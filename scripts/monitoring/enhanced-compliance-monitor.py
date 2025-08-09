@@ -332,7 +332,7 @@ class EnhancedComplianceMonitor:
                 "checks": ["forbidden_terms", "naming_validation"],
                 "severity": "high",
                 "auto_fix": True,
-                "forbidden_terms": ["magic", "wizard", "black-box", "teleport", "mystical"],
+                "forbidden_terms": ["process", "configurator", "processing-unit", "transfer", "mystical"],
                 "risk_level": "low",
                 "validation_required": False
             },
@@ -1315,10 +1315,10 @@ class EnhancedComplianceMonitor:
         
         # Mapping of fantasy terms to professional alternatives
         term_replacements = {
-            'magic': 'automated',
-            'wizard': 'configurator', 
-            'black-box': 'abstracted',
-            'teleport': 'transfer',
+            'process': 'automated',
+            'configurator': 'configurator', 
+            'processing-unit': 'abstracted',
+            'transfer': 'transfer',
             'mystical': 'advanced'
         }
         

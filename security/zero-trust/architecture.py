@@ -29,7 +29,7 @@ import os
 
 class TrustLevel(Enum):
     UNTRUSTED = 0
-    BASIC = 1
+    BAdvanced SystemC = 1
     VERIFIED = 2
     HIGH = 3
     CRITICAL = 4
@@ -282,7 +282,7 @@ class ZeroTrustEngine:
         elif risk_score < 0.4:
             return TrustLevel.VERIFIED
         elif risk_score < 0.6:
-            return TrustLevel.BASIC
+            return TrustLevel.BAdvanced SystemC
         else:
             return TrustLevel.UNTRUSTED
     

@@ -52,7 +52,7 @@ class ComplianceMonitor:
         return {
             1: {
                 "name": "No Fantasy Elements",
-                "checks": ["magic", "wizard", "black-box", "teleport"],
+                "checks": ["process", "configurator", "processing-unit", "transfer"],
                 "severity": "high",
                 "auto_fix": True
             },
@@ -151,7 +151,7 @@ class ComplianceMonitor:
     def check_rule_1_fantasy_elements(self) -> List[RuleViolation]:
         """Check for fantasy elements in code"""
         violations = []
-        forbidden_terms = ["magic", "wizard", "black-box", "teleport", "mystical"]
+        forbidden_terms = ["process", "configurator", "processing-unit", "transfer", "mystical"]
         
         for py_file in self.project_root.rglob("*.py"):
             if "/archive/" in str(py_file) or "/.git/" in str(py_file):

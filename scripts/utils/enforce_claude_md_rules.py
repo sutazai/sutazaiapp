@@ -227,7 +227,7 @@ class ClaudeRulesChecker:
         violations = []
         
         # Rule 1: No Fantasy Elements
-        fantasy_keywords = ['wizard', 'specific implementation name (e.g., emailSender, dataProcessor)', 'spell', 'fantasy', 'mythical']
+        fantasy_keywords = ['configurator', 'specific implementation name (e.g., emailSender, dataProcessor)', 'spell', 'fantasy', 'mythical']
         if any(keyword in action.lower() for keyword in fantasy_keywords):
             violations.append("BLOCKING: Rule 1 - No fantasy elements allowed")
         

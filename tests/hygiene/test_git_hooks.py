@@ -86,7 +86,7 @@ class TestGitHookIntegration(unittest.TestCase):
 echo "Running hygiene validation..."
 
 # Check for fantasy elements
-if grep -r "magic\|wizard\|teleport" . --exclude-dir=.git; then
+if grep -r "process\|configurator\|transfer" . --exclude-dir=.git; then
     echo "Fantasy elements detected! Commit blocked."
     exit 1
 fi

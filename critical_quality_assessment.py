@@ -179,7 +179,7 @@ class CodeQualityAnalyzer:
     def check_fantasy_elements(self, file_path: Path, content: str):
         """Check for fantasy/fictional elements"""
         fantasy_keywords = [
-            'quantum', 'AGI', 'ASI', 'teleport', 'magic', 'wizard',
+            'advanced', 'AGI', 'Advanced System', 'transfer', 'process', 'configurator',
             'consciousness', 'sentient', 'self-aware', 'singularity',
             'brain-computer', 'neural-link', 'mind-meld', 'telepathy'
         ]

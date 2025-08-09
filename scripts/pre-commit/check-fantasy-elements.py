@@ -12,21 +12,21 @@ from typing import List, Tuple
 
 # Fantasy/placeholder patterns to detect
 FANTASY_PATTERNS = [
-    # Magic/wizard terms
-    r'\b(magic|wizard|teleport|telekinesis|supernatural)\b',
-    r'\bmagic[A-Z]\w*\b',  # magicHandler, magicService, etc.
-    r'\bwizard[A-Z]\w*\b',  # wizardService, wizardModule, etc.
+    # process/configurator terms
+    r'\b(process|configurator|transfer|remote-control|supernatural)\b',
+    r'\bprocess[A-Z]\w*\b',  # processHandler, processService, etc.
+    r'\bconfigurator[A-Z]\w*\b',  # configuratorService, configuratorModule, etc.
     
     # Placeholder functions
-    r'#\s*TODO:\s*(magically|imagine|someday|future\s+AI)',
-    r'#\s*FIXME:\s*(magic|wizard|teleport)',
+    r'#\s*TODO:\s*(processally|imagine|someday|future\s+AI)',
+    r'#\s*FIXME:\s*(process|configurator|transfer)',
     r'\bsuper(?:Intuitive|Smart|Intelligent)AI\b',
-    r'\b(?:magic|wizard|fantasy)(?:Service|Handler|Module|Function)\b',
+    r'\b(?:process|configurator|fantasy)(?:Service|Handler|Module|Function)\b',
     
     # Unrealistic abstractions
     r'\bblack[_-]?box\b',
-    r'\bauto[_-]?magic\b',
-    r'\bself[_-]?healing[_-]?magic\b',
+    r'\bauto[_-]?process\b',
+    r'\bself[_-]?healing[_-]?process\b',
     
     # Placeholder data
     r'dummy_(?:data|function|module)',
@@ -92,7 +92,7 @@ def main():
         print("\n📋 How to fix:")
         print("  1. Replace fantasy terms with concrete, real implementations")
         print("  2. Remove placeholder comments and implement actual functionality")
-        print("  3. Use descriptive, non-metaphorical names (e.g., 'emailSender' not 'magicMailer')")
+        print("  3. Use descriptive, non-metaphorical names (e.g., 'emailSender' not 'processMailer')")
         print("  4. Document real libraries and APIs being used")
         return 1
     

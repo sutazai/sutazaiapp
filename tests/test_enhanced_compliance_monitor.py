@@ -217,9 +217,9 @@ ADD scripts/ /app/scripts/
             'test_fantasy.py': '''
 def process_data():
     # This is automated processing
-    magic_value = 42  # This should be detected
-    wizard_config = {}  # This should be detected
-    result = teleport_data(magic_value)  # Both should be detected
+    process_value = 42  # This should be detected
+    configurator_config = {}  # This should be detected
+    result = transfer_data(process_value)  # Both should be detected
     return result
 ''',
             'test_clean.py': '''
@@ -232,7 +232,7 @@ def process_data():
 ''',
             'test_comments.py': '''
 def process_data():
-    # This comment mentions magic but shouldn't be flagged
+    # This comment mentions process but shouldn't be flagged
     value = 42
     return value
 '''
@@ -245,7 +245,7 @@ def process_data():
         
         # Should find violations in test_fantasy.py
         fantasy_violations = [v for v in violations if 'test_fantasy.py' in v.file_path]
-        assert len(fantasy_violations) >= 3  # magic, wizard, teleport
+        assert len(fantasy_violations) >= 3  # process, configurator, transfer
         
         # Should not find violations in test_clean.py
         clean_violations = [v for v in violations if 'test_clean.py' in v.file_path]
@@ -330,7 +330,7 @@ def process_data():
     def test_compliance_check_integration(self, monitor, temp_project_root):
         """Test full compliance check integration"""
         # Create various violations
-        (temp_project_root / 'fantasy.py').write_text('magic_function = lambda x: x')
+        (temp_project_root / 'fantasy.py').write_text('process_function = lambda x: x')
         (temp_project_root / 'garbage.tmp').write_text('temp file')
         (temp_project_root / 'wrong_script.sh').write_text('#!/bin/bash\necho "wrong place"')
         
@@ -440,9 +440,9 @@ def process_data():
         test_file = temp_project_root / 'test_fantasy.py'
         content = '''
 def process():
-    magic_value = 42
-    wizard_config = {}
-    teleport_data(magic_value)
+    process_value = 42
+    configurator_config = {}
+    transfer_data(process_value)
 '''
         test_file.write_text(content)
         
@@ -453,7 +453,7 @@ def process():
                 severity="high",
                 file_path=str(test_file),
                 line_number=2,
-                description="Found forbidden term 'magic' in code",
+                description="Found forbidden term 'process' in code",
                 timestamp=datetime.now().isoformat(),
                 auto_fixable=True
             ),
@@ -463,7 +463,7 @@ def process():
                 severity="high",
                 file_path=str(test_file),
                 line_number=3,
-                description="Found forbidden term 'wizard' in code",
+                description="Found forbidden term 'configurator' in code",
                 timestamp=datetime.now().isoformat(),
                 auto_fixable=True
             )
@@ -474,8 +474,8 @@ def process():
         
         # Check that fantasy terms were replaced
         fixed_content = test_file.read_text()
-        assert 'magic' not in fixed_content.lower()
-        assert 'wizard' not in fixed_content.lower()
+        assert 'process' not in fixed_content.lower()
+        assert 'configurator' not in fixed_content.lower()
         assert 'automated' in fixed_content or 'configurator' in fixed_content
     
     def test_auto_fix_script_organization(self, monitor, temp_project_root):
@@ -569,7 +569,7 @@ def process():
         
         for i in range(num_files):
             # Fantasy elements
-            (temp_project_root / f'fantasy_{i}.py').write_text(f'magic_value_{i} = {i}')
+            (temp_project_root / f'fantasy_{i}.py').write_text(f'process_value_{i} = {i}')
             
             # Garbage files
             (temp_project_root / f'garbage_{i}.tmp').write_text(f'temp content {i}')
@@ -708,7 +708,7 @@ def process():
         """Test individual rule checks in isolation"""
         # Set up violations for each rule
         if rule_number == 1:
-            (temp_project_root / 'fantasy.py').write_text('magic = True')
+            (temp_project_root / 'fantasy.py').write_text('process = True')
         elif rule_number == 7:
             (temp_project_root / 'misplaced.sh').write_text('#!/bin/bash\necho test')
         elif rule_number == 12:
@@ -854,7 +854,7 @@ class TestIntegrationFlows:
         """Test complete scan and fix workflow"""
         # Set up project with various violations
         violations_setup = {
-            'fantasy.py': 'magic_value = wizard_function()',
+            'fantasy.py': 'process_value = configurator_function()',
             'garbage.tmp': 'temporary file',
             'misplaced.sh': '#!/bin/bash\necho "misplaced"',
             'extra_deploy.sh': '#!/bin/bash\necho "extra deploy"'

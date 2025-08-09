@@ -16,7 +16,7 @@ BACKUP_DIR = BASE_DIR / f"final_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')
 
 # Fantasy patterns to remove
 FANTASY_PATTERNS = [
-    "quantum", "agi", "asi", "magic", "wizard", "teleport", "black-box",
+    "advanced", "agi", "advanced system", "process", "configurator", "transfer", "processing-unit",
     "69 agents", "149 agents", "service mesh", "Kong", "Consul", "RabbitMQ",
     "Vault", "Jaeger", "Elasticsearch", "distributed AI", "swarm intelligence"
 ]

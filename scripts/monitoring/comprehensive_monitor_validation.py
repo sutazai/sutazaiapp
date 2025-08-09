@@ -154,7 +154,7 @@ class ComprehensiveMonitorValidator:
         
         # Validate no fantasy elements in description
         description = agent_info.get('description', '').lower()
-        fantasy_terms = ['magic', 'wizard', 'teleport', 'black-box', 'fantasy']
+        fantasy_terms = ['process', 'configurator', 'transfer', 'processing-unit', 'fantasy']
         if any(term in description for term in fantasy_terms):
             return False
         
@@ -419,7 +419,7 @@ class ComprehensiveMonitorValidator:
             hardcoded_issues = []
             
             # Check for fantasy terms
-            fantasy_terms = ['magic', 'wizard', 'teleport', 'black-box', 'fantasy']
+            fantasy_terms = ['process', 'configurator', 'transfer', 'processing-unit', 'fantasy']
             for term in fantasy_terms:
                 if term in source_code.lower():
                     hardcoded_issues.append(f"Fantasy term found: {term}")

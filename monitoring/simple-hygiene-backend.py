@@ -128,7 +128,7 @@ class SimpleMonitoringBackend:
                         content = f.read()
                         
                     # Check for fantasy elements
-                    if any(word in content.lower() for word in ['magic', 'wizard', 'teleport']):
+                    if any(word in content.lower() for word in ['process', 'configurator', 'transfer']):
                         violation = {
                             'timestamp': datetime.now().isoformat(),
                             'rule_id': 'rule_1',

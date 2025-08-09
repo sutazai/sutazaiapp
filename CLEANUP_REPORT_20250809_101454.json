@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-08-09T10:14:54.188892",
+  "backup_location": "/tmp/sutazai_backup_20250809_101447",
+  "initial_health": {
+    "backend_api": true,
+    "frontend": true,
+    "ollama": true,
+    "postgres": true,
+    "redis": true,
+    "rabbitmq": false
+  },
+  "changes_made": [
+    "Removed: /opt/sutazaiapp/IMPORTANT/IMPORTANT",
+    "Removed: /opt/sutazaiapp/backups",
+    "Removed: /opt/sutazaiapp/data/backups",
+    "Removed: /opt/sutazaiapp/scripts/backup",
+    "Removed: /opt/sutazaiapp/docs/backup",
+    "Removed: /opt/sutazaiapp/backend/app/__pycache__",
+    "Removed: /opt/sutazaiapp/backend/knowledge_graph/__pycache__",
+    "Removed: /opt/sutazaiapp/backend/agent_orchestration/__pycache__",
+    "Removed: /opt/sutazaiapp/backend/monitoring/__pycache__",
+    "Removed: /opt/sutazaiapp/backend/app/core/__pycache__",
+    "Removed: /opt/sutazaiapp/backend/app/services/__pycache__"
+  ],
+  "final_health": {
+    "backend_api": true,
+    "frontend": true,
+    "ollama": true,
+    "postgres": true,
+    "redis": true,
+    "rabbitmq": false
+  }
+}

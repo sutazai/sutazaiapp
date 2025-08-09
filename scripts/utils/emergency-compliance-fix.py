@@ -31,7 +31,7 @@ class ComplianceFixer:
         shutil.copy2(filepath, backup_path)
         
     def fix_rule1_fantasy_elements(self):
-        """Remove all fantasy/AGI/quantum elements"""
+        """Remove all fantasy/AGI/advanced elements"""
         print("\n[RULE 1] Removing fantasy elements...")
         
         # Files to delete completely
@@ -40,8 +40,8 @@ class ComplianceFixer:
             "backend/ai_agents/reasoning/agi_orchestrator.py",
         ]
         
-        # Also find and remove quantum directories
-        quantum_dirs = list(self.root.glob("**/quantum*"))
+        # Also find and remove advanced directories
+        advanced_dirs = list(self.root.glob("**/advanced*"))
         agi_dirs = list(self.root.glob("**/agi*"))
         
         for rel_path in fantasy_files:
@@ -52,14 +52,14 @@ class ComplianceFixer:
                 self.files_deleted.append(str(rel_path))
                 print(f"  ✓ Deleted: {rel_path}")
                 
-        for dir_path in quantum_dirs + agi_dirs:
+        for dir_path in advanced_dirs + agi_dirs:
             if dir_path.is_dir():
                 rel_path = dir_path.relative_to(self.root)
                 shutil.rmtree(dir_path)
                 self.files_deleted.append(f"{rel_path}/ (directory)")
                 print(f"  ✓ Deleted directory: {rel_path}/")
                 
-        self.violations_fixed.append("Removed AGI/quantum fantasy modules")
+        self.violations_fixed.append("Removed AGI/advanced fantasy modules")
         
     def fix_rule3_docker_compose_chaos(self):
         """Keep only essential docker-compose files"""
@@ -96,7 +96,7 @@ class ComplianceFixer:
         # Directories with mostly outdated docs
         docs_to_remove = [
             "docs/agi",
-            "docs/quantum", 
+            "docs/advanced", 
             "docs/agents",  # Mostly fantasy
             "docs/architecture",  # Outdated
             "docs/deployment",  # Conflicting guides

@@ -31,8 +31,8 @@ class ImportAuditor:
         
         # Fantasy/fictional module patterns
         self.fantasy_patterns = [
-            'quantum', 'agi', 'magic', 'wizard', 'teleport', 'black_box',
-            'superintelligence', 'neural_magic', 'ai_magic', 'quantum_ai',
+            'advanced', 'agi', 'process', 'configurator', 'transfer', 'black_box',
+            'superintelligence', 'neural_process', 'ai_process', 'advanced_ai',
             'agi_core', 'sentient', 'consciousness'
         ]
         

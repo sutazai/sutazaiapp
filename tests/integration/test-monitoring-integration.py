@@ -265,13 +265,13 @@ class MonitoringIntegrationTester:
         with open(fantasy_file, 'w') as f:
             f.write("""
 # This file contains fantasy elements for testing
-def magic_function():
-    wizard_result = teleport_data()
-    return wizard_result
+def process_function():
+    configurator_result = transfer_data()
+    return configurator_result
 
-def teleport_data():
-    # TODO: add telekinesis here
-    return "magic result"
+def transfer_data():
+    # TODO: add remote-control here
+    return "process result"
 """)
         
         # Create a temp file (rule 13 violation)

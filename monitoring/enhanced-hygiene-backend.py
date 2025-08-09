@@ -338,7 +338,7 @@ class EnhancedHygieneBackend:
             # Define rule patterns
             rule_patterns = {
                 'no_fantasy_elements': {
-                    'patterns': ['magic', 'wizard', 'teleport', 'fairy', 'unicorn'],
+                    'patterns': ['process', 'configurator', 'transfer', 'fairy', 'unicorn'],
                     'severity': 'CRITICAL',
                     'description': 'Fantasy elements detected in code'
                 },

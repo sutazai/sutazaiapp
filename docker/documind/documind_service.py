@@ -284,7 +284,7 @@ async def process_document(file: UploadFile = File(...)):
     
     try:
         # Detect file type
-        # TODO: Implement file type detection (e.g., using python-magic)
+        # TODO: Implement file type detection (e.g., using python-process)
         file_type = "application/octet-stream"  # Default file type
         logger.info(f"Processing file: {file.filename}, type: {file_type}")
         

@@ -1,0 +1,299 @@
+# Development Requirements
+# Testing, linting, and development tools
+
+aio-pika==9.3.1                    # Async RabbitMQ client - latest
+aiofiles==24.1.0                   # Async file operations
+aiofiles==24.1.0                 # Async file operations for code context
+aiohttp==3.11.10                   # Async HTTP server/client - security validated
+aioredis==2.0.1                    # Async Redis client
+aioresponses==0.7.6                # Async HTTP mocking
+alembic==1.14.0                    # Database migrations
+allure-pytest==2.13.5              # Allure reporting framework
+altair==4.2.2                      # Declarative visualization
+anthropic==0.42.0                  # Anthropic API client
+asyncio-mqtt==0.13.0               # Async MQTT client
+asyncpg==0.29.0                    # Async PostgreSQL driver
+asynctest==0.13.0                  # Async testing utilities
+atheris==2.3.0                     # Python fuzzing engine
+authlib==1.3.2                   # Multiple auth methods
+azure-storage-blob==12.24.0     # Azure Storage
+bandit==1.7.10                     # Security linter - latest security checks
+bandit==1.7.10                     # Security linting - latest security checks
+bcrypt==4.2.0                      # Password hashing backend
+beautifulsoup4==4.12.3             # HTML/XML parsing
+black==24.10.0                     # Code formatter - latest stable
+bleach==6.1.0                      # HTML sanitization
+boto3==1.35.78                   # AWS SDK
+bump2version==1.0.1                # Version bumping utility
+celery==5.4.0                      # Task queue
+certifi==2024.8.30                 # SSL certificates bundle
+chromadb# ChromaDB client - latest
+chromadb# Vector database testing
+click-testing==0.1.0               # CLI testing utilities
+click==8.1.8                       # CLI framework
+colorlog==6.9.0                    # Colored logging output
+commitizen==3.29.1                 # Semantic versioning/changelog
+coverage[toml]==7.6.9              # Coverage measurement with TOML support
+coverage[toml]==7.6.9              # Coverage with TOML configuration
+cryptography==43.0.1               # Cryptographic library - CRITICAL security fix
+dask[complete]==2024.12.1        # Distributed computing
+discord.py==2.4.0                # Discord notifications
+docker-compose==1.29.2             # Docker Compose (if not using v2)
+docker==7.1.0
+docker==7.1.0                      # Docker API client
+docker==7.1.0                      # Docker API for test containers
+dynaconf==3.2.6                    # Advanced configuration
+email-validator==2.2.0             # Email validation utility
+execnet==2.1.1                     # Distributed execution
+factory-boy==3.3.1                 # Test data factories
+fairscale==0.4.13                 # Facebook's FSDP utilities
+faiss-cpu==1.9.0                   # Facebook AI similarity search
+faker==33.1.0                      # Fake data generation
+faker==33.1.0                      # Fake data generation - latest
+fastapi==0.104.1
+fastapi==0.115.6
+fastapi==0.115.6                    # Latest stable - security validated
+flake8==6.1.0                      # Legacy linter (for compatibility)
+fms-fsdp==0.1.5                   # IBM's FSDP implementation for distributed training
+freezegun==1.5.1                   # Time mocking
+freezegun==1.5.1                   # Time/date mocking
+gitpython==3.1.43
+gitpython==3.1.43                  # Git interface for Python
+google-cloud-storage==2.19.0    # Google Cloud Storage
+gpustat==1.1.1                   # GPU monitoring
+grafana-api==1.0.3                 # Grafana API client
+helm==3.14.0                       # Helm package manager (if available)
+httpie==3.2.4                      # Command-line HTTP client
+httpx==0.25.0
+httpx==0.27.2
+httpx==0.27.2                      # Async HTTP client - CVE patched
+httpx==0.27.2                      # HTTP client for async API tests
+httpx==0.27.2                    # HTTP client for TabbyML API
+huggingface-hub==0.27.0            # HF model hub client
+hypothesis==6.122.1                # Includes fuzzing capabilities
+hypothesis==6.122.1                # Property-based testing - latest
+insomnia-cli==1.0.0                # Insomnia CLI (if available)
+ipdb==0.13.13                      # Debugger
+ipython==8.29.0                    # Enhanced Python REPL
+isort==5.13.2                      # Import sorting
+jinja2==3.1.4                      # Template engine - XSS fixes
+joblib==1.4.2                      # Parallel processing
+jsonschema==4.24.0                 # JSON schema validation
+jupyter==1.1.1                     # Jupyter meta-package
+jupyterlab-git==0.50.2             # Git extension for JupyterLab
+jupyterlab==4.3.3                  # JupyterLab IDE
+jupytext==1.16.6                   # Jupyter notebook text formats
+kubernetes==31.0.0                 # Kubernetes client - security validated
+langchain==0.3.11                  # LLM framework
+ldap3==2.9.1                     # LDAP authentication
+line-profiler==4.1.3               # Line-by-line profiling
+lizard==1.17.10                    # Code complexity analyzer
+locust==2.32.4                     # Load testing framework - latest
+loguru==0.7.2                      # Advanced logging (dev features)
+lxml==5.3.0                        # Fast XML/HTML processing
+marshmallow==3.20.1                # Object serialization
+matplotlib==3.10.0                 # Plotting library
+mccabe==0.7.0                      # McCabe complexity checker
+memory-profiler==0.61.0            # Memory usage profiling
+memory-profiler==0.61.0            # Memory usage tracking
+milvus==2.4.9                    # Milvus vector database
+mimesis==18.0.0                    # Alternative fake data generator
+mkdocs-material==9.5.44            # Material theme for MkDocs
+mkdocs==1.6.1                      # Alternative docs generator
+mlflow==2.19.0                     # ML experiment tracking
+mlflow==2.19.0                     # ML lifecycle management
+modin[all]==0.32.0               # Accelerated pandas
+mutmut==2.5.1                      # Mutation testing
+mycli==1.27.2                      # MySQL CLI (if needed)
+mypy==1.14.1                       # Static type checker - latest
+myst-parser==4.0.0                 # Markdown support for Sphinx
+nbstripout==0.7.1                  # Clean Jupyter notebooks
+neo4j==5.27.0                      # Graph database testing
+neo4j==5.27.0                      # Neo4j graph database
+notebook==7.3.1                    # Jupyter notebook
+numpy==2.1.3                       # Numerical computing - latest stable
+nvidia-ml-py==12.560.30          # NVIDIA Management Library
+oauthlib==3.2.2                  # OAuth authentication
+objgraph==3.6.2                    # Object reference tracking
+oci==2.138.2                     # Oracle Cloud Infrastructure
+onnx==1.17.0                     # ONNX model format
+onnxruntime==1.20.1              # ONNX runtime
+openai==1.58.1                     # OpenAI API client - latest
+opencv-python==4.10.0.84           # Computer vision for image comparison
+openpyxl==3.1.5                    # Excel file handling for test data
+opensearch-py==2.8.0             # OpenSearch with vector support
+opentelemetry-api==1.28.2        # OpenTelemetry API
+opentelemetry-exporter-prometheus==0.49b2  # Prometheus exporter
+opentelemetry-instrumentation-fastapi==0.49b2  # FastAPI instrumentation
+opentelemetry-sdk==1.28.2        # OpenTelemetry SDK
+openvino==2024.5.0               # Intel OpenVINO
+pandas==2.2.3                      # Data analysis - security validated
+pandas==2.2.3                      # Data manipulation for test datasets
+passlib[bcrypt]==1.7.4             # Password hashing - includes bcrypt
+pdb-attach==3.2.0                  # Remote debugging
+pexpect==4.9.0                     # Interactive application testing
+pgcli==4.1.0                       # PostgreSQL CLI with autocomplete
+pika==1.3.2                        # RabbitMQ client
+pillow==10.4.0                     # Image comparison - security patches
+pillow==10.4.0                     # Image processing - security patches
+pinecone-client==5.0.1           # Pinecone vector database
+pip-audit==2.7.3                   # Additional security scanning
+pip-audit==2.7.3                   # PyPI vulnerability scanning
+pipenv==2024.0.3                   # Environment management (if used)
+pixelmatch==0.3.0                  # Pixel-level image comparison (if available)
+playwright==1.49.0                 # Modern web testing - latest
+plotly==5.24.1                     # Interactive plotting
+postgresql-wheel==0.7.0            # PostgreSQL testing utilities (if available)
+postman-cli==1.0.0                 # Postman CLI (if available)
+pre-commit==4.0.1                  # Pre-commit framework - latest
+prometheus-client==0.21.1          # Metrics collection during tests
+prometheus-client==0.21.1          # Prometheus metrics - security validated
+psutil==6.1.0                      # System monitoring - security patches
+psutil==6.1.0                      # System monitoring during tests
+psutil==6.1.0                      # System resource monitoring
+psycopg2-binary==2.9.10            # PostgreSQL adapter - compiled
+py-spy==0.3.14                     # Performance profiling
+py-spy==0.3.14                     # Sampling profiler
+pyaudio==0.2.13
+pydantic-settings==2.8.1            # Settings management
+pydantic==2.10.4
+pydantic==2.10.4                    # Data validation - security patches
+pydantic[dotenv]==2.10.4          # Enhanced .env support
+pydeck==0.9.1                      # Deck.gl visualization
+pyjwt==2.9.0                       # JWT tokens - security validated
+pymongo==4.10.1                    # MongoDB driver
+pympler==0.9                       # Advanced memory profiling
+pynvml==11.5.3                   # Python bindings for NVML
+pypdf2==3.0.1
+pytest-asyncio==0.25.2             # Async test support - latest
+pytest-asyncio==0.25.2             # Async testing support
+pytest-benchmark==4.0.0            # Microbenchmarking
+pytest-benchmark==4.0.0            # Performance benchmarking
+pytest-clarity==1.0.1              # Clear assertion diffs
+pytest-cov==6.0.0                  # Coverage integration
+pytest-cov==6.0.0                  # Coverage reporting - security validated
+pytest-django==4.9.0               # Django testing (if needed)
+pytest-docker==3.1.1               # Docker fixtures for pytest
+pytest-env==1.1.5                  # Environment variable management
+pytest-factoryboy==2.7.0           # Factory Boy integration
+pytest-flask==1.3.0                # Flask testing (if needed)
+pytest-html==4.1.1                 # HTML reports
+pytest-html==4.1.1                 # HTML test reports
+pytest-hypothesis==0.19.0          # Hypothesis pytest integration
+pytest-instafail==0.5.0            # Show failures instantly
+pytest-json-report==1.5.0          # JSON reports
+pytest-json-report==1.5.0          # JSON test reports
+pytest-mock==3.14.0                # Mocking fixtures
+pytest-mongo==2.2.0                # MongoDB test fixtures
+pytest-parallel==0.1.1             # Alternative parallel execution
+pytest-picked==0.5.0               # Run tests from modified files
+pytest-postgresql==6.1.0           # PostgreSQL test fixtures
+pytest-randomly==3.15.0            # Randomize test execution order
+pytest-redis==3.1.0                # Redis test fixtures
+pytest-repeat==0.9.3               # Repeat tests multiple times
+pytest-rerunfailures==14.0         # Rerun failed tests
+pytest-snapshot==0.9.0             # Snapshot testing
+pytest-sugar==1.0.0                # Beautiful test output
+pytest-testmon==2.1.3              # Smart test selection
+pytest-timeout==2.3.1              # Test timeout management
+pytest-watch==4.2.0                # Continuous testing
+pytest-xdist==3.6.0                # Parallel execution
+pytest-xdist==3.6.0                # Parallel test execution
+pytest==8.3.4                      # Main testing framework - latest stable
+python-consul==1.1.0
+python-consul==1.1.0               # Consul service discovery
+python-decouple==3.8               # Configuration management
+python-docx==1.1.0
+python-dotenv==1.0.1               # .env file support for tests
+python-dotenv==1.0.1               # Environment variables
+python-dotenv[cli]==1.0.1          # CLI for .env management
+python-jose[cryptography]==3.3.0   # JWT/JWE library
+python-json-logger==2.0.7          # JSON logging for development
+python-multipart==0.0.18            # Form data parsing
+python-pptx==0.6.23
+python-saml==1.16.0              # SAML authentication
+python-telegram-bot==21.7        # Telegram notifications
+pyttsx3==2.90
+pyyaml==6.0.2                      # YAML parsing - security fix
+pyyaml==6.0.2                      # YAML test configuration files
+qdrant-client==1.12.1              # Qdrant vector database
+radon==6.0.1                       # Code complexity analysis
+ray==2.40.0                      # Distributed AI/ML
+redis-cli==2.0.2                   # Redis CLI improvements
+redis==5.2.1
+redis==5.2.1                       # Redis client - latest stable
+redis==5.2.1                       # Redis for integration tests
+requests-mock==1.12.1              # Alternative HTTP mocking
+requests-mock==1.12.1              # Request mocking
+requests==2.32.3
+requests==2.32.3                    # HTTP library - CRITICAL security fix
+requests==2.32.3                   # HTTP client for sync API tests
+responses==0.25.3                  # HTTP mocking
+responses==0.25.3                  # HTTP request mocking
+rich==13.9.4                       # Rich terminal output
+ruff==0.8.6                        # Fast Python linter - latest features
+safety==3.2.11                     # Dependency vulnerability checking
+safety==3.2.11                     # Dependency vulnerability scanner
+scalene==1.5.47                    # High-performance CPU/memory profiler
+schedule==1.2.2                    # Task scheduling
+scikit-learn==1.6.0                # For ML model evaluation
+scikit-learn==1.6.0                # Machine learning - latest features
+scipy==1.14.1                      # Scientific computing
+selenium==4.27.1                   # Web browser automation - latest stable
+semgrep==1.96.0                    # Static analysis security tool
+sentence-transformers==3.3.1       # Sentence embeddings
+slack-sdk==3.34.0                # Slack notifications
+speechrecognition==3.10.0
+sphinx-autodoc-typehints==2.4.4    # Type hints in docs
+sphinx-rtd-theme==3.0.2            # ReadTheDocs theme
+sphinx==8.1.3                      # Documentation generator - latest
+sqlalchemy-utils==0.41.2           # Database utilities for testing
+sqlalchemy==2.0.36                 # ORM - performance improvements
+st-pages==0.5.0                    # Multi-page apps
+starlette==0.41.3                   # ASGI framework core
+streamlit-ace==0.1.1               # Code editor component
+streamlit-aggrid==0.3.4            # Data grid component
+streamlit-chat==0.1.1              # Chat interface
+streamlit-elements==0.1.0          # React components
+streamlit-extras==0.4.7            # Additional components
+streamlit-lottie==0.0.5            # Lottie animations
+streamlit-option-menu==0.3.13      # Navigation menu
+streamlit-testing==0.1.0           # Streamlit testing utilities (if available)
+streamlit-webrtc==0.47.7           # WebRTC support
+streamlit==1.40.2                  # Main UI framework - latest stable
+streamlit==1.40.2                  # Streamlit for UI testing
+structlog==24.4.0                  # Structured logging
+tabby-client==0.3.0               # TabbyML Python client
+tensorboard==2.18.0                # TensorFlow visualization
+tensorrt==10.7.0                 # NVIDIA TensorRT
+testcontainers==4.9.0              # Container-based testing
+testpath==0.6.0                    # Test path utilities
+tiktoken==0.8.0                    # OpenAI tokenizer
+torch-distributed==2.5.1          # PyTorch distributed training extensions
+torch==2.5.1
+torch==2.5.1                       # For AI model testing
+torch==2.5.1                       # PyTorch - latest stable
+torch==2.5.1+cu118                # PyTorch with CUDA support (if GPU available)
+tqdm==4.67.1                       # Progress bars
+transformers
+transformers# For NLP model testing
+transformers# Hugging Face transformers - security patches
+twilio==9.3.7                    # SMS/WhatsApp notifications
+typer==0.15.1                      # CLI framework (FastAPI style)
+urllib3==2.2.3                     # HTTP client utility - security patches
+uvicorn==0.24.0
+uvicorn[standard]==0.32.1
+uvicorn[standard]==0.32.1            # ASGI server with standard features
+uvloop==0.19.0                     # Fast asyncio event loop
+vaex==4.18.0                     # Out-of-core DataFrames
+virtualenv==20.27.1                # Virtual environment creation
+virtualenvwrapper==6.1.0           # Virtualenv extensions
+vulture==2.13                      # Dead code finder
+wandb==0.19.0                      # ML experiment tracking
+watchdog==6.0.0                    # File system monitoring
+weaviate-client==4.9.4           # Weaviate vector database
+webdriver-manager==4.0.2           # WebDriver management
+websocket-client==1.8.0            # WebSocket client
+websockets==13.0                   # WebSocket support - latest stable
+wiremock==2.6.0                    # Service virtualization (if available)
+yfinance==0.2.52

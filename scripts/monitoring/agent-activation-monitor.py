@@ -361,7 +361,7 @@ class AgentActivationMonitor:
                 "security-pentesting-specialist", "cicd-pipeline-orchestrator", "ai-system-validator"],
             2: ["garbage-collector-coordinator", "distributed-computing-architect", "edge-computing-optimizer",
                 "container-orchestrator-k3s", "gpu-hardware-optimizer", "cpu-only-hardware-optimizer"],
-            3: ["quantum-ai-researcher", "neuromorphic-computing-expert", "agentzero-coordinator"]
+            3: ["advanced-ai-researcher", "neuromorphic-computing-expert", "agentzero-coordinator"]
         }
         
         active_agents = {agent.name for agent in agent_statuses if agent.status == "running"}

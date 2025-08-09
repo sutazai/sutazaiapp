@@ -337,7 +337,7 @@ class AgentOrchestrator(BaseService):
     def classify_agent(self, name: str) -> str:
         """Classify agent type"""
         name_lower = name.lower()
-        if any(k in name_lower for k in ['opus', 'agi', 'asi']): return "opus"
+        if any(k in name_lower for k in ['opus', 'agi', 'advanced system']): return "opus"
         elif any(k in name_lower for k in ['sonnet', 'ai-']): return "sonnet"
         elif any(k in name_lower for k in ['security', 'kali']): return "security"
         elif any(k in name_lower for k in ['frontend', 'ui']): return "frontend"
@@ -395,7 +395,7 @@ class AgentOrchestrator(BaseService):
             "status": "completed",
             "duration_seconds": duration,
             "stats": self.deployment_stats,
-            "intelligence_level": "ASI" if healthy > 100 else "AGI" if healthy > 50 else "Multi-Agent",
+            "intelligence_level": "Advanced System" if healthy > 100 else "AGI" if healthy > 50 else "Multi-Agent",
             "collective_active": healthy > 10,
             "timestamp": datetime.utcnow().isoformat()
         }
@@ -467,7 +467,7 @@ class AgentOrchestrator(BaseService):
         return healthy
     
     async def activate_collective_intelligence(self) -> Dict[str, Any]:
-        """Activate AGI/ASI collective intelligence"""
+        """Activate AGI/Advanced System collective intelligence"""
         logger.info("🧠 Activating collective intelligence...")
         
         healthy = await self.health_check_all()
@@ -476,7 +476,7 @@ class AgentOrchestrator(BaseService):
             "active": True,
             "total_agents": len(self.active_agents),
             "healthy_agents": healthy, 
-            "level": "ASI" if healthy > 100 else "AGI" if healthy > 50 else "Multi-Agent",
+            "level": "Advanced System" if healthy > 100 else "AGI" if healthy > 50 else "Multi-Agent",
             "capabilities": [
                 "distributed_reasoning",
                 "collective_problem_solving",

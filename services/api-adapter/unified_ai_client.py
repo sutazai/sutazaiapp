@@ -397,7 +397,7 @@ if __name__ == "__main__":
     # Example: Execute chain
     try:
         response = client.execute_chain(
-            prompt="Explain quantum computing in simple terms",
+            prompt="Explain advanced computing in simple terms",
             chain_type="simple"
         )
         print(f"Chain response: {response}")

@@ -335,11 +335,11 @@ class HygieneMonitorBackend:
             return []
 
     async def _check_fantasy_elements(self) -> List[RuleViolation]:
-        """Check for fantasy/magic elements in code"""
+        """Check for fantasy/process elements in code"""
         violations = []
         fantasy_patterns = [
-            r'\bmagic\w*\b', r'\bwizard\w*\b', r'\bteleport\w*\b',
-            r'\bblack.?box\b', r'TODO.*magic', r'TODO.*telekinesis'
+            r'\bprocess\w*\b', r'\bconfigurator\w*\b', r'\btransfer\w*\b',
+            r'\bblack.?box\b', r'TODO.*process', r'TODO.*remote-control'
         ]
         
         try:

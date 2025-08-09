@@ -919,7 +919,7 @@ class ProductionReadinessValidator:
             # Create many files with violations
             num_files = 200
             violation_types = [
-                ('fantasy.py', 'automated_value = wizard_function()'),
+                ('fantasy.py', 'automated_value = configurator_function()'),
                 ('garbage.tmp', 'temporary content'),
                 ('script.sh', '#!/bin/bash\necho "test"')
             ]
@@ -946,7 +946,7 @@ class ProductionReadinessValidator:
             fantasy_violations = 0
             for py_file in py_files:
                 content = py_file.read_text()
-                if 'wizard' in content.lower():
+                if 'configurator' in content.lower():
                     fantasy_violations += 1
             
             scan_time = time.time() - start_time

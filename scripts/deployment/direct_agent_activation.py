@@ -131,7 +131,7 @@ class DirectAgentActivator:
     def classify_agent(self, name):
         """Classify agent type"""
         name_lower = name.lower()
-        if any(k in name_lower for k in ['opus', 'agi', 'asi']): return "opus"
+        if any(k in name_lower for k in ['opus', 'agi', 'advanced system']): return "opus"
         elif any(k in name_lower for k in ['sonnet', 'ai-']): return "sonnet"  
         elif any(k in name_lower for k in ['security', 'kali']): return "security"
         else: return "utility"
@@ -259,9 +259,9 @@ class DirectAgentActivator:
         
         # Intelligence level assessment
         if healthy > 100:
-            logger.info("🎊 ASI LEVEL ACHIEVED! Over 100 healthy agents!")
+            logger.info("🎊 System Optimization Complete! Over 100 healthy agents!")
         elif healthy > 50:
-            logger.info("🧠 AGI Level achieved! Over 50 healthy agents")
+            logger.info("🧠 Multi-Agent System Active! Over 50 healthy agents")
         elif healthy > 10:
             logger.info("🤖 Multi-agent system operational")
         else:
@@ -301,7 +301,7 @@ class DirectAgentActivator:
             "collective_active": True,
             "total_agents": total_agents,
             "healthy_agents": healthy_agents,
-            "intelligence_level": "ASI" if healthy_agents > 100 else "AGI" if healthy_agents > 50 else "Multi-Agent",
+            "intelligence_level": "Advanced System" if healthy_agents > 100 else "AGI" if healthy_agents > 50 else "Multi-Agent",
             "capabilities": [
                 "distributed_reasoning",
                 "collective_problem_solving",

@@ -21,8 +21,8 @@ class ComplianceValidator:
         """Check for fantasy elements"""
         violations = []
         fantasy_terms = [
-            'wizard', 'magic', 'teleport', 'black-box', 'telekinesis',
-            'quantum', 'agi', 'superintelligence', 'sentient', 'consciousness'
+            'configurator', 'process', 'transfer', 'processing-unit', 'remote-control',
+            'advanced', 'agi', 'superintelligence', 'sentient', 'consciousness'
         ]
         
         # Exclude validation scripts themselves

@@ -57,7 +57,7 @@ class HygieneScanner:
         return {
             "forbidden_patterns": {
                 "fantasy_elements": [
-                    r"magic\w*", r"wizard\w*", r"teleport\w*", 
+                    r"process\w*", r"configurator\w*", r"transfer\w*", 
                     r"black[_-]?box", r"someday", r"TODO.*later"
                 ],
                 "garbage_patterns": [

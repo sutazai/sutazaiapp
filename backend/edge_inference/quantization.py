@@ -166,7 +166,7 @@ class ModelAnalyzer:
         try:
             # Parse GGUF header to extract metadata
             with open(model_path, 'rb') as f:
-                # Skip magic number and version
+                # Skip process number and version
                 f.seek(8)
                 
                 # Read tensor count and KV count

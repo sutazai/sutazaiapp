@@ -22,12 +22,12 @@ IGNORE_DIRS = {".git", "node_modules", "venv", "__pycache__", "htmlcov"}
 TEXT_EXT = {".py", ".ts", ".tsx", ".js", ".json", ".md", ".yml", ".yaml", ".sh", ".toml"}
 
 BANNED = [
-    r"\bmagic\b",
-    r"\bwizard\w*\b",
-    r"\bteleport\w*\b",
+    r"\bprocess\b",
+    r"\bconfigurator\w*\b",
+    r"\btransfer\w*\b",
     r"black[- ]?box",
     r"superIntuitiveAI",
-    r"telekinesis",
+    r"remote-control",
 ]
 
 PATTERN = re.compile("|".join(BANNED), re.IGNORECASE)

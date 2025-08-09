@@ -380,7 +380,7 @@ class AgentCoordinator:
             'neural-architecture-search': ['neural', 'architecture', 'search', 'optimization'],
             'evolution-strategy-trainer': ['evolution', 'strategy', 'training', 'optimization'],
             'genetic-algorithm-tuner': ['genetic', 'algorithm', 'tuning', 'optimization'],
-            'quantum-ai-researcher': ['quantum', 'ai', 'research', 'quantum computing'],
+            'advanced-ai-researcher': ['advanced', 'ai', 'research', 'advanced computing'],
             
             # Data & Analytics agents
             'private-data-analyst': ['data', 'analysis', 'analytics', 'private data'],

@@ -78,7 +78,7 @@ class HealthStatus(Enum):
 
 class TestType(Enum):
     """Types of health tests"""
-    BASIC_PING = "basic_ping"
+    BAdvanced SystemC_PING = "basic_ping"
     HTTP_HEALTH = "http_health"
     DEEP_HEALTH = "deep_health"
     PERFORMANCE = "performance"
@@ -355,7 +355,7 @@ class AgentDiscovery:
         checks = [
             HealthCheck(
                 name="basic_connectivity",
-                test_type=TestType.BASIC_PING,
+                test_type=TestType.BAdvanced SystemC_PING,
                 endpoint="/",
                 timeout=5
             ),
@@ -467,7 +467,7 @@ class ComprehensiveHealthChecker:
             try:
                 start_time = time.time()
                 
-                if check.test_type == TestType.BASIC_PING:
+                if check.test_type == TestType.BAdvanced SystemC_PING:
                     result = await self._basic_ping_check(agent, check)
                 elif check.test_type == TestType.HTTP_HEALTH:
                     result = await self._http_health_check(agent, check)

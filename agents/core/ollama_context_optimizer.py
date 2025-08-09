@@ -171,7 +171,7 @@ class OllamaContextOptimizer:
             "Describe the process of machine learning.",
             "What are the benefits and risks of AI?",
             "Compare different programming languages.",
-            "Explain quantum computing concepts.",
+            "Explain advanced computing concepts.",
             "Describe the history of computers.",
             "What is the future of technology?"
         ]

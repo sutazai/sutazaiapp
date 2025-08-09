@@ -248,7 +248,7 @@ class TestVectorContextInjector:
         assert injector._is_knowledge_query("How to install Python?")
         assert injector._is_knowledge_query("Explain machine learning")
         assert injector._is_knowledge_query("Tell me about React")
-        assert injector._is_knowledge_query("Can you explain quantum computing?")
+        assert injector._is_knowledge_query("Can you explain advanced computing?")
         
         # Non-knowledge queries
         assert not injector._is_knowledge_query("Hello there")

@@ -77,7 +77,7 @@ class ClaudeRulesEnforcer:
             return True
         
         # Check for blocking violations
-        blocking_keywords = ['fantasy', 'specific implementation name (e.g., emailSender, dataProcessor)', 'wizard', 'mythical']
+        blocking_keywords = ['fantasy', 'specific implementation name (e.g., emailSender, dataProcessor)', 'configurator', 'mythical']
         for keyword in blocking_keywords:
             if keyword in action.lower():
                 print(f"BLOCKED: Action contains forbidden keyword: {keyword}")

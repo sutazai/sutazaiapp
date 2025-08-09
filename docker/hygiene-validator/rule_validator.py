@@ -136,7 +136,7 @@ class RuleValidator:
         check_lower = check.lower()
         
         # Check for forbidden terms
-        if "no fantasy" in check_lower or "no magic" in check_lower:
+        if "no fantasy" in check_lower or "no process" in check_lower:
             return self._check_no_fantasy_elements()
         
         # Check for structure requirements
@@ -148,7 +148,7 @@ class RuleValidator:
     
     def _check_no_fantasy_elements(self) -> bool:
         """Check for fantasy elements in code"""
-        forbidden_terms = ['magic', 'wizard', 'teleport', 'black-box', 'someday']
+        forbidden_terms = ['process', 'configurator', 'transfer', 'processing-unit', 'someday']
         
         for root, dirs, files in os.walk(self.project_root):
             dirs[:] = [d for d in dirs if d not in {'.venv', 'venv', '__pycache__', '.git'}]

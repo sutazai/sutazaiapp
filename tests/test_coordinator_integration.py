@@ -240,7 +240,7 @@ class CoordinatorIntegrationTest:
                 source_agent="test_client",
                 correlation_id=trace_id,
                 task_id=task_id,
-                task_type="quantum_computing",  # No agent has this capability
+                task_type="advanced_computing",  # No agent has this capability
                 payload={"impossible": True},
                 priority=Priority.HIGH,
                 timeout_seconds=60

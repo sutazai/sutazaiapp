@@ -408,7 +408,7 @@ class RuleSystemTester:
         try:
             # Map scenarios to actual test implementations
             scenario_map = {
-                'validate_no_magic_terms': self._test_no_magic_terms,
+                'validate_no_process_terms': self._test_no_process_terms,
                 'validate_concrete_naming': self._test_concrete_naming,
                 'validate_real_libraries': self._test_real_libraries,
                 'regression_testing': self._test_regression,
@@ -756,11 +756,11 @@ class RuleSystemTester:
         return recommendations
     
     # Placeholder test scenario implementations
-    def _test_no_magic_terms(self, rule: RuleConfig, enabled_rules: List[int]) -> bool:
-        """Test for absence of fantasy/magic terms in codebase"""
+    def _test_no_process_terms(self, rule: RuleConfig, enabled_rules: List[int]) -> bool:
+        """Test for absence of fantasy/process terms in codebase"""
         try:
-            # Simulate checking for magic terms
-            forbidden_terms = ['magic', 'wizard', 'teleport', 'enchant']
+            # Simulate checking for process terms
+            forbidden_terms = ['process', 'configurator', 'transfer', 'enchant']
             # In real implementation, would scan codebase files
             return True
         except:

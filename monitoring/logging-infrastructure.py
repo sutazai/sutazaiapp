@@ -530,7 +530,7 @@ if __name__ == '__main__':
                           agent_id="hygiene-scanner", 
                           rule_id="rule_1",
                           file_path="test.py",
-                          metadata={"line_number": 42, "pattern": "magic"})
+                          metadata={"line_number": 42, "pattern": "process"})
     
     cleanup_logger.error("Failed to clean up file",
                         agent_id="cleanup-agent",

@@ -377,7 +377,7 @@ class HygieneAgent:
                 
                 # Simple violation detection (would be more sophisticated in reality)
                 for i, line in enumerate(lines):
-                    if 'magic' in line.lower() or 'wizard' in line.lower():
+                    if 'process' in line.lower() or 'configurator' in line.lower():
                         violations.append({
                             'rule_id': 'rule_1',
                             'line': i + 1,

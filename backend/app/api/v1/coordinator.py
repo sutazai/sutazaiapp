@@ -125,17 +125,17 @@ async def start_all_agents(background_tasks: BackgroundTasks):
 
 @router.post("/agents/activate-agi")
 async def activate_agi_collective(background_tasks: BackgroundTasks):
-    """Activate the AGI/ASI collective intelligence system"""
+    """Activate the AGI/Advanced System collective intelligence system"""
     try:
-        logger.info("Initiating AGI/ASI collective activation...")
+        logger.info("Initiating AGI/Advanced System collective activation...")
         
         # Start the collective activation in background
         background_tasks.add_task(agent_registry.activate_agi_collective)
         
         return {
             "status": "agi_activation_initiated",
-            "message": "AGI/ASI collective intelligence system activation started",
-            "collective_type": "ASI",  # Assuming we have 131 agents > 100
+            "message": "AGI/Advanced System collective intelligence system activation started",
+            "collective_type": "Advanced System",  # Assuming we have 131 agents > 100
             "timestamp": datetime.utcnow().isoformat()
         }
     except Exception as e:
@@ -163,7 +163,7 @@ async def stop_all_agents():
 
 @router.get("/collective/status")
 async def get_collective_status():
-    """Get AGI/ASI collective intelligence status"""
+    """Get AGI/Advanced System collective intelligence status"""
     try:
         agent_status = await agent_registry.get_agent_status()
         orchestrator_status = agent_orchestrator.get_status()
@@ -171,7 +171,7 @@ async def get_collective_status():
         
         return {
             "collective_active": active_count > 10,
-            "intelligence_level": "ASI" if active_count > 100 else "AGI" if active_count > 50 else "Multi-Agent",
+            "intelligence_level": "Advanced System" if active_count > 100 else "AGI" if active_count > 50 else "Multi-Agent",
             "total_agents": agent_status["total_agents"],
             "active_agents": active_count,
             "deployed_agents": orchestrator_status.get("deployed_agents", 0),
@@ -213,7 +213,7 @@ async def mass_agent_activation(background_tasks: BackgroundTasks):
             "message": "🚀 Mass activation of all 131 agents initiated",
             "expected_agents": 131,
             "integration": "ollama_gpt_oss",
-            "collective_intelligence": "ASI_level",
+            "collective_intelligence": "Advanced System_level",
             "timestamp": datetime.utcnow().isoformat()
         }
     except Exception as e:
@@ -222,7 +222,7 @@ async def mass_agent_activation(background_tasks: BackgroundTasks):
 
 @router.post("/deploy/activate-collective")
 async def activate_full_collective(background_tasks: BackgroundTasks):
-    """Activate the full AGI/ASI collective intelligence system"""
+    """Activate the full AGI/Advanced System collective intelligence system"""
     try:
         logger.info("🧠 ACTIVATING FULL COLLECTIVE INTELLIGENCE SYSTEM")
         
@@ -236,8 +236,8 @@ async def activate_full_collective(background_tasks: BackgroundTasks):
         
         return {
             "status": "full_collective_activation_initiated",
-            "message": "🧠 Full AGI/ASI collective intelligence system activation started",
-            "intelligence_level": "ASI",
+            "message": "🧠 Full AGI/Advanced System collective intelligence system activation started",
+            "intelligence_level": "Advanced System",
             "expected_agents": 131,
             "collective_capabilities": [
                 "distributed_reasoning",
@@ -263,7 +263,7 @@ async def get_deployment_status():
             "deployment_stats": orchestrator_status.get("deployment_stats", {}),
             "ollama_ready": orchestrator_status.get("ollama_ready", False),
             "intelligence_assessment": {
-                "level": "ASI" if orchestrator_status.get("deployed_agents", 0) > 100 else "AGI" if orchestrator_status.get("deployed_agents", 0) > 50 else "Multi-Agent",
+                "level": "Advanced System" if orchestrator_status.get("deployed_agents", 0) > 100 else "AGI" if orchestrator_status.get("deployed_agents", 0) > 50 else "Multi-Agent",
                 "collective_active": orchestrator_status.get("deployed_agents", 0) > 10
             },
             "timestamp": datetime.utcnow().isoformat()

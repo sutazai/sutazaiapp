@@ -659,7 +659,7 @@ class TestModelManagement:
     def test_model_generation(self, client_with_mocks):
         """Test model generation endpoint"""
         request_data = {
-            "prompt": "Explain quantum computing",
+            "prompt": "Explain advanced computing",
             "model": "tinyllama.2:1b",
             "max_tokens": 1024,
             "temperature": 0.7

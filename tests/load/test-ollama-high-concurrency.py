@@ -96,7 +96,7 @@ class OllamaLoadTester:
         
         # Test prompts for variety
         self.test_prompts = [
-            "Explain quantum computing in simple terms.",
+            "Explain advanced computing in simple terms.",
             "Write a Python function to calculate Fibonacci numbers.",
             "What are the benefits of renewable energy?",
             "Describe the process of photosynthesis.",

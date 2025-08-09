@@ -99,10 +99,10 @@ class MassAgentActivator:
                     logger.info(f"🧠 Intelligence level: {intelligence.get('level', 'Unknown')}")
                     
                     if stats.get("healthy_agents", 0) > 100:
-                        logger.info("🎉 ASI LEVEL ACHIEVED! Over 100 healthy agents!")
+                        logger.info("🎉 System Optimization Complete! Over 100 healthy agents!")
                         return status
                     elif stats.get("healthy_agents", 0) > 50:
-                        logger.info("🧠 AGI level achieved! Over 50 healthy agents")
+                        logger.info("🧠 multi-agent system active! Over 50 healthy agents")
                     
                     # Check if deployment seems complete
                     if (stats.get("successful_starts", 0) + stats.get("failed_starts", 0)) >= 100:
@@ -230,9 +230,9 @@ class MassAgentActivator:
         # Success determination
         healthy_agents = deployment_stats.get('healthy_agents', 0)
         if healthy_agents > 100:
-            logger.info("🎊 SUCCESS: ASI LEVEL ACHIEVED! Over 100 healthy agents!")
+            logger.info("🎊 SUCCESS: System Optimization Complete! Over 100 healthy agents!")
         elif healthy_agents > 50:
-            logger.info("🧠 SUCCESS: AGI level achieved! Over 50 healthy agents")
+            logger.info("🧠 SUCCESS: multi-agent system active! Over 50 healthy agents")
         elif healthy_agents > 10:
             logger.info("🤖 SUCCESS: Multi-agent system operational")
         else:

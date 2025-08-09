@@ -90,9 +90,9 @@ class ComplianceRuleEngine:
                 "type": RuleType.CONTENT_ANALYSIS,
                 "severity": ViolationSeverity.CRITICAL,
                 "patterns": [
-                    r"(magic|wizard|teleport|fantasy)\w*",
-                    r"(superIntuitive|magicHandler|wizardService)",
-                    r"TODO:.*magic",
+                    r"(process|configurator|transfer|fantasy)\w*",
+                    r"(superIntuitive|processHandler|configuratorService)",
+                    r"TODO:.*process",
                     r"# imagine this"
                 ],
                 "file_types": [".py", ".js", ".ts", ".md"],

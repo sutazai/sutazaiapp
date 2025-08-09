@@ -275,14 +275,14 @@ class AgentRegistry:
             "failed_to_start": failed_count,
             "healthy_agents": healthy_count,
             "activation_duration_seconds": duration,
-            "collective_intelligence_level": "ASI" if healthy_count > 100 else "AGI" if healthy_count > 50 else "Multi-Agent",
+            "collective_intelligence_level": "Advanced System" if healthy_count > 100 else "AGI" if healthy_count > 50 else "Multi-Agent",
             "collective_active": healthy_count > 10,
             "active_agents": list(self.active_agents.keys()),
             "timestamp": datetime.utcnow().isoformat()
         }
         
         if healthy_count > 100:
-            logger.info(f"🧠 ASI-LEVEL COLLECTIVE INTELLIGENCE ACHIEVED! {healthy_count}/{total_agents} agents active")
+            logger.info(f"🧠 Advanced System-LEVEL COLLECTIVE INTELLIGENCE ACHIEVED! {healthy_count}/{total_agents} agents active")
         elif healthy_count > 50:
             logger.info(f"🤖 AGI-LEVEL COLLECTIVE INTELLIGENCE ACHIEVED! {healthy_count}/{total_agents} agents active")
         else:
@@ -357,8 +357,8 @@ class AgentRegistry:
         }
     
     async def activate_agi_collective(self) -> Dict[str, Any]:
-        """Activate the AGI/ASI collective intelligence system"""
-        logger.info("Activating AGI/ASI collective intelligence system...")
+        """Activate the AGI/Advanced System collective intelligence system"""
+        logger.info("Activating AGI/Advanced System collective intelligence system...")
         
         # Start all agents first
         activation_result = await self.start_all_agents()
@@ -372,7 +372,7 @@ class AgentRegistry:
             "inter_agent_communication": True,
             "total_agents": activation_result["total_discovered"],
             "active_agents": activation_result["healthy_agents"],
-            "collective_intelligence_level": "ASI" if activation_result["healthy_agents"] > 100 else "AGI",
+            "collective_intelligence_level": "Advanced System" if activation_result["healthy_agents"] > 100 else "AGI",
             "activation_timestamp": datetime.utcnow().isoformat(),
             "capabilities": [
                 "distributed_reasoning",
@@ -383,7 +383,7 @@ class AgentRegistry:
             ]
         }
         
-        logger.info(f"AGI/ASI collective activated with {activation_result['healthy_agents']} agents")
+        logger.info(f"AGI/Advanced System collective activated with {activation_result['healthy_agents']} agents")
         return collective_status
     
     async def enable_inter_agent_communication(self):

@@ -192,7 +192,7 @@ class ComplianceMonitoringIntegrationTest:
             
             # Create various test violations
             violations = {
-                "fantasy_test.py": "# Test file\nresult = magic_function(wizard_data)",
+                "fantasy_test.py": "# Test file\nresult = process_function(config_data)",
                 "garbage_test.tmp": "temporary test file",
                 "misplaced_test.sh": "#!/bin/bash\necho 'misplaced script'"
             }
