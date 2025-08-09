@@ -244,14 +244,27 @@ class ResourceArbitrationAgent:
             # Initialize message processor
             self.message_processor = ResourceArbitrationMessageProcessor(self)
             
-            # Register custom handlers
+            # Connect RabbitMQ client first
+            await self.message_processor.rabbitmq_client.connect()
+            
+            # Register handlers before starting consumption
             self.message_processor.rabbitmq_client.register_handler(
                 MessageType.RESOURCE_REQUEST,
                 self.message_processor.handle_resource_request
             )
             
-            await self.message_processor.start()
-            logger.info("Message processor started")
+            # Register additional handler for resource release
+            self.message_processor.rabbitmq_client.register_handler(
+                MessageType.RESOURCE_RESPONSE,
+                self.message_processor.handle_resource_release
+            )
+            
+            # Start consuming messages in background (NON-BLOCKING)
+            self.message_processor.consumer_task = await self.message_processor.rabbitmq_client.start_consuming(
+                self.message_processor.handle_message
+            )
+            
+            logger.info("Message processor started in background")
             
             # Load existing allocations from Redis
             await self.load_allocations()
@@ -688,10 +701,18 @@ arbitrator = ResourceArbitrationAgent()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    await arbitrator.initialize()
-    yield
-    # Shutdown
-    await arbitrator.shutdown()
+    try:
+        logger.info("Starting Resource Arbitration Agent lifespan")
+        await arbitrator.initialize()
+        logger.info("Resource Arbitration Agent startup complete")
+        yield
+    except Exception as e:
+        logger.error(f"Startup failed: {e}")
+        raise
+    finally:
+        # Shutdown
+        logger.info("Shutting down Resource Arbitration Agent")
+        await arbitrator.shutdown()
 
 # Create FastAPI app
 app = FastAPI(

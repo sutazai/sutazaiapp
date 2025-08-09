@@ -2,26 +2,25 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies for resource monitoring
 RUN apt-get update && apt-get install -y \
     curl \
     procps \
+    lsof \
+    htop \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements
-COPY task_assignment_coordinator/requirements.txt .
+COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
-COPY task_assignment_coordinator /app
-
-# Copy core module
-COPY core /app/core
+COPY . .
 
 # Create directories and set up Python path
-RUN mkdir -p /app/logs /app/data
+RUN mkdir -p /app/agents/core /app/logs /app/data
 ENV PYTHONPATH=/app:/app/agents:/opt/sutazaiapp/agents
 
 # Create non-root user with proper permissions
@@ -32,10 +31,10 @@ USER appuser
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8551/health || exit 1
+    CMD curl -f http://localhost:8588/health || exit 1
 
 # Expose port
-EXPOSE 8551
+EXPOSE 8588
 
 # Start application
 CMD ["python", "app.py"]

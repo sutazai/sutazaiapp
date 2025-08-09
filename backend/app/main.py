@@ -162,6 +162,17 @@ except Exception as e:
     logger.warning("Text Analysis Agent not available")
     TEXT_ANALYSIS_ENABLED = False
 
+# Include Vector Database router (VECTOR DB INTEGRATION)
+try:
+    from app.api.vector_db import router as vector_db_router
+    app.include_router(vector_db_router, tags=["Vector Database"])
+    logger.info("Vector Database router loaded successfully - Qdrant/ChromaDB integration enabled")
+    VECTOR_DB_ENABLED = True
+except Exception as e:
+    logger.error(f"Vector Database router setup failed: {e}")
+    logger.warning("Vector Database integration not available")
+    VECTOR_DB_ENABLED = False
+
 # Agent service configurations with health monitoring
 AGENT_SERVICES = {
     "jarvis-automation": {

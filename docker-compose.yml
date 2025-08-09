@@ -312,10 +312,11 @@ services:
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
       KONG_LOG_LEVEL: "notice"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8001/status"]
+      test: ["CMD-SHELL", "ps aux | grep '[k]ong' > /dev/null || exit 1"]
       interval: 30s
       timeout: 5s
-      retries: 5
+      retries: 3
+      start_period: 10s
     networks:
     - sutazai-network
     ports:
@@ -430,10 +431,10 @@ services:
       QDRANT_HOST: qdrant
       QDRANT_PORT: 6333
       QDRANT_URL: http://qdrant:6333
-      REDIS_HOST: redis
+      REDIS_HOST: sutazai-redis
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_PORT: 6379
-      REDIS_URL: redis://redis:6379/0
+      REDIS_URL: redis://sutazai-redis:6379/0
       SECRET_KEY: ${SECRET_KEY}
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
@@ -800,7 +801,8 @@ services:
       LOG_LEVEL: INFO
       OLLAMA_BASE_URL: http://ollama:11434
       PORT: 8090
-      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+      REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
       MAX_RETRIES: 3
@@ -818,6 +820,8 @@ services:
     ports:
     - 8090:8090
     restart: unless-stopped
+    volumes:
+    - ./agents/core:/app/agents/core:ro
 
   # --------------------------------------------------------
   # Hardware Resource Optimizer
@@ -853,14 +857,15 @@ services:
       OLLAMA_MODEL: tinyllama:latest
       OLLAMA_ORIGINS: '*'
       PORT: 8080
-      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+      REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
     healthcheck:
       interval: 60s
       retries: 5
       start_period: 120s
-      test: *backend_health_test
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       timeout: 30s
     networks:
     - sutazai-network
@@ -870,6 +875,7 @@ services:
     privileged: true
     restart: unless-stopped
     volumes:
+    - ./agents/core:/app/agents/core:ro
     - ./data:/app/data
     - ./configs:/app/configs
     - ./logs:/app/logs
@@ -889,6 +895,8 @@ services:
     depends_on:
       backend:
         condition: service_started
+      rabbitmq:
+        condition: service_healthy
       redis:
         condition: service_healthy
     deploy:
@@ -904,7 +912,8 @@ services:
       API_ENDPOINT: http://backend:8000
       LOG_LEVEL: INFO
       PORT: 8080
-      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+      REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
     healthcheck:
@@ -921,6 +930,7 @@ services:
     privileged: true
     restart: unless-stopped
     volumes:
+    - ./agents/core:/app/agents/core:ro
     - ./data:/app/data
     - ./configs:/app/configs
     - ./logs:/app/logs
@@ -939,6 +949,8 @@ services:
     depends_on:
       backend:
         condition: service_started
+      rabbitmq:
+        condition: service_healthy
       redis:
         condition: service_healthy
     deploy:
@@ -956,7 +968,8 @@ services:
       LOG_LEVEL: INFO
       OLLAMA_BASE_URL: http://ollama:11434
       PORT: 8080
-      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+      REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
     healthcheck:
@@ -971,6 +984,7 @@ services:
     - 11102:8080
     restart: unless-stopped
     volumes:
+    - ./agents/core:/app/agents/core:ro
     - ./data:/app/data
     - ./configs:/app/configs
     - ./logs:/app/logs
@@ -981,18 +995,30 @@ services:
   # AI Agent Orchestrator
   # Port: 8589
   ai-agent-orchestrator:
-    image: sutazai-ai-agent-orchestrator:latest
+    build:
+      context: ./agents/ai_agent_orchestrator
+      dockerfile: Dockerfile
     container_name: sutazai-ai-agent-orchestrator
     depends_on:
       rabbitmq:
         condition: service_healthy
       redis:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
     environment:
-      REDIS_URL: redis://redis:6379/0
-      RABBITMQ_URL: amqp://sutazai:${RABBITMQ_DEFAULT_PASS:-sutazai_rabbit_secure}@rabbitmq:5672/
-      PORT: 8589
+      AGENT_TYPE: ai-agent-orchestrator
+      API_ENDPOINT: http://backend:8000
       LOG_LEVEL: INFO
+      PORT: 8589
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+      REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
     healthcheck:
@@ -1007,7 +1033,103 @@ services:
     - 8589:8589
     restart: unless-stopped
     volumes:
+    - ./agents/core:/app/agents/core:ro
     - ./logs:/app/logs
+
+  # --------------------------------------------------------
+  # Task Assignment Coordinator
+  # Port: 8551
+  task-assignment-coordinator:
+    build:
+      context: ./agents
+      dockerfile: task_assignment_coordinator/Dockerfile
+    container_name: sutazai-task-assignment-coordinator
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      AGENT_TYPE: task-assignment-coordinator
+      API_ENDPOINT: http://backend:8000
+      LOG_LEVEL: INFO
+      PORT: 8551
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+      REDIS_URL: redis://sutazai-redis:6379/0
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8551/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+    - sutazai-network
+    ports:
+    - 8551:8551
+    restart: unless-stopped
+    volumes:
+    - ./agents/core:/app/agents/core:ro
+    - ./logs:/app/logs
+
+  # --------------------------------------------------------
+  # Resource Arbitration Agent
+  # Port: 8588
+  resource-arbitration-agent:
+    build:
+      context: ./agents/resource_arbitration_agent
+      dockerfile: Dockerfile
+    container_name: sutazai-resource-arbitration-agent
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      AGENT_TYPE: resource-arbitration-agent
+      API_ENDPOINT: http://backend:8000
+      LOG_LEVEL: INFO
+      PORT: 8588
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+      REDIS_URL: redis://sutazai-redis:6379/0
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8588/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+    - sutazai-network
+    pid: host
+    ports:
+    - 8588:8588
+    privileged: true
+    restart: unless-stopped
+    volumes:
+    - ./agents/core:/app/agents/core:ro
+    - ./data:/app/data
+    - ./logs:/app/logs
+    - /proc:/host/proc:ro
+    - /sys:/host/sys:ro
 
 # ========================================================================
 # VOLUMES

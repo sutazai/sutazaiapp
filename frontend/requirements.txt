@@ -52,6 +52,12 @@ tzlocal==5.2                     # Timezone handling
 validators==0.34.0               # Input validation
 watchdog==6.0.0                  # File system monitoring
 
+# WebSocket Support
+websocket-client==1.8.0          # WebSocket client for real-time updates
+
+# Authentication
+PyJWT==2.10.1                    # JWT token handling
+
 # Optional Dependencies (commonly used with Streamlit)
 python-dateutil==2.9.0.post0     # Date handling
 pytz==2024.2                     # Timezone data

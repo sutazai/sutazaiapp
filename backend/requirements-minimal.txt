@@ -1,18 +1,4 @@
-# Core dependencies only - for fast builds
-fastapi==0.115.6
-uvicorn[standard]==0.32.1
-pydantic==2.10.4
-pydantic-settings==2.8.1
-httpx==0.27.2
-aiohttp==3.11.10
-redis==5.2.1
-sqlalchemy==2.0.36
-psycopg2-binary==2.9.10
-asyncpg==0.29.0
-neo4j==5.27.0
-prometheus-client==0.21.1
-psutil==6.1.0
-python-dotenv==1.0.1
-pyyaml==6.0.2
-structlog==24.4.0
-aiofiles==24.1.0
+## Deprecated alias file
+## Canonical minimal dependencies live in requirements_minimal.txt
+## This file is kept for backward compatibility only.
+-r requirements_minimal.txt

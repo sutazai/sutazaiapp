@@ -218,6 +218,23 @@ class RabbitMQClient:
             logger.error(f"Error in message consumer: {e}")
             raise
     
+    async def start_consuming(self, callback: Callable) -> asyncio.Task:
+        """Start consuming messages in a background task (non-blocking)"""
+        logger.info(f"Starting message consumer for {self.agent_id}")
+        consumer_task = asyncio.create_task(self.consume_messages(callback))
+        # Add error handling to prevent task from dying silently
+        consumer_task.add_done_callback(self._handle_consumer_error)
+        return consumer_task
+    
+    def _handle_consumer_error(self, task: asyncio.Task):
+        """Handle consumer task errors"""
+        try:
+            task.result()
+        except asyncio.CancelledError:
+            logger.info(f"Consumer task for {self.agent_id} was cancelled")
+        except Exception as e:
+            logger.error(f"Consumer task for {self.agent_id} failed: {e}")
+    
     def register_handler(self, message_type: MessageType, callback: Callable):
         """Register a callback for a specific message type"""
         self.callbacks[message_type] = callback
@@ -322,9 +339,10 @@ class MessageProcessor:
     def __init__(self, agent_id: str):
         self.agent_id = agent_id
         self.rabbitmq_client = RabbitMQClient(agent_id)
+        self.consumer_task = None
         
     async def start(self):
-        """Start the message processor"""
+        """Start the message processor (non-blocking)"""
         await self.rabbitmq_client.connect()
         
         # Register handlers
@@ -337,11 +355,20 @@ class MessageProcessor:
             self.handle_resource_response
         )
         
-        # Start consuming
-        await self.rabbitmq_client.consume_messages(self.handle_message)
+        # Start consuming in background task (non-blocking)
+        self.consumer_task = await self.rabbitmq_client.start_consuming(self.handle_message)
+        logger.info(f"Message processor started for {self.agent_id}")
     
     async def stop(self):
         """Stop the message processor"""
+        # Cancel the consumer task if it exists
+        if self.consumer_task and not self.consumer_task.done():
+            logger.info(f"Cancelling consumer task for {self.agent_id}")
+            self.consumer_task.cancel()
+            try:
+                await asyncio.wait_for(self.consumer_task, timeout=5.0)
+            except (asyncio.CancelledError, asyncio.TimeoutError):
+                logger.info(f"Consumer task cancelled for {self.agent_id}")
         await self.rabbitmq_client.disconnect()
     
     async def handle_message(self, message: Dict[str, Any]):

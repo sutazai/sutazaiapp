@@ -18,7 +18,8 @@ RUN pip install --no-cache-dir \
     uvicorn \
     numpy \
     requests \
-    psutil
+    psutil \
+    python-multipart
 
 # Create application structure
 COPY . .

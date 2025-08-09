@@ -96,7 +96,10 @@
       "Bash(apt install:*)",
       "Bash(systemctl start:*)",
       "Bash(systemctl:*)",
-      "Bash(pip3 freeze:*)"
+      "Bash(pip3 freeze:*)",
+      "Bash(cat:*)",
+      "Bash(npm --version)",
+      "Bash(npx:*)"
     ],
     "deny": []
   }

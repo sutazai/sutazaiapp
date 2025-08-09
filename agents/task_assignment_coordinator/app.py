@@ -175,7 +175,14 @@ class TaskAssignmentCoordinator:
             # Initialize message processor
             self.message_processor = TaskAssignmentMessageProcessor(self)
             
-            # Register additional handlers
+            # Connect RabbitMQ client first
+            await self.message_processor.rabbitmq_client.connect()
+            
+            # Register ALL handlers before starting consumption
+            self.message_processor.rabbitmq_client.register_handler(
+                MessageType.TASK_REQUEST,
+                self.message_processor.handle_task_request
+            )
             self.message_processor.rabbitmq_client.register_handler(
                 MessageType.TASK_STATUS,
                 self.message_processor.handle_status_update
@@ -185,8 +192,12 @@ class TaskAssignmentCoordinator:
                 self.message_processor.handle_agent_registration
             )
             
-            await self.message_processor.start()
-            logger.info("Message processor started")
+            # Start consuming messages in background (NON-BLOCKING)
+            self.message_processor.consumer_task = await self.message_processor.rabbitmq_client.start_consuming(
+                self.message_processor.handle_message
+            )
+            
+            logger.info("Message processor started in background")
             
             # Load queued tasks from Redis
             await self.load_queued_tasks()
@@ -565,12 +576,20 @@ metrics: Optional[AgentMetrics] = None
 async def lifespan(app: FastAPI):
     global metrics
     # Startup
-    metrics = AgentMetrics("task_assignment_coordinator")
-    setup_metrics_endpoint(app, metrics)
-    await coordinator.initialize()
-    yield
-    # Shutdown
-    await coordinator.shutdown()
+    try:
+        logger.info("Starting Task Assignment Coordinator lifespan")
+        metrics = AgentMetrics("task_assignment_coordinator")
+        setup_metrics_endpoint(app, metrics)
+        await coordinator.initialize()
+        logger.info("Task Assignment Coordinator startup complete")
+        yield
+    except Exception as e:
+        logger.error(f"Startup failed: {e}")
+        raise
+    finally:
+        # Shutdown
+        logger.info("Shutting down Task Assignment Coordinator")
+        await coordinator.shutdown()
 
 # Create FastAPI app
 app = FastAPI(

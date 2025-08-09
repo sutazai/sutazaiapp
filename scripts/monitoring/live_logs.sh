@@ -1503,8 +1503,8 @@ show_system_overview() {
         else
             ports=$(printf "%-11s" "$ports")
         fi
-        # Format health to fit column
-        health=$(printf "%-8s" "$health" | cut -c1-8)
+        # Format health to fit column (allow full 'unhealthy')
+        health=$(printf "%-10s" "$health" | cut -c1-10)
         # Use echo instead of printf to avoid formatting issues
         echo "│ ${short_name} │   ${status}    │ ${health} │ ${ports} │"
     done
@@ -1514,19 +1514,25 @@ show_system_overview() {
     
     # Quick API tests
     echo -e "${BLUE}API Connectivity:${NC}"
-    
-    # Test backend health
-    if curl -f http://localhost:8000/health >/dev/null 2>&1; then
-        echo -e "Backend API (8000): ${GREEN}✓ Responding${NC}"
+
+    # Resolve backend and frontend ports dynamically (fallback to canonical ports)
+    backend_port=$(docker port sutazai-backend 2>/dev/null | awk '/0.0.0.0:/ {print $3}' | head -1 | awk -F: '{print $2}')
+    frontend_port=$(docker port sutazai-frontend 2>/dev/null | awk '/0.0.0.0:/ {print $3}' | head -1 | awk -F: '{print $2}')
+    backend_port=${backend_port:-10010}
+    frontend_port=${frontend_port:-10011}
+
+    # Test backend health (FastAPI /health)
+    if curl -fsS "http://localhost:${backend_port}/health" >/dev/null 2>&1; then
+        echo -e "Backend API (${backend_port}): ${GREEN}✓ Responding${NC}"
     else
-        echo -e "Backend API (8000): ${RED}✗ Not responding${NC}"
+        echo -e "Backend API (${backend_port}): ${RED}✗ Not responding${NC}"
     fi
-    
-    # Test frontend
-    if curl -f http://localhost:8501/healthz >/dev/null 2>&1; then
-        echo -e "Frontend (8501): ${GREEN}✓ Responding${NC}"
+
+    # Test frontend (Streamlit root)
+    if curl -fsS "http://localhost:${frontend_port}/" >/dev/null 2>&1; then
+        echo -e "Frontend (${frontend_port}): ${GREEN}✓ Responding${NC}"
     else
-        echo -e "Frontend (8501): ${RED}✗ Not responding${NC}"
+        echo -e "Frontend (${frontend_port}): ${RED}✗ Not responding${NC}"
     fi
     
     # Test Ollama
@@ -1664,11 +1670,13 @@ test_api_endpoints() {
     
     # Core backend endpoints (always test if backend is running)
     if docker ps --filter "name=sutazai-backend" --format "{{.Names}}" | grep -q .; then
+        BACKEND_PORT=$(docker port sutazai-backend 2>/dev/null | awk '/0.0.0.0:/ {print $3}' | head -1 | awk -F: '{print $2}')
+        BACKEND_PORT=${BACKEND_PORT:-10010}
         endpoints+=(
-            "GET|http://localhost:8000/health|Backend Health"
-            "GET|http://localhost:8000/agents|Agent List"
-            "GET|http://localhost:8000/models|Model List"
-            "POST|http://localhost:8000/simple-chat|Simple Chat"
+            "GET|http://localhost:${BACKEND_PORT}/health|Backend Health"
+            "GET|http://localhost:${BACKEND_PORT}/agents|Agent List"
+            "GET|http://localhost:${BACKEND_PORT}/models|Model List"
+            "POST|http://localhost:${BACKEND_PORT}/simple-chat|Simple Chat"
         )
     fi
     
@@ -1734,7 +1742,7 @@ test_api_endpoints() {
     
     echo ""
     echo "Testing frontend connectivity..."
-    if curl -f http://localhost:8501/healthz >/dev/null 2>&1; then
+    if curl -f http://localhost:${frontend_port:-10011}/healthz >/dev/null 2>&1; then
         echo -e "Frontend Health: ${GREEN}✓ OK${NC}"
     else
         echo -e "Frontend Health: ${RED}✗ FAILED${NC}"
@@ -2384,9 +2392,9 @@ redeploy_all_containers() {
     # Show access URLs
     echo ""
     echo -e "${CYAN}Access URLs:${NC}"
-    echo "• Frontend: http://localhost:8501"
-    echo "• Backend API: http://localhost:8000"
-    echo "• API Docs: http://localhost:8000/docs"
+    echo "• Frontend: http://localhost:${frontend_port:-10011}"
+    echo "• Backend API: http://localhost:${backend_port:-10010}"
+    echo "• API Docs: http://localhost:${backend_port:-10010}/docs"
     
     # Additional URLs if monitoring is deployed
     if docker ps --filter "name=sutazai-grafana" --format "{{.Names}}" | grep -q .; then

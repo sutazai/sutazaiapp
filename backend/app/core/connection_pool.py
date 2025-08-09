@@ -6,6 +6,7 @@ Handles HTTP, Database, and Redis connections with proper pooling
 import os
 import asyncio
 import logging
+import socket
 from typing import Optional, Dict, Any
 from contextlib import asynccontextmanager
 import httpx
@@ -53,9 +54,9 @@ class ConnectionPoolManager:
                 max_connections=50,
                 socket_keepalive=True,
                 socket_keepalive_options={
-                    1: 1,  # TCP_KEEPIDLE
-                    2: 3,  # TCP_KEEPINTVL
-                    3: 5,  # TCP_KEEPCNT
+                    socket.TCP_KEEPIDLE: 1,  # TCP_KEEPIDLE
+                    socket.TCP_KEEPINTVL: 3,  # TCP_KEEPINTVL
+                    socket.TCP_KEEPCNT: 5,  # TCP_KEEPCNT
                 },
                 decode_responses=False
             )
@@ -271,16 +272,16 @@ async def get_pool_manager() -> ConnectionPoolManager:
                 _pool_manager = ConnectionPoolManager()
                 # Initialize with default config
                 await _pool_manager.initialize({
-                    'redis_host': os.getenv('REDIS_HOST', 'sutazai-redis'),
+                    'redis_host': os.getenv('REDIS_HOST', 'redis'),
                     'redis_port': int(os.getenv('REDIS_PORT', '6379')),
-                    'db_host': os.getenv('POSTGRES_HOST', 'sutazai-postgres'),
+                    'db_host': os.getenv('POSTGRES_HOST', 'postgres'),
                     'db_port': int(os.getenv('POSTGRES_PORT', '5432')),
                     'db_user': os.getenv('POSTGRES_USER', 'sutazai'),
                     # Security: do not use hardcoded fallback for passwords.
                     # Require POSTGRES_PASSWORD to come from the environment.
                     'db_password': os.getenv('POSTGRES_PASSWORD'),
                     'db_name': os.getenv('POSTGRES_DB', 'sutazai'),
-                    'ollama_url': os.getenv('OLLAMA_URL', 'http://sutazai-ollama:11434')
+                    'ollama_url': os.getenv('OLLAMA_URL', 'http://ollama:11434')
                 })
                 
     return _pool_manager

@@ -24,11 +24,8 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-# Import the consolidated BaseAgent
-try:
-    from agents.core.base_agent import BaseAgent, AgentCapability, TaskResult
-except ImportError:
-    from core.base_agent import BaseAgent, AgentCapability, TaskResult
+# Import the consolidated BaseAgent from the core module
+from agents.core.base_agent import BaseAgent, AgentCapability, TaskResult
 
 # Configure logging
 logging.basicConfig(
