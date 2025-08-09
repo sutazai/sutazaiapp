@@ -8,3 +8,4 @@ RAG,Integrate ChromaDB for ingestion/query,P1,M,Backend Architect,Models,Given d
 Docs,Canonicalize standards and roadmap,P2,S,System Architect,,Given canonical set when published then duplicates marked deprecated,/IMPORTANT/02_issues/ISSUE-0010.md,Low
 Ops,Secrets to .env and rotation,P0,S,Backend Architect,,Given deployment when env loaded then no hardcoded secrets remain,/IMPORTANT/02_issues/ISSUE-0008.md,High
 Docs,Render Mermaid diagrams to PNG in CI,P2,S,System Architect,,Given .mmd files when CI runs then .png images are rendered and committed next to sources,/IMPORTANT/02_issues/ISSUE-0013.md,Low
+Cleanup,Execute comprehensive system cleanup per analysis,P0,XL,System Architect,"DB,Models,Security",Given 5-phase plan when executed then all 19 CLAUDE.md rules compliant with zero breakage,/IMPORTANT/02_issues/ISSUE-0013.md,Critical

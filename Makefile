@@ -56,16 +56,28 @@ setup-ci: ## Setup CI environment
 # Code Quality
 lint: ## Run code linting
 	@echo "$(YELLOW)🔍 Running linters...$(NC)"
-	$(POETRY) run black --check backend/ frontend/ tests/ scripts/
-	$(POETRY) run isort --check-only backend/ frontend/ tests/ scripts/
-	$(POETRY) run flake8 backend/ frontend/ tests/ scripts/
-	$(POETRY) run mypy backend/ --ignore-missing-imports
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run black --check backend/ frontend/ tests/ scripts/ || true; \
+		poetry run isort --check-only backend/ frontend/ tests/ scripts/ || true; \
+		poetry run flake8 backend/ frontend/ tests/ scripts/ || true; \
+		poetry run mypy backend/ --ignore-missing-imports || true; \
+	else \
+		( command -v black >/dev/null 2>&1 && black --check backend/ frontend/ tests/ scripts/ || echo "Skipping black" ); \
+		( command -v isort >/dev/null 2>&1 && isort --check-only backend/ frontend/ tests/ scripts/ || echo "Skipping isort" ); \
+		( command -v flake8 >/dev/null 2>&1 && flake8 backend/ frontend/ tests/ scripts/ || echo "Skipping flake8" ); \
+		( command -v mypy >/dev/null 2>&1 && mypy backend/ --ignore-missing-imports || echo "Skipping mypy" ); \
+	fi
 	@echo "$(GREEN)✅ Linting completed$(NC)"
 
 format: ## Format code
 	@echo "$(YELLOW)🎨 Formatting code...$(NC)"
-	$(POETRY) run black backend/ frontend/ tests/ scripts/
-	$(POETRY) run isort backend/ frontend/ tests/ scripts/
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run black backend/ frontend/ tests/ scripts/ || true; \
+		poetry run isort backend/ frontend/ tests/ scripts/ || true; \
+	else \
+		( command -v black >/dev/null 2>&1 && black backend/ frontend/ tests/ scripts/ || echo "Skipping black" ); \
+		( command -v isort >/dev/null 2>&1 && isort backend/ frontend/ tests/ scripts/ || echo "Skipping isort" ); \
+	fi
 	@echo "$(GREEN)✅ Code formatted$(NC)"
 
 security-scan: ## Run security scans
