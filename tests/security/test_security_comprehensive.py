@@ -32,8 +32,8 @@ class TestAuthenticationSecurity:
     def test_jwt_token_validation(self):
         """Test JWT token validation and security."""
         # Test with invalid token
-        invalid_token = "invalid.jwt.token"
-        headers = {"Authorization": f"Bearer {invalid_token}"}
+        invalid_jwt = "bad.jwt"
+        headers = {"Authorization": f"Bearer {invalid_jwt}"}
         
         protected_endpoints = [
             "/api/agents",

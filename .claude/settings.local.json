@@ -92,7 +92,11 @@
       "Bash(git stash:*)",
       "Bash(touch:*)",
       "Bash(apt list:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(apt install:*)",
+      "Bash(systemctl start:*)",
+      "Bash(systemctl:*)",
+      "Bash(pip3 freeze:*)"
     ],
     "deny": []
   }

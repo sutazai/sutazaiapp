@@ -204,10 +204,20 @@ class AIAgentOrchestrator:
             await self.redis_client.ping()
             logger.info("Connected to Redis")
             
-            # Initialize message processor
+            # Initialize message processor without starting consumption
             self.message_processor = OrchestratorMessageProcessor(self)
-            await self.message_processor.start()
-            logger.info("Message processor started")
+            await self.message_processor.rabbitmq_client.connect()
+            
+            # Register message handlers
+            self.message_processor.rabbitmq_client.register_handler(
+                MessageType.TASK_REQUEST, 
+                self.message_processor.handle_task_request
+            )
+            self.message_processor.rabbitmq_client.register_handler(
+                MessageType.RESOURCE_RESPONSE,
+                self.message_processor.handle_resource_response
+            )
+            logger.info("Message processor initialized")
             
             # Load registered agents from Redis
             await self.load_registered_agents()
@@ -217,12 +227,27 @@ class AIAgentOrchestrator:
             asyncio.create_task(self.task_scheduler())
             asyncio.create_task(self.health_monitor())
             asyncio.create_task(self.cleanup_old_tasks())
+            asyncio.create_task(self.start_message_consumption())
             
             logger.info("AI Agent Orchestrator initialized successfully")
             
         except Exception as e:
             logger.error(f"Failed to initialize orchestrator: {e}")
             raise
+            
+    async def start_message_consumption(self):
+        """Start message consumption in background"""
+        try:
+            logger.info("Starting message consumption")
+            await self.message_processor.rabbitmq_client.consume_messages(
+                self.message_processor.handle_message
+            )
+        except Exception as e:
+            logger.error(f"Error in message consumption: {e}")
+            # Attempt to reconnect after a delay
+            await asyncio.sleep(5)
+            if self.running:
+                asyncio.create_task(self.start_message_consumption())
     
     async def shutdown(self):
         """Shutdown the orchestrator"""

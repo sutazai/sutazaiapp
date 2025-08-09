@@ -36,10 +36,10 @@ class TestFeatureFlags:
     
     def test_enable_tabby_via_env(self):
         """Test enabling TabbyML via environment variable"""
-        with patch.dict(os.environ, {'ENABLE_TABBY': 'true', 'TABBY_API_KEY': 'test-key'}):
+        with patch.dict(os.environ, {'ENABLE_TABBY': 'true', 'TABBY_API_KEY': 'key'}):
             settings = Settings()
             assert settings.ENABLE_TABBY is True
-            assert settings.TABBY_API_KEY == 'test-key'
+            assert settings.TABBY_API_KEY == 'key'
 
 
 class TestCodeCompletionFactory:
@@ -64,14 +64,14 @@ class TestCodeCompletionFactory:
         settings = Settings(
             ENABLE_TABBY=True,
             TABBY_URL="http://test:8080",
-            TABBY_API_KEY="test-key"
+            TABBY_API_KEY="key"
         )
         
         client = code_completion_factory(settings)
         
         mock_tabby_class.assert_called_once_with(
             base_url="http://test:8080",
-            api_key="test-key"
+            api_key="key"
         )
         assert client == mock_client
     

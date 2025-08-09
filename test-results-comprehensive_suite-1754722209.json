@@ -1,0 +1,215 @@
+{
+  "start_time": "2025-08-09T06:50:08.403028",
+  "environment": "local",
+  "python_version": "3.12.3 (main, Jun 18 2025, 17:59:45) [GCC 13.3.0]",
+  "tests_executed": [
+    {
+      "test_type": "syntax_validation",
+      "passed": 614,
+      "failed": 0,
+      "errors": []
+    },
+    {
+      "test_type": "import_tests",
+      "passed": 7,
+      "failed": 2,
+      "details": [
+        "\u2705 Standard JSON library: json",
+        "\u2705 Standard OS library: os",
+        "\u2705 Standard system library: sys",
+        "\u2705 Path manipulation: pathlib",
+        "\u2705 Date/time utilities: datetime",
+        "\u2705 Process management: subprocess",
+        "\u2705 Logging framework: logging",
+        "\u274c Backend main application: app.main - No module named 'httpx'",
+        "\u274c Backend configuration: app.core.config - No module named 'pydantic_settings'"
+      ]
+    },
+    {
+      "test_type": "configuration_validation",
+      "passed": 6,
+      "failed": 0,
+      "details": [
+        "\u2705 Main Docker Compose configuration: docker-compose.yml",
+        "\u2705 Backend application entry point: backend/app/main.py",
+        "\u2705 Test configuration: pytest.ini",
+        "\u2705 Security environment template: .env.secure.template",
+        "\u2705 Master deployment script: scripts/deployment/deploy.sh",
+        "\u2705 Model configuration: Uses tinyllama"
+      ]
+    },
+    {
+      "test_type": "file_structure_validation",
+      "passed": 9,
+      "failed": 0,
+      "details": [
+        "\u2705 Directory exists: backend/app",
+        "\u2705 Directory exists: backend/tests",
+        "\u2705 Directory exists: agents",
+        "\u2705 Directory exists: tests",
+        "\u2705 Directory exists: scripts/deployment",
+        "\u2705 Directory exists: scripts/monitoring",
+        "\u2705 Directory exists: scripts/devops",
+        "\u2705 Directory exists: frontend",
+        "\u2705 Directory exists: docs"
+      ]
+    },
+    {
+      "test_type": "script_organization_validation",
+      "passed": 6,
+      "failed": 0,
+      "details": [
+        "\u2705 Master deployment script exists",
+        "\u2705 Deployment script is executable",
+        "\u2705 Organized script directory: scripts/deployment",
+        "\u2705 Organized script directory: scripts/monitoring",
+        "\u2705 Organized script directory: scripts/devops",
+        "\u2705 Organized script directory: scripts/automation"
+      ]
+    },
+    {
+      "test_type": "security_scan",
+      "passed": 3426,
+      "failed": 6,
+      "warnings": [
+        "/opt/sutazaiapp/tests/test_optional_features.py: Hardcoded API key",
+        "/opt/sutazaiapp/tests/test_feature_flags.py: Hardcoded API key",
+        "/opt/sutazaiapp/monitoring/enhanced-hygiene-backend.py: Hardcoded password",
+        "/opt/sutazaiapp/monitoring/enhanced-hygiene-backend.py: Hardcoded token",
+        "/opt/sutazaiapp/tests/security/test_security_comprehensive.py: Hardcoded token",
+        "/opt/sutazaiapp/backend/mlflow_system/database.py: Hardcoded password"
+      ]
+    },
+    {
+      "test_type": "health_checks",
+      "passed": 0,
+      "failed": 5,
+      "details": [
+        "\u274c Backend API (port 10010): Service not running (expected in non-Docker environment)",
+        "\u274c Ollama (port 10104): Service not running (expected in non-Docker environment)",
+        "\u274c PostgreSQL (port 10000): Service not running (expected in non-Docker environment)",
+        "\u274c Redis (port 10001): Service not running (expected in non-Docker environment)",
+        "\u274c Neo4j (port 10002): Service not running (expected in non-Docker environment)"
+      ]
+    },
+    {
+      "test_type": "pytest_tests",
+      "passed": 0,
+      "failed": 0,
+      "skipped": 1,
+      "details": [
+        "\u26a0\ufe0f Pytest not available - skipping pytest tests"
+      ]
+    }
+  ],
+  "total_passed": 4068,
+  "total_failed": 13,
+  "total_skipped": 1,
+  "end_time": "2025-08-09T06:50:09.749221",
+  "final_result": {
+    "test_type": "comprehensive_suite",
+    "passed": 4068,
+    "failed": 13,
+    "skipped": 1,
+    "sub_results": [
+      {
+        "test_type": "syntax_validation",
+        "passed": 614,
+        "failed": 0,
+        "errors": []
+      },
+      {
+        "test_type": "import_tests",
+        "passed": 7,
+        "failed": 2,
+        "details": [
+          "\u2705 Standard JSON library: json",
+          "\u2705 Standard OS library: os",
+          "\u2705 Standard system library: sys",
+          "\u2705 Path manipulation: pathlib",
+          "\u2705 Date/time utilities: datetime",
+          "\u2705 Process management: subprocess",
+          "\u2705 Logging framework: logging",
+          "\u274c Backend main application: app.main - No module named 'httpx'",
+          "\u274c Backend configuration: app.core.config - No module named 'pydantic_settings'"
+        ]
+      },
+      {
+        "test_type": "configuration_validation",
+        "passed": 6,
+        "failed": 0,
+        "details": [
+          "\u2705 Main Docker Compose configuration: docker-compose.yml",
+          "\u2705 Backend application entry point: backend/app/main.py",
+          "\u2705 Test configuration: pytest.ini",
+          "\u2705 Security environment template: .env.secure.template",
+          "\u2705 Master deployment script: scripts/deployment/deploy.sh",
+          "\u2705 Model configuration: Uses tinyllama"
+        ]
+      },
+      {
+        "test_type": "file_structure_validation",
+        "passed": 9,
+        "failed": 0,
+        "details": [
+          "\u2705 Directory exists: backend/app",
+          "\u2705 Directory exists: backend/tests",
+          "\u2705 Directory exists: agents",
+          "\u2705 Directory exists: tests",
+          "\u2705 Directory exists: scripts/deployment",
+          "\u2705 Directory exists: scripts/monitoring",
+          "\u2705 Directory exists: scripts/devops",
+          "\u2705 Directory exists: frontend",
+          "\u2705 Directory exists: docs"
+        ]
+      },
+      {
+        "test_type": "script_organization_validation",
+        "passed": 6,
+        "failed": 0,
+        "details": [
+          "\u2705 Master deployment script exists",
+          "\u2705 Deployment script is executable",
+          "\u2705 Organized script directory: scripts/deployment",
+          "\u2705 Organized script directory: scripts/monitoring",
+          "\u2705 Organized script directory: scripts/devops",
+          "\u2705 Organized script directory: scripts/automation"
+        ]
+      },
+      {
+        "test_type": "security_scan",
+        "passed": 3426,
+        "failed": 6,
+        "warnings": [
+          "/opt/sutazaiapp/tests/test_optional_features.py: Hardcoded API key",
+          "/opt/sutazaiapp/tests/test_feature_flags.py: Hardcoded API key",
+          "/opt/sutazaiapp/monitoring/enhanced-hygiene-backend.py: Hardcoded password",
+          "/opt/sutazaiapp/monitoring/enhanced-hygiene-backend.py: Hardcoded token",
+          "/opt/sutazaiapp/tests/security/test_security_comprehensive.py: Hardcoded token",
+          "/opt/sutazaiapp/backend/mlflow_system/database.py: Hardcoded password"
+        ]
+      },
+      {
+        "test_type": "health_checks",
+        "passed": 0,
+        "failed": 5,
+        "details": [
+          "\u274c Backend API (port 10010): Service not running (expected in non-Docker environment)",
+          "\u274c Ollama (port 10104): Service not running (expected in non-Docker environment)",
+          "\u274c PostgreSQL (port 10000): Service not running (expected in non-Docker environment)",
+          "\u274c Redis (port 10001): Service not running (expected in non-Docker environment)",
+          "\u274c Neo4j (port 10002): Service not running (expected in non-Docker environment)"
+        ]
+      },
+      {
+        "test_type": "pytest_tests",
+        "passed": 0,
+        "failed": 0,
+        "skipped": 1,
+        "details": [
+          "\u26a0\ufe0f Pytest not available - skipping pytest tests"
+        ]
+      }
+    ]
+  }
+}

@@ -50,7 +50,9 @@ class MLflowDatabase:
                 user, password = auth, ''
         else:
             host_port = auth_host
-            user, password = 'mlflow', 'mlflow_secure_pwd'
+            # Do not hardcode credentials; pull from environment or leave empty
+            user = os.getenv('MLFLOW_DB_USER', '')
+            password = os.getenv('MLFLOW_DB_PASSWORD', '')
         
         if ':' in host_port:
             host, port = host_port.split(':')

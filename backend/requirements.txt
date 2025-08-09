@@ -16,7 +16,7 @@ psycopg2-binary==2.9.10
 asyncpg==0.29.0
 redis==5.2.1
 pymongo==4.10.1
-chromadb
+chromadb==0.5.23
 qdrant-client==1.12.1
 faiss-cpu==1.9.0
 neo4j==5.27.0
@@ -28,7 +28,7 @@ python-jose[cryptography]==3.3.0
 email-validator==2.2.0
 bleach==6.1.0
 torch==2.5.1
-transformers
+transformers==4.46.3
 sentence-transformers==3.3.1
 openai==1.58.1
 anthropic==0.42.0

@@ -1,5 +1,0 @@
-{
-  "archived": true,
-  "note": "Moved from config/service-mesh.json per ADR 2025-08-07-remove-service-mesh",
-  "original_path": "config/service-mesh.json"
-}

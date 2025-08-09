@@ -17,5 +17,5 @@ Template entry:
 - [TIME UTC - YYYY-MM-DD] - [version or N/A] - [component] - [change type] - [description]
 
 
-> Path: /scripts/monitoring
+> Path: /scripts/health-checks
 

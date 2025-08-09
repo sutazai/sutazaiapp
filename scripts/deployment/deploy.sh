@@ -1,18 +1,27 @@
 #!/bin/bash
 #
-# SutazAI Universal Deployment Script
-# Version: 4.0.0
+# SutazAI Master Deployment Script
+# Version: 5.0.0
+# Rule 12 Compliant: Single, Self-Updating, Comprehensive Deploy Script
 #
 # DESCRIPTION:
-#   Canonical deployment script following CLAUDE.md codebase hygiene standards.
-#   This is the ONLY deployment script for SutazAI - consolidates all deployment
-#   functionality into a single, maintainable, production-ready solution.
+#   THE canonical deployment script for SutazAI following CLAUDE.md Rule 12.
+#   This is the ONLY deployment script that should exist - all other deployment
+#   scripts must be removed or consolidated into this one.
+#
+# FEATURES:
+#   ✅ Self-updating: Automatically pulls latest changes before execution
+#   ✅ Comprehensive: Handles all environments (dev, staging, production)
+#   ✅ Self-sufficient: Contains all deployment logic in one place
+#   ✅ Logging: Clear logging with rollback capabilities
+#   ✅ Error handling: Robust error handling and recovery
 #
 # PURPOSE:
 #   - Deploy SutazAI AI automation platform to any environment
 #   - Manage service lifecycle (start, stop, health checks)
 #   - Handle rollbacks and recovery scenarios
 #   - Maintain deployment state and logging
+#   - Auto-update itself from repository
 #
 # USAGE:
 #   ./deploy.sh [COMMAND] [TARGET] [OPTIONS]
@@ -60,8 +69,8 @@ set -euo pipefail
 # ===============================================
 
 # Script metadata
-readonly SCRIPT_VERSION="4.0.0"
-readonly SCRIPT_NAME="SutazAI Universal Deployment Script"
+readonly SCRIPT_VERSION="5.0.0"
+readonly SCRIPT_NAME="SutazAI Master Deployment Script (Rule 12 Compliant)"
 readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly DEPLOYMENT_ID="deploy_$(date +%Y%m%d_%H%M%S)_$$"
 
@@ -393,22 +402,74 @@ handle_error() {
 trap 'handle_error $? $LINENO $BASH_COMMAND' ERR
 trap 'cleanup_on_exit' EXIT
 
-# Optional self-update (Rule 12: single, self-updating deploy script)
-self_update_if_enabled() {
-    if [[ "${SELF_UPDATE:-false}" == "true" ]]; then
-        log_info "Self-update enabled; pulling latest main branch..."
-        if command -v git >/dev/null 2>&1 && [[ -d "$PROJECT_ROOT/.git" ]]; then
-            git -C "$PROJECT_ROOT" fetch --all --prune || true
-            # Stash local changes to avoid failures, then re-apply
-            git -C "$PROJECT_ROOT" stash push -u -m "deploy.sh_auto_stash_$(date +%s)" >/dev/null 2>&1 || true
-            git -C "$PROJECT_ROOT" checkout --quiet ${BRANCH:-main} 2>/dev/null || true
-            git -C "$PROJECT_ROOT" pull --rebase || true
-            git -C "$PROJECT_ROOT" stash pop >/dev/null 2>&1 || true
-            log_success "Repository updated."
-        else
-            log_warn "Git not available or not a git repo; skipping self-update."
-        fi
+# Rule 12: Single self-updating deploy script implementation
+self_update() {
+    log_info "Checking for deployment script updates..."
+    
+    if ! command -v git >/dev/null 2>&1; then
+        log_warn "Git not available; cannot perform self-update"
+        return 0
     fi
+    
+    if [[ ! -d "$PROJECT_ROOT/.git" ]]; then
+        log_warn "Not a git repository; cannot perform self-update"
+        return 0
+    fi
+    
+    # Store current script path
+    local current_script="${BASH_SOURCE[0]}"
+    local script_checksum_before
+    script_checksum_before=$(sha256sum "$current_script" 2>/dev/null | cut -d' ' -f1)
+    
+    # Fetch latest changes
+    log_info "Fetching latest updates from repository..."
+    git -C "$PROJECT_ROOT" fetch --all --prune --quiet || {
+        log_warn "Failed to fetch updates; continuing with current version"
+        return 0
+    }
+    
+    # Check if there are updates to the deploy script
+    local remote_diff
+    remote_diff=$(git -C "$PROJECT_ROOT" diff HEAD origin/${BRANCH:-main} -- "$current_script" 2>/dev/null)
+    
+    if [[ -z "$remote_diff" ]]; then
+        log_success "Deploy script is up to date"
+        return 0
+    fi
+    
+    log_info "Updates available for deploy script; applying..."
+    
+    # Stash any local changes
+    local stash_name="deploy_auto_stash_$(date +%s)"
+    git -C "$PROJECT_ROOT" stash push -u -m "$stash_name" >/dev/null 2>&1 || true
+    
+    # Pull latest changes
+    if git -C "$PROJECT_ROOT" pull --rebase origin ${BRANCH:-main} >/dev/null 2>&1; then
+        log_success "Successfully updated to latest version"
+        
+        # Check if script actually changed
+        local script_checksum_after
+        script_checksum_after=$(sha256sum "$current_script" 2>/dev/null | cut -d' ' -f1)
+        
+        if [[ "$script_checksum_before" != "$script_checksum_after" ]]; then
+            log_warn "Deploy script has been updated. Re-executing with new version..."
+            
+            # Pop stash if it exists
+            git -C "$PROJECT_ROOT" stash list | grep -q "$stash_name" && \
+                git -C "$PROJECT_ROOT" stash pop >/dev/null 2>&1 || true
+            
+            # Re-execute with same arguments
+            exec "$current_script" "$@"
+        fi
+    else
+        log_warn "Failed to pull updates; continuing with current version"
+    fi
+    
+    # Pop stash if it exists
+    git -C "$PROJECT_ROOT" stash list | grep -q "$stash_name" && \
+        git -C "$PROJECT_ROOT" stash pop >/dev/null 2>&1 || true
+    
+    return 0
 }
 
 # ===============================================
@@ -2448,6 +2509,8 @@ ${BOLD}ENVIRONMENT VARIABLES:${NC}
     PLATFORM              Container platform for autoscaling (kubernetes|swarm|compose)
     PARALLEL_BUILD        Enable parallel image builds (true|false|auto)
     LOG_LEVEL             Set logging level (DEBUG|INFO|WARN|ERROR)
+    SKIP_UPDATE           Skip automatic self-update check (true|false)
+    BRANCH                Git branch to pull updates from (default: main)
 
 ${BOLD}EXAMPLES:${NC}
     $0 deploy local                      # Deploy to local development
@@ -2478,13 +2541,20 @@ ${BOLD}REQUIREMENTS:${NC}
     - Internet connectivity for model downloads
     - Linux, macOS, or WSL2 on Windows
 
-${BOLD}HYGIENE COMPLIANCE:${NC}
-This script follows CLAUDE.md standards:
-- Single canonical deployment script (no duplicates)
-- No hardcoded passwords or secrets
-- Environment variable configuration
-- Comprehensive error handling and rollback
-- Production-ready with proper logging
+${BOLD}HYGIENE COMPLIANCE (Rule 12):${NC}
+This script is THE SINGLE deployment script as mandated by Rule 12:
+✅ Self-sufficient and comprehensive for all environments
+✅ Self-updating - pulls latest changes before running
+✅ Handles dev, staging, and production with appropriate flags
+✅ Provides clear logging and error handling
+✅ Rollback capabilities for safe deployment
+✅ No hardcoded passwords or secrets
+✅ Documented inline and in /docs/deployment/
+
+${YELLOW}IMPORTANT:${NC} No other deployment scripts should exist.
+If you find other deployment scripts, they should be:
+1. Consolidated into this script, or
+2. Removed from the repository
 
 For more information, visit: https://github.com/sutazai/sutazaiapp
 EOF
@@ -2493,6 +2563,14 @@ EOF
 # Main command dispatcher
 main() {
     local command="${1:-deploy}"
+    
+    # Always perform self-update check first (Rule 12)
+    # Unless explicitly disabled or running help
+    if [[ "$command" != "help" && "$command" != "--help" && "$command" != "-h" ]]; then
+        if [[ "${SKIP_UPDATE:-false}" != "true" ]]; then
+            self_update "$@"
+        fi
+    fi
     
     case "$command" in
         "deploy")

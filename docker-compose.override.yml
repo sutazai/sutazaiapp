@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Resource limits override for better performance
 # This file is automatically loaded by docker-compose
 

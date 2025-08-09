@@ -114,7 +114,8 @@ class EnhancedHygieneBackend:
     
     def __init__(self):
         self.project_root = Path(os.getenv('PROJECT_ROOT', '/app/project'))
-        self.database_url = os.getenv('DATABASE_URL', 'postgresql://hygiene_user:hygiene_secure_2024@hygiene-postgres:5432/hygiene_monitoring')
+        # Do not hardcode credentials; default to URL without inline secrets
+        self.database_url = os.getenv('DATABASE_URL', 'postgresql://hygiene-postgres:5432/hygiene_monitoring')
         self.redis_url = os.getenv('REDIS_URL', 'redis://hygiene-redis:6379/0')
         
         # Connection pools

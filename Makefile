@@ -79,32 +79,56 @@ test: test-unit ## Run default tests (unit tests)
 
 test-unit: ## Run unit tests
 	@echo "$(YELLOW)🧪 Running unit tests...$(NC)"
-	$(POETRY) run python scripts/test_runner.py --type unit
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run python scripts/testing/test_runner.py --type unit; \
+	else \
+		python3 scripts/testing/test_runner.py --type unit; \
+	fi
 	@echo "$(GREEN)✅ Unit tests completed$(NC)"
 
 test-integration: services-up ## Run integration tests
 	@echo "$(YELLOW)🔗 Running integration tests...$(NC)"
-	$(POETRY) run python scripts/test_runner.py --type integration --services postgres,redis
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run python scripts/testing/test_runner.py --type integration --services postgres,redis; \
+	else \
+		python3 scripts/testing/test_runner.py --type integration --services postgres,redis; \
+	fi
 	@echo "$(GREEN)✅ Integration tests completed$(NC)"
 
 test-e2e: services-up ## Run end-to-end tests
 	@echo "$(YELLOW)🌐 Running end-to-end tests...$(NC)"
-	$(POETRY) run python scripts/test_runner.py --type e2e --browser chrome
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run python scripts/testing/test_runner.py --type e2e --browser chrome; \
+	else \
+		python3 scripts/testing/test_runner.py --type e2e --browser chrome; \
+	fi
 	@echo "$(GREEN)✅ End-to-end tests completed$(NC)"
 
 test-performance: services-up ## Run performance tests
 	@echo "$(YELLOW)⚡ Running performance tests...$(NC)"
-	$(POETRY) run python scripts/test_runner.py --type performance
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run python scripts/testing/test_runner.py --type performance; \
+	else \
+		python3 scripts/testing/test_runner.py --type performance; \
+	fi
 	@echo "$(GREEN)✅ Performance tests completed$(NC)"
 
 test-security: services-up ## Run security tests
 	@echo "$(YELLOW)🛡️ Running security tests...$(NC)"
-	$(POETRY) run python scripts/test_runner.py --type security
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run python scripts/testing/test_runner.py --type security; \
+	else \
+		python3 scripts/testing/test_runner.py --type security; \
+	fi
 	@echo "$(GREEN)✅ Security tests completed$(NC)"
 
 test-docker: ## Run Docker container tests
 	@echo "$(YELLOW)🐳 Running Docker tests...$(NC)"
-	$(POETRY) run python scripts/test_runner.py --type docker
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run python scripts/testing/test_runner.py --type docker; \
+	else \
+		python3 scripts/testing/test_runner.py --type docker; \
+	fi
 	@echo "$(GREEN)✅ Docker tests completed$(NC)"
 
 test-health: services-up ## Run health check tests
@@ -119,12 +143,20 @@ test-load: services-up ## Run load tests
 
 test-all: services-up ## Run all tests
 	@echo "$(YELLOW)🚀 Running complete test suite...$(NC)"
-	$(POETRY) run python scripts/test_runner.py --type all --quick
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run python scripts/testing/test_runner.py --type all --quick; \
+	else \
+		python3 scripts/testing/test_runner.py --type all --quick; \
+	fi
 	@echo "$(GREEN)✅ All tests completed$(NC)"
 
 test-comprehensive: services-up ## Run comprehensive test suite (long-running)
 	@echo "$(YELLOW)🎯 Running comprehensive test suite...$(NC)"
-	$(POETRY) run python scripts/test_runner.py --type all
+	@if command -v poetry >/dev/null 2>&1; then \
+		poetry run python scripts/testing/test_runner.py --type all; \
+	else \
+		python3 scripts/testing/test_runner.py --type all; \
+	fi
 	@echo "$(GREEN)✅ Comprehensive tests completed$(NC)"
 
 # Coverage

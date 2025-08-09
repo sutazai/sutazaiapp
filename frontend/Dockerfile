@@ -16,31 +16,23 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application
+# Copy application and components
 COPY app.py .
+COPY components/ ./components/
 
 # Set environment variables
-ENV AGENT_ID=senior-frontend-developer
-ENV AGENT_NAME="Senior Frontend Developer"
-ENV PORT=8542
+ENV PORT=8501
 
 # Expose port
-EXPOSE 8542
+EXPOSE 8501
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8542/health || exit 1
-
-# Run the application
-
-# Create and use non-root user
-RUN adduser --disabled-password --gecos '' --uid 1001 frontend
-USER frontend
-
+    CMD curl -f http://localhost:8501/health || exit 1
 
 # Security: Create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
+    && chown -R appuser:appuser /app
 USER appuser
 
-CMD ["python", "app.py"]
+CMD ["streamlit", "run", "app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]

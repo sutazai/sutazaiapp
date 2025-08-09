@@ -28,7 +28,7 @@ class TestFeatureFlags:
             'ENABLE_FSDP': 'true',
             'ENABLE_TABBY': 'true',
             'TABBY_URL': 'http://custom-tabby:9000',
-            'TABBY_API_KEY': 'test-key'
+            'TABBY_API_KEY': 'key'
         }):
             settings = Settings()
             assert settings.ENABLE_FSDP == True
@@ -57,7 +57,7 @@ class TestCodeCompletionFactory:
         settings = Mock(spec=Settings)
         settings.ENABLE_TABBY = True
         settings.TABBY_URL = 'http://tabby:8080'
-        settings.TABBY_API_KEY = 'test-key'
+        settings.TABBY_API_KEY = 'key'
         
         client = code_completion_factory(settings)
         assert client.__class__.__name__ == 'TabbyCodeCompletionClient'
