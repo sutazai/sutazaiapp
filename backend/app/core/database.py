@@ -16,9 +16,9 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-# Database URL
-DATABASE_URL = settings.DATABASE_URL
-if "postgresql://" in DATABASE_URL:
+# Database URL - Use computed URL if DATABASE_URL not set
+DATABASE_URL = settings.DATABASE_URL or settings.computed_database_url
+if "postgresql://" in DATABASE_URL and "postgresql+asyncpg://" not in DATABASE_URL:
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
 
 # Create async engine with optimized settings

@@ -184,15 +184,17 @@ class AuthenticationManager:
             
     async def authenticate_user(self, username: str, password: str) -> Optional[Dict[str, Any]]:
         """Authenticate user credentials"""
-        # In production, this would check against database
-        # For now, return mock user
-        if username == "admin" and password == "secure_password":
-            return {
-                "user_id": "admin_001",
-                "username": username,
-                "role": "admin",
-                "scopes": ["read", "write", "admin"]
-            }
+        # SECURITY FIX: Removed hardcoded credentials vulnerability
+        # This method must use proper database authentication with bcrypt
+        # Implementation should delegate to app.auth.service.AuthService
+        
+        logger.error(
+            "AuthenticationManager.authenticate_user called but not properly implemented. "
+            "Use app.auth.service.AuthService for database-backed authentication."
+        )
+        
+        # Always return None to prevent authentication bypass
+        # Forces proper implementation through auth service
         return None
 
 class AuthorizationManager:

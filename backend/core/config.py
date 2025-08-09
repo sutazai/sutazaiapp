@@ -41,7 +41,8 @@ class AppSettings(BaseSettings):
     # --- Database ---
     POSTGRES_SERVER: str = Field("postgres", env="POSTGRES_HOST")
     POSTGRES_USER: str = Field("sutazai", env="POSTGRES_USER") 
-    POSTGRES_PASSWORD: str = Field("sutazai_password", env="POSTGRES_PASSWORD")
+    # Security: do not embed default secrets in code. Expect runtime env to provide.
+    POSTGRES_PASSWORD: str = Field("", env="POSTGRES_PASSWORD")
     POSTGRES_DB: str = Field("sutazai", env="POSTGRES_DB")
     DATABASE_URL: Optional[str] = Field(None, env="DATABASE_URL")
     DATABASE_URI: Optional[PostgresDsn] = None # Assembled below

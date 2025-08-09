@@ -16,13 +16,11 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Copy requirements first for better caching
-COPY requirements_minimal.txt .
-RUN pip install --no-cache-dir -r requirements_minimal.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
-# Use minimal main.py for now
-RUN cp app/main_minimal.py app/main.py
 
 ENV PYTHONUNBUFFERED=1
 ENV DEBUG=false

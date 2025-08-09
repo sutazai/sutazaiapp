@@ -99,71 +99,106 @@ async def get_status():
         "version": "0.1.0"
     }
 
-# Agent endpoints
+# Agent service configurations
+AGENT_SERVICES = {
+    "jarvis-automation": {
+        "name": "Jarvis Automation Agent", 
+        "url": "http://sutazai-jarvis-automation-agent:8080",
+        "capabilities": ["automation", "task_execution"]
+    },
+    "ollama-integration": {
+        "name": "Ollama Integration",
+        "url": "http://sutazai-ollama-integration:8090", 
+        "capabilities": ["text_generation", "chat"]
+    },
+    "hardware-optimizer": {
+        "name": "Hardware Resource Optimizer",
+        "url": "http://sutazai-hardware-resource-optimizer:8080",
+        "capabilities": ["resource_monitoring", "optimization"]
+    }
+}
+
+async def check_agent_health(agent_url: str) -> str:
+    """Check if agent service is healthy"""
+    try:
+        import httpx
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{agent_url}/health", timeout=5.0)
+            return "healthy" if response.status_code == 200 else "unhealthy"
+    except:
+        return "offline"
+
+# Agent endpoints  
 @app.get("/api/v1/agents", response_model=List[AgentResponse])
 async def list_agents():
-    """List available agents"""
-    return [
-        AgentResponse(
-            id="ollama-integration",
-            name="Ollama Integration",
-            status="healthy",
-            capabilities=["text_generation", "chat"]
-        ),
-        AgentResponse(
-            id="ai-orchestrator",
-            name="AI Agent Orchestrator",
-            status="healthy",
-            capabilities=["task_routing", "agent_coordination"]
-        ),
-        AgentResponse(
-            id="hardware-optimizer",
-            name="Hardware Resource Optimizer",
-            status="healthy",
-            capabilities=["resource_monitoring", "optimization"]
-        )
-    ]
+    """List available agents with real health status"""
+    agents = []
+    for agent_id, config in AGENT_SERVICES.items():
+        health_status = await check_agent_health(config["url"])
+        agents.append(AgentResponse(
+            id=agent_id,
+            name=config["name"],
+            status=health_status,
+            capabilities=config["capabilities"]
+        ))
+    return agents
 
 @app.get("/api/v1/agents/{agent_id}", response_model=AgentResponse)
 async def get_agent(agent_id: str):
-    """Get specific agent details"""
-    agents = {
-        "ollama-integration": AgentResponse(
-            id="ollama-integration",
-            name="Ollama Integration",
-            status="healthy",
-            capabilities=["text_generation", "chat"]
-        ),
-        "ai-orchestrator": AgentResponse(
-            id="ai-orchestrator",
-            name="AI Agent Orchestrator",
-            status="healthy",
-            capabilities=["task_routing", "agent_coordination"]
-        ),
-        "hardware-optimizer": AgentResponse(
-            id="hardware-optimizer",
-            name="Hardware Resource Optimizer",
-            status="healthy",
-            capabilities=["resource_monitoring", "optimization"]
-        )
-    }
-    
-    if agent_id not in agents:
+    """Get specific agent details with real health status"""
+    if agent_id not in AGENT_SERVICES:
         raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
     
-    return agents[agent_id]
+    config = AGENT_SERVICES[agent_id]
+    health_status = await check_agent_health(config["url"])
+    
+    return AgentResponse(
+        id=agent_id,
+        name=config["name"],
+        status=health_status,
+        capabilities=config["capabilities"]
+    )
 
 # Task endpoints
 @app.post("/api/v1/tasks", response_model=TaskResponse)
 async def create_task(task: TaskRequest):
-    """Create a new task"""
+    """Create and dispatch a real task to agents"""
     import uuid
     task_id = str(uuid.uuid4())
     
+    # Try to dispatch to appropriate agent based on task type
+    agent_url = None
+    if task.task_type == "automation":
+        agent_url = AGENT_SERVICES["jarvis-automation"]["url"]
+    elif task.task_type == "text_generation":
+        agent_url = AGENT_SERVICES["ollama-integration"]["url"] 
+    elif task.task_type == "optimization":
+        agent_url = AGENT_SERVICES["hardware-optimizer"]["url"]
+    
+    if agent_url:
+        try:
+            import httpx
+            async with httpx.AsyncClient() as client:
+                response = await client.post(
+                    f"{agent_url}/process",
+                    json={"task_id": task_id, "payload": task.payload},
+                    timeout=30.0
+                )
+                if response.status_code == 200:
+                    result = response.json()
+                    return TaskResponse(
+                        task_id=task_id,
+                        status="completed",
+                        result=result
+                    )
+        except Exception as e:
+            logger.warning(f"Agent dispatch failed: {e}")
+    
+    # Fallback for unsupported task types or agent failures
     return TaskResponse(
         task_id=task_id,
-        status="processing",
-        result={"message": f"Task {task_id} created and processing"}
+        status="queued",
+        result={"message": f"Task {task_id} queued for processing", "task_type": task.task_type}
     )
 
 @app.get("/api/v1/tasks/{task_id}", response_model=TaskResponse)
@@ -207,10 +242,14 @@ async def chat(message: Dict[str, str]):
                 "http://ollama:11434/api/generate",
                 json={
                     "model": "tinyllama",
-                    "prompt": user_message,
-                    "stream": False
+                    "prompt": f"{user_message}\n\nPlease provide a brief response (max 100 words).",
+                    "stream": False,
+                    "options": {
+                        "num_predict": 100,
+                        "temperature": 0.7
+                    }
                 },
-                timeout=30.0
+                timeout=120.0
             )
             if response.status_code == 200:
                 result = response.json()
@@ -219,7 +258,8 @@ async def chat(message: Dict[str, str]):
                     "model": "tinyllama"
                 }
     except Exception as e:
-        logger.warning(f"Ollama connection failed: {e}")
+        logger.error(f"Ollama connection failed: {type(e).__name__}: {e}")
+        logger.info("Falling back to echo response")
     
     # Fallback response
     return {

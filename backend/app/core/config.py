@@ -24,9 +24,9 @@ class Settings(BaseSettings):
     LOCAL_IP: str = Field("127.0.0.1", env="LOCAL_IP")
     DEPLOYMENT_ID: str = Field("", env="DEPLOYMENT_ID")
     
-    # Security
-    SECRET_KEY: str = Field("default-secret-key-change-in-production", env="SECRET_KEY")
-    JWT_SECRET: str = Field("default-jwt-secret-change-in-production", env="JWT_SECRET")
+    # Security - REQUIRED environment variables for production security
+    SECRET_KEY: str = Field(..., env="SECRET_KEY", description="Required: Application secret key")
+    JWT_SECRET: str = Field(..., env="JWT_SECRET", description="Required: JWT signing secret")
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
@@ -38,7 +38,8 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str = Field("postgres", env="POSTGRES_HOST")
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = Field("sutazai", env="POSTGRES_USER")
-    POSTGRES_PASSWORD: str = Field("sutazai_password", env="POSTGRES_PASSWORD")
+    # Security: do not embed default secrets in code. Expect runtime env to provide.
+    POSTGRES_PASSWORD: str = Field("", env="POSTGRES_PASSWORD")
     POSTGRES_DB: str = Field("sutazai", env="POSTGRES_DB")
     DATABASE_URL: Optional[str] = Field(None, env="DATABASE_URL")
     
@@ -67,10 +68,12 @@ class Settings(BaseSettings):
     QDRANT_API_KEY: Optional[str] = None
     
     # Neo4j Configuration
-    NEO4J_PASSWORD: str = Field("neo4j_password", env="NEO4J_PASSWORD")
+    # Security: do not embed default secrets in code. Expect runtime env to provide.
+    NEO4J_PASSWORD: str = Field("", env="NEO4J_PASSWORD")
     
     # Monitoring Configuration
-    GRAFANA_PASSWORD: str = Field("admin", env="GRAFANA_PASSWORD")
+    # Security: do not embed default secrets in code. Expect runtime env to provide.
+    GRAFANA_PASSWORD: str = Field("", env="GRAFANA_PASSWORD")
     
     # Model Configuration - Fixed to use correct Ollama internal port
     OLLAMA_HOST: str = Field("http://ollama:11434", env="OLLAMA_HOST")
@@ -96,6 +99,46 @@ class Settings(BaseSettings):
         if not v.startswith("http"):
             # Default to the correct Ollama internal port (11434)
             return f"http://{v}:11434"
+        return v
+    
+    @field_validator("JWT_SECRET", "SECRET_KEY", mode="after")
+    @classmethod
+    def validate_secrets(cls, v: str, info) -> str:
+        """Ensure secrets are not using default/insecure values"""
+        insecure_values = [
+            "default-secret-key-change-in-production",
+            "default-jwt-secret-change-in-production",
+            "changeme",
+            "secret",
+            "password",
+            "123456",
+            "admin"
+        ]
+        
+        if not v or len(v) < 32:
+            raise ValueError(f"{info.field_name} must be at least 32 characters long for security")
+        
+        if v.lower() in insecure_values or any(bad in v.lower() for bad in ["default", "change", "todo"]):
+            raise ValueError(
+                f"{info.field_name} is using an insecure default value. "
+                f"Generate a secure secret with: python -c 'import secrets; print(secrets.token_urlsafe(32))'"
+            )
+        
+        return v
+
+    @field_validator("POSTGRES_PASSWORD", "NEO4J_PASSWORD", "GRAFANA_PASSWORD", mode="after")
+    @classmethod
+    def validate_service_passwords(cls, v: str, info) -> str:
+        """Enforce non-empty, non-insecure passwords in non-local environments."""
+        # Allow empty in explicit local/dev setups to avoid blocking local runs,
+        # but require strong values in staging/production.
+        env = os.getenv("SUTAZAI_ENV", os.getenv("ENVIRONMENT", "local")).lower()
+        insecure_values = {"", "password", "admin", "changeme", "default"}
+        if env in {"production", "prod", "staging"}:
+            if v is None or v.strip().lower() in insecure_values or len(v) < 8:
+                raise ValueError(
+                    f"{info.field_name} must be provided via environment and be at least 8 characters in {env}"
+                )
         return v
     
     # GPU Configuration
