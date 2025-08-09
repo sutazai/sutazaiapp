@@ -22,7 +22,7 @@ from pathlib import Path
 # Import both old and new base classes
 sys.path.append('/opt/sutazaiapp/agents')
 from agent_base import BaseAgent as BaseAgentV1
-from core.base_agent_v2 import BaseAgentV2
+from agents.core.base_agent import BaseAgent
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class AgentMigrationError(Exception):
     pass
 
 
-class LegacyAgentWrapper(BaseAgentV2):
+class LegacyAgentWrapper(BaseAgent):
     """
     Wrapper class that provides backward compatibility for legacy agents
     
@@ -99,7 +99,7 @@ class LegacyAgentWrapper(BaseAgentV2):
                     result = self.legacy_methods['process_task'](legacy_instance, task)
                 
                 # Convert to new TaskResult format
-                from core.base_agent_v2 import TaskResult
+                from agents.core.base_agent import TaskResult
                 from datetime import datetime
                 
                 return TaskResult(
@@ -185,7 +185,7 @@ class AgentMigrationValidator:
             if "from agent_base import BaseAgent" in app_content:
                 validation["migration_type"] = "v1_agent"
                 validation["recommendations"].append("Can use LegacyAgentWrapper for immediate compatibility")
-            elif "from core.base_agent_v2 import BaseAgentV2" in app_content:
+            elif "from agents.core.base_agent import BaseAgentV2" in app_content:
                 validation["migration_type"] = "v2_agent"
                 validation["status"] = "current"
             else:
@@ -307,8 +307,8 @@ class AgentMigrationValidator:
         if v1_agents:
             plan.append({
                 "phase": 3,
-                "title": "Full Migration to BaseAgentV2",
-                "description": "Migrate agents to use BaseAgentV2 directly",
+                "title": "Full Migration to BaseAgent",
+                "description": "Migrate agents to use BaseAgent directly",
                 "agents": v1_agents,
                 "effort": "medium",
                 "priority": "medium"
@@ -318,7 +318,7 @@ class AgentMigrationValidator:
 
 
 def create_agent_factory(agent_name: str, 
-                        agent_path: str = "/opt/sutazaiapp/agents") -> Union[BaseAgentV2, LegacyAgentWrapper]:
+                        agent_path: str = "/opt/sutazaiapp/agents") -> Union[BaseAgent, LegacyAgentWrapper]:
     """
     Factory function to create appropriate agent instance
     
@@ -342,8 +342,8 @@ def create_agent_factory(agent_name: str,
             for attr_name in dir(app_module):
                 attr = getattr(app_module, attr_name)
                 if (inspect.isclass(attr) and 
-                    issubclass(attr, (BaseAgentV1, BaseAgentV2)) and 
-                    attr not in [BaseAgentV1, BaseAgentV2]):
+                    issubclass(attr, (BaseAgentV1, BaseAgent)) and 
+                    attr not in [BaseAgentV1, BaseAgent]):
                     agent_class = attr
                     break
             
@@ -351,7 +351,7 @@ def create_agent_factory(agent_name: str,
                 raise AgentMigrationError(f"No agent class found in {agent_name}/app.py")
             
             # Determine if it's a legacy agent
-            if issubclass(agent_class, BaseAgentV1) and not issubclass(agent_class, BaseAgentV2):
+            if issubclass(agent_class, BaseAgentV1) and not issubclass(agent_class, BaseAgent):
                 logger.info(f"Creating legacy wrapper for {agent_name}")
                 return LegacyAgentWrapper(agent_class)
             else:
@@ -369,7 +369,7 @@ def migrate_agent_to_v2(agent_name: str,
                        agent_path: str = "/opt/sutazaiapp/agents",
                        backup: bool = True) -> bool:
     """
-    Migrate a specific agent to BaseAgentV2
+    Migrate a specific agent to BaseAgent
     
     Args:
         agent_name: Name of agent to migrate
@@ -398,8 +398,8 @@ def migrate_agent_to_v2(agent_name: str,
         # Perform migration transformations
         migrations = [
             # Update import statement
-            ("from agent_base import BaseAgent", "from core.base_agent_v2 import BaseAgentV2"),
-            ("class.*Agent.*BaseAgent", "class {agent_name}Agent(BaseAgentV2)"),
+            ("from agent_base import BaseAgent", "from agents.core.base_agent import BaseAgent"),
+            ("class.*Agent.*BaseAgent", "class {agent_name}Agent(BaseAgent)"),
             # Update method signatures if needed
             ("def process_task(self, task)", "async def process_task(self, task)"),
             # Update Ollama calls
@@ -417,7 +417,7 @@ def migrate_agent_to_v2(agent_name: str,
         # Write modified content
         app_file.write_text(modified_content)
         
-        logger.info(f"Successfully migrated {agent_name} to BaseAgentV2")
+        logger.info(f"Successfully migrated {agent_name} to BaseAgent")
         return True
         
     except Exception as e:

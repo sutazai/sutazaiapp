@@ -15,7 +15,7 @@ import json
 # Add the agents directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'agents'))
 
-from core.base_agent_v2 import BaseAgentV2, BaseAgent, AgentStatus
+from agents.core.base_agent import BaseAgentV2, BaseAgent, AgentStatus
 from core.ollama_integration import OllamaIntegration, OllamaConfig
 
 
@@ -24,18 +24,18 @@ class TestBackwardCompatibility:
     
     def test_base_agent_alias_compatibility(self):
         """Test that BaseAgent alias still works"""
-        # BaseAgent should be an alias for BaseAgentV2
-        assert BaseAgent is BaseAgentV2
+        # BaseAgent should be an alias for BaseAgent
+        assert BaseAgent is BaseAgent
         
         # Should be able to create instance using old name
         agent = BaseAgent()
-        assert isinstance(agent, BaseAgentV2)
+        assert isinstance(agent, BaseAgent)
         assert agent.agent_version == "2.0.0"
     
     def test_initialization_backward_compatibility(self):
         """Test that agents can be initialized with old patterns"""
         # Test with minimal parameters (old style)
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         assert agent.agent_name is not None
         assert agent.agent_type is not None
         assert agent.status == AgentStatus.INITIALIZING
@@ -46,7 +46,7 @@ class TestBackwardCompatibility:
             config_path = f.name
         
         try:
-            agent = BaseAgentV2(config_path=config_path)
+            agent = BaseAgent(config_path=config_path)
             assert agent.config["capabilities"] == ["test"]
         finally:
             os.unlink(config_path)
@@ -61,7 +61,7 @@ class TestBackwardCompatibility:
         }
         
         with patch.dict(os.environ, test_env):
-            agent = BaseAgentV2()
+            agent = BaseAgent()
             
             assert agent.agent_name == 'legacy-test-agent'
             assert agent.agent_type == 'legacy-type'
@@ -80,7 +80,7 @@ class TestBackwardCompatibility:
             config_path = f.name
         
         try:
-            agent = BaseAgentV2(config_path=config_path)
+            agent = BaseAgent(config_path=config_path)
             
             # Should load minimal config and fill in defaults
             assert agent.config["capabilities"] == ["text-processing"]
@@ -103,7 +103,7 @@ class TestBackwardCompatibility:
             config_path = f.name
         
         try:
-            agent = BaseAgentV2(config_path=config_path)
+            agent = BaseAgent(config_path=config_path)
             
             # Should preserve all existing settings
             for key, value in legacy_config.items():
@@ -118,7 +118,7 @@ class TestExistingAgentMethods:
     @pytest.fixture
     def legacy_agent(self):
         """Create agent in legacy style"""
-        return BaseAgentV2()
+        return BaseAgent()
     
     def test_synchronous_ollama_query_compatibility(self, legacy_agent):
         """Test that sync Ollama query method still exists and works"""
@@ -237,7 +237,7 @@ class TestExistingAgentTypes:
         
         for agent_name in opus_agents:
             with patch.dict(os.environ, {'AGENT_NAME': agent_name, 'AGENT_TYPE': 'test'}):
-                agent = BaseAgentV2()
+                agent = BaseAgent()
                 
                 # Should be assigned Opus model
                 assert agent.default_model == OllamaConfig.OPUS_MODEL
@@ -255,7 +255,7 @@ class TestExistingAgentTypes:
         
         for agent_name in sonnet_agents:
             with patch.dict(os.environ, {'AGENT_NAME': agent_name, 'AGENT_TYPE': 'test'}):
-                agent = BaseAgentV2()
+                agent = BaseAgent()
                 
                 # Should be assigned Sonnet model
                 assert agent.default_model == OllamaConfig.SONNET_MODEL
@@ -273,7 +273,7 @@ class TestExistingAgentTypes:
         
         for agent_name in default_agents:
             with patch.dict(os.environ, {'AGENT_NAME': agent_name, 'AGENT_TYPE': 'test'}):
-                agent = BaseAgentV2()
+                agent = BaseAgent()
                 
                 # Should be assigned default model
                 assert agent.default_model == OllamaConfig.DEFAULT_MODEL
@@ -291,7 +291,7 @@ class TestLegacyBehaviorPreservation:
     @pytest.mark.asyncio
     async def test_agent_lifecycle_compatibility(self):
         """Test that agent lifecycle works as in legacy system"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         
         # Test initial state
         assert agent.status == AgentStatus.INITIALIZING
@@ -313,7 +313,7 @@ class TestLegacyBehaviorPreservation:
     @pytest.mark.asyncio
     async def test_error_handling_compatibility(self):
         """Test that error handling works as expected in legacy scenarios"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         
         # Test error handling in task processing
         problematic_task = {
@@ -332,7 +332,7 @@ class TestLegacyBehaviorPreservation:
     
     def test_metrics_compatibility(self):
         """Test that metrics structure is compatible"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         
         # Test that all expected metrics fields exist
         expected_fields = [
@@ -394,7 +394,7 @@ class TestIntegrationRegression:
     @pytest.mark.asyncio
     async def test_agent_ollama_integration_compatibility(self):
         """Test that agent-Ollama integration hasn't broken"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         await agent._setup_async_components()
         
         # Test that Ollama query methods exist and work
@@ -427,7 +427,7 @@ class TestPerformanceRegression:
         import time
         
         start_time = time.time()
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         init_time = time.time() - start_time
         
         # Initialization should be fast (under 1 second)
@@ -438,7 +438,7 @@ class TestPerformanceRegression:
         """Test that basic task processing performance is reasonable"""
         import time
         
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         
         task = {
             "id": "perf-test",
@@ -466,7 +466,7 @@ class TestPerformanceRegression:
         baseline_memory = process.memory_info().rss / 1024 / 1024  # MB
         
         # Create and use agent
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         await agent._setup_async_components()
         
         # Process some tasks

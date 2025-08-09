@@ -17,14 +17,14 @@ import httpx
 # Add the agents directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'agents'))
 
-from core.base_agent_v2 import (
-    BaseAgentV2, AgentStatus, AgentMetrics, TaskResult,
-    BaseAgent  # Backward compatibility alias
+from agents.core.base_agent import (
+    BaseAgent, AgentStatus, AgentMetrics, TaskResult,
+    BaseAgentV2  # Backward compatibility alias
 )
 
 
 class TestBaseAgentV2:
-    """Test suite for BaseAgentV2 class"""
+    """Test suite for BaseAgent class"""
     
     @pytest.fixture
     def temp_config(self):
@@ -47,14 +47,14 @@ class TestBaseAgentV2:
     
     @pytest.fixture
     def agent(self, temp_config):
-        """Create BaseAgentV2 instance for testing"""
+        """Create BaseAgent instance for testing"""
         with patch.dict(os.environ, {
             'AGENT_NAME': 'test-agent',
             'AGENT_TYPE': 'testing',
             'BACKEND_URL': 'http://test-backend:8000',
             'OLLAMA_URL': 'http://test-ollama:10104'
         }):
-            return BaseAgentV2(
+            return BaseAgent(
                 config_path=temp_config,
                 max_concurrent_tasks=2,
                 max_ollama_connections=1,
@@ -75,7 +75,7 @@ class TestBaseAgentV2:
     
     def test_load_config_success(self, temp_config):
         """Test successful config loading"""
-        agent = BaseAgentV2(config_path=temp_config)
+        agent = BaseAgent(config_path=temp_config)
         assert agent.config["capabilities"] == ["test", "example"]
         assert agent.config["max_retries"] == 2
         assert agent.config["timeout"] == 60
@@ -83,7 +83,7 @@ class TestBaseAgentV2:
     
     def test_load_config_missing_file(self):
         """Test config loading with missing file"""
-        agent = BaseAgentV2(config_path="/nonexistent/config.json")
+        agent = BaseAgent(config_path="/nonexistent/config.json")
         # Should load default config
         assert agent.config["capabilities"] == []
         assert agent.config["max_retries"] == 3
@@ -97,7 +97,7 @@ class TestBaseAgentV2:
             temp_path = f.name
         
         try:
-            agent = BaseAgentV2(config_path=temp_path)
+            agent = BaseAgent(config_path=temp_path)
             # Should load default config
             assert agent.config["capabilities"] == []
         finally:
@@ -315,7 +315,7 @@ class TestBaseAgentV2:
             mock_process.side_effect = Exception("Processing error")
             
             # Create new agent to test the actual exception handling
-            test_agent = BaseAgentV2()
+            test_agent = BaseAgent()
             result = await test_agent.process_task(task)
             
             assert result.task_id == "test-task-123"
@@ -531,11 +531,11 @@ class TestBaseAgentV2:
     def test_backward_compatibility_alias(self):
         """Test that BaseAgent alias works"""
         agent = BaseAgent()
-        assert isinstance(agent, BaseAgentV2)
+        assert isinstance(agent, BaseAgent)
     
     def test_query_ollama_sync_not_running(self):
         """Test sync Ollama query when no event loop is running"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         
         # Mock asyncio.get_event_loop() to return a mock that's not running
         mock_loop = Mock()
@@ -550,7 +550,7 @@ class TestBaseAgentV2:
     
     def test_query_ollama_sync_running_loop(self):
         """Test sync Ollama query when event loop is already running"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         
         # Mock asyncio.get_event_loop() to return a mock that's running
         mock_loop = Mock()

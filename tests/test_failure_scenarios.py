@@ -17,7 +17,7 @@ import time
 # Add the agents directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'agents'))
 
-from core.base_agent_v2 import BaseAgentV2, AgentStatus
+from agents.core.base_agent import BaseAgentV2, AgentStatus
 from core.ollama_pool import OllamaConnectionPool, ConnectionState
 from core.ollama_integration import OllamaIntegration
 from core.circuit_breaker import CircuitBreaker, CircuitBreakerState
@@ -333,7 +333,7 @@ class TestAgentFailureScenarios:
             'BACKEND_URL': 'http://test-backend:8000',
             'OLLAMA_URL': 'http://test-ollama:10104'
         }):
-            return BaseAgentV2(max_concurrent_tasks=2)
+            return BaseAgent(max_concurrent_tasks=2)
     
     @pytest.mark.asyncio
     async def test_agent_backend_unavailable(self, test_agent):
@@ -351,7 +351,7 @@ class TestAgentFailureScenarios:
             await test_agent.send_heartbeat()  # Should not raise exception
             
             # Task completion reporting should fail gracefully
-            from core.base_agent_v2 import TaskResult
+            from agents.core.base_agent import TaskResult
             task_result = TaskResult(
                 task_id="test-task",
                 status="completed",
@@ -487,7 +487,7 @@ class TestNetworkFailures:
     @pytest.mark.asyncio
     async def test_network_partition_scenario(self):
         """Test behavior during network partition (agent can't reach services)"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         await agent._setup_async_components()
         
         # Simulate network partition - all network calls fail
@@ -516,7 +516,7 @@ class TestNetworkFailures:
     @pytest.mark.asyncio
     async def test_slow_network_scenario(self):
         """Test behavior with very slow network responses"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         await agent._setup_async_components()
         
         async def slow_network_response(*args, **kwargs):
@@ -547,7 +547,7 @@ class TestNetworkFailures:
             'BACKEND_URL': 'http://nonexistent-backend-host:8000',
             'OLLAMA_URL': 'http://nonexistent-ollama-host:10104'
         }):
-            agent = BaseAgentV2()
+            agent = BaseAgent()
             await agent._setup_async_components()
             
             # DNS failures should be handled gracefully
@@ -566,7 +566,7 @@ class TestResourceExhaustionScenarios:
     @pytest.mark.asyncio
     async def test_memory_pressure_scenario(self):
         """Test behavior under memory pressure (simulated)"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         await agent._setup_async_components()
         
         # Simulate memory pressure by creating large objects
@@ -648,7 +648,7 @@ class TestDataCorruptionScenarios:
     @pytest.mark.asyncio
     async def test_malformed_json_responses(self):
         """Test handling of malformed JSON responses from services"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         await agent._setup_async_components()
         
         # Mock malformed JSON response
@@ -675,7 +675,7 @@ class TestDataCorruptionScenarios:
         
         try:
             # Agent should handle corrupted config gracefully
-            agent = BaseAgentV2(config_path=temp_path)
+            agent = BaseAgent(config_path=temp_path)
             
             # Should fall back to default config
             assert agent.config["capabilities"] == []
@@ -687,7 +687,7 @@ class TestDataCorruptionScenarios:
     @pytest.mark.asyncio
     async def test_incomplete_task_data(self):
         """Test handling of incomplete or malformed task data"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         
         # Test with missing required fields
         incomplete_tasks = [

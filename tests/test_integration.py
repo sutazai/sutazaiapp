@@ -17,7 +17,7 @@ import tempfile
 # Add the agents directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'agents'))
 
-from core.base_agent_v2 import BaseAgentV2, AgentStatus, TaskResult
+from agents.core.base_agent import BaseAgentV2, AgentStatus, TaskResult
 from core.ollama_pool import OllamaConnectionPool
 from core.ollama_integration import OllamaIntegration, OllamaConfig
 from core.circuit_breaker import CircuitBreaker, CircuitBreakerState
@@ -35,7 +35,7 @@ class TestAgentOllamaIntegration:
             'BACKEND_URL': 'http://test-backend:8000',
             'OLLAMA_URL': 'http://test-ollama:10104'
         }):
-            return BaseAgentV2(
+            return BaseAgent(
                 max_concurrent_tasks=3,
                 max_ollama_connections=2
             )
@@ -219,7 +219,7 @@ class TestMultiAgentCoordination:
                 'BACKEND_URL': 'http://test-backend:8000',
                 'OLLAMA_URL': 'http://test-ollama:10104'
             }):
-                agent = BaseAgentV2(max_concurrent_tasks=2)
+                agent = BaseAgent(max_concurrent_tasks=2)
                 if model:
                     agent.default_model = model
                 agents_created.append(agent)
@@ -254,7 +254,7 @@ class TestMultiAgentCoordination:
             model = kwargs.get('model', 'tinyllama')
             return "Response from GPT-OSS model"
         
-        with patch.object(BaseAgentV2, 'query_ollama', side_effect=mock_model_response):
+        with patch.object(BaseAgent, 'query_ollama', side_effect=mock_model_response):
             
             # Execute tasks on all agents concurrently
             async def agent_task(agent, task_num):
@@ -315,7 +315,7 @@ class TestMultiAgentCoordination:
             connection_counts.append(len(connection_counts) + 1)
             return f"Shared response {len(connection_counts)}"
         
-        with patch.object(BaseAgentV2, 'query_ollama', side_effect=mock_ollama_with_tracking):
+        with patch.object(BaseAgent, 'query_ollama', side_effect=mock_ollama_with_tracking):
             
             # Execute requests from all agents simultaneously
             async def agent_requests(agent):
@@ -348,7 +348,7 @@ class TestSystemIntegration:
     @pytest.mark.asyncio
     async def test_agent_backend_integration(self):
         """Test agent integration with backend coordinator"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         await agent._setup_async_components()
         
         # Mock successful backend interactions
@@ -422,7 +422,7 @@ class TestSystemIntegration:
     @pytest.mark.asyncio
     async def test_full_system_workflow(self):
         """Test complete system workflow from task receipt to completion"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         await agent._setup_async_components()
         
         # Mock complete system interaction
@@ -532,7 +532,7 @@ class TestConfigurationIntegration:
             config_path = f.name
         
         try:
-            agent = BaseAgentV2(
+            agent = BaseAgent(
                 config_path=config_path,
                 max_concurrent_tasks=4,
                 health_check_interval=60
@@ -584,7 +584,7 @@ class TestConfigurationIntegration:
                 'AGENT_NAME': agent_name,
                 'AGENT_TYPE': 'config-test'
             }):
-                agent = BaseAgentV2()
+                agent = BaseAgent()
                 
                 # Verify model configuration - should be GPT-OSS
                 assert agent.default_model == "tinyllama"
@@ -619,7 +619,7 @@ class TestErrorPropagationIntegration:
     @pytest.mark.asyncio
     async def test_end_to_end_error_handling(self):
         """Test error handling from Ollama through to task completion"""
-        agent = BaseAgentV2()
+        agent = BaseAgent()
         await agent._setup_async_components()
         
         # Test error propagation chain

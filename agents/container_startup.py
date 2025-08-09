@@ -50,7 +50,7 @@ def load_agent_instance():
                     attr = getattr(agent_module, attr_name)
                     if (isinstance(attr, type) and 
                         attr_name.endswith('Agent') and 
-                        attr_name not in ['BaseAgentV2', 'BaseAgent']):
+                        attr_name not in ['BaseAgent', 'BaseAgent']):
                         logger.info(f"Found agent class: {attr_name}")
                         return attr()
         

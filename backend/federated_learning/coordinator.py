@@ -30,7 +30,7 @@ import numpy as np
 from pydantic import BaseModel
 
 from ..ai_agents.core.agent_registry import AgentRegistry, get_agent_registry
-from ..ai_agents.core.base_agent import AgentMessage, AgentCapability, AgentStatus
+from agents.core.base_agent import AgentMessage, AgentCapability, AgentStatus
 from .aggregator import FederatedAggregator, AggregationAlgorithm
 from .privacy import PrivacyManager, PrivacyBudget
 from .versioning import ModelVersionManager

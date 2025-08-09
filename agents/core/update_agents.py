@@ -10,20 +10,20 @@ import re
 from pathlib import Path
 
 def update_agent_file(file_path: Path) -> bool:
-    """Update a single agent file to use BaseAgentV2"""
+    """Update a single agent file to use BaseAgent"""
     try:
         content = file_path.read_text()
         
         # Check if already updated
-        if "BaseAgentV2" in content or "base_agent_v2" in content:
+        if "BaseAgent" in content or "base_agent_v2" in content:
             return True
             
         # Update imports
         replacements = [
-            (r'from agents\.agent_base import BaseAgent', 'from agents.core.base_agent_v2 import BaseAgentV2'),
-            (r'from agent_base import BaseAgent', 'from agents.core.base_agent_v2 import BaseAgentV2'),
-            (r'from \.agent_base import BaseAgent', 'from agents.core.base_agent_v2 import BaseAgentV2'),
-            (r'class\s+(\w+)\s*\(\s*BaseAgent\s*\)', r'class \1(BaseAgentV2)'),
+            (r'from agents\.agent_base import BaseAgent', 'from agents.core.base_agent import BaseAgentV2'),
+            (r'from agent_base import BaseAgent', 'from agents.core.base_agent import BaseAgentV2'),
+            (r'from \.agent_base import BaseAgent', 'from agents.core.base_agent import BaseAgent'),
+            (r'class\s+(\w+)\s*\(\s*BaseAgent\s*\)', r'class \1(BaseAgent)'),
         ]
         
         modified = False
@@ -55,7 +55,7 @@ def main():
                         updated += 1
                     break
                     
-    print(f"\n✅ Updated {updated} agents to use BaseAgentV2")
+    print(f"\n✅ Updated {updated} agents to use BaseAgent")
 
 if __name__ == "__main__":
     main()

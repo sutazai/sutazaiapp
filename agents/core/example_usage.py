@@ -19,7 +19,7 @@ import os
 # Add agents to path
 sys.path.append('/opt/sutazaiapp/agents')
 
-from core.base_agent_v2 import BaseAgentV2, TaskResult, AgentStatus
+from agents.core.base_agent import BaseAgentV2, TaskResult, AgentStatus
 from core.ollama_pool import OllamaConnectionPool
 from core.circuit_breaker import CircuitBreaker
 from core.request_queue import RequestQueue, RequestPriority
@@ -33,10 +33,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# Example 1: New Agent with BaseAgentV2
-class AISystemArchitectAgent(BaseAgentV2):
+# Example 1: New Agent with BaseAgent
+class AISystemArchitectAgent(BaseAgent):
     """
-    Example of a new agent using BaseAgentV2 directly
+    Example of a new agent using BaseAgent directly
     This represents one of the 131 agents in the system
     """
     
@@ -191,9 +191,9 @@ class AISystemArchitectAgent(BaseAgentV2):
 
 
 # Example 2: Migrated Legacy Agent
-class DataAnalysisEngineerAgent(BaseAgentV2):
+class DataAnalysisEngineerAgent(BaseAgent):
     """
-    Example of a migrated agent from BaseAgent to BaseAgentV2
+    Example of a migrated agent from BaseAgent to BaseAgent
     Shows how to update existing agent code
     """
     
@@ -275,7 +275,7 @@ async def example_legacy_wrapper():
     # Wrap with new system
     wrapped_agent = LegacyAgentWrapper(OldStyleAgent)
     
-    # Use as normal BaseAgentV2 agent
+    # Use as normal BaseAgent agent
     await wrapped_agent._setup_async_components()
     
     test_task = {"id": "legacy_test", "type": "old_task"}
@@ -365,8 +365,8 @@ class ProductionAgentRunner:
         except Exception as e:
             logger.error(f"Failed to initialize {self.agent_name}: {e}")
             
-            # Fallback to generic BaseAgentV2
-            self.agent = BaseAgentV2()
+            # Fallback to generic BaseAgent
+            self.agent = BaseAgent()
             logger.info(f"Using generic agent for {self.agent_name}")
     
     async def run_agent(self):

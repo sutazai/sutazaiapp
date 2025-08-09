@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 # Add the agents directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'agents'))
 
-from core.base_agent_v2 import BaseAgentV2
+from agents.core.base_agent import BaseAgentV2
 from core.ollama_pool import OllamaConnectionPool
 from core.ollama_integration import OllamaIntegration, OllamaConfig
 
@@ -357,7 +357,7 @@ class TestAgentPerformance:
             'AGENT_NAME': 'test-performance-agent',
             'AGENT_TYPE': 'performance-test'
         }):
-            agent = BaseAgentV2(
+            agent = BaseAgent(
                 max_concurrent_tasks=5,
                 max_ollama_connections=2
             )
@@ -505,7 +505,7 @@ class TestSystemWidePerfomance:
                     'AGENT_NAME': agent_name,
                     'AGENT_TYPE': f'test-{model_type}'
                 }):
-                    agent = BaseAgentV2(max_concurrent_tasks=2)
+                    agent = BaseAgent(max_concurrent_tasks=2)
                     await agent._setup_async_components()
                     agents.append(agent)
             
@@ -585,7 +585,7 @@ class TestSystemWidePerfomance:
                 'AGENT_NAME': f'test-{model.replace(":", "-").replace(".", "-")}',
                 'AGENT_TYPE': 'model-performance-test'
             }):
-                agent = BaseAgentV2()
+                agent = BaseAgent()
                 agent.default_model = model
                 await agent._setup_async_components()
                 

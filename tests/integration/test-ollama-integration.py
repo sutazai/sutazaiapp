@@ -21,7 +21,7 @@ from collections import defaultdict
 sys.path.append(str(Path(__file__).parent.parent))
 
 from agents.core.ollama_integration import OllamaIntegration, OllamaConfig
-from agents.core.base_agent_v2 import BaseAgentV2
+from agents.core.base_agent import BaseAgent
 
 
 class OllamaIntegrationTester:

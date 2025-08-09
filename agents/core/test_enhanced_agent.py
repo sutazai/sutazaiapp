@@ -21,7 +21,7 @@ import os
 # Add the agents directory to path
 sys.path.append('/opt/sutazaiapp/agents')
 
-from core.base_agent_v2 import BaseAgentV2, TaskResult
+from agents.core.base_agent import BaseAgentV2, TaskResult
 from core.ollama_pool import OllamaConnectionPool
 from core.circuit_breaker import CircuitBreaker, CircuitBreakerOpenException
 from core.request_queue import RequestQueue, RequestPriority
@@ -36,7 +36,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class TestAgent(BaseAgentV2):
+class TestAgent(BaseAgent):
     """Test agent implementation"""
     
     def __init__(self):
@@ -345,7 +345,7 @@ def run_quick_validation():
     
     # Test imports
     try:
-        from core.base_agent_v2 import BaseAgentV2
+        from agents.core.base_agent import BaseAgentV2
         from core.ollama_pool import OllamaConnectionPool
         from core.circuit_breaker import CircuitBreaker
         from core.request_queue import RequestQueue
@@ -354,8 +354,8 @@ def run_quick_validation():
         logger.info("✓ All imports successful")
         
         # Test basic instantiation
-        agent = BaseAgentV2()
-        logger.info("✓ BaseAgentV2 instantiation successful")
+        agent = BaseAgent()
+        logger.info("✓ BaseAgent instantiation successful")
         
         # Test configuration
         from core.ollama_integration import OllamaConfig

@@ -23,7 +23,7 @@ from agents.core.ollama_integration import OllamaConfig
 from agents.core.migration_helper import validate_migration
 
 class AgentMigrator:
-    """Handles migration of agents to BaseAgentV2 with Ollama integration"""
+    """Handles migration of agents to BaseAgent with Ollama integration"""
     
     def __init__(self, dry_run: bool = False):
         self.dry_run = dry_run
@@ -77,7 +77,7 @@ class AgentMigrator:
             return None
             
     def update_agent_imports(self, agent_path: Path) -> bool:
-        """Update agent to use BaseAgentV2"""
+        """Update agent to use BaseAgent"""
         app_file = agent_path / "app.py"
         if not app_file.exists():
             app_file = agent_path / "agent.py"
@@ -89,19 +89,19 @@ class AgentMigrator:
             content = app_file.read_text()
             
             # Check if already migrated
-            if "BaseAgentV2" in content or "base_agent_v2" in content:
+            if "BaseAgent" in content or "base_agent_v2" in content:
                 self.log(f"{agent_path.name} already migrated")
                 return True
                 
             # Update imports
             updates = [
                 ("from agents.agent_base import BaseAgent", 
-                 "from agents.core.base_agent_v2 import BaseAgentV2"),
+                 "from agents.core.base_agent import BaseAgentV2"),
                 ("from agent_base import BaseAgent",
-                 "from agents.core.base_agent_v2 import BaseAgentV2"),
+                 "from agents.core.base_agent import BaseAgentV2"),
                 ("from .agent_base import BaseAgent",
-                 "from agents.core.base_agent_v2 import BaseAgentV2"),
-                ("class.*\\(BaseAgent\\)", "class \\1(BaseAgentV2)"),
+                 "from agents.core.base_agent import BaseAgent"),
+                ("class.*\\(BaseAgent\\)", "class \\1(BaseAgent)"),
             ]
             
             modified = False
@@ -114,7 +114,7 @@ class AgentMigrator:
             import re
             content = re.sub(
                 r'class\s+(\w+)\s*\(\s*BaseAgent\s*\)',
-                r'class \1(BaseAgentV2)',
+                r'class \1(BaseAgent)',
                 content
             )
             
@@ -333,7 +333,7 @@ echo "Rollback completed"
         self.log(f"Rollback script created: {script_path}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Migrate agents to BaseAgentV2 with Ollama")
+    parser = argparse.ArgumentParser(description="Migrate agents to BaseAgent with Ollama")
     parser.add_argument("--dry-run", action="store_true", help="Simulate migration without changes")
     parser.add_argument("--phase", choices=["canary", "development", "balanced", "complex", "production", "complete"],
                        help="Migration phase to run")

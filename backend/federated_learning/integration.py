@@ -30,7 +30,7 @@ from .monitoring import FederatedMonitor, MetricType, TrainingMetric
 from .dashboard import FederatedDashboard, run_dashboard
 
 from ..ai_agents.core.agent_registry import get_agent_registry, set_agent_registry, AgentRegistry
-from ..ai_agents.core.base_agent import AgentCapability
+from agents.core.base_agent import AgentCapability
 
 
 class FederatedSystemConfig:

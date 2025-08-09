@@ -32,7 +32,7 @@ from concurrent.futures import ThreadPoolExecutor
 import aioredis
 from pydantic import BaseModel
 
-from ..ai_agents.core.base_agent import BaseAgent, AgentMessage, AgentCapability, AgentStatus
+from agents.core.base_agent import BaseAgent, AgentMessage, AgentCapability, AgentStatus
 from .privacy import PrivacyManager, DifferentialPrivacyConfig
 from .aggregator import ClientUpdate
 

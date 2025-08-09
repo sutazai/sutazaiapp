@@ -42,21 +42,21 @@ def import_agent_class(agent_name):
                 attr = getattr(app, attr_name)
                 if (isinstance(attr, type) and 
                     attr_name.endswith('Agent') and 
-                    attr_name != 'BaseAgentV2' and
+                    attr_name != 'BaseAgent' and
                     attr_name != 'BaseAgent'):
                     logger.info(f"Found agent class: {attr_name}")
                     return attr
         
         # Fallback to base agent
         logger.warning(f"Could not find specific agent class for {agent_name}, using base agent")
-        from agents.core.base_agent_v2 import BaseAgentV2
+        from agents.core.base_agent import BaseAgentV2
         return BaseAgentV2
         
     except Exception as e:
         logger.error(f"Error importing agent class: {e}")
         # Final fallback to base agent
-        from agents.core.base_agent_v2 import BaseAgentV2
-        return BaseAgentV2
+        from agents.core.base_agent import BaseAgent
+        return BaseAgent
 
 def main():
     """Main entry point"""

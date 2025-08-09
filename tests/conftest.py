@@ -159,7 +159,7 @@ def mock_backend_service():
 @pytest.fixture
 async def base_agent():
     """Create a base agent for testing"""
-    from core.base_agent_v2 import BaseAgentV2
+    from agents.core.base_agent import BaseAgentV2
     
     with patch.dict(os.environ, {
         'AGENT_NAME': 'test-base-agent',
@@ -191,7 +191,7 @@ def sample_task():
 @pytest.fixture
 def sample_task_result():
     """Create a sample task result for testing"""
-    from core.base_agent_v2 import TaskResult
+    from agents.core.base_agent import TaskResult
     
     return TaskResult(
         task_id="test-task-001",
@@ -344,7 +344,7 @@ class TestAssertions:
     @staticmethod
     def assert_valid_task_result(result):
         """Assert that task result is valid"""
-        from core.base_agent_v2 import TaskResult
+        from agents.core.base_agent import TaskResult
         
         assert isinstance(result, TaskResult)
         assert result.task_id is not None

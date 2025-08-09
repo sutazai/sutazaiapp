@@ -69,7 +69,7 @@ def import_agent_class(agent_name):
                     attr = getattr(agent_module, attr_name)
                     if (isinstance(attr, type) and 
                         attr_name.endswith('Agent') and 
-                        attr_name != 'BaseAgentV2' and
+                        attr_name != 'BaseAgent' and
                         attr_name != 'BaseAgent'):
                         logger.info(f"Found agent class: {attr_name}")
                         return attr

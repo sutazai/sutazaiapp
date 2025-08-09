@@ -35,14 +35,14 @@ pytestmark = pytest.mark.skipif(
 )
 
 class TestAgent:
-    """Simple test agent using BaseAgentV2"""
+    """Simple test agent using BaseAgent"""
     
     def __init__(self):
         # Import BaseAgentV2
-        from core.base_agent_v2 import BaseAgentV2
+        from agents.core.base_agent import BaseAgentV2
         from core.ollama_integration import OllamaIntegration
         
-        self.agent = BaseAgentV2(
+        self.agent = BaseAgent(
             config_path='/dev/null',  # Use defaults
             max_concurrent_tasks=1,
             max_ollama_connections=1
