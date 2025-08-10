@@ -1,0 +1,39 @@
+# Phase 2: Exact Duplicate Dockerfiles to Remove (25+ files)
+
+# 1. Exact MD5 duplicates - Remove the duplicates, keep one original (9 files - 3 groups)
+# Group 1: Keep data-analysis-engineer, remove others
+/opt/sutazaiapp/docker/deep-local-brain-builder/Dockerfile
+/opt/sutazaiapp/docker/document-knowledge-manager/Dockerfile
+/opt/sutazaiapp/docker/edge-computing-optimizer/Dockerfile
+
+# Group 2: Keep jarvis-hardware-resource-optimizer, remove others  
+/opt/sutazaiapp/agents/jarvis-knowledge-management/Dockerfile
+/opt/sutazaiapp/agents/jarvis-multimodal-ai/Dockerfile
+
+# Group 3: Keep the individual service directory version, remove dockerfiles version
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.langchain
+
+# 2. Directory vs Dockerfiles duplicates - Remove dockerfiles versions (11 files)
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.semgrep
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.skyvern
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.shellgpt
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.privategpt
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.tabbyml
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.flowise
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.localagi
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.bigagi
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.dify
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.langflow
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.documind
+
+# 3. Additional duplicates in remaining dockerfiles/ (remaining files - 8 files)
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.gpt-engineer
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.autogpt
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.finrobot
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.llamaindex
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.crewai
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.browseruse
+/opt/sutazaiapp/docker/legacy/Dockerfile
+/opt/sutazaiapp/docker/requirements/Dockerfile
+
+# Total: 25 files to remove

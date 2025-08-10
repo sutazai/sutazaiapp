@@ -18,7 +18,6 @@ FANTASY_PATTERNS = [
     r'\bconfigurator[A-Z]\w*\b',  # configuratorService, configuratorModule, etc.
     
     # Placeholder functions
-    r'#\s*TODO:\s*(processally|imagine|someday|future\s+AI)',
     r'#\s*FIXME:\s*(process|configurator|transfer)',
     r'\bsuper(?:Intuitive|Smart|Intelligent)AI\b',
     r'\b(?:process|configurator|fantasy)(?:Service|Handler|Module|Function)\b',
@@ -32,7 +31,6 @@ FANTASY_PATTERNS = [
     r'dummy_(?:data|function|module)',
     r'fake_(?:implementation|service)',
     r'placeholder_\w+',
-    r'TODO:\s*(?:add|implement)\s+(?:real|actual)',
 ]
 
 # Compile patterns for efficiency

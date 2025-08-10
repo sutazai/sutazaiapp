@@ -201,7 +201,6 @@ class OllamaLoadTester:
                         request_id=request.id,
                         success=True,
                         response_time_ms=response_time_ms,
-                        queue_wait_time_ms=0,  # TODO: Extract from response if available
                         response_size=response_size,
                         timestamp=time.time(),
                         status_code=response.status

@@ -1,0 +1,40 @@
+FROM python:3.11-slim
+
+# Create non-root user early
+RUN groupadd -g 1000 appuser && \
+    useradd -u 1000 -g appuser -m -s /bin/bash appuser
+
+WORKDIR /app
+
+# Install only essential packages first
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install as root for efficiency
+COPY requirements.txt .
+RUN pip install --no-cache-dir fastapi uvicorn pika aio-pika redis prometheus-client requests httpx pydantic
+
+# Copy application files
+COPY messaging.py ./core/messaging.py
+COPY metrics.py .
+COPY app.py .
+
+# Create logs directory and set permissions
+RUN mkdir -p /app/logs /app/core && \
+    chown -R appuser:appuser /app && \
+    chmod -R 755 /app && \
+    chmod 777 /app/logs
+
+# Switch to non-root user
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
+    CMD curl -f http://localhost:8589/health || exit 1
+
+# Expose port
+EXPOSE 8589
+
+# Run the application
+CMD ["python", "app.py"]

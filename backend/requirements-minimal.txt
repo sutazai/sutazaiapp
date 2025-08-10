@@ -1,4 +1,0 @@
-## Deprecated alias file
-## Canonical minimal dependencies live in requirements_minimal.txt
-## This file is kept for backward compatibility only.
--r requirements_minimal.txt

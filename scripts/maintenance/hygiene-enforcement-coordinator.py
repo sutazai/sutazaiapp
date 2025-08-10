@@ -351,7 +351,6 @@ class HygieneEnforcementCoordinator:
                     stats["archived"] += 1
                     self.log_action(f"Archived redundant deploy script: {script}")
         
-        # TODO: Agent coordination for actual consolidation
         self.log_action("NEXT: Coordinate with deploy-automation-master agent for consolidation")
         
         return stats

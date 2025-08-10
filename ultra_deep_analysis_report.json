@@ -1,271 +1,335 @@
 {
-  "timestamp": "2025-08-09T16:17:33.521743",
+  "timestamp": "2025-08-10T01:09:31.908899",
   "containers": {
-    "running_count": 16,
-    "sutazai-frontend": {
-      "status": "Up 8 hours (healthy)",
-      "ports": "0.0.0.0:10011->8501/tcp, [::]:10011->8501/tcp",
-      "state": "running"
-    },
-    "sutazai-backend": {
-      "status": "Up 26 minutes (healthy)",
-      "ports": "0.0.0.0:10010->8000/tcp, [::]:10010->8000/tcp",
-      "state": "running"
-    },
-    "sutazai-chromadb": {
-      "status": "Up 8 hours (healthy)",
-      "ports": "0.0.0.0:10100->8000/tcp, [::]:10100->8000/tcp",
-      "state": "running"
-    },
-    "sutazai-postgres": {
-      "status": "Up 8 hours (healthy)",
-      "ports": "0.0.0.0:10000->5432/tcp, [::]:10000->5432/tcp",
-      "state": "running"
-    },
-    "sutazai-ollama": {
-      "status": "Up 8 hours (healthy)",
-      "ports": "0.0.0.0:10104->11434/tcp, [::]:10104->11434/tcp",
-      "state": "running"
-    },
-    "sutazai-qdrant": {
-      "status": "Up 8 hours (healthy)",
-      "ports": "0.0.0.0:10101->6333/tcp, [::]:10101->6333/tcp, 0.0.0.0:10102->6334/tcp, [::]:10102->6334/tcp",
-      "state": "running"
-    },
-    "sutazai-redis": {
-      "status": "Up 9 hours (healthy)",
-      "ports": "0.0.0.0:10001->6379/tcp, [::]:10001->6379/tcp",
-      "state": "running"
-    },
-    "sutazai-jarvis-automation-agent": {
-      "status": "Up 4 hours (healthy)",
-      "ports": "0.0.0.0:11102->8080/tcp, [::]:11102->8080/tcp",
-      "state": "running"
-    },
-    "sutazai-hardware-resource-optimizer": {
-      "status": "Up 9 hours (unhealthy)",
-      "ports": "0.0.0.0:11110->8080/tcp, [::]:11110->8080/tcp",
-      "state": "running"
-    },
-    "sutazai-jarvis-hardware-resource-optimizer": {
-      "status": "Restarting (1) 21 seconds ago",
-      "ports": "",
-      "state": "restarting"
-    },
-    "sutazai-rabbitmq": {
-      "status": "Up 15 hours (healthy)",
-      "ports": "4369/tcp, 5671/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:10007->5672/tcp, [::]:10007->5672/tcp, 0.0.0.0:10008->15672/tcp, [::]:10008->15672/tcp",
-      "state": "running"
-    },
-    "sutazai-ollama-integration": {
-      "status": "Up 16 hours (healthy)",
-      "ports": "0.0.0.0:8090->8090/tcp, :::8090->8090/tcp",
-      "state": "running"
-    },
-    "sutazai-grafana": {
-      "status": "Up 16 hours (healthy)",
-      "ports": "0.0.0.0:10201->3000/tcp, [::]:10201->3000/tcp",
-      "state": "running"
-    },
-    "sutazai-loki": {
-      "status": "Up 16 hours (healthy)",
-      "ports": "0.0.0.0:10202->3100/tcp, [::]:10202->3100/tcp",
-      "state": "running"
-    },
-    "sutazai-prometheus": {
-      "status": "Up 16 hours (healthy)",
-      "ports": "0.0.0.0:10200->9090/tcp, [::]:10200->9090/tcp",
-      "state": "running"
-    },
-    "sutazai-neo4j": {
-      "status": "Up 16 hours (healthy)",
-      "ports": "7473/tcp, 0.0.0.0:10002->7474/tcp, [::]:10002->7474/tcp, 0.0.0.0:10003->7687/tcp, [::]:10003->7687/tcp",
-      "state": "running"
+    "total": 27,
+    "running": 27,
+    "stopped": 0,
+    "health_status": {
+      "sutazai-frontend": "healthy",
+      "sutazai-resource-arbitration-agent": "healthy",
+      "sutazai-task-assignment-coordinator": "healthy",
+      "sutazai-faiss": "healthy",
+      "sutazai-jarvis-automation-agent": "healthy",
+      "sutazai-jarvis-hardware-resource-optimizer": "healthy",
+      "sutazai-backend": "healthy",
+      "sutazai-ollama-integration": "healthy",
+      "sutazai-grafana": "healthy",
+      "sutazai-ai-agent-orchestrator": "healthy",
+      "sutazai-redis-exporter": "no_health_check",
+      "sutazai-postgres-exporter": "no_health_check",
+      "sutazai-kong": "healthy",
+      "sutazai-neo4j": "healthy",
+      "sutazai-consul": "healthy",
+      "sutazai-cadvisor": "healthy",
+      "sutazai-qdrant": "healthy",
+      "sutazai-ollama": "healthy",
+      "sutazai-blackbox-exporter": "healthy",
+      "sutazai-chromadb": "healthy",
+      "sutazai-prometheus": "healthy",
+      "sutazai-alertmanager": "healthy",
+      "sutazai-redis": "healthy",
+      "sutazai-postgres": "healthy",
+      "sutazai-node-exporter": "no_health_check",
+      "sutazai-loki": "healthy",
+      "sutazai-rabbitmq": "healthy"
     }
   },
   "services": {
     "backend": {
-      "status": "timeout"
+      "status": "unreachable"
     },
     "frontend": {
-      "status": "reachable",
-      "status_code": 200,
-      "response": "<!--\n Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)\n\n Licensed under the Apache License, Version 2.0 (the \"License\");\n you may not use this file except in compliance with the License.\n You may obtain a copy of the License at\n\n     http://www.apache.org/licenses/LICENSE-2.0\n\n Unless required by applicable law or agreed to in writing, software\n distributed under the License is distributed on an \"AS IS\" BASIS,\n WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or im"
+      "status": "healthy",
+      "status_code": 200
     },
     "ollama": {
-      "status": "reachable",
-      "status_code": 200,
-      "response": "{\"models\":[{\"name\":\"tinyllama:latest\",\"model\":\"tinyllama:latest\",\"modified_at\":\"2025-08-08T22:23:57.155075731Z\",\"size\":637700138,\"digest\":\"2644915ede352ea7bdfaff0bfac0be74c719d5d5202acb63a6fb095b52f394a4\",\"details\":{\"parent_model\":\"\",\"format\":\"gguf\",\"family\":\"llama\",\"families\":[\"llama\"],\"parameter_size\":\"1B\",\"quantization_level\":\"Q4_0\"}}]}"
-    },
-    "postgres": {
-      "status": "reachable",
-      "has_tables": true
-    },
-    "redis": {
-      "status": "reachable"
-    },
-    "neo4j": {
-      "status": "reachable",
-      "status_code": 200,
-      "response": "{\n  \"bolt_routing\" : \"neo4j://127.0.0.1:7687\",\n  \"transaction\" : \"http://127.0.0.1:10002/db/{databaseName}/tx\",\n  \"bolt_direct\" : \"bolt://127.0.0.1:7687\",\n  \"neo4j_version\" : \"5.13.0\",\n  \"neo4j_edition\" : \"community\"\n}"
+      "status": "healthy",
+      "status_code": 200
     },
     "prometheus": {
-      "status": "reachable",
-      "status_code": 200,
-      "response": "Prometheus Server is Healthy.\n"
+      "status": "healthy",
+      "status_code": 200
     },
     "grafana": {
-      "status": "reachable",
-      "status_code": 200,
-      "response": "{\n  \"database\": \"ok\",\n  \"version\": \"12.2.0-16818804881\",\n  \"commit\": \"cc64b1748324fb42f9b6154524ac8315cd9fd5d4\"\n}"
+      "status": "healthy",
+      "status_code": 200
     },
-    "chromadb": {
-      "status": "reachable",
-      "status_code": 200,
-      "response": "{\"nanosecond heartbeat\":1754749056728870945}"
+    "rabbitmq": {
+      "status": "unhealthy",
+      "status_code": 401
     },
-    "qdrant": {
-      "status": "reachable",
-      "status_code": 200,
-      "response": "{\"result\":{\"collections\":[]},\"status\":\"ok\",\"time\":6.724e-6}"
+    "neo4j": {
+      "status": "healthy",
+      "status_code": 200
+    },
+    "postgres": {
+      "status": "unreachable"
+    },
+    "redis": {
+      "status": "unreachable"
     }
   },
-  "agents": {
-    "task-assignment": {
-      "port": 8551,
-      "health": {
-        "status": "connection_error"
-      },
-      "process": {
-        "status": "connection_error"
-      }
+  "code_quality": {
+    "files_analyzed": 100,
+    "total_files": 977,
+    "total_lines": 48092,
+    "critical_issues": {
+      "hardcoded_credentials": 6,
+      "fantasy_elements": 15,
+      "bare_excepts": 48
     },
-    "ai-orchestrator": {
-      "port": 8589,
-      "health": {
-        "status": "connection_error"
-      },
-      "process": {
-        "status": "connection_error"
-      }
-    },
-    "multi-agent-coordinator": {
-      "port": 8587,
-      "health": {
-        "status": "connection_error"
-      },
-      "process": {
-        "status": "connection_error"
-      }
-    },
-    "resource-arbitration": {
-      "port": 8588,
-      "health": {
-        "status": "connection_error"
-      },
-      "process": {
-        "status": "connection_error"
-      }
-    },
-    "hardware-optimizer": {
-      "port": 8002,
-      "health": {
-        "status": "connection_error"
-      },
-      "process": {
-        "status": "connection_error"
-      }
-    },
-    "ollama-integration": {
-      "port": 11015,
-      "health": {
-        "status": "connection_error"
-      },
-      "process": {
-        "status": "connection_error"
-      }
-    },
-    "metrics-exporter": {
-      "port": 11063,
-      "health": {
-        "status": "connection_error"
-      },
-      "process": {
-        "status": "connection_error"
-      }
-    },
-    "jarvis-automation": {
-      "port": 11102,
-      "health": {
-        "status": "reachable",
-        "status_code": 200,
-        "response": "{\"status\":\"healthy\"}"
-      },
-      "process": {
-        "status": "reachable",
-        "status_code": 404,
-        "response": "{\"detail\":\"Not Found\"}"
-      }
-    },
-    "jarvis-hardware": {
-      "port": 11110,
-      "health": {
-        "status": "reachable",
-        "status_code": 200,
-        "response": "{\"status\":\"healthy\",\"agent\":\"hardware-resource-optimizer\",\"description\":\"On-demand hardware resource optimization and cleanup tool\",\"docker_available\":false,\"system_status\":{\"cpu_percent\":36.1,\"memory_percent\":26.1,\"disk_percent\":3.03539070858855,\"memory_available_gb\":17.211681365966797,\"disk_free_gb\":925.076358795166,\"timestamp\":1754749057.753258},\"timestamp\":1754749057.7532673}"
-      },
-      "process": {
-        "status": "reachable",
-        "status_code": 404,
-        "response": "{\"detail\":\"Not Found\"}"
-      }
-    }
+    "compliance_score": 97.22
   },
-  "databases": {},
-  "api_endpoints": {
-    "/docs": {
-      "status": "timeout"
-    },
-    "/api/v1/agents": {
-      "status": "timeout"
-    },
-    "/api/v1/chat": {
-      "status": "timeout"
-    },
-    "/api/v1/models": {
-      "status": "timeout"
-    },
-    "/api/v1/system/status": {
-      "status": "timeout"
-    },
-    "/api/v1/documents": {
-      "status": "timeout"
-    },
-    "/api/v1/features": {
-      "status": "timeout"
-    },
-    "/api/v1/orchestration/status": {
-      "status": "timeout"
-    }
+  "security": {
+    "root_containers": 11,
+    "exposed_ports": [],
+    "ssl_enabled": false,
+    "credentials_in_env": true,
+    "security_scanning": false
   },
-  "rule_violations": [
-    {
-      "rule": "Rule 1: No Fantasy Elements",
-      "violation": "Found 30 references to fantasy terms"
-    }
-  ],
-  "critical_issues": [
-    "Only 2 agents are responding (expected 7+)"
-  ],
-  "recommendations": [
-    {
-      "priority": "HIGH",
-      "action": "Implement authentication layer",
-      "details": "Add JWT authentication middleware to all API endpoints"
+  "infrastructure": {},
+  "agent_progress": {
+    "phase_1_security": {
+      "agents": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "status": "pending",
+      "progress": 0,
+      "tasks_completed": 0,
+      "tasks_total": 29
     },
-    {
-      "priority": "HIGH",
-      "action": "Fix unhealthy containers: sutazai-hardware-resource-optimizer"
+    "phase_2_organization": {
+      "agents": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75
+      ],
+      "status": "pending",
+      "progress": 0,
+      "tasks_completed": 0,
+      "tasks_total": 40
+    },
+    "phase_3_quality": {
+      "agents": [
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135
+      ],
+      "status": "pending",
+      "progress": 0,
+      "tasks_completed": 0,
+      "tasks_total": 60
+    },
+    "phase_4_architecture": {
+      "agents": [
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175
+      ],
+      "status": "pending",
+      "progress": 0,
+      "tasks_completed": 0,
+      "tasks_total": 40
+    },
+    "phase_5_testing": {
+      "agents": [
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195
+      ],
+      "status": "pending",
+      "progress": 0,
+      "tasks_completed": 0,
+      "tasks_total": 20
+    },
+    "phase_6_validation": {
+      "agents": [
+        196,
+        197,
+        198,
+        199,
+        200
+      ],
+      "status": "pending",
+      "progress": 0,
+      "tasks_completed": 0,
+      "tasks_total": 5
     }
-  ]
+  }
 }

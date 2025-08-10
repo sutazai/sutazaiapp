@@ -1,0 +1,42 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install common dependencies
+RUN apt-get update && apt-get install -y \
+    git curl wget unzip \
+    python3-pip python3-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements if exists
+COPY requirements-autogen.txt* ./
+RUN if [ -f requirements-autogen.txt ]; then pip install -r requirements-autogen.txt; fi
+
+# Create necessary directories
+RUN mkdir -p /app/data /app/logs /app/workspace
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1
+ENV AGENT_NAME=autogen
+ENV OLLAMA_BASE_URL=http://ollama:11434
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8508/health || exit 1
+
+EXPOSE 8508
+
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
+CMD ["python", "-m", "autogen"]

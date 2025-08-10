@@ -784,7 +784,6 @@ class AgentManager:
         Args:
             message: Query message
         """
-        # TODO: Implement query handling
         pass
 
     def update_agent_config(self, agent_id: str, new_config_dict: Dict[str, Any], new_metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:

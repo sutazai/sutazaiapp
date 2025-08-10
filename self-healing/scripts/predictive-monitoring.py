@@ -550,7 +550,6 @@ class PredictiveMonitor:
                     json.dumps(alert)
                 )
             
-            # TODO: Send to alerting system (Slack, PagerDuty, etc.)
     
     def train_models(self):
         """Train anomaly detection models on historical data"""

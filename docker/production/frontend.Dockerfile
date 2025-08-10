@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy requirements
-COPY frontend/requirements.txt .
+COPY requirements/prod.txt requirements.txt
 
 # Install dependencies
 RUN pip install --no-cache-dir --user -r requirements.txt

@@ -1,0 +1,10 @@
+total 36
+drwxr-xr-x 9 10001 10001 4096 Aug  9 00:22 .
+drwx-----x 3 root  root  4096 Aug  9 00:22 ..
+drwxr-xr-x 2 10001 10001 4096 Aug  9 00:22 chunks
+drwxr-xr-x 2 10001 10001 4096 Aug  9 00:22 compactor
+drwxr-xr-x 2 10001 10001 4096 Sep  7  2023 rules
+drwxr-xr-x 2 10001 10001 4096 Sep  7  2023 rules-temp
+drwxr-xr-x 7 10001 10001 4096 Aug  9 18:45 tsdb-shipper-active
+drwxr-xr-x 2 10001 10001 4096 Aug  9 00:22 tsdb-shipper-cache
+drwxr-xr-x 3 10001 10001 4096 Aug 10 01:23 wal

@@ -1,0 +1,80 @@
+# Phase 1: Dockerfiles to Archive (55 files)
+
+# 1. Backup files (1 file)
+/opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile.backup
+
+# 2. Test and temporary files (7 files)
+/opt/sutazaiapp/docker/test-build/Dockerfile
+/opt/sutazaiapp/docker/test-generated/crewai/Dockerfile
+/opt/sutazaiapp/docker/test-generated/langchain/Dockerfile
+/opt/sutazaiapp/docker/test-generated/autogpt/Dockerfile
+/opt/sutazaiapp/tests/Dockerfile
+/opt/sutazaiapp/tests/fixtures/hygiene/docker_chaos/Dockerfile.test
+/opt/sutazaiapp/tests/playwright/Dockerfile
+
+# 3. Template files (2 files)
+/opt/sutazaiapp/docker/templates/Dockerfile.nodejs-agent-template
+/opt/sutazaiapp/docker/templates/Dockerfile.python-agent-template
+
+# 4. Variant files that should be archived (4 files)
+/opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile.hardened
+/opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile.minimal
+/opt/sutazaiapp/backend/Dockerfile.optimized
+/opt/sutazaiapp/backend/Dockerfile.minimal
+
+# 5. Deployment scripts Dockerfiles (3 files)
+/opt/sutazaiapp/scripts/deployment/Dockerfile.orchestrator
+/opt/sutazaiapp/scripts/deployment/Dockerfile.service-discovery
+/opt/sutazaiapp/scripts/deployment/Dockerfile.health-check
+
+# 6. Deployment variants (4 files)
+/opt/sutazaiapp/deployment/docker/Dockerfile.backend-production
+/opt/sutazaiapp/deployment/docker/Dockerfile.agent-base
+/opt/sutazaiapp/deployment/production/docker/Dockerfile.brain-optimized
+/opt/sutazaiapp/deployment/production/docker/Dockerfile.agent-base
+
+# 7. Docker fusion files (4 files)
+/opt/sutazaiapp/docker/Dockerfile.fusion-learning
+/opt/sutazaiapp/docker/Dockerfile.fusion-coordinator
+/opt/sutazaiapp/docker/Dockerfile.fusion-pipeline
+/opt/sutazaiapp/docker/Dockerfile.fusion-dashboard
+
+# 8. Docker deployments folder (4 files)
+/opt/sutazaiapp/docker/deployments/Dockerfile.task_router
+/opt/sutazaiapp/docker/deployments/Dockerfile.self_healer
+/opt/sutazaiapp/docker/deployments/Dockerfile.workflow_manager
+/opt/sutazaiapp/docker/deployments/Dockerfile.monitor
+
+# 9. Docker adapters (2 files)
+/opt/sutazaiapp/docker/adapters/postgres/Dockerfile
+/opt/sutazaiapp/docker/adapters/Dockerfile.service-adapter
+
+# 10. Docker agents duplicates (20 files) - These have individual service containers already
+/opt/sutazaiapp/docker/agents/Dockerfile.aider
+/opt/sutazaiapp/docker/agents/Dockerfile.semgrep
+/opt/sutazaiapp/docker/agents/Dockerfile.shellgpt
+/opt/sutazaiapp/docker/agents/Dockerfile.agentgpt
+/opt/sutazaiapp/docker/agents/Dockerfile.gpt-engineer
+/opt/sutazaiapp/docker/agents/Dockerfile.privategpt
+/opt/sutazaiapp/docker/agents/Dockerfile.universal
+/opt/sutazaiapp/docker/agents/Dockerfile.tabbyml
+/opt/sutazaiapp/docker/agents/Dockerfile.python-agent-v2
+/opt/sutazaiapp/docker/agents/Dockerfile.flowise
+/opt/sutazaiapp/docker/agents/Dockerfile.browseruse
+/opt/sutazaiapp/docker/agents/Dockerfile.agentzero
+/opt/sutazaiapp/docker/agents/Dockerfile.autogpt
+/opt/sutazaiapp/docker/agents/Dockerfile.dify
+/opt/sutazaiapp/docker/agents/Dockerfile.autogen
+/opt/sutazaiapp/docker/agents/Dockerfile.finrobot
+/opt/sutazaiapp/docker/agents/Dockerfile.llamaindex
+/opt/sutazaiapp/docker/agents/Dockerfile.langflow
+/opt/sutazaiapp/docker/agents/Dockerfile.documind
+/opt/sutazaiapp/docker/agents/Dockerfile.crewai
+
+# 11. Dockerfiles that are duplicates in /docker/dockerfiles/ (4 files)
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.agentgpt
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.agentzero
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.aider
+/opt/sutazaiapp/docker/dockerfiles/Dockerfile.autogen
+
+# Total: 55 files

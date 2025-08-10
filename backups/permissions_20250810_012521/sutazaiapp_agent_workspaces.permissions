@@ -1,0 +1,5 @@
+total 12
+drwxrwxr-x 2 dnsmasq systemd-journal 4096 Aug  9 08:24 .
+drwx-----x 3 root    root            4096 Aug  9 06:55 ..
+-rwxrwxr-x 1 dnsmasq systemd-journal    0 Aug  8 18:08 .gitkeep
+-rw-r--r-- 1 dnsmasq systemd-journal  634 Aug  8 22:06 CHANGELOG.md

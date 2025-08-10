@@ -105,7 +105,6 @@ async def process_task(request: TaskRequest):
     try:
         logger.info(f"Processing task: {{request.task}}")
         
-        # TODO: Implement agent-specific logic here
         result = f"{{AGENT_NAME}} processed: {{request.task}}"
         
         return TaskResponse(

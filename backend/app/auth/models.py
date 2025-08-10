@@ -6,7 +6,7 @@ Pydantic models for request/response validation
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, EmailStr, Field, field_validator
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Table, Text, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -31,6 +31,9 @@ class User(Base):
     last_login = Column(DateTime(timezone=True))
     failed_login_attempts = Column(Integer, default=0)
     locked_until = Column(DateTime(timezone=True))
+    
+    # Permissions system
+    permissions = Column(JSON, default=list, nullable=True)  # List of permission strings
     
     def __repr__(self):
         return f"<User(username='{self.username}', email='{self.email}')>"
@@ -78,6 +81,7 @@ class UserInDB(UserBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     last_login: Optional[datetime] = None
+    permissions: Optional[List[str]] = []
     
     class Config:
         from_attributes = True

@@ -3,7 +3,7 @@ Authentication dependencies for FastAPI
 Provides dependency injection for authenticated routes
 """
 
-from typing import Optional, Annotated
+from typing import Optional, Annotated, List, Callable
 from datetime import datetime, timezone
 
 from fastapi import Depends, HTTPException, status
@@ -176,3 +176,113 @@ async def get_optional_user(
         return user
     except HTTPException:
         return None
+
+
+def require_permissions(permissions: List[str]) -> Callable:
+    """
+    Create a dependency that requires specific permissions
+    
+    Args:
+        permissions: List of required permissions (e.g., ["hardware:optimize", "system:monitor"])
+        
+    Returns:
+        Dependency function that validates permissions
+        
+    Example:
+        @router.post("/optimize")
+        async def optimize(user = Depends(require_permissions(["hardware:optimize"]))):
+            # Only users with hardware:optimize permission can access this
+            pass
+    """
+    def permission_dependency(
+        current_user: Annotated[User, Depends(get_current_active_user)]
+    ) -> User:
+        """
+        Validate user has required permissions
+        
+        Args:
+            current_user: Current authenticated active user
+            
+        Returns:
+            User object if permissions are satisfied
+            
+        Raises:
+            HTTPException: If user lacks required permissions
+        """
+        # Admin users have all permissions
+        if current_user.is_admin:
+            return current_user
+        
+        # Check user permissions
+        user_permissions = getattr(current_user, 'permissions', [])
+        
+        # If user_permissions is a string, convert to list
+        if isinstance(user_permissions, str):
+            user_permissions = [user_permissions]
+        elif user_permissions is None:
+            user_permissions = []
+        
+        # Check if user has all required permissions
+        missing_permissions = []
+        for required_permission in permissions:
+            # Check for exact match or wildcard match
+            if not any(
+                user_perm == required_permission or 
+                user_perm.endswith('*') and required_permission.startswith(user_perm[:-1])
+                for user_perm in user_permissions
+            ):
+                missing_permissions.append(required_permission)
+        
+        if missing_permissions:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Missing required permissions: {', '.join(missing_permissions)}"
+            )
+        
+        return current_user
+    
+    return permission_dependency
+
+
+def require_any_permission(permissions: List[str]) -> Callable:
+    """
+    Create a dependency that requires ANY of the specified permissions
+    
+    Args:
+        permissions: List of permissions (user needs only one)
+        
+    Returns:
+        Dependency function that validates permissions
+    """
+    def permission_dependency(
+        current_user: Annotated[User, Depends(get_current_active_user)]
+    ) -> User:
+        """Validate user has at least one required permission"""
+        # Admin users have all permissions
+        if current_user.is_admin:
+            return current_user
+        
+        # Check user permissions
+        user_permissions = getattr(current_user, 'permissions', [])
+        
+        # If user_permissions is a string, convert to list
+        if isinstance(user_permissions, str):
+            user_permissions = [user_permissions]
+        elif user_permissions is None:
+            user_permissions = []
+        
+        # Check if user has any of the required permissions
+        for required_permission in permissions:
+            if any(
+                user_perm == required_permission or 
+                user_perm.endswith('*') and required_permission.startswith(user_perm[:-1])
+                for user_perm in user_permissions
+            ):
+                return current_user
+        
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Requires one of: {', '.join(permissions)}"
+        )
+    
+    return permission_dependency

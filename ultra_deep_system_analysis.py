@@ -1,326 +1,433 @@
 #!/usr/bin/env python3
 """
-ULTRA-DEEP System Analysis for SutazAI
-Comprehensive verification of actual system state vs documentation claims
+ULTRA-DEEP SYSTEM ANALYSIS & REAL-TIME MONITORING
+Agent: ARCH-001 (Master System Architect)
+Purpose: Continuous system analysis and 200-agent coordination monitoring
 """
 
-import subprocess
 import json
-import requests
+import subprocess
 import time
+import os
+import sys
 from datetime import datetime
 from typing import Dict, List, Any, Tuple
+import requests
+from pathlib import Path
+import re
+import shlex
 
-class UltraDeepAnalyzer:
+class UltraSystemAnalyzer:
+    """Ultra-comprehensive system analysis and monitoring"""
+    
     def __init__(self):
-        self.findings = {
-            "timestamp": datetime.now().isoformat(),
+        self.timestamp = datetime.now().isoformat()
+        self.results = {
+            "timestamp": self.timestamp,
             "containers": {},
             "services": {},
-            "agents": {},
-            "databases": {},
-            "api_endpoints": {},
-            "rule_violations": [],
-            "critical_issues": [],
-            "recommendations": []
+            "code_quality": {},
+            "security": {},
+            "infrastructure": {},
+            "agent_progress": {}
         }
         
-    def run_command(self, cmd: str, timeout: int = 5) -> Tuple[bool, str]:
-        """Execute shell command and return success/output"""
+    def analyze_containers(self) -> Dict[str, Any]:
+        """Analyze Docker container status"""
         try:
-            result = subprocess.run(
-                cmd, shell=True, capture_output=True, text=True, timeout=timeout
-            )
-            return result.returncode == 0, result.stdout or result.stderr
-        except subprocess.TimeoutExpired:
-            return False, "Command timed out"
-        except Exception as e:
-            return False, str(e)
+            # Get all containers - SECURE: Using parameterized command
+            cmd = ["docker", "ps", "-a", "--format", "{{json .}}"]
+            result = subprocess.run(cmd, shell=False, capture_output=True, text=True)
+            containers = []
             
-    def test_endpoint(self, url: str, timeout: int = 3) -> Dict[str, Any]:
-        """Test HTTP endpoint"""
-        try:
-            response = requests.get(url, timeout=timeout)
-            return {
-                "status": "reachable",
-                "status_code": response.status_code,
-                "response": response.text[:500] if response.text else None
+            for line in result.stdout.strip().split('\n'):
+                if line:
+                    containers.append(json.loads(line))
+            
+            # Count running vs total
+            running = [c for c in containers if 'Up' in c.get('Status', '')]
+            
+            self.results['containers'] = {
+                'total': len(containers),
+                'running': len(running),
+                'stopped': len(containers) - len(running),
+                'health_status': {}
             }
-        except requests.exceptions.Timeout:
-            return {"status": "timeout"}
-        except requests.exceptions.ConnectionError:
-            return {"status": "connection_error"}
+            
+            # Check health status
+            for container in running:
+                name = container.get('Names', 'unknown')
+                status = container.get('Status', 'unknown')
+                if 'healthy' in status.lower():
+                    self.results['containers']['health_status'][name] = 'healthy'
+                elif 'unhealthy' in status.lower():
+                    self.results['containers']['health_status'][name] = 'unhealthy'
+                else:
+                    self.results['containers']['health_status'][name] = 'no_health_check'
+                    
+            return self.results['containers']
+            
         except Exception as e:
-            return {"status": "error", "error": str(e)}
-            
-    def analyze_containers(self):
-        """Analyze Docker containers"""
-        print("[1/7] Analyzing Docker containers...")
+            return {"error": str(e)}
+    
+    def check_service_endpoints(self) -> Dict[str, Any]:
+        """Check all service endpoints"""
+        endpoints = {
+            'backend': 'http://localhost:10010/health',
+            'frontend': 'http://localhost:10011',
+            'ollama': 'http://localhost:10104/api/tags',
+            'prometheus': 'http://localhost:10200/-/healthy',
+            'grafana': 'http://localhost:10201/api/health',
+            'rabbitmq': 'http://localhost:10008/api/overview',
+            'neo4j': 'http://localhost:10002',
+            'postgres': 'localhost:10000',
+            'redis': 'localhost:10001'
+        }
         
-        # Count running containers
-        success, output = self.run_command("docker ps --format '{{.Names}}' | wc -l")
-        if success:
-            self.findings["containers"]["running_count"] = int(output.strip())
-            
-        # Get container details
-        success, output = self.run_command(
-            "docker ps --format '{{json .}}' | jq -s '.'"
-        )
-        if success:
+        for service, url in endpoints.items():
             try:
-                containers = json.loads(output)
-                for container in containers:
-                    self.findings["containers"][container["Names"]] = {
-                        "status": container.get("Status"),
-                        "ports": container.get("Ports", ""),
-                        "state": container.get("State", "")
+                if service in ['postgres', 'redis']:
+                    # Use netcat for TCP services - SECURE: Validated parameters
+                    host, port = url.split(':')
+                    # Input validation to prevent command injection
+                    if not re.match(r'^[a-zA-Z0-9.-]+$', host) or not re.match(r'^[0-9]+$', port):
+                        self.results['services'][service] = {'status': 'invalid_endpoint'}
+                        continue
+                    cmd = ["nc", "-zv", host, port]
+                    result = subprocess.run(cmd, shell=False, capture_output=True, text=True, timeout=2, stderr=subprocess.STDOUT)
+                    self.results['services'][service] = {
+                        'status': 'reachable' if result.returncode == 0 else 'unreachable'
+                    }
+                else:
+                    # HTTP services
+                    response = requests.get(url, timeout=2, auth=('guest', 'guest') if service == 'rabbitmq' else None)
+                    self.results['services'][service] = {
+                        'status': 'healthy' if response.status_code == 200 else 'unhealthy',
+                        'status_code': response.status_code
                     }
             except:
+                self.results['services'][service] = {'status': 'unreachable'}
+                
+        return self.results['services']
+    
+    def analyze_code_quality(self) -> Dict[str, Any]:
+        """Analyze code quality metrics"""
+        metrics = {
+            'python_files': 0,
+            'total_lines': 0,
+            'hardcoded_credentials': [],
+            'fantasy_elements': [],
+            'unused_imports': [],
+            'bare_excepts': [],
+            'duplicate_patterns': []
+        }
+        
+        # Count Python files
+        python_files = list(Path('/opt/sutazaiapp').rglob('*.py'))
+        metrics['python_files'] = len(python_files)
+        
+        # Analyze patterns
+        patterns = {
+            'hardcoded_credentials': [
+                r'password\s*=\s*["\'][^"\']+["\']',
+                r'api_key\s*=\s*["\'][^"\']+["\']',
+                r'secret\s*=\s*["\'][^"\']+["\']'
+            ],
+            'fantasy_elements': [
+                r'\bquantum\b', r'\bAGI\b', r'\bASI\b', 
+                r'\btelepathy\b', r'\bconsciousness\b',
+                r'\bmagic\b', r'\bwizard\b', r'\bteleport\b'
+            ],
+            'bare_excepts': [r'except\s*:'],
+            'unused_imports': [r'^import\s+\w+$', r'^from\s+\w+\s+import\s+\w+$']
+        }
+        
+        for file_path in python_files[:100]:  # Sample first 100 files
+            try:
+                with open(file_path, 'r') as f:
+                    content = f.read()
+                    lines = content.split('\n')
+                    metrics['total_lines'] += len(lines)
+                    
+                    # Check patterns
+                    for pattern_type, pattern_list in patterns.items():
+                        for pattern in pattern_list:
+                            matches = re.findall(pattern, content, re.IGNORECASE | re.MULTILINE)
+                            if matches and pattern_type in metrics:
+                                metrics[pattern_type].extend([
+                                    f"{file_path}:{i+1}" 
+                                    for i, line in enumerate(lines) 
+                                    if re.search(pattern, line, re.IGNORECASE)
+                                ])
+            except:
                 pass
-                
-    def analyze_services(self):
-        """Test all service endpoints"""
-        print("[2/7] Testing service endpoints...")
         
-        services = {
-            "backend": "http://127.0.0.1:10010/health",
-            "frontend": "http://127.0.0.1:10011",
-            "ollama": "http://127.0.0.1:10104/api/tags",
-            "postgres": "postgresql://sutazai:sutazai_password@127.0.0.1:10000/sutazai",
-            "redis": "redis://127.0.0.1:10001",
-            "neo4j": "http://127.0.0.1:10002",
-            "prometheus": "http://127.0.0.1:10200/-/healthy",
-            "grafana": "http://127.0.0.1:10201/api/health",
-            "chromadb": "http://127.0.0.1:10100/api/v1/heartbeat",
-            "qdrant": "http://127.0.0.1:10101/collections"
+        # Summarize findings
+        self.results['code_quality'] = {
+            'files_analyzed': len(python_files[:100]),
+            'total_files': metrics['python_files'],
+            'total_lines': metrics['total_lines'],
+            'critical_issues': {
+                'hardcoded_credentials': len(metrics['hardcoded_credentials']),
+                'fantasy_elements': len(metrics['fantasy_elements']),
+                'bare_excepts': len(metrics['bare_excepts'])
+            },
+            'compliance_score': self.calculate_compliance_score(metrics)
         }
         
-        for name, url in services.items():
-            if url.startswith("http"):
-                self.findings["services"][name] = self.test_endpoint(url)
-            else:
-                # Test non-HTTP services differently
-                if "postgresql" in url:
-                    success, _ = self.run_command(
-                        "docker exec sutazai-postgres psql -U sutazai -d sutazai -c '\\dt' 2>/dev/null"
-                    )
-                    self.findings["services"][name] = {
-                        "status": "reachable" if success else "error",
-                        "has_tables": success
-                    }
-                elif "redis" in url:
-                    success, _ = self.run_command(
-                        "docker exec sutazai-redis redis-cli ping 2>/dev/null"
-                    )
-                    self.findings["services"][name] = {
-                        "status": "reachable" if success else "error"
-                    }
-                    
-    def analyze_agents(self):
-        """Test agent endpoints"""
-        print("[3/7] Testing agent services...")
+        return self.results['code_quality']
+    
+    def calculate_compliance_score(self, metrics: Dict) -> float:
+        """Calculate overall compliance score"""
+        issues = sum([
+            len(metrics.get('hardcoded_credentials', [])),
+            len(metrics.get('fantasy_elements', [])),
+            len(metrics.get('bare_excepts', [])),
+            len(metrics.get('unused_imports', [])) / 10  # Weight unused imports less
+        ])
         
-        # Known agent ports from documentation
-        agent_ports = {
-            "task-assignment": 8551,
-            "ai-orchestrator": 8589,
-            "multi-agent-coordinator": 8587,
-            "resource-arbitration": 8588,
-            "hardware-optimizer": 8002,
-            "ollama-integration": 11015,
-            "metrics-exporter": 11063,
-            "jarvis-automation": 11102,
-            "jarvis-hardware": 11110
+        total_lines = max(metrics.get('total_lines', 1), 1)
+        score = max(0, 100 - (issues / total_lines * 1000))
+        return round(score, 2)
+    
+    def check_security_status(self) -> Dict[str, Any]:
+        """Check security configuration"""
+        security_checks = {
+            'root_containers': 0,
+            'exposed_ports': [],
+            'ssl_enabled': False,
+            'credentials_in_env': False,
+            'security_scanning': False
         }
         
-        for name, port in agent_ports.items():
-            health_url = f"http://127.0.0.1:{port}/health"
-            process_url = f"http://127.0.0.1:{port}/process"
+        # Check for root containers - SECURE: Individual container checks
+        try:
+            # First get container names securely
+            cmd = ["docker", "ps", "--format", "{{.Names}}"]
+            result = subprocess.run(cmd, shell=False, capture_output=True, text=True)
+            container_names = [name.strip() for name in result.stdout.strip().split('\n') if name.strip()]
             
-            self.findings["agents"][name] = {
-                "port": port,
-                "health": self.test_endpoint(health_url, timeout=2),
-                "process": self.test_endpoint(process_url, timeout=2)
+            root_count = 0
+            for container_name in container_names:
+                # Validate container name to prevent injection
+                if re.match(r'^[a-zA-Z0-9_.-]+$', container_name):
+                    try:
+                        user_cmd = ["docker", "exec", container_name, "whoami"]
+                        user_result = subprocess.run(user_cmd, shell=False, capture_output=True, text=True, timeout=5)
+                        if user_result.stdout.strip() == 'root':
+                            root_count += 1
+                    except:
+                        pass  # Skip containers that can't be queried
+            security_checks['root_containers'] = root_count
+        except:
+            pass
+        
+        # Check for .env file
+        env_file = Path('/opt/sutazaiapp/.env')
+        security_checks['credentials_in_env'] = env_file.exists()
+        
+        # Check for SSL certificates
+        ssl_dir = Path('/opt/sutazaiapp/config/ssl')
+        security_checks['ssl_enabled'] = ssl_dir.exists() and any(ssl_dir.glob('*.crt'))
+        
+        self.results['security'] = security_checks
+        return self.results['security']
+    
+    def monitor_agent_progress(self) -> Dict[str, Any]:
+        """Monitor 200-agent coordination progress"""
+        # This would connect to RabbitMQ to get real agent progress
+        # For now, we'll create a template structure
+        phases = {
+            'phase_1_security': {
+                'agents': list(range(7, 36)),
+                'status': 'pending',
+                'progress': 0,
+                'tasks_completed': 0,
+                'tasks_total': 29
+            },
+            'phase_2_organization': {
+                'agents': list(range(36, 76)),
+                'status': 'pending',
+                'progress': 0,
+                'tasks_completed': 0,
+                'tasks_total': 40
+            },
+            'phase_3_quality': {
+                'agents': list(range(76, 136)),
+                'status': 'pending',
+                'progress': 0,
+                'tasks_completed': 0,
+                'tasks_total': 60
+            },
+            'phase_4_architecture': {
+                'agents': list(range(136, 176)),
+                'status': 'pending',
+                'progress': 0,
+                'tasks_completed': 0,
+                'tasks_total': 40
+            },
+            'phase_5_testing': {
+                'agents': list(range(176, 196)),
+                'status': 'pending',
+                'progress': 0,
+                'tasks_completed': 0,
+                'tasks_total': 20
+            },
+            'phase_6_validation': {
+                'agents': list(range(196, 201)),
+                'status': 'pending',
+                'progress': 0,
+                'tasks_completed': 0,
+                'tasks_total': 5
             }
-            
-    def analyze_api_endpoints(self):
-        """Test backend API endpoints"""
-        print("[4/7] Testing API endpoints...")
+        }
         
-        base_url = "http://127.0.0.1:10010"
-        endpoints = [
-            "/docs",
-            "/api/v1/agents",
-            "/api/v1/chat",
-            "/api/v1/models",
-            "/api/v1/system/status",
-            "/api/v1/documents",
-            "/api/v1/features",
-            "/api/v1/orchestration/status"
-        ]
+        self.results['agent_progress'] = phases
+        return self.results['agent_progress']
+    
+    def generate_report(self) -> str:
+        """Generate comprehensive analysis report"""
+        report = f"""
+╔══════════════════════════════════════════════════════════════════════╗
+║           ULTRA-DEEP SYSTEM ANALYSIS REPORT                         ║
+║           Timestamp: {self.timestamp}                               ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+📊 CONTAINER STATUS
+├─ Total Containers: {self.results['containers'].get('total', 0)}
+├─ Running: {self.results['containers'].get('running', 0)}
+├─ Stopped: {self.results['containers'].get('stopped', 0)}
+└─ Health Summary:
+   ├─ Healthy: {sum(1 for v in self.results['containers'].get('health_status', {}).values() if v == 'healthy')}
+   ├─ Unhealthy: {sum(1 for v in self.results['containers'].get('health_status', {}).values() if v == 'unhealthy')}
+   └─ No Check: {sum(1 for v in self.results['containers'].get('health_status', {}).values() if v == 'no_health_check')}
+
+🔌 SERVICE ENDPOINTS
+"""
+        for service, status in self.results.get('services', {}).items():
+            status_icon = '✅' if status.get('status') in ['healthy', 'reachable'] else '❌'
+            report += f"├─ {status_icon} {service}: {status.get('status', 'unknown')}\n"
         
-        for endpoint in endpoints:
-            url = base_url + endpoint
-            self.findings["api_endpoints"][endpoint] = self.test_endpoint(url)
-            
-    def check_rule_compliance(self):
-        """Check compliance with CLAUDE.md rules"""
-        print("[5/7] Checking rule compliance...")
+        report += f"""
+📝 CODE QUALITY
+├─ Files Analyzed: {self.results['code_quality'].get('files_analyzed', 0)}/{self.results['code_quality'].get('total_files', 0)}
+├─ Total Lines: {self.results['code_quality'].get('total_lines', 0):,}
+├─ Compliance Score: {self.results['code_quality'].get('compliance_score', 0)}%
+└─ Critical Issues:
+   ├─ Hardcoded Credentials: {self.results['code_quality'].get('critical_issues', {}).get('hardcoded_credentials', 0)}
+   ├─ Fantasy Elements: {self.results['code_quality'].get('critical_issues', {}).get('fantasy_elements', 0)}
+   └─ Bare Excepts: {self.results['code_quality'].get('critical_issues', {}).get('bare_excepts', 0)}
+
+🔐 SECURITY STATUS
+├─ Root Containers: {self.results['security'].get('root_containers', 0)}
+├─ Credentials in .env: {'✅' if self.results['security'].get('credentials_in_env') else '❌'}
+└─ SSL Enabled: {'✅' if self.results['security'].get('ssl_enabled') else '❌'}
+
+🤖 200-AGENT PROGRESS
+"""
+        for phase_name, phase_data in self.results.get('agent_progress', {}).items():
+            progress_bar = '█' * (phase_data['progress'] // 10) + '░' * (10 - phase_data['progress'] // 10)
+            report += f"├─ {phase_name.replace('_', ' ').title()}\n"
+            report += f"│  ├─ Status: {phase_data['status']}\n"
+            report += f"│  ├─ Progress: [{progress_bar}] {phase_data['progress']}%\n"
+            report += f"│  └─ Tasks: {phase_data['tasks_completed']}/{phase_data['tasks_total']}\n"
         
-        # Rule 1: No Fantasy Elements
-        success, output = self.run_command(
-            "grep -r 'quantum\\|AGI\\|ASI\\|magic' /opt/sutazaiapp/backend/app 2>/dev/null | wc -l"
-        )
-        if success and int(output.strip()) > 0:
-            self.findings["rule_violations"].append({
-                "rule": "Rule 1: No Fantasy Elements",
-                "violation": f"Found {output.strip()} references to fantasy terms"
-            })
+        report += """
+╔══════════════════════════════════════════════════════════════════════╗
+║                    IMMEDIATE ACTIONS REQUIRED                        ║
+╚══════════════════════════════════════════════════════════════════════╝
+"""
+        
+        # Determine critical actions
+        if self.results['security'].get('root_containers', 0) > 0:
+            report += "🔴 CRITICAL: Remove root user from containers\n"
+        if self.results['code_quality'].get('critical_issues', {}).get('hardcoded_credentials', 0) > 0:
+            report += "🔴 CRITICAL: Remove hardcoded credentials\n"
+        if self.results['containers'].get('running', 0) < 20:
+            report += "🟠 HIGH: Start missing critical services\n"
+        if not self.results['security'].get('credentials_in_env'):
+            report += "🟠 HIGH: Create .env file with secure credentials\n"
             
-        # Rule 16: Local LLM only
-        if "ollama" in self.findings["services"]:
-            if self.findings["services"]["ollama"].get("status") != "reachable":
-                self.findings["rule_violations"].append({
-                    "rule": "Rule 16: Use Local LLMs via Ollama",
-                    "violation": "Ollama service not accessible"
-                })
+        return report
+    
+    def _clear_screen(self):
+        """Secure screen clearing without shell injection"""
+        try:
+            # Use appropriate clear command for the platform
+            if os.name == 'nt':  # Windows
+                subprocess.run(["cls"], shell=False)
+            else:  # Unix/Linux/macOS
+                subprocess.run(["clear"], shell=False)
+        except:
+            # Fallback: print newlines if clear command fails
+            print("\n" * 50)
+    
+    def save_results(self):
+        """Save analysis results to file"""
+        with open('/opt/sutazaiapp/ultra_deep_analysis_report.json', 'w') as f:
+            json.dump(self.results, f, indent=2, default=str)
+        
+        with open('/opt/sutazaiapp/ultra_deep_analysis_report.txt', 'w') as f:
+            f.write(self.generate_report())
+    
+    def run_continuous_monitoring(self, interval=60):
+        """Run continuous monitoring"""
+        print("🚀 Starting ULTRA-DEEP System Monitoring...")
+        print(f"📊 Monitoring interval: {interval} seconds")
+        print("Press Ctrl+C to stop\n")
+        
+        try:
+            while True:
+                # Run all analyses
+                self.analyze_containers()
+                self.check_service_endpoints()
+                self.analyze_code_quality()
+                self.check_security_status()
+                self.monitor_agent_progress()
                 
-        # Check for hardcoded credentials
-        success, output = self.run_command(
-            "grep -r 'password.*=.*[\"\\']' /opt/sutazaiapp/backend/app/core 2>/dev/null | wc -l"
-        )
-        if success and int(output.strip()) > 0:
-            self.findings["critical_issues"].append(
-                f"Found {output.strip()} hardcoded password references"
-            )
-            
-    def identify_critical_issues(self):
-        """Identify critical system issues"""
-        print("[6/7] Identifying critical issues...")
-        
-        # Check database schema
-        if not self.findings["services"].get("postgres", {}).get("has_tables"):
-            self.findings["critical_issues"].append(
-                "PostgreSQL has no tables - database schema not applied"
-            )
-            
-        # Check authentication
-        backend_health = self.findings["services"].get("backend", {})
-        if backend_health.get("status") == "reachable":
-            # Test if endpoints require auth
-            test_url = "http://127.0.0.1:10010/api/v1/agents"
-            response = self.test_endpoint(test_url)
-            if response.get("status_code") == 200:
-                self.findings["critical_issues"].append(
-                    "No authentication required for API endpoints"
-                )
+                # Generate and display report
+                report = self.generate_report()
+                # SECURE: Safe screen clear without shell injection
+                self._clear_screen()
+                print(report)
                 
-        # Check agent functionality
-        working_agents = sum(
-            1 for agent in self.findings["agents"].values()
-            if agent.get("health", {}).get("status") == "reachable"
-        )
-        if working_agents < 3:
-            self.findings["critical_issues"].append(
-                f"Only {working_agents} agents are responding (expected 7+)"
-            )
-            
-    def generate_recommendations(self):
-        """Generate architectural recommendations"""
-        print("[7/7] Generating recommendations...")
-        
-        # Based on findings
-        if not self.findings["services"].get("postgres", {}).get("has_tables"):
-            self.findings["recommendations"].append({
-                "priority": "CRITICAL",
-                "action": "Apply database schema",
-                "command": "docker exec sutazai-postgres psql -U sutazai -d sutazai -f /init.sql"
-            })
-            
-        if len(self.findings["critical_issues"]) > 0:
-            self.findings["recommendations"].append({
-                "priority": "HIGH",
-                "action": "Implement authentication layer",
-                "details": "Add JWT authentication middleware to all API endpoints"
-            })
-            
-        # Check container health
-        unhealthy = [
-            name for name, info in self.findings["containers"].items()
-            if isinstance(info, dict) and "unhealthy" in info.get("status", "").lower()
-        ]
-        if unhealthy:
-            self.findings["recommendations"].append({
-                "priority": "HIGH",
-                "action": f"Fix unhealthy containers: {', '.join(unhealthy)}"
-            })
-            
-    def generate_report(self):
-        """Generate comprehensive report"""
-        print("\n" + "="*80)
-        print("ULTRA-DEEP SYSTEM ANALYSIS REPORT")
-        print("="*80)
-        
-        # Executive Summary
-        print("\n## EXECUTIVE SUMMARY")
-        print(f"Timestamp: {self.findings['timestamp']}")
-        print(f"Running Containers: {self.findings['containers'].get('running_count', 0)}")
-        print(f"Critical Issues: {len(self.findings['critical_issues'])}")
-        print(f"Rule Violations: {len(self.findings['rule_violations'])}")
-        
-        # Critical Issues
-        if self.findings["critical_issues"]:
-            print("\n## CRITICAL ISSUES")
-            for i, issue in enumerate(self.findings["critical_issues"], 1):
-                print(f"{i}. {issue}")
+                # Save results
+                self.save_results()
                 
-        # Service Status
-        print("\n## SERVICE STATUS")
-        for name, status in self.findings["services"].items():
-            status_str = status.get("status", "unknown")
-            print(f"- {name}: {status_str}")
-            
-        # Agent Status
-        print("\n## AGENT STATUS")
-        for name, info in self.findings["agents"].items():
-            health = info.get("health", {}).get("status", "unknown")
-            print(f"- {name}: {health}")
-            
-        # Rule Violations
-        if self.findings["rule_violations"]:
-            print("\n## RULE VIOLATIONS")
-            for violation in self.findings["rule_violations"]:
-                print(f"- {violation['rule']}: {violation['violation']}")
+                # Wait for next cycle
+                print(f"\n⏱️  Next update in {interval} seconds...")
+                time.sleep(interval)
                 
-        # Recommendations
-        if self.findings["recommendations"]:
-            print("\n## RECOMMENDATIONS")
-            for rec in self.findings["recommendations"]:
-                print(f"\n[{rec['priority']}] {rec['action']}")
-                if "details" in rec:
-                    print(f"  Details: {rec['details']}")
-                if "command" in rec:
-                    print(f"  Command: {rec['command']}")
-                    
-        # Save full report
-        with open("/opt/sutazaiapp/ultra_deep_analysis_report.json", "w") as f:
-            json.dump(self.findings, f, indent=2)
-        print(f"\nFull report saved to: /opt/sutazaiapp/ultra_deep_analysis_report.json")
-        
-    def run(self):
-        """Execute full analysis"""
-        print("Starting ULTRA-DEEP System Analysis...")
-        print("This will test all services, agents, and compliance rules.\n")
-        
-        self.analyze_containers()
-        self.analyze_services()
-        self.analyze_agents()
-        self.analyze_api_endpoints()
-        self.check_rule_compliance()
-        self.identify_critical_issues()
-        self.generate_recommendations()
-        self.generate_report()
-        
+        except KeyboardInterrupt:
+            print("\n\n✋ Monitoring stopped by user")
+            print(f"📁 Final report saved to:")
+            print("   - /opt/sutazaiapp/ultra_deep_analysis_report.json")
+            print("   - /opt/sutazaiapp/ultra_deep_analysis_report.txt")
+
+def main():
+    """Main execution"""
+    analyzer = UltraSystemAnalyzer()
+    
+    # Check for command line arguments
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '--once':
+            # Run once and exit
+            analyzer.analyze_containers()
+            analyzer.check_service_endpoints()
+            analyzer.analyze_code_quality()
+            analyzer.check_security_status()
+            analyzer.monitor_agent_progress()
+            print(analyzer.generate_report())
+            analyzer.save_results()
+        elif sys.argv[1] == '--interval':
+            # Custom interval
+            interval = int(sys.argv[2]) if len(sys.argv) > 2 else 60
+            analyzer.run_continuous_monitoring(interval)
+        else:
+            print("Usage: python ultra_deep_system_analysis.py [--once | --interval <seconds>]")
+    else:
+        # Default: continuous monitoring every 60 seconds
+        analyzer.run_continuous_monitoring(60)
+
 if __name__ == "__main__":
-    analyzer = UltraDeepAnalyzer()
-    analyzer.run()
+    main()

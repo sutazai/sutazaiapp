@@ -116,9 +116,6 @@ async def health_check():
         "uptime": status["running"],
         "checks": {
             "orchestrator_running": status["running"],
-            "database_accessible": True,  # TODO: Add actual DB check
-            "disk_space": True,  # TODO: Add disk space check
-            "memory_usage": True  # TODO: Add memory check
         }
     }
 

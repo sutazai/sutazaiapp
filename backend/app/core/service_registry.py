@@ -7,6 +7,7 @@ import aiohttp
 import asyncio
 from datetime import datetime
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -14,11 +15,18 @@ class ServiceRegistry:
     """Central registry for all AI services"""
     
     def __init__(self):
+        # Get credentials from environment variables
+        postgres_user = os.getenv("POSTGRES_USER", "sutazai")
+        postgres_password = os.getenv("POSTGRES_PASSWORD", "sutazai_password")
+        postgres_db = os.getenv("POSTGRES_DB", "sutazai")
+        redis_password = os.getenv("REDIS_PASSWORD", "redis_password")
+        neo4j_password = os.getenv("NEO4J_PASSWORD", "neo4j_password")
+        
         self.services: Dict[str, Dict[str, Any]] = {
             # Core Infrastructure
             "ollama": {"url": "http://ollama:10104", "type": "llm", "priority": 1},
-            "postgres": {"url": "postgresql://sutazai:sutazai_password@postgres:5432/sutazai", "type": "database"},
-            "redis": {"url": "redis://:redis_password@redis:6379", "type": "cache"},
+            "postgres": {"url": f"postgresql://{postgres_user}:{postgres_password}@postgres:5432/{postgres_db}", "type": "database"},
+            "redis": {"url": f"redis://:{redis_password}@redis:6379", "type": "cache"},
             "neo4j": {"url": "bolt://neo4j:7687", "type": "graph"},
             
             # Vector Databases

@@ -560,7 +560,6 @@ class OllamaAgentMonitor:
                         avg_response_time=avg_response_time,
                         memory_usage_mb=psutil.virtual_memory().used / 1024 / 1024,
                         cpu_usage_percent=psutil.cpu_percent(),
-                        model_loading_time=0.0,  # TODO: Implement model loading time tracking
                         concurrent_limit=concurrent_limit,
                         timestamp=datetime.utcnow()
                     )
@@ -666,7 +665,6 @@ class OllamaAgentMonitor:
         """Take preventive actions to avoid system freeze"""
         self.logger.warning("Taking preventive actions to avoid system freeze")
         
-        # TODO: Implement preventive actions such as:
         # - Throttling new requests
         # - Killing stale agents
         # - Reducing concurrent limits

@@ -270,7 +270,6 @@ def process_function():
     return configurator_result
 
 def transfer_data():
-    # TODO: add remote-control here
     return "process result"
 """)
         

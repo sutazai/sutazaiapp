@@ -1,0 +1,32 @@
+{
+  "test_execution_summary": {
+    "timestamp": "2025-08-10T10:13:06.146509",
+    "total_load_scenarios": 18,
+    "total_security_tests": 7,
+    "overall_assessment": "FAIL",
+    "critical_issues": [
+      "High severity vulnerabilities: 1"
+    ]
+  },
+  "sla_validation": {
+    "response_time_sla_ms": 200,
+    "success_rate_sla_percent": 99.5,
+    "compliance_summary": {
+      "total_tests": 18,
+      "sla_compliant_tests": 17,
+      "sla_compliance_rate": 94.44444444444444,
+      "avg_response_time_ms": 37.54966612215395,
+      "avg_success_rate": 100.0,
+      "avg_throughput_rps": 367.04504177311173
+    }
+  },
+  "security_validation": {
+    "total_tests": 7,
+    "vulnerabilities_detected": 1,
+    "high_severity_vulnerabilities": 1
+  },
+  "performance_analysis": {
+    "endpoint_performance": {
+      "/health": {
+        "tests": [
+          

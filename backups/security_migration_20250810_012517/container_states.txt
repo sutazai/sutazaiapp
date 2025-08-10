@@ -1,0 +1,29 @@
+NAMES                                        STATUS                    PORTS
+sutazai-hardware-resource-optimizer          Up 7 minutes (healthy)    0.0.0.0:11110->8080/tcp, [::]:11110->8080/tcp
+sutazai-backend                              Up 10 minutes (healthy)   0.0.0.0:10010->8000/tcp, [::]:10010->8000/tcp
+sutazai-frontend                             Up 3 hours (healthy)      0.0.0.0:10011->8501/tcp, [::]:10011->8501/tcp
+sutazai-resource-arbitration-agent           Up 3 hours (healthy)      0.0.0.0:8588->8588/tcp, :::8588->8588/tcp
+sutazai-task-assignment-coordinator          Up 3 hours (healthy)      0.0.0.0:8551->8551/tcp, :::8551->8551/tcp
+sutazai-faiss                                Up 6 hours (healthy)      0.0.0.0:10103->8000/tcp, [::]:10103->8000/tcp
+sutazai-jarvis-automation-agent              Up 19 minutes (healthy)   0.0.0.0:11102->8080/tcp, [::]:11102->8080/tcp
+sutazai-jarvis-hardware-resource-optimizer   Up 19 minutes (healthy)   0.0.0.0:11104->8080/tcp, [::]:11104->8080/tcp
+sutazai-ollama-integration                   Up 7 hours (healthy)      0.0.0.0:8090->8090/tcp, :::8090->8090/tcp
+sutazai-grafana                              Up 7 hours (healthy)      0.0.0.0:10201->3000/tcp, [::]:10201->3000/tcp
+sutazai-ai-agent-orchestrator                Up 7 hours (healthy)      0.0.0.0:8589->8589/tcp, :::8589->8589/tcp
+sutazai-redis-exporter                       Up 7 hours                0.0.0.0:10208->9121/tcp, [::]:10208->9121/tcp
+sutazai-postgres-exporter                    Up 7 hours                0.0.0.0:10207->9187/tcp, [::]:10207->9187/tcp
+sutazai-kong                                 Up 7 hours (healthy)      8443-8444/tcp, 0.0.0.0:10005->8000/tcp, [::]:10005->8000/tcp, 0.0.0.0:10015->8001/tcp, [::]:10015->8001/tcp
+sutazai-neo4j                                Up 7 hours (healthy)      7473/tcp, 0.0.0.0:10002->7474/tcp, [::]:10002->7474/tcp, 0.0.0.0:10003->7687/tcp, [::]:10003->7687/tcp
+sutazai-consul                               Up 7 hours (healthy)      8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:10006->8500/tcp, [::]:10006->8500/tcp
+sutazai-cadvisor                             Up 7 hours (healthy)      0.0.0.0:10206->8080/tcp, [::]:10206->8080/tcp
+sutazai-qdrant                               Up 7 hours (healthy)      0.0.0.0:10101->6333/tcp, [::]:10101->6333/tcp, 0.0.0.0:10102->6334/tcp, [::]:10102->6334/tcp
+sutazai-ollama                               Up 7 hours (healthy)      0.0.0.0:10104->11434/tcp, [::]:10104->11434/tcp
+sutazai-blackbox-exporter                    Up 7 hours (healthy)      0.0.0.0:10204->9115/tcp, [::]:10204->9115/tcp
+sutazai-chromadb                             Up 7 hours (healthy)      0.0.0.0:10100->8000/tcp, [::]:10100->8000/tcp
+sutazai-prometheus                           Up 7 hours (healthy)      0.0.0.0:10200->9090/tcp, [::]:10200->9090/tcp
+sutazai-alertmanager                         Up 7 hours (healthy)      0.0.0.0:10203->9093/tcp, [::]:10203->9093/tcp
+sutazai-redis                                Up 7 hours (healthy)      0.0.0.0:10001->6379/tcp, [::]:10001->6379/tcp
+sutazai-postgres                             Up 7 hours (healthy)      0.0.0.0:10000->5432/tcp, [::]:10000->5432/tcp
+sutazai-node-exporter                        Up 7 hours                0.0.0.0:10205->9100/tcp, [::]:10205->9100/tcp
+sutazai-loki                                 Up 7 hours (healthy)      0.0.0.0:10202->3100/tcp, [::]:10202->3100/tcp
+sutazai-rabbitmq                             Up 7 hours (healthy)      4369/tcp, 5671/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:10007->5672/tcp, [::]:10007->5672/tcp, 0.0.0.0:10008->15672/tcp, [::]:10008->15672/tcp

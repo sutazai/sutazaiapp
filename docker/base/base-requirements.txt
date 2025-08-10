@@ -1,0 +1,38 @@
+# SutazAI Python Agent Base Requirements
+# Common packages used across all Python agents
+# Author: DevOps Manager - Deduplication Operation
+# Date: August 10, 2025
+
+# Core Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.1
+httpx==0.25.2
+
+# AI/ML Integration
+ollama==0.1.7
+openai==1.3.7
+anthropic==0.8.1
+
+# Database and Storage
+redis==5.0.1
+neo4j==5.14.1
+qdrant-client==1.6.9
+
+# Messaging and Queue
+pika==1.3.2
+celery==5.3.4
+
+# Monitoring and Logging
+prometheus-client==0.19.0
+structlog==23.2.0
+
+# Utilities
+python-dotenv==1.0.0
+click==8.1.7
+typing-extensions==4.8.0
+
+# Health and Testing
+requests==2.31.0
+pytest==7.4.3
+pytest-asyncio==0.21.1

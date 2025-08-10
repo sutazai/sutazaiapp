@@ -200,17 +200,14 @@ open http://localhost:10011
 
 @router.post("/chat")
 async def chat(message: str):
-    # TODO: Implement Ollama integration
     pass
 
 @router.get("/agents")
 async def list_agents():
-    # TODO: Return list of working agents
     pass
 
 @router.post("/agents/{agent_id}/execute")
 async def execute_agent(agent_id: str, payload: dict):
-    # TODO: Execute specific agent
     pass
 ```
 

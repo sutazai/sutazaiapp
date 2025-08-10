@@ -1,0 +1,68 @@
+version: '3.8'
+
+# Security Hardening Override for Root Containers
+# This file fixes the remaining security issues with containers running as root
+# Use with: docker compose -f docker-compose.yml -f docker-compose.security-hardening.yml up -d
+
+services:
+  # Consul - Keep default security (it already runs as consul user internally)
+  # Note: The official Consul image handles its own user management
+  # It drops to consul user internally after setup
+  consul:
+    # Additional security options
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    # Ensure data directory has correct permissions
+    volumes:
+      - consul_data:/consul/data
+
+  # Fix Grafana - Correct group permissions (run as grafana:grafana instead of grafana:root)
+  grafana:
+    # Grafana runs as UID 472 by default, ensure correct group
+    user: "472:472"
+    # Additional security options
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # Environment to ensure correct permissions
+    environment:
+      - GF_PATHS_DATA=/var/lib/grafana
+      - GF_PATHS_LOGS=/var/log/grafana
+      - GF_PATHS_PLUGINS=/var/lib/grafana/plugins
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+
+  # Fix AI Agent Orchestrator - Ensure it uses the secure Dockerfile
+  ai-agent-orchestrator:
+    # Force rebuild with the secure Dockerfile
+    build:
+      context: ./agents/ai_agent_orchestrator
+      dockerfile: Dockerfile
+      # Add build args to ensure non-root user is created
+      args:
+        - USER_ID=1000
+        - GROUP_ID=1000
+    # Explicitly set user to ensure non-root
+    user: "1000:1000"
+    # Additional security options
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # Ensure logs directory has correct permissions
+    volumes:
+      - ai_orchestrator_logs:/app/logs
+
+volumes:
+  consul_data:
+    driver: local
+  ai_orchestrator_logs:
+    driver: local

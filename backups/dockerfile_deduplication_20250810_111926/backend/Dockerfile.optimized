@@ -1,0 +1,62 @@
+FROM python:3.12.8-slim-bookworm
+
+WORKDIR /app
+
+# Install system dependencies for performance libraries
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    git \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Copy requirements and install dependencies
+COPY requirements/base.txt requirements.txt
+COPY requirements/prod.txt requirements.txt
+
+# Install base requirements
+RUN pip install --no-cache-dir -r requirements_minimal.txt
+
+# Install performance optimization dependencies
+RUN pip install --no-cache-dir \
+    uvloop==0.19.0 \
+    httpx==0.25.2 \
+    asyncpg==0.29.0 \
+    "redis[hiredis]==5.0.1" \
+    psutil==5.9.6 \
+    orjson==3.9.10 \
+    "uvicorn[standard]==0.25.0"
+
+# Copy application code
+COPY . .
+
+# Environment variables for optimization
+ENV PYTHONUNBUFFERED=1
+ENV DEBUG=false
+ENV UVLOOP_USE_LIBUV=1
+ENV PYTHONASYNCIODEBUG=0
+
+EXPOSE 8000
+
+# Health check with shorter intervals for faster detection
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()"
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && chown -R appuser:appuser /app
+USER appuser
+
+# Start with optimized settings
+CMD ["uvicorn", "app.main:app", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--workers", "4", \
+     "--loop", "uvloop", \
+     "--log-level", "info"]

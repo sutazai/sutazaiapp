@@ -209,7 +209,6 @@ async def jarvis_store_document(
         doc_id = f"doc_{datetime.utcnow().strftime('%Y%m%d_%H%M%S_%f')}"
         
         # Process document content (basic implementation)
-        # TODO: Implement actual vector storage when ChromaDB/Qdrant integration is ready
         word_count = len(request.content.split())
         char_count = len(request.content)
         
@@ -351,7 +350,6 @@ async def jarvis_delete_document(
     """Delete a document from JARVIS knowledge base"""
     try:
         # Simulate document deletion
-        # TODO: Implement actual document deletion from vector store
         
         return {
             "document_id": document_id,

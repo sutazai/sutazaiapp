@@ -348,7 +348,6 @@ class EnhancedHygieneBackend:
                     'description': 'Potential hardcoded secrets detected'
                 },
                 'no_todo_comments': {
-                    'patterns': ['TODO:', 'FIXME:', 'HACK:'],
                     'severity': 'MEDIUM',
                     'description': 'TODO/FIXME comments require attention'
                 }

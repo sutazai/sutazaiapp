@@ -1,0 +1,190 @@
+{
+  "timestamp": "2025-08-10T11:03:45.317916",
+  "summary": {
+    "total_services": 13,
+    "healthy_services": 11,
+    "unhealthy_services": 2,
+    "health_percentage": 84.61538461538461
+  },
+  "system_metrics": {
+    "timestamp": "2025-08-10T11:03:45.317721",
+    "cpu_percent": 14.7,
+    "memory_percent": 37.8,
+    "disk_percent": 3.9,
+    "container_count": 32,
+    "healthy_services": 11,
+    "unhealthy_services": 2
+  },
+  "service_details": [
+    {
+      "group": "core",
+      "name": "ollama",
+      "status": "healthy",
+      "response_time": 0.004918098449707031,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.259054",
+      "metadata": {
+        "type": "ai_model",
+        "port": 10104
+      }
+    },
+    {
+      "group": "core",
+      "name": "redis",
+      "status": "unhealthy",
+      "response_time": 0.002663135528564453,
+      "error": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+      "last_check": "2025-08-10T11:03:44.255813",
+      "metadata": {
+        "type": "cache",
+        "port": 10001
+      }
+    },
+    {
+      "group": "core",
+      "name": "neo4j",
+      "status": "healthy",
+      "response_time": 0.010048151016235352,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.262144",
+      "metadata": {
+        "type": "graph_db",
+        "port": 10002
+      }
+    },
+    {
+      "group": "core",
+      "name": "postgres",
+      "status": "healthy",
+      "response_time": 0.004980802536010742,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.256388",
+      "metadata": {
+        "type": "database",
+        "port": 10000
+      }
+    },
+    {
+      "group": "agents",
+      "name": "hardware-optimizer",
+      "status": "healthy",
+      "response_time": 0.006020069122314453,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.263295",
+      "metadata": {
+        "type": "agent",
+        "port": 11110
+      }
+    },
+    {
+      "group": "agents",
+      "name": "ai-orchestrator",
+      "status": "unhealthy",
+      "response_time": 0.007639408111572266,
+      "error": "HTTPConnectionPool(host='localhost', port=8589): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x74cf7e5de4e0>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+      "last_check": "2025-08-10T11:03:44.267817",
+      "metadata": {
+        "type": "agent",
+        "port": 8589
+      }
+    },
+    {
+      "group": "agents",
+      "name": "jarvis-automation",
+      "status": "healthy",
+      "response_time": 0.012643814086914062,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.272615",
+      "metadata": {
+        "type": "agent",
+        "port": 11102
+      }
+    },
+    {
+      "group": "agents",
+      "name": "ollama-integration",
+      "status": "healthy",
+      "response_time": 0.009460926055908203,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.276097",
+      "metadata": {
+        "type": "agent",
+        "port": 8090
+      }
+    },
+    {
+      "group": "monitoring",
+      "name": "prometheus",
+      "status": "healthy",
+      "response_time": 0.008593559265136719,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.270027",
+      "metadata": {
+        "type": "metrics",
+        "port": 10200
+      }
+    },
+    {
+      "group": "monitoring",
+      "name": "grafana",
+      "status": "healthy",
+      "response_time": 0.008275747299194336,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.272950",
+      "metadata": {
+        "type": "dashboard",
+        "port": 10201
+      }
+    },
+    {
+      "group": "monitoring",
+      "name": "loki",
+      "status": "healthy",
+      "response_time": 0.0076808929443359375,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.273708",
+      "metadata": {
+        "type": "logs",
+        "port": 10202
+      }
+    },
+    {
+      "group": "application",
+      "name": "backend",
+      "status": "healthy",
+      "response_time": 0.007035732269287109,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.270966",
+      "metadata": {
+        "type": "api",
+        "port": 10010
+      }
+    },
+    {
+      "group": "application",
+      "name": "frontend",
+      "status": "healthy",
+      "response_time": 0.005091190338134766,
+      "error": null,
+      "last_check": "2025-08-10T11:03:44.276618",
+      "metadata": {
+        "type": "ui",
+        "port": 10011
+      }
+    }
+  ],
+  "alerts": [],
+  "configuration": {
+    "check_interval": 30,
+    "timeout": 10,
+    "retry_count": 3,
+    "alert_thresholds": {
+      "cpu_percent": 80,
+      "memory_percent": 85,
+      "disk_percent": 90,
+      "response_time": 5.0
+    },
+    "enable_notifications": false,
+    "webhook_url": null
+  }
+}

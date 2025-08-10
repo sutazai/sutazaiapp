@@ -2,6 +2,9 @@
 
 import os
 import asyncio
+import ast
+import operator
+import re
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Dict, Any, Optional
@@ -17,6 +20,89 @@ import uvicorn
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Secure calculator implementation
+def safe_calculate(expression: str) -> str:
+    """
+    Secure mathematical calculator using AST parsing.
+    Replaces the dangerous eval() function with safe mathematical evaluation.
+    
+    Args:
+        expression: Mathematical expression as string
+        
+    Returns:
+        String result of calculation or error message
+    """
+    try:
+        # Remove whitespace and validate input format
+        expression = expression.strip()
+        if not expression:
+            return "Error: Empty expression"
+            
+        # Basic input validation - only allow mathematical characters
+        allowed_chars = set('0123456789+-*/.()')
+        if not all(c in allowed_chars for c in expression.replace(' ', '')):
+            return "Error: Invalid characters in expression"
+        
+        # Parse the expression into an AST
+        try:
+            node = ast.parse(expression, mode='eval')
+        except SyntaxError:
+            return "Error: Invalid mathematical syntax"
+        
+        # Define allowed operations
+        allowed_operators = {
+            ast.Add: operator.add,
+            ast.Sub: operator.sub,
+            ast.Mult: operator.mul,
+            ast.Div: operator.truediv,
+            ast.USub: operator.neg,
+            ast.UAdd: operator.pos,
+        }
+        
+        def evaluate_node(node):
+            if isinstance(node, ast.Expression):
+                return evaluate_node(node.body)
+            elif isinstance(node, ast.Num):  # Numbers
+                return node.n
+            elif isinstance(node, ast.Constant):  # Constants (newer Python versions)
+                if isinstance(node.value, (int, float)):
+                    return node.value
+                else:
+                    raise ValueError("Only numeric constants allowed")
+            elif isinstance(node, ast.BinOp):  # Binary operations
+                if type(node.op) not in allowed_operators:
+                    raise ValueError(f"Operator {type(node.op).__name__} not allowed")
+                left = evaluate_node(node.left)
+                right = evaluate_node(node.right)
+                return allowed_operators[type(node.op)](left, right)
+            elif isinstance(node, ast.UnaryOp):  # Unary operations
+                if type(node.op) not in allowed_operators:
+                    raise ValueError(f"Unary operator {type(node.op).__name__} not allowed")
+                operand = evaluate_node(node.operand)
+                return allowed_operators[type(node.op)](operand)
+            else:
+                raise ValueError(f"Node type {type(node).__name__} not allowed")
+        
+        # Evaluate the AST
+        result = evaluate_node(node.body)
+        
+        # Handle division by zero and other math errors
+        if isinstance(result, float):
+            if result == float('inf') or result == float('-inf'):
+                return "Error: Division by zero or overflow"
+            elif result != result:  # NaN check
+                return "Error: Invalid mathematical operation"
+        
+        return str(result)
+        
+    except ZeroDivisionError:
+        return "Error: Division by zero"
+    except ValueError as e:
+        return f"Error: {str(e)}"
+    except Exception as e:
+        logger.error(f"Calculator error: {e}")
+        return "Error: Invalid mathematical expression"
 
 app = FastAPI(title="LangChain Agent Server", version="1.0.0")
 
@@ -51,8 +137,8 @@ class LangChainAgentServer:
                 ),
                 Tool(
                     name="calculator",
-                    description="Calculate mathematical expressions",
-                    func=lambda x: str(eval(x)) if x.replace(".", "").replace("-", "").isdigit() else "Invalid expression",
+                    description="Calculate mathematical expressions safely (supports +, -, *, /, parentheses)",
+                    func=safe_calculate,
                 ),
             ]
             

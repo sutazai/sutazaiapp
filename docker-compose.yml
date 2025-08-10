@@ -34,7 +34,7 @@ services:
       - CMD-SHELL
       - pg_isready -U ${POSTGRES_USER:-sutazai}
       timeout: 5s
-    image: postgres:16.3-alpine
+    image: sutazai-postgres-secure:latest
     networks:
     - sutazai-network
     ports:
@@ -65,7 +65,7 @@ services:
       - CMD-SHELL
       - redis-cli ping
       timeout: 5s
-    image: redis:7.2-alpine
+    image: sutazai-redis-secure:latest
     networks:
     - sutazai-network
     ports:
@@ -114,7 +114,7 @@ services:
       - CMD-SHELL
       - wget --no-verbose --tries=1 --spider http://localhost:7474/ || exit 1
       timeout: 15s
-    image: neo4j:5.13-community
+    image: sutazai-neo4j-secure:latest
     networks:
     - sutazai-network
     ports:
@@ -147,12 +147,12 @@ services:
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_KEEP_ALIVE: 10m
       OLLAMA_MAX_LOADED_MODELS: 3
-      OLLAMA_MODELS: /root/.ollama/models
+      OLLAMA_MODELS: /home/ollama/.ollama/models
       OLLAMA_NUM_PARALLEL: 50
       OLLAMA_NUM_THREADS: 10
       OLLAMA_ORIGINS: '*'
       OLLAMA_RUNNERS_DIR: /tmp
-      OLLAMA_TMPDIR: /tmp
+      OLLAMA_TMPDIR: /tmp/ollama
     healthcheck:
       interval: 60s
       retries: 5
@@ -161,7 +161,7 @@ services:
       - CMD-SHELL
       - ollama list > /dev/null || exit 1
       timeout: 30s
-    image: ollama/ollama:latest
+    image: sutazai-ollama-secure:latest
     networks:
     - sutazai-network
     ports:
@@ -174,7 +174,7 @@ services:
         hard: 65536
         soft: 65536
     volumes:
-    - ollama_data:/root/.ollama
+    - ollama_data:/home/ollama/.ollama
     - models_data:/models
     - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
     - /opt/sutazaiapp/config/ollama.yaml:/app/config/ollama.yaml:ro
@@ -212,7 +212,7 @@ services:
       - -c
       - 'curl -f http://localhost:8000/api/v1/heartbeat || exit 1'
       timeout: 30s
-    image: chromadb/chroma:0.5.0
+    image: sutazai-chromadb-secure:latest
     networks:
     - sutazai-network
     ports:
@@ -249,7 +249,7 @@ services:
         Proto => q{tcp}, Timeout => 2); if ($$s) { print $$s qq{GET / HTTP/1.0\r\n\r\n};
         while (<$$s>) { if (/200 OK/) { exit 0; } } } exit 1;' | perl
       timeout: 30s
-    image: qdrant/qdrant:v1.9.2
+    image: sutazai-qdrant-secure:latest
     networks:
     - sutazai-network
     ports:
@@ -352,7 +352,7 @@ services:
   # Message Queue: RabbitMQ
   # Ports: 10007 (AMQP), 10008 (management UI)
   rabbitmq:
-    image: rabbitmq:3.12-management-alpine
+    image: sutazai-rabbitmq-secure:latest
     container_name: sutazai-rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-sutazai}
@@ -414,6 +414,7 @@ services:
       FAISS_INDEX_PATH: /data/faiss
       GRAFANA_PASSWORD: ${GRAFANA_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       NEO4J_HOST: neo4j
       NEO4J_PASSWORD: ${NEO4J_PASSWORD}
       NEO4J_PORT: 7687
@@ -869,20 +870,33 @@ services:
       timeout: 30s
     networks:
     - sutazai-network
-    pid: host
+    # ULTRA-SECURE: Removed pid: host - not needed for optimization tasks
     ports:
     - 11110:8080
-    privileged: true
+    # ULTRA-SECURE: Removed privileged mode for security
+    privileged: false
+    # ULTRA-SECURE: Minimal capabilities with enhanced security
+    cap_drop:
+      - ALL                    # Drop all capabilities first
+    cap_add:
+      - SYS_PTRACE            # For process monitoring only
+      # SYS_ADMIN removed - too permissive for container
+    security_opt:
+      - no-new-privileges:true
+      - seccomp=default
+      # apparmor:docker-default  # Enable if AppArmor available
     restart: unless-stopped
     volumes:
-    - ./agents/core:/app/agents/core:ro
-    - ./data:/app/data
-    - ./configs:/app/configs
-    - ./logs:/app/logs
-    - /proc:/host/proc:ro
-    - /sys:/host/sys:ro
-    - /var/run/docker.sock:/var/run/docker.sock
-    - /tmp:/host/tmp
+    # ULTRA-SECURE: Minimal volume mounts with proper restrictions
+    - ./data:/app/data:rw,noexec        # Data access without execution
+    - ./configs:/app/configs:ro         # Read-only configuration files
+    - ./logs:/app/logs:rw,noexec        # Log writing without execution
+    # ULTRA-SECURE: Removed dangerous system mounts
+    # - ./agents/core:/app/agents/core:ro  # REMOVED - not needed
+    # - /proc:/host/proc:ro                # REMOVED - host process exposure risk
+    # - /sys:/host/sys:ro                  # REMOVED - host system exposure risk
+    # - /var/run/docker.sock:/var/run/docker.sock  # REMOVED - container escape risk
+    # - /tmp:/host/tmp                     # REMOVED - write access to host
 
   # --------------------------------------------------------
   # Jarvis Hardware Resource Optimizer

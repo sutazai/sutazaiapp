@@ -158,7 +158,7 @@ def show_ai_chat():
                 }
                 
                 # Call AI chat API
-                response = await call_api("/api/v1/chat", method="POST", data=chat_request)
+                response = asyncio.run(call_api("/api/v1/chat", method="POST", data=chat_request))
                 
                 if response and handle_api_error(response, "AI chat"):
                     # Add AI response to history

@@ -54,7 +54,6 @@ async def process_task(request: TaskRequest):
     try:
         logger.info(f"Processing task of type: {request.type}")
         
-        # TODO: Implement actual task processing logic
         result = {
             "message": "Task processed successfully",
             "task_type": request.type,

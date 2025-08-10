@@ -1,0 +1,42 @@
+# Real-Time Fusion Pipeline Dockerfile
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    build-essential \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY fusion/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY fusion/ /app/fusion/
+COPY config/ /app/config/
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data /app/cache
+
+# Set Python path
+ENV PYTHONPATH=/app
+
+# Expose ports
+EXPOSE 8765 8767
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8767/health || exit 1
+
+# Start the fusion pipeline service
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
+CMD ["python", "-m", "fusion.pipeline.realtime_fusion_pipeline"]

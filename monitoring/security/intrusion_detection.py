@@ -50,7 +50,6 @@ class IntrusionDetector:
         if ip not in self.blocked_ips:
             self.blocked_ips.add(ip)
             logging.error(f"IP {ip} has been flagged for blocking")
-            # TODO: Implement actual IP blocking
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)

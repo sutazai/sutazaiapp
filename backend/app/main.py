@@ -140,16 +140,27 @@ app.add_middleware(
 # Add compression middleware for better performance
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
-# Include authentication router (CRITICAL)
+# Include authentication router (CRITICAL) - FAIL-FAST SECURITY
 try:
+    # Validate authentication dependencies first
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    if not JWT_SECRET_KEY or JWT_SECRET_KEY == "your_secret_key_here" or len(JWT_SECRET_KEY) < 32:
+        raise ValueError("JWT_SECRET_KEY must be set with a secure value (minimum 32 characters)")
+    
     from app.auth.router import router as auth_router
-    app.include_router(auth_router, tags=["Authentication"])
+    app.include_router(auth_router)
     logger.info("Authentication router loaded successfully - JWT auth enabled")
     AUTHENTICATION_ENABLED = True
+    
 except Exception as e:
-    logger.error(f"CRITICAL: Authentication router setup failed: {e}")
-    logger.warning("System running without proper authentication - SECURITY RISK")
-    AUTHENTICATION_ENABLED = False
+    logger.critical(f"CRITICAL SECURITY FAILURE: Authentication initialization failed: {e}")
+    logger.critical("STOPPING SYSTEM: Cannot run without authentication - this would be a security breach")
+    logger.critical("Fix authentication configuration and restart the system")
+    logger.critical("Check JWT_SECRET_KEY environment variable and auth router dependencies")
+    
+    # SECURITY: System MUST NOT run without authentication
+    # Exit immediately to prevent security bypass
+    sys.exit(1)
 
 # Include Text Analysis Agent router (REAL AI IMPLEMENTATION)
 try:
@@ -172,6 +183,17 @@ except Exception as e:
     logger.error(f"Vector Database router setup failed: {e}")
     logger.warning("Vector Database integration not available")
     VECTOR_DB_ENABLED = False
+
+# Include Hardware Optimization router (HARDWARE RESOURCE OPTIMIZER INTEGRATION)
+try:
+    from app.api.v1.endpoints.hardware import router as hardware_router
+    app.include_router(hardware_router, prefix="/api/v1", tags=["Hardware Optimization"])
+    logger.info("Hardware Optimization router loaded successfully - Resource optimizer integration enabled")
+    HARDWARE_OPTIMIZATION_ENABLED = True
+except Exception as e:
+    logger.error(f"Hardware Optimization router setup failed: {e}")
+    logger.warning("Hardware Resource Optimizer integration not available")
+    HARDWARE_OPTIMIZATION_ENABLED = False
 
 # Agent service configurations with health monitoring
 AGENT_SERVICES = {

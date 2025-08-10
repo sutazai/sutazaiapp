@@ -1,0 +1,49 @@
+# SutazAI Python Agent Master Base Image
+# Multi-stage build for security and efficiency
+# Author: DevOps Manager - Deduplication Operation
+# Date: August 10, 2025
+
+FROM python:3.11-slim as base
+
+# Security and performance optimizations
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    wget \
+    unzip \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Install common Python packages
+COPY base-requirements.txt /tmp/
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r /tmp/base-requirements.txt \
+    && rm /tmp/base-requirements.txt
+
+# Create secure non-root user
+RUN groupadd -r appuser && useradd -r -g appuser -s /bin/bash appuser \
+    && mkdir -p /app /app/data /app/logs /app/workspace \
+    && chown -R appuser:appuser /app
+
+# Production stage
+FROM base as production
+
+WORKDIR /app
+
+# Standard environment variables
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Health check template (can be overridden)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:${SERVICE_PORT:-8080}/health || exit 1
+
+# Switch to non-root user
+USER appuser
+
+# Default command (to be overridden by services)
+CMD ["python", "app.py"]

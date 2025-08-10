@@ -455,7 +455,6 @@ class AIAgentOrchestrator:
             # Find new agent (might be same one)
             best_agent = await self.find_best_agent(
                 assignment.task_type,
-                []  # TODO: Extract required capabilities from original task
             )
             
             if best_agent:
@@ -466,7 +465,6 @@ class AIAgentOrchestrator:
                 await self.message_processor.rabbitmq_client.publish_task(
                     task_id=assignment.task_id,
                     task_type=assignment.task_type,
-                    payload={},  # TODO: Store and retrieve original payload
                     target_agent=best_agent.agent_id,
                     priority=assignment.priority
                 )

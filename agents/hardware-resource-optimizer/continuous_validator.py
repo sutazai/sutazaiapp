@@ -29,7 +29,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger('ContinuousValidator')
 
-BASE_URL = "http://localhost:8116"
+BASE_URL = "http://localhost:8080"
 RESULTS_DIR = "/opt/sutazaiapp/agents/hardware-resource-optimizer/validation_results"
 ALERT_THRESHOLD = 0.8  # Alert if pass rate drops below 80%
 
@@ -248,7 +248,6 @@ class ContinuousValidator:
         self.alerts.append(alert)
         logger.warning(f"ALERT [{severity.upper()}]: {message}")
         
-        # TODO: Implement actual alerting (email, Slack, etc.)
         # For now, just log to file
         alert_file = f"{RESULTS_DIR}/alerts.log"
         with open(alert_file, 'a') as f:

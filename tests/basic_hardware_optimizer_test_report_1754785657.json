@@ -1,0 +1,81 @@
+{
+  "overall_passed": true,
+  "execution_time_seconds": 0.26688385009765625,
+  "service_health": true,
+  "endpoint_tests": {
+    "results": [
+      {
+        "endpoint": "/health",
+        "method": "GET",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 1.5749931335449219
+      },
+      {
+        "endpoint": "/status",
+        "method": "GET",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 2.007007598876953
+      },
+      {
+        "endpoint": "/analyze/storage",
+        "method": "GET",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 2.2788047790527344
+      },
+      {
+        "endpoint": "/analyze/storage/report",
+        "method": "GET",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 212.80455589294434
+      },
+      {
+        "endpoint": "/optimize/memory",
+        "method": "POST",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 26.37791633605957
+      },
+      {
+        "endpoint": "/optimize/storage",
+        "method": "POST",
+        "success": true,
+        "status_code": 200,
+        "response_time_ms": 2.0852088928222656
+      }
+    ],
+    "success_rate": 100.0,
+    "passed": true
+  },
+  "load_tests": {
+    "total_requests": 10,
+    "successful_requests": 10,
+    "success_rate": 100.0,
+    "avg_response_time_ms": 3.577423095703125,
+    "passed": true
+  },
+  "security_tests": {
+    "results": [
+      {
+        "test_path": "../../../etc/passwd",
+        "safe": true,
+        "status_code": 200
+      },
+      {
+        "test_path": "/root",
+        "safe": true,
+        "status_code": 200
+      },
+      {
+        "test_path": "/etc/shadow",
+        "safe": true,
+        "status_code": 200
+      }
+    ],
+    "success_rate": 100.0,
+    "passed": true
+  }
+}

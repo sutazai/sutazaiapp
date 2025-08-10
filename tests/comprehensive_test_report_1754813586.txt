@@ -1,0 +1,465 @@
+{
+  "test_execution_summary": {
+    "timestamp": "2025-08-10T10:13:06.146509",
+    "total_load_scenarios": 18,
+    "total_security_tests": 7,
+    "overall_assessment": "FAIL",
+    "critical_issues": [
+      "High severity vulnerabilities: 1"
+    ]
+  },
+  "sla_validation": {
+    "response_time_sla_ms": 200,
+    "success_rate_sla_percent": 99.5,
+    "compliance_summary": {
+      "total_tests": 18,
+      "sla_compliant_tests": 17,
+      "sla_compliance_rate": 94.44444444444444,
+      "avg_response_time_ms": 37.54966612215395,
+      "avg_success_rate": 100.0,
+      "avg_throughput_rps": 367.04504177311173
+    }
+  },
+  "security_validation": {
+    "total_tests": 7,
+    "vulnerabilities_detected": 1,
+    "high_severity_vulnerabilities": 1
+  },
+  "performance_analysis": {
+    "endpoint_performance": {
+      "/health": {
+        "tests": [
+          "LoadTestResult(endpoint='/health', method='GET', concurrent_users=1, total_requests=3, successful_requests=3, failed_requests=0, success_rate=100.0, avg_response_time_ms=1.621246337890625, median_response_time_ms=1.5954971313476562, p95_response_time_ms=1.9969940185546875, min_response_time_ms=1.2712478637695312, max_response_time_ms=1.9969940185546875, throughput_rps=525.2948150622026, total_duration_s=0.005711078643798828, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/health', method='GET', concurrent_users=5, total_requests=15, successful_requests=15, failed_requests=0, success_rate=100.0, avg_response_time_ms=4.463990529378255, median_response_time_ms=4.644632339477539, p95_response_time_ms=6.838083267211914, min_response_time_ms=2.2161006927490234, max_response_time_ms=6.838083267211914, throughput_rps=792.4247118836199, total_duration_s=0.018929243087768555, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/health', method='GET', concurrent_users=10, total_requests=30, successful_requests=30, failed_requests=0, success_rate=100.0, avg_response_time_ms=7.150634129842122, median_response_time_ms=6.365060806274414, p95_response_time_ms=11.771202087402344, min_response_time_ms=2.9172897338867188, max_response_time_ms=13.263702392578125, throughput_rps=891.5704446900774, total_duration_s=0.03364849090576172, sla_compliance=True, errors=[])"
+        ],
+        "max_load": 10
+      },
+      "/status": {
+        "tests": [
+          "LoadTestResult(endpoint='/status', method='GET', concurrent_users=1, total_requests=3, successful_requests=3, failed_requests=0, success_rate=100.0, avg_response_time_ms=2.0240147908528647, median_response_time_ms=1.9114017486572266, p95_response_time_ms=2.5391578674316406, min_response_time_ms=1.6214847564697266, max_response_time_ms=2.5391578674316406, throughput_rps=451.42110927746285, total_duration_s=0.006645679473876953, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/status', method='GET', concurrent_users=5, total_requests=15, successful_requests=15, failed_requests=0, success_rate=100.0, avg_response_time_ms=12.043190002441406, median_response_time_ms=10.64443588256836, p95_response_time_ms=21.521568298339844, min_response_time_ms=3.8955211639404297, max_response_time_ms=21.521568298339844, throughput_rps=229.38914208626537, total_duration_s=0.06539106369018555, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/status', method='GET', concurrent_users=10, total_requests=30, successful_requests=30, failed_requests=0, success_rate=100.0, avg_response_time_ms=6.168063481648763, median_response_time_ms=6.148695945739746, p95_response_time_ms=10.022640228271484, min_response_time_ms=2.1126270294189453, max_response_time_ms=10.518312454223633, throughput_rps=1035.1790576949973, total_duration_s=0.028980493545532227, sla_compliance=True, errors=[])"
+        ],
+        "max_load": 10
+      },
+      "/optimize/memory": {
+        "tests": [
+          "LoadTestResult(endpoint='/optimize/memory', method='POST', concurrent_users=1, total_requests=3, successful_requests=3, failed_requests=0, success_rate=100.0, avg_response_time_ms=28.662761052449543, median_response_time_ms=27.592182159423828, p95_response_time_ms=31.166791915893555, min_response_time_ms=27.22930908203125, max_response_time_ms=31.166791915893555, throughput_rps=34.53238926395521, total_duration_s=0.08687496185302734, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/optimize/memory', method='POST', concurrent_users=5, total_requests=15, successful_requests=15, failed_requests=0, success_rate=100.0, avg_response_time_ms=117.5178050994873, median_response_time_ms=127.7925968170166, p95_response_time_ms=168.58434677124023, min_response_time_ms=23.8034725189209, max_response_time_ms=168.58434677124023, throughput_rps=37.14172872740797, total_duration_s=0.4038584232330322, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/optimize/memory', method='POST', concurrent_users=10, total_requests=30, successful_requests=30, failed_requests=0, success_rate=100.0, avg_response_time_ms=218.34415594736734, median_response_time_ms=233.1066131591797, p95_response_time_ms=289.75939750671387, min_response_time_ms=37.187814712524414, max_response_time_ms=290.9977436065674, throughput_rps=39.44718999113427, total_duration_s=0.7605104446411133, sla_compliance=False, errors=[])"
+        ],
+        "max_load": 5
+      },
+      "/optimize/cpu": {
+        "tests": [
+          "LoadTestResult(endpoint='/optimize/cpu', method='POST', concurrent_users=1, total_requests=3, successful_requests=3, failed_requests=0, success_rate=100.0, avg_response_time_ms=12.394428253173828, median_response_time_ms=12.752294540405273, p95_response_time_ms=12.89987564086914, min_response_time_ms=11.53111457824707, max_response_time_ms=12.89987564086914, throughput_rps=79.12984856869748, total_duration_s=0.03791236877441406, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/optimize/cpu', method='POST', concurrent_users=5, total_requests=15, successful_requests=15, failed_requests=0, success_rate=100.0, avg_response_time_ms=50.45895576477051, median_response_time_ms=44.775962829589844, p95_response_time_ms=76.73025131225586, min_response_time_ms=23.879051208496094, max_response_time_ms=76.73025131225586, throughput_rps=83.09534469983636, total_duration_s=0.18051552772521973, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/optimize/cpu', method='POST', concurrent_users=10, total_requests=30, successful_requests=30, failed_requests=0, success_rate=100.0, avg_response_time_ms=112.46240933736165, median_response_time_ms=127.31325626373291, p95_response_time_ms=137.58540153503418, min_response_time_ms=20.5996036529541, max_response_time_ms=140.74420928955078, throughput_rps=72.66907531809908, total_duration_s=0.4128303527832031, sla_compliance=True, errors=[])"
+        ],
+        "max_load": 10
+      },
+      "/optimize/disk": {
+        "tests": [
+          "LoadTestResult(endpoint='/optimize/disk', method='POST', concurrent_users=1, total_requests=3, successful_requests=3, failed_requests=0, success_rate=100.0, avg_response_time_ms=8.408069610595703, median_response_time_ms=8.043050765991211, p95_response_time_ms=9.335517883300781, min_response_time_ms=7.845640182495117, max_response_time_ms=9.335517883300781, throughput_rps=115.92773237762688, total_duration_s=0.025878190994262695, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/optimize/disk', method='POST', concurrent_users=5, total_requests=15, successful_requests=15, failed_requests=0, success_rate=100.0, avg_response_time_ms=24.78470802307129, median_response_time_ms=26.87692642211914, p95_response_time_ms=30.806779861450195, min_response_time_ms=15.553951263427734, max_response_time_ms=30.806779861450195, throughput_rps=171.2995605508634, total_duration_s=0.08756589889526367, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/optimize/disk', method='POST', concurrent_users=10, total_requests=30, successful_requests=30, failed_requests=0, success_rate=100.0, avg_response_time_ms=53.8128932317098, median_response_time_ms=62.87813186645508, p95_response_time_ms=69.44537162780762, min_response_time_ms=11.346101760864258, max_response_time_ms=69.51689720153809, throughput_rps=148.81404441627066, total_duration_s=0.20159387588500977, sla_compliance=True, errors=[])"
+        ],
+        "max_load": 10
+      },
+      "/optimize/docker": {
+        "tests": [
+          "LoadTestResult(endpoint='/optimize/docker', method='POST', concurrent_users=1, total_requests=3, successful_requests=3, failed_requests=0, success_rate=100.0, avg_response_time_ms=2.9113292694091797, median_response_time_ms=2.241373062133789, p95_response_time_ms=4.338264465332031, min_response_time_ms=2.1543502807617188, max_response_time_ms=4.338264465332031, throughput_rps=309.4970484061393, total_duration_s=0.009693145751953125, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/optimize/docker', method='POST', concurrent_users=5, total_requests=15, successful_requests=15, failed_requests=0, success_rate=100.0, avg_response_time_ms=4.866997400919597, median_response_time_ms=4.789829254150391, p95_response_time_ms=8.53586196899414, min_response_time_ms=1.8444061279296875, max_response_time_ms=8.53586196899414, throughput_rps=747.2570491959046, total_duration_s=0.020073413848876953, sla_compliance=True, errors=[])",
+          "LoadTestResult(endpoint='/optimize/docker', method='POST', concurrent_users=10, total_requests=30, successful_requests=30, failed_requests=0, success_rate=100.0, avg_response_time_ms=7.798337936401367, median_response_time_ms=7.008552551269531, p95_response_time_ms=13.812780380249023, min_response_time_ms=3.582477569580078, max_response_time_ms=16.96324348449707, throughput_rps=842.7204597054509, total_duration_s=0.0355989933013916, sla_compliance=True, errors=[])"
+        ],
+        "max_load": 10
+      }
+    },
+    "recommendations": [
+      "Fix security vulnerabilities immediately",
+      "Implement input validation and sanitization",
+      "Add security scanning to CI/CD pipeline",
+      "Critical: /optimize/memory needs optimization - max load only 5 users"
+    ]
+  },
+  "detailed_results": {
+    "load_test_results": [
+      {
+        "endpoint": "/health",
+        "method": "GET",
+        "concurrent_users": 1,
+        "total_requests": 3,
+        "successful_requests": 3,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 1.621246337890625,
+        "median_response_time_ms": 1.5954971313476562,
+        "p95_response_time_ms": 1.9969940185546875,
+        "min_response_time_ms": 1.2712478637695312,
+        "max_response_time_ms": 1.9969940185546875,
+        "throughput_rps": 525.2948150622026,
+        "total_duration_s": 0.005711078643798828,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/health",
+        "method": "GET",
+        "concurrent_users": 5,
+        "total_requests": 15,
+        "successful_requests": 15,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 4.463990529378255,
+        "median_response_time_ms": 4.644632339477539,
+        "p95_response_time_ms": 6.838083267211914,
+        "min_response_time_ms": 2.2161006927490234,
+        "max_response_time_ms": 6.838083267211914,
+        "throughput_rps": 792.4247118836199,
+        "total_duration_s": 0.018929243087768555,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/health",
+        "method": "GET",
+        "concurrent_users": 10,
+        "total_requests": 30,
+        "successful_requests": 30,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 7.150634129842122,
+        "median_response_time_ms": 6.365060806274414,
+        "p95_response_time_ms": 11.771202087402344,
+        "min_response_time_ms": 2.9172897338867188,
+        "max_response_time_ms": 13.263702392578125,
+        "throughput_rps": 891.5704446900774,
+        "total_duration_s": 0.03364849090576172,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/status",
+        "method": "GET",
+        "concurrent_users": 1,
+        "total_requests": 3,
+        "successful_requests": 3,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 2.0240147908528647,
+        "median_response_time_ms": 1.9114017486572266,
+        "p95_response_time_ms": 2.5391578674316406,
+        "min_response_time_ms": 1.6214847564697266,
+        "max_response_time_ms": 2.5391578674316406,
+        "throughput_rps": 451.42110927746285,
+        "total_duration_s": 0.006645679473876953,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/status",
+        "method": "GET",
+        "concurrent_users": 5,
+        "total_requests": 15,
+        "successful_requests": 15,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 12.043190002441406,
+        "median_response_time_ms": 10.64443588256836,
+        "p95_response_time_ms": 21.521568298339844,
+        "min_response_time_ms": 3.8955211639404297,
+        "max_response_time_ms": 21.521568298339844,
+        "throughput_rps": 229.38914208626537,
+        "total_duration_s": 0.06539106369018555,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/status",
+        "method": "GET",
+        "concurrent_users": 10,
+        "total_requests": 30,
+        "successful_requests": 30,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 6.168063481648763,
+        "median_response_time_ms": 6.148695945739746,
+        "p95_response_time_ms": 10.022640228271484,
+        "min_response_time_ms": 2.1126270294189453,
+        "max_response_time_ms": 10.518312454223633,
+        "throughput_rps": 1035.1790576949973,
+        "total_duration_s": 0.028980493545532227,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/memory",
+        "method": "POST",
+        "concurrent_users": 1,
+        "total_requests": 3,
+        "successful_requests": 3,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 28.662761052449543,
+        "median_response_time_ms": 27.592182159423828,
+        "p95_response_time_ms": 31.166791915893555,
+        "min_response_time_ms": 27.22930908203125,
+        "max_response_time_ms": 31.166791915893555,
+        "throughput_rps": 34.53238926395521,
+        "total_duration_s": 0.08687496185302734,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/memory",
+        "method": "POST",
+        "concurrent_users": 5,
+        "total_requests": 15,
+        "successful_requests": 15,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 117.5178050994873,
+        "median_response_time_ms": 127.7925968170166,
+        "p95_response_time_ms": 168.58434677124023,
+        "min_response_time_ms": 23.8034725189209,
+        "max_response_time_ms": 168.58434677124023,
+        "throughput_rps": 37.14172872740797,
+        "total_duration_s": 0.4038584232330322,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/memory",
+        "method": "POST",
+        "concurrent_users": 10,
+        "total_requests": 30,
+        "successful_requests": 30,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 218.34415594736734,
+        "median_response_time_ms": 233.1066131591797,
+        "p95_response_time_ms": 289.75939750671387,
+        "min_response_time_ms": 37.187814712524414,
+        "max_response_time_ms": 290.9977436065674,
+        "throughput_rps": 39.44718999113427,
+        "total_duration_s": 0.7605104446411133,
+        "sla_compliance": false,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/cpu",
+        "method": "POST",
+        "concurrent_users": 1,
+        "total_requests": 3,
+        "successful_requests": 3,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 12.394428253173828,
+        "median_response_time_ms": 12.752294540405273,
+        "p95_response_time_ms": 12.89987564086914,
+        "min_response_time_ms": 11.53111457824707,
+        "max_response_time_ms": 12.89987564086914,
+        "throughput_rps": 79.12984856869748,
+        "total_duration_s": 0.03791236877441406,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/cpu",
+        "method": "POST",
+        "concurrent_users": 5,
+        "total_requests": 15,
+        "successful_requests": 15,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 50.45895576477051,
+        "median_response_time_ms": 44.775962829589844,
+        "p95_response_time_ms": 76.73025131225586,
+        "min_response_time_ms": 23.879051208496094,
+        "max_response_time_ms": 76.73025131225586,
+        "throughput_rps": 83.09534469983636,
+        "total_duration_s": 0.18051552772521973,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/cpu",
+        "method": "POST",
+        "concurrent_users": 10,
+        "total_requests": 30,
+        "successful_requests": 30,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 112.46240933736165,
+        "median_response_time_ms": 127.31325626373291,
+        "p95_response_time_ms": 137.58540153503418,
+        "min_response_time_ms": 20.5996036529541,
+        "max_response_time_ms": 140.74420928955078,
+        "throughput_rps": 72.66907531809908,
+        "total_duration_s": 0.4128303527832031,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/disk",
+        "method": "POST",
+        "concurrent_users": 1,
+        "total_requests": 3,
+        "successful_requests": 3,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 8.408069610595703,
+        "median_response_time_ms": 8.043050765991211,
+        "p95_response_time_ms": 9.335517883300781,
+        "min_response_time_ms": 7.845640182495117,
+        "max_response_time_ms": 9.335517883300781,
+        "throughput_rps": 115.92773237762688,
+        "total_duration_s": 0.025878190994262695,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/disk",
+        "method": "POST",
+        "concurrent_users": 5,
+        "total_requests": 15,
+        "successful_requests": 15,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 24.78470802307129,
+        "median_response_time_ms": 26.87692642211914,
+        "p95_response_time_ms": 30.806779861450195,
+        "min_response_time_ms": 15.553951263427734,
+        "max_response_time_ms": 30.806779861450195,
+        "throughput_rps": 171.2995605508634,
+        "total_duration_s": 0.08756589889526367,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/disk",
+        "method": "POST",
+        "concurrent_users": 10,
+        "total_requests": 30,
+        "successful_requests": 30,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 53.8128932317098,
+        "median_response_time_ms": 62.87813186645508,
+        "p95_response_time_ms": 69.44537162780762,
+        "min_response_time_ms": 11.346101760864258,
+        "max_response_time_ms": 69.51689720153809,
+        "throughput_rps": 148.81404441627066,
+        "total_duration_s": 0.20159387588500977,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/docker",
+        "method": "POST",
+        "concurrent_users": 1,
+        "total_requests": 3,
+        "successful_requests": 3,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 2.9113292694091797,
+        "median_response_time_ms": 2.241373062133789,
+        "p95_response_time_ms": 4.338264465332031,
+        "min_response_time_ms": 2.1543502807617188,
+        "max_response_time_ms": 4.338264465332031,
+        "throughput_rps": 309.4970484061393,
+        "total_duration_s": 0.009693145751953125,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/docker",
+        "method": "POST",
+        "concurrent_users": 5,
+        "total_requests": 15,
+        "successful_requests": 15,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 4.866997400919597,
+        "median_response_time_ms": 4.789829254150391,
+        "p95_response_time_ms": 8.53586196899414,
+        "min_response_time_ms": 1.8444061279296875,
+        "max_response_time_ms": 8.53586196899414,
+        "throughput_rps": 747.2570491959046,
+        "total_duration_s": 0.020073413848876953,
+        "sla_compliance": true,
+        "errors": []
+      },
+      {
+        "endpoint": "/optimize/docker",
+        "method": "POST",
+        "concurrent_users": 10,
+        "total_requests": 30,
+        "successful_requests": 30,
+        "failed_requests": 0,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 7.798337936401367,
+        "median_response_time_ms": 7.008552551269531,
+        "p95_response_time_ms": 13.812780380249023,
+        "min_response_time_ms": 3.582477569580078,
+        "max_response_time_ms": 16.96324348449707,
+        "throughput_rps": 842.7204597054509,
+        "total_duration_s": 0.0355989933013916,
+        "sla_compliance": true,
+        "errors": []
+      }
+    ],
+    "security_test_results": [
+      {
+        "test_type": "Path Traversal",
+        "payload": "../../../etc/passwd",
+        "status_code": 200,
+        "vulnerability_detected": false,
+        "severity": "LOW"
+      },
+      {
+        "test_type": "Path Traversal",
+        "payload": "/root",
+        "status_code": 200,
+        "vulnerability_detected": false,
+        "severity": "LOW"
+      },
+      {
+        "test_type": "Path Traversal",
+        "payload": "/etc/shadow",
+        "status_code": 200,
+        "vulnerability_detected": true,
+        "severity": "HIGH"
+      },
+      {
+        "test_type": "Path Traversal",
+        "payload": "../../../../../../../../etc/hosts",
+        "status_code": 200,
+        "vulnerability_detected": false,
+        "severity": "LOW"
+      },
+      {
+        "test_type": "Parameter Injection",
+        "payload": "{'path': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'}",
+        "status_code": 200,
+        "graceful_handling": false,
+        "vulnerability_detected": false
+      },
+      {
+        "test_type": "Parameter Injection",
+        "payload": "{'min_size_mb': -999999}",
+        "status_code": 200,
+        "graceful_handling": false,
+        "vulnerability_detected": false
+      },
+      {
+        "test_type": "Parameter Injection",
+        "payload": "{'days_old': \"'; DROP TABLE users; --\"}",
+        "status_code": 200,
+        "graceful_handling": false,
+        "vulnerability_detected": false
+      }
+    ]
+  }
+}

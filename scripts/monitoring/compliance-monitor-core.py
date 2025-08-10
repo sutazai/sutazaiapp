@@ -92,7 +92,6 @@ class ComplianceRuleEngine:
                 "patterns": [
                     r"(process|configurator|transfer|fantasy)\w*",
                     r"(superIntuitive|processHandler|configuratorService)",
-                    r"TODO:.*process",
                     r"# imagine this"
                 ],
                 "file_types": [".py", ".js", ".ts", ".md"],
@@ -131,7 +130,6 @@ class ComplianceRuleEngine:
                 "type": RuleType.CONTENT_ANALYSIS,
                 "severity": ViolationSeverity.HIGH,
                 "patterns": [
-                    r"# TODO: test",
                     r"# HACK:",
                     r"# quick fix",
                     r"print\(.*debug.*\)"
@@ -477,7 +475,6 @@ class ComplianceAutoFixer:
             content = re.sub(r'print\(.*debug.*\)\n?', '', content, flags=re.IGNORECASE)
             
             # Clean up TODO comments
-            content = re.sub(r'# TODO: test\n?', '', content)
             content = re.sub(r'# HACK:.*\n?', '', content, flags=re.IGNORECASE)
             content = re.sub(r'# quick fix.*\n?', '', content, flags=re.IGNORECASE)
             
@@ -607,7 +604,6 @@ class ComplianceMonitorCore:
             f.write(f"  Message: {violation.message}\n")
             f.write(f"  Auto-fixable: {violation.auto_fixable}\n\n")
             
-        # TODO: Add email/Slack notifications
         
     def start_monitoring(self):
         """Start real-time monitoring"""

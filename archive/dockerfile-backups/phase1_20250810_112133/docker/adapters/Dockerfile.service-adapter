@@ -1,0 +1,47 @@
+# Universal Service Adapter Base Image
+FROM python:3.11-slim
+
+# Install common dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    netcat-traditional \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Install Python dependencies
+COPY requirements/base.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy adapter code
+COPY adapter.py .
+COPY config.yaml .
+
+# Health check script
+COPY health_check.sh .
+RUN chmod +x health_check.sh
+
+# Default environment variables
+ENV ADAPTER_PORT=8080
+ENV TARGET_HOST=localhost
+ENV TARGET_PORT=80
+ENV METRICS_ENABLED=true
+ENV LOG_LEVEL=INFO
+
+# Expose adapter port
+EXPOSE ${ADAPTER_PORT}
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD ./health_check.sh || exit 1
+
+# Run the adapter
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
+CMD ["python", "adapter.py"]

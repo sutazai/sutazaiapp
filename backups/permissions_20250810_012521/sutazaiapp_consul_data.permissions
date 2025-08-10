@@ -1,0 +1,8 @@
+total 28
+drwxr-xr-x 4 dhcpcd ai   4096 Aug 10 01:07 .
+drwx-----x 3 root   root 4096 Aug  9 18:15 ..
+-rw-r--r-- 1 dhcpcd ai    394 Aug  9 18:15 checkpoint-signature
+-rw------- 1 dhcpcd ai     36 Aug  9 18:15 node-id
+drwxr-xr-x 3 dhcpcd ai   4096 Aug  9 18:15 raft
+drwxr-xr-x 2 dhcpcd ai   4096 Aug  9 18:15 serf
+-rw------- 1 dhcpcd ai     29 Aug 10 01:07 server_metadata.json

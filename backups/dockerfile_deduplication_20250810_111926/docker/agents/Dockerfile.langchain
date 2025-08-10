@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+RUN pip install --no-cache-dir langchain langchain-community langchain-experimental fastapi uvicorn
+
+WORKDIR /app
+
+COPY langchain_service.py .
+
+ENV OPENAI_API_BASE=http://ollama:11434/v1
+
+EXPOSE 8505
+
+
+# Run as non-root user
+USER nobody
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
+CMD ["uvicorn", "langchain_service:app", "--host", "0.0.0.0", "--port", "8505"]

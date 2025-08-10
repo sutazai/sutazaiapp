@@ -20,7 +20,7 @@ import docker
 import redis
 from circuit_breaker import (
     CircuitBreaker, HttpCircuitBreaker, CircuitConfig, 
-    CircuitBreakerRegistry, CircuitBreakerOpenError
+    CircuitBreakerRegistry, CircuitBreakerOpenError, CircuitState
 )
 
 # Configure logging

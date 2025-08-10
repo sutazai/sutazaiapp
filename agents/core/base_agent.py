@@ -940,7 +940,7 @@ class BaseAgent:
                 "avg_processing_time": self.metrics.avg_processing_time,
                 "ollama_healthy": ollama_healthy,
                 "backend_healthy": backend_healthy,
-                "circuit_breaker_status": getattr(self.circuit_breaker, 'state', {}).get('value', 'unknown') if self.circuit_breaker else "unavailable",
+                "circuit_breaker_status": getattr(self.circuit_breaker, 'state', 'unknown').value if self.circuit_breaker and hasattr(getattr(self.circuit_breaker, 'state', None), 'value') else "unavailable",
                 "model": self.default_model,
                 "timestamp": datetime.utcnow().isoformat()
             }

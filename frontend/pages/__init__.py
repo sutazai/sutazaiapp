@@ -7,6 +7,7 @@ Contains all major page functions organized by category
 from .dashboard.main_dashboard import show_dashboard
 from .ai_services.ai_chat import show_ai_chat  
 from .system.agent_control import show_agent_control
+from .system.hardware_optimization import show_hardware_optimization
 
 # Page registry for navigation
 PAGE_REGISTRY = {
@@ -23,6 +24,11 @@ PAGE_REGISTRY = {
     "Agent Control": {
         "function": show_agent_control,
         "icon": "👥",
+        "category": "system"
+    },
+    "Hardware Optimizer": {
+        "function": show_hardware_optimization,
+        "icon": "🔧",
         "category": "system"
     }
 }

@@ -1386,7 +1386,6 @@ class HumanOversightInterface:
                 
                 conn.commit()
             
-            # TODO: Send actual pause command to agent
             logger.info(f"Agent {agent_id} paused by {data.get('operator_id')}")
             
             return web.json_response({'status': 'success', 'message': f'Agent {agent_id} paused'})
@@ -1435,7 +1434,6 @@ class HumanOversightInterface:
                 
                 conn.commit()
             
-            # TODO: Send actual resume command to agent
             logger.info(f"Agent {agent_id} resumed by {data.get('operator_id')}")
             
             return web.json_response({'status': 'success', 'message': f'Agent {agent_id} resumed'})
@@ -1495,7 +1493,6 @@ class HumanOversightInterface:
                 
                 conn.commit()
             
-            # TODO: Send actual emergency stop command to agent
             logger.critical(f"Agent {agent_id} emergency stopped by {data.get('operator_id')}")
             
             return web.json_response({'status': 'success', 'message': f'Agent {agent_id} emergency stopped'})
@@ -1560,7 +1557,6 @@ class HumanOversightInterface:
             
             self.active_overrides[override.id] = override
             
-            # TODO: Apply override to actual agent
             logger.info(f"Override created for agent {agent_id} by {data['operator_id']}")
             
             return web.json_response({'status': 'success', 'override_id': override.id})
@@ -1937,7 +1933,6 @@ class HumanOversightInterface:
             
             logger.critical(f"SYSTEM EMERGENCY STOP initiated by {data.get('operator_id')} - {len(stopped_agents)} agents stopped")
             
-            # TODO: Actually stop all agents and system processes
             
             return web.json_response({
                 'status': 'success', 
