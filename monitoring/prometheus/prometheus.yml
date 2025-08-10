@@ -1,9 +1,14 @@
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
+  external_labels:
+    cluster: 'sutazai-production'
+    replica: 'prometheus-1'
 
 rule_files:
   - "/etc/prometheus/alert_rules.yml"
+  - "/etc/prometheus/sutazai_production_alerts.yml"
+  - "/etc/prometheus/ollama-agent-alerts.yml"
 
 alerting:
   alertmanagers:
@@ -12,18 +17,23 @@ alerting:
           - sutazai-alertmanager:9093
 
 scrape_configs:
+  # Monitoring Infrastructure
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
+    scrape_interval: 10s
 
   - job_name: 'node-exporter'
     static_configs:
       - targets: ['sutazai-node-exporter:9100']
+    scrape_interval: 15s
 
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['sutazai-cadvisor:8080']
+    scrape_interval: 15s
 
+  # Core Application Services
   - job_name: 'sutazai-backend'
     static_configs:
       - targets: ['sutazai-backend:8000']
@@ -41,18 +51,46 @@ scrape_configs:
   - job_name: 'sutazai-ollama'
     static_configs:
       - targets: ['sutazai-ollama:11434']
-    metrics_path: '/api/health'
+    metrics_path: '/metrics'
     scrape_interval: 30s
-    scrape_timeout: 10s
+    scrape_timeout: 15s
 
-  - job_name: 'sutazai-databases'
+  # Database Services
+  - job_name: 'sutazai-postgres'
     static_configs:
-      - targets: 
-        - 'sutazai-postgres-exporter-monitoring:9187'
-        - 'sutazai-redis-exporter-monitoring:9121'
+      - targets: ['sutazai-postgres-exporter:9187']
     scrape_interval: 30s
     scrape_timeout: 10s
 
+  - job_name: 'sutazai-redis'
+    static_configs:
+      - targets: ['sutazai-redis-exporter:9121']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Vector Databases
+  - job_name: 'sutazai-qdrant'
+    static_configs:
+      - targets: ['sutazai-qdrant:6333']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-chromadb'
+    static_configs:
+      - targets: ['sutazai-chromadb:8000']
+    metrics_path: '/api/v1/heartbeat'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-faiss'
+    static_configs:
+      - targets: ['sutazai-faiss:8000']
+    metrics_path: '/health'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # AI Agent Services
   - job_name: 'sutazai-hardware-optimizer'
     static_configs:
       - targets: ['sutazai-hardware-resource-optimizer:8080']
@@ -60,25 +98,73 @@ scrape_configs:
     scrape_interval: 60s
     scrape_timeout: 30s
 
-  - job_name: 'sutazai-agents'
+  - job_name: 'sutazai-ai-orchestrator'
     static_configs:
-      - targets: 
-        - 'sutazai-data-analysis-engineer-phase3:8080'
-        - 'sutazai-dify-automation-specialist-phase3:8080'
-        - 'sutazai-awesome-code-ai-phase3:8080'
-    metrics_path: '/metrics'
+      - targets: ['sutazai-ai-agent-orchestrator:8589']
+    metrics_path: '/health'
     scrape_interval: 60s
     scrape_timeout: 30s
 
-  - job_name: 'externalService, thirdPartyAPI-http-checks'
+  - job_name: 'sutazai-ollama-integration'
+    static_configs:
+      - targets: ['sutazai-ollama-integration:8090']
+    metrics_path: '/health'
+    scrape_interval: 60s
+    scrape_timeout: 30s
+
+  - job_name: 'sutazai-resource-arbitration'
+    static_configs:
+      - targets: ['sutazai-resource-arbitration-agent:8588']
+    metrics_path: '/health'
+    scrape_interval: 60s
+    scrape_timeout: 30s
+
+  - job_name: 'sutazai-task-assignment'
+    static_configs:
+      - targets: ['sutazai-task-assignment-coordinator:8551']
+    metrics_path: '/health'
+    scrape_interval: 60s
+    scrape_timeout: 30s
+
+  # Service Mesh
+  - job_name: 'sutazai-kong'
+    static_configs:
+      - targets: ['sutazai-kong:8001']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-consul'
+    static_configs:
+      - targets: ['sutazai-consul:8500']
+    metrics_path: '/v1/agent/metrics?format=prometheus'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-rabbitmq'
+    static_configs:
+      - targets: ['sutazai-rabbitmq:15692']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Blackbox Exporter - HTTP Health Checks
+  - job_name: 'sutazai-http-checks'
     metrics_path: /probe
     params:
       module: [http_2xx]
     static_configs:
       - targets:
         - http://sutazai-backend:8000/health
+        - http://sutazai-frontend:8501/health
         - http://sutazai-chromadb:8000/api/v1/heartbeat
         - http://sutazai-qdrant:6333/
+        - http://sutazai-faiss:8000/health
+        - http://sutazai-hardware-resource-optimizer:8080/health
+        - http://sutazai-ai-agent-orchestrator:8589/health
+        - http://sutazai-ollama-integration:8090/health
+        - http://sutazai-resource-arbitration-agent:8588/health
+        - http://sutazai-task-assignment-coordinator:8551/health
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -86,9 +172,11 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: sutazai-blackbox-exporter:9115
+    scrape_interval: 30s
+    scrape_timeout: 10s
   
-  # TCP checks for non-HTTP services
-  - job_name: 'tcp-service-checks'
+  # Blackbox Exporter - TCP Connectivity Checks
+  - job_name: 'sutazai-tcp-checks'
     metrics_path: /probe
     params:
       module: [tcp_connect]
@@ -97,6 +185,8 @@ scrape_configs:
         - sutazai-redis:6379
         - sutazai-postgres:5432
         - sutazai-neo4j:7687
+        - sutazai-rabbitmq:5672
+        - sutazai-ollama:11434
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -104,3 +194,5 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: sutazai-blackbox-exporter:9115
+    scrape_interval: 30s
+    scrape_timeout: 10s

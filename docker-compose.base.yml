@@ -1,0 +1,156 @@
+# ============================================================================
+# SutazAI Docker Base Images - ULTRA CONSOLIDATION BUILD SYSTEM
+# ============================================================================
+# Purpose: Build all master base images for the SutazAI ecosystem
+# Author: DOCKER-MASTER-001
+# Date: August 10, 2025
+# Status: PRODUCTION READY
+# ============================================================================
+# Usage:
+#   docker-compose -f docker-compose.base.yml build    # Build all bases
+#   docker-compose -f docker-compose.base.yml up -d    # Optional health checks
+# ============================================================================
+
+version: '3.8'
+
+networks:
+  sutazai-base-network:
+    driver: bridge
+
+services:
+  # ========================================================================== 
+  # PYTHON AGENT MASTER BASE - 132+ services use this
+  # ==========================================================================
+  python-agent-master:
+    build:
+      context: .
+      dockerfile: docker/base/Dockerfile.python-agent-master
+      args:
+        PYTHON_VERSION: 3.12.8
+    image: sutazai-python-agent-master:latest
+    container_name: sutazai-python-base-builder
+    networks:
+      - sutazai-base-network
+
+  # ========================================================================== 
+  # NODE.JS AGENT MASTER BASE - 7+ services use this
+  # ==========================================================================
+  nodejs-agent-master:
+    build:
+      context: .
+      dockerfile: docker/base/Dockerfile.nodejs-agent-master  
+      args:
+        NODE_VERSION: 18
+    image: sutazai-nodejs-agent-master:latest
+    container_name: sutazai-nodejs-base-builder
+    networks:
+      - sutazai-base-network
+
+  # ========================================================================== 
+  # PYTHON ALPINE OPTIMIZED BASE - For lightweight services
+  # ==========================================================================
+  python-alpine-optimized:
+    build:
+      context: .
+      dockerfile: docker/base/Dockerfile.python-alpine-optimized
+      args:
+        PYTHON_VERSION: 3.12.8
+        ALPINE_VERSION: 3.19
+    image: sutazai-python-alpine-optimized:latest
+    container_name: sutazai-python-alpine-builder
+    networks:
+      - sutazai-base-network
+
+  # ========================================================================== 
+  # AI/ML GPU BASE - For CUDA-enabled services
+  # ==========================================================================
+  ai-ml-gpu-base:
+    build:
+      context: .
+      dockerfile: docker/templates/Dockerfile.ai-ml-service-base
+      args:
+        ENABLE_GPU: "true"
+        CUDA_VERSION: 12.1
+        PYTHON_VERSION: 3.12.8
+    image: sutazai-ai-ml-gpu:latest
+    container_name: sutazai-gpu-base-builder
+    networks:
+      - sutazai-base-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # ========================================================================== 
+  # AI/ML CPU BASE - For CPU-only ML services
+  # ==========================================================================
+  ai-ml-cpu-base:
+    build:
+      context: .
+      dockerfile: docker/templates/Dockerfile.ai-ml-service-base
+      args:
+        ENABLE_GPU: "false"
+        PYTHON_VERSION: 3.12.8
+    image: sutazai-ai-ml-cpu:latest
+    container_name: sutazai-cpu-base-builder
+    networks:
+      - sutazai-base-network
+
+  # ========================================================================== 
+  # GOLANG SERVICE BASE - For Go-based services
+  # ==========================================================================
+  golang-service-base:
+    build:
+      context: .
+      dockerfile: docker/base/Dockerfile.golang-base
+      args:
+        GO_VERSION: 1.21
+    image: sutazai-golang-base:latest
+    container_name: sutazai-golang-base-builder
+    networks:
+      - sutazai-base-network
+
+  # ========================================================================== 
+  # MONITORING BASE - For Prometheus, Grafana, etc.
+  # ==========================================================================
+  monitoring-base:
+    build:
+      context: .
+      dockerfile: docker/base/Dockerfile.monitoring-base
+    image: sutazai-monitoring-base:latest
+    container_name: sutazai-monitoring-base-builder
+    networks:
+      - sutazai-base-network
+
+  # ========================================================================== 
+  # MINIMAL AGENT BASE - Ultra-lightweight for simple services
+  # ==========================================================================
+  python-agent-minimal:
+    build:
+      context: .
+      dockerfile: docker/base/Dockerfile.python-agent-minimal
+      args:
+        PYTHON_VERSION: 3.12.8
+    image: sutazai-python-agent-minimal:latest
+    container_name: sutazai-minimal-base-builder
+    networks:
+      - sutazai-base-network
+
+# ============================================================================
+# VOLUME DEFINITIONS - For persistent base image data
+# ============================================================================
+volumes:
+  base_build_cache:
+    driver: local
+
+# ============================================================================
+# ENVIRONMENT CONFIGURATION
+# ============================================================================
+# Copy this to .env if needed:
+# DOCKER_BUILDKIT=1
+# COMPOSE_DOCKER_CLI_BUILD=1
+# BUILDX_EXPERIMENTAL=1
+# ============================================================================

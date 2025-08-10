@@ -161,7 +161,12 @@
       "Bash(/opt/sutazaiapp/tests/ultra_cleanup_test_suite.sh:*)",
       "Bash(/opt/sutazaiapp/scripts/consolidated/security/master-security.sh validate:*)",
       "Bash(/opt/sutazaiapp/tests/performance_benchmarks.sh:*)",
-      "Bash(/opt/sutazaiapp/scripts/consolidated/cleanup/archive-old-scripts.sh:*)"
+      "Bash(/opt/sutazaiapp/scripts/consolidated/cleanup/archive-old-scripts.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/master/deploy.sh:*)",
+      "Bash(SKIP_UPDATE=1 /opt/sutazaiapp/scripts/master/deploy.sh help)",
+      "Bash(SKIP_UPDATE=1 /opt/sutazaiapp/scripts/master/deploy.sh status)",
+      "Bash(env SKIP_UPDATE=1 /opt/sutazaiapp/scripts/master/deploy.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/docker/migrate-stragglers.sh:*)"
     ],
     "deny": []
   }

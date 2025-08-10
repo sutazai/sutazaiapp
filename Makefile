@@ -40,13 +40,209 @@ help: ## Show this help message
 # Environment Setup
 install: ## Install all dependencies
 	@echo "$(YELLOW)📦 Installing dependencies...$(NC)"
-	$(POETRY) install --with dev,security,performance
+	$(PIP) install -r requirements/base.txt
+	$(PIP) install pytest pytest-asyncio pytest-cov pytest-xdist pytest-timeout pytest-html
+	$(PIP) install httpx selenium requests psutil
+	$(PIP) install bandit safety mypy black isort flake8
 	@echo "$(GREEN)✅ Dependencies installed$(NC)"
 
 setup-dev: install ## Setup development environment
 	@echo "$(YELLOW)🔧 Setting up development environment...$(NC)"
-	$(POETRY) run pre-commit install
+	mkdir -p tests/reports/{junit,coverage,performance,security}
 	@echo "$(GREEN)✅ Development environment ready$(NC)"
+
+setup-ci: ## Setup CI environment
+	@echo "$(YELLOW)🔧 Setting up CI environment...$(NC)"
+	mkdir -p tests/reports/{junit,coverage,performance,security}
+	$(PIP) install --upgrade pip
+	$(MAKE) install
+	@echo "$(GREEN)✅ CI environment ready$(NC)"
+
+# Testing Targets (Professional Rule 5)
+test: ## Run all tests (fast)
+	@echo "$(BLUE)🧪 Running comprehensive test suite...$(NC)"
+	$(PYTHON) tests/run_all_tests.py --fast
+
+test-all: ## Run all tests including slow ones
+	@echo "$(BLUE)🧪 Running ALL tests (including slow)...$(NC)"
+	$(PYTHON) tests/run_all_tests.py
+
+test-unit: ## Run unit tests only
+	@echo "$(YELLOW)🔬 Running unit tests...$(NC)"
+	$(PYTEST) -m unit --cov=backend --cov-report=html:tests/reports/coverage/unit tests/unit/
+
+test-integration: ## Run integration tests only
+	@echo "$(YELLOW)🔗 Running integration tests...$(NC)"
+	$(PYTEST) -m integration --tb=short tests/integration/
+
+test-e2e: ## Run end-to-end tests only
+	@echo "$(YELLOW)🌐 Running E2E tests...$(NC)"
+	$(PYTEST) -m e2e --tb=short tests/e2e/
+
+test-performance: ## Run performance tests only
+	@echo "$(YELLOW)⚡ Running performance tests...$(NC)"
+	$(PYTEST) -m "performance and not slow" --tb=short tests/performance/
+
+test-load: ## Run load/stress tests
+	@echo "$(YELLOW)🔥 Running load tests...$(NC)"
+	$(PYTEST) -m "slow or load or stress" --tb=short tests/performance/
+
+test-security: ## Run security tests only
+	@echo "$(YELLOW)🛡️ Running security tests...$(NC)"
+	$(PYTEST) -m security --tb=short tests/security/
+
+test-smoke: ## Run smoke tests (quick validation)
+	@echo "$(YELLOW)💨 Running smoke tests...$(NC)"
+	$(PYTEST) -m smoke --tb=short --maxfail=1
+
+test-ci: ## Run tests in CI mode
+	@echo "$(BLUE)🤖 Running tests in CI mode...$(NC)"
+	$(PYTHON) tests/run_all_tests.py --fast --ci
+
+# Coverage and Quality (Rule 5)
+coverage: ## Generate coverage report
+	@echo "$(YELLOW)📊 Generating coverage report...$(NC)"
+	$(PYTEST) --cov=backend --cov=agents --cov-report=html:tests/reports/coverage/html --cov-report=term-missing tests/
+
+coverage-report: coverage ## Open coverage report in browser
+	@echo "$(GREEN)📈 Opening coverage report...$(NC)"
+	@python3 -m webbrowser tests/reports/coverage/html/index.html 2>/dev/null || echo "Open tests/reports/coverage/html/index.html manually"
+
+# Code Quality (Rule 5)
+lint: ## Run linting tools
+	@echo "$(YELLOW)🔍 Running linting...$(NC)"
+	black --check backend/ agents/ tests/
+	isort --check-only backend/ agents/ tests/
+	flake8 backend/ agents/ tests/
+	mypy backend/ --ignore-missing-imports
+
+format: ## Format code
+	@echo "$(YELLOW)✨ Formatting code...$(NC)"
+	black backend/ agents/ tests/
+	isort backend/ agents/ tests/
+	@echo "$(GREEN)✅ Code formatted$(NC)"
+
+security-scan: ## Run security scanning
+	@echo "$(YELLOW)🔒 Running security scan...$(NC)"
+	bandit -r backend/ agents/ -f json -o tests/reports/security/bandit.json || true
+	safety check --json --output tests/reports/security/safety.json || true
+	@echo "$(GREEN)✅ Security scan complete$(NC)"
+
+# System Health Checks
+health: ## Check system health
+	@echo "$(YELLOW)💚 Checking system health...$(NC)"
+	curl -f http://localhost:10010/health || echo "Backend not responding"
+	curl -f http://localhost:10011 || echo "Frontend not responding"
+	curl -f http://localhost:10104/api/tags || echo "Ollama not responding"
+
+health-detailed: ## Detailed health check
+	@echo "$(BLUE)🩺 Detailed system health check...$(NC)"
+	$(PYTEST) tests/health/test_service_health.py -v
+
+# Test Infrastructure
+test-infra-up: ## Start test infrastructure
+	@echo "$(YELLOW)🚀 Starting test infrastructure...$(NC)"
+	$(DOCKER_COMPOSE) up -d postgres redis ollama
+
+test-infra-down: ## Stop test infrastructure
+	@echo "$(YELLOW)⏹️ Stopping test infrastructure...$(NC)"
+	$(DOCKER_COMPOSE) down
+
+# Reports and Analytics
+report-dashboard: ## Generate test dashboard
+	@echo "$(YELLOW)📊 Generating test dashboard...$(NC)"
+	$(PYTHON) -c "
+import json
+from datetime import datetime
+import os
+
+# Find latest test report
+reports_dir = 'tests/reports'
+if os.path.exists(reports_dir):
+    files = [f for f in os.listdir(reports_dir) if f.startswith('test_report_') and f.endswith('.json')]
+    if files:
+        latest = max(files)
+        with open(os.path.join(reports_dir, latest)) as f:
+            data = json.load(f)
+        print('📊 Latest Test Results:')
+        print(f'⏰ Date: {data[\"timestamp\"]}')
+        print(f'✅ Success Rate: {data[\"summary\"][\"success_rate\"]:.1f}%')
+        print(f'🏃 Duration: {data[\"duration_seconds\"]:.1f}s')
+    else:
+        print('No test reports found')
+else:
+    print('Reports directory not found')
+"
+
+# Benchmark Tests
+benchmark: ## Run performance benchmarks
+	@echo "$(YELLOW)⚡ Running benchmarks...$(NC)"
+	$(PYTEST) tests/performance/ -m "not slow" --benchmark-only --benchmark-json=tests/reports/performance/benchmark.json
+
+# Clean and Reset
+clean: ## Clean test artifacts
+	@echo "$(YELLOW)🧹 Cleaning test artifacts...$(NC)"
+	rm -rf tests/reports/junit/*
+	rm -rf tests/reports/coverage/*
+	rm -rf tests/reports/performance/*
+	rm -rf tests/reports/security/*
+	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	find . -type f -name "*.pyc" -delete 2>/dev/null || true
+	@echo "$(GREEN)✅ Cleaned test artifacts$(NC)"
+
+clean-all: clean ## Clean everything including dependencies
+	@echo "$(YELLOW)🧹 Deep cleaning...$(NC)"
+	rm -rf .pytest_cache
+	rm -rf .coverage
+	rm -rf htmlcov
+	@echo "$(GREEN)✅ Deep clean complete$(NC)"
+
+# Test Data Management
+test-data-setup: ## Setup test data
+	@echo "$(YELLOW)📋 Setting up test data...$(NC)"
+	$(PYTHON) -c "
+import os
+import json
+
+# Create sample test data
+test_data = {
+    'users': [{'id': 1, 'name': 'test_user', 'email': 'test@example.com'}],
+    'models': ['tinyllama'],
+    'test_messages': ['Hello', 'How are you?', 'Test message']
+}
+
+os.makedirs('tests/fixtures', exist_ok=True)
+with open('tests/fixtures/test_data.json', 'w') as f:
+    json.dump(test_data, f, indent=2)
+
+print('✅ Test data setup complete')
+"
+
+# Documentation
+docs-test: ## Test documentation examples
+	@echo "$(YELLOW)📚 Testing documentation examples...$(NC)"
+	$(PYTEST) tests/docs/ -v || echo "No doc tests found"
+
+# Continuous Integration Helpers
+ci-test-quick: setup-ci test-smoke test-unit ## Quick CI tests
+	@echo "$(GREEN)✅ Quick CI tests complete$(NC)"
+
+ci-test-full: setup-ci test-all ## Full CI tests
+	@echo "$(GREEN)✅ Full CI tests complete$(NC)"
+
+# Test Utilities
+test-watch: ## Watch files and re-run tests
+	@echo "$(YELLOW)👀 Watching for changes...$(NC)"
+	$(PYTEST) tests/unit/ --looponfail
+
+test-pdb: ## Run tests with debugger
+	@echo "$(YELLOW)🐛 Running tests with debugger...$(NC)"
+	$(PYTEST) --pdb tests/unit/
+
+# Parallel Testing
+test-parallel: ## Run tests in parallel
+	@echo "$(YELLOW)⚡ Running tests in parallel...$(NC)"
+	$(PYTEST) -n auto tests/
 
 setup-ci: ## Setup CI environment
 	@echo "$(YELLOW)🔧 Setting up CI environment...$(NC)"

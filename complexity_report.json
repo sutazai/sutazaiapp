@@ -1,0 +1,3557 @@
+{
+  "summary": {
+    "complexity_low": 12693,
+    "complexity_high": 241,
+    "complexity_medium": 559,
+    "long_functions": 20,
+    "complexity_very_high": 12,
+    "deeply_nested": 22,
+    "many_parameters": 5,
+    "complexity_extreme": 1,
+    "total_functions": 13506
+  },
+  "high_complexity_functions": [
+    {
+      "file": "hardware_api_validation_test.py",
+      "function": "_test_endpoint",
+      "class": "HardwareAPIValidator",
+      "line": 196,
+      "complexity": 19,
+      "line_count": 79,
+      "parameters": 6,
+      "nested_functions": 0
+    },
+    {
+      "file": "hardware_api_validation_test.py",
+      "function": "_generate_final_report",
+      "class": "HardwareAPIValidator",
+      "line": 301,
+      "complexity": 19,
+      "line_count": 55,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "script_consolidation_analysis.py",
+      "function": "analyze_scripts",
+      "class": null,
+      "line": 29,
+      "complexity": 18,
+      "line_count": 71,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "ULTRA_DOCKERFILE_ANALYSIS.py",
+      "function": "categorize_dockerfiles",
+      "class": "DockerfileAnalyzer",
+      "line": 98,
+      "complexity": 20,
+      "line_count": 52,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "scripts/consolidation_analysis.py",
+      "function": "_extract_description",
+      "class": "ScriptAnalyzer",
+      "line": 169,
+      "complexity": 17,
+      "line_count": 32,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/agent_health_dashboard.py",
+      "function": "main",
+      "class": null,
+      "line": 88,
+      "complexity": 37,
+      "line_count": 229,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/test_accessibility.py",
+      "function": "generate_accessibility_report",
+      "class": "AccessibilityTester",
+      "line": 409,
+      "complexity": 17,
+      "line_count": 63,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/test_runtime_issues.py",
+      "function": "analyze_potential_runtime_issues",
+      "class": null,
+      "line": 10,
+      "complexity": 34,
+      "line_count": 165,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/test_optimization_debug.py",
+      "function": "analyze_import_structure",
+      "class": "UltraFrontendDebugger",
+      "line": 81,
+      "complexity": 18,
+      "line_count": 49,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/app_optimized.py",
+      "function": "render_optimized_sidebar",
+      "class": null,
+      "line": 158,
+      "complexity": 23,
+      "line_count": 132,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/app.py",
+      "function": "render_navigation",
+      "class": null,
+      "line": 90,
+      "complexity": 20,
+      "line_count": 120,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "workflows/code_improvement_workflow.py",
+      "function": "analyze",
+      "class": "InfrastructureDevOpsAnalyzer",
+      "line": 299,
+      "complexity": 15,
+      "line_count": 80,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "workflows/test_code_improvement.py",
+      "function": "test_workflow",
+      "class": null,
+      "line": 19,
+      "complexity": 20,
+      "line_count": 154,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "workflows/demo_workflow.py",
+      "function": "demonstrate_workflow",
+      "class": null,
+      "line": 23,
+      "complexity": 24,
+      "line_count": 129,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "workflows/security_scan_workflow.py",
+      "function": "_scan_for_secrets",
+      "class": "SecurityScanWorkflow",
+      "line": 140,
+      "complexity": 16,
+      "line_count": 48,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "workflows/security_scan_workflow.py",
+      "function": "_scan_docker_files",
+      "class": "SecurityScanWorkflow",
+      "line": 189,
+      "complexity": 15,
+      "line_count": 59,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "workflows/security_scan_workflow.py",
+      "function": "generate_report",
+      "class": "SecurityScanWorkflow",
+      "line": 334,
+      "complexity": 17,
+      "line_count": 79,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/execute_ultra_testing_strategy.py",
+      "function": "generate_report",
+      "class": "UltraTestOrchestrator",
+      "line": 873,
+      "complexity": 20,
+      "line_count": 67,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/frontend_final_validation.py",
+      "function": "validate_frontend_health",
+      "class": null,
+      "line": 18,
+      "complexity": 19,
+      "line_count": 145,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/hardware_optimizer_load_runner.py",
+      "function": "_analyze_load_test_results",
+      "class": "LoadTestRunner",
+      "line": 110,
+      "complexity": 19,
+      "line_count": 92,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/dockerfile_performance_validator.py",
+      "function": "validate_service_performance",
+      "class": "DockerfilePerformanceValidator",
+      "line": 311,
+      "complexity": 22,
+      "line_count": 115,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/dockerfile_consolidation_test_suite.py",
+      "function": "test_security_compliance",
+      "class": "DockerfileValidationSuite",
+      "line": 129,
+      "complexity": 18,
+      "line_count": 38,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/frontend_performance_ultra_test.py",
+      "function": "_generate_validation_summary",
+      "class": "FrontendPerformanceValidator",
+      "line": 332,
+      "complexity": 21,
+      "line_count": 93,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/simplified_load_test.py",
+      "function": "run_load_test_for_endpoint",
+      "class": "SimplifiedLoadTester",
+      "line": 243,
+      "complexity": 15,
+      "line_count": 131,
+      "parameters": 3,
+      "nested_functions": 1
+    },
+    {
+      "file": "tests/simplified_load_test.py",
+      "function": "analyze_results",
+      "class": "SimplifiedLoadTester",
+      "line": 516,
+      "complexity": 15,
+      "line_count": 64,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/master_dockerfile_validator.py",
+      "function": "calculate_final_assessment",
+      "class": "MasterDockerfileValidator",
+      "line": 248,
+      "complexity": 29,
+      "line_count": 121,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/test_jwt_vulnerability_fix.py",
+      "function": "check_jwt_service_file",
+      "class": null,
+      "line": 10,
+      "complexity": 22,
+      "line_count": 85,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/backend_hardware_integration_ultra_corrected_test.py",
+      "function": "test_data_transformation_analysis",
+      "class": "CorrectedBackendHardwareIntegrationTest",
+      "line": 399,
+      "complexity": 18,
+      "line_count": 126,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/backend_hardware_integration_ultra_corrected_test.py",
+      "function": "run_all_tests",
+      "class": "CorrectedBackendHardwareIntegrationTest",
+      "line": 777,
+      "complexity": 19,
+      "line_count": 113,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/backend_hardware_integration_ultra_corrected_test.py",
+      "function": "main",
+      "class": null,
+      "line": 891,
+      "complexity": 16,
+      "line_count": 72,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/qa_comprehensive_test_suite.py",
+      "function": "_test_all_endpoints",
+      "class": "UltraComprehensiveQATestSuite",
+      "line": 167,
+      "complexity": 15,
+      "line_count": 79,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/qa_comprehensive_test_suite.py",
+      "function": "_test_security_vulnerabilities",
+      "class": "UltraComprehensiveQATestSuite",
+      "line": 247,
+      "complexity": 16,
+      "line_count": 69,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/qa_comprehensive_test_suite.py",
+      "function": "_test_error_handling",
+      "class": "UltraComprehensiveQATestSuite",
+      "line": 471,
+      "complexity": 15,
+      "line_count": 62,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/qa_comprehensive_test_suite.py",
+      "function": "_test_integration_points",
+      "class": "UltraComprehensiveQATestSuite",
+      "line": 687,
+      "complexity": 21,
+      "line_count": 64,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/qa_comprehensive_test_suite.py",
+      "function": "_generate_final_report",
+      "class": "UltraComprehensiveQATestSuite",
+      "line": 770,
+      "complexity": 15,
+      "line_count": 106,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/monitoring_system_validation.py",
+      "function": "test_performance_monitoring_accuracy",
+      "class": "MonitoringSystemValidator",
+      "line": 280,
+      "complexity": 18,
+      "line_count": 81,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/test_enhanced_detection.py",
+      "function": "_get_container_info_enhanced",
+      "class": null,
+      "line": 39,
+      "complexity": 27,
+      "line_count": 101,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/security_test_suite.py",
+      "function": "test_input_validation",
+      "class": "SecurityTestSuite",
+      "line": 62,
+      "complexity": 16,
+      "line_count": 134,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/security_test_suite.py",
+      "function": "_generate_security_summary",
+      "class": "SecurityTestSuite",
+      "line": 519,
+      "complexity": 24,
+      "line_count": 100,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/advanced_health_scenarios.py",
+      "function": "test_service_restart_recovery",
+      "class": "AdvancedHealthScenarios",
+      "line": 361,
+      "complexity": 20,
+      "line_count": 85,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/advanced_health_scenarios.py",
+      "function": "test_edge_cases",
+      "class": "AdvancedHealthScenarios",
+      "line": 448,
+      "complexity": 18,
+      "line_count": 88,
+      "parameters": 1,
+      "nested_functions": 1
+    },
+    {
+      "file": "tests/corrected_security_test.py",
+      "function": "test_path_traversal_protection",
+      "class": null,
+      "line": 17,
+      "complexity": 18,
+      "line_count": 122,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/system_baseline_test.py",
+      "function": "test_performance_baseline",
+      "class": "SystemBaselineTester",
+      "line": 350,
+      "complexity": 17,
+      "line_count": 97,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/comprehensive_test_report_final.py",
+      "function": "generate_detailed_analysis",
+      "class": "ComprehensiveTestReportGenerator",
+      "line": 247,
+      "complexity": 19,
+      "line_count": 84,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/run_monitoring_validation.py",
+      "function": "run_validation",
+      "class": null,
+      "line": 60,
+      "complexity": 25,
+      "line_count": 147,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/backend_hardware_integration_ultra_test.py",
+      "function": "test_data_validation",
+      "class": "BackendHardwareIntegrationUltraTest",
+      "line": 597,
+      "complexity": 16,
+      "line_count": 85,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/backend_hardware_integration_ultra_test.py",
+      "function": "run_all_tests",
+      "class": "BackendHardwareIntegrationUltraTest",
+      "line": 751,
+      "complexity": 15,
+      "line_count": 91,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/hardware_optimizer_ultra_test_suite.py",
+      "function": "_run_spike_test",
+      "class": "UltraHardwareOptimizerTester",
+      "line": 843,
+      "complexity": 15,
+      "line_count": 74,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/hardware_optimizer_ultra_test_suite.py",
+      "function": "run_error_injection_tests",
+      "class": "UltraHardwareOptimizerTester",
+      "line": 1206,
+      "complexity": 16,
+      "line_count": 127,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/hardware_optimizer_ultra_test_suite.py",
+      "function": "generate_comprehensive_report",
+      "class": "UltraHardwareOptimizerTester",
+      "line": 1483,
+      "complexity": 20,
+      "line_count": 105,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/frontend_stress_ultra_validation.py",
+      "function": "_generate_stress_analysis",
+      "class": "FrontendStressValidator",
+      "line": 309,
+      "complexity": 24,
+      "line_count": 102,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "security/security_orchestrator.py",
+      "function": "_check_system_health",
+      "class": "SecurityOrchestrator",
+      "line": 301,
+      "complexity": 31,
+      "line_count": 81,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "security/security_orchestrator.py",
+      "function": "_scheduled_tasks_loop",
+      "class": "SecurityOrchestrator",
+      "line": 558,
+      "complexity": 15,
+      "line_count": 33,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "load-testing/simplified-load-test.py",
+      "function": "analyze_results",
+      "class": "SimplifiedLoadTester",
+      "line": 316,
+      "complexity": 16,
+      "line_count": 89,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "load-testing/production-load-test.py",
+      "function": "generate_report",
+      "class": "SutazAILoadTester",
+      "line": 558,
+      "complexity": 23,
+      "line_count": 92,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/freeze_prevention.py",
+      "function": "_calculate_freeze_risk",
+      "class": "FreezePreventionSystem",
+      "line": 270,
+      "complexity": 19,
+      "line_count": 54,
+      "parameters": 5,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/freeze_prevention.py",
+      "function": "_execute_action",
+      "class": "FreezePreventionSystem",
+      "line": 446,
+      "complexity": 17,
+      "line_count": 62,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/system_performance_benchmark_suite.py",
+      "function": "generate_recommendations",
+      "class": "SystemPerformanceBenchmarkSuite",
+      "line": 809,
+      "complexity": 19,
+      "line_count": 94,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/system_performance_benchmark_suite.py",
+      "function": "generate_markdown_report",
+      "class": "SystemPerformanceBenchmarkSuite",
+      "line": 1009,
+      "complexity": 29,
+      "line_count": 154,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/self_healing_monitor.py",
+      "function": "check_service_health",
+      "class": "SelfHealingMonitor",
+      "line": 93,
+      "complexity": 15,
+      "line_count": 50,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/enhanced-hygiene-backend.py",
+      "function": "default",
+      "class": "SafeJSONEncoder",
+      "line": 47,
+      "complexity": 16,
+      "line_count": 42,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/enhanced-hygiene-backend.py",
+      "function": "_safe_serialize",
+      "class": "EnhancedHygieneBackend",
+      "line": 524,
+      "complexity": 23,
+      "line_count": 60,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/ollama_performance_monitor.py",
+      "function": "collect_ollama_metrics",
+      "class": "OllamaPerformanceMonitor",
+      "line": 165,
+      "complexity": 17,
+      "line_count": 126,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/ollama_performance_monitor.py",
+      "function": "check_alerts",
+      "class": "OllamaPerformanceMonitor",
+      "line": 406,
+      "complexity": 24,
+      "line_count": 74,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/websocket-cleanup-patch.py",
+      "function": "broadcast_to_websockets_safe",
+      "class": null,
+      "line": 67,
+      "complexity": 20,
+      "line_count": 69,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/ollama_agent_monitor.py",
+      "function": "_calculate_freeze_risk",
+      "class": "OllamaAgentMonitor",
+      "line": 612,
+      "complexity": 17,
+      "line_count": 51,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/comprehensive_report_generator.py",
+      "function": "generate_comprehensive_report",
+      "class": "ComprehensiveReportGenerator",
+      "line": 576,
+      "complexity": 20,
+      "line_count": 102,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/service_health_checker.py",
+      "function": "check_ollama_health",
+      "class": "ServiceHealthChecker",
+      "line": 57,
+      "complexity": 18,
+      "line_count": 84,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/service_health_checker.py",
+      "function": "print_health_report",
+      "class": "ServiceHealthChecker",
+      "line": 437,
+      "complexity": 17,
+      "line_count": 63,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/test_cors_security.py",
+      "function": "check_cors_configuration",
+      "class": null,
+      "line": 10,
+      "complexity": 17,
+      "line_count": 92,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/emergency-shutdown-coordinator.py",
+      "function": "_monitor_system",
+      "class": "EmergencyShutdownCoordinator",
+      "line": 253,
+      "complexity": 19,
+      "line_count": 61,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/emergency-shutdown-coordinator.py",
+      "function": "_shutdown_services",
+      "class": "EmergencyShutdownCoordinator",
+      "line": 405,
+      "complexity": 25,
+      "line_count": 73,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/emergency-shutdown-coordinator.py",
+      "function": "_shutdown_application_service",
+      "class": "EmergencyShutdownCoordinator",
+      "line": 551,
+      "complexity": 24,
+      "line_count": 57,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/emergency-shutdown-coordinator.py",
+      "function": "_drain_queues_and_connections",
+      "class": "EmergencyShutdownCoordinator",
+      "line": 647,
+      "complexity": 19,
+      "line_count": 49,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/emergency-shutdown-coordinator.py",
+      "function": "_persist_critical_state",
+      "class": "EmergencyShutdownCoordinator",
+      "line": 697,
+      "complexity": 15,
+      "line_count": 77,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/emergency-shutdown-coordinator.py",
+      "function": "_graceful_process_termination",
+      "class": "EmergencyShutdownCoordinator",
+      "line": 775,
+      "complexity": 19,
+      "line_count": 47,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/emergency-shutdown-coordinator.py",
+      "function": "_force_process_termination",
+      "class": "EmergencyShutdownCoordinator",
+      "line": 823,
+      "complexity": 15,
+      "line_count": 34,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/validate-disaster-recovery.py",
+      "function": "check_monitoring_systems",
+      "class": "DisasterRecoveryValidator",
+      "line": 529,
+      "complexity": 17,
+      "line_count": 69,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/backup-coordinator.py",
+      "function": "create_backup",
+      "class": "BackupCoordinator",
+      "line": 253,
+      "complexity": 15,
+      "line_count": 87,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/backup-coordinator.py",
+      "function": "_verify_backup",
+      "class": "BackupCoordinator",
+      "line": 557,
+      "complexity": 16,
+      "line_count": 39,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/point-in-time-recovery.py",
+      "function": "_collect_system_state",
+      "class": "PointInTimeRecovery",
+      "line": 272,
+      "complexity": 19,
+      "line_count": 85,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/point-in-time-recovery.py",
+      "function": "_restore_data_snapshot",
+      "class": "PointInTimeRecovery",
+      "line": 724,
+      "complexity": 17,
+      "line_count": 67,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/point-in-time-recovery.py",
+      "function": "main",
+      "class": null,
+      "line": 939,
+      "complexity": 21,
+      "line_count": 107,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/disaster-recovery-test-suite.py",
+      "function": "generate_report",
+      "class": "DisasterRecoveryTestSuite",
+      "line": 1196,
+      "complexity": 16,
+      "line_count": 93,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "fusion/core/cross_modal_learning.py",
+      "function": "train_cross_modal_alignment",
+      "class": "CrossModalLearningSystem",
+      "line": 491,
+      "complexity": 16,
+      "line_count": 85,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "fusion/core/cross_modal_learning.py",
+      "function": "_validate_models",
+      "class": "CrossModalLearningSystem",
+      "line": 667,
+      "complexity": 16,
+      "line_count": 67,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "fusion/visualization/fusion_visualizer.py",
+      "function": "_render_representation_space",
+      "class": "FusionVisualizer",
+      "line": 688,
+      "complexity": 19,
+      "line_count": 111,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "security_audit_env/bin/pwiz.py",
+      "function": "_print_table",
+      "class": null,
+      "line": 73,
+      "complexity": 24,
+      "line_count": 69,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "scripts/maintenance/fix_bare_except_clauses.py",
+      "function": "fix_file",
+      "class": "BareExceptFixer",
+      "line": 120,
+      "complexity": 37,
+      "line_count": 161,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "scripts/lib/security_utils.py",
+      "function": "fix_infinite_loops",
+      "class": null,
+      "line": 140,
+      "complexity": 20,
+      "line_count": 102,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "scripts/testing/verify_exception_handling.py",
+      "function": "verify_codebase",
+      "class": "ExceptionHandlingVerifier",
+      "line": 102,
+      "complexity": 15,
+      "line_count": 82,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "scripts/monitoring/system_monitor.py",
+      "function": "collect_system_metrics",
+      "class": "MetricsCollector",
+      "line": 107,
+      "complexity": 20,
+      "line_count": 110,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/utils/optimized_api_client.py",
+      "function": "call_api",
+      "class": "OptimizedAPIClient",
+      "line": 140,
+      "complexity": 19,
+      "line_count": 65,
+      "parameters": 6,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/pages/system/agent_control.py",
+      "function": "show_agent_control",
+      "class": null,
+      "line": 17,
+      "complexity": 35,
+      "line_count": 126,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/pages/system/agent_control.py",
+      "function": "show_agent_card",
+      "class": null,
+      "line": 144,
+      "complexity": 19,
+      "line_count": 61,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/pages/system/hardware_optimization.py",
+      "function": "show_hardware_optimization",
+      "class": null,
+      "line": 31,
+      "complexity": 84,
+      "line_count": 547,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/pages/dashboard/main_dashboard.py",
+      "function": "show_dashboard",
+      "class": null,
+      "line": 24,
+      "complexity": 23,
+      "line_count": 148,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/pages/ai_services/ai_chat.py",
+      "function": "show_ai_chat",
+      "class": null,
+      "line": 17,
+      "complexity": 29,
+      "line_count": 217,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "deployment/monitoring/agent-monitor/monitor.py",
+      "function": "get_agents_status",
+      "class": "SutazAIAgentMonitor",
+      "line": 145,
+      "complexity": 20,
+      "line_count": 109,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "deployment/autoscaling/swarm/swarm-autoscaler.py",
+      "function": "determine_scale_action",
+      "class": "SwarmAutoscaler",
+      "line": 297,
+      "complexity": 21,
+      "line_count": 60,
+      "parameters": 6,
+      "nested_functions": 0
+    },
+    {
+      "file": "docker/browser-use/browser_use_server.py",
+      "function": "_execute_sync_task",
+      "class": "BrowserUseServer",
+      "line": 116,
+      "complexity": 15,
+      "line_count": 80,
+      "parameters": 7,
+      "nested_functions": 0
+    },
+    {
+      "file": "docker/task-assignment-coordinator/app.py",
+      "function": "find_best_agent",
+      "class": "TaskAssignmentCoordinator",
+      "line": 236,
+      "complexity": 15,
+      "line_count": 36,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "docker/code-improver/code_improver.py",
+      "function": "improve_code",
+      "class": null,
+      "line": 117,
+      "complexity": 23,
+      "line_count": 87,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/hygiene/test-all-rule-combinations.py",
+      "function": "run_comprehensive_test_suite",
+      "class": "RuleSystemTester",
+      "line": 517,
+      "complexity": 21,
+      "line_count": 117,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/load/load_test_runner.py",
+      "function": "_generate_summary_report",
+      "class": "LoadTestRunner",
+      "line": 365,
+      "complexity": 16,
+      "line_count": 67,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/load/load_test_runner.py",
+      "function": "_generate_recommendations",
+      "class": "LoadTestRunner",
+      "line": 433,
+      "complexity": 15,
+      "line_count": 41,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/security/test-authentication.py",
+      "function": "main",
+      "class": null,
+      "line": 491,
+      "complexity": 17,
+      "line_count": 70,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/integration/test-ollama-integration.py",
+      "function": "run_integration_tests",
+      "class": "OllamaIntegrationTester",
+      "line": 185,
+      "complexity": 18,
+      "line_count": 110,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "IMPORTANT/00_inventory/generate_inventory.py",
+      "function": "extract_archive",
+      "class": null,
+      "line": 108,
+      "complexity": 17,
+      "line_count": 59,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "IMPORTANT/00_inventory/generate_inventory.py",
+      "function": "generate_inventory",
+      "class": null,
+      "line": 185,
+      "complexity": 21,
+      "line_count": 93,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "models/optimization/ab_testing.py",
+      "function": "generate_experiment_report",
+      "class": "ABTestManager",
+      "line": 776,
+      "complexity": 16,
+      "line_count": 65,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "models/optimization/performance_benchmarking.py",
+      "function": "get_request_rate",
+      "class": "LoadGenerator",
+      "line": 227,
+      "complexity": 17,
+      "line_count": 53,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "security/incident-response/incident_response.py",
+      "function": "_collect_memory_dump",
+      "class": "IncidentResponseEngine",
+      "line": 759,
+      "complexity": 19,
+      "line_count": 84,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/apply_security_fixes.py",
+      "function": "fix_script_security",
+      "class": null,
+      "line": 31,
+      "complexity": 34,
+      "line_count": 194,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/consolidation_analysis.py",
+      "function": "_extract_description",
+      "class": "ScriptAnalyzer",
+      "line": 169,
+      "complexity": 17,
+      "line_count": 32,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/pre-commit/check-script-organization.py",
+      "function": "check_script_header",
+      "class": "ScriptOrganizationChecker",
+      "line": 120,
+      "complexity": 16,
+      "line_count": 50,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/pre-commit/check-docker-structure.py",
+      "function": "check_dockerfile",
+      "class": "DockerStructureValidator",
+      "line": 20,
+      "complexity": 16,
+      "line_count": 67,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/pre-commit/check-docker-structure.py",
+      "function": "check_docker_compose",
+      "class": "DockerStructureValidator",
+      "line": 88,
+      "complexity": 19,
+      "line_count": 82,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/pre-commit/quick-system-check.py",
+      "function": "check_import_integrity",
+      "class": "QuickSystemAnalyzer",
+      "line": 27,
+      "complexity": 19,
+      "line_count": 39,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/pre-commit/check-garbage-files.py",
+      "function": "main",
+      "class": null,
+      "line": 164,
+      "complexity": 19,
+      "line_count": 60,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/pre-commit/check-safe-deletion.py",
+      "function": "main",
+      "class": null,
+      "line": 209,
+      "complexity": 16,
+      "line_count": 67,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/pre-commit/check-python-docs.py",
+      "function": "main",
+      "class": null,
+      "line": 164,
+      "complexity": 17,
+      "line_count": 78,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/pre-commit/check-deployment-scripts.py",
+      "function": "check_deployment_script_quality",
+      "class": null,
+      "line": 102,
+      "complexity": 18,
+      "line_count": 40,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/pre-commit/check-doc-structure.py",
+      "function": "check_doc_structure",
+      "class": "DocStructureChecker",
+      "line": 79,
+      "complexity": 16,
+      "line_count": 48,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/hygiene-system-orchestrator.py",
+      "function": "check_service_health",
+      "class": "HealthChecker",
+      "line": 68,
+      "complexity": 16,
+      "line_count": 81,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/hygiene-system-orchestrator.py",
+      "function": "start_system",
+      "class": "HygieneSystemOrchestrator",
+      "line": 306,
+      "complexity": 15,
+      "line_count": 65,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/update-agent-auth.py",
+      "function": "update_docker_compose_env",
+      "class": "AgentAuthUpdater",
+      "line": 244,
+      "complexity": 15,
+      "line_count": 64,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/demo-hygiene-tests.py",
+      "function": "main",
+      "class": null,
+      "line": 13,
+      "complexity": 17,
+      "line_count": 170,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/ultra-script-consolidation.py",
+      "function": "categorize_script",
+      "class": "UltraScriptConsolidator",
+      "line": 212,
+      "complexity": 15,
+      "line_count": 22,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/safe-requirements-cleanup.py",
+      "function": "analyze_duplicates_and_redundancy",
+      "class": "SafeRequirementsCleanup",
+      "line": 127,
+      "complexity": 25,
+      "line_count": 84,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/optimize-agent-utilization.py",
+      "function": "main",
+      "class": null,
+      "line": 681,
+      "complexity": 16,
+      "line_count": 93,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/fix-memory-limits.py",
+      "function": "update_compose_file",
+      "class": null,
+      "line": 114,
+      "complexity": 20,
+      "line_count": 68,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/advanced-rollback-system.py",
+      "function": "main",
+      "class": null,
+      "line": 1389,
+      "complexity": 20,
+      "line_count": 133,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/dockerfile-consolidation/execute_consolidation.py",
+      "function": "_determine_category",
+      "class": "DockerfileConsolidator",
+      "line": 84,
+      "complexity": 24,
+      "line_count": 35,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/optimize-load-balancing.py",
+      "function": "get_service_type",
+      "class": "LoadBalancerOptimizer",
+      "line": 42,
+      "complexity": 24,
+      "line_count": 31,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/migrate_agent_ports.py",
+      "function": "migrate_compose_file",
+      "class": "PortMigrator",
+      "line": 101,
+      "complexity": 20,
+      "line_count": 90,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/configure-rabbitmq.py",
+      "function": "configure_from_file",
+      "class": "RabbitMQConfigurator",
+      "line": 217,
+      "complexity": 16,
+      "line_count": 63,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/service-mesh-orchestrator.py",
+      "function": "configure_kong_gateway",
+      "class": "ServiceMeshOrchestrator",
+      "line": 155,
+      "complexity": 21,
+      "line_count": 95,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/validate-service-mesh.py",
+      "function": "validate_consul",
+      "class": "ServiceMeshValidator",
+      "line": 47,
+      "complexity": 17,
+      "line_count": 77,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/validate-service-mesh.py",
+      "function": "validate_kong",
+      "class": "ServiceMeshValidator",
+      "line": 125,
+      "complexity": 22,
+      "line_count": 99,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/validate-service-mesh.py",
+      "function": "validate_rabbitmq",
+      "class": "ServiceMeshValidator",
+      "line": 225,
+      "complexity": 23,
+      "line_count": 103,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/validate-service-mesh.py",
+      "function": "validate_health_monitoring",
+      "class": "ServiceMeshValidator",
+      "line": 329,
+      "complexity": 18,
+      "line_count": 82,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/validate-service-mesh.py",
+      "function": "validate_integration",
+      "class": "ServiceMeshValidator",
+      "line": 412,
+      "complexity": 19,
+      "line_count": 77,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/startup_optimizer.py",
+      "function": "optimize_startup_groups",
+      "class": "StartupOptimizer",
+      "line": 257,
+      "complexity": 15,
+      "line_count": 68,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/ultimate-deployment-master.py",
+      "function": "main",
+      "class": null,
+      "line": 1065,
+      "complexity": 20,
+      "line_count": 113,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/lib/security_utils.py",
+      "function": "fix_infinite_loops",
+      "class": null,
+      "line": 140,
+      "complexity": 20,
+      "line_count": 102,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/master/health-master.py",
+      "function": "main",
+      "class": null,
+      "line": 587,
+      "complexity": 25,
+      "line_count": 127,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/onboarding/generate_kickoff_deck.py",
+      "function": "main",
+      "class": null,
+      "line": 21,
+      "complexity": 23,
+      "line_count": 57,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/security/validate_cors_ultra.py",
+      "function": "main",
+      "class": null,
+      "line": 144,
+      "complexity": 17,
+      "line_count": 132,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/security/validate_cors_simple.py",
+      "function": "scan_python_files_for_wildcards",
+      "class": null,
+      "line": 78,
+      "complexity": 18,
+      "line_count": 66,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/security/ultra_security_validation.py",
+      "function": "check_secrets_management",
+      "class": "UltraSecurityValidator",
+      "line": 170,
+      "complexity": 17,
+      "line_count": 45,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/test_gpu_detection.py",
+      "function": "test_nvidia_smi_paths",
+      "class": null,
+      "line": 14,
+      "complexity": 17,
+      "line_count": 65,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/test_gpu_detection.py",
+      "function": "test_alternative_methods",
+      "class": null,
+      "line": 111,
+      "complexity": 16,
+      "line_count": 59,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/validate_ports.py",
+      "function": "validate_all",
+      "class": "PortValidator",
+      "line": 385,
+      "complexity": 21,
+      "line_count": 103,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/validate_ports.py",
+      "function": "fix_docker_compose",
+      "class": "PortValidator",
+      "line": 506,
+      "complexity": 22,
+      "line_count": 64,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/validate_agents.py",
+      "function": "validate_agent_file",
+      "class": null,
+      "line": 25,
+      "complexity": 22,
+      "line_count": 64,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/verify-hygiene-monitoring-system.py",
+      "function": "generate_summary_report",
+      "class": "HygieneMonitoringVerifier",
+      "line": 569,
+      "complexity": 15,
+      "line_count": 49,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/test_hardware_optimizer_detection.py",
+      "function": "test_hardware_optimizer_detection",
+      "class": null,
+      "line": 22,
+      "complexity": 17,
+      "line_count": 69,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/validate-complete-system.py",
+      "function": "_generate_recommendations",
+      "class": "CompleteSystemValidator",
+      "line": 1200,
+      "complexity": 15,
+      "line_count": 37,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/validate-complete-system.py",
+      "function": "main",
+      "class": null,
+      "line": 1251,
+      "complexity": 24,
+      "line_count": 97,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/container-health-monitor.py",
+      "function": "monitor_containers",
+      "class": "ContainerHealthMonitor",
+      "line": 217,
+      "complexity": 17,
+      "line_count": 88,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/comprehensive_monitor_validation.py",
+      "function": "validate_error_handling",
+      "class": "ComprehensiveMonitorValidator",
+      "line": 296,
+      "complexity": 15,
+      "line_count": 62,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "get_ai_agents_status",
+      "class": "EnhancedMonitor",
+      "line": 423,
+      "complexity": 27,
+      "line_count": 118,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_check_agent_health",
+      "class": "EnhancedMonitor",
+      "line": 542,
+      "complexity": 36,
+      "line_count": 122,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_get_agent_endpoint",
+      "class": "EnhancedMonitor",
+      "line": 697,
+      "complexity": 27,
+      "line_count": 74,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_get_container_info",
+      "class": "EnhancedMonitor",
+      "line": 772,
+      "complexity": 27,
+      "line_count": 100,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_is_agent_deployed",
+      "class": "EnhancedMonitor",
+      "line": 1064,
+      "complexity": 16,
+      "line_count": 43,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_detect_wsl_environment",
+      "class": "EnhancedMonitor",
+      "line": 1169,
+      "complexity": 17,
+      "line_count": 41,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_detect_wsl2_gpu",
+      "class": "EnhancedMonitor",
+      "line": 1506,
+      "complexity": 15,
+      "line_count": 57,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "get_gpu_stats",
+      "class": "EnhancedMonitor",
+      "line": 1579,
+      "complexity": 15,
+      "line_count": 51,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_get_nvidia_pynvml_stats",
+      "class": "EnhancedMonitor",
+      "line": 1911,
+      "complexity": 16,
+      "line_count": 74,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "run",
+      "class": "EnhancedMonitor",
+      "line": 2146,
+      "complexity": 26,
+      "line_count": 175,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_generate_alert_message",
+      "class": "EnhancedMonitor",
+      "line": 2322,
+      "complexity": 15,
+      "line_count": 40,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/simple_validation.py",
+      "function": "main",
+      "class": null,
+      "line": 11,
+      "complexity": 15,
+      "line_count": 113,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/enhanced-compliance-monitor.py",
+      "function": "_build_dependency_graph",
+      "class": "EnhancedComplianceMonitor",
+      "line": 245,
+      "complexity": 19,
+      "line_count": 42,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/enhanced-compliance-monitor.py",
+      "function": "check_rule_7_script_organization",
+      "class": "EnhancedComplianceMonitor",
+      "line": 734,
+      "complexity": 19,
+      "line_count": 69,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/enhanced-compliance-monitor.py",
+      "function": "run_compliance_check",
+      "class": "EnhancedComplianceMonitor",
+      "line": 939,
+      "complexity": 16,
+      "line_count": 119,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/enhanced-compliance-monitor.py",
+      "function": "run_daemon_mode",
+      "class": "EnhancedComplianceMonitor",
+      "line": 1618,
+      "complexity": 16,
+      "line_count": 70,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/enhanced-compliance-monitor.py",
+      "function": "validate_system_integrity",
+      "class": "EnhancedComplianceMonitor",
+      "line": 1689,
+      "complexity": 16,
+      "line_count": 76,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/enhanced-compliance-monitor.py",
+      "function": "cleanup_old_data",
+      "class": "EnhancedComplianceMonitor",
+      "line": 1766,
+      "complexity": 18,
+      "line_count": 62,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/enhanced-compliance-monitor.py",
+      "function": "main",
+      "class": null,
+      "line": 1829,
+      "complexity": 18,
+      "line_count": 136,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/validation_report.py",
+      "function": "generate_validation_report",
+      "class": null,
+      "line": 12,
+      "complexity": 48,
+      "line_count": 247,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/identify_working_method.py",
+      "function": "test_method_4_pynvml",
+      "class": null,
+      "line": 114,
+      "complexity": 17,
+      "line_count": 59,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/check-python-headers.py",
+      "function": "check_python_header",
+      "class": null,
+      "line": 12,
+      "complexity": 18,
+      "line_count": 47,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/permanent-health-monitor.py",
+      "function": "monitor_containers",
+      "class": "ContainerHealthMonitor",
+      "line": 217,
+      "complexity": 17,
+      "line_count": 88,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/distributed-health-monitor.py",
+      "function": "monitor_containers",
+      "class": "ContainerHealthMonitor",
+      "line": 217,
+      "complexity": 17,
+      "line_count": 88,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/system-health-validator.py",
+      "function": "generate_health_report",
+      "class": "MonitoringHealthAggregator",
+      "line": 391,
+      "complexity": 22,
+      "line_count": 67,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/performance-profiler-suite.py",
+      "function": "_create_summary_report",
+      "class": "PerformanceProfilerSuite",
+      "line": 1090,
+      "complexity": 15,
+      "line_count": 81,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/performance-profiler-suite.py",
+      "function": "main",
+      "class": null,
+      "line": 1172,
+      "complexity": 17,
+      "line_count": 100,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/validate-production-health.py",
+      "function": "generate_health_report",
+      "class": "MonitoringHealthAggregator",
+      "line": 391,
+      "complexity": 22,
+      "line_count": 67,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/database_health_check.py",
+      "function": "generate_health_report",
+      "class": "MonitoringHealthAggregator",
+      "line": 391,
+      "complexity": 22,
+      "line_count": 67,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/ultra-dockerfile-migrator.py",
+      "function": "generate_migrated_dockerfile",
+      "class": "UltraDockerfileMigrator",
+      "line": 157,
+      "complexity": 33,
+      "line_count": 109,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/fix-agent-health-checks.py",
+      "function": "monitor_containers",
+      "class": "ContainerHealthMonitor",
+      "line": 217,
+      "complexity": 17,
+      "line_count": 88,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/redis_performance_monitor.py",
+      "function": "_analyze_keys",
+      "class": "RedisPerformanceMonitor",
+      "line": 113,
+      "complexity": 18,
+      "line_count": 72,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/neo4j-performance-monitor.py",
+      "function": "main",
+      "class": null,
+      "line": 54,
+      "complexity": 20,
+      "line_count": 68,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/final_validation.py",
+      "function": "main",
+      "class": null,
+      "line": 11,
+      "complexity": 20,
+      "line_count": 177,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/multi-system-integration-framework.py",
+      "function": "_fuse_multi_modal_data",
+      "class": "MultiSystemIntegrationFramework",
+      "line": 1643,
+      "complexity": 16,
+      "line_count": 59,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/multi-system-integration-framework.py",
+      "function": "_check_metric_anomaly",
+      "class": "AnomalyDetector",
+      "line": 2249,
+      "complexity": 15,
+      "line_count": 75,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/multi-system-integration-framework.py",
+      "function": "main",
+      "class": null,
+      "line": 2513,
+      "complexity": 23,
+      "line_count": 165,
+      "parameters": 0,
+      "nested_functions": 2
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/system_monitor.py",
+      "function": "collect_system_metrics",
+      "class": "MetricsCollector",
+      "line": 107,
+      "complexity": 20,
+      "line_count": 110,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/comprehensive-agent-health-monitor.py",
+      "function": "monitor_containers",
+      "class": "ContainerHealthMonitor",
+      "line": 217,
+      "complexity": 17,
+      "line_count": 88,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/production-readiness-validator.py",
+      "function": "_validate_error_handling",
+      "class": "ProductionReadinessValidator",
+      "line": 392,
+      "complexity": 16,
+      "line_count": 129,
+      "parameters": 1,
+      "nested_functions": 1
+    },
+    {
+      "file": "phase1_script_backup/scripts/health/container-health-monitor.py",
+      "function": "monitor_containers",
+      "class": "ContainerHealthMonitor",
+      "line": 217,
+      "complexity": 17,
+      "line_count": 88,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/health/monitoring-health-aggregator.py",
+      "function": "generate_health_report",
+      "class": "MonitoringHealthAggregator",
+      "line": 391,
+      "complexity": 22,
+      "line_count": 67,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/health/master-health-controller.py",
+      "function": "main",
+      "class": null,
+      "line": 587,
+      "complexity": 25,
+      "line_count": 127,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/coverage_reporter.py",
+      "function": "analyze_file_coverage",
+      "class": "CoverageReporter",
+      "line": 31,
+      "complexity": 19,
+      "line_count": 61,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/coverage_reporter.py",
+      "function": "generate_coverage_report",
+      "class": "CoverageReporter",
+      "line": 160,
+      "complexity": 17,
+      "line_count": 131,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/health_monitor.py",
+      "function": "main",
+      "class": null,
+      "line": 587,
+      "complexity": 25,
+      "line_count": 127,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/register_with_consul.py",
+      "function": "main",
+      "class": null,
+      "line": 127,
+      "complexity": 17,
+      "line_count": 61,
+      "parameters": 0,
+      "nested_functions": 2
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/multi-environment-config-manager.py",
+      "function": "_validate_secure_password",
+      "class": "ConfigValidator",
+      "line": 610,
+      "complexity": 15,
+      "line_count": 23,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/multi-environment-config-manager.py",
+      "function": "main",
+      "class": null,
+      "line": 1220,
+      "complexity": 28,
+      "line_count": 149,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/dynamic-load-balancer.py",
+      "function": "select_backend",
+      "class": "DynamicLoadBalancer",
+      "line": 484,
+      "complexity": 18,
+      "line_count": 68,
+      "parameters": 5,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/dynamic-load-balancer.py",
+      "function": "main",
+      "class": null,
+      "line": 913,
+      "complexity": 18,
+      "line_count": 114,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/create-performance-baseline.py",
+      "function": "analyze_samples",
+      "class": "PerformanceBaseline",
+      "line": 275,
+      "complexity": 19,
+      "line_count": 107,
+      "parameters": 5,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/extract_port_mappings.py",
+      "function": "main",
+      "class": null,
+      "line": 41,
+      "complexity": 16,
+      "line_count": 83,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/create-container-requirements-map.py",
+      "function": "analyze_container_requirements",
+      "class": null,
+      "line": 15,
+      "complexity": 28,
+      "line_count": 163,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/optimization-validator.py",
+      "function": "test_container_optimization",
+      "class": "OptimizationValidator",
+      "line": 137,
+      "complexity": 17,
+      "line_count": 88,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/check_naming.py",
+      "function": "main",
+      "class": null,
+      "line": 52,
+      "complexity": 20,
+      "line_count": 61,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/database_operations.py",
+      "function": "main",
+      "class": null,
+      "line": 329,
+      "complexity": 15,
+      "line_count": 77,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/intelligent-cache-system.py",
+      "function": "main",
+      "class": null,
+      "line": 852,
+      "complexity": 16,
+      "line_count": 102,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/memory-pool-manager.py",
+      "function": "main",
+      "class": null,
+      "line": 760,
+      "complexity": 15,
+      "line_count": 76,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/optimize_transformers.py",
+      "function": "optimize_with_quantization",
+      "class": "TransformerOptimizer",
+      "line": 459,
+      "complexity": 20,
+      "line_count": 190,
+      "parameters": 5,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/optimize_transformers.py",
+      "function": "optimize_all",
+      "class": "TransformerOptimizer",
+      "line": 650,
+      "complexity": 21,
+      "line_count": 96,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/optimize_transformers.py",
+      "function": "_generate_recommendations",
+      "class": "TransformerOptimizer",
+      "line": 747,
+      "complexity": 29,
+      "line_count": 158,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/ai-performance-validator.py",
+      "function": "_generate_recommendations",
+      "class": "AIPerformanceValidator",
+      "line": 419,
+      "complexity": 18,
+      "line_count": 45,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/final-system-validation.py",
+      "function": "_generate_ai_insights",
+      "class": "AIQualityAssessmentEngine",
+      "line": 325,
+      "complexity": 17,
+      "line_count": 36,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/final-system-validation.py",
+      "function": "_validate_security_excellence",
+      "class": "FinalSystemValidator",
+      "line": 729,
+      "complexity": 16,
+      "line_count": 62,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/final-system-validation.py",
+      "function": "_validate_documentation_excellence",
+      "class": "FinalSystemValidator",
+      "line": 964,
+      "complexity": 15,
+      "line_count": 75,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/final-system-validation.py",
+      "function": "main",
+      "class": null,
+      "line": 1372,
+      "complexity": 25,
+      "line_count": 135,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/audit_docs.py",
+      "function": "main",
+      "class": null,
+      "line": 27,
+      "complexity": 17,
+      "line_count": 43,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/enforce_claude_md_rules.py",
+      "function": "update_docker_compose_files",
+      "class": null,
+      "line": 144,
+      "complexity": 15,
+      "line_count": 42,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/enforce_claude_md_rules.py",
+      "function": "run_comprehensive_check",
+      "class": null,
+      "line": 291,
+      "complexity": 16,
+      "line_count": 52,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/check_requirements.py",
+      "function": "check_requirements_files",
+      "class": null,
+      "line": 33,
+      "complexity": 18,
+      "line_count": 64,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/requirements_analyzer.py",
+      "function": "parse_requirements_txt",
+      "class": "RequirementsAnalyzer",
+      "line": 48,
+      "complexity": 17,
+      "line_count": 39,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/requirements_analyzer.py",
+      "function": "parse_pyproject_toml",
+      "class": "RequirementsAnalyzer",
+      "line": 88,
+      "complexity": 15,
+      "line_count": 44,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/requirements_analyzer.py",
+      "function": "find_duplicate_files",
+      "class": "RequirementsAnalyzer",
+      "line": 187,
+      "complexity": 18,
+      "line_count": 54,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/check_banned_keywords.py",
+      "function": "main",
+      "class": null,
+      "line": 49,
+      "complexity": 25,
+      "line_count": 37,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/dependency_analyzer.py",
+      "function": "analyze_docker_images",
+      "class": "DependencyAnalyzer",
+      "line": 162,
+      "complexity": 16,
+      "line_count": 46,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/dependency_analyzer.py",
+      "function": "generate_report",
+      "class": "DependencyAnalyzer",
+      "line": 336,
+      "complexity": 16,
+      "line_count": 66,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/static_discovery.py",
+      "function": "scan_python_file",
+      "class": null,
+      "line": 56,
+      "complexity": 22,
+      "line_count": 45,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/static_discovery.py",
+      "function": "main",
+      "class": null,
+      "line": 103,
+      "complexity": 28,
+      "line_count": 123,
+      "parameters": 0,
+      "nested_functions": 2
+    },
+    {
+      "file": "phase1_script_backup/chaos/scripts/chaos-monkey.py",
+      "function": "is_system_safe_for_chaos",
+      "class": "SafetyController",
+      "line": 87,
+      "complexity": 18,
+      "line_count": 49,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "chaos/scripts/chaos-monkey.py",
+      "function": "is_system_safe_for_chaos",
+      "class": "SafetyController",
+      "line": 87,
+      "complexity": 18,
+      "line_count": 49,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/core/request_queue.py",
+      "function": "_handle_request",
+      "class": "RequestQueue",
+      "line": 375,
+      "complexity": 17,
+      "line_count": 84,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/core/context_manager.py",
+      "function": "score",
+      "class": "ImportanceScorer",
+      "line": 415,
+      "complexity": 15,
+      "line_count": 47,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app_debug_enhanced.py",
+      "function": "_optimize_cpu",
+      "class": "DebugEnhancedHardwareResourceOptimizerAgent",
+      "line": 45,
+      "complexity": 15,
+      "line_count": 45,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app_debug_enhanced.py",
+      "function": "_optimize_docker",
+      "class": "DebugEnhancedHardwareResourceOptimizerAgent",
+      "line": 139,
+      "complexity": 16,
+      "line_count": 53,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app_debug_enhanced.py",
+      "function": "_optimize_storage_comprehensive",
+      "class": "DebugEnhancedHardwareResourceOptimizerAgent",
+      "line": 194,
+      "complexity": 15,
+      "line_count": 74,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/test_storage_endpoints.py",
+      "function": "main",
+      "class": null,
+      "line": 65,
+      "complexity": 38,
+      "line_count": 178,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app.py",
+      "function": "_optimize_storage_comprehensive",
+      "class": "HardwareResourceOptimizerAgent",
+      "line": 443,
+      "complexity": 27,
+      "line_count": 89,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app.py",
+      "function": "_optimize_compress",
+      "class": "HardwareResourceOptimizerAgent",
+      "line": 631,
+      "complexity": 16,
+      "line_count": 63,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app.py",
+      "function": "_optimize_logs",
+      "class": "HardwareResourceOptimizerAgent",
+      "line": 695,
+      "complexity": 24,
+      "line_count": 85,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app.py",
+      "function": "_optimize_docker",
+      "class": "HardwareResourceOptimizerAgent",
+      "line": 1188,
+      "complexity": 17,
+      "line_count": 76,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app.py",
+      "function": "process_task",
+      "class": "HardwareResourceOptimizerAgent",
+      "line": 1339,
+      "complexity": 18,
+      "line_count": 74,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/manual_debug_test.py",
+      "function": "cleanup_test_artifacts",
+      "class": "ManualTestFramework",
+      "line": 651,
+      "complexity": 19,
+      "line_count": 46,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/final_performance_demo.py",
+      "function": "demonstrate_full_workflow",
+      "class": null,
+      "line": 16,
+      "complexity": 25,
+      "line_count": 229,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/tests/final_validation_summary.py",
+      "function": "main",
+      "class": null,
+      "line": 158,
+      "complexity": 18,
+      "line_count": 171,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/tests/performance_stress_tests.py",
+      "function": "sustained_load_test",
+      "class": "StressTestScenarios",
+      "line": 304,
+      "complexity": 16,
+      "line_count": 107,
+      "parameters": 5,
+      "nested_functions": 1
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/tests/performance_stress_tests.py",
+      "function": "_generate_summary",
+      "class": "PerformanceBenchmarkSuite",
+      "line": 629,
+      "complexity": 15,
+      "line_count": 56,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/shared/agents/core/request_queue.py",
+      "function": "_handle_request",
+      "class": "RequestQueue",
+      "line": 375,
+      "complexity": 17,
+      "line_count": 84,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/shared/agents/core/context_manager.py",
+      "function": "score",
+      "class": "ImportanceScorer",
+      "line": 415,
+      "complexity": 15,
+      "line_count": 47,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/ai_agents/integration_examples_fantasy_backup.py",
+      "function": "example_advanced_api_patterns",
+      "class": null,
+      "line": 572,
+      "complexity": 30,
+      "line_count": 232,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/ai_agents/integration_examples_fantasy_backup.py",
+      "function": "example_complete_scenario",
+      "class": null,
+      "line": 807,
+      "complexity": 21,
+      "line_count": 330,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/ai_agents/workflow_orchestrator.py",
+      "function": "_execute_workflow",
+      "class": "WorkflowEngine",
+      "line": 444,
+      "complexity": 16,
+      "line_count": 52,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/edge_inference/__init__.py",
+      "function": "initialize_edge_inference_system",
+      "class": null,
+      "line": 113,
+      "complexity": 16,
+      "line_count": 72,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/edge_inference/__init__.py",
+      "function": "shutdown_edge_inference_system",
+      "class": null,
+      "line": 186,
+      "complexity": 22,
+      "line_count": 63,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/oversight/oversight_orchestrator.py",
+      "function": "_compliance_monitoring_loop",
+      "class": "OversightOrchestrator",
+      "line": 209,
+      "complexity": 19,
+      "line_count": 60,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/oversight/compliance_reporter.py",
+      "function": "generate_compliance_report",
+      "class": "ComplianceReporter",
+      "line": 620,
+      "complexity": 18,
+      "line_count": 92,
+      "parameters": 5,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/oversight/compliance_reporter.py",
+      "function": "_generate_recommendations",
+      "class": "ComplianceReporter",
+      "line": 713,
+      "complexity": 30,
+      "line_count": 52,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/tests/test_agent_hygiene_compliance.py",
+      "function": "_validate_yaml_frontmatter",
+      "class": "AgentHygieneValidator",
+      "line": 166,
+      "complexity": 18,
+      "line_count": 53,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/tests/test_deployment_validation.py",
+      "function": "parse_logs",
+      "class": "DeploymentValidator",
+      "line": 169,
+      "complexity": 15,
+      "line_count": 64,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/tests/test_deployment_validation.py",
+      "function": "generate_report",
+      "class": "DeploymentValidator",
+      "line": 344,
+      "complexity": 16,
+      "line_count": 91,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/unified_service_controller.py",
+      "function": "execute_command",
+      "class": "UnifiedServiceController",
+      "line": 85,
+      "complexity": 33,
+      "line_count": 81,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/knowledge_graph/graph_builder.py",
+      "function": "_analyze_node",
+      "class": "CodeAnalyzer",
+      "line": 80,
+      "complexity": 24,
+      "line_count": 70,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/utils/cache_manager.py",
+      "function": "clean_model_cache",
+      "class": "CacheManager",
+      "line": 73,
+      "complexity": 17,
+      "line_count": 47,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/utils/readlarge.py",
+      "function": "main",
+      "class": null,
+      "line": 21,
+      "complexity": 24,
+      "line_count": 132,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/data_catalog.py",
+      "function": "_execute_search",
+      "class": "DataCatalog",
+      "line": 351,
+      "complexity": 33,
+      "line_count": 95,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/data_catalog.py",
+      "function": "_update_search_indexes",
+      "class": "DataCatalog",
+      "line": 530,
+      "complexity": 22,
+      "line_count": 72,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/quality_monitor.py",
+      "function": "_parse_content",
+      "class": "DataQualityMonitor",
+      "line": 410,
+      "complexity": 15,
+      "line_count": 38,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/quality_monitor.py",
+      "function": "_rule_applies_to_data",
+      "class": "DataQualityMonitor",
+      "line": 449,
+      "complexity": 15,
+      "line_count": 24,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/quality_monitor.py",
+      "function": "_evaluate_regex_rule",
+      "class": "DataQualityMonitor",
+      "line": 556,
+      "complexity": 18,
+      "line_count": 38,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/quality_monitor.py",
+      "function": "_evaluate_freshness_rule",
+      "class": "DataQualityMonitor",
+      "line": 732,
+      "complexity": 18,
+      "line_count": 60,
+      "parameters": 5,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/audit_logger.py",
+      "function": "_event_matches_filter",
+      "class": "DataAuditLogger",
+      "line": 563,
+      "complexity": 22,
+      "line_count": 44,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/lifecycle_manager.py",
+      "function": "find_matching_policy",
+      "class": "DataLifecycleManager",
+      "line": 305,
+      "complexity": 19,
+      "line_count": 41,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/lifecycle_manager.py",
+      "function": "evaluate_lifecycle_actions",
+      "class": "DataLifecycleManager",
+      "line": 347,
+      "complexity": 16,
+      "line_count": 70,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/compliance_manager.py",
+      "function": "generate_compliance_report",
+      "class": "ComplianceManager",
+      "line": 838,
+      "complexity": 17,
+      "line_count": 58,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/ai_agents/orchestration/infrastructure_integration.py",
+      "function": "_evaluate_scaling",
+      "class": "InfrastructureIntegration",
+      "line": 956,
+      "complexity": 15,
+      "line_count": 41,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/ai_agents/orchestration/enhanced_multi_agent_coordinator.py",
+      "function": "_select_and_assign_agents",
+      "class": "EnhancedMultiAgentCoordinator",
+      "line": 329,
+      "complexity": 16,
+      "line_count": 60,
+      "parameters": 5,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/ai_agents/core/agent_message_bus.py",
+      "function": "match",
+      "class": "MessageFilter",
+      "line": 79,
+      "complexity": 15,
+      "line_count": 18,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/ai_agents/orchestrator/workflow_engine.py",
+      "function": "_execute_workflow_async",
+      "class": "WorkflowEngine",
+      "line": 160,
+      "complexity": 15,
+      "line_count": 64,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/orchestration/monitoring.py",
+      "function": "_evaluate_alert_rules",
+      "class": "OrchestrationMonitor",
+      "line": 453,
+      "complexity": 17,
+      "line_count": 44,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/schemas/message_model.py",
+      "function": "from_dict",
+      "class": "Message",
+      "line": 80,
+      "complexity": 23,
+      "line_count": 66,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/core/xss_tester.py",
+      "function": "test_xss_protection",
+      "class": null,
+      "line": 106,
+      "complexity": 19,
+      "line_count": 135,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/services/agent_orchestrator.py",
+      "function": "classify_agent",
+      "class": "AgentOrchestrator",
+      "line": 337,
+      "complexity": 17,
+      "line_count": 12,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/services/agent_registry.py",
+      "function": "classify_agent_type",
+      "class": "AgentRegistry",
+      "line": 83,
+      "complexity": 17,
+      "line_count": 22,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/services/agent_registry.py",
+      "function": "start_all_agents",
+      "class": "AgentRegistry",
+      "line": 186,
+      "complexity": 16,
+      "line_count": 107,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/api/v1/endpoints/hardware.py",
+      "function": "_make_request",
+      "class": "HardwareServiceClient",
+      "line": 281,
+      "complexity": 24,
+      "line_count": 113,
+      "parameters": 7,
+      "nested_functions": 0
+    },
+    {
+      "file": "localagi/workflows/self_improving_workflow_engine.py",
+      "function": "_calculate_performance_metrics",
+      "class": "SelfImprovingWorkflow",
+      "line": 334,
+      "complexity": 16,
+      "line_count": 44,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "localagi/workflows/self_improving_workflow_engine.py",
+      "function": "_detect_performance_patterns",
+      "class": "SelfImprovingWorkflow",
+      "line": 399,
+      "complexity": 18,
+      "line_count": 53,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "localagi/workflows/self_improving_workflow_engine.py",
+      "function": "_learn_parameter_optimizations",
+      "class": "SelfImprovingWorkflow",
+      "line": 453,
+      "complexity": 15,
+      "line_count": 51,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "localagi/engine/decision_engine.py",
+      "function": "adapt_decision_parameters",
+      "class": "AutonomousDecisionEngine",
+      "line": 810,
+      "complexity": 17,
+      "line_count": 68,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "localagi/engine/task_decomposer.py",
+      "function": "_identify_optimizations",
+      "class": "RecursiveTaskDecomposer",
+      "line": 629,
+      "complexity": 15,
+      "line_count": 45,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "localagi/engine/task_decomposer.py",
+      "function": "_optimize_resource_usage",
+      "class": "RecursiveTaskDecomposer",
+      "line": 910,
+      "complexity": 17,
+      "line_count": 47,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "localagi/frameworks/collaborative_problem_solver.py",
+      "function": "_select_participating_agents",
+      "class": "CollaborativeProblemSolver",
+      "line": 228,
+      "complexity": 16,
+      "line_count": 63,
+      "parameters": 3,
+      "nested_functions": 0
+    }
+  ],
+  "worst_offenders": [
+    {
+      "file": "frontend/pages/system/hardware_optimization.py",
+      "function": "show_hardware_optimization",
+      "class": null,
+      "line": 31,
+      "complexity": 84,
+      "line_count": 547,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/validation_report.py",
+      "function": "generate_validation_report",
+      "class": null,
+      "line": 12,
+      "complexity": 48,
+      "line_count": 247,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/test_storage_endpoints.py",
+      "function": "main",
+      "class": null,
+      "line": 65,
+      "complexity": 38,
+      "line_count": 178,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/agent_health_dashboard.py",
+      "function": "main",
+      "class": null,
+      "line": 88,
+      "complexity": 37,
+      "line_count": 229,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "scripts/maintenance/fix_bare_except_clauses.py",
+      "function": "fix_file",
+      "class": "BareExceptFixer",
+      "line": 120,
+      "complexity": 37,
+      "line_count": 161,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_check_agent_health",
+      "class": "EnhancedMonitor",
+      "line": 542,
+      "complexity": 36,
+      "line_count": 122,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/pages/system/agent_control.py",
+      "function": "show_agent_control",
+      "class": null,
+      "line": 17,
+      "complexity": 35,
+      "line_count": 126,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/test_runtime_issues.py",
+      "function": "analyze_potential_runtime_issues",
+      "class": null,
+      "line": 10,
+      "complexity": 34,
+      "line_count": 165,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/apply_security_fixes.py",
+      "function": "fix_script_security",
+      "class": null,
+      "line": 31,
+      "complexity": 34,
+      "line_count": 194,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/ultra-dockerfile-migrator.py",
+      "function": "generate_migrated_dockerfile",
+      "class": "UltraDockerfileMigrator",
+      "line": 157,
+      "complexity": 33,
+      "line_count": 109,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/unified_service_controller.py",
+      "function": "execute_command",
+      "class": "UnifiedServiceController",
+      "line": 85,
+      "complexity": 33,
+      "line_count": 81,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/data_governance/data_catalog.py",
+      "function": "_execute_search",
+      "class": "DataCatalog",
+      "line": 351,
+      "complexity": 33,
+      "line_count": 95,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "security/security_orchestrator.py",
+      "function": "_check_system_health",
+      "class": "SecurityOrchestrator",
+      "line": 301,
+      "complexity": 31,
+      "line_count": 81,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/ai_agents/integration_examples_fantasy_backup.py",
+      "function": "example_advanced_api_patterns",
+      "class": null,
+      "line": 572,
+      "complexity": 30,
+      "line_count": 232,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/oversight/compliance_reporter.py",
+      "function": "_generate_recommendations",
+      "class": "ComplianceReporter",
+      "line": 713,
+      "complexity": 30,
+      "line_count": 52,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/master_dockerfile_validator.py",
+      "function": "calculate_final_assessment",
+      "class": "MasterDockerfileValidator",
+      "line": 248,
+      "complexity": 29,
+      "line_count": 121,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/system_performance_benchmark_suite.py",
+      "function": "generate_markdown_report",
+      "class": "SystemPerformanceBenchmarkSuite",
+      "line": 1009,
+      "complexity": 29,
+      "line_count": 154,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "frontend/pages/ai_services/ai_chat.py",
+      "function": "show_ai_chat",
+      "class": null,
+      "line": 17,
+      "complexity": 29,
+      "line_count": 217,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/optimize_transformers.py",
+      "function": "_generate_recommendations",
+      "class": "TransformerOptimizer",
+      "line": 747,
+      "complexity": 29,
+      "line_count": 158,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/multi-environment-config-manager.py",
+      "function": "main",
+      "class": null,
+      "line": 1220,
+      "complexity": 28,
+      "line_count": 149,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/create-container-requirements-map.py",
+      "function": "analyze_container_requirements",
+      "class": null,
+      "line": 15,
+      "complexity": 28,
+      "line_count": 163,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/static_discovery.py",
+      "function": "main",
+      "class": null,
+      "line": 103,
+      "complexity": 28,
+      "line_count": 123,
+      "parameters": 0,
+      "nested_functions": 2
+    },
+    {
+      "file": "tests/test_enhanced_detection.py",
+      "function": "_get_container_info_enhanced",
+      "class": null,
+      "line": 39,
+      "complexity": 27,
+      "line_count": 101,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "get_ai_agents_status",
+      "class": "EnhancedMonitor",
+      "line": 423,
+      "complexity": 27,
+      "line_count": 118,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_get_agent_endpoint",
+      "class": "EnhancedMonitor",
+      "line": 697,
+      "complexity": 27,
+      "line_count": 74,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "_get_container_info",
+      "class": "EnhancedMonitor",
+      "line": 772,
+      "complexity": 27,
+      "line_count": 100,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app.py",
+      "function": "_optimize_storage_comprehensive",
+      "class": "HardwareResourceOptimizerAgent",
+      "line": 443,
+      "complexity": 27,
+      "line_count": 89,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/monitoring/static_monitor.py",
+      "function": "run",
+      "class": "EnhancedMonitor",
+      "line": 2146,
+      "complexity": 26,
+      "line_count": 175,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/run_monitoring_validation.py",
+      "function": "run_validation",
+      "class": null,
+      "line": 60,
+      "complexity": 25,
+      "line_count": 147,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/emergency-shutdown-coordinator.py",
+      "function": "_shutdown_services",
+      "class": "EmergencyShutdownCoordinator",
+      "line": 405,
+      "complexity": 25,
+      "line_count": 73,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/maintenance/safe-requirements-cleanup.py",
+      "function": "analyze_duplicates_and_redundancy",
+      "class": "SafeRequirementsCleanup",
+      "line": 127,
+      "complexity": 25,
+      "line_count": 84,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/master/health-master.py",
+      "function": "main",
+      "class": null,
+      "line": 587,
+      "complexity": 25,
+      "line_count": 127,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/health/master-health-controller.py",
+      "function": "main",
+      "class": null,
+      "line": 587,
+      "complexity": 25,
+      "line_count": 127,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/health_monitor.py",
+      "function": "main",
+      "class": null,
+      "line": 587,
+      "complexity": 25,
+      "line_count": 127,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/final-system-validation.py",
+      "function": "main",
+      "class": null,
+      "line": 1372,
+      "complexity": 25,
+      "line_count": 135,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/utils/check_banned_keywords.py",
+      "function": "main",
+      "class": null,
+      "line": 49,
+      "complexity": 25,
+      "line_count": 37,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/final_performance_demo.py",
+      "function": "demonstrate_full_workflow",
+      "class": null,
+      "line": 16,
+      "complexity": 25,
+      "line_count": 229,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "workflows/demo_workflow.py",
+      "function": "demonstrate_workflow",
+      "class": null,
+      "line": 23,
+      "complexity": 24,
+      "line_count": 129,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/security_test_suite.py",
+      "function": "_generate_security_summary",
+      "class": "SecurityTestSuite",
+      "line": 519,
+      "complexity": 24,
+      "line_count": 100,
+      "parameters": 2,
+      "nested_functions": 0
+    },
+    {
+      "file": "tests/frontend_stress_ultra_validation.py",
+      "function": "_generate_stress_analysis",
+      "class": "FrontendStressValidator",
+      "line": 309,
+      "complexity": 24,
+      "line_count": 102,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "monitoring/ollama_performance_monitor.py",
+      "function": "check_alerts",
+      "class": "OllamaPerformanceMonitor",
+      "line": 406,
+      "complexity": 24,
+      "line_count": 74,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "disaster-recovery/emergency-shutdown-coordinator.py",
+      "function": "_shutdown_application_service",
+      "class": "EmergencyShutdownCoordinator",
+      "line": 551,
+      "complexity": 24,
+      "line_count": 57,
+      "parameters": 4,
+      "nested_functions": 0
+    },
+    {
+      "file": "security_audit_env/bin/pwiz.py",
+      "function": "_print_table",
+      "class": null,
+      "line": 73,
+      "complexity": 24,
+      "line_count": 69,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/dockerfile-consolidation/execute_consolidation.py",
+      "function": "_determine_category",
+      "class": "DockerfileConsolidator",
+      "line": 84,
+      "complexity": 24,
+      "line_count": 35,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/deployment/optimize-load-balancing.py",
+      "function": "get_service_type",
+      "class": "LoadBalancerOptimizer",
+      "line": 42,
+      "complexity": 24,
+      "line_count": 31,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "phase1_script_backup/scripts/testing/validate-complete-system.py",
+      "function": "main",
+      "class": null,
+      "line": 1251,
+      "complexity": 24,
+      "line_count": 97,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "agents/hardware-resource-optimizer/app.py",
+      "function": "_optimize_logs",
+      "class": "HardwareResourceOptimizerAgent",
+      "line": 695,
+      "complexity": 24,
+      "line_count": 85,
+      "parameters": 1,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/knowledge_graph/graph_builder.py",
+      "function": "_analyze_node",
+      "class": "CodeAnalyzer",
+      "line": 80,
+      "complexity": 24,
+      "line_count": 70,
+      "parameters": 3,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/utils/readlarge.py",
+      "function": "main",
+      "class": null,
+      "line": 21,
+      "complexity": 24,
+      "line_count": 132,
+      "parameters": 0,
+      "nested_functions": 0
+    },
+    {
+      "file": "backend/app/api/v1/endpoints/hardware.py",
+      "function": "_make_request",
+      "class": "HardwareServiceClient",
+      "line": 281,
+      "complexity": 24,
+      "line_count": 113,
+      "parameters": 7,
+      "nested_functions": 0
+    }
+  ]
+}

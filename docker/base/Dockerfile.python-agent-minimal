@@ -1,6 +1,6 @@
 # Minimal Python Agent Base for quick testing
 # ULTRAFIX: Updated to Python 3.12.8-slim-bookworm for consistency
-FROM python:3.12.8-slim-bookworm
+FROM sutazai-python-agent-master:latest
 
 # Essential dependencies only
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*

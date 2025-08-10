@@ -1,10 +1,62 @@
 #!/bin/bash
-# Master Deployment Script for SutazAI System
-# Version: 2.0 - Ultra-Consolidated
-# Created: August 10, 2025
-# Purpose: Single, comprehensive deployment script for all environments
+# Master Deployment Script for SutazAI System - RULE 12 COMPLIANT
+# Version: 3.0 - Self-Updating Ultra-Consolidated
+# Created: August 10, 2025, Enhanced: August 11, 2025
+# Purpose: Single, comprehensive, SELF-UPDATING deployment script for all environments
+# Rule 12 Compliance: One Self-Updating, Intelligent, End-to-End Deployment Script
 
 set -euo pipefail
+
+# Self-update mechanism (Rule 12 requirement)
+self_update() {
+    log_info "🔄 Checking for script updates (Rule 12: Self-Updating)..."
+    
+    # Check if we're in a git repository
+    if git rev-parse --git-dir > /dev/null 2>&1; then
+        # Store current version
+        local current_version=$(grep "^# Version:" "$0" | head -1 | cut -d: -f2 | xargs)
+        
+        # Pull latest changes
+        git fetch origin 2>/dev/null || {
+            log_warning "Could not fetch updates - continuing with current version"
+            return 0
+        }
+        
+        # Check if deploy script has been updated
+        local script_path="$(realpath "$0")"
+        local relative_path="${script_path#$PROJECT_ROOT/}"
+        
+        if git diff HEAD origin/$(git symbolic-ref --short HEAD) --quiet -- "$relative_path" 2>/dev/null; then
+            log_info "✅ Deploy script is up to date ($current_version)"
+            return 0
+        fi
+        
+        log_info "🔄 Deploy script has updates available - self-updating..."
+        
+        # Create backup of current version
+        cp "$0" "${0}.backup.$(date +%s)"
+        
+        # Pull updates
+        git pull origin $(git symbolic-ref --short HEAD) 2>/dev/null || {
+            log_error "Failed to pull updates"
+            return 1
+        }
+        
+        # Check if the script was actually updated
+        local new_version=$(grep "^# Version:" "$0" | head -1 | cut -d: -f2 | xargs)
+        if [ "$current_version" != "$new_version" ]; then
+            log_success "🚀 Script updated from $current_version to $new_version"
+            log_info "🔄 Re-executing with updated version..."
+            exec "$0" "$@"
+        fi
+    else
+        log_warning "Not in git repository - skipping self-update"
+    fi
+}
+
+# Version tracking for self-update
+SCRIPT_VERSION="3.0"
+LAST_UPDATED="2025-08-11"
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -188,9 +240,13 @@ tail_logs() {
     docker-compose -f "$COMPOSE_FILE" logs -f --tail=100
 }
 
-# Main deployment modes
+# Main deployment modes with self-update (Rule 12 compliance)
 deploy_minimal() {
-    log_info "Deploying minimal stack..."
+    log_info "🚀 Deploying minimal stack..."
+    
+    # Self-update check (Rule 12 requirement)
+    [ "${SKIP_UPDATE:-0}" != "1" ] && self_update "$@"
+    
     check_prerequisites
     cleanup_old
     start_core
@@ -200,7 +256,11 @@ deploy_minimal() {
 }
 
 deploy_full() {
-    log_info "Deploying full stack..."
+    log_info "🚀 Deploying full stack..."
+    
+    # Self-update check (Rule 12 requirement)
+    [ "${SKIP_UPDATE:-0}" != "1" ] && self_update "$@"
+    
     check_prerequisites
     cleanup_old
     build_images
@@ -213,7 +273,11 @@ deploy_full() {
 }
 
 deploy_production() {
-    log_info "Deploying production stack..."
+    log_info "🚀 Deploying production stack..."
+    
+    # Self-update check (Rule 12 requirement)
+    [ "${SKIP_UPDATE:-0}" != "1" ] && self_update "$@"
+    
     check_prerequisites
     
     # Production-specific checks
@@ -257,17 +321,41 @@ case "${1:-full}" in
     clean)
         cleanup_old
         ;;
+    update)
+        log_info "🔄 Force updating deployment script..."
+        self_update "$@"
+        ;;
+    version)
+        echo "SutazAI Master Deployment Script"
+        echo "Version: $SCRIPT_VERSION"
+        echo "Last Updated: $LAST_UPDATED" 
+        echo "Self-Updating: Enabled (Rule 12 Compliant)"
+        echo "Backup Available: /opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/rollback.sh"
+        ;;
     *)
-        echo "Usage: $0 {minimal|full|production|status|health|logs|clean}"
+        echo "Usage: $0 {minimal|full|production|status|health|logs|clean|update|version}"
         echo ""
-        echo "Modes:"
+        echo "🚀 SELF-UPDATING DEPLOYMENT SCRIPT (Rule 12 Compliant)"
+        echo ""
+        echo "Deployment Modes:"
         echo "  minimal    - Deploy core services only (databases, backend, frontend)"
         echo "  full       - Deploy all services including monitoring and agents"
         echo "  production - Deploy with production configuration"
+        echo ""
+        echo "Management Commands:"
         echo "  status     - Show current system status"
         echo "  health     - Run health checks on all services"
         echo "  logs       - Tail logs from all services"
         echo "  clean      - Stop and clean up all containers"
+        echo "  update     - Force update this script from git"
+        echo "  version    - Show script version and update information"
+        echo ""
+        echo "Environment Variables:"
+        echo "  SKIP_UPDATE=1    - Skip automatic self-update check"
+        echo "  FORCE_DEPLOY=1   - Force deployment even if health checks fail"
+        echo ""
+        echo "🛡️  Emergency Rollback Available:"
+        echo "  /opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/rollback.sh"
         exit 1
         ;;
 esac

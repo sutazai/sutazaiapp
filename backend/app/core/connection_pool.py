@@ -193,39 +193,95 @@ class ConnectionPoolManager:
         async with self.get_db_connection() as conn:
             return await conn.execute(query, *args)
             
-    async def health_check(self) -> Dict[str, Any]:
-        """Check health of all connection pools"""
+    async def health_check(self, timeout: float = 5.0) -> Dict[str, Any]:
+        """Optimized health check with parallel execution and timeouts"""
         health = {
             'status': 'healthy',
             'pools': {},
             'stats': self._stats
         }
         
-        # Check Redis
-        try:
-            await self._redis_client.ping()
-            health['pools']['redis'] = 'healthy'
-        except Exception as e:
-            health['pools']['redis'] = f'unhealthy: {e}'
-            health['status'] = 'degraded'
-            
-        # Check Database
-        try:
-            await self.execute_db_query("SELECT 1", fetch_one=True)
-            health['pools']['database'] = 'healthy'
-        except Exception as e:
-            health['pools']['database'] = f'unhealthy: {e}'
-            health['status'] = 'degraded'
-            
-        # Check HTTP clients
-        for name, client in self._http_clients.items():
+        # Create health check tasks to run in parallel
+        health_tasks = []
+        
+        # Redis health check task
+        async def check_redis():
             try:
-                # Just check if client is configured
-                health['pools'][f'http_{name}'] = 'configured'
+                await asyncio.wait_for(self._redis_client.ping(), timeout=1.0)
+                return ('redis', 'healthy')
+            except asyncio.TimeoutError:
+                return ('redis', 'timeout')
             except Exception as e:
-                health['pools'][f'http_{name}'] = f'error: {e}'
+                return ('redis', f'unhealthy: {str(e)[:50]}')
+        
+        # Database health check task
+        async def check_database():
+            try:
+                await asyncio.wait_for(
+                    self.execute_db_query("SELECT 1", fetch_one=True),
+                    timeout=2.0
+                )
+                return ('database', 'healthy')
+            except asyncio.TimeoutError:
+                return ('database', 'timeout')
+            except Exception as e:
+                return ('database', f'unhealthy: {str(e)[:50]}')
+        
+        # Add tasks
+        health_tasks.append(asyncio.create_task(check_redis()))
+        health_tasks.append(asyncio.create_task(check_database()))
+        
+        # Run all health checks in parallel with overall timeout
+        try:
+            results = await asyncio.wait_for(
+                asyncio.gather(*health_tasks, return_exceptions=True),
+                timeout=timeout
+            )
+            
+            # Process results
+            for result in results:
+                if isinstance(result, tuple):
+                    service_name, status = result
+                    health['pools'][service_name] = status
+                    if status != 'healthy' and status != 'configured':
+                        health['status'] = 'degraded'
+                else:
+                    # Exception occurred
+                    health['status'] = 'degraded'
+                    
+        except asyncio.TimeoutError:
+            health['status'] = 'timeout'
+            health['pools']['error'] = 'Health check timeout'
+            
+        # HTTP clients are just configuration checks (instant)
+        for name in self._http_clients.keys():
+            health['pools'][f'http_{name}'] = 'configured'
                 
         return health
+        
+    async def quick_health_check(self) -> bool:
+        """Ultra-fast health check for critical services only"""
+        try:
+            # Check Redis and DB in parallel with very short timeout
+            redis_task = asyncio.create_task(
+                asyncio.wait_for(self._redis_client.ping(), timeout=0.5)
+            )
+            db_task = asyncio.create_task(
+                asyncio.wait_for(
+                    self.execute_db_query("SELECT 1", fetch_one=True),
+                    timeout=0.5
+                )
+            )
+            
+            # Wait for both with 1 second total timeout
+            await asyncio.wait_for(
+                asyncio.gather(redis_task, db_task),
+                timeout=1.0
+            )
+            return True
+            
+        except:
+            return False
         
     def get_stats(self) -> Dict[str, int]:
         """Get connection pool statistics"""

@@ -19,7 +19,9 @@ from pathlib import Path
 # Import the master health controller
 sys.path.append(str(Path(__file__).parent))
 try:
-    from master_health_controller import HealthMaster
+    # Import the master health controller from scripts.lib
+sys.path.append("/opt/sutazaiapp")
+from scripts.lib.master_health_controller import HealthMaster
 except ImportError:
     # Fallback if master controller is not available
     print("Warning: Master health controller not available, using basic checks")

@@ -1,6 +1,6 @@
 """
-Enhanced UI Components for SutazAI Frontend
-Modern, accessible, and performant UI components
+Enhanced UI Components for SutazAI Frontend with Error Boundaries
+Modern, accessible, and performant UI components with comprehensive error handling
 """
 
 import streamlit as st
@@ -10,16 +10,59 @@ from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional, Union, Callable
 import time
 import json
+import logging
+from functools import wraps
+import traceback
 
-class ModernMetrics:
-    """Enhanced metric display components with animations and better UX"""
+logger = logging.getLogger(__name__)
+
+class ErrorBoundary:
+    """
+    Professional error boundary system for Streamlit components
+    Provides graceful degradation and user-friendly error messages
+    """
     
     @staticmethod
+    def safe_render(component_name: str, fallback_message: str = None):
+        """Decorator for safe component rendering with error boundaries"""
+        def decorator(func: Callable):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    logger.error(f"Error in {component_name}: {e}", exc_info=True)
+                    
+                    # Professional error display
+                    with st.container():
+                        st.error(f"⚠️ {component_name} temporarily unavailable")
+                        
+                        if fallback_message:
+                            st.info(fallback_message)
+                        else:
+                            st.info("Please refresh the page or try again later.")
+                        
+                        # Debug info for development
+                        if st.session_state.get('debug_mode', False):
+                            with st.expander("🐛 Debug Information"):
+                                st.code(f"Component: {component_name}")
+                                st.code(f"Error: {str(e)}")
+                                st.code(f"Type: {type(e).__name__}")
+                    
+                    return None
+            return wrapper
+        return decorator
+
+class ModernMetrics:
+    """Enhanced metric display components with animations, better UX, and error boundaries"""
+    
+    @staticmethod
+    @ErrorBoundary.safe_render("Hero Metrics", "System metrics are temporarily unavailable.")
     def render_hero_metrics(metrics: Dict[str, Any]):
-        """Render hero metrics with enhanced styling and animations"""
+        """Render hero metrics with enhanced styling, animations, and error handling"""
         
         st.markdown("""
         <style>
@@ -332,7 +375,7 @@ class LoadingComponents:
         </style>
         """, unsafe_allow_html=True)
 
-class NotificationSystem:
+class NotificationSystem:\n    \"\"\"Professional notification and alert system with error boundaries\"\"\""
     """Advanced notification and alert system"""
     
     @staticmethod

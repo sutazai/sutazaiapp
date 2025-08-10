@@ -24,7 +24,9 @@ from pathlib import Path
 
 # Import the master health controller
 sys.path.append(str(Path(__file__).parent))
-from master_health_controller import HealthMaster
+# Import the master health controller from scripts.lib
+sys.path.append("/opt/sutazaiapp")
+from scripts.lib.master_health_controller import HealthMaster
 
 class DeploymentHealthChecker(HealthMaster):
     """Specialized health checker for deployment scenarios"""

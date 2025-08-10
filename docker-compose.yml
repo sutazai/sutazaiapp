@@ -1136,6 +1136,69 @@ services:
     - ./agents/core:/app/agents/core:ro
     - ./data:/app/data:rw,noexec
     - ./logs:/app/logs:rw,noexec
+
+  # Distributed Tracing
+  jaeger:
+    container_name: sutazai-jaeger
+    image: jaegertracing/all-in-one:latest
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+      - COLLECTOR_OTLP_ENABLED=true
+      - JAEGER_DISABLED=false
+      - METRICS_STORAGE_TYPE=prometheus
+      - PROMETHEUS_SERVER_URL=http://sutazai-prometheus:9090
+      - PROMETHEUS_QUERY_SUPPORT_SPANMETRICS_CONNECTOR=true
+      - SPAN_STORAGE_TYPE=memory
+      - MEMORY_MAX_TRACES=100000
+    ports:
+      - "10210:16686"  # Jaeger UI
+      - "10211:14268"  # Jaeger Collector HTTP
+      - "10212:14250"  # Jaeger Collector gRPC
+      - "10213:9411"   # Zipkin Collector
+      - "10214:4317"   # OTLP gRPC
+      - "10215:4318"   # OTLP HTTP
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:16686/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Log Shipping (Promtail for Loki)
+  promtail:
+    container_name: sutazai-promtail
+    image: grafana/promtail:2.9.0
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./monitoring/promtail/config.yml:/etc/promtail/config.yml:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    depends_on:
+      - loki
+
 volumes:
   agent_outputs: null
   agent_workspaces: null
