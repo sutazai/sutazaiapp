@@ -1,6 +1,24 @@
 #!/bin/bash
 
+# Strict error handling
+set -euo pipefail
+
+
 # Build all Ollama models for SutazAI agents
+
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
 
 echo 'Building model for document-knowledge-manager...'
 ollama create sutazai_document-knowledge-manager -f ollama/models/document-knowledge-manager.modelfile

@@ -14,9 +14,10 @@ services:
       - SEQUENTIAL_THINKING_IMAGE=${SEQUENTIAL_THINKING_IMAGE:-mcp/sequentialthinking}
       - MCP_HTTP_PORT=${MCP_HTTP_PORT:-3030}
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:rw
+      # Docker socket mount REMOVED for security - container escape risk
+      # - /var/run/docker.sock:/var/run/docker.sock:rw  # SECURITY: Removed
       # Optional: live-reload local code during development
-    user: "0:0"  # run as root to access docker.sock
+    user: "1000:1000"  # Changed from root to non-root user for security
     ports:
       - "3030:3030"
     healthcheck:

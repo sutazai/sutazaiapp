@@ -12,7 +12,7 @@ import json
 from typing import Dict, Any, List
 from datetime import datetime
 
-from ..core.base_agent import BaseAgent, AgentMessage, AgentStatus, AgentCapability
+from agents.core.base_agent import BaseAgent, AgentMessage, AgentStatus, AgentCapability
 
 
 class GenericAgent(BaseAgent):

@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  ollama:
+    # FINAL PERFORMANCE FIX
+    container_name: sutazai-ollama
+    image: ollama/ollama:0.1.48
+    ports:
+      - "10104:11434"
+    environment:
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      OLLAMA_NUM_PARALLEL: 1
+      OLLAMA_KEEP_ALIVE: 5m
+      OLLAMA_DEBUG: false
+      # CPU optimization
+      GOMAXPROCS: 4
+      OMP_NUM_THREADS: 4
+    volumes:
+      - ollama-data:/root/.ollama
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - sutazai-network
+    # Performance tuning
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+      memlock:
+        soft: -1
+        hard: -1
+    sysctls:
+      - net.core.somaxconn=1024
+
+volumes:
+  ollama-data:
+    external: true
+
+networks:
+  sutazai-network:
+    external: true

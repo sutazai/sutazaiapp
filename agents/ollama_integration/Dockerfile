@@ -1,17 +1,10 @@
-FROM python:3.10-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements/base.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements
-COPY requirements/base.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Create directories
+# Create agent-specific directories (base directories already exist)
 RUN mkdir -p /app/schemas /app/agents/core
 
 # Copy application code
@@ -19,16 +12,16 @@ COPY app.py .
 COPY ollama_schemas.py ./schemas/
 COPY metrics.py ./agents/core/
 
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8090
+ENV AGENT_ID=ollama-integration
+ENV AGENT_NAME="Ollama Integration Service"
+
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\
     CMD curl -f http://localhost:8090/health || exit 1
 
-# Run the service
+# Expose port
 EXPOSE 8090
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
 
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8090"]

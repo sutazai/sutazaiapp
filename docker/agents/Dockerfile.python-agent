@@ -1,41 +1,22 @@
-# Dockerfile for Python-based AI agents
-FROM python:3.11-alpine
+FROM sutazai-python-agent-master:latest
 
-# Install system dependencies required for Python packages
-RUN apk add --no-cache \
-    gcc \
-    musl-dev \
-    linux-headers \
-    python3-dev \
-    libffi-dev \
-    openssl-dev \
-    cargo \
-    rust
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Set working directory
-WORKDIR /app
+# Copy application code
+COPY . .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir \
-    fastapi==0.116.1 \
-    uvicorn==0.35.0 \
-    httpx==0.27.2 \
-    redis==6.3.0 \
-    psutil==7.0.0 \
-    pydantic==2.10.6 \
-    prometheus-client==0.21.1 \
-    python-multipart==0.0.19 \
-    aiofiles==25.1.0
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=agents
+ENV AGENT_NAME="Agents"
 
-# Create a non-root user
-RUN adduser -D -u 1000 agent
-USER agent
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
-# Default command (can be overridden)
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
+# Expose port
+EXPOSE 8080
 
 CMD ["python", "-m", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]

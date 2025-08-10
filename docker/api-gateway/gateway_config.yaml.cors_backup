@@ -1,0 +1,106 @@
+gateway:
+  host: "0.0.0.0"
+  port: 8080
+  debug: false
+  
+redis:
+  url: "redis://redis:6379/0"
+  connection_pool:
+    max_connections: 10
+    retry_on_timeout: true
+
+rate_limiting:
+  enabled: true
+  requests_per_minute: 100
+  burst_size: 10
+
+load_balancing:
+  strategy: "round_robin"  # round_robin, least_connections, weighted
+  health_check_interval: 30
+
+security:
+  cors:
+    allow_origins: ["*"]
+    allow_methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+    allow_headers: ["*"]
+  
+  authentication:
+    enabled: false  # Enable when JWT authentication is implemented
+    jwt_secret: "${JWT_SECRET}"
+
+monitoring:
+  metrics_enabled: true
+  logging_level: "INFO"
+  request_logging: true
+  performance_tracking: true
+
+services:
+  backend:
+    url: "http://backend:8000"
+    health_check: "/health"
+    timeout: 30
+    retry_count: 3
+    weight: 1
+    
+  frontend:
+    url: "http://frontend:8501"
+    health_check: "/"
+    timeout: 10
+    retry_count: 2
+    weight: 1
+    
+  ollama:
+    url: "http://ollama:10104"
+    health_check: "/api/tags"
+    timeout: 60
+    retry_count: 3
+    weight: 1
+    
+  chromadb:
+    url: "http://chromadb:8000"
+    health_check: "/api/v1/heartbeat"
+    timeout: 30
+    retry_count: 3
+    weight: 1
+    
+  qdrant:
+    url: "http://qdrant:6333"
+    health_check: "/health"
+    timeout: 30
+    retry_count: 3
+    weight: 1
+    
+  jarvis-ai:
+    url: "http://jarvis-ai:8120"
+    health_check: "/health"
+    timeout: 30
+    retry_count: 3
+    weight: 1
+    
+  task-scheduler:
+    url: "http://task-scheduler:8080"
+    health_check: "/health"
+    timeout: 30
+    retry_count: 3
+    weight: 1
+    
+  model-optimizer:
+    url: "http://model-optimizer:8080"
+    health_check: "/health"
+    timeout: 30
+    retry_count: 3
+    weight: 1
+    
+  prometheus:
+    url: "http://prometheus:9090"
+    health_check: "/-/healthy"
+    timeout: 15
+    retry_count: 2
+    weight: 1
+    
+  grafana:
+    url: "http://grafana:3000"
+    health_check: "/api/health"
+    timeout: 15
+    retry_count: 2
+    weight: 1 

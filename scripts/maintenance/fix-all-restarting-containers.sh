@@ -4,6 +4,20 @@
 
 set -e
 
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 echo "=== Fixing ALL Restarting Containers ==="
 echo ""
 
@@ -20,7 +34,7 @@ echo "$RESTARTING_CONTAINERS"
 echo ""
 
 # Create a simple Python HTTP server that works
-cat > /tmp/simple_agent_server.py << 'EOF'
+cat > "$(mktemp /tmp/simple_agent_server.py.XXXXXX)" << 'EOF'
 import http.server
 import socketserver
 import json

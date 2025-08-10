@@ -368,6 +368,7 @@ class TaskAssignmentCoordinator:
                 # High priority tasks go to best agents
                 if task.priority >= Priority.HIGH:
                     # Select agent with best success rate (simplified)
+                    return available_agents[0]
                 else:
                     return available_agents[-1]
             

@@ -1,79 +1,22 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    build-essential \
-    python3-dev \
-    wget \
-    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
+# Copy application code
+COPY . .
 
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=semgrep
+ENV AGENT_NAME="Semgrep"
 
-# Install Node.js and npm for semgrep
-RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
-# Install Python and Node dependencies
-RUN pip install --no-cache-dir \
-    semgrep \
-    requests \
-    fastapi \
-    uvicorn
-
-
-# Create startup script
-COPY main.py requirements.txt* ./
-RUN if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi
-
-# Add health check endpoint
-RUN echo '#!/usr/bin/env python3
-import http.server
-import socketserver
-import threading
-import json
-import os
-
-class HealthHandler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == "/health":
-            self.send_response(200)
-            self.send_header("Content-type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "healthy", "agent": "semgrep"}).encode())
-        else:
-            self.send_response(404)
-            self.end_headers()
-
-def start_health_server():
-    with socketserver.TCPServer(("", 8000), HealthHandler) as httpd:
-        httpd.serve_forever()
-
-if __name__ == "__main__":
-    # Start health check server in background
-    health_thread = threading.Thread(target=start_health_server)
-    health_thread.daemon = True
-    health_thread.start()
-    
-    # Import and run main application
-    import main
-    main.run()
-' > /app/web_interface.py
-
+# Expose port
 EXPOSE 8080
-EXPOSE 8000
-
-
-# Run as non-root user
-USER nobody
-
-# Run as non-root user
-USER nobody
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
 
 CMD ["python3", "web_interface.py"]

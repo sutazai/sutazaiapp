@@ -1,46 +1,22 @@
-# Optimized base image for SutazAI agents
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    DEBIAN_FRONTEND=noninteractive
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+# Copy application code
+COPY . .
 
-# Create app directory
-WORKDIR /app
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=docker
+ENV AGENT_NAME="Docker"
 
-# Pre-install common Python dependencies
-RUN pip install --no-cache-dir \
-    fastapi==0.104.1 \
-    uvicorn[standard]==0.24.0 \
-    pydantic==2.5.0 \
-    httpx==0.25.2 \
-    redis==5.0.1 \
-    aiofiles==23.2.1 \
-    python-multipart==0.0.6 \
-    prometheus-client==0.19.0 \
-    psutil==5.9.6 \
-    structlog==23.2.0 \
-    tenacity==8.2.3 \
-    python-json-logger==2.0.7
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
-# Create non-root user
-RUN useradd -m -u 1000 -s /bin/bash appuser && \
-    chown -R appuser:appuser /app
+# Expose port
+EXPOSE 8080
 
-# Switch to non-root user
-USER appuser
-
-# Copy startup script
-COPY --chown=appuser:appuser scripts/agent_startup.py /app/
-
-# Default command
 CMD ["python", "/app/agent_startup.py"]

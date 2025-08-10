@@ -8,6 +8,20 @@
 
 set -euo pipefail
 
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 BACKUP_DIR="$PROJECT_DIR/security_backup_$(date +%Y%m%d_%H%M%S)"
@@ -389,7 +403,9 @@ check() {
     local test_command="$2"
     
     echo -n "Checking $test_name... "
-    if eval "$test_command" >/dev/null 2>&1; then
+    if # SECURITY FIX: eval replaced
+# Original: eval "$test_command"
+$test_command >/dev/null 2>&1; then
         echo -e "${GREEN}PASS${NC}"
     else
         echo -e "${RED}FAIL${NC}"

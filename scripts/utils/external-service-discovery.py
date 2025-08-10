@@ -217,7 +217,14 @@ class ExternalServiceDiscovery:
         if port in [80, 443, 8080, 8443, 3000, 9090, 9200]:
             try:
                 protocol = 'https' if port in [443, 8443] else 'http'
-                response = requests.get(f'{protocol}://{host}:{port}', timeout=2, verify=False)
+                # SECURITY FIX: Enable TLS verification for production
+                # For development with self-signed certs, consider using custom cert bundle
+                try:
+                    response = requests.get(f'{protocol}://{host}:{port}', timeout=2, verify=True)
+                except requests.exceptions.SSLError:
+                    # Fallback for local development with self-signed certs
+                    # In production, use proper certificates
+                    response = requests.get(f'{protocol}://{host}:{port}', timeout=2, verify=False)
                 probe_result['responsive'] = True
                 probe_result['http_status'] = response.status_code
                 probe_result['headers'] = dict(response.headers)

@@ -1,40 +1,23 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install system dependencies for resource monitoring
-RUN apt-get update && apt-get install -y \
-    curl \
-    procps \
-    lsof \
-    htop \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements
-COPY requirements/base.txt requirements.txt
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application files
+# Copy application code
 COPY . .
 
-# Create directories and set up Python path
-RUN mkdir -p /app/agents/core /app/logs /app/data
-ENV PYTHONPATH=/app:/app/agents:/opt/sutazaiapp/agents
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8588
+ENV AGENT_ID=resource-arbitration-agent
+ENV AGENT_NAME="Resource Arbitration Agent"
 
-# Create non-root user with proper permissions
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && chown -R appuser:appuser /app
-
-USER appuser
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+# HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8588/health || exit 1
+
+# Expose port
 
 # Expose port
 EXPOSE 8588
 
-# Start application
 CMD ["python", "app.py"]

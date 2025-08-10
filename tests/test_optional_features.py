@@ -57,7 +57,7 @@ class TestCodeCompletionFactory:
         settings = Mock(spec=Settings)
         settings.ENABLE_TABBY = True
         settings.TABBY_URL = 'http://tabby:8080'
-        settings.TABBY_API_KEY = 'key'
+        settings.TABBY_API_KEY = os.getenv('TEST_API_KEY', 'test-api-key-placeholder')
         
         client = code_completion_factory(settings)
         assert client.__class__.__name__ == 'TabbyCodeCompletionClient'

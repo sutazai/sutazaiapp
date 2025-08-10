@@ -1,8 +1,26 @@
 #!/bin/bash
+
+# Strict error handling
+set -euo pipefail
+
 # SutazAI Server Synchronization Script
 # This script synchronizes files between the Code Server and Deployment Server
 
 # Navigate to the project root directory
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 cd "$(dirname "$0")/.."
 PROJECT_ROOT=$(pwd)
 
@@ -96,7 +114,9 @@ sync_files() {
     log "Executing: $rsync_cmd"
     
     # Execute the command
-    eval $rsync_cmd
+    # SECURITY FIX: eval replaced
+# Original: eval $rsync_cmd
+"${rsync_cmd}"
     
     if [ $? -eq 0 ]; then
         log "${GREEN}${sync_type} synchronization completed successfully.${NC}"

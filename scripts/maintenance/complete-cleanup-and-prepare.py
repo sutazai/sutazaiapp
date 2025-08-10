@@ -658,7 +658,9 @@ from app.services.auth import AuthService
 
 def test_password_hashing():
     auth = AuthService()
-    password = os.getenv('TEST_PASSWORD', 'temp_test_password_123')
+    password = os.getenv('TEST_PASSWORD')
+    if not password:
+        raise ValueError("TEST_PASSWORD environment variable must be set")
     hashed = auth.hash_password(password)
     assert auth.verify_password(password, hashed)
 

@@ -55,7 +55,7 @@ cache: &global_cache
 
 validate:codebase:
   stage: validate
-  image: python:3.11-slim
+  image: python:3.12.8-slim-bookworm
   <<: *default_retry
   before_script:
     - apt-get update && apt-get install -y git
@@ -74,7 +74,7 @@ validate:codebase:
 
 validate:hygiene:
   stage: validate
-  image: python:3.11-slim
+  image: python:3.12.8-slim-bookworm
   <<: *default_retry
   script:
     - echo "Running hygiene validation..."
@@ -187,7 +187,7 @@ build:agents:
 
 test:unit:
   stage: test
-  image: python:3.11
+  image: python:3.12.8
   <<: *default_retry
   services:
     - postgres:15-alpine
@@ -267,7 +267,7 @@ test:e2e:
 
 test:agents:
   stage: test
-  image: python:3.11
+  image: python:3.12.8
   <<: *default_retry
   parallel:
     matrix:
@@ -282,7 +282,7 @@ test:agents:
 # Infrastructure health smoke test (gated by variable to avoid false fails)
 test:infra-health:
   stage: test
-  image: python:3.11-slim
+  image: python:3.12.8-slim-bookworm
   <<: *default_retry
   script:
     - python scripts/devops/check_services_health.py --ollama localhost:10104 --kong localhost:10005 --consul localhost:10006 --vector-range 10100-10103
@@ -294,7 +294,7 @@ test:infra-health:
 
 security:sast:
   stage: security
-  image: python:3.11
+  image: python:3.12.8
   <<: *default_retry
   script:
     - pip install --cache-dir .cache/pip bandit safety semgrep
@@ -378,7 +378,7 @@ performance:load-test:
 
 performance:benchmark:
   stage: performance
-  image: python:3.11
+  image: python:3.12.8
   <<: *default_retry
   script:
     - pip install --cache-dir .cache/pip pytest-benchmark

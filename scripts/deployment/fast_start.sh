@@ -195,6 +195,9 @@ wait_for_service_health() {
     
     log_debug "Waiting for $service_name health check (timeout: ${timeout}s)"
     
+    # Timeout mechanism to prevent infinite loops
+    LOOP_TIMEOUT=${LOOP_TIMEOUT:-300}  # 5 minute default timeout
+    loop_start=$(date +%s)
     while true; do
         local current_time=$(date +%s)
         local elapsed=$((current_time - start_time))
@@ -220,6 +223,13 @@ wait_for_service_health() {
         fi
         
         sleep 2
+        # Check for timeout
+        current_time=$(date +%s)
+        if [[ $((current_time - loop_start)) -gt $LOOP_TIMEOUT ]]; then
+            echo 'Loop timeout reached after ${LOOP_TIMEOUT}s, exiting...' >&2
+            break
+        fi
+
     done
 }
 

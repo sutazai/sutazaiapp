@@ -1,0 +1,150 @@
+{
+  "analysis": {
+    "total_scripts": 1672,
+    "by_type": {
+      ".js": 34,
+      ".py": 1101,
+      ".sh": 537
+    },
+    "by_directory": {
+      "jest.config.js": 1,
+      "test_ollama.py": 1,
+      "health_check.sh": 1,
+      "deploy.sh": 1,
+      "hardware_api_validation_test.py": 1,
+      "script_consolidation_analysis.py": 1,
+      "index.js": 1,
+      "fix_ollama_performance.sh": 1,
+      "jest.setup.js": 1,
+      "hardware_api_test_comprehensive.sh": 1,
+      "ULTRA_FIX_CRITICAL_ISSUES.sh": 1,
+      "ultra_migration_test_suite.py": 1,
+      "ultra_deep_system_analysis.py": 1,
+      "ollama-fix.sh": 1,
+      "fusion": 6,
+      "security_audit_env": 1,
+      "scripts": 473,
+      "schemas": 8,
+      "self-healing": 11,
+      "frontend": 25,
+      "dashboard": 3,
+      "workflows": 9,
+      "deployment": 2,
+      "docker": 78,
+      "operations": 2,
+      "auth": 6,
+      "tests": 89,
+      "security-scan-results": 2,
+      "IMPORTANT": 4,
+      "system-validator": 1,
+      "models": 14,
+      "security": 9,
+      "load-testing": 13,
+      "chaos": 5,
+      "monitoring": 23,
+      "agents": 96,
+      "config": 1,
+      "backend": 234,
+      "archive": 469,
+      "reports": 1,
+      "mcp_server": 2,
+      "localagi": 7,
+      "disaster-recovery": 5,
+      "services": 46,
+      "src": 12,
+      "backups": 1
+    },
+    "duplicates": 474,
+    "duplicate_groups": 474,
+    "small_scripts": 70,
+    "samples": {
+      "duplicates": [
+        [
+          "/opt/sutazaiapp/health_check.sh",
+          "/opt/sutazaiapp/scripts/monitoring/health_check.sh",
+          "/opt/sutazaiapp/operations/monitor/health_check.sh",
+          "/opt/sutazaiapp/archive/scripts-backup-ultrafix-20250810_171617/monitoring/health_check.sh"
+        ],
+        [
+          "/opt/sutazaiapp/deploy.sh",
+          "/opt/sutazaiapp/scripts/deployment/deploy.sh",
+          "/opt/sutazaiapp/operations/deploy/deploy.sh",
+          "/opt/sutazaiapp/archive/scripts-backup-ultrafix-20250810_171617/deployment/deploy.sh"
+        ],
+        [
+          "/opt/sutazaiapp/scripts/immediate-security-fix.sh",
+          "/opt/sutazaiapp/archive/scripts-backup-ultrafix-20250810_171617/immediate-security-fix.sh"
+        ],
+        [
+          "/opt/sutazaiapp/scripts/secure-hardware-optimizer-rebuild.sh",
+          "/opt/sutazaiapp/archive/scripts-backup-ultrafix-20250810_171617/secure-hardware-optimizer-rebuild.sh"
+        ],
+        [
+          "/opt/sutazaiapp/scripts/build_all_images.sh",
+          "/opt/sutazaiapp/scripts/deployment/build_all_images.sh",
+          "/opt/sutazaiapp/archive/scripts-backup-ultrafix-20250810_171617/build_all_images.sh",
+          "/opt/sutazaiapp/archive/scripts-backup-ultrafix-20250810_171617/deployment/build_all_images.sh"
+        ]
+      ],
+      "small_scripts": [
+        [
+          "/opt/sutazaiapp/jest.setup.js",
+          2
+        ],
+        [
+          "/opt/sutazaiapp/scripts/utils/prevent_pycache.sh",
+          1
+        ],
+        [
+          "/opt/sutazaiapp/scripts/utils/rotate_logs.sh",
+          7
+        ],
+        [
+          "/opt/sutazaiapp/frontend/components/__init__.py",
+          0
+        ],
+        [
+          "/opt/sutazaiapp/frontend/pages/system/__init__.py",
+          1
+        ],
+        [
+          "/opt/sutazaiapp/frontend/pages/dashboard/__init__.py",
+          1
+        ],
+        [
+          "/opt/sutazaiapp/frontend/pages/integrations/__init__.py",
+          1
+        ],
+        [
+          "/opt/sutazaiapp/frontend/pages/ai_services/__init__.py",
+          1
+        ],
+        [
+          "/opt/sutazaiapp/frontend/styles/__init__.py",
+          1
+        ],
+        [
+          "/opt/sutazaiapp/frontend/services/__init__.py",
+          1
+        ]
+      ]
+    }
+  },
+  "categorization": {
+    "categories": {
+      "deployment": 34,
+      "testing": 352,
+      "monitoring": 171,
+      "maintenance": 87,
+      "security": 41,
+      "database": 20,
+      "docker": 75,
+      "agents": 116,
+      "utilities": 10,
+      "initialization": 112,
+      "validation": 5
+    },
+    "uncategorized": 649,
+    "total_categorized": 1023
+  }
+}

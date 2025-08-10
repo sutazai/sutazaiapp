@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  ollama:
+    environment:
+      # CRITICAL PERFORMANCE FIX - Override all settings
+      OLLAMA_NUM_PARALLEL: 1        # SINGLE request at a time
+      OLLAMA_NUM_THREADS: 2         # Minimal threads
+      OLLAMA_MAX_LOADED_MODELS: 1   # Single model only
+      OLLAMA_KEEP_ALIVE: 1m         # Unload quickly
+      OLLAMA_FLASH_ATTENTION: 0     # Disable for stability
+      
+      # Force CPU settings
+      GOMAXPROCS: 2                 # Strict limit
+      OLLAMA_MAX_QUEUE: 1           # No queue buildup
+      
+      # Memory optimizations
+      GOGC: 25                      # Aggressive GC
+      GOMEMLIMIT: 1500MiB           # Lower limit
+      
+    deploy:
+      resources:
+        limits:
+          cpus: '4'                 # Reduced from 10
+          memory: 4G                 # Reduced from 20G
+        reservations:
+          cpus: '2'                 # Reduced from 4
+          memory: 2G                 # Reduced from 8G
+    
+    # Faster health checks
+    healthcheck:
+      interval: 30s                 # Reduced from 60s
+      timeout: 5s                   # Reduced from 30s
+      retries: 3                    # Reduced from 5
+      start_period: 30s             # Reduced from 60s
+      test:
+        - CMD-SHELL
+        - curl -f http://localhost:11434/api/tags || exit 1
+
+  # Update integration service timeouts
+  ollama-integration:
+    environment:
+      REQUEST_TIMEOUT: 10           # Reduced from 30
+      CONNECTION_POOL_SIZE: 4       # Reduced from 10
+      MAX_RETRIES: 2               # Reduced from 3
+      BACKOFF_BASE: 1              # Reduced from 2

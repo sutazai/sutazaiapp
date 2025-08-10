@@ -1,1 +1,0 @@
-/opt/sutazaiapp/scripts/deployment/build_all_images.sh

@@ -431,7 +431,7 @@ jobs:
         REDIS_URL: redis://localhost:6379/0
         TESTING: true
       run: |
-        poetry run python scripts/coverage_reporter.py --test-type all --threshold 80
+        poetry run bash scripts/script-discovery-bootstrap.sh exec_script coverage_reporter.py --test-type all --threshold 80
     
     - name: Upload coverage reports
       uses: actions/upload-artifact@v3

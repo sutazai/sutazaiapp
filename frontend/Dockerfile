@@ -1,38 +1,33 @@
-FROM python:3.12.8-slim-bookworm
+# SutazAI Frontend Service - ULTRAFIX Dockerfile Consolidation  
+# Migrated to use sutazai-python-agent-master base image
+# Date: August 10, 2025 - CRITICAL DOCKERFILE DEDUPLICATION
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements
-COPY requirements/base.txt requirements.txt
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install frontend-specific requirements on top of base  
+# Note: Copy from context root, not relative path
+COPY requirements/base.txt /tmp/frontend-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/frontend-requirements.txt && rm /tmp/frontend-requirements.txt
 
 # Copy application and components
 COPY app.py .
 COPY components/ ./components/
+COPY pages/ ./pages/
 
-# Set environment variables
+# Override base environment variables for frontend service
+ENV SERVICE_PORT=8501
+ENV AGENT_ID=sutazai-frontend
+ENV AGENT_NAME="SutazAI Frontend Service"
 ENV PORT=8501
 
-# Expose port
-EXPOSE 8501
-
-# Health check
+# Override health check for frontend service
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8501/health || exit 1
 
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && chown -R appuser:appuser /app
+# Expose frontend port
+EXPOSE 8501
+
+# Switch to non-root user (inherited from base)
 USER appuser
 
+# Start frontend service
 CMD ["streamlit", "run", "app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]

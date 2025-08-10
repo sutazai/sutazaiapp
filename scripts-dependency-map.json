@@ -1,0 +1,54 @@
+{
+  "migration_info": {
+    "timestamp": "2025-08-10T17:00:00Z",
+    "version": "ultra-compatibility-v1.0",
+    "purpose": "Track all script dependencies during consolidation"
+  },
+  "legacy_paths": {
+    "scripts/testing/test_runner.py": "scripts/testing/test_runner.py",
+    "scripts/coverage_reporter.py": "scripts/monitoring/coverage_reporter.py", 
+    "scripts/check_secrets.py": "scripts/security/check_secrets.py",
+    "scripts/check_naming.py": "scripts/monitoring/check_naming.py",
+    "scripts/check_duplicates.py": "scripts/monitoring/check_duplicates.py",
+    "scripts/validate_agents.py": "scripts/monitoring/validate_agents.py",
+    "scripts/check_requirements.py": "scripts/monitoring/check_requirements.py",
+    "scripts/enforce_claude_md_simple.py": "scripts/monitoring/enforce_claude_md_simple.py",
+    "scripts/export_openapi.py": "scripts/documentation/export_openapi.py",
+    "scripts/summarize_openapi.py": "scripts/documentation/summarize_openapi.py",
+    "scripts/onboarding/generate_kickoff_deck.py": "scripts/documentation/generate_kickoff_deck.py"
+  },
+  "new_structure": {
+    "scripts/": {
+      "deployment/": ["deploy.sh", "build_all_images.sh", "check_services_health.sh"],
+      "maintenance/": ["hygiene-enforcement-coordinator.py", "fix-critical-agents.py"],
+      "monitoring/": ["compliance-monitor-core.py", "coverage_reporter.py"],
+      "security/": ["check_secrets.py", "validate_nonroot.sh"],
+      "testing/": ["test_runner.py", "validate-rule-system.sh"],
+      "documentation/": ["export_openapi.py", "summarize_openapi.py"],
+      "utils/": ["validate_and_optimize_system.sh", "cleanup_sync.sh"],
+      "mcp/": ["build_sequentialthinking.sh", "register_mcp_contexts.sh"],
+      "emergency_fixes/": ["apply_emergency_fixes.sh"],
+      "automation/": ["operational-runbook-demo.sh"],
+      "sync/": ["ssh_key_exchange.sh", "two_way_sync.sh"]
+    }
+  },
+  "critical_dependencies": {
+    "github_workflows": [
+      ".github/workflows/hygiene-check.yml",
+      ".github/workflows/security-scan.yml",
+      ".github/workflows/continuous-testing.yml",
+      ".github/workflows/integration.yml"
+    ],
+    "makefile_references": [
+      "scripts/testing/test_runner.py",
+      "scripts/coverage_reporter.py",
+      "scripts/export_openapi.py",
+      "scripts/summarize_openapi.py"
+    ],
+    "systemd_services": [],
+    "docker_references": [
+      "docker-compose.yml",
+      "docker-compose.minimal.yml"
+    ]
+  }
+}

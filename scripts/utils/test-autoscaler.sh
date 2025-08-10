@@ -4,6 +4,20 @@
 set -euo pipefail
 
 # Color codes
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
@@ -89,7 +103,7 @@ echo -e "\n${YELLOW}Test 6: Swarm Autoscaler Simulation${NC}"
 echo "Creating minimal test environment..."
 
 # Create a test Python script to simulate the autoscaler
-cat > /tmp/test-autoscaler.py << 'EOF'
+cat > "$(mktemp /tmp/test-autoscaler.py.XXXXXX)" << 'EOF'
 #!/usr/bin/env python3
 import ast
 import sys

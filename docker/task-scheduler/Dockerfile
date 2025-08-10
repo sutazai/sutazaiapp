@@ -1,67 +1,25 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    build-essential \
-    cron \
-    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
+# Copy application code
+COPY . .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir \
-    fastapi \
-    uvicorn \
-    pydantic \
-    sqlalchemy \
-    psycopg2-binary \
-    redis \
-    aioredis \
-    celery \
-    schedule \
-    asyncio \
-    requests \
-    aiohttp \
-    python-multipart \
-    python-dotenv \
-    structlog \
-    prometheus-client
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=task-scheduler
+ENV AGENT_NAME="Task Scheduler"
 
-# Copy scheduler service files
-COPY task_scheduler.py requirements.txt* ./
-COPY scheduler_config.yaml ./
-
-# Install additional requirements if they exist
-RUN if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi
-
-# Create directories
-RUN mkdir -p /app/data /app/logs /app/tasks
-
-# Environment variables
-ENV PYTHONUNBUFFERED=1
-ENV SCHEDULER_MODE=autonomous
-ENV MAX_CONCURRENT_TASKS=10
-
-# Expose port
-EXPOSE 8080
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+# HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8080/health')" || exit 1
 
 # Start task scheduler
 
 # Run as non-root user
-USER nobody
 
-# Run as non-root user
-USER nobody
+# Expose port
+EXPOSE 8080
 
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
-
-CMD ["python", "task_scheduler.py"] 
+CMD ["python", "task_scheduler.py"]

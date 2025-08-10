@@ -332,7 +332,7 @@ class EnhancedComplianceMonitor:
                 "checks": ["forbidden_terms", "naming_validation"],
                 "severity": "high",
                 "auto_fix": True,
-                "forbidden_terms": ["process", "configurator", "processing-unit", "transfer", "mystical"],
+                "forbidden_terms": ["wizardService", "magicMailer", "teleportData", "superIntuitiveAI", "mysticalConnection"],
                 "risk_level": "low",
                 "validation_required": False
             },
@@ -1315,11 +1315,11 @@ class EnhancedComplianceMonitor:
         
         # Mapping of fantasy terms to professional alternatives
         term_replacements = {
-            'process': 'automated',
-            'configurator': 'configurator', 
-            'processing-unit': 'abstracted',
-            'transfer': 'transfer',
-            'mystical': 'advanced'
+            'wizardService': 'configService',
+            'magicMailer': 'emailSender',
+            'teleportData': 'transferData',
+            'superIntuitiveAI': 'smartProcessor',
+            'mysticalConnection': 'advancedConnection'
         }
         
         # Group violations by file for efficient processing

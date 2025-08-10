@@ -1,6 +1,24 @@
 #!/bin/bash
 
+# Strict error handling
+set -euo pipefail
+
+
 # Script to monitor and manage high CPU usage processes
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 LOG_FILE="/opt/sutazaiapp/logs/cpu_monitor.log"
 THRESHOLD=50  # CPU usage percentage threshold
 MAX_RUNTIME=3600  # Maximum runtime in seconds for a process (1 hour)
@@ -39,6 +57,9 @@ if pgrep -f "$(basename $0)" | grep -v $$ > /dev/null; then
   exit 0
 fi
 
+# Timeout mechanism to prevent infinite loops
+LOOP_TIMEOUT=${LOOP_TIMEOUT:-300}  # 5 minute default timeout
+loop_start=$(date +%s)
 while true; do
   # Get list of high CPU processes (more efficient than repeated top calls)
   HIGH_CPU_PROCESSES=$(ps -eo pid,pcpu,etimes,cmd --sort=-%cpu | awk -v threshold="$THRESHOLD" '$2 > threshold {print $1","$2","$3","$4}' | head -n 10)
@@ -70,6 +91,13 @@ while true; do
       else
         log "Process $PID ($CMD) is whitelisted, not modifying"
       fi
+    # Check for timeout
+    current_time=$(date +%s)
+    if [[ $((current_time - loop_start)) -gt $LOOP_TIMEOUT ]]; then
+        echo 'Loop timeout reached after ${LOOP_TIMEOUT}s, exiting...' >&2
+        break
+    fi
+
     done
   else
     log "No high CPU usage processes detected above $THRESHOLD%"

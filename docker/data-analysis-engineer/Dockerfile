@@ -1,36 +1,26 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-# Set working directory
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
-RUN pip install --no-cache-dir \
-    fastapi==0.104.1 \
-    uvicorn==0.24.0 \
-    pydantic==2.5.0 \
-    httpx==0.25.2 \
-    redis==5.0.1 \
-    loguru==0.7.2 \
-    psutil==5.9.8
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
 # Copy application code
-COPY app.py .
+COPY . .
+
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=data-analysis-engineer
+ENV AGENT_NAME="Data Analysis Engineer"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
 # Expose port
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
-
-# Run the application
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
+# Switch to non-root user for security
 USER appuser
 
-CMD ["python", "app.py"]
+# Default command
+CMD ["python", "-u", "app.py"]

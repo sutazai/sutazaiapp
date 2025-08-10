@@ -148,12 +148,13 @@ async def init_connections():
                 logger.warning("Vault client initialized but not authenticated")
         
         # Initialize Keycloak clients
+        # SECURITY FIX: Enable TLS verification for production security
         keycloak_admin = KeycloakAdmin(
             server_url=KEYCLOAK_SERVER_URL,
             username=os.getenv('KEYCLOAK_ADMIN', 'admin'),
             password=os.getenv('KEYCLOAK_ADMIN_PASSWORD', ''),
             realm_name=KEYCLOAK_REALM,
-            verify=False
+            verify=True  # SECURITY: TLS verification enabled
         )
         
         keycloak_openid = KeycloakOpenID(
@@ -161,7 +162,7 @@ async def init_connections():
             client_id=KEYCLOAK_CLIENT_ID,
             realm_name=KEYCLOAK_REALM,
             client_secret_key=KEYCLOAK_CLIENT_SECRET,
-            verify=False
+            verify=True  # SECURITY: TLS verification enabled
         )
         
         logger.info("Keycloak clients initialized")
@@ -238,7 +239,12 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:10011",  # Frontend Streamlit UI
+        "http://localhost:10010",  # Backend API
+        "http://127.0.0.1:10011",  # Alternative localhost
+        "http://127.0.0.1:10010",  # Alternative localhost
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -423,29 +429,48 @@ async def validate_token(request: TokenValidationRequest):
 async def revoke_token(request: TokenValidationRequest, current_service: Dict = Depends(get_current_service)):
     """Revoke JWT token"""
     try:
-        payload = jwt.decode(request.token, JWT_SECRET, algorithms=[JWT_ALGORITHM], verify=False)
+        # SECURITY FIX: Always verify JWT signature to prevent token forgery
+        # Never use verify=False as it bypasses signature validation
+        try:
+            payload = jwt.decode(request.token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        except jwt.ExpiredSignatureError:
+            # Allow revoking expired tokens
+            payload = jwt.decode(request.token, JWT_SECRET, algorithms=[JWT_ALGORITHM], options={"verify_exp": False})
+        except jwt.InvalidTokenError as e:
+            logger.warning("Invalid token provided for revocation", error=str(e))
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token"
+            )
+        
         jti = payload.get('jti')
         
         if not jti:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Invalid token format"
+                detail="Invalid token format - missing JTI"
             )
         
         # Mark token as revoked in database
         async with db_pool.acquire() as conn:
-            await conn.execute(
+            result = await conn.execute(
                 "UPDATE jwt_tokens SET revoked = TRUE WHERE jti = $1",
                 jti
             )
+            
+            # Check if token was found and updated
+            if result.split()[-1] == '0':
+                logger.warning("Token not found in database for revocation", jti=jti)
         
         # Remove from Redis cache
         await redis_client.delete(f"jwt:{jti}")
         
-        logger.info("JWT token revoked", jti=jti)
+        logger.info("JWT token revoked", jti=jti, service=payload.get('service_name'))
         
-        return {"message": "Token revoked successfully"}
+        return {"message": "Token revoked successfully", "jti": jti}
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error("Failed to revoke token", error=str(e))
         raise HTTPException(

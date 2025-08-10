@@ -1,69 +1,25 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    build-essential \
-    nginx \
-    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
+# Copy application code
+COPY . .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir \
-    fastapi \
-    uvicorn \
-    aiohttp \
-    aioredis \
-    pydantic \
-    pydantic-settings \
-    python-multipart \
-    python-jose[cryptography] \
-    passlib[bcrypt] \
-    httpx \
-    asyncio \
-    prometheus-client \
-    structlog \
-    python-dotenv \
-    limits \
-    slowapi \
-    starlette-prometheus
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=api-gateway
+ENV AGENT_NAME="Api Gateway"
 
-# Copy gateway service files
-COPY api_gateway.py requirements.txt* ./
-COPY gateway_config.yaml nginx.conf ./
-
-# Install additional requirements if they exist
-RUN if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi
-
-# Create directories
-RUN mkdir -p /app/logs /app/cache /app/config
-
-# Environment variables
-ENV PYTHONUNBUFFERED=1
-ENV GATEWAY_HOST=0.0.0.0
-ENV GATEWAY_PORT=8080
-ENV REDIS_URL=redis://redis:6379/0
-
-# Expose port
-EXPOSE 8080
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+# HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
 # Start API Gateway
 
 # Run as non-root user
-USER nobody
 
-# Run as non-root user
-USER nobody
+# Expose port
+EXPOSE 8080
 
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
-
-CMD ["python", "api_gateway.py"] 
+CMD ["python", "api_gateway.py"]

@@ -1,32 +1,22 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-# Install basic dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-WORKDIR /app
+# Copy application code
+COPY . .
 
-# Copy requirements first for better caching
-COPY docker/hygiene-scanner/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=hygiene-scanner
+ENV AGENT_NAME="Hygiene Scanner"
 
-# Copy scanner script
-COPY docker/hygiene-scanner/hygiene_scanner.py .
-COPY docker/hygiene-scanner/rule_definitions.yaml .
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
-# Create directories
-RUN mkdir -p /app/data /app/logs /app/reports
+# Expose port
+EXPOSE 8080
 
-# Run as non-root user
-RUN useradd -m -u 1000 scanner && chown -R scanner:scanner /app
-USER scanner
-
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
-
-ENTRYPOINT ["python", "hygiene_scanner.py"]
+CMD ["python", "-u", "app.py"]

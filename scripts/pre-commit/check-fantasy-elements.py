@@ -12,20 +12,21 @@ from typing import List, Tuple
 
 # Fantasy/placeholder patterns to detect
 FANTASY_PATTERNS = [
-    # process/configurator terms
-    r'\b(process|configurator|transfer|remote-control|supernatural)\b',
-    r'\bprocess[A-Z]\w*\b',  # processHandler, processService, etc.
-    r'\bconfigurator[A-Z]\w*\b',  # configuratorService, configuratorModule, etc.
+    # Actual fantasy service/function names
+    r'\bwizard(?:Service|Handler|Manager|Module|Function)\b',
+    r'\bmagic(?:Mailer|Handler|Function|Method|Service)\b',
+    r'\bteleport(?:Data|Function|Service)\b',
+    r'\bmystical(?:Connection|Service|Manager)\b',
     
     # Placeholder functions
-    r'#\s*FIXME:\s*(process|configurator|transfer)',
     r'\bsuper(?:Intuitive|Smart|Intelligent)AI\b',
-    r'\b(?:process|configurator|fantasy)(?:Service|Handler|Module|Function)\b',
+    r'\bfantasy(?:Service|Handler|Module|Function)\b',
     
     # Unrealistic abstractions
-    r'\bblack[_-]?box\b',
-    r'\bauto[_-]?process\b',
-    r'\bself[_-]?healing[_-]?process\b',
+    r'\bblack[_-]?box(?!-exporter)\b',
+    r'\benchanted\w*\b',
+    r'\bsupernatural\w*\b',
+    r'\bethereal\w*\b',
     
     # Placeholder data
     r'dummy_(?:data|function|module)',

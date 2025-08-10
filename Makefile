@@ -522,5 +522,67 @@ add-mcp-tool:
 	@if [ -z "$(IMG)" ]; then echo "Usage: make add-mcp-tool IMG=<docker-image>"; exit 1; fi
 	bash scripts/add_mcp_tool.sh $(IMG)
 integration:
-\t@echo "Running integration suite (health, tests, lint, security)..."
-\tpython3 scripts/run_integration.py
+	@echo "Running integration suite (health, tests, lint, security)..."
+	python3 scripts/run_integration.py
+
+# ULTRA-COMPREHENSIVE TESTING STRATEGY TARGETS
+.PHONY: test-ultra test-ultra-quick test-ultra-phase1 test-ultra-phase2 test-ultra-full test-ultra-report
+
+test-ultra-quick: ## Run quick validation tests (Phase 1 only - 4 hours)
+	@echo "$(PURPLE)🚀 ULTRA TESTING - QUICK VALIDATION$(NC)"
+	@echo "$(YELLOW)Running Phase 1: Critical Issue Resolution...$(NC)"
+	@chmod +x tests/execute_ultra_testing_strategy.py
+	@python3 tests/execute_ultra_testing_strategy.py --quick
+	@echo "$(GREEN)✅ Quick validation complete$(NC)"
+
+test-ultra-phase1: ## Run Phase 1 - Critical Issue Resolution (4 hours)
+	@echo "$(PURPLE)🚀 ULTRA TESTING - PHASE 1$(NC)"
+	@echo "$(YELLOW)Executing critical issue resolution tests...$(NC)"
+	@python3 tests/execute_ultra_testing_strategy.py --phases phase1
+	@echo "$(GREEN)✅ Phase 1 complete$(NC)"
+
+test-ultra-phase2: ## Run Phase 2 - Comprehensive Testing (16 hours)
+	@echo "$(PURPLE)🚀 ULTRA TESTING - PHASE 2$(NC)"
+	@echo "$(YELLOW)Executing comprehensive system tests...$(NC)"
+	@python3 tests/execute_ultra_testing_strategy.py --phases phase2
+	@echo "$(GREEN)✅ Phase 2 complete$(NC)"
+
+test-ultra: ## Run standard ultra testing (Phases 1 & 2 - 20 hours)
+	@echo "$(PURPLE)🚀 ULTRA-COMPREHENSIVE TESTING STRATEGY$(NC)"
+	@echo "$(CYAN)Executing Phases 1 and 2...$(NC)"
+	@python3 tests/execute_ultra_testing_strategy.py --phases phase1 phase2
+	@echo "$(GREEN)✅ Standard ultra testing complete$(NC)"
+
+test-ultra-full: ## Run ALL ultra testing phases (5 days)
+	@echo "$(RED)⚠️  WARNING: This will run ALL test phases (estimated 5 days)$(NC)"
+	@echo "$(PURPLE)🚀 ULTRA-COMPREHENSIVE TESTING - FULL EXECUTION$(NC)"
+	@python3 tests/execute_ultra_testing_strategy.py --phases phase1 phase2 phase3 phase4 phase5
+	@echo "$(GREEN)✅ Full ultra testing complete$(NC)"
+
+test-ultra-report: ## Generate ultra testing report from latest results
+	@echo "$(YELLOW)📊 Generating ultra testing report...$(NC)"
+	@python3 -c "import json; import glob; files = sorted(glob.glob('ultra_test_report_*.json')); \
+		latest = files[-1] if files else None; \
+		print(f'Latest report: {latest}') if latest else print('No reports found'); \
+		data = json.load(open(latest)) if latest else {}; \
+		print(f\"\nSummary: {data.get('execution_summary', {})}\") if data else None"
+	@echo "$(GREEN)✅ Report generated$(NC)"
+
+test-production-ready: test-ultra ## Alias for production readiness testing
+	@echo "$(GREEN)✅ Production readiness testing complete$(NC)"
+
+test-chaos: ## Run chaos engineering tests (Day 5 - 8 hours)
+	@echo "$(RED)💥 CHAOS ENGINEERING TESTS$(NC)"
+	@echo "$(YELLOW)Injecting failures and testing recovery...$(NC)"
+	@python3 tests/chaos/resilience_test.py
+	@echo "$(GREEN)✅ Chaos testing complete$(NC)"
+
+test-monitor: ## Run continuous monitoring tests
+	@echo "$(CYAN)📊 CONTINUOUS MONITORING$(NC)"
+	@echo "$(YELLOW)Starting continuous test monitoring...$(NC)"
+	@while true; do \
+		curl -sf http://localhost:10010/health > /dev/null && echo "$(GREEN)✓$(NC) Backend healthy" || echo "$(RED)✗$(NC) Backend down"; \
+		curl -sf http://localhost:10011/ > /dev/null && echo "$(GREEN)✓$(NC) Frontend healthy" || echo "$(RED)✗$(NC) Frontend down"; \
+		curl -sf http://localhost:10104/api/tags > /dev/null && echo "$(GREEN)✓$(NC) Ollama healthy" || echo "$(RED)✗$(NC) Ollama down"; \
+		sleep 30; \
+	done

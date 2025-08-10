@@ -28,7 +28,8 @@ services:
       - PLAYWRIGHT_MCP_CONTEXTS=${PLAYWRIGHT_MCP_CONTEXTS:-context7,sequentialthinking}
     volumes:
       - reports_playwright_mcp:/app/reports/playwright-mcp
-      - /var/run/docker.sock:/var/run/docker.sock
+      # Docker socket mount REMOVED for security - container escape risk
+      # - /var/run/docker.sock:/var/run/docker.sock  # SECURITY: Removed
     networks:
       - sutazai_mcp_net
     depends_on:

@@ -20,7 +20,11 @@ load_balancing:
 
 security:
   cors:
-    allow_origins: ["*"]
+    allow_origins:
+      - "http://localhost:10011"  # Frontend
+      - "http://localhost:10010"  # Backend
+      - "http://127.0.0.1:10011"  # Alt frontend
+      - "http://127.0.0.1:10010"  # Alt backend
     allow_methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
     allow_headers: ["*"]
   

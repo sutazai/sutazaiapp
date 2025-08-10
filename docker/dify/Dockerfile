@@ -1,44 +1,22 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    wget \
-    nodejs \
-    npm \
-    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
+# Copy application code
+COPY . .
 
-# Clone Dify
-RUN git clone https://github.com/langgenius/dify.git .
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=5001
+ENV AGENT_ID=dify
+ENV AGENT_NAME="Dify"
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r api/requirements.txt
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:5001/health || curl -f http://localhost:5001/ || exit 1
 
-# Install Node.js dependencies
-RUN cd web && npm install
-
-# Create startup script
-RUN echo '#!/bin/bash\n\
-cd api && python app.py &\n\
-cd web && npm start &\n\
-wait\n\
-' > start.sh && chmod +x start.sh
-
-EXPOSE 5001 3000
-
-
-# Run as non-root user
-USER nobody
-
-# Run as non-root user
-USER nobody
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
+# Expose port
+EXPOSE 5001
 
 CMD ["./start.sh"]

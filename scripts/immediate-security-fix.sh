@@ -5,6 +5,20 @@
 
 set -euo pipefail
 
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 log() { echo "[$(date +'%H:%M:%S')] $1"; }
 error() { echo "ERROR: $1" >&2; exit 1; }
 
@@ -17,7 +31,7 @@ docker-compose rm -f hardware-resource-optimizer 2>/dev/null || true
 
 # 2. Create secure configuration patch
 log "Applying security configuration..."
-cat > /tmp/secure-patch.yml << 'EOF'
+cat > "$(mktemp /tmp/secure-patch.yml.XXXXXX)" << 'EOF'
   hardware-resource-optimizer:
     build:
       context: ./agents/hardware-resource-optimizer

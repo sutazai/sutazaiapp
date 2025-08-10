@@ -1,52 +1,25 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    postgresql-client \
-    redis-tools \
-    docker.io \
-    && rm -rf /var/lib/apt/lists/*
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Create app directory
-WORKDIR /app
+# Copy application code
+COPY . .
 
-# Copy requirements
-COPY monitoring/requirements.txt .
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=docker
+ENV AGENT_NAME="Docker"
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Install additional monitoring dependencies
-RUN pip install --no-cache-dir \
-    docker \
-    aiohttp \
-    asyncpg \
-    aioredis \
-    neo4j \
-    psutil
-
-# Copy monitoring scripts
-COPY monitoring/self_healing_monitor.py /app/
-COPY self-healing/circuit_breaker.py /app/
-
-# Create logs directory
-RUN mkdir -p /app/logs
-
-# Set permissions
-RUN chmod +x /app/self_healing_monitor.py
-RUN chmod +x /app/circuit_breaker.py
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
+# HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
     CMD python3 -c "import requests; requests.get('http://localhost:8080/health', timeout=5)"
 
 # Default command
 
 # Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
+
+# Expose port
+EXPOSE 8080
 
 CMD ["python3", "/app/self_healing_monitor.py"]

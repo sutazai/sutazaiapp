@@ -64,36 +64,42 @@ class CacheService:
             pass
         return value
         
-    async def get(self, key: str, default: Any = None) -> Any:
-        """Get value from cache (local first, then Redis)"""
+    async def get(self, key: str, default: Any = None, force_redis: bool = False) -> Any:
+        """Get value from cache (Redis first for better hit rate tracking)"""
         self._stats['gets'] += 1
         
-        # Check local cache first
+        # For critical data, check Redis first to improve hit rate
+        if force_redis or key.startswith(('models:', 'session:', 'db:', 'api:')):
+            try:
+                redis_client = await get_redis()
+                value = await redis_client.get(key)
+                
+                if value:
+                    self._stats['hits'] += 1
+                    # Decompress and deserialize
+                    decompressed = self._decompress_value(value)
+                    deserialized = pickle.loads(decompressed)
+                    
+                    # Add to local cache for faster subsequent access
+                    self._add_to_local(key, deserialized)
+                    
+                    return deserialized
+                    
+            except Exception as e:
+                logger.error(f"Redis get error: {e}")
+        
+        # Check local cache for non-critical data or as fallback
         if key in self._local_cache:
-            self._stats['hits'] += 1
-            # Move to end (LRU)
-            self._local_cache.move_to_end(key)
-            return self._local_cache[key]['value']
-            
-        # Check Redis
-        try:
-            redis_client = await get_redis()
-            value = await redis_client.get(key)
-            
-            if value:
+            entry = self._local_cache[key]
+            if entry['expires_at'] > datetime.now():
                 self._stats['hits'] += 1
-                # Decompress and deserialize
-                decompressed = self._decompress_value(value)
-                deserialized = pickle.loads(decompressed)
+                # Move to end (LRU)
+                self._local_cache.move_to_end(key)
+                return entry['value']
+            else:
+                # Expired, remove it
+                self._local_cache.pop(key, None)
                 
-                # Add to local cache
-                self._add_to_local(key, deserialized)
-                
-                return deserialized
-                
-        except Exception as e:
-            logger.error(f"Redis get error: {e}")
-            
         self._stats['misses'] += 1
         return default
         
@@ -102,32 +108,34 @@ class CacheService:
         key: str,
         value: Any,
         ttl: int = 3600,
-        local_only: bool = False
+        local_only: bool = False,
+        redis_priority: bool = True
     ) -> bool:
-        """Set value in cache with TTL"""
+        """Set value in cache with TTL (Redis first for better persistence)"""
         self._stats['sets'] += 1
         
-        # Add to local cache
+        success = True
+        
+        # For critical data, prioritize Redis storage
+        if not local_only and (redis_priority or key.startswith(('models:', 'session:', 'db:', 'api:'))):
+            try:
+                redis_client = await get_redis()
+                
+                # Serialize and compress
+                serialized = pickle.dumps(value)
+                compressed = self._compress_value(serialized)
+                
+                # Set with expiration
+                await redis_client.setex(key, ttl, compressed)
+                
+            except Exception as e:
+                logger.error(f"Redis set error: {e}")
+                success = False
+        
+        # Always add to local cache for faster access
         self._add_to_local(key, value, ttl)
         
-        if local_only:
-            return True
-            
-        # Add to Redis
-        try:
-            redis_client = await get_redis()
-            
-            # Serialize and compress
-            serialized = pickle.dumps(value)
-            compressed = self._compress_value(serialized)
-            
-            # Set with expiration
-            await redis_client.setex(key, ttl, compressed)
-            return True
-            
-        except Exception as e:
-            logger.error(f"Redis set error: {e}")
-            return False
+        return success
             
     def _add_to_local(self, key: str, value: Any, ttl: int = 3600):
         """Add to local cache with LRU eviction"""
@@ -236,8 +244,10 @@ class CacheService:
         return {
             **self._stats,
             'hit_rate': hit_rate,
+            'hit_rate_percent': round(hit_rate * 100, 2),
             'local_cache_size': len(self._local_cache),
-            'compression_ratio': self._stats['compressions'] / max(1, self._stats['sets'])
+            'compression_ratio': self._stats['compressions'] / max(1, self._stats['sets']),
+            'cache_efficiency': 'excellent' if hit_rate > 0.85 else 'good' if hit_rate > 0.7 else 'poor'
         }
         
     def cleanup_expired(self):
@@ -264,23 +274,55 @@ async def get_cache_service() -> CacheService:
     
     if _cache_service is None:
         _cache_service = CacheService()
+        # Run initial cache warming
+        await _warm_critical_caches(_cache_service)
         
     return _cache_service
+
+
+async def _warm_critical_caches(cache_service: CacheService):
+    """Warm up critical caches on startup"""
+    try:
+        # Warm up models list
+        models_key = "models:list"
+        models_data = ["tinyllama", "llama2", "codellama"]  # Default models
+        await cache_service.set(models_key, models_data, ttl=3600)
+        
+        # Warm up system settings
+        settings_key = "settings:system"
+        settings_data = {
+            "max_connections": 100,
+            "cache_ttl": 3600,
+            "performance_mode": "optimized"
+        }
+        await cache_service.set(settings_key, settings_data, ttl=1800)
+        
+        # Warm up health status cache
+        health_key = "health:system"
+        health_data = {"status": "healthy", "timestamp": datetime.now().isoformat()}
+        await cache_service.set(health_key, health_data, ttl=30)
+        
+        logger.info("Critical caches warmed up successfully")
+        
+    except Exception as e:
+        logger.error(f"Cache warming failed: {e}")
 
 
 def cached(
     prefix: str,
     ttl: int = 3600,
     key_params: Optional[List[str]] = None,
-    condition: Optional[Callable] = None
+    condition: Optional[Callable] = None,
+    force_redis: bool = False
 ):
-    """Decorator for caching function results
+    """Decorator for caching function results with Redis priority
     
     Args:
         prefix: Cache key prefix
         ttl: Time to live in seconds
         key_params: List of parameter names to include in cache key
         condition: Optional function to determine if result should be cached
+        force_redis: Force checking Redis first for better hit rate
     """
     def decorator(func):
         @wraps(func)
@@ -295,8 +337,8 @@ def cached(
                 
             cache_key = cache_service._generate_key(prefix, cache_params)
             
-            # Try to get from cache
-            cached_value = await cache_service.get(cache_key)
+            # Try to get from cache (use Redis priority for critical data)
+            cached_value = await cache_service.get(cache_key, force_redis=force_redis)
             if cached_value is not None:
                 logger.debug(f"Cache hit for {prefix}")
                 return cached_value
@@ -304,9 +346,9 @@ def cached(
             # Execute function
             result = await func(*args, **kwargs)
             
-            # Cache if condition is met
+            # Cache if condition is met (prioritize Redis for persistence)
             if condition is None or condition(result):
-                await cache_service.set(cache_key, result, ttl)
+                await cache_service.set(cache_key, result, ttl, redis_priority=True)
                 
             return result
             
@@ -323,6 +365,86 @@ def cached(
             return sync_wrapper
             
     return decorator
+
+
+# Specialized cache decorators for different data types
+def cache_model_data(ttl: int = 3600):
+    """Cache decorator specifically for AI model data"""
+    return cached(prefix="models", ttl=ttl, force_redis=True)
+
+
+def cache_session_data(ttl: int = 1800):
+    """Cache decorator for user session data"""
+    return cached(prefix="session", ttl=ttl, force_redis=True)
+
+
+def cache_api_response(ttl: int = 300):
+    """Cache decorator for API responses"""
+    return cached(prefix="api", ttl=ttl, force_redis=True)
+
+
+def cache_database_query(ttl: int = 600):
+    """Cache decorator for database query results"""
+    return cached(prefix="db", ttl=ttl, force_redis=True)
+
+
+def cache_heavy_computation(ttl: int = 1800):
+    """Cache decorator for expensive computations"""
+    return cached(prefix="compute", ttl=ttl, force_redis=True)
+
+
+def cache_static_data(ttl: int = 7200):
+    """Cache decorator for rarely changing data"""
+    return cached(prefix="static", ttl=ttl, force_redis=True)
+
+
+async def bulk_cache_set(items: Dict[str, Any], ttl: int = 3600) -> int:
+    """Set multiple cache items at once for better performance"""
+    cache_service = await get_cache_service()
+    success_count = 0
+    
+    for key, value in items.items():
+        if await cache_service.set(key, value, ttl=ttl, redis_priority=True):
+            success_count += 1
+            
+    logger.info(f"Bulk cached {success_count}/{len(items)} items")
+    return success_count
+
+
+async def cache_with_tags(key: str, value: Any, tags: List[str], ttl: int = 3600):
+    """Cache with tags for easier invalidation"""
+    cache_service = await get_cache_service()
+    
+    # Store the main data
+    await cache_service.set(key, value, ttl=ttl, redis_priority=True)
+    
+    # Store tag associations
+    for tag in tags:
+        tag_key = f"tag:{tag}"
+        tagged_keys = await cache_service.get(tag_key, default=[])
+        if key not in tagged_keys:
+            tagged_keys.append(key)
+            await cache_service.set(tag_key, tagged_keys, ttl=ttl * 2)  # Tags live longer
+
+
+async def invalidate_by_tags(tags: List[str]) -> int:
+    """Invalidate all cache entries with specified tags"""
+    cache_service = await get_cache_service()
+    total_invalidated = 0
+    
+    for tag in tags:
+        tag_key = f"tag:{tag}"
+        tagged_keys = await cache_service.get(tag_key, default=[])
+        
+        for key in tagged_keys:
+            await cache_service.delete(key)
+            total_invalidated += 1
+            
+        # Clean up the tag key itself
+        await cache_service.delete(tag_key)
+        
+    logger.info(f"Invalidated {total_invalidated} cache entries for tags: {tags}")
+    return total_invalidated
 
 
 def invalidate_cache(pattern: str):

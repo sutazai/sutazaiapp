@@ -93,7 +93,7 @@ backup_current_state() {
     docker inspect "$SERVICE_NAME" > "$BACKUP_DIR/inspect.json" 2>&1 || true
     
     log "Backup created in: $BACKUP_DIR"
-    echo "$BACKUP_DIR" > /tmp/hardware-optimizer-backup-location.txt
+    echo "$BACKUP_DIR" > "$(mktemp /tmp/hardware-optimizer-backup-location.txt.XXXXXX)"
 }
 
 # Stop service gracefully

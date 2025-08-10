@@ -1,31 +1,26 @@
-# Base Python image with health check and common dependencies
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-# Install health check tools and common dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    netcat-openbsd \
-    procps \
-    && rm -rf /var/lib/apt/lists/*
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Create non-root user
-RUN useradd -m -u 1000 appuser
+# Copy application code
+COPY . .
 
-# Add health check endpoint
-RUN pip install --no-cache-dir flask aiohttp
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=python-base-fix
+ENV AGENT_NAME="Python Base Fix"
 
-# Add simple health check server
-RUN echo 'from flask import Flask\n\
-app = Flask(__name__)\n\
-@app.route("/health")\n\
-def health():\n\
-    return {"status": "healthy"}, 200\n\
-if __name__ == "__main__":\n\
-    app.run(host="0.0.0.0", port=8080)' > /tmp/health_server.py
-
-# Default health check
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
+# Expose port
+EXPOSE 8080
+
+# Switch to non-root user for security
 USER appuser
+
+# Default command
+CMD ["python", "-u", "app.py"]

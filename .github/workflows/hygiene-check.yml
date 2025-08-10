@@ -56,12 +56,12 @@ jobs:
     - name: Run custom hygiene checks
       run: |
         echo "Running custom hygiene checks..."
-        python scripts/check_secrets.py
-        python scripts/check_naming.py
-        python scripts/check_duplicates.py
-        python scripts/validate_agents.py
-        python scripts/check_requirements.py
-        python scripts/enforce_claude_md_simple.py
+        bash scripts/script-discovery-bootstrap.sh exec_script check_secrets.py
+        bash scripts/script-discovery-bootstrap.sh exec_script check_naming.py
+        bash scripts/script-discovery-bootstrap.sh exec_script check_duplicates.py
+        bash scripts/script-discovery-bootstrap.sh exec_script validate_agents.py
+        bash scripts/script-discovery-bootstrap.sh exec_script check_requirements.py
+        bash scripts/script-discovery-bootstrap.sh exec_script enforce_claude_md_simple.py
 
     - name: Check for large files
       run: |

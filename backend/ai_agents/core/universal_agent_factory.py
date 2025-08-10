@@ -24,7 +24,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Type, Union, Callable
 
-from .base_agent import BaseAgent, AgentConfig, AgentCapability, AgentStatus
+from agents.core.base_agent import BaseAgent, AgentConfig, AgentCapability, AgentStatus
 
 
 class AgentTemplate:

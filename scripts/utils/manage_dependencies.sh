@@ -1,7 +1,25 @@
 #!/bin/bash
+
+# Strict error handling
+set -euo pipefail
+
 # Systematically manage all dependencies with version control and hash verification
 
 # Configuration
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 PYTHON_REQUIRED="3.11"
 VIRTUALENV_VERSION="20.16.7"
 VIRTUALENV_HASH="sha256:330618a7970b6596b79c4b45a60a51bfbaa5fcf0d77ac7e0697b1307eafde145"

@@ -1,25 +1,22 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-RUN pip install --no-cache-dir \
-    jax[cpu] \
-    flax \
-    optax \
-    fastapi \
-    uvicorn
+# Copy application code
+COPY . .
 
-COPY web_interface.py .
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=jax
+ENV AGENT_NAME="Jax"
 
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
+
+# Expose port
 EXPOSE 8080
-
-
-# Run as non-root user
-USER nobody
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
 
 CMD ["python", "web_interface.py"]

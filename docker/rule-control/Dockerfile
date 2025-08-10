@@ -1,46 +1,26 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-LABEL maintainer="Sutazai Rule Control Team"
-LABEL description="Intelligent Rule Control API"
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+# Copy application code
+COPY . .
 
-# Create app user  
-RUN groupadd -r rulecontrol && useradd -r -g rulecontrol rulecontrol
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8100
+ENV AGENT_ID=rule-control
+ENV AGENT_NAME="Rule Control"
 
-WORKDIR /app
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8100/health || curl -f http://localhost:8100/ || exit 1
 
-# Copy requirements
-COPY docker/rule-control/requirements.txt .
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application
-COPY scripts/agents/rule-control-manager.py ./app.py
-COPY docker/rule-control/entrypoint.sh ./entrypoint.sh
-
-# Create directories
-RUN mkdir -p /app/config /app/logs && \
-    chown -R rulecontrol:rulecontrol /app
-
-RUN chmod +x ./entrypoint.sh
-
-USER rulecontrol
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8100/api/health/live || exit 1
-
+# Expose port
 EXPOSE 8100
 
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
+# Switch to non-root user for security
 USER appuser
 
-ENTRYPOINT ["./entrypoint.sh"]
+# Default command
+CMD ["python", "-u", "app.py"]

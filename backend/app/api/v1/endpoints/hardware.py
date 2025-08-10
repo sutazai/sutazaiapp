@@ -21,7 +21,11 @@ import httpx
 
 # Import core services
 from app.core.connection_pool import get_http_client, get_pool_manager
-from app.core.cache import get_cache_service, cached
+from app.core.cache import (
+    get_cache_service, cached, cache_model_data, cache_session_data,
+    cache_api_response, cache_database_query, cache_heavy_computation,
+    cache_static_data
+)
 from app.core.task_queue import get_task_queue, create_background_task
 from app.auth.dependencies import get_current_user, require_permissions, get_optional_user
 
@@ -418,7 +422,7 @@ async def get_hardware_client() -> HardwareServiceClient:
 # API Endpoints with comprehensive functionality
 
 @router.get("/health", response_model=HardwareStatus, summary="Hardware Service Health Check")
-@cached(prefix="hardware_health", ttl=30)
+@cache_api_response(ttl=30)
 async def get_hardware_service_health():
     """
     Get hardware optimization service health status with detailed metrics.
@@ -474,6 +478,7 @@ async def get_detailed_status(
         )
 
 @router.get("/metrics", response_model=SystemMetrics, summary="System Metrics Collection")
+@cache_api_response(ttl=10)
 async def get_system_metrics(
     include_processes: bool = Query(default=True, description="Include process-level metrics"),
     include_network: bool = Query(default=True, description="Include network metrics"),
@@ -654,7 +659,7 @@ async def start_optimization(
         )
 
 @router.get("/optimize", summary="List Active Optimizations")
-@cached(prefix="active_optimizations", ttl=30)
+@cache_api_response(ttl=30)
 async def list_active_optimizations(
     status_filter: Optional[str] = Query(None, description="Filter by optimization status"),
     user_filter: Optional[str] = Query(None, description="Filter by user (admin only)"),
@@ -701,7 +706,7 @@ async def list_active_optimizations(
         )
 
 @router.get("/optimize/{task_id}", response_model=OptimizationResult, summary="Get Optimization Status")
-@cached(prefix="optimization_status", ttl=10, key_params=["task_id"])
+@cache_api_response(ttl=10)
 async def get_optimization_status(
     task_id: str = Path(..., description="Optimization task ID"),
     current_user = Depends(get_current_user)
@@ -791,7 +796,7 @@ async def cancel_optimization(
         )
 
 @router.get("/processes", response_model=List[ProcessInfo], summary="List System Processes")
-@cached(prefix="processes", ttl=10)
+@cache_api_response(ttl=10)
 async def get_processes(
     sort_by: SortField = Query(default=SortField.CPU, description="Sort processes by field"),
     limit: int = Query(default=50, ge=1, le=500, description="Maximum number of processes to return"),
@@ -907,7 +912,7 @@ async def control_process(
         )
 
 @router.get("/monitoring/config", summary="Get Monitoring Configuration")
-@cached(prefix="monitoring_config", ttl=300)
+@cache_static_data(ttl=300)
 async def get_monitoring_config(
     current_user = Depends(get_current_user)
 ):
@@ -1109,7 +1114,7 @@ async def acknowledge_alert(
         )
 
 @router.get("/recommendations", response_model=List[RecommendationInfo], summary="Get AI Optimization Recommendations")
-@cached(prefix="hardware_recommendations", ttl=1800)  # 30 minutes
+@cache_heavy_computation(ttl=1800)  # 30 minutes
 async def get_optimization_recommendations(
     category: Optional[str] = Query(None, description="Filter by recommendation category"),
     priority: Optional[Priority] = Query(None, description="Filter by priority level"),
@@ -1245,7 +1250,7 @@ async def run_system_benchmark(
         )
 
 @router.get("/benchmark/{task_id}", response_model=BenchmarkResult, summary="Get Benchmark Results")
-@cached(prefix="benchmark_result", ttl=300, key_params=["task_id"])
+@cache_api_response(ttl=300)
 async def get_benchmark_results(
     task_id: str = Path(..., description="Benchmark task ID"),
     include_raw_data: bool = Query(default=False, description="Include raw benchmark data"),

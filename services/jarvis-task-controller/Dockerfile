@@ -1,29 +1,22 @@
-# Production-ready Dockerfile for jarvis-task-controller (FastAPI)
+FROM sutazai-python-agent-master:latest
 
-FROM python:3.11-slim-bullseye AS base
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Builder: install dependencies in a venv
-FROM base AS builder
-COPY requirements.txt /tmp/requirements.txt
-RUN python -m venv /opt/venv \
-    && . /opt/venv/bin/activate \
-    && pip install --upgrade pip \
-    && pip install -r /tmp/requirements.txt
+# Copy application code
+COPY . .
 
-# Final: copy app and venv, run as non-root
-FROM base AS final
-COPY --from=builder /opt/venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-COPY . /app
-RUN useradd -r -u 10002 -g root appuser \
-    && chown -R appuser:root /app
-USER appuser
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=jarvis-task-controller
+ENV AGENT_NAME="Jarvis Task Controller"
 
-# Expect src/main.py to start FastAPI with Uvicorn
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
+
+# Expose port
+EXPOSE 8080
+
 CMD ["python", "src/main.py"]
-

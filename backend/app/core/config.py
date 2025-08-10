@@ -32,7 +32,17 @@ class Settings(BaseSettings):
     
     # API Configuration
     API_V1_PREFIX: str = "/api/v1"
-    BACKEND_CORS_ORIGINS: List[str] = ["*"]
+    # Security: Specify exact allowed origins instead of wildcard
+    # These are the legitimate services that need CORS access
+    BACKEND_CORS_ORIGINS: List[str] = [
+        "http://localhost:10011",  # Frontend Streamlit UI
+        "http://localhost:10010",  # Backend itself (for Swagger UI)
+        "http://localhost:3000",   # Development frontend (if needed)
+        "http://127.0.0.1:10011",  # Alternative localhost
+        "http://127.0.0.1:10010",  # Alternative localhost backend
+        # Add production domains here when deployed
+        # "https://sutazai.example.com",
+    ]
     
     # Database
     POSTGRES_HOST: str = Field("postgres", env="POSTGRES_HOST")

@@ -5,6 +5,20 @@
 set -euo pipefail
 
 # Configuration
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 BACKUP_DIR="${PROJECT_ROOT}/backups/migration-$(date +%Y%m%d-%H%M%S)"
@@ -179,7 +193,7 @@ migrate_data() {
         log_info "Migrating PostgreSQL data..."
         
         # Create backup from old database
-        docker exec sutazai-postgres pg_dump -U sutazai sutazai > /tmp/sutazai-db.sql
+        docker exec sutazai-postgres pg_dump -U sutazai sutazai > "$(mktemp /tmp/sutazai-db.sql.XXXXXX)"
         
         # Restore to new primary
         docker exec -i $(docker ps -q -f name=postgres-primary) psql -U sutazai sutazai < /tmp/sutazai-db.sql

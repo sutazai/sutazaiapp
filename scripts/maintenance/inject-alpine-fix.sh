@@ -5,6 +5,20 @@
 
 set -e
 
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 echo "=== Injecting Alpine Container Fixes ==="
 
 # List of containers to fix
@@ -16,7 +30,7 @@ CONTAINERS=(
 )
 
 # Create fixed app.py that doesn't require external dependencies for basic operation
-cat > /tmp/minimal_app.py << 'EOF'
+cat > "$(mktemp /tmp/minimal_app.py.XXXXXX)" << 'EOF'
 #!/usr/bin/env python3
 import json
 import time

@@ -204,7 +204,12 @@ class UnifiedOrchestrationAPI:
         
         self.app.add_middleware(
             CORSMiddleware,
-            allow_origins=["*"],  # Configure appropriately for production
+            allow_origins=[
+        "http://localhost:10011",  # Frontend Streamlit UI
+        "http://localhost:10010",  # Backend API
+        "http://127.0.0.1:10011",  # Alternative localhost
+        "http://127.0.0.1:10010",  # Alternative localhost
+    ],  # Configure appropriately for production
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],

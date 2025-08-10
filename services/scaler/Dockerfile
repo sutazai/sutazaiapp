@@ -1,32 +1,22 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
-RUN pip install --no-cache-dir \
-    docker \
-    python-consul \
-    redis \
-    prometheus-client \
-    requests \
-    asyncio
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
 # Copy application code
-COPY service_scaler.py /app/
+COPY . .
 
-# Make executable
-RUN chmod +x /app/service_scaler.py
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=scaler
+ENV AGENT_NAME="Scaler"
 
-# Run the scaler
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
+# Expose port
+EXPOSE 8080
 
 CMD ["python", "/app/service_scaler.py"]

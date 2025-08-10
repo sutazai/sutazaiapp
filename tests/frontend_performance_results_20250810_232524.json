@@ -1,0 +1,97 @@
+{
+  "timestamp": "2025-08-10T23:24:48.830040",
+  "test_results": {
+    "load_times": {
+      "mean": 0.0026458581288655598,
+      "median": 0.002558469772338867,
+      "min": 0.002077341079711914,
+      "max": 0.003269195556640625,
+      "std_dev": 0.00029826040185282126,
+      "sample_count": 15,
+      "raw_times": [
+        0.003269195556640625,
+        0.002920866012573242,
+        0.0024330615997314453,
+        0.002077341079711914,
+        0.0025544166564941406,
+        0.002966165542602539,
+        0.002733469009399414,
+        0.002343416213989258,
+        0.002496004104614258,
+        0.0027174949645996094,
+        0.002558469772338867,
+        0.0025186538696289062,
+        0.0024416446685791016,
+        0.002682924270629883,
+        0.0029747486114501953
+      ]
+    },
+    "caching": {
+      "first_request_time": 0.002554178237915039,
+      "second_request_time": 0.0026717185974121094,
+      "improvement_percent": -4.601885559600485,
+      "caching_effective": false
+    },
+    "load_testing": {
+      "concurrent_users": 5,
+      "duration_seconds": 20,
+      "total_requests": 962,
+      "successful_requests": 962,
+      "failed_requests": 0,
+      "average_response_time": 0.003766015017106974,
+      "requests_per_second": 47.85424564181251,
+      "errors": []
+    },
+    "functionality": {
+      "tests": {
+        "homepage_accessible": true,
+        "streamlit_app_loads": true,
+        "health_endpoint": true,
+        "static_resources": true
+      },
+      "errors": [],
+      "overall_functional": true
+    },
+    "final_container_stats": {
+      "memory_used_mb": 49.43,
+      "memory_limit_mb": 512.0,
+      "memory_percent": 9.654296875,
+      "cpu_percent": 0.0,
+      "raw_stats": {
+        "BlockIO": "8.13MB / 0B",
+        "CPUPerc": "0.00%",
+        "Container": "sutazai-frontend",
+        "ID": "ad64015d2427",
+        "MemPerc": "9.65%",
+        "MemUsage": "49.43MiB / 512MiB",
+        "Name": "sutazai-frontend",
+        "NetIO": "6.28MB / 13.8MB",
+        "PIDs": "1"
+      }
+    }
+  },
+  "baseline_measurements": {
+    "container_stats": {
+      "memory_used_mb": 48.55,
+      "memory_limit_mb": 512.0,
+      "memory_percent": 9.482421875,
+      "cpu_percent": 0.0,
+      "raw_stats": {
+        "BlockIO": "6.87MB / 0B",
+        "CPUPerc": "0.00%",
+        "Container": "sutazai-frontend",
+        "ID": "ad64015d2427",
+        "MemPerc": "9.48%",
+        "MemUsage": "48.55MiB / 512MiB",
+        "Name": "sutazai-frontend",
+        "NetIO": "5.6MB / 12.2MB",
+        "PIDs": "1"
+      }
+    }
+  },
+  "performance_claims": {
+    "load_time_improvement": "70%",
+    "memory_reduction": "60%"
+  },
+  "validation_status": "PASS"
+}

@@ -1,41 +1,23 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    procps \
-    && rm -rf /var/lib/apt/lists/*
+# Copy application code
+COPY . .
 
-# Copy requirements
-COPY task_assignment_coordinator/requirements.txt .
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8551
+ENV AGENT_ID=task-assignment-coordinator
+ENV AGENT_NAME="Task Assignment Coordinator"
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application files
-COPY task_assignment_coordinator /app
-
-# Copy core module
-COPY core /app/core
-
-# Create directories and set up Python path
-RUN mkdir -p /app/logs /app/data
-ENV PYTHONPATH=/app:/app/agents:/opt/sutazaiapp/agents
-
-# Create non-root user with proper permissions
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && chown -R appuser:appuser /app
-
-USER appuser
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+# HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8551/health || exit 1
+
+# Expose port
 
 # Expose port
 EXPOSE 8551
 
-# Start application
 CMD ["python", "app.py"]

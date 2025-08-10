@@ -1,0 +1,21 @@
+{
+  "start_time": "2025-08-10T18:02:17.554659",
+  "environment": "development",
+  "python_version": "3.12.3 (main, Jun 18 2025, 17:59:45) [GCC 13.3.0]",
+  "tests_executed": [],
+  "total_passed": 631,
+  "total_failed": 4,
+  "total_skipped": 0,
+  "end_time": "2025-08-10T18:02:19.321923",
+  "final_result": {
+    "test_type": "syntax_validation",
+    "passed": 631,
+    "failed": 4,
+    "errors": [
+      "/opt/sutazaiapp/backend/test_cors_security.py: invalid syntax (test_cors_security.py, line 60)",
+      "/opt/sutazaiapp/backend/app/agent_orchestrator.py: unexpected indent (agent_orchestrator.py, line 7)",
+      "/opt/sutazaiapp/agents/task_assignment_coordinator/app.py: expected an indented block after 'if' statement on line 369 (app.py, line 371)",
+      "/opt/sutazaiapp/scripts/monitoring/comprehensive-agent-health-monitor.py: invalid syntax (comprehensive-agent-health-monitor.py, line 81)"
+    ]
+  }
+}

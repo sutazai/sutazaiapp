@@ -1,30 +1,22 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-WORKDIR /app
+# Copy application code
+COPY . .
 
-# Copy requirements
-COPY docker/hygiene-validator/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=hygiene-validator
+ENV AGENT_NAME="Hygiene Validator"
 
-# Copy validator script
-COPY docker/hygiene-validator/rule_validator.py .
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
-# Create directories
-RUN mkdir -p /app/rules /app/reports
+# Expose port
+EXPOSE 8080
 
-# Run as non-root
-RUN useradd -m -u 1000 validator && chown -R validator:validator /app
-USER validator
-
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
-
-ENTRYPOINT ["python", "rule_validator.py"]
+CMD ["python", "-u", "app.py"]

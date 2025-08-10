@@ -1,26 +1,22 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Update pip first to avoid issues
-RUN pip install --upgrade pip
+# Copy application code
+COPY . .
 
-# Install minimal dependencies
-RUN pip install --no-cache-dir \
-    httpx \
-    pydantic
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=code-generation-improver
+ENV AGENT_NAME="Code Generation Improver"
 
-# Copy agent code
-COPY agent.py .
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
-# Run the agent
-
-# Run as non-root user
-USER nobody
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
+# Expose port
+EXPOSE 8080
 
 CMD ["python", "agent.py"]

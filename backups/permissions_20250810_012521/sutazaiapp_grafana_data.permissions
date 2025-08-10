@@ -1,9 +1,0 @@
-total 1772
-drwxrwxrwx 7  472 root    4096 Aug 10 01:25 .
-drwx-----x 3 root root    4096 Aug  9 00:22 ..
-drwx------ 2  472 root    4096 Aug  9 00:22 csv
-drwxr-xr-x 2 root root    4096 Aug  9 00:22 dashboards
--rw-r----- 1  472 root 1781760 Aug 10 01:25 grafana.db
-drwx------ 2  472 root    4096 Aug  9 00:22 pdf
-drwxrwxrwx 6  472 root    4096 Aug  9 00:22 plugins
-drwx------ 2  472 root    4096 Aug  9 00:22 png

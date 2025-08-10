@@ -31,7 +31,7 @@ from collections import defaultdict, deque
 import aioredis
 from pydantic import BaseModel
 
-from .base_agent import BaseAgent, AgentStatus, AgentCapability
+from agents.core.base_agent import BaseAgent, AgentStatus, AgentCapability
 
 
 class RegistryStatus(Enum):

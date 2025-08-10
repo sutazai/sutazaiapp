@@ -1,5 +1,5 @@
 # Multi-stage build for minimal production image
-FROM python:3.11-slim as builder
+FROM python:3.12.8-slim-bookworm as builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -19,7 +19,7 @@ COPY requirements/prod.txt requirements.txt
 RUN pip install --no-cache-dir --user -r requirements.txt
 
 # Production stage
-FROM python:3.11-slim
+FROM python:3.12.8-slim-bookworm
 
 # Install runtime dependencies only
 RUN apt-get update && apt-get install -y \

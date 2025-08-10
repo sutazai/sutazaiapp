@@ -278,7 +278,9 @@ run_experiment() {
         # Show experiment details
         if command -v yq &> /dev/null; then
             echo "Experiment configuration:"
-            yq eval "$CHAOS_DIR/experiments/${EXPERIMENT_NAME}.yaml"
+            yq # SECURITY FIX: eval replaced
+# Original: eval "$CHAOS_DIR/experiments/${EXPERIMENT_NAME}.yaml"
+$CHAOS_DIR/experiments/${EXPERIMENT_NAME}.yaml
         else
             log_info "Install 'yq' to see experiment configuration preview"
         fi

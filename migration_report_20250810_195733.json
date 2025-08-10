@@ -1,0 +1,660 @@
+{
+  "timestamp": "2025-08-10T19:57:33.773824",
+  "stats": {
+    "total": 174,
+    "migrated": 3,
+    "skipped": 24,
+    "failed": 0,
+    "already_migrated": 102
+  },
+  "details": [
+    {
+      "path": "/opt/sutazaiapp/docker/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/Dockerfile.agent-base",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/Dockerfile.streamlit",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/Dockerfile.healthcheck",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/data-analysis-engineer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/observability-monitoring-engineer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/agentzero/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/hygiene-backend/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/product-strategy-architect/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/rule-control/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/python-base-fix/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/python-agent-base/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/agent-message-bus/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/cognitive-architecture-designer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/private-data-analyst/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/fsdp/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/awesome-code-ai/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/chromadb-secure/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (chromadb)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/flowiseai-flow-manager/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/dify-automation-specialist/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/self-healing/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/qdrant-secure/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (qdrant)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/hygiene-reporter/Dockerfile",
+      "status": "skipped",
+      "reason": "unknown_technology"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/ollama-integration/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/causal-inference-expert/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/multi-modal-fusion-coordinator/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/jarvis-agi/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/base/Dockerfile.python-agent-minimal",
+      "status": "skipped",
+      "reason": "base_image"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/base/Dockerfile.monitoring-base",
+      "status": "skipped",
+      "reason": "base_image"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/base/Dockerfile.nodejs-agent-master",
+      "status": "skipped",
+      "reason": "base_image"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/base/Dockerfile.golang-base",
+      "status": "skipped",
+      "reason": "base_image"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/base/Dockerfile.gpu-python-base",
+      "status": "skipped",
+      "reason": "infrastructure_service (nvidia/cuda)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/base/Dockerfile.python-agent-master",
+      "status": "skipped",
+      "reason": "base_image"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/tensorflow/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (tensorflow/tensorflow)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/health-check/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/context-framework/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/task-scheduler/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/browser-use/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/resource-arbitration-agent/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/privategpt/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/synthetic-data-generator/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/langflow/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/meta-learning-specialist/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/pentestgpt/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/alpine-base-fix/Dockerfile",
+      "status": "migrated",
+      "technology": "python",
+      "base_image": "sutazai-python-agent-master:latest"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/agent-registry/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/data-pipeline-engineer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/self-healing-orchestrator/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/transformers-migration-specialist/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/symbolic-reasoning-engine/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/hygiene-scanner/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/tabbyml/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (nvidia/cuda)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/senior-ai-engineer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/api-gateway/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/context-engineering/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/hygiene-validator/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/hardware-optimizer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/reinforcement-learning-trainer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/jarvis-voice-interface/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/knowledge-distillation-expert/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/knowledge-manager/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/context-optimizer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/agent-base/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/task-assignment-coordinator/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/nginx/Dockerfile",
+      "status": "skipped",
+      "reason": "unknown_technology"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/service-hub/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/documind/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/faiss/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/federated-learning-coordinator/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/redis-secure/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (redis)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/autogpt-real/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/ollama-monitor/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/mesh-worker/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/distributed-computing-architect/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/shellgpt/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/garbage-collector-coordinator/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/semgrep/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/skyvern/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (mcr.microsoft.com)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/multi-agent-coordinator/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/monitoring/Dockerfile.agent-monitor",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/gradient-compression-specialist/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/neo4j-secure/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (neo4j)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/dify/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/episodic-memory-engineer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/jarvis-ai/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/bigagi-system-manager/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/intelligence-optimization-monitor/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/ollama-secure/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (ollama/ollama)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/hygiene-dashboard/Dockerfile",
+      "status": "skipped",
+      "reason": "unknown_technology"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/postgres-secure/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (postgres)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/babyagi/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/jax/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/browser-automation-orchestrator/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/health-monitor/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/rabbitmq-secure/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (rabbitmq)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/autogen/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/agentgpt-autonomous-executor/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/flowise/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/bigagi/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/explainable-ai-specialist/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/code-generation-improver/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/localagi-orchestration-manager/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/mcp_server/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/memory-persistence-manager/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/fms-fsdp/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/localagi/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/pytorch/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (pytorch/pytorch)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/enhanced-model-manager/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/neuromorphic-computing-expert/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/attention-optimizer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/semgrep-security-analyzer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/mcp-server/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/infrastructure-devops/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/knowledge-graph-builder/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/tabbyml-cpu/Dockerfile",
+      "status": "skipped",
+      "reason": "unknown_technology"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/code-improver/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/chainlit/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/opendevin/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/letta/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/mcp_server/playwright/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (mcr.microsoft.com)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/services/infrastructure/ollama/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (ollama/ollama)"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/services/monitoring/prometheus/Dockerfile",
+      "status": "skipped",
+      "reason": "infrastructure_service (prometheus)"
+    },
+    {
+      "path": "/opt/sutazaiapp/node_modules/newman/docker/images/ubuntu/Dockerfile",
+      "status": "migrated",
+      "technology": "nodejs",
+      "base_image": "sutazai-nodejs-agent-master:latest"
+    },
+    {
+      "path": "/opt/sutazaiapp/node_modules/newman/docker/images/alpine/Dockerfile",
+      "status": "migrated",
+      "technology": "nodejs",
+      "base_image": "sutazai-nodejs-agent-master:latest"
+    },
+    {
+      "path": "/opt/sutazaiapp/services/jarvis-task-controller/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/services/jarvis-voice-handler/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/services/jarvis-model-manager/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/services/jarvis/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/services/scaler/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    }
+  ]
+}

@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Strict error handling
+set -euo pipefail
+
 # SutazAI Monitoring Setup Script
 # This script sets up the monitoring stack for SutazAI including:
 # - Prometheus for metrics collection
@@ -7,6 +11,20 @@
 # - Docker and docker-compose for containerization
 
 # Navigate to the project root directory
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 cd "$(dirname "$0")/.."
 PROJECT_ROOT=$(pwd)
 

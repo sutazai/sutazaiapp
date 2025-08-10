@@ -1,35 +1,22 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-WORKDIR /app
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
-# Install only what is needed for the worker
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Copy application code
+COPY . .
 
-COPY requirements/base.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=mesh-worker
+ENV AGENT_NAME="Mesh Worker"
 
-# Copy minimal code needed for the worker
-COPY scripts/mesh/ /app/scripts/mesh/
-COPY agents/agent_with_health.py /app/agents/agent_with_health.py
-COPY backend/app/mesh/ /app/backend/app/mesh/
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
-ENV PYTHONPATH=/app
-ENV REDIS_URL=redis://redis:6379/0
-ENV LOG_LEVEL=INFO
-
-# Defaults (can be overridden via environment)
-ENV MESH_TOPIC=nlp
-ENV MESH_GROUP=nlp
-ENV MESH_CONSUMER=worker-1
-ENV MESH_RESULTS=nlp
-
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
-USER appuser
+# Expose port
+EXPOSE 8080
 
 CMD ["python", "scripts/mesh/agent_stream_consumer.py", "--topic", "${MESH_TOPIC}", "--group", "${MESH_GROUP}", "--consumer", "${MESH_CONSUMER}", "--results", "${MESH_RESULTS}"]
-

@@ -18,13 +18,21 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Add CORS middleware
+# Add CORS middleware - SECURE: No wildcards
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8501", "http://172.31.77.193:8501", "*"],
+    allow_origins=[
+        "http://localhost:8501",    # Streamlit dev server
+        "http://localhost:10011",   # Frontend Streamlit UI
+        "http://localhost:10010",   # Backend API
+        "http://127.0.0.1:8501",    # Alt Streamlit dev server
+        "http://127.0.0.1:10011",   # Alt frontend
+        "http://127.0.0.1:10010",   # Alt backend
+        "http://172.31.77.193:8501", # Specific IP if needed
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 @app.get("/")

@@ -3,6 +3,20 @@
 
 set -euo pipefail
 
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 AUDIT_SCRIPT="$SCRIPT_DIR/hygiene-audit.sh"
 
@@ -27,7 +41,7 @@ echo "Current cron jobs:"
 crontab -l | grep hygiene || echo "No hygiene jobs found"
 
 # Create systemd timer as alternative (more reliable than cron)
-cat > /tmp/sutazai-hygiene-audit.service << EOF
+cat > "$(mktemp /tmp/sutazai-hygiene-audit.service.XXXXXX)" << EOF
 [Unit]
 Description=SutazAI Codebase Hygiene Audit
 After=network.target
@@ -40,7 +54,7 @@ StandardOutput=journal
 StandardError=journal
 EOF
 
-cat > /tmp/sutazai-hygiene-audit.timer << EOF
+cat > "$(mktemp /tmp/sutazai-hygiene-audit.timer.XXXXXX)" << EOF
 [Unit]
 Description=Run SutazAI Hygiene Audit daily
 Requires=sutazai-hygiene-audit.service

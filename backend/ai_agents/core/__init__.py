@@ -33,7 +33,7 @@ Usage:
     })
 """
 
-from .base_agent import (
+from agents.core.base_agent import (
     BaseAgent, 
     AgentMessage, 
     AgentStatus, 

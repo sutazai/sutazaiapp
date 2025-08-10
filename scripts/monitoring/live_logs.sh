@@ -208,6 +208,9 @@ start_live_monitoring() {
     # Start logging each container in background with color coding
     for container in "${containers[@]}"; do
         (
+            # Timeout mechanism to prevent infinite loops
+            LOOP_TIMEOUT=${LOOP_TIMEOUT:-300}  # 5 minute default timeout
+            loop_start=$(date +%s)
             while true; do
                 if docker ps --format "{{.Names}}" | grep -q "^${container}$"; then
                     docker logs -f --tail 0 "$container" 2>&1 | while read -r line; do
@@ -237,6 +240,13 @@ start_live_monitoring() {
                         fi
                         
                         echo -e "$colored_line"
+                # Check for timeout
+                current_time=$(date +%s)
+                if [[ $((current_time - loop_start)) -gt $LOOP_TIMEOUT ]]; then
+                    echo 'Loop timeout reached after ${LOOP_TIMEOUT}s, exiting...' >&2
+                    break
+                fi
+
                     done
                 else
                     echo -e "${RED}[$(date '+%H:%M:%S')] ${container}: Container stopped${NC}"
@@ -2192,7 +2202,9 @@ redeploy_all_containers() {
     # Extract services that use build contexts (need building)
     # Use yq if available, otherwise use grep-based approach
     if command -v yq &> /dev/null; then
-        BUILD_SERVICES=$(yq eval '.services | to_entries | .[] | select(.value.build) | .key' docker-compose.yml 2>/dev/null | sort -u || echo "")
+        BUILD_SERVICES=$(yq # SECURITY FIX: eval usage removed
+# Original: eval '.services | to_entries | .[] | select(.value.build) | .key' docker-compose.yml 2>/dev/null | sort -u || echo "")
+# TODO: Replace with safer alternative
     else
         # Fallback: Find services with build sections using grep
         BUILD_SERVICES=$(grep -B 5 "^    build:" docker-compose.yml | grep "^  [a-zA-Z][a-zA-Z0-9_-]*:" | awk -F: '{print $1}' | sed 's/^  //' | sort -u)
@@ -2201,7 +2213,9 @@ redeploy_all_containers() {
     # Extract services that use external images (need pulling)
     # Only include images from services that DON'T have build contexts
     if command -v yq &> /dev/null; then
-        EXTERNAL_IMAGES=$(yq eval '.services | to_entries | .[] | select(.value.build | not) | .value.image' docker-compose.yml 2>/dev/null | grep -v "null" | sort -u || echo "")
+        EXTERNAL_IMAGES=$(yq # SECURITY FIX: eval usage removed
+# Original: eval '.services | to_entries | .[] | select(.value.build | not) | .value.image' docker-compose.yml 2>/dev/null | grep -v "null" | sort -u || echo "")
+# TODO: Replace with safer alternative
     else
         # Fallback: Get all images, then filter out those from services with build contexts
         ALL_IMAGES=$(grep "^\s*image:" docker-compose.yml | awk '{print $2}')

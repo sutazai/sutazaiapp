@@ -9,6 +9,7 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Table, Text, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+# UUID imports removed - using Integer IDs to match database schema
 
 from app.core.database import Base
 
@@ -32,8 +33,7 @@ class User(Base):
     failed_login_attempts = Column(Integer, default=0)
     locked_until = Column(DateTime(timezone=True))
     
-    # Permissions system
-    permissions = Column(JSON, default=list, nullable=True)  # List of permission strings
+    # Note: permissions column removed to match actual database schema
     
     def __repr__(self):
         return f"<User(username='{self.username}', email='{self.email}')>"
@@ -75,13 +75,12 @@ class UserLogin(BaseModel):
 
 class UserInDB(UserBase):
     """User schema with database fields"""
-    id: int
+    id: int  # Changed from str to int to match database schema
     is_active: bool = True
     is_admin: bool = False
     created_at: datetime
     updated_at: Optional[datetime] = None
     last_login: Optional[datetime] = None
-    permissions: Optional[List[str]] = []
     
     class Config:
         from_attributes = True
@@ -89,7 +88,7 @@ class UserInDB(UserBase):
 
 class UserResponse(UserBase):
     """User response schema (public)"""
-    id: int
+    id: int  # Changed from str to int to match database schema
     is_active: bool = True
     is_admin: bool = False
     created_at: datetime
@@ -109,7 +108,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     """Token payload data"""
-    user_id: Optional[int] = None
+    user_id: Optional[int] = None  # Changed from str to int to match database schema
     username: Optional[str] = None
     email: Optional[str] = None
     is_admin: bool = False

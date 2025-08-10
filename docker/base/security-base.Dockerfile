@@ -1,6 +1,6 @@
 # Multi-stage security-hardened base image
 # Stage 1: Build environment
-FROM python:3.11-slim as builder
+FROM python:3.12.8-slim-bookworm as builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r /tmp/requirements-security.txt
 
 # Stage 2: Hardened runtime environment
-FROM python:3.11-slim
+FROM python:3.12.8-slim-bookworm
 
 # Security: Create restricted user for security tools
 RUN groupadd -r security && useradd -r -g security -s /bin/false security

@@ -30,7 +30,7 @@ from contextlib import asynccontextmanager
 import aioredis
 from pydantic import BaseModel
 
-from .base_agent import AgentMessage, AgentStatus
+from agents.core.base_agent import AgentMessage, AgentStatus
 from backend.app.schemas.message_types import MessageType, MessagePriority
 
 

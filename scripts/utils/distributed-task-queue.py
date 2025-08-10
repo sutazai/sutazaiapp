@@ -56,7 +56,7 @@ class TaskConfig:
 # Celery configuration
 class CeleryConfig:
     # Broker settings
-    broker_url = os.getenv('CELERY_BROKER_URL', 'amqp://admin:admin@rabbitmq-1:5672//')
+    broker_url = os.getenv('CELERY_BROKER_URL', f'amqp://{os.getenv("RABBITMQ_DEFAULT_USER", "sutazai")}:{os.getenv("RABBITMQ_DEFAULT_PASS")}@rabbitmq-1:5672//')
     broker_connection_retry_on_startup = True
     broker_connection_max_retries = 10
     
@@ -509,7 +509,7 @@ if __name__ == '__main__':
             'flower',
             '--broker=' + CeleryConfig.broker_url,
             '--port=5555',
-            '--basic_auth=admin:admin'
+            f'--basic_auth={os.getenv("GRAFANA_USERNAME", "admin")}:{os.getenv("GRAFANA_PASSWORD")}'
         ])
         
     else:

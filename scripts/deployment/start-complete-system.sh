@@ -367,6 +367,9 @@ PROJECT_ROOT="/opt/sutazaiapp"
 LOG_DIR="${PROJECT_ROOT}/logs"
 PID_DIR="${LOG_DIR}/pids"
 
+# Timeout mechanism to prevent infinite loops
+LOOP_TIMEOUT=${LOOP_TIMEOUT:-300}  # 5 minute default timeout
+loop_start=$(date +%s)
 while true; do
     # Check all services
     for pid_file in "${PID_DIR}"/*.pid; do
@@ -384,6 +387,13 @@ while true; do
                 fi
             fi
         fi
+    # Check for timeout
+    current_time=$(date +%s)
+    if [[ $((current_time - loop_start)) -gt $LOOP_TIMEOUT ]]; then
+        echo 'Loop timeout reached after ${LOOP_TIMEOUT}s, exiting...' >&2
+        break
+    fi
+
     done
     
     # Check system resources
@@ -516,6 +526,9 @@ main() {
     fi
     
     # Start monitoring
+    # Timeout mechanism to prevent infinite loops
+    LOOP_TIMEOUT=${LOOP_TIMEOUT:-300}  # 5 minute default timeout
+    loop_start=$(date +%s)
     start_health_monitoring
     
     # Generate status report
@@ -537,6 +550,13 @@ main() {
                 log ERROR "Critical service failure detected!"
                 break
             fi
+        # Check for timeout
+        current_time=$(date +%s)
+        if [[ $((current_time - loop_start)) -gt $LOOP_TIMEOUT ]]; then
+            echo 'Loop timeout reached after ${LOOP_TIMEOUT}s, exiting...' >&2
+            break
+        fi
+
         done
     fi
 }

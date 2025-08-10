@@ -1,85 +1,29 @@
-# Multi-stage build for security-hardened backend
-# Stage 1: Build stage
-FROM python:3.12.8-slim AS builder
+# Migrated to Master Base Image
+# Original: python:3.12.8-slim AS runtime
+# Migration Date: 2025-08-10T19:58:30.710176
+FROM sutazai-python-agent-master:latest
 
-# Create non-root user for build
+COPY COPY requirements/base.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
+
+# Service-specific setup
 RUN groupadd -r appuser && useradd -r -g appuser appuser
-
-# Install only necessary build dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    g++ \
-    curl \
-    ca-certificates \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /var/cache/apt/archives/*
-
-# Set work directory
-WORKDIR /app
-
-# Copy and install Python dependencies
-COPY requirements/base.txt requirements.txt
 RUN pip install --no-cache-dir --user -r requirements.txt
+RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser
 
 # Copy application code
 COPY . .
-
-# Stage 2: Runtime stage - minimal distroless-like image
-FROM python:3.12.8-slim AS runtime
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser
-
-# Install minimal runtime dependencies and security updates
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    && apt-get upgrade -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /var/cache/apt/archives/* \
-    && rm -rf /tmp/* \
-    && rm -rf /var/tmp/*
-
-# Security: Remove unnecessary packages and files
-RUN apt-get autoremove -y && apt-get autoclean
-
-# Set secure work directory
-WORKDIR /app
-
-# Copy Python packages from builder
 COPY --from=builder /root/.local /home/appuser/.local
-
-# Copy application files with proper ownership
 COPY --from=builder --chown=appuser:appuser /app .
 
-# Security: Set proper permissions
-RUN chmod -R 755 /app \
-    && find /app -type f -name "*.py" -exec chmod 644 {} \; \
-    && mkdir -p /app/logs /app/data \
-    && chown -R appuser:appuser /app/logs /app/data
-
-# Security: Create read-only root filesystem directories
-RUN mkdir -p /tmp /var/tmp \
-    && chown appuser:appuser /tmp /var/tmp \
-    && chmod 1777 /tmp /var/tmp
-
-# Security environment variables
+# Environment configuration
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    DEBUG=false \
-    PATH="/home/appuser/.local/bin:$PATH" \
-    PYTHONPATH="/app"
-
-# Security: Switch to non-root user
-USER appuser
-
-# Expose port (non-privileged)
+ENV SERVICE_PORT=8000
 EXPOSE 8000
 
-# Security: Add health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)" || exit 1
 
-# Security: Use exec form to avoid shell injection
+# Security: Run as non-root user
+USER appuser
+
 CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

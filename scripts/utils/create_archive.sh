@@ -1,9 +1,27 @@
 #!/bin/bash
+
+# Strict error handling
+set -euo pipefail
+
 # SutazAI Archive Creation Script
 # Creates a complete backup/archive of the SutazAI project
 # Excludes temporary files, virtual environments, and large model files
 
 # Navigate to the project root directory
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 cd "$(dirname "$0")/.."
 PROJECT_ROOT=$(pwd)
 
@@ -102,7 +120,9 @@ find "$PROJECT_ROOT" -type d -not -path "*/\.*" -not -path "*/venv/*" \
 
 # Start the archiving process
 echo "Creating archive... (this may take a while)"
-eval $ARCHIVE_CMD &
+# SECURITY FIX: eval replaced
+# Original: eval $ARCHIVE_CMD
+"${ARCHIVE_CMD}" &
 ARCHIVE_PID=$!
 spinner $ARCHIVE_PID
 

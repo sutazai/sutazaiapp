@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 from app.schemas.message_types import TaskPriority
 
-from ..core.base_agent import BaseAgent, AgentMessage, AgentStatus, AgentCapability
+from agents.core.base_agent import BaseAgent, AgentMessage, AgentStatus, AgentCapability
 from ..core.agent_registry import get_agent_registry
 from ..core.agent_message_bus import get_message_bus
 

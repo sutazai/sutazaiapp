@@ -4,6 +4,20 @@
 
 set -euo pipefail
 
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 echo "🚀 Starting container restart loops fix..."
 echo "Target: Fix health checks and restart policies for all agents"
 echo "========================================================"
@@ -119,7 +133,7 @@ app = Flask(__name__)\n\
 def health():\n\
     return {"status": "healthy"}, 200\n\
 if __name__ == "__main__":\n\
-    app.run(host="0.0.0.0", port=8080)' > /tmp/health_server.py
+    app.run(host="0.0.0.0", port=8080)' > "$(mktemp /tmp/health_server.py.XXXXXX)"
 
 # Default health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
@@ -288,6 +302,9 @@ cat > /opt/sutazaiapp/scripts/monitor-restarts.sh << 'EOF'
 echo "Monitoring container restarts (Ctrl+C to stop)..."
 echo "================================================"
 
+# Timeout mechanism to prevent infinite loops
+LOOP_TIMEOUT=${LOOP_TIMEOUT:-300}  # 5 minute default timeout
+loop_start=$(date +%s)
 while true; do
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
     
@@ -306,6 +323,13 @@ while true; do
         else
             ((restarts_20_plus++))
         fi
+    # Check for timeout
+    current_time=$(date +%s)
+    if [[ $((current_time - loop_start)) -gt $LOOP_TIMEOUT ]]; then
+        echo 'Loop timeout reached after ${LOOP_TIMEOUT}s, exiting...' >&2
+        break
+    fi
+
     done
     
     echo -e "\n[$timestamp]"

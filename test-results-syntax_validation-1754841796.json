@@ -1,0 +1,18 @@
+{
+  "start_time": "2025-08-10T18:03:15.333715",
+  "environment": "development",
+  "python_version": "3.12.3 (main, Jun 18 2025, 17:59:45) [GCC 13.3.0]",
+  "tests_executed": [],
+  "total_passed": 634,
+  "total_failed": 1,
+  "total_skipped": 0,
+  "end_time": "2025-08-10T18:03:16.340212",
+  "final_result": {
+    "test_type": "syntax_validation",
+    "passed": 634,
+    "failed": 1,
+    "errors": [
+      "/opt/sutazaiapp/scripts/monitoring/comprehensive-agent-health-monitor.py: invalid syntax. Perhaps you forgot a comma? (comprehensive-agent-health-monitor.py, line 358)"
+    ]
+  }
+}

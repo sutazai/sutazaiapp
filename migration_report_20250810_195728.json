@@ -1,0 +1,27 @@
+{
+  "timestamp": "2025-08-10T19:57:28.974104",
+  "stats": {
+    "total": 174,
+    "migrated": 0,
+    "skipped": 0,
+    "failed": 0,
+    "already_migrated": 3
+  },
+  "details": [
+    {
+      "path": "/opt/sutazaiapp/docker/model-training-specialist/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/model-optimizer/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    },
+    {
+      "path": "/opt/sutazaiapp/docker/ai-metrics-exporter/Dockerfile",
+      "status": "skipped",
+      "reason": "already_migrated"
+    }
+  ]
+}

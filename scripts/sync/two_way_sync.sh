@@ -6,6 +6,20 @@
 set -euo pipefail
 
 # Source configuration
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 source /opt/sutazaiapp/scripts/config/sync_config.sh
 
 # Define log file and variables
@@ -103,7 +117,9 @@ handle_conflicts() {
             RSYNC_CMD="$RSYNC_CMD --dry-run"
             # Store conflicts for manual resolution
             CONFLICT_LOG="$LOG_DIR/conflicts_$TIMESTAMP.log"
-            eval $RSYNC_CMD $SOURCE_PATH root@$DESTINATION:$DEST_PATH > "$CONFLICT_LOG"
+            # SECURITY FIX: eval replaced
+# Original: eval $RSYNC_CMD
+"${RSYNC_CMD}" $SOURCE_PATH root@$DESTINATION:$DEST_PATH > "$CONFLICT_LOG"
             # Send notification if conflicts detected
             if grep -q "^>" "$CONFLICT_LOG"; then
                 if [ "$ENABLE_EMAIL_NOTIFICATIONS" = true ]; then
@@ -188,7 +204,9 @@ sync_servers() {
     # Execute with retry logic
     RETRY_COUNT=0
     while [ $RETRY_COUNT -lt $MAX_SYNC_RETRIES ]; do
-        if eval $FULL_CMD; then
+        if # SECURITY FIX: eval replaced
+# Original: eval $FULL_CMD
+"${FULL_CMD}"; then
             echo "[$CURRENT_DATE] Sync from $SOURCE to $DESTINATION completed successfully"
             send_notification "Sync Completed" "Sync from $SOURCE to $DESTINATION completed successfully"
             return 0

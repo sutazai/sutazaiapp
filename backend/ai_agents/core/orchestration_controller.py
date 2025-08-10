@@ -28,7 +28,7 @@ from typing import Any, Dict, List, Optional, Set, Union, Callable
 from dataclasses import dataclass, field
 from collections import defaultdict, deque
 
-from .base_agent import BaseAgent, AgentMessage, AgentStatus, AgentCapability
+from agents.core.base_agent import BaseAgent, AgentMessage, AgentStatus, AgentCapability
 from .agent_message_bus import AgentMessageBus, MessageRoute, RoutingStrategy
 from .universal_agent_factory import UniversalAgentFactory
 

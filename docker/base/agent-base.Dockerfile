@@ -1,6 +1,6 @@
 # Multi-stage AI Agent base image
 # Stage 1: Build environment  
-FROM python:3.11-slim as builder
+FROM python:3.12.8-slim-bookworm as builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r /tmp/requirements-agent.txt
 
 # Stage 2: Runtime environment
-FROM python:3.11-slim
+FROM python:3.12.8-slim-bookworm
 
 # Security: Create non-root user for agents
 RUN groupadd -r agent && useradd -r -g agent -s /bin/false agent

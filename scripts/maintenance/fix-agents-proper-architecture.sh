@@ -4,12 +4,26 @@
 
 set -e
 
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 echo "=== Fixing Agents According to Master Blueprint ==="
 echo "Using standardized agent base with proper configuration"
 echo ""
 
 # Create proper agent startup template based on architecture
-cat > /tmp/agent_base.py << 'EOF'
+cat > "$(mktemp /tmp/agent_base.py.XXXXXX)" << 'EOF'
 #!/usr/bin/env python3
 import os
 import asyncio

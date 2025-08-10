@@ -39,8 +39,8 @@ import concurrent.futures
 from functools import partial
 
 # Add local shared directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent))
-from shared.agent_base import BaseAgent
+sys.path.insert(0, str(Path(__file__).parent / "shared"))
+from agents.core.base_agent import BaseAgent
 
 # ULTRA-FIX: Import threading for thread safety
 import threading

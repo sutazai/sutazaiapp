@@ -4,6 +4,20 @@
 
 set -euo pipefail
 
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 echo "🚀 Starting Ollama CPU optimization fix..."
 echo "Current target: Reduce CPU from 185% to <50%"
 echo "============================================"
@@ -116,7 +130,7 @@ chmod +x /opt/sutazaiapp/scripts/ollama-pool-manager.py
 
 # Step 7: Create systemd service for pool manager
 echo -e "\n🔧 Step 7: Creating systemd service for pool manager..."
-cat > /tmp/ollama-pool-manager.service << 'EOF'
+cat > "$(mktemp /tmp/ollama-pool-manager.service.XXXXXX)" << 'EOF'
 [Unit]
 Description=Ollama Connection Pool Manager
 After=docker.service
@@ -181,6 +195,9 @@ echo "Monitoring Ollama CPU usage (Ctrl+C to stop)..."
 echo "Target: <50% CPU usage"
 echo "================================"
 
+# Timeout mechanism to prevent infinite loops
+LOOP_TIMEOUT=${LOOP_TIMEOUT:-300}  # 5 minute default timeout
+loop_start=$(date +%s)
 while true; do
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
     cpu_usage=$(docker stats --no-stream --format "{{.CPUPerc}}" sutazai-ollama 2>/dev/null | sed 's/%//')
@@ -199,6 +216,13 @@ while true; do
     fi
     
     sleep 5
+    # Check for timeout
+    current_time=$(date +%s)
+    if [[ $((current_time - loop_start)) -gt $LOOP_TIMEOUT ]]; then
+        echo 'Loop timeout reached after ${LOOP_TIMEOUT}s, exiting...' >&2
+        break
+    fi
+
 done
 EOF
 

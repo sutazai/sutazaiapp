@@ -4,6 +4,20 @@
 
 set -e
 
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 LOG_FILE="/opt/sutazaiapp/logs/immediate-health-fix.log"
 mkdir -p "$(dirname "$LOG_FILE")"
 
@@ -45,7 +59,7 @@ except Exception as e:
             
             # Add health endpoint directly to the running container
             docker exec "$container" bash -c "
-cat > /tmp/health_server.py << 'EOF'
+cat > "$(mktemp /tmp/health_server.py.XXXXXX)" << 'EOF'
 from fastapi import FastAPI
 import uvicorn
 from datetime import datetime
@@ -65,7 +79,7 @@ if __name__ == '__main__':
 EOF
 
 # Start health server on port 8081 in background
-nohup python3 /tmp/health_server.py > /tmp/health_server.log 2>&1 &
+nohup python3 /tmp/health_server.py > "$(mktemp /tmp/health_server.log.XXXXXX)" 2>&1 &
 " 2>/dev/null || log "Failed to add health endpoint to $container"
         fi
     done

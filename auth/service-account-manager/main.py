@@ -144,12 +144,13 @@ async def init_connections():
                 logger.info("Vault client initialized and authenticated")
         
         # Initialize Keycloak admin client
+        # SECURITY FIX: Enable TLS verification for production security
         keycloak_admin = KeycloakAdmin(
             server_url=KEYCLOAK_SERVER_URL,
             username=KEYCLOAK_ADMIN_USERNAME,
             password=KEYCLOAK_ADMIN_PASSWORD,
             realm_name=KEYCLOAK_REALM,
-            verify=False
+            verify=True  # SECURITY: TLS verification enabled
         )
         
         logger.info("Keycloak admin client initialized")
@@ -323,7 +324,12 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:10011",  # Frontend Streamlit UI
+        "http://localhost:10010",  # Backend API
+        "http://127.0.0.1:10011",  # Alternative localhost
+        "http://127.0.0.1:10010",  # Alternative localhost
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

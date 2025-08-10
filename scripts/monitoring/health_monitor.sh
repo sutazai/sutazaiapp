@@ -8,6 +8,20 @@
 set -euo pipefail
 
 # Colors for output
+
+# Signal handlers for graceful shutdown
+cleanup_and_exit() {
+    local exit_code="${1:-0}"
+    echo "Script interrupted, cleaning up..." >&2
+    # Clean up any background processes
+    jobs -p | xargs -r kill 2>/dev/null || true
+    exit "$exit_code"
+}
+
+trap 'cleanup_and_exit 130' INT
+trap 'cleanup_and_exit 143' TERM
+trap 'cleanup_and_exit 1' ERR
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -309,10 +323,20 @@ continuous_monitor() {
     print_color "$BLUE" "Press Ctrl+C to stop"
     echo ""
     
+    # Timeout mechanism to prevent infinite loops
+    LOOP_TIMEOUT=${LOOP_TIMEOUT:-300}  # 5 minute default timeout
+    loop_start=$(date +%s)
     while true; do
         clear
         monitor_services
         sleep "$interval"
+        # Check for timeout
+        current_time=$(date +%s)
+        if [[ $((current_time - loop_start)) -gt $LOOP_TIMEOUT ]]; then
+            echo 'Loop timeout reached after ${LOOP_TIMEOUT}s, exiting...' >&2
+            break
+        fi
+
     done
 }
 

@@ -1,41 +1,26 @@
-FROM python:3.11-slim
+FROM sutazai-python-agent-master:latest
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
-
-# Create app directory
-WORKDIR /app
-
-# Copy requirements and install dependencies
-COPY requirements/base.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy agent-specific requirements and install additional dependencies
+COPY requirements.txt /tmp/agent-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/agent-requirements.txt && rm /tmp/agent-requirements.txt
 
 # Copy application code
-COPY circuit_breaker.py .
-COPY config.yml .
+COPY . .
 
-# Create logs directory
-RUN mkdir -p /app/logs
+# Override base environment variables for this specific service
+ENV SERVICE_PORT=8080
+ENV AGENT_ID=self-healing
+ENV AGENT_NAME="Self Healing"
 
-# Set permissions
-RUN chmod +x circuit_breaker.py
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/health || curl -f http://localhost:8080/ || exit 1
 
 # Expose port
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
-
-# Run the circuit breaker service
-
-# Security: Create non-root user
-RUN groupadd -r appuser && useradd -r -g appuser appuser \
-    && mkdir -p /app && chown -R appuser:appuser /app
+# Switch to non-root user for security
 USER appuser
 
-CMD ["python3", "circuit_breaker.py"]
+# Default command
+CMD ["python", "-u", "app.py"]
