@@ -428,7 +428,8 @@ class FailoverManager:
                 import requests
                 response = requests.get(f"{endpoint}/health", timeout=5)
                 return response.status_code == 200
-            except:
+            except Exception as e:
+                logger.warning(f"Exception caught, returning: {e}")
                 return False
         
         self.health_checker.register_health_check(
@@ -451,7 +452,8 @@ class FailoverManager:
                 response = requests.get(f"{endpoint}/health", timeout=10)
                 response_time = (time.time() - start_time) * 1000
                 return response.status_code == 200 and response_time < 5000  # 5 second max
-            except:
+            except Exception as e:
+                logger.warning(f"Exception caught, returning: {e}")
                 return False
         
         self.health_checker.register_health_check(

@@ -5,7 +5,6 @@ import logging
 import sys
 from typing import Optional
 from pathlib import Path
-import json
 from datetime import datetime
 
 try:

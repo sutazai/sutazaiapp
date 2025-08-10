@@ -142,7 +142,9 @@ class ModelAnalyzer:
                     return "gguf"
                 elif header.startswith(b'\x08\x01\x12'):
                     return "onnx"
-        except:
+        except (IOError, OSError, FileNotFoundError) as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         return "unknown"

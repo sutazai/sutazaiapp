@@ -19,7 +19,6 @@ import json
 import time
 import subprocess
 from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
 import logging
 
 # Configure logging
@@ -181,7 +180,9 @@ class MonitoringSystemValidator:
                 try:
                     health_response = requests.get(f"{service_config['url']}/health", timeout=30)
                     actual_health = health_response.status_code == 200
-                except:
+                except (AssertionError, Exception) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
                 
                 results[service_name] = {
@@ -293,7 +294,9 @@ class MonitoringSystemValidator:
                     health_response = requests.get(f"{service_config['url']}/health", timeout=10)
                     if health_response.status_code == 200:
                         service_metrics = health_response.json()
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             
             # Get container stats
@@ -309,7 +312,9 @@ class MonitoringSystemValidator:
                             "cpu_percent": stats_line[0] if len(stats_line) > 0 else "0%",
                             "memory_usage": stats_line[1] if len(stats_line) > 1 else "0B / 0B"
                         }
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             
             # Compare metrics accuracy
@@ -340,7 +345,9 @@ class MonitoringSystemValidator:
                         metrics_comparison["cpu_difference"] = cpu_diff
                         metrics_comparison["metrics_consistent"] = metrics_consistent
                         
-                except:
+                except (AssertionError, Exception) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     metrics_comparison["comparison_error"] = "Could not parse metrics for comparison"
             
             results[service_name] = {

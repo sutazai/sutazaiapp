@@ -109,7 +109,8 @@ class AgentPerformanceBenchmark:
                 response_time = end - start
                 response_times.append(response_time)
                 return response.status_code == 200
-            except:
+            except Exception as e:
+                logger.warning(f"Exception caught, returning: {e}")
                 return False
         
         # Run load test for specified duration
@@ -916,7 +917,8 @@ class SystemPerformanceBenchmarkSuite:
         try:
             result = subprocess.run(['docker', '--version'], capture_output=True, text=True)
             return result.stdout.strip()
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return "unknown"
     
     async def generate_report(self, benchmark_results: Dict[str, Any]):

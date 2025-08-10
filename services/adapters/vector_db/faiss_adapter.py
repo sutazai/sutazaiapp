@@ -5,7 +5,6 @@ import faiss
 import numpy as np
 import pickle
 import os
-from typing import Dict, Any, List, Optional, Tuple
 from ..base_adapter import ServiceAdapter
 import logging
 

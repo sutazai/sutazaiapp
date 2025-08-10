@@ -114,7 +114,9 @@ class CrewManager:
                         if llm_response.status_code == 200:
                             result_data = llm_response.json()
                             demo_response = result_data.get("response", demo_response)
-                except:
+                except Exception as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     pass  # Use demo response if Ollama fails
                 
                 execution_time = time.time() - start_time

@@ -58,7 +58,9 @@ class MonitoringConnectionManager:
             for connection in self.active_connections:
                 try:
                     await connection.send_text(message_str)
-                except:
+                except (ValueError, TypeError, KeyError, AttributeError) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     disconnected.append(connection)
             
             # Remove disconnected clients
@@ -99,7 +101,9 @@ class MonitoringConnectionManager:
                 redis_client = redis.Redis(host='sutazai-redis', port=6379, db=0)
                 queue_size = redis_client.llen('task_queue')
                 active_tasks = redis_client.scard('active_tasks')
-            except:
+            except (ValueError, TypeError, KeyError, AttributeError) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 queue_size = 0
                 active_tasks = 0
 
@@ -150,7 +154,9 @@ class MonitoringConnectionManager:
             if system_delta > 0 and cpu_delta > 0:
                 cpu_percent = (cpu_delta / system_delta) * len(cpu_stats['cpu_usage']['percpu_usage']) * 100
                 return round(cpu_percent, 2)
-        except:
+        except (ValueError, TypeError, KeyError, AttributeError) as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         return 0.0
 
@@ -160,7 +166,8 @@ class MonitoringConnectionManager:
             stats = container.stats(stream=False)
             memory_usage = stats['memory_stats']['usage']
             return round(memory_usage / (1024**2), 2)  # Convert to MB
-        except:
+        except (ValueError, TypeError, KeyError, AttributeError) as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return 0.0
 
 # Global connection manager

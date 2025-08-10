@@ -20,6 +20,11 @@ Test Coverage:
 6. Functionality testing
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import subprocess
 import requests
 import json
@@ -27,8 +32,6 @@ import time
 import datetime
 import sys
 import os
-from typing import Dict, List, Tuple, Optional
-
 class UltraMigrationTester:
     def __init__(self):
         self.services = {
@@ -352,7 +355,9 @@ class UltraMigrationTester:
                 response = requests.get(url, timeout=5)
                 if response.status_code in [200, 404]:  # 404 is OK, means server is responding
                     working_endpoints.append(f"{endpoint} ({response.status_code})")
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         result['endpoints_tested'] = working_endpoints

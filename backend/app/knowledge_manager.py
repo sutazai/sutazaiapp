@@ -3,9 +3,7 @@ Knowledge Manager - Manages knowledge graph and semantic memory
 """
 
 import logging
-from typing import Dict, Any, List, Optional
 from datetime import datetime
-import json
 import asyncio
 import os
 from dataclasses import dataclass
@@ -480,7 +478,9 @@ class KnowledgeManager:
                     result = await session.run("RETURN 1")
                     if await result.single():
                         neo4j_status = "connected"
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 neo4j_status = "error"
                 
         return {

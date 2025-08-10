@@ -4,7 +4,6 @@ Provides essential endpoints to get the system running
 """
 
 import os
-import sys
 import logging
 from typing import Dict, List, Optional, Any
 from datetime import datetime
@@ -191,7 +190,8 @@ async def get_metrics():
             "memory_percent": psutil.virtual_memory().percent,
             "disk_usage": psutil.disk_usage('/').percent
         }
-    except:
+    except Exception as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return {
             "cpu_percent": 10.0,
             "memory_percent": 25.0,

@@ -7,6 +7,11 @@ Specialized tests for agent detection, health validation, and status reporting.
 Tests the core logic that determines agent health and status.
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import pytest
 import unittest
 from unittest.mock import Mock, patch, MagicMock
@@ -164,7 +169,9 @@ class TestAgentDetectionCore(unittest.TestCase):
                     else:
                         health = "unhealthy"
                     response_time = response.elapsed.total_seconds()
-                except:
+                except (AssertionError, Exception) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     health = "offline"
                     response_time = None
                 
@@ -231,7 +238,9 @@ class TestAgentStatusIntegration(unittest.TestCase):
                     health_status = "healthy"
                 else:
                     health_status = "unhealthy"
-            except:
+            except (AssertionError, Exception) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 health_status = "offline"
             
             # Combine Docker and health check status

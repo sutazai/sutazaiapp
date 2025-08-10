@@ -4,7 +4,6 @@ Provides essential endpoints to get the system running
 """
 
 import os
-import sys
 import logging
 from typing import Dict, List, Optional, Any
 from datetime import datetime
@@ -130,7 +129,8 @@ async def check_agent_health(agent_url: str) -> str:
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{agent_url}/health", timeout=5.0)
             return "healthy" if response.status_code == 200 else "unhealthy"
-    except:
+    except Exception as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return "offline"
 
 # Agent endpoints  
@@ -226,7 +226,8 @@ async def get_metrics():
             "memory_percent": psutil.virtual_memory().percent,
             "disk_usage": psutil.disk_usage('/').percent
         }
-    except:
+    except Exception as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return {
             "cpu_percent": 10.0,
             "memory_percent": 25.0,

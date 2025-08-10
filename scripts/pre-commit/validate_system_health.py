@@ -1,1 +1,0 @@
-../health/pre-commit-health-validator.py

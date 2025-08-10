@@ -420,7 +420,9 @@ class SelfImprovementEngine:
             if score_match:
                 score = float(score_match.group(1))
                 return score if score <= 1.0 else score / 100.0
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         return 0.5  # Default middle score

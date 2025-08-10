@@ -460,7 +460,9 @@ class HealthValidationSuite:
                     response = requests.get(f"{service['url']}/health", timeout=10)
                     response_time = time.time() - start
                     response_times.append(response_time)
-                except:
+                except (AssertionError, Exception) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     response_times.append(10.0)  # Timeout penalty
             
             avg_response_time = sum(response_times) / len(response_times)
@@ -490,7 +492,9 @@ class HealthValidationSuite:
                             "memory_meets_threshold": memory_usage <= max_memory_usage,
                             "success": cpu_usage <= max_cpu_usage and memory_usage <= max_memory_usage
                         }
-            except:
+            except (AssertionError, Exception) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 perf_results["resource_usage"] = {
                     "success": True,  # Skip if not available
                     "note": "Resource metrics not available"

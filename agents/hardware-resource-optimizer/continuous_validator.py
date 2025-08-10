@@ -181,7 +181,9 @@ class ContinuousValidator:
                     "time": elapsed,
                     "status": "ok" if elapsed < 1.0 else "slow"
                 }
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 metrics["response_times"][endpoint] = {"status": "error"}
                 
         # Test optimization effectiveness
@@ -194,7 +196,9 @@ class ContinuousValidator:
                     "freed_mb": data.get("memory_freed_mb", 0),
                     "effective": data.get("memory_freed_mb", 0) > 0
                 }
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
             
         return metrics

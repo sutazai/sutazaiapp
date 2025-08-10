@@ -131,12 +131,16 @@ async def jarvis_health():
             async with httpx.AsyncClient(timeout=5.0) as client:
                 response = await client.get("http://ollama:11434/api/tags")
                 ollama_available = response.status_code == 200
-        except:
+        except (ValueError, TypeError, KeyError, AttributeError) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             try:
                 async with httpx.AsyncClient(timeout=5.0) as client:
                     response = await client.get("http://sutazai-ollama:11434/api/tags")
                     ollama_available = response.status_code == 200
-            except:
+            except (ValueError, TypeError, KeyError, AttributeError) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         return {

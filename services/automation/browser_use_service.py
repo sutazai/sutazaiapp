@@ -6,7 +6,6 @@ Browser-Use Web Automation Service
 from fastapi import FastAPI
 import uvicorn
 from datetime import datetime
-import json
 
 app = FastAPI(title="SutazAI Browser-Use", version="1.0")
 

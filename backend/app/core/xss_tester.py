@@ -6,8 +6,6 @@ Tests the core XSS protection functionality without external dependencies
 import re
 import html
 import json
-from typing import Dict, List, Any, Optional
-
 class SimpleXSSValidator:
     """Simplified XSS validator for testing"""
     

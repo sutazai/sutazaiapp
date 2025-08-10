@@ -171,7 +171,9 @@ class OptimizationValidator:
                     response_time = time.time() - start_time
                     if response.status_code == 200:
                         response_times.append(response_time)
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
             
             if response_times:
@@ -197,7 +199,8 @@ class OptimizationValidator:
                 try:
                     response = requests.get(f"{self.frontend_url}/health", timeout=10)
                     return response.status_code == 200
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    logger.warning(f"Exception caught, returning: {e}")
                     return False
             
             # Test with 10 concurrent requests

@@ -154,7 +154,9 @@ class MetricsCollector:
                     value=disk_io.write_bytes / (1024**2),
                     unit='mb_per_second'
                 ))
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         # Network I/O
@@ -176,7 +178,9 @@ class MetricsCollector:
                     value=network_io.bytes_recv,
                     unit='bytes'
                 ))
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         return metrics
@@ -307,7 +311,9 @@ class MetricsCollector:
             for internal_port, bindings in port_bindings.items():
                 if bindings:
                     return int(bindings[0]['HostPort'])
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         return None
     

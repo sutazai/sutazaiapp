@@ -117,7 +117,9 @@ class VoiceInterface:
             if self.tts_engine:
                 try:
                     self.tts_engine.stop()
-                except:
+                except Exception as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
                     
             logger.info("Voice interface shutdown complete")

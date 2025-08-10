@@ -11,10 +11,8 @@ import asyncio
 import logging
 from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime
-from pathlib import Path
 import ast
 import re
-import subprocess
 from dataclasses import dataclass, field
 from collections import defaultdict
 
@@ -108,7 +106,8 @@ class CodeAnalyzer:
             # Normalize by lines of code
             lines = len(code.splitlines())
             return complexity / max(lines, 1) * 100
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return 0.0
     
     def find_code_patterns(self, code: str, patterns: Dict[str, str]) -> List[Tuple[int, str, str]]:
@@ -180,7 +179,9 @@ class SeniorAIEngineerAnalyzer(CodeAnalyzer):
                                     suggested_fix="Add comprehensive docstring explaining model behavior",
                                     agent='senior-ai-engineer'
                                 ))
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         return {
@@ -457,7 +458,9 @@ class CodeImprovementWorkflow:
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     metrics.lines_of_code += len(f.readlines())
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         # Count issues by type

@@ -5,6 +5,12 @@ Usage: Apply this patch to fix memory leaks in WebSocket handling
 Requirements: None - this is a code patch
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
+
 # Add this method to the EnhancedHygieneBackend class:
 
 async def cleanup_websocket_clients(self):
@@ -31,7 +37,9 @@ async def cleanup_websocket_clients(self):
                     disconnected_count += 1
                     try:
                         await ws.close()
-                    except:
+                    except Exception as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
             
             # Update the client set
@@ -116,7 +124,9 @@ async def broadcast_to_websockets_safe(self, message: Dict[str, Any]):
             try:
                 if task.done() and task.exception():
                     closed_clients.add(ws)
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 closed_clients.add(ws)
     
     # Remove closed clients

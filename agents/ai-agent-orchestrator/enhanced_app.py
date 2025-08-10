@@ -6,7 +6,6 @@ Version 2.0 - Full implementation with Ollama integration
 
 import asyncio
 import httpx
-from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from pydantic import BaseModel, Field
 import pika
@@ -471,14 +470,18 @@ Respond with a JSON object containing:
                 if self.redis_client:
                     self.redis_client.ping()
                     health_status["connections"]["redis"] = True
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             
             # Check RabbitMQ
             try:
                 if self.rabbit_connection and not self.rabbit_connection.is_closed:
                     health_status["connections"]["rabbitmq"] = True
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             
             # Check Ollama

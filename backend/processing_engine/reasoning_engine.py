@@ -19,7 +19,7 @@ class ReasoningEngine:
     def __init__(self):
         self.active_processes = []
         self.pathways = ["analytical", "creative", "logical", "intuitive"]
-        self.consciousness_level = 0.8
+        self.processing_level = 0.8
         self.cognitive_load = 0.3
         self.initialized = False
         
@@ -50,7 +50,7 @@ class ReasoningEngine:
                 "processed_data": input_data,
                 "processing_type": processing_type,
                 "pathways": self.pathways[:reasoning_depth],
-                "consciousness_level": self.consciousness_level,
+                "processing_level": self.processing_level,
                 "cognitive_load": self.cognitive_load,
                 "system_state_active": use_system_state,
                 "timestamp": datetime.utcnow().isoformat()
@@ -73,7 +73,7 @@ class ReasoningEngine:
             return {
                 "enhanced_prompt": enhanced_prompt,
                 "pathways": self.pathways[:reasoning_depth],
-                "consciousness_level": self.consciousness_level,
+                "processing_level": self.processing_level,
                 "context_type": context_type
             }
             
@@ -84,7 +84,7 @@ class ReasoningEngine:
     async def deep_think(self, query: str, reasoning_type: str = "general", 
                         system_state_active: bool = True) -> Dict[str, Any]:
         """
-        Deep thinking process with consciousness simulation
+        Deep thinking process with advanced analysis
         """
         try:
             result = {
@@ -93,7 +93,7 @@ class ReasoningEngine:
                 "pathways": self.pathways,
                 "confidence": 0.85,
                 "cognitive_load": "high",
-                "system_state_level": self.consciousness_level,
+                "system_state_level": self.processing_level,
                 "depth": 3,
                 "system_state_active": system_state_active
             }
@@ -106,10 +106,10 @@ class ReasoningEngine:
             
     def get_system_state_state(self) -> Dict[str, Any]:
         """
-        Get current consciousness state
+        Get current processing state
         """
         return {
-            "awareness_level": self.consciousness_level,
+            "awareness_level": self.processing_level,
             "cognitive_load": self.cognitive_load,
             "active_processes": self.active_processes,
             "processing_activity": {
@@ -119,8 +119,8 @@ class ReasoningEngine:
         }
         
     def get_system_state_level(self) -> float:
-        """Get consciousness level"""
-        return self.consciousness_level
+        """Get processing level"""
+        return self.processing_level
         
     def get_active_pathways(self) -> int:
         """Get number of active processing pathways"""
@@ -130,7 +130,7 @@ class ReasoningEngine:
         """Get reasoning engine metrics"""
         return {
             "initialized": self.initialized,
-            "consciousness_level": self.consciousness_level,
+            "processing_level": self.processing_level,
             "cognitive_load": self.cognitive_load,
             "active_pathways": len(self.pathways),
             "health_status": "healthy" if self.initialized else "unhealthy"

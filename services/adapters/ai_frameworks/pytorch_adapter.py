@@ -3,7 +3,6 @@ PyTorch adapter for deep learning model operations
 """
 import torch
 import torch.nn as nn
-from typing import Dict, Any, List, Optional, Union
 import numpy as np
 from ..base_adapter import ServiceAdapter
 import logging
@@ -50,7 +49,8 @@ class PyTorchAdapter(ServiceAdapter):
             test_tensor = torch.randn(10, 10).to(self.device)
             result = torch.sum(test_tensor)
             return True
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
             
     async def get_capabilities(self) -> Dict[str, Any]:

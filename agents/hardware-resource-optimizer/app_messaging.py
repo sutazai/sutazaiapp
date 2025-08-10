@@ -283,7 +283,9 @@ class HardwareResourceOptimizerMessaging(MessagingAgent):
                         item.unlink()
                     elif item.is_dir():
                         shutil.rmtree(item)
-                except:
+                except Exception as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
             
             after = psutil.disk_usage('/')

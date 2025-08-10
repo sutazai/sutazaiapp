@@ -136,7 +136,9 @@ class ModelManager:
                                 progress = json.loads(line.decode())
                                 if "status" in progress:
                                     logger.info(f"Pull progress: {progress.get('status')}")
-                            except:
+                            except Exception as e:
+                                # Suppressed exception (was bare except)
+                                logger.debug(f"Suppressed exception: {e}")
                                 pass
                     
                     logger.info(f"Successfully pulled model: {model_name}")

@@ -6,11 +6,9 @@ Author: DevOps Manager - Deduplication Operation
 Date: August 10, 2025
 """
 
-import os
 import json
 import argparse
 from pathlib import Path
-from typing import Dict, List
 
 # Service configuration mapping
 SERVICE_CONFIG = {

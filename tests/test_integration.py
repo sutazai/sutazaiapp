@@ -4,6 +4,11 @@ Integration tests for Ollama integration with all 131 agents
 Tests end-to-end functionality, agent coordination, and system interactions
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import pytest
 import asyncio
 import time
@@ -232,7 +237,9 @@ class TestMultiAgentCoordination:
             if hasattr(agent, '_cleanup_async_components'):
                 try:
                     asyncio.run(agent._cleanup_async_components())
-                except:
+                except (AssertionError, Exception) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
     
     @pytest.mark.asyncio
@@ -593,7 +600,9 @@ class TestConfigurationIntegration:
                 try:
                     model_config = OllamaConfig.get_model_config(agent_name)
                     assert model_config["model"] == "tinyllama"
-                except:
+                except (AssertionError, Exception) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     # Config might not exist, that's OK as long as default model is correct
                     pass
                 

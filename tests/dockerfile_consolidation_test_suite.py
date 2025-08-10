@@ -265,7 +265,9 @@ class DockerfileValidationSuite:
             # Clean up the test image
             try:
                 self.docker_client.images.remove(image.id, force=True)
-            except:
+            except (AssertionError, Exception) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 pass  # Ignore cleanup errors
             
             return True, build_info

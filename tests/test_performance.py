@@ -4,6 +4,11 @@ Performance tests for Ollama integration with all 131 agents
 Tests load handling, memory usage, response times, and resource optimization
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import pytest
 import asyncio
 import time
@@ -56,7 +61,9 @@ class TestPerformanceMetrics:
                     self.memory_samples.append(process.memory_info().rss / 1024 / 1024)  # MB
                     self.cpu_samples.append(process.cpu_percent())
                     time.sleep(0.1)
-                except:
+                except (AssertionError, Exception) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     break
         
         thread = threading.Thread(target=resource_monitor, daemon=True)

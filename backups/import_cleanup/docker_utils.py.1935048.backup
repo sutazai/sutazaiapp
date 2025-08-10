@@ -1,0 +1,387 @@
+#!/usr/bin/env python3
+"""
+Docker Utilities for SutazAI
+============================
+
+Consolidated Docker management utilities.
+Replaces multiple Docker-related scripts with a single module.
+"""
+
+import docker
+import json
+import time
+import logging
+from typing import Dict, List, Optional, Any, Tuple, Union
+from pathlib import Path
+from dataclasses import dataclass
+from datetime import datetime
+
+from .common_utils import setup_logging, format_size, health_check_url
+
+logger = setup_logging('docker_utils')
+
+@dataclass
+class ContainerInfo:
+    """Container information structure"""
+    id: str
+    name: str
+    image: str
+    status: str
+    ports: Dict[str, Any]
+    labels: Dict[str, str]
+    created: datetime
+    cpu_percent: float = 0.0
+    memory_usage: int = 0
+    memory_limit: int = 0
+    network_io: Dict[str, int] = None
+    
+    def __post_init__(self):
+        if self.network_io is None:
+            self.network_io = {'rx_bytes': 0, 'tx_bytes': 0}
+
+class DockerManager:
+    """Docker management utility class"""
+    
+    def __init__(self):
+        self.client = None
+        self._connect()
+    
+    def _connect(self) -> bool:
+        """Connect to Docker daemon"""
+        try:
+            self.client = docker.from_env()
+            # Test connection
+            self.client.ping()
+            logger.info("Connected to Docker daemon")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to connect to Docker: {e}")
+            return False
+    
+    def list_containers(self, all_containers: bool = True) -> List[ContainerInfo]:
+        """List all containers with detailed info"""
+        if not self.client:
+            return []
+        
+        containers = []
+        try:
+            for container in self.client.containers.list(all=all_containers):
+                info = self._get_container_info(container)
+                if info:
+                    containers.append(info)
+        except Exception as e:
+            logger.error(f"Error listing containers: {e}")
+        
+        return containers
+    
+    def _get_container_info(self, container) -> Optional[ContainerInfo]:
+        """Extract container information"""
+        try:
+            attrs = container.attrs
+            config = attrs.get('Config', {})
+            state = attrs.get('State', {})
+            network_settings = attrs.get('NetworkSettings', {})
+            
+            # Parse ports
+            ports = {}
+            port_bindings = network_settings.get('Ports', {})
+            for internal_port, external_bindings in port_bindings.items():
+                if external_bindings:
+                    ports[internal_port] = [
+                        f"{binding['HostIp']}:{binding['HostPort']}"
+                        for binding in external_bindings
+                    ]
+                else:
+                    ports[internal_port] = []
+            
+            return ContainerInfo(
+                id=container.id[:12],
+                name=container.name,
+                image=config.get('Image', 'unknown'),
+                status=container.status,
+                ports=ports,
+                labels=config.get('Labels', {}),
+                created=datetime.fromisoformat(attrs.get('Created', '').replace('Z', '+00:00')),
+            )
+        except Exception as e:
+            logger.warning(f"Error getting container info for {container.name}: {e}")
+            return None
+    
+    def get_container_stats(self, container_name: str) -> Optional[Dict[str, Any]]:
+        """Get real-time stats for a container"""
+        if not self.client:
+            return None
+        
+        try:
+            container = self.client.containers.get(container_name)
+            stats = container.stats(stream=False)
+            
+            # Calculate CPU percentage
+            cpu_delta = stats['cpu_stats']['cpu_usage']['total_usage'] - \
+                       stats['precpu_stats']['cpu_usage']['total_usage']
+            system_delta = stats['cpu_stats']['system_cpu_usage'] - \
+                          stats['precpu_stats']['system_cpu_usage']
+            cpu_percent = 0.0
+            if system_delta > 0 and cpu_delta > 0:
+                cpu_percent = (cpu_delta / system_delta) * len(stats['cpu_stats']['cpu_usage']['percpu_usage']) * 100
+            
+            # Memory info
+            memory_usage = stats['memory_stats'].get('usage', 0)
+            memory_limit = stats['memory_stats'].get('limit', 0)
+            
+            # Network I/O
+            network_io = {'rx_bytes': 0, 'tx_bytes': 0}
+            networks = stats.get('networks', {})
+            for interface_stats in networks.values():
+                network_io['rx_bytes'] += interface_stats.get('rx_bytes', 0)
+                network_io['tx_bytes'] += interface_stats.get('tx_bytes', 0)
+            
+            return {
+                'cpu_percent': round(cpu_percent, 2),
+                'memory_usage': memory_usage,
+                'memory_limit': memory_limit,
+                'memory_percent': round((memory_usage / memory_limit) * 100, 2) if memory_limit > 0 else 0,
+                'network_io': network_io,
+                'timestamp': datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"Error getting stats for {container_name}: {e}")
+            return None
+    
+    def health_check_container(self, container_name: str) -> Dict[str, Any]:
+        """Perform health check on a container"""
+        result = {
+            'container': container_name,
+            'status': 'unknown',
+            'healthy': False,
+            'details': {},
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        if not self.client:
+            result['details']['error'] = 'Docker client not connected'
+            return result
+        
+        try:
+            container = self.client.containers.get(container_name)
+            result['status'] = container.status
+            result['healthy'] = container.status == 'running'
+            
+            # Get health check if available
+            health = container.attrs.get('State', {}).get('Health')
+            if health:
+                result['details']['health_status'] = health.get('Status')
+                result['details']['health_log'] = health.get('Log', [])[-1] if health.get('Log') else None
+            
+            # Get recent logs
+            logs = container.logs(tail=10, since=datetime.now().timestamp() - 300).decode('utf-8')
+            result['details']['recent_logs'] = logs.split('\n')[-5:] if logs else []
+            
+            # Try HTTP health check if ports are exposed
+            network_settings = container.attrs.get('NetworkSettings', {})
+            ports = network_settings.get('Ports', {})
+            
+            for internal_port, external_bindings in ports.items():
+                if external_bindings and '/tcp' in internal_port:
+                    port = external_bindings[0]['HostPort']
+                    health_url = f"http://localhost:{port}/health"
+                    healthy, message = health_check_url(health_url, timeout=2)
+                    result['details'][f'http_health_{port}'] = {
+                        'healthy': healthy,
+                        'message': message,
+                        'url': health_url
+                    }
+            
+        except docker.errors.NotFound:
+            result['details']['error'] = 'Container not found'
+        except Exception as e:
+            result['details']['error'] = str(e)
+            logger.error(f"Error in health check for {container_name}: {e}")
+        
+        return result
+    
+    def start_container(self, container_name: str) -> bool:
+        """Start a container"""
+        if not self.client:
+            return False
+        
+        try:
+            container = self.client.containers.get(container_name)
+            container.start()
+            logger.info(f"Started container: {container_name}")
+            return True
+        except Exception as e:
+            logger.error(f"Error starting container {container_name}: {e}")
+            return False
+    
+    def stop_container(self, container_name: str, timeout: int = 10) -> bool:
+        """Stop a container"""
+        if not self.client:
+            return False
+        
+        try:
+            container = self.client.containers.get(container_name)
+            container.stop(timeout=timeout)
+            logger.info(f"Stopped container: {container_name}")
+            return True
+        except Exception as e:
+            logger.error(f"Error stopping container {container_name}: {e}")
+            return False
+    
+    def restart_container(self, container_name: str, timeout: int = 10) -> bool:
+        """Restart a container"""
+        if not self.client:
+            return False
+        
+        try:
+            container = self.client.containers.get(container_name)
+            container.restart(timeout=timeout)
+            logger.info(f"Restarted container: {container_name}")
+            return True
+        except Exception as e:
+            logger.error(f"Error restarting container {container_name}: {e}")
+            return False
+    
+    def get_compose_services(self, compose_file: str = 'docker-compose.yml') -> List[str]:
+        """Extract service names from docker-compose file"""
+        import yaml
+        
+        try:
+            with open(compose_file, 'r') as f:
+                compose_data = yaml.safe_load(f)
+            
+            services = list(compose_data.get('services', {}).keys())
+            logger.info(f"Found {len(services)} services in {compose_file}")
+            return services
+            
+        except Exception as e:
+            logger.error(f"Error reading compose file {compose_file}: {e}")
+            return []
+    
+    def build_image(self, path: str, tag: str, dockerfile: str = 'Dockerfile') -> bool:
+        """Build Docker image"""
+        if not self.client:
+            return False
+        
+        try:
+            logger.info(f"Building image {tag} from {path}")
+            image, build_logs = self.client.images.build(
+                path=path,
+                tag=tag,
+                dockerfile=dockerfile,
+                rm=True
+            )
+            
+            for log in build_logs:
+                if 'stream' in log:
+                    logger.debug(log['stream'].strip())
+            
+            logger.info(f"Successfully built image: {tag}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error building image {tag}: {e}")
+            return False
+    
+    def cleanup_unused_images(self) -> List[str]:
+        """Remove unused Docker images"""
+        if not self.client:
+            return []
+        
+        removed_images = []
+        try:
+            # Remove dangling images
+            filters = {'dangling': True}
+            images = self.client.images.list(filters=filters)
+            
+            for image in images:
+                try:
+                    self.client.images.remove(image.id, force=True)
+                    removed_images.append(image.id[:12])
+                except Exception as e:
+                    logger.warning(f"Could not remove image {image.id[:12]}: {e}")
+            
+            logger.info(f"Removed {len(removed_images)} dangling images")
+            
+        except Exception as e:
+            logger.error(f"Error during image cleanup: {e}")
+        
+        return removed_images
+
+# Standalone utility functions
+def get_container_stats(container_name: str) -> Optional[Dict[str, Any]]:
+    """Get container stats (standalone function)"""
+    manager = DockerManager()
+    return manager.get_container_stats(container_name)
+
+def health_check_containers(container_names: List[str]) -> Dict[str, Dict[str, Any]]:
+    """Health check multiple containers"""
+    manager = DockerManager()
+    results = {}
+    
+    for name in container_names:
+        results[name] = manager.health_check_container(name)
+    
+    return results
+
+def get_system_containers_overview() -> Dict[str, Any]:
+    """Get overview of all system containers"""
+    manager = DockerManager()
+    containers = manager.list_containers()
+    
+    overview = {
+        'total_containers': len(containers),
+        'running': len([c for c in containers if c.status == 'running']),
+        'stopped': len([c for c in containers if c.status != 'running']),
+        'containers': [],
+        'timestamp': datetime.now().isoformat()
+    }
+    
+    for container in containers:
+        stats = manager.get_container_stats(container.name)
+        container_data = {
+            'name': container.name,
+            'image': container.image,
+            'status': container.status,
+            'ports': container.ports,
+            'created': container.created.isoformat(),
+        }
+        
+        if stats:
+            container_data.update({
+                'cpu_percent': stats['cpu_percent'],
+                'memory_usage': format_size(stats['memory_usage']),
+                'memory_percent': stats['memory_percent']
+            })
+        
+        overview['containers'].append(container_data)
+    
+    return overview
+
+if __name__ == "__main__":
+    # Test the Docker utilities
+    manager = DockerManager()
+    
+    if manager.client:
+        logger.info("Testing Docker utilities...")
+        
+        # List containers
+        containers = manager.list_containers()
+        logger.info(f"Found {len(containers)} containers")
+        
+        # Get overview
+        overview = get_system_containers_overview()
+        logger.info(f"System overview: {overview['running']}/{overview['total_containers']} containers running")
+        
+        # Test stats for first running container
+        running_containers = [c for c in containers if c.status == 'running']
+        if running_containers:
+            first_container = running_containers[0]
+            stats = manager.get_container_stats(first_container.name)
+            if stats:
+                logger.info(f"Container {first_container.name}: "
+                          f"CPU {stats['cpu_percent']}%, "
+                          f"Memory {format_size(stats['memory_usage'])}")
+    else:
+        logger.error("Docker not available for testing")

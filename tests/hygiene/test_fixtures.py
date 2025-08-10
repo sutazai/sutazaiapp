@@ -5,6 +5,11 @@ Usage: python -m pytest tests/hygiene/test_fixtures.py
 Requirements: pytest, tempfile
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import unittest
 import tempfile
 import shutil
@@ -77,7 +82,8 @@ def validate_deployment():
     try:
         response = requests.get("http://localhost:10206/health")
         return response.status_code == 200
-    except:
+    except (AssertionError, Exception) as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return False
 
 if __name__ == "__main__":

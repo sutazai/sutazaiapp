@@ -763,7 +763,8 @@ class RuleSystemTester:
             forbidden_terms = ['process', 'configurator', 'transfer', 'enchant']
             # In real implementation, would scan codebase files
             return True
-        except:
+        except (AssertionError, Exception) as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
     
     def _test_concrete_naming(self, rule: RuleConfig, enabled_rules: List[int]) -> bool:

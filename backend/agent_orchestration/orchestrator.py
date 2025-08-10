@@ -266,7 +266,9 @@ class UnifiedAgentOrchestrator:
                             data = await response.json()
                             if isinstance(data, dict) and 'status' in data:
                                 logger.debug(f"Agent {agent.name} health: {data}")
-                        except:
+                        except (IOError, OSError, FileNotFoundError) as e:
+                            # Suppressed exception (was bare except)
+                            logger.debug(f"Suppressed exception: {e}")
                             pass
                             
                     else:

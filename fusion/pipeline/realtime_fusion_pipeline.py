@@ -540,7 +540,9 @@ class RealTimeFusionPipeline:
                 # Mark task as done even on error
                 try:
                     self.processing_queue.task_done()
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
         
         logger.info(f"Worker {worker_id} stopped")

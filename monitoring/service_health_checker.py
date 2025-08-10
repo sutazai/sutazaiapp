@@ -9,11 +9,9 @@ Requirements: requests, psycopg2, redis, neo4j
 import asyncio
 import json
 import logging
-import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Any, Optional
 import argparse
 
 # Third-party imports with graceful degradation
@@ -71,7 +69,9 @@ class ServiceHealthChecker:
                 result = subprocess.run(['pgrep', '-f', 'ollama'], capture_output=True, text=True)
                 if result.returncode == 0:
                     ollama_running = True
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             
             # Also check for Ollama container
@@ -80,7 +80,9 @@ class ServiceHealthChecker:
                                       capture_output=True, text=True)
                 if 'ollama' in result.stdout:
                     ollama_running = True
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             
             if not ollama_running:
@@ -109,7 +111,9 @@ class ServiceHealthChecker:
                         try:
                             version_response = requests.get(f"{base_url}/api/version", timeout=5)
                             version_info = version_response.json() if version_response.status_code == 200 else {}
-                        except:
+                        except Exception as e:
+                            # TODO: Review this exception handling
+                            logger.error(f"Unexpected exception: {e}", exc_info=True)
                             version_info = {}
                         
                         return {
@@ -152,7 +156,9 @@ class ServiceHealthChecker:
                 try:
                     with open('/opt/sutazaiapp/secrets/postgres_password.txt', 'r') as f:
                         password = f.read().strip()
-                except:
+                except Exception as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
             
             start_time = time.time()
@@ -271,7 +277,9 @@ class ServiceHealthChecker:
                 try:
                     with open('/opt/sutazaiapp/secrets/neo4j_password.txt', 'r') as f:
                         password = f.read().strip()
-                except:
+                except Exception as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
             
             start_time = time.time()
@@ -298,7 +306,9 @@ class ServiceHealthChecker:
                 try:
                     result = session.run("CALL apoc.meta.stats() YIELD nodeCount, relCount, labelCount, propertyKeyCount")
                     stats = dict(result.single()) if result else {}
-                except:
+                except Exception as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     stats = {}
             
             driver.close()
@@ -338,7 +348,9 @@ class ServiceHealthChecker:
             # Try to parse JSON response if possible
             try:
                 response_data = response.json()
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 response_data = None
             
             return {

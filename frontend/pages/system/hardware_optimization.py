@@ -3,6 +3,11 @@ Hardware Optimization Page Module - ULTRA-COMPREHENSIVE FRONTEND VALIDATION
 Complete hardware optimization UI with real-time monitoring and control
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import streamlit as st
 import asyncio
 import json
@@ -49,7 +54,9 @@ def show_hardware_optimization():
             backend_health = sync_call_api("/health", timeout=2.0)
             backend_status = "✅ Healthy" if backend_health else "❌ Offline"
             backend_color = "success" if backend_health else "error"
-        except:
+        except (IOError, OSError, FileNotFoundError) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             backend_status = "❌ Error"
             backend_color = "error"
         
@@ -60,7 +67,9 @@ def show_hardware_optimization():
         try:
             hardware_health = sync_call_api("http://127.0.0.1:11110/health", timeout=2.0)
             hardware_status = "✅ Operational" if hardware_health else "❌ Offline"
-        except:
+        except (IOError, OSError, FileNotFoundError) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             hardware_status = "❌ Error"
         
         st.metric("Hardware Service", hardware_status)
@@ -70,7 +79,9 @@ def show_hardware_optimization():
         try:
             ollama_health = sync_call_api("http://127.0.0.1:10104/api/tags", timeout=2.0)
             ollama_status = "✅ Ready" if ollama_health else "❌ Offline"
-        except:
+        except (IOError, OSError, FileNotFoundError) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             ollama_status = "❌ Error"
             
         st.metric("Ollama AI", ollama_status)
@@ -80,7 +91,9 @@ def show_hardware_optimization():
         try:
             db_health = sync_call_api("/api/v1/database/health", timeout=2.0)
             db_status = "✅ Connected" if db_health else "⚠️ Limited"
-        except:
+        except (IOError, OSError, FileNotFoundError) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             db_status = "⚠️ Limited"
             
         st.metric("Database", db_status)
@@ -422,7 +435,9 @@ def show_hardware_optimization():
                     result = sync_call_api(endpoint["url"], timeout=2.0)
                     status = "✅ Online" if result else "❌ Offline"
                     color = "success" if result else "error"
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     status = "❌ Error"
                     color = "error"
                 
@@ -448,7 +463,9 @@ def show_hardware_optimization():
                     # Intentionally call non-existent endpoint
                     result = sync_call_api("http://127.0.0.1:99999/nonexistent", timeout=1.0)
                     st.error("❌ Network error handling test failed - this should not succeed")
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     st.success("✅ Network error handling working correctly")
             
             if st.button("⏱️ Test Timeout"):
@@ -456,7 +473,9 @@ def show_hardware_optimization():
                     # Test with very short timeout
                     result = sync_call_api("http://127.0.0.1:11110/health", timeout=0.001)
                     st.warning("⚠️ Timeout test inconclusive")
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     st.success("✅ Timeout error handling working correctly")
         
         with test_col2:
@@ -466,7 +485,9 @@ def show_hardware_optimization():
                     result = sync_call_api("http://127.0.0.1:11110/optimize/invalid", 
                                          method="POST", data={"invalid": "data"}, timeout=2.0)
                     st.success("✅ Invalid data handled gracefully")
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     st.success("✅ Invalid data error handling working correctly")
             
             if st.button("🔒 Test Authentication"):
@@ -477,7 +498,9 @@ def show_hardware_optimization():
                         st.success("✅ Authentication protection working")
                     else:
                         st.warning("⚠️ Authentication test inconclusive")
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     st.success("✅ Authentication error handling working correctly")
     
     # CRITICAL UI INTEGRATION TEST 7: Responsive Design Validation

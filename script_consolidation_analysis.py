@@ -6,6 +6,11 @@ Author: Ultra System Architect
 Date: 2025-08-10
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import os
 import hashlib
 from pathlib import Path
@@ -17,7 +22,8 @@ def get_file_hash(filepath):
     try:
         with open(filepath, 'rb') as f:
             return hashlib.md5(f.read()).hexdigest()
-    except:
+    except (IOError, OSError, FileNotFoundError) as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return None
 
 def analyze_scripts():
@@ -71,7 +77,9 @@ def analyze_scripts():
                     lines = len(f.readlines())
                     if lines < 10:
                         small_scripts.append((str(filepath), lines))
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
     
     # Generate report

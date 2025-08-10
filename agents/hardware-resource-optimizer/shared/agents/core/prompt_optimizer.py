@@ -6,11 +6,9 @@ Requirements: tiktoken, nltk, asyncio
 """
 
 import re
-import json
 import hashlib
 from typing import Dict, Any, List, Optional, Tuple
 from dataclasses import dataclass
-from collections import defaultdict
 import logging
 
 logger = logging.getLogger(__name__)

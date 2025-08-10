@@ -573,7 +573,9 @@ class AgentRegistryService:
                     try:
                         data = response.json()
                         health_score = data.get("health_score", 100.0)
-                    except:
+                    except (IOError, OSError, FileNotFoundError) as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
                     
                     return {

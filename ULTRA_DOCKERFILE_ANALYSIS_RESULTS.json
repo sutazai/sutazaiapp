@@ -1,0 +1,3698 @@
+{
+  "analysis": {
+    "total_files": 370,
+    "categories": {
+      "python_agents": 52,
+      "nodejs_services": 14,
+      "databases": 10,
+      "monitoring": 10,
+      "frontend": 10,
+      "backend": 12,
+      "base_images": 56,
+      "templates": 0,
+      "security": 4,
+      "ai_ml": 40,
+      "other": 162
+    },
+    "base_image_usage": {
+      "sutazai-python-agent-master:latest": 396,
+      "python:3.12.8-slim-bookworm": 27,
+      "sutazai-nodejs-agent-master:latest": 21,
+      "python:3.12.8-alpine3.20": 12,
+      "nginx:alpine": 9,
+      "sutazai-python-alpine-optimized:latest": 9,
+      "alpine:3.19": 9,
+      "ollama/ollama:latest": 6,
+      "node:20-alpine": 6,
+      "ubuntu:22.04": 6,
+      "chromadb/chroma:0.5.0": 3,
+      "qdrant/qdrant:v1.9.2": 3,
+      "alpine:3.18": 3,
+      "node:18-slim": 3,
+      "golang:1.21-bullseye": 3,
+      "nvidia/cuda:11.8-runtime-ubuntu20.04": 3,
+      "tensorflow/tensorflow:2.14.0-gpu": 3,
+      "nvidia/cuda:11.8-devel-ubuntu22.04": 3,
+      "redis:7.2-alpine": 3,
+      "mcr.microsoft.com/playwright/python:v1.46.0-jammy": 3,
+      "neo4j:5.13-community": 3,
+      "postgres:16.3-alpine": 3,
+      "rabbitmq:3.12-management-alpine": 3,
+      "pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime": 3,
+      "tabbyml/tabby:latest": 3,
+      "nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu22.04": 3,
+      "mcr.microsoft.com/playwright:v1.54.2-jammy": 3,
+      "prom/prometheus:latest": 3
+    },
+    "exact_duplicates": [
+      {
+        "files": [
+          "docker/agentzero/Dockerfile",
+          "docker/agentzero/Dockerfile"
+        ],
+        "count": 2,
+        "size": 738
+      },
+      {
+        "files": [
+          "docker/agent-message-bus/Dockerfile",
+          "docker/agent-message-bus/Dockerfile"
+        ],
+        "count": 2,
+        "size": 754
+      },
+      {
+        "files": [
+          "docker/resource-arbitration-agent/Dockerfile",
+          "docker/resource-arbitration-agent/Dockerfile"
+        ],
+        "count": 2,
+        "size": 671
+      },
+      {
+        "files": [
+          "docker/agent-registry/Dockerfile",
+          "docker/agent-registry/Dockerfile"
+        ],
+        "count": 2,
+        "size": 682
+      },
+      {
+        "files": [
+          "docker/multi-agent-coordinator/Dockerfile",
+          "docker/multi-agent-coordinator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 665
+      },
+      {
+        "files": [
+          "docker/monitoring/Dockerfile.agent-monitor",
+          "docker/monitoring/Dockerfile.agent-monitor"
+        ],
+        "count": 2,
+        "size": 645
+      },
+      {
+        "files": [
+          "docker/agents/Dockerfile",
+          "docker/agents/Dockerfile"
+        ],
+        "count": 2,
+        "size": 657
+      },
+      {
+        "files": [
+          "docker/agents/Dockerfile.langchain",
+          "docker/agents/Dockerfile.langchain"
+        ],
+        "count": 2,
+        "size": 710
+      },
+      {
+        "files": [
+          "docker/agents/Dockerfile.pentestgpt",
+          "docker/agents/Dockerfile.pentestgpt"
+        ],
+        "count": 2,
+        "size": 619
+      },
+      {
+        "files": [
+          "docker/agents/Dockerfile.python-agent",
+          "docker/agents/Dockerfile.python-agent"
+        ],
+        "count": 2,
+        "size": 712
+      },
+      {
+        "files": [
+          "docker/agentgpt-autonomous-executor/Dockerfile",
+          "docker/agentgpt-autonomous-executor/Dockerfile"
+        ],
+        "count": 2,
+        "size": 698
+      },
+      {
+        "files": [
+          "docker/services/agents/infrastructure-devops-manager/Dockerfile",
+          "docker/services/agents/infrastructure-devops-manager/Dockerfile"
+        ],
+        "count": 2,
+        "size": 822
+      },
+      {
+        "files": [
+          "docker/services/agents/deployment-automation-master/Dockerfile",
+          "docker/services/agents/deployment-automation-master/Dockerfile"
+        ],
+        "count": 2,
+        "size": 822
+      },
+      {
+        "files": [
+          "docker/services/agents/senior-ai-engineer/Dockerfile",
+          "docker/services/agents/senior-ai-engineer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 811
+      },
+      {
+        "files": [
+          "agents/task_assignment_coordinator/Dockerfile",
+          "agents/task_assignment_coordinator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 665
+      },
+      {
+        "files": [
+          "agents/jarvis-automation-agent/Dockerfile",
+          "agents/jarvis-automation-agent/Dockerfile"
+        ],
+        "count": 2,
+        "size": 651
+      },
+      {
+        "files": [
+          "agents/jarvis-hardware-resource-optimizer/Dockerfile",
+          "agents/jarvis-hardware-resource-optimizer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 737
+      },
+      {
+        "files": [
+          "agents/ai_agent_orchestrator/Dockerfile.optimized",
+          "agents/ai_agent_orchestrator/Dockerfile.optimized"
+        ],
+        "count": 2,
+        "size": 1754
+      },
+      {
+        "files": [
+          "agents/ai_agent_orchestrator/Dockerfile",
+          "agents/ai_agent_orchestrator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 871
+      },
+      {
+        "files": [
+          "agents/ai_agent_orchestrator/Dockerfile.secure",
+          "agents/ai_agent_orchestrator/Dockerfile.secure"
+        ],
+        "count": 2,
+        "size": 683
+      },
+      {
+        "files": [
+          "agents/resource_arbitration_agent/Dockerfile",
+          "agents/resource_arbitration_agent/Dockerfile"
+        ],
+        "count": 2,
+        "size": 663
+      },
+      {
+        "files": [
+          "agents/jarvis-voice-interface/Dockerfile",
+          "agents/jarvis-voice-interface/Dockerfile"
+        ],
+        "count": 2,
+        "size": 640
+      },
+      {
+        "files": [
+          "agents/ollama_integration/Dockerfile",
+          "agents/ollama_integration/Dockerfile"
+        ],
+        "count": 2,
+        "size": 881
+      },
+      {
+        "files": [
+          "agents/hardware-resource-optimizer/Dockerfile.optimized",
+          "agents/hardware-resource-optimizer/Dockerfile.optimized"
+        ],
+        "count": 2,
+        "size": 1783
+      },
+      {
+        "files": [
+          "agents/hardware-resource-optimizer/Dockerfile",
+          "agents/hardware-resource-optimizer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 890
+      },
+      {
+        "files": [
+          "agents/ai-agent-orchestrator/Dockerfile",
+          "agents/ai-agent-orchestrator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 704
+      },
+      {
+        "files": [
+          "Dockerfile",
+          "Dockerfile"
+        ],
+        "count": 2,
+        "size": 773
+      },
+      {
+        "files": [
+          "docker/Dockerfile",
+          "docker/Dockerfile"
+        ],
+        "count": 2,
+        "size": 996
+      },
+      {
+        "files": [
+          "documind/Dockerfile",
+          "documind/Dockerfile"
+        ],
+        "count": 2,
+        "size": 972
+      },
+      {
+        "files": [
+          "mcp_server/Dockerfile",
+          "mcp_server/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1214
+      },
+      {
+        "files": [
+          "docker/flowise/Dockerfile",
+          "docker/flowise/Dockerfile"
+        ],
+        "count": 2,
+        "size": 930
+      },
+      {
+        "files": [
+          "docker/bigagi/Dockerfile",
+          "docker/bigagi/Dockerfile"
+        ],
+        "count": 2,
+        "size": 850
+      },
+      {
+        "files": [
+          "docker/mcp_server/Dockerfile",
+          "docker/mcp_server/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1146
+      },
+      {
+        "files": [
+          "docker/chromadb-secure/Dockerfile",
+          "docker/chromadb-secure/Dockerfile"
+        ],
+        "count": 2,
+        "size": 729
+      },
+      {
+        "files": [
+          "docker/qdrant-secure/Dockerfile",
+          "docker/qdrant-secure/Dockerfile"
+        ],
+        "count": 2,
+        "size": 699
+      },
+      {
+        "files": [
+          "docker/redis-secure/Dockerfile",
+          "docker/redis-secure/Dockerfile"
+        ],
+        "count": 2,
+        "size": 647
+      },
+      {
+        "files": [
+          "docker/neo4j-secure/Dockerfile",
+          "docker/neo4j-secure/Dockerfile"
+        ],
+        "count": 2,
+        "size": 513
+      },
+      {
+        "files": [
+          "docker/postgres-secure/Dockerfile",
+          "docker/postgres-secure/Dockerfile"
+        ],
+        "count": 2,
+        "size": 577
+      },
+      {
+        "files": [
+          "docker/observability-monitoring-engineer/Dockerfile",
+          "docker/observability-monitoring-engineer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 786
+      },
+      {
+        "files": [
+          "docker/ollama-monitor/Dockerfile",
+          "docker/ollama-monitor/Dockerfile"
+        ],
+        "count": 2,
+        "size": 643
+      },
+      {
+        "files": [
+          "docker/intelligence-optimization-monitor/Dockerfile",
+          "docker/intelligence-optimization-monitor/Dockerfile"
+        ],
+        "count": 2,
+        "size": 708
+      },
+      {
+        "files": [
+          "docker/health-monitor/Dockerfile",
+          "docker/health-monitor/Dockerfile"
+        ],
+        "count": 2,
+        "size": 670
+      },
+      {
+        "files": [
+          "docker/services/monitoring/prometheus/Dockerfile",
+          "docker/services/monitoring/prometheus/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1848
+      },
+      {
+        "files": [
+          "frontend/Dockerfile.optimized",
+          "frontend/Dockerfile.optimized"
+        ],
+        "count": 2,
+        "size": 2586
+      },
+      {
+        "files": [
+          "frontend/Dockerfile",
+          "frontend/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1148
+      },
+      {
+        "files": [
+          "frontend/Dockerfile.secure",
+          "frontend/Dockerfile.secure"
+        ],
+        "count": 2,
+        "size": 1048
+      },
+      {
+        "files": [
+          "docker/frontend/Dockerfile",
+          "docker/frontend/Dockerfile"
+        ],
+        "count": 2,
+        "size": 658
+      },
+      {
+        "files": [
+          "docker/services/frontend/Dockerfile",
+          "docker/services/frontend/Dockerfile"
+        ],
+        "count": 2,
+        "size": 727
+      },
+      {
+        "files": [
+          "backend/Dockerfile.optimized",
+          "backend/Dockerfile.optimized"
+        ],
+        "count": 2,
+        "size": 2406
+      },
+      {
+        "files": [
+          "backend/Dockerfile",
+          "backend/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1039
+      },
+      {
+        "files": [
+          "backend/Dockerfile.secure",
+          "backend/Dockerfile.secure"
+        ],
+        "count": 2,
+        "size": 942
+      },
+      {
+        "files": [
+          "docker/hygiene-backend/Dockerfile",
+          "docker/hygiene-backend/Dockerfile"
+        ],
+        "count": 2,
+        "size": 750
+      },
+      {
+        "files": [
+          "docker/backend/Dockerfile",
+          "docker/backend/Dockerfile"
+        ],
+        "count": 2,
+        "size": 656
+      },
+      {
+        "files": [
+          "docker/services/backend/Dockerfile",
+          "docker/services/backend/Dockerfile"
+        ],
+        "count": 2,
+        "size": 746
+      },
+      {
+        "files": [
+          "docker/Dockerfile.agent-base",
+          "docker/Dockerfile.agent-base"
+        ],
+        "count": 2,
+        "size": 670
+      },
+      {
+        "files": [
+          "docker/python-base-fix/Dockerfile",
+          "docker/python-base-fix/Dockerfile"
+        ],
+        "count": 2,
+        "size": 750
+      },
+      {
+        "files": [
+          "docker/python-agent-base/Dockerfile",
+          "docker/python-agent-base/Dockerfile"
+        ],
+        "count": 2,
+        "size": 735
+      },
+      {
+        "files": [
+          "docker/base/Dockerfile.python-agent-minimal",
+          "docker/base/Dockerfile.python-agent-minimal"
+        ],
+        "count": 2,
+        "size": 765
+      },
+      {
+        "files": [
+          "docker/base/Dockerfile.monitoring-base",
+          "docker/base/Dockerfile.monitoring-base"
+        ],
+        "count": 2,
+        "size": 1553
+      },
+      {
+        "files": [
+          "docker/base/Dockerfile.nodejs-agent-master",
+          "docker/base/Dockerfile.nodejs-agent-master"
+        ],
+        "count": 2,
+        "size": 3276
+      },
+      {
+        "files": [
+          "docker/base/Dockerfile.golang-base",
+          "docker/base/Dockerfile.golang-base"
+        ],
+        "count": 2,
+        "size": 1967
+      },
+      {
+        "files": [
+          "docker/base/Dockerfile.gpu-python-base",
+          "docker/base/Dockerfile.gpu-python-base"
+        ],
+        "count": 2,
+        "size": 985
+      },
+      {
+        "files": [
+          "docker/base/Dockerfile.python-agent-master",
+          "docker/base/Dockerfile.python-agent-master"
+        ],
+        "count": 2,
+        "size": 3103
+      },
+      {
+        "files": [
+          "docker/base/Dockerfile.python-alpine-optimized",
+          "docker/base/Dockerfile.python-alpine-optimized"
+        ],
+        "count": 2,
+        "size": 2831
+      },
+      {
+        "files": [
+          "docker/base/Dockerfile.agent-alpine-template",
+          "docker/base/Dockerfile.agent-alpine-template"
+        ],
+        "count": 2,
+        "size": 1433
+      },
+      {
+        "files": [
+          "docker/alpine-base-fix/Dockerfile",
+          "docker/alpine-base-fix/Dockerfile"
+        ],
+        "count": 2,
+        "size": 514
+      },
+      {
+        "files": [
+          "docker/agent-base/Dockerfile",
+          "docker/agent-base/Dockerfile"
+        ],
+        "count": 2,
+        "size": 641
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.nodejs-service-base",
+          "docker/templates/Dockerfile.nodejs-service-base"
+        ],
+        "count": 2,
+        "size": 4355
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.ai-ml-service-base",
+          "docker/templates/Dockerfile.ai-ml-service-base"
+        ],
+        "count": 2,
+        "size": 6836
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.production-multistage-base",
+          "docker/templates/Dockerfile.production-multistage-base"
+        ],
+        "count": 2,
+        "size": 11617
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.testing-service-base",
+          "docker/templates/Dockerfile.testing-service-base"
+        ],
+        "count": 2,
+        "size": 16586
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.worker-service-base",
+          "docker/templates/Dockerfile.worker-service-base"
+        ],
+        "count": 2,
+        "size": 10558
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.frontend-base",
+          "docker/templates/Dockerfile.frontend-base"
+        ],
+        "count": 2,
+        "size": 6369
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.edge-computing-base",
+          "docker/templates/Dockerfile.edge-computing-base"
+        ],
+        "count": 2,
+        "size": 10494
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.database-service-base",
+          "docker/templates/Dockerfile.database-service-base"
+        ],
+        "count": 2,
+        "size": 9247
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.backend-api-base",
+          "docker/templates/Dockerfile.backend-api-base"
+        ],
+        "count": 2,
+        "size": 11237
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.documentation-base",
+          "docker/templates/Dockerfile.documentation-base"
+        ],
+        "count": 2,
+        "size": 16983
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.monitoring-service-base",
+          "docker/templates/Dockerfile.monitoring-service-base"
+        ],
+        "count": 2,
+        "size": 11050
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.python-agent-base",
+          "docker/templates/Dockerfile.python-agent-base"
+        ],
+        "count": 2,
+        "size": 4563
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.security-service-base",
+          "docker/templates/Dockerfile.security-service-base"
+        ],
+        "count": 2,
+        "size": 15419
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.build-tools-base",
+          "docker/templates/Dockerfile.build-tools-base"
+        ],
+        "count": 2,
+        "size": 16024
+      },
+      {
+        "files": [
+          "docker/templates/Dockerfile.data-pipeline-base",
+          "docker/templates/Dockerfile.data-pipeline-base"
+        ],
+        "count": 2,
+        "size": 15934
+      },
+      {
+        "files": [
+          "docker/ollama-secure/Dockerfile",
+          "docker/ollama-secure/Dockerfile"
+        ],
+        "count": 2,
+        "size": 927
+      },
+      {
+        "files": [
+          "docker/rabbitmq-secure/Dockerfile",
+          "docker/rabbitmq-secure/Dockerfile"
+        ],
+        "count": 2,
+        "size": 850
+      },
+      {
+        "files": [
+          "docker/Dockerfile.streamlit",
+          "docker/Dockerfile.streamlit"
+        ],
+        "count": 2,
+        "size": 675
+      },
+      {
+        "files": [
+          "docker/awesome-code-ai/Dockerfile",
+          "docker/awesome-code-ai/Dockerfile"
+        ],
+        "count": 2,
+        "size": 672
+      },
+      {
+        "files": [
+          "docker/model-training-specialist/Dockerfile",
+          "docker/model-training-specialist/Dockerfile"
+        ],
+        "count": 2,
+        "size": 692
+      },
+      {
+        "files": [
+          "docker/flowiseai-flow-manager/Dockerfile",
+          "docker/flowiseai-flow-manager/Dockerfile"
+        ],
+        "count": 2,
+        "size": 686
+      },
+      {
+        "files": [
+          "docker/ollama-integration/Dockerfile",
+          "docker/ollama-integration/Dockerfile"
+        ],
+        "count": 2,
+        "size": 679
+      },
+      {
+        "files": [
+          "docker/model-optimizer/Dockerfile",
+          "docker/model-optimizer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 687
+      },
+      {
+        "files": [
+          "docker/langflow/Dockerfile",
+          "docker/langflow/Dockerfile"
+        ],
+        "count": 2,
+        "size": 653
+      },
+      {
+        "files": [
+          "docker/tabbyml/Dockerfile",
+          "docker/tabbyml/Dockerfile"
+        ],
+        "count": 2,
+        "size": 737
+      },
+      {
+        "files": [
+          "docker/senior-ai-engineer/Dockerfile",
+          "docker/senior-ai-engineer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1078
+      },
+      {
+        "files": [
+          "docker/reinforcement-learning-trainer/Dockerfile",
+          "docker/reinforcement-learning-trainer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 702
+      },
+      {
+        "files": [
+          "docker/faiss/Dockerfile.optimized",
+          "docker/faiss/Dockerfile.optimized"
+        ],
+        "count": 2,
+        "size": 2664
+      },
+      {
+        "files": [
+          "docker/faiss/Dockerfile",
+          "docker/faiss/Dockerfile"
+        ],
+        "count": 2,
+        "size": 663
+      },
+      {
+        "files": [
+          "docker/jarvis-ai/Dockerfile",
+          "docker/jarvis-ai/Dockerfile"
+        ],
+        "count": 2,
+        "size": 673
+      },
+      {
+        "files": [
+          "docker/explainable-ai-specialist/Dockerfile",
+          "docker/explainable-ai-specialist/Dockerfile"
+        ],
+        "count": 2,
+        "size": 692
+      },
+      {
+        "files": [
+          "docker/enhanced-model-manager/Dockerfile",
+          "docker/enhanced-model-manager/Dockerfile"
+        ],
+        "count": 2,
+        "size": 738
+      },
+      {
+        "files": [
+          "docker/ai-metrics-exporter/Dockerfile",
+          "docker/ai-metrics-exporter/Dockerfile"
+        ],
+        "count": 2,
+        "size": 648
+      },
+      {
+        "files": [
+          "docker/tabbyml-cpu/Dockerfile",
+          "docker/tabbyml-cpu/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1124
+      },
+      {
+        "files": [
+          "docker/chainlit/Dockerfile",
+          "docker/chainlit/Dockerfile"
+        ],
+        "count": 2,
+        "size": 716
+      },
+      {
+        "files": [
+          "docker/services/infrastructure/ollama/Dockerfile",
+          "docker/services/infrastructure/ollama/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1873
+      },
+      {
+        "files": [
+          "services/jarvis-model-manager/Dockerfile",
+          "services/jarvis-model-manager/Dockerfile"
+        ],
+        "count": 2,
+        "size": 688
+      },
+      {
+        "files": [
+          "self-healing/Dockerfile",
+          "self-healing/Dockerfile"
+        ],
+        "count": 2,
+        "size": 744
+      },
+      {
+        "files": [
+          "docker/Dockerfile.healthcheck",
+          "docker/Dockerfile.healthcheck"
+        ],
+        "count": 2,
+        "size": 723
+      },
+      {
+        "files": [
+          "skyvern/Dockerfile",
+          "skyvern/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1159
+      },
+      {
+        "files": [
+          "docker/data-analysis-engineer/Dockerfile",
+          "docker/data-analysis-engineer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 764
+      },
+      {
+        "files": [
+          "docker/product-strategy-architect/Dockerfile",
+          "docker/product-strategy-architect/Dockerfile"
+        ],
+        "count": 2,
+        "size": 772
+      },
+      {
+        "files": [
+          "docker/rule-control/Dockerfile",
+          "docker/rule-control/Dockerfile"
+        ],
+        "count": 2,
+        "size": 744
+      },
+      {
+        "files": [
+          "docker/cognitive-architecture-designer/Dockerfile",
+          "docker/cognitive-architecture-designer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 782
+      },
+      {
+        "files": [
+          "docker/private-data-analyst/Dockerfile",
+          "docker/private-data-analyst/Dockerfile"
+        ],
+        "count": 2,
+        "size": 682
+      },
+      {
+        "files": [
+          "docker/fsdp/Dockerfile",
+          "docker/fsdp/Dockerfile"
+        ],
+        "count": 2,
+        "size": 650
+      },
+      {
+        "files": [
+          "docker/dify-automation-specialist/Dockerfile",
+          "docker/dify-automation-specialist/Dockerfile"
+        ],
+        "count": 2,
+        "size": 694
+      },
+      {
+        "files": [
+          "docker/self-healing/Dockerfile",
+          "docker/self-healing/Dockerfile"
+        ],
+        "count": 2,
+        "size": 685
+      },
+      {
+        "files": [
+          "docker/hygiene-reporter/Dockerfile",
+          "docker/hygiene-reporter/Dockerfile"
+        ],
+        "count": 2,
+        "size": 522
+      },
+      {
+        "files": [
+          "docker/causal-inference-expert/Dockerfile",
+          "docker/causal-inference-expert/Dockerfile"
+        ],
+        "count": 2,
+        "size": 688
+      },
+      {
+        "files": [
+          "docker/multi-modal-fusion-coordinator/Dockerfile",
+          "docker/multi-modal-fusion-coordinator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 702
+      },
+      {
+        "files": [
+          "docker/jarvis-agi/Dockerfile",
+          "docker/jarvis-agi/Dockerfile"
+        ],
+        "count": 2,
+        "size": 654
+      },
+      {
+        "files": [
+          "docker/tensorflow/Dockerfile",
+          "docker/tensorflow/Dockerfile"
+        ],
+        "count": 2,
+        "size": 466
+      },
+      {
+        "files": [
+          "docker/health-check/Dockerfile",
+          "docker/health-check/Dockerfile"
+        ],
+        "count": 2,
+        "size": 676
+      },
+      {
+        "files": [
+          "docker/context-framework/Dockerfile",
+          "docker/context-framework/Dockerfile"
+        ],
+        "count": 2,
+        "size": 676
+      },
+      {
+        "files": [
+          "docker/task-scheduler/Dockerfile",
+          "docker/task-scheduler/Dockerfile"
+        ],
+        "count": 2,
+        "size": 720
+      },
+      {
+        "files": [
+          "docker/browser-use/Dockerfile",
+          "docker/browser-use/Dockerfile"
+        ],
+        "count": 2,
+        "size": 659
+      },
+      {
+        "files": [
+          "docker/privategpt/Dockerfile",
+          "docker/privategpt/Dockerfile"
+        ],
+        "count": 2,
+        "size": 662
+      },
+      {
+        "files": [
+          "docker/synthetic-data-generator/Dockerfile",
+          "docker/synthetic-data-generator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 690
+      },
+      {
+        "files": [
+          "docker/meta-learning-specialist/Dockerfile",
+          "docker/meta-learning-specialist/Dockerfile"
+        ],
+        "count": 2,
+        "size": 690
+      },
+      {
+        "files": [
+          "docker/pentestgpt/Dockerfile",
+          "docker/pentestgpt/Dockerfile"
+        ],
+        "count": 2,
+        "size": 674
+      },
+      {
+        "files": [
+          "docker/data-pipeline-engineer/Dockerfile",
+          "docker/data-pipeline-engineer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 686
+      },
+      {
+        "files": [
+          "docker/self-healing-orchestrator/Dockerfile",
+          "docker/self-healing-orchestrator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 692
+      },
+      {
+        "files": [
+          "docker/transformers-migration-specialist/Dockerfile",
+          "docker/transformers-migration-specialist/Dockerfile"
+        ],
+        "count": 2,
+        "size": 708
+      },
+      {
+        "files": [
+          "docker/symbolic-reasoning-engine/Dockerfile",
+          "docker/symbolic-reasoning-engine/Dockerfile"
+        ],
+        "count": 2,
+        "size": 692
+      },
+      {
+        "files": [
+          "docker/hygiene-scanner/Dockerfile",
+          "docker/hygiene-scanner/Dockerfile"
+        ],
+        "count": 2,
+        "size": 679
+      },
+      {
+        "files": [
+          "docker/api-gateway/Dockerfile",
+          "docker/api-gateway/Dockerfile"
+        ],
+        "count": 2,
+        "size": 671
+      },
+      {
+        "files": [
+          "docker/context-engineering/Dockerfile",
+          "docker/context-engineering/Dockerfile"
+        ],
+        "count": 2,
+        "size": 733
+      },
+      {
+        "files": [
+          "docker/hygiene-validator/Dockerfile",
+          "docker/hygiene-validator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 683
+      },
+      {
+        "files": [
+          "docker/hardware-optimizer/Dockerfile",
+          "docker/hardware-optimizer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 679
+      },
+      {
+        "files": [
+          "docker/jarvis-voice-interface/Dockerfile",
+          "docker/jarvis-voice-interface/Dockerfile"
+        ],
+        "count": 2,
+        "size": 686
+      },
+      {
+        "files": [
+          "docker/knowledge-distillation-expert/Dockerfile",
+          "docker/knowledge-distillation-expert/Dockerfile"
+        ],
+        "count": 2,
+        "size": 700
+      },
+      {
+        "files": [
+          "docker/knowledge-manager/Dockerfile",
+          "docker/knowledge-manager/Dockerfile"
+        ],
+        "count": 2,
+        "size": 750
+      },
+      {
+        "files": [
+          "docker/context-optimizer/Dockerfile",
+          "docker/context-optimizer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 677
+      },
+      {
+        "files": [
+          "docker/task-assignment-coordinator/Dockerfile",
+          "docker/task-assignment-coordinator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 696
+      },
+      {
+        "files": [
+          "docker/nginx/Dockerfile",
+          "docker/nginx/Dockerfile"
+        ],
+        "count": 2,
+        "size": 935
+      },
+      {
+        "files": [
+          "docker/service-hub/Dockerfile",
+          "docker/service-hub/Dockerfile"
+        ],
+        "count": 2,
+        "size": 664
+      },
+      {
+        "files": [
+          "docker/documind/Dockerfile",
+          "docker/documind/Dockerfile"
+        ],
+        "count": 2,
+        "size": 712
+      },
+      {
+        "files": [
+          "docker/federated-learning-coordinator/Dockerfile",
+          "docker/federated-learning-coordinator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 702
+      },
+      {
+        "files": [
+          "docker/autogpt-real/Dockerfile",
+          "docker/autogpt-real/Dockerfile"
+        ],
+        "count": 2,
+        "size": 710
+      },
+      {
+        "files": [
+          "docker/mesh-worker/Dockerfile",
+          "docker/mesh-worker/Dockerfile"
+        ],
+        "count": 2,
+        "size": 818
+      },
+      {
+        "files": [
+          "docker/distributed-computing-architect/Dockerfile",
+          "docker/distributed-computing-architect/Dockerfile"
+        ],
+        "count": 2,
+        "size": 704
+      },
+      {
+        "files": [
+          "docker/shellgpt/Dockerfile",
+          "docker/shellgpt/Dockerfile"
+        ],
+        "count": 2,
+        "size": 658
+      },
+      {
+        "files": [
+          "docker/garbage-collector-coordinator/Dockerfile",
+          "docker/garbage-collector-coordinator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 700
+      },
+      {
+        "files": [
+          "docker/semgrep/Dockerfile",
+          "docker/semgrep/Dockerfile"
+        ],
+        "count": 2,
+        "size": 668
+      },
+      {
+        "files": [
+          "docker/skyvern/Dockerfile",
+          "docker/skyvern/Dockerfile"
+        ],
+        "count": 2,
+        "size": 836
+      },
+      {
+        "files": [
+          "docker/gradient-compression-specialist/Dockerfile",
+          "docker/gradient-compression-specialist/Dockerfile"
+        ],
+        "count": 2,
+        "size": 704
+      },
+      {
+        "files": [
+          "docker/dify/Dockerfile",
+          "docker/dify/Dockerfile"
+        ],
+        "count": 2,
+        "size": 645
+      },
+      {
+        "files": [
+          "docker/episodic-memory-engineer/Dockerfile",
+          "docker/episodic-memory-engineer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 690
+      },
+      {
+        "files": [
+          "docker/bigagi-system-manager/Dockerfile",
+          "docker/bigagi-system-manager/Dockerfile"
+        ],
+        "count": 2,
+        "size": 684
+      },
+      {
+        "files": [
+          "docker/hygiene-dashboard/Dockerfile",
+          "docker/hygiene-dashboard/Dockerfile"
+        ],
+        "count": 2,
+        "size": 1037
+      },
+      {
+        "files": [
+          "docker/babyagi/Dockerfile",
+          "docker/babyagi/Dockerfile"
+        ],
+        "count": 2,
+        "size": 656
+      },
+      {
+        "files": [
+          "docker/jax/Dockerfile",
+          "docker/jax/Dockerfile"
+        ],
+        "count": 2,
+        "size": 659
+      },
+      {
+        "files": [
+          "docker/browser-automation-orchestrator/Dockerfile",
+          "docker/browser-automation-orchestrator/Dockerfile"
+        ],
+        "count": 2,
+        "size": 704
+      },
+      {
+        "files": [
+          "docker/autogen/Dockerfile",
+          "docker/autogen/Dockerfile"
+        ],
+        "count": 2,
+        "size": 656
+      },
+      {
+        "files": [
+          "docker/code-generation-improver/Dockerfile",
+          "docker/code-generation-improver/Dockerfile"
+        ],
+        "count": 2,
+        "size": 693
+      },
+      {
+        "files": [
+          "docker/localagi-orchestration-manager/Dockerfile",
+          "docker/localagi-orchestration-manager/Dockerfile"
+        ],
+        "count": 2,
+        "size": 702
+      },
+      {
+        "files": [
+          "docker/memory-persistence-manager/Dockerfile",
+          "docker/memory-persistence-manager/Dockerfile"
+        ],
+        "count": 2,
+        "size": 694
+      },
+      {
+        "files": [
+          "docker/fms-fsdp/Dockerfile",
+          "docker/fms-fsdp/Dockerfile"
+        ],
+        "count": 2,
+        "size": 709
+      },
+      {
+        "files": [
+          "docker/localagi/Dockerfile",
+          "docker/localagi/Dockerfile"
+        ],
+        "count": 2,
+        "size": 701
+      },
+      {
+        "files": [
+          "docker/pytorch/Dockerfile",
+          "docker/pytorch/Dockerfile"
+        ],
+        "count": 2,
+        "size": 479
+      },
+      {
+        "files": [
+          "docker/neuromorphic-computing-expert/Dockerfile",
+          "docker/neuromorphic-computing-expert/Dockerfile"
+        ],
+        "count": 2,
+        "size": 700
+      },
+      {
+        "files": [
+          "docker/attention-optimizer/Dockerfile",
+          "docker/attention-optimizer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 680
+      },
+      {
+        "files": [
+          "docker/semgrep-security-analyzer/Dockerfile",
+          "docker/semgrep-security-analyzer/Dockerfile"
+        ],
+        "count": 2,
+        "size": 692
+      },
+      {
+        "files": [
+          "docker/mcp-server/Dockerfile",
+          "docker/mcp-server/Dockerfile"
+        ],
+        "count": 2,
+        "size": 662
+      },
+      {
+        "files": [
+          "docker/infrastructure-devops/Dockerfile",
+          "docker/infrastructure-devops/Dockerfile"
+        ],
+        "count": 2,
+        "size": 685
+      },
+      {
+        "files": [
+          "docker/knowledge-graph-builder/Dockerfile",
+          "docker/knowledge-graph-builder/Dockerfile"
+        ],
+        "count": 2,
+        "size": 688
+      },
+      {
+        "files": [
+          "docker/code-improver/Dockerfile",
+          "docker/code-improver/Dockerfile"
+        ],
+        "count": 2,
+        "size": 668
+      },
+      {
+        "files": [
+          "docker/opendevin/Dockerfile",
+          "docker/opendevin/Dockerfile"
+        ],
+        "count": 2,
+        "size": 703
+      },
+      {
+        "files": [
+          "docker/letta/Dockerfile",
+          "docker/letta/Dockerfile"
+        ],
+        "count": 2,
+        "size": 652
+      },
+      {
+        "files": [
+          "docker/mcp_server/playwright/Dockerfile",
+          "docker/mcp_server/playwright/Dockerfile"
+        ],
+        "count": 2,
+        "size": 321
+      },
+      {
+        "files": [
+          "auth/service-account-manager/Dockerfile",
+          "auth/service-account-manager/Dockerfile"
+        ],
+        "count": 2,
+        "size": 683
+      },
+      {
+        "files": [
+          "auth/jwt-service/Dockerfile",
+          "auth/jwt-service/Dockerfile"
+        ],
+        "count": 2,
+        "size": 659
+      },
+      {
+        "files": [
+          "auth/rbac-engine/Dockerfile",
+          "auth/rbac-engine/Dockerfile"
+        ],
+        "count": 2,
+        "size": 659
+      },
+      {
+        "files": [
+          "services/jarvis-task-controller/Dockerfile",
+          "services/jarvis-task-controller/Dockerfile"
+        ],
+        "count": 2,
+        "size": 692
+      },
+      {
+        "files": [
+          "services/jarvis-voice-handler/Dockerfile",
+          "services/jarvis-voice-handler/Dockerfile"
+        ],
+        "count": 2,
+        "size": 688
+      },
+      {
+        "files": [
+          "services/jarvis/Dockerfile",
+          "services/jarvis/Dockerfile"
+        ],
+        "count": 2,
+        "size": 672
+      },
+      {
+        "files": [
+          "services/scaler/Dockerfile",
+          "services/scaler/Dockerfile"
+        ],
+        "count": 2,
+        "size": 671
+      }
+    ],
+    "near_duplicates": [
+      {
+        "pattern": "sutazai-python-agent-master:latest",
+        "files": [
+          "docker/agentzero/Dockerfile",
+          "docker/agent-message-bus/Dockerfile",
+          "docker/resource-arbitration-agent/Dockerfile",
+          "docker/agent-registry/Dockerfile",
+          "docker/multi-agent-coordinator/Dockerfile",
+          "docker/monitoring/Dockerfile.agent-monitor",
+          "docker/agents/Dockerfile",
+          "docker/agents/Dockerfile.langchain",
+          "docker/agents/Dockerfile.pentestgpt",
+          "docker/agents/Dockerfile.python-agent",
+          "docker/agentgpt-autonomous-executor/Dockerfile",
+          "agents/task_assignment_coordinator/Dockerfile",
+          "agents/jarvis-automation-agent/Dockerfile",
+          "agents/jarvis-hardware-resource-optimizer/Dockerfile",
+          "agents/ai_agent_orchestrator/Dockerfile.secure",
+          "agents/resource_arbitration_agent/Dockerfile",
+          "agents/jarvis-voice-interface/Dockerfile",
+          "agents/ai-agent-orchestrator/Dockerfile",
+          "docker/agentzero/Dockerfile",
+          "docker/agent-message-bus/Dockerfile",
+          "docker/resource-arbitration-agent/Dockerfile",
+          "docker/agent-registry/Dockerfile",
+          "docker/multi-agent-coordinator/Dockerfile",
+          "docker/monitoring/Dockerfile.agent-monitor",
+          "docker/agents/Dockerfile",
+          "docker/agents/Dockerfile.langchain",
+          "docker/agents/Dockerfile.pentestgpt",
+          "docker/agents/Dockerfile.python-agent",
+          "docker/agentgpt-autonomous-executor/Dockerfile",
+          "agents/task_assignment_coordinator/Dockerfile",
+          "agents/jarvis-automation-agent/Dockerfile",
+          "agents/jarvis-hardware-resource-optimizer/Dockerfile",
+          "agents/ai_agent_orchestrator/Dockerfile.secure",
+          "agents/resource_arbitration_agent/Dockerfile",
+          "agents/jarvis-voice-interface/Dockerfile",
+          "agents/ai-agent-orchestrator/Dockerfile",
+          "docker/observability-monitoring-engineer/Dockerfile",
+          "docker/ollama-monitor/Dockerfile",
+          "docker/intelligence-optimization-monitor/Dockerfile",
+          "docker/health-monitor/Dockerfile",
+          "docker/observability-monitoring-engineer/Dockerfile",
+          "docker/ollama-monitor/Dockerfile",
+          "docker/intelligence-optimization-monitor/Dockerfile",
+          "docker/health-monitor/Dockerfile",
+          "docker/frontend/Dockerfile",
+          "docker/services/frontend/Dockerfile",
+          "docker/frontend/Dockerfile",
+          "docker/services/frontend/Dockerfile",
+          "docker/hygiene-backend/Dockerfile",
+          "docker/backend/Dockerfile",
+          "docker/services/backend/Dockerfile",
+          "docker/hygiene-backend/Dockerfile",
+          "docker/backend/Dockerfile",
+          "docker/services/backend/Dockerfile",
+          "docker/Dockerfile.agent-base",
+          "docker/python-base-fix/Dockerfile",
+          "docker/python-agent-base/Dockerfile",
+          "docker/agent-base/Dockerfile",
+          "docker/Dockerfile.agent-base",
+          "docker/python-base-fix/Dockerfile",
+          "docker/python-agent-base/Dockerfile",
+          "docker/agent-base/Dockerfile",
+          "docker/Dockerfile.streamlit",
+          "docker/awesome-code-ai/Dockerfile",
+          "docker/model-training-specialist/Dockerfile",
+          "docker/flowiseai-flow-manager/Dockerfile",
+          "docker/ollama-integration/Dockerfile",
+          "docker/model-optimizer/Dockerfile",
+          "docker/langflow/Dockerfile",
+          "docker/senior-ai-engineer/Dockerfile",
+          "docker/reinforcement-learning-trainer/Dockerfile",
+          "docker/faiss/Dockerfile",
+          "docker/jarvis-ai/Dockerfile",
+          "docker/explainable-ai-specialist/Dockerfile",
+          "docker/enhanced-model-manager/Dockerfile",
+          "docker/ai-metrics-exporter/Dockerfile",
+          "docker/chainlit/Dockerfile",
+          "services/jarvis-model-manager/Dockerfile",
+          "docker/Dockerfile.streamlit",
+          "docker/awesome-code-ai/Dockerfile",
+          "docker/model-training-specialist/Dockerfile",
+          "docker/flowiseai-flow-manager/Dockerfile",
+          "docker/ollama-integration/Dockerfile",
+          "docker/model-optimizer/Dockerfile",
+          "docker/langflow/Dockerfile",
+          "docker/senior-ai-engineer/Dockerfile",
+          "docker/reinforcement-learning-trainer/Dockerfile",
+          "docker/faiss/Dockerfile",
+          "docker/jarvis-ai/Dockerfile",
+          "docker/explainable-ai-specialist/Dockerfile",
+          "docker/enhanced-model-manager/Dockerfile",
+          "docker/ai-metrics-exporter/Dockerfile",
+          "docker/chainlit/Dockerfile",
+          "services/jarvis-model-manager/Dockerfile",
+          "self-healing/Dockerfile",
+          "docker/Dockerfile.healthcheck",
+          "docker/data-analysis-engineer/Dockerfile",
+          "docker/product-strategy-architect/Dockerfile",
+          "docker/rule-control/Dockerfile",
+          "docker/cognitive-architecture-designer/Dockerfile",
+          "docker/private-data-analyst/Dockerfile",
+          "docker/fsdp/Dockerfile",
+          "docker/dify-automation-specialist/Dockerfile",
+          "docker/self-healing/Dockerfile",
+          "docker/causal-inference-expert/Dockerfile",
+          "docker/multi-modal-fusion-coordinator/Dockerfile",
+          "docker/jarvis-agi/Dockerfile",
+          "docker/health-check/Dockerfile",
+          "docker/context-framework/Dockerfile",
+          "docker/task-scheduler/Dockerfile",
+          "docker/browser-use/Dockerfile",
+          "docker/privategpt/Dockerfile",
+          "docker/synthetic-data-generator/Dockerfile",
+          "docker/meta-learning-specialist/Dockerfile",
+          "docker/pentestgpt/Dockerfile",
+          "docker/data-pipeline-engineer/Dockerfile",
+          "docker/self-healing-orchestrator/Dockerfile",
+          "docker/transformers-migration-specialist/Dockerfile",
+          "docker/symbolic-reasoning-engine/Dockerfile",
+          "docker/hygiene-scanner/Dockerfile",
+          "docker/api-gateway/Dockerfile",
+          "docker/context-engineering/Dockerfile",
+          "docker/hygiene-validator/Dockerfile",
+          "docker/hardware-optimizer/Dockerfile",
+          "docker/jarvis-voice-interface/Dockerfile",
+          "docker/knowledge-distillation-expert/Dockerfile",
+          "docker/knowledge-manager/Dockerfile",
+          "docker/context-optimizer/Dockerfile",
+          "docker/task-assignment-coordinator/Dockerfile",
+          "docker/service-hub/Dockerfile",
+          "docker/documind/Dockerfile",
+          "docker/federated-learning-coordinator/Dockerfile",
+          "docker/autogpt-real/Dockerfile",
+          "docker/mesh-worker/Dockerfile",
+          "docker/distributed-computing-architect/Dockerfile",
+          "docker/shellgpt/Dockerfile",
+          "docker/garbage-collector-coordinator/Dockerfile",
+          "docker/semgrep/Dockerfile",
+          "docker/gradient-compression-specialist/Dockerfile",
+          "docker/dify/Dockerfile",
+          "docker/episodic-memory-engineer/Dockerfile",
+          "docker/bigagi-system-manager/Dockerfile",
+          "docker/babyagi/Dockerfile",
+          "docker/jax/Dockerfile",
+          "docker/browser-automation-orchestrator/Dockerfile",
+          "docker/autogen/Dockerfile",
+          "docker/code-generation-improver/Dockerfile",
+          "docker/localagi-orchestration-manager/Dockerfile",
+          "docker/memory-persistence-manager/Dockerfile",
+          "docker/fms-fsdp/Dockerfile",
+          "docker/localagi/Dockerfile",
+          "docker/neuromorphic-computing-expert/Dockerfile",
+          "docker/attention-optimizer/Dockerfile",
+          "docker/semgrep-security-analyzer/Dockerfile",
+          "docker/mcp-server/Dockerfile",
+          "docker/infrastructure-devops/Dockerfile",
+          "docker/knowledge-graph-builder/Dockerfile",
+          "docker/code-improver/Dockerfile",
+          "docker/opendevin/Dockerfile",
+          "docker/letta/Dockerfile",
+          "auth/service-account-manager/Dockerfile",
+          "auth/jwt-service/Dockerfile",
+          "auth/rbac-engine/Dockerfile",
+          "services/jarvis-task-controller/Dockerfile",
+          "services/jarvis-voice-handler/Dockerfile",
+          "services/jarvis/Dockerfile",
+          "services/scaler/Dockerfile",
+          "self-healing/Dockerfile",
+          "docker/Dockerfile.healthcheck",
+          "docker/data-analysis-engineer/Dockerfile",
+          "docker/product-strategy-architect/Dockerfile",
+          "docker/rule-control/Dockerfile",
+          "docker/cognitive-architecture-designer/Dockerfile",
+          "docker/private-data-analyst/Dockerfile",
+          "docker/fsdp/Dockerfile",
+          "docker/dify-automation-specialist/Dockerfile",
+          "docker/self-healing/Dockerfile",
+          "docker/causal-inference-expert/Dockerfile",
+          "docker/multi-modal-fusion-coordinator/Dockerfile",
+          "docker/jarvis-agi/Dockerfile",
+          "docker/health-check/Dockerfile",
+          "docker/context-framework/Dockerfile",
+          "docker/task-scheduler/Dockerfile",
+          "docker/browser-use/Dockerfile",
+          "docker/privategpt/Dockerfile",
+          "docker/synthetic-data-generator/Dockerfile",
+          "docker/meta-learning-specialist/Dockerfile",
+          "docker/pentestgpt/Dockerfile",
+          "docker/data-pipeline-engineer/Dockerfile",
+          "docker/self-healing-orchestrator/Dockerfile",
+          "docker/transformers-migration-specialist/Dockerfile",
+          "docker/symbolic-reasoning-engine/Dockerfile",
+          "docker/hygiene-scanner/Dockerfile",
+          "docker/api-gateway/Dockerfile",
+          "docker/context-engineering/Dockerfile",
+          "docker/hygiene-validator/Dockerfile",
+          "docker/hardware-optimizer/Dockerfile",
+          "docker/jarvis-voice-interface/Dockerfile",
+          "docker/knowledge-distillation-expert/Dockerfile",
+          "docker/knowledge-manager/Dockerfile",
+          "docker/context-optimizer/Dockerfile",
+          "docker/task-assignment-coordinator/Dockerfile",
+          "docker/service-hub/Dockerfile",
+          "docker/documind/Dockerfile",
+          "docker/federated-learning-coordinator/Dockerfile",
+          "docker/autogpt-real/Dockerfile",
+          "docker/mesh-worker/Dockerfile",
+          "docker/distributed-computing-architect/Dockerfile",
+          "docker/shellgpt/Dockerfile",
+          "docker/garbage-collector-coordinator/Dockerfile",
+          "docker/semgrep/Dockerfile",
+          "docker/gradient-compression-specialist/Dockerfile",
+          "docker/dify/Dockerfile",
+          "docker/episodic-memory-engineer/Dockerfile",
+          "docker/bigagi-system-manager/Dockerfile",
+          "docker/babyagi/Dockerfile",
+          "docker/jax/Dockerfile",
+          "docker/browser-automation-orchestrator/Dockerfile",
+          "docker/autogen/Dockerfile",
+          "docker/code-generation-improver/Dockerfile",
+          "docker/localagi-orchestration-manager/Dockerfile",
+          "docker/memory-persistence-manager/Dockerfile",
+          "docker/fms-fsdp/Dockerfile",
+          "docker/localagi/Dockerfile",
+          "docker/neuromorphic-computing-expert/Dockerfile",
+          "docker/attention-optimizer/Dockerfile",
+          "docker/semgrep-security-analyzer/Dockerfile",
+          "docker/mcp-server/Dockerfile",
+          "docker/infrastructure-devops/Dockerfile",
+          "docker/knowledge-graph-builder/Dockerfile",
+          "docker/code-improver/Dockerfile",
+          "docker/opendevin/Dockerfile",
+          "docker/letta/Dockerfile",
+          "auth/service-account-manager/Dockerfile",
+          "auth/jwt-service/Dockerfile",
+          "auth/rbac-engine/Dockerfile",
+          "services/jarvis-task-controller/Dockerfile",
+          "services/jarvis-voice-handler/Dockerfile",
+          "services/jarvis/Dockerfile",
+          "services/scaler/Dockerfile"
+        ],
+        "count": 240
+      },
+      {
+        "pattern": "sutazai-python-agent-master:latest",
+        "files": [
+          "docker/services/agents/infrastructure-devops-manager/Dockerfile",
+          "docker/services/agents/deployment-automation-master/Dockerfile",
+          "docker/services/agents/senior-ai-engineer/Dockerfile",
+          "docker/services/agents/infrastructure-devops-manager/Dockerfile",
+          "docker/services/agents/deployment-automation-master/Dockerfile",
+          "docker/services/agents/senior-ai-engineer/Dockerfile"
+        ],
+        "count": 6
+      },
+      {
+        "pattern": "sutazai-python-agent-master:latest",
+        "files": [
+          "agents/ai_agent_orchestrator/Dockerfile",
+          "agents/ollama_integration/Dockerfile",
+          "agents/ai_agent_orchestrator/Dockerfile",
+          "agents/ollama_integration/Dockerfile"
+        ],
+        "count": 4
+      }
+    ],
+    "consolidation_opportunities": [
+      {
+        "category": "python_agents",
+        "current_count": 52,
+        "target_count": 3,
+        "consolidation_strategy": "Use sutazai-python-agent-master base with service-specific overrides",
+        "savings": "Reduce from 52 to 3 files (~94% reduction)"
+      },
+      {
+        "category": "databases",
+        "current_count": 10,
+        "target_count": 2,
+        "consolidation_strategy": "Unified database base with security overlays",
+        "savings": "Reduce from 10 to 2 files (~80% reduction)"
+      },
+      {
+        "category": "ai_ml",
+        "current_count": 40,
+        "target_count": 4,
+        "consolidation_strategy": "Framework-specific base images",
+        "savings": "Reduce from 40 to 4 files (~90% reduction)"
+      }
+    ],
+    "security_issues": [],
+    "optimization_potential": []
+  },
+  "categories": {
+    "python_agents": [
+      {
+        "path": "docker/agentzero/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 738
+      },
+      {
+        "path": "docker/agent-message-bus/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 754
+      },
+      {
+        "path": "docker/resource-arbitration-agent/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 671
+      },
+      {
+        "path": "docker/agent-registry/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 682
+      },
+      {
+        "path": "docker/multi-agent-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 665
+      },
+      {
+        "path": "docker/monitoring/Dockerfile.agent-monitor",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 645
+      },
+      {
+        "path": "docker/agents/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 657
+      },
+      {
+        "path": "docker/agents/Dockerfile.langchain",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 710
+      },
+      {
+        "path": "docker/agents/Dockerfile.pentestgpt",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 619
+      },
+      {
+        "path": "docker/agents/Dockerfile.python-agent",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 712
+      },
+      {
+        "path": "docker/agentgpt-autonomous-executor/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 698
+      },
+      {
+        "path": "docker/services/agents/infrastructure-devops-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 822
+      },
+      {
+        "path": "docker/services/agents/deployment-automation-master/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 822
+      },
+      {
+        "path": "docker/services/agents/senior-ai-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 811
+      },
+      {
+        "path": "agents/task_assignment_coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 665
+      },
+      {
+        "path": "agents/jarvis-automation-agent/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 651
+      },
+      {
+        "path": "agents/jarvis-hardware-resource-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 737
+      },
+      {
+        "path": "agents/ai_agent_orchestrator/Dockerfile.optimized",
+        "base_image": "sutazai-python-alpine-optimized:latest",
+        "size": 1754
+      },
+      {
+        "path": "agents/ai_agent_orchestrator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 871
+      },
+      {
+        "path": "agents/ai_agent_orchestrator/Dockerfile.secure",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 683
+      },
+      {
+        "path": "agents/resource_arbitration_agent/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 663
+      },
+      {
+        "path": "agents/jarvis-voice-interface/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 640
+      },
+      {
+        "path": "agents/ollama_integration/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 881
+      },
+      {
+        "path": "agents/hardware-resource-optimizer/Dockerfile.optimized",
+        "base_image": "sutazai-python-alpine-optimized:latest",
+        "size": 1783
+      },
+      {
+        "path": "agents/hardware-resource-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 890
+      },
+      {
+        "path": "agents/ai-agent-orchestrator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 704
+      },
+      {
+        "path": "docker/agentzero/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 738
+      },
+      {
+        "path": "docker/agent-message-bus/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 754
+      },
+      {
+        "path": "docker/resource-arbitration-agent/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 671
+      },
+      {
+        "path": "docker/agent-registry/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 682
+      },
+      {
+        "path": "docker/multi-agent-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 665
+      },
+      {
+        "path": "docker/monitoring/Dockerfile.agent-monitor",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 645
+      },
+      {
+        "path": "docker/agents/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 657
+      },
+      {
+        "path": "docker/agents/Dockerfile.langchain",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 710
+      },
+      {
+        "path": "docker/agents/Dockerfile.pentestgpt",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 619
+      },
+      {
+        "path": "docker/agents/Dockerfile.python-agent",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 712
+      },
+      {
+        "path": "docker/agentgpt-autonomous-executor/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 698
+      },
+      {
+        "path": "docker/services/agents/infrastructure-devops-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 822
+      },
+      {
+        "path": "docker/services/agents/deployment-automation-master/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 822
+      },
+      {
+        "path": "docker/services/agents/senior-ai-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 811
+      },
+      {
+        "path": "agents/task_assignment_coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 665
+      },
+      {
+        "path": "agents/jarvis-automation-agent/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 651
+      },
+      {
+        "path": "agents/jarvis-hardware-resource-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 737
+      },
+      {
+        "path": "agents/ai_agent_orchestrator/Dockerfile.optimized",
+        "base_image": "sutazai-python-alpine-optimized:latest",
+        "size": 1754
+      },
+      {
+        "path": "agents/ai_agent_orchestrator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 871
+      },
+      {
+        "path": "agents/ai_agent_orchestrator/Dockerfile.secure",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 683
+      },
+      {
+        "path": "agents/resource_arbitration_agent/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 663
+      },
+      {
+        "path": "agents/jarvis-voice-interface/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 640
+      },
+      {
+        "path": "agents/ollama_integration/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 881
+      },
+      {
+        "path": "agents/hardware-resource-optimizer/Dockerfile.optimized",
+        "base_image": "sutazai-python-alpine-optimized:latest",
+        "size": 1783
+      },
+      {
+        "path": "agents/hardware-resource-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 890
+      },
+      {
+        "path": "agents/ai-agent-orchestrator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 704
+      }
+    ],
+    "nodejs_services": [
+      {
+        "path": "Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 773
+      },
+      {
+        "path": "docker/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 996
+      },
+      {
+        "path": "documind/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 972
+      },
+      {
+        "path": "mcp_server/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 1214
+      },
+      {
+        "path": "docker/flowise/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 930
+      },
+      {
+        "path": "docker/bigagi/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 850
+      },
+      {
+        "path": "docker/mcp_server/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 1146
+      },
+      {
+        "path": "Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 773
+      },
+      {
+        "path": "docker/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 996
+      },
+      {
+        "path": "documind/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 972
+      },
+      {
+        "path": "mcp_server/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 1214
+      },
+      {
+        "path": "docker/flowise/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 930
+      },
+      {
+        "path": "docker/bigagi/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 850
+      },
+      {
+        "path": "docker/mcp_server/Dockerfile",
+        "base_image": "sutazai-nodejs-agent-master:latest",
+        "size": 1146
+      }
+    ],
+    "databases": [
+      {
+        "path": "docker/chromadb-secure/Dockerfile",
+        "base_image": "chromadb/chroma:0.5.0",
+        "size": 729
+      },
+      {
+        "path": "docker/qdrant-secure/Dockerfile",
+        "base_image": "qdrant/qdrant:v1.9.2",
+        "size": 699
+      },
+      {
+        "path": "docker/redis-secure/Dockerfile",
+        "base_image": "redis:7.2-alpine",
+        "size": 647
+      },
+      {
+        "path": "docker/neo4j-secure/Dockerfile",
+        "base_image": "neo4j:5.13-community",
+        "size": 513
+      },
+      {
+        "path": "docker/postgres-secure/Dockerfile",
+        "base_image": "postgres:16.3-alpine",
+        "size": 577
+      },
+      {
+        "path": "docker/chromadb-secure/Dockerfile",
+        "base_image": "chromadb/chroma:0.5.0",
+        "size": 729
+      },
+      {
+        "path": "docker/qdrant-secure/Dockerfile",
+        "base_image": "qdrant/qdrant:v1.9.2",
+        "size": 699
+      },
+      {
+        "path": "docker/redis-secure/Dockerfile",
+        "base_image": "redis:7.2-alpine",
+        "size": 647
+      },
+      {
+        "path": "docker/neo4j-secure/Dockerfile",
+        "base_image": "neo4j:5.13-community",
+        "size": 513
+      },
+      {
+        "path": "docker/postgres-secure/Dockerfile",
+        "base_image": "postgres:16.3-alpine",
+        "size": 577
+      }
+    ],
+    "monitoring": [
+      {
+        "path": "docker/observability-monitoring-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 786
+      },
+      {
+        "path": "docker/ollama-monitor/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 643
+      },
+      {
+        "path": "docker/intelligence-optimization-monitor/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 708
+      },
+      {
+        "path": "docker/health-monitor/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 670
+      },
+      {
+        "path": "docker/services/monitoring/prometheus/Dockerfile",
+        "base_image": "prom/prometheus:latest",
+        "size": 1848
+      },
+      {
+        "path": "docker/observability-monitoring-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 786
+      },
+      {
+        "path": "docker/ollama-monitor/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 643
+      },
+      {
+        "path": "docker/intelligence-optimization-monitor/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 708
+      },
+      {
+        "path": "docker/health-monitor/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 670
+      },
+      {
+        "path": "docker/services/monitoring/prometheus/Dockerfile",
+        "base_image": "prom/prometheus:latest",
+        "size": 1848
+      }
+    ],
+    "frontend": [
+      {
+        "path": "frontend/Dockerfile.optimized",
+        "base_image": "python:3.12.8-alpine3.20",
+        "size": 2586
+      },
+      {
+        "path": "frontend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1148
+      },
+      {
+        "path": "frontend/Dockerfile.secure",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1048
+      },
+      {
+        "path": "docker/frontend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 658
+      },
+      {
+        "path": "docker/services/frontend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 727
+      },
+      {
+        "path": "frontend/Dockerfile.optimized",
+        "base_image": "python:3.12.8-alpine3.20",
+        "size": 2586
+      },
+      {
+        "path": "frontend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1148
+      },
+      {
+        "path": "frontend/Dockerfile.secure",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1048
+      },
+      {
+        "path": "docker/frontend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 658
+      },
+      {
+        "path": "docker/services/frontend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 727
+      }
+    ],
+    "backend": [
+      {
+        "path": "backend/Dockerfile.optimized",
+        "base_image": "python:3.12.8-alpine3.20",
+        "size": 2406
+      },
+      {
+        "path": "backend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1039
+      },
+      {
+        "path": "backend/Dockerfile.secure",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 942
+      },
+      {
+        "path": "docker/hygiene-backend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 750
+      },
+      {
+        "path": "docker/backend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 656
+      },
+      {
+        "path": "docker/services/backend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 746
+      },
+      {
+        "path": "backend/Dockerfile.optimized",
+        "base_image": "python:3.12.8-alpine3.20",
+        "size": 2406
+      },
+      {
+        "path": "backend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1039
+      },
+      {
+        "path": "backend/Dockerfile.secure",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 942
+      },
+      {
+        "path": "docker/hygiene-backend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 750
+      },
+      {
+        "path": "docker/backend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 656
+      },
+      {
+        "path": "docker/services/backend/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 746
+      }
+    ],
+    "base_images": [
+      {
+        "path": "docker/Dockerfile.agent-base",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 670
+      },
+      {
+        "path": "docker/python-base-fix/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 750
+      },
+      {
+        "path": "docker/python-agent-base/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 735
+      },
+      {
+        "path": "docker/base/Dockerfile.python-agent-minimal",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 765
+      },
+      {
+        "path": "docker/base/Dockerfile.monitoring-base",
+        "base_image": "alpine:3.18",
+        "size": 1553
+      },
+      {
+        "path": "docker/base/Dockerfile.nodejs-agent-master",
+        "base_image": "node:18-slim",
+        "size": 3276
+      },
+      {
+        "path": "docker/base/Dockerfile.golang-base",
+        "base_image": "golang:1.21-bullseye",
+        "size": 1967
+      },
+      {
+        "path": "docker/base/Dockerfile.gpu-python-base",
+        "base_image": "nvidia/cuda:11.8-runtime-ubuntu20.04",
+        "size": 985
+      },
+      {
+        "path": "docker/base/Dockerfile.python-agent-master",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 3103
+      },
+      {
+        "path": "docker/base/Dockerfile.python-alpine-optimized",
+        "base_image": "python:3.12.8-alpine3.20",
+        "size": 2831
+      },
+      {
+        "path": "docker/base/Dockerfile.agent-alpine-template",
+        "base_image": "sutazai-python-alpine-optimized:latest",
+        "size": 1433
+      },
+      {
+        "path": "docker/alpine-base-fix/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 514
+      },
+      {
+        "path": "docker/agent-base/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 641
+      },
+      {
+        "path": "docker/templates/Dockerfile.nodejs-service-base",
+        "base_image": "node:20-alpine",
+        "size": 4355
+      },
+      {
+        "path": "docker/templates/Dockerfile.ai-ml-service-base",
+        "base_image": "nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu22.04",
+        "size": 6836
+      },
+      {
+        "path": "docker/templates/Dockerfile.production-multistage-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 11617
+      },
+      {
+        "path": "docker/templates/Dockerfile.testing-service-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 16586
+      },
+      {
+        "path": "docker/templates/Dockerfile.worker-service-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 10558
+      },
+      {
+        "path": "docker/templates/Dockerfile.frontend-base",
+        "base_image": "node:20-alpine",
+        "size": 6369
+      },
+      {
+        "path": "docker/templates/Dockerfile.edge-computing-base",
+        "base_image": "alpine:3.19",
+        "size": 10494
+      },
+      {
+        "path": "docker/templates/Dockerfile.database-service-base",
+        "base_image": "ubuntu:22.04",
+        "size": 9247
+      },
+      {
+        "path": "docker/templates/Dockerfile.backend-api-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 11237
+      },
+      {
+        "path": "docker/templates/Dockerfile.documentation-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 16983
+      },
+      {
+        "path": "docker/templates/Dockerfile.monitoring-service-base",
+        "base_image": "alpine:3.19",
+        "size": 11050
+      },
+      {
+        "path": "docker/templates/Dockerfile.python-agent-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 4563
+      },
+      {
+        "path": "docker/templates/Dockerfile.security-service-base",
+        "base_image": "alpine:3.19",
+        "size": 15419
+      },
+      {
+        "path": "docker/templates/Dockerfile.build-tools-base",
+        "base_image": "ubuntu:22.04",
+        "size": 16024
+      },
+      {
+        "path": "docker/templates/Dockerfile.data-pipeline-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 15934
+      },
+      {
+        "path": "docker/Dockerfile.agent-base",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 670
+      },
+      {
+        "path": "docker/python-base-fix/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 750
+      },
+      {
+        "path": "docker/python-agent-base/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 735
+      },
+      {
+        "path": "docker/base/Dockerfile.python-agent-minimal",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 765
+      },
+      {
+        "path": "docker/base/Dockerfile.monitoring-base",
+        "base_image": "alpine:3.18",
+        "size": 1553
+      },
+      {
+        "path": "docker/base/Dockerfile.nodejs-agent-master",
+        "base_image": "node:18-slim",
+        "size": 3276
+      },
+      {
+        "path": "docker/base/Dockerfile.golang-base",
+        "base_image": "golang:1.21-bullseye",
+        "size": 1967
+      },
+      {
+        "path": "docker/base/Dockerfile.gpu-python-base",
+        "base_image": "nvidia/cuda:11.8-runtime-ubuntu20.04",
+        "size": 985
+      },
+      {
+        "path": "docker/base/Dockerfile.python-agent-master",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 3103
+      },
+      {
+        "path": "docker/base/Dockerfile.python-alpine-optimized",
+        "base_image": "python:3.12.8-alpine3.20",
+        "size": 2831
+      },
+      {
+        "path": "docker/base/Dockerfile.agent-alpine-template",
+        "base_image": "sutazai-python-alpine-optimized:latest",
+        "size": 1433
+      },
+      {
+        "path": "docker/alpine-base-fix/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 514
+      },
+      {
+        "path": "docker/agent-base/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 641
+      },
+      {
+        "path": "docker/templates/Dockerfile.nodejs-service-base",
+        "base_image": "node:20-alpine",
+        "size": 4355
+      },
+      {
+        "path": "docker/templates/Dockerfile.ai-ml-service-base",
+        "base_image": "nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu22.04",
+        "size": 6836
+      },
+      {
+        "path": "docker/templates/Dockerfile.production-multistage-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 11617
+      },
+      {
+        "path": "docker/templates/Dockerfile.testing-service-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 16586
+      },
+      {
+        "path": "docker/templates/Dockerfile.worker-service-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 10558
+      },
+      {
+        "path": "docker/templates/Dockerfile.frontend-base",
+        "base_image": "node:20-alpine",
+        "size": 6369
+      },
+      {
+        "path": "docker/templates/Dockerfile.edge-computing-base",
+        "base_image": "alpine:3.19",
+        "size": 10494
+      },
+      {
+        "path": "docker/templates/Dockerfile.database-service-base",
+        "base_image": "ubuntu:22.04",
+        "size": 9247
+      },
+      {
+        "path": "docker/templates/Dockerfile.backend-api-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 11237
+      },
+      {
+        "path": "docker/templates/Dockerfile.documentation-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 16983
+      },
+      {
+        "path": "docker/templates/Dockerfile.monitoring-service-base",
+        "base_image": "alpine:3.19",
+        "size": 11050
+      },
+      {
+        "path": "docker/templates/Dockerfile.python-agent-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 4563
+      },
+      {
+        "path": "docker/templates/Dockerfile.security-service-base",
+        "base_image": "alpine:3.19",
+        "size": 15419
+      },
+      {
+        "path": "docker/templates/Dockerfile.build-tools-base",
+        "base_image": "ubuntu:22.04",
+        "size": 16024
+      },
+      {
+        "path": "docker/templates/Dockerfile.data-pipeline-base",
+        "base_image": "python:3.12.8-slim-bookworm",
+        "size": 15934
+      }
+    ],
+    "templates": [],
+    "security": [
+      {
+        "path": "docker/ollama-secure/Dockerfile",
+        "base_image": "ollama/ollama:latest",
+        "size": 927
+      },
+      {
+        "path": "docker/rabbitmq-secure/Dockerfile",
+        "base_image": "rabbitmq:3.12-management-alpine",
+        "size": 850
+      },
+      {
+        "path": "docker/ollama-secure/Dockerfile",
+        "base_image": "ollama/ollama:latest",
+        "size": 927
+      },
+      {
+        "path": "docker/rabbitmq-secure/Dockerfile",
+        "base_image": "rabbitmq:3.12-management-alpine",
+        "size": 850
+      }
+    ],
+    "ai_ml": [
+      {
+        "path": "docker/Dockerfile.streamlit",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 675
+      },
+      {
+        "path": "docker/awesome-code-ai/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 672
+      },
+      {
+        "path": "docker/model-training-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/flowiseai-flow-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 686
+      },
+      {
+        "path": "docker/ollama-integration/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 679
+      },
+      {
+        "path": "docker/model-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 687
+      },
+      {
+        "path": "docker/langflow/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 653
+      },
+      {
+        "path": "docker/tabbyml/Dockerfile",
+        "base_image": "nvidia/cuda:11.8-devel-ubuntu22.04",
+        "size": 737
+      },
+      {
+        "path": "docker/senior-ai-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1078
+      },
+      {
+        "path": "docker/reinforcement-learning-trainer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 702
+      },
+      {
+        "path": "docker/faiss/Dockerfile.optimized",
+        "base_image": "python:3.12.8-alpine3.20",
+        "size": 2664
+      },
+      {
+        "path": "docker/faiss/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 663
+      },
+      {
+        "path": "docker/jarvis-ai/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 673
+      },
+      {
+        "path": "docker/explainable-ai-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/enhanced-model-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 738
+      },
+      {
+        "path": "docker/ai-metrics-exporter/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 648
+      },
+      {
+        "path": "docker/tabbyml-cpu/Dockerfile",
+        "base_image": "tabbyml/tabby:latest",
+        "size": 1124
+      },
+      {
+        "path": "docker/chainlit/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 716
+      },
+      {
+        "path": "docker/services/infrastructure/ollama/Dockerfile",
+        "base_image": "ollama/ollama:latest",
+        "size": 1873
+      },
+      {
+        "path": "services/jarvis-model-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 688
+      },
+      {
+        "path": "docker/Dockerfile.streamlit",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 675
+      },
+      {
+        "path": "docker/awesome-code-ai/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 672
+      },
+      {
+        "path": "docker/model-training-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/flowiseai-flow-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 686
+      },
+      {
+        "path": "docker/ollama-integration/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 679
+      },
+      {
+        "path": "docker/model-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 687
+      },
+      {
+        "path": "docker/langflow/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 653
+      },
+      {
+        "path": "docker/tabbyml/Dockerfile",
+        "base_image": "nvidia/cuda:11.8-devel-ubuntu22.04",
+        "size": 737
+      },
+      {
+        "path": "docker/senior-ai-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1078
+      },
+      {
+        "path": "docker/reinforcement-learning-trainer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 702
+      },
+      {
+        "path": "docker/faiss/Dockerfile.optimized",
+        "base_image": "python:3.12.8-alpine3.20",
+        "size": 2664
+      },
+      {
+        "path": "docker/faiss/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 663
+      },
+      {
+        "path": "docker/jarvis-ai/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 673
+      },
+      {
+        "path": "docker/explainable-ai-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/enhanced-model-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 738
+      },
+      {
+        "path": "docker/ai-metrics-exporter/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 648
+      },
+      {
+        "path": "docker/tabbyml-cpu/Dockerfile",
+        "base_image": "tabbyml/tabby:latest",
+        "size": 1124
+      },
+      {
+        "path": "docker/chainlit/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 716
+      },
+      {
+        "path": "docker/services/infrastructure/ollama/Dockerfile",
+        "base_image": "ollama/ollama:latest",
+        "size": 1873
+      },
+      {
+        "path": "services/jarvis-model-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 688
+      }
+    ],
+    "other": [
+      {
+        "path": "self-healing/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 744
+      },
+      {
+        "path": "docker/Dockerfile.healthcheck",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 723
+      },
+      {
+        "path": "skyvern/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1159
+      },
+      {
+        "path": "docker/data-analysis-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 764
+      },
+      {
+        "path": "docker/product-strategy-architect/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 772
+      },
+      {
+        "path": "docker/rule-control/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 744
+      },
+      {
+        "path": "docker/cognitive-architecture-designer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 782
+      },
+      {
+        "path": "docker/private-data-analyst/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 682
+      },
+      {
+        "path": "docker/fsdp/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 650
+      },
+      {
+        "path": "docker/dify-automation-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 694
+      },
+      {
+        "path": "docker/self-healing/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 685
+      },
+      {
+        "path": "docker/hygiene-reporter/Dockerfile",
+        "base_image": "nginx:alpine",
+        "size": 522
+      },
+      {
+        "path": "docker/causal-inference-expert/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 688
+      },
+      {
+        "path": "docker/multi-modal-fusion-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 702
+      },
+      {
+        "path": "docker/jarvis-agi/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 654
+      },
+      {
+        "path": "docker/tensorflow/Dockerfile",
+        "base_image": "tensorflow/tensorflow:2.14.0-gpu",
+        "size": 466
+      },
+      {
+        "path": "docker/health-check/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 676
+      },
+      {
+        "path": "docker/context-framework/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 676
+      },
+      {
+        "path": "docker/task-scheduler/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 720
+      },
+      {
+        "path": "docker/browser-use/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 659
+      },
+      {
+        "path": "docker/privategpt/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 662
+      },
+      {
+        "path": "docker/synthetic-data-generator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 690
+      },
+      {
+        "path": "docker/meta-learning-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 690
+      },
+      {
+        "path": "docker/pentestgpt/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 674
+      },
+      {
+        "path": "docker/data-pipeline-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 686
+      },
+      {
+        "path": "docker/self-healing-orchestrator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/transformers-migration-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 708
+      },
+      {
+        "path": "docker/symbolic-reasoning-engine/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/hygiene-scanner/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 679
+      },
+      {
+        "path": "docker/api-gateway/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 671
+      },
+      {
+        "path": "docker/context-engineering/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 733
+      },
+      {
+        "path": "docker/hygiene-validator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 683
+      },
+      {
+        "path": "docker/hardware-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 679
+      },
+      {
+        "path": "docker/jarvis-voice-interface/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 686
+      },
+      {
+        "path": "docker/knowledge-distillation-expert/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 700
+      },
+      {
+        "path": "docker/knowledge-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 750
+      },
+      {
+        "path": "docker/context-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 677
+      },
+      {
+        "path": "docker/task-assignment-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 696
+      },
+      {
+        "path": "docker/nginx/Dockerfile",
+        "base_image": "nginx:alpine",
+        "size": 935
+      },
+      {
+        "path": "docker/service-hub/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 664
+      },
+      {
+        "path": "docker/documind/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 712
+      },
+      {
+        "path": "docker/federated-learning-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 702
+      },
+      {
+        "path": "docker/autogpt-real/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 710
+      },
+      {
+        "path": "docker/mesh-worker/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 818
+      },
+      {
+        "path": "docker/distributed-computing-architect/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 704
+      },
+      {
+        "path": "docker/shellgpt/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 658
+      },
+      {
+        "path": "docker/garbage-collector-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 700
+      },
+      {
+        "path": "docker/semgrep/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 668
+      },
+      {
+        "path": "docker/skyvern/Dockerfile",
+        "base_image": "mcr.microsoft.com/playwright/python:v1.46.0-jammy",
+        "size": 836
+      },
+      {
+        "path": "docker/gradient-compression-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 704
+      },
+      {
+        "path": "docker/dify/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 645
+      },
+      {
+        "path": "docker/episodic-memory-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 690
+      },
+      {
+        "path": "docker/bigagi-system-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 684
+      },
+      {
+        "path": "docker/hygiene-dashboard/Dockerfile",
+        "base_image": "nginx:alpine",
+        "size": 1037
+      },
+      {
+        "path": "docker/babyagi/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 656
+      },
+      {
+        "path": "docker/jax/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 659
+      },
+      {
+        "path": "docker/browser-automation-orchestrator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 704
+      },
+      {
+        "path": "docker/autogen/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 656
+      },
+      {
+        "path": "docker/code-generation-improver/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 693
+      },
+      {
+        "path": "docker/localagi-orchestration-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 702
+      },
+      {
+        "path": "docker/memory-persistence-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 694
+      },
+      {
+        "path": "docker/fms-fsdp/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 709
+      },
+      {
+        "path": "docker/localagi/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 701
+      },
+      {
+        "path": "docker/pytorch/Dockerfile",
+        "base_image": "pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime",
+        "size": 479
+      },
+      {
+        "path": "docker/neuromorphic-computing-expert/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 700
+      },
+      {
+        "path": "docker/attention-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 680
+      },
+      {
+        "path": "docker/semgrep-security-analyzer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/mcp-server/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 662
+      },
+      {
+        "path": "docker/infrastructure-devops/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 685
+      },
+      {
+        "path": "docker/knowledge-graph-builder/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 688
+      },
+      {
+        "path": "docker/code-improver/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 668
+      },
+      {
+        "path": "docker/opendevin/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 703
+      },
+      {
+        "path": "docker/letta/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 652
+      },
+      {
+        "path": "docker/mcp_server/playwright/Dockerfile",
+        "base_image": "mcr.microsoft.com/playwright:v1.54.2-jammy",
+        "size": 321
+      },
+      {
+        "path": "auth/service-account-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 683
+      },
+      {
+        "path": "auth/jwt-service/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 659
+      },
+      {
+        "path": "auth/rbac-engine/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 659
+      },
+      {
+        "path": "services/jarvis-task-controller/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "services/jarvis-voice-handler/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 688
+      },
+      {
+        "path": "services/jarvis/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 672
+      },
+      {
+        "path": "services/scaler/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 671
+      },
+      {
+        "path": "self-healing/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 744
+      },
+      {
+        "path": "docker/Dockerfile.healthcheck",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 723
+      },
+      {
+        "path": "skyvern/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 1159
+      },
+      {
+        "path": "docker/data-analysis-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 764
+      },
+      {
+        "path": "docker/product-strategy-architect/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 772
+      },
+      {
+        "path": "docker/rule-control/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 744
+      },
+      {
+        "path": "docker/cognitive-architecture-designer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 782
+      },
+      {
+        "path": "docker/private-data-analyst/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 682
+      },
+      {
+        "path": "docker/fsdp/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 650
+      },
+      {
+        "path": "docker/dify-automation-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 694
+      },
+      {
+        "path": "docker/self-healing/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 685
+      },
+      {
+        "path": "docker/hygiene-reporter/Dockerfile",
+        "base_image": "nginx:alpine",
+        "size": 522
+      },
+      {
+        "path": "docker/causal-inference-expert/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 688
+      },
+      {
+        "path": "docker/multi-modal-fusion-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 702
+      },
+      {
+        "path": "docker/jarvis-agi/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 654
+      },
+      {
+        "path": "docker/tensorflow/Dockerfile",
+        "base_image": "tensorflow/tensorflow:2.14.0-gpu",
+        "size": 466
+      },
+      {
+        "path": "docker/health-check/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 676
+      },
+      {
+        "path": "docker/context-framework/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 676
+      },
+      {
+        "path": "docker/task-scheduler/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 720
+      },
+      {
+        "path": "docker/browser-use/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 659
+      },
+      {
+        "path": "docker/privategpt/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 662
+      },
+      {
+        "path": "docker/synthetic-data-generator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 690
+      },
+      {
+        "path": "docker/meta-learning-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 690
+      },
+      {
+        "path": "docker/pentestgpt/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 674
+      },
+      {
+        "path": "docker/data-pipeline-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 686
+      },
+      {
+        "path": "docker/self-healing-orchestrator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/transformers-migration-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 708
+      },
+      {
+        "path": "docker/symbolic-reasoning-engine/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/hygiene-scanner/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 679
+      },
+      {
+        "path": "docker/api-gateway/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 671
+      },
+      {
+        "path": "docker/context-engineering/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 733
+      },
+      {
+        "path": "docker/hygiene-validator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 683
+      },
+      {
+        "path": "docker/hardware-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 679
+      },
+      {
+        "path": "docker/jarvis-voice-interface/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 686
+      },
+      {
+        "path": "docker/knowledge-distillation-expert/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 700
+      },
+      {
+        "path": "docker/knowledge-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 750
+      },
+      {
+        "path": "docker/context-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 677
+      },
+      {
+        "path": "docker/task-assignment-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 696
+      },
+      {
+        "path": "docker/nginx/Dockerfile",
+        "base_image": "nginx:alpine",
+        "size": 935
+      },
+      {
+        "path": "docker/service-hub/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 664
+      },
+      {
+        "path": "docker/documind/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 712
+      },
+      {
+        "path": "docker/federated-learning-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 702
+      },
+      {
+        "path": "docker/autogpt-real/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 710
+      },
+      {
+        "path": "docker/mesh-worker/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 818
+      },
+      {
+        "path": "docker/distributed-computing-architect/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 704
+      },
+      {
+        "path": "docker/shellgpt/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 658
+      },
+      {
+        "path": "docker/garbage-collector-coordinator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 700
+      },
+      {
+        "path": "docker/semgrep/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 668
+      },
+      {
+        "path": "docker/skyvern/Dockerfile",
+        "base_image": "mcr.microsoft.com/playwright/python:v1.46.0-jammy",
+        "size": 836
+      },
+      {
+        "path": "docker/gradient-compression-specialist/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 704
+      },
+      {
+        "path": "docker/dify/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 645
+      },
+      {
+        "path": "docker/episodic-memory-engineer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 690
+      },
+      {
+        "path": "docker/bigagi-system-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 684
+      },
+      {
+        "path": "docker/hygiene-dashboard/Dockerfile",
+        "base_image": "nginx:alpine",
+        "size": 1037
+      },
+      {
+        "path": "docker/babyagi/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 656
+      },
+      {
+        "path": "docker/jax/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 659
+      },
+      {
+        "path": "docker/browser-automation-orchestrator/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 704
+      },
+      {
+        "path": "docker/autogen/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 656
+      },
+      {
+        "path": "docker/code-generation-improver/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 693
+      },
+      {
+        "path": "docker/localagi-orchestration-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 702
+      },
+      {
+        "path": "docker/memory-persistence-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 694
+      },
+      {
+        "path": "docker/fms-fsdp/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 709
+      },
+      {
+        "path": "docker/localagi/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 701
+      },
+      {
+        "path": "docker/pytorch/Dockerfile",
+        "base_image": "pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime",
+        "size": 479
+      },
+      {
+        "path": "docker/neuromorphic-computing-expert/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 700
+      },
+      {
+        "path": "docker/attention-optimizer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 680
+      },
+      {
+        "path": "docker/semgrep-security-analyzer/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "docker/mcp-server/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 662
+      },
+      {
+        "path": "docker/infrastructure-devops/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 685
+      },
+      {
+        "path": "docker/knowledge-graph-builder/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 688
+      },
+      {
+        "path": "docker/code-improver/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 668
+      },
+      {
+        "path": "docker/opendevin/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 703
+      },
+      {
+        "path": "docker/letta/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 652
+      },
+      {
+        "path": "docker/mcp_server/playwright/Dockerfile",
+        "base_image": "mcr.microsoft.com/playwright:v1.54.2-jammy",
+        "size": 321
+      },
+      {
+        "path": "auth/service-account-manager/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 683
+      },
+      {
+        "path": "auth/jwt-service/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 659
+      },
+      {
+        "path": "auth/rbac-engine/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 659
+      },
+      {
+        "path": "services/jarvis-task-controller/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 692
+      },
+      {
+        "path": "services/jarvis-voice-handler/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 688
+      },
+      {
+        "path": "services/jarvis/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 672
+      },
+      {
+        "path": "services/scaler/Dockerfile",
+        "base_image": "sutazai-python-agent-master:latest",
+        "size": 671
+      }
+    ]
+  }
+}

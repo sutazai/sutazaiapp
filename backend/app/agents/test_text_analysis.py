@@ -73,23 +73,21 @@ TEST_TEXTS = {
     "short_text": "AI is amazing!",
     
     "long_technical": """
-        Quantum computing represents a fundamental shift in computational paradigm, leveraging 
-        quantum mechanical phenomena such as superposition and entanglement to process information 
-        in ways that classical computers cannot efficiently replicate. Unlike classical bits that 
-        exist in definite states of 0 or 1, quantum bits (qubits) can exist in superposition states, 
-        representing both 0 and 1 simultaneously until measured. This property, combined with 
-        entanglement where qubits become correlated in ways that measuring one instantly affects 
-        others regardless of distance, enables quantum computers to explore multiple solution paths 
-        simultaneously. Current implementations face significant challenges including decoherence, 
-        where quantum states decay rapidly due to environmental interference, necessitating 
-        operation at near absolute zero temperatures. Companies like IBM, Google, and Rigetti 
-        are pursuing different qubit technologies including superconducting circuits, trapped ions, 
-        and topological qubits. Recent breakthroughs include Google's claimed quantum supremacy 
-        in 2019 with their Sycamore processor completing a specific task in 200 seconds that would 
-        take classical supercomputers 10,000 years. Applications range from cryptography and drug 
-        discovery to optimization problems and machine learning. The development of quantum 
-        error correction codes and fault-tolerant quantum computing remains an active area of 
-        research, with the goal of achieving practical quantum advantage for real-world problems.
+        Machine learning algorithms represent a significant advancement in computational methods, 
+        using statistical techniques to enable computers to learn patterns from data without being 
+        explicitly programmed for every task. Modern deep learning architectures like transformers 
+        and convolutional neural networks have demonstrated remarkable performance across various 
+        domains including natural language processing and computer vision. These systems work by 
+        processing large datasets through multiple layers of mathematical transformations, gradually 
+        extracting higher-level features and patterns. Current implementations utilize GPU acceleration 
+        and distributed computing to handle the substantial computational requirements of training 
+        large models. Companies like OpenAI, Google, and NVIDIA are advancing the field with 
+        improved architectures, training techniques, and hardware optimizations. Recent developments 
+        include large language models like GPT-4 and Claude that can perform complex reasoning tasks. 
+        Applications span from recommendation systems and fraud detection to medical diagnosis and 
+        autonomous vehicle navigation. The development of more efficient training algorithms and 
+        model architectures remains an active area of research, with focus on reducing computational 
+        costs while improving accuracy and reliability for practical applications.
     """
 }
 

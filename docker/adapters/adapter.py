@@ -8,11 +8,8 @@ import asyncio
 import aiohttp
 from aiohttp import web
 import yaml
-import json
-import logging
 import os
 import time
-from typing import Dict, Any, Optional
 from datetime import datetime
 from prometheus_client import Counter, Histogram, Gauge, generate_latest
 import structlog

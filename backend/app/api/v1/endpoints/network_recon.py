@@ -286,7 +286,8 @@ class NetworkReconEngine:
         try:
             hostname = socket.gethostbyaddr(ip)[0]
             return hostname
-        except:
+        except (ValueError, TypeError, KeyError, AttributeError) as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return None
     
     async def _scan_ports(self, host: NetworkHost, port_range: str, stealth: bool):

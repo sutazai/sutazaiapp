@@ -14,7 +14,6 @@ Features:
 
 import asyncio
 import httpx
-import json
 import time
 import logging
 from typing import Dict, Any, Optional, List, Set

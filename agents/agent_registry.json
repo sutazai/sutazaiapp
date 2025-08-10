@@ -93,9 +93,9 @@
       ],
       "config_path": "configs/browser-automation-orchestrator_universal.json"
     },
-    "agi-system-architect": {
-      "name": "agi-system-architect",
-      "description": "Use this agent when you need to:\\n\\n- Design comprehensive automation/advanced automation system architectures\\n- Create scalable and modular system designs\\n- Implement cognitive architectures for artificial general intelligence\\n- Design multi-modal AI integration patterns\\n- Create self-improving system architectures\\n- Implement meta-learning frameworks\\n- Design distributed intelligence systems\\n- Create processing-symbolic hybrid architectures\\n- Implement system_state modeling approaches\\n- Build recursive self-improvement mechanisms\\n- Design emergent intelligence patterns\\n- Create knowledge representation systems\\n- Implement reasoning and inference engines\\n- Build memory architecture for automation systems\\n- Design attention and focus mechanisms\\n- Create goal-oriented architecture patterns\\n- Implement ethical AI frameworks\\n- Build explainable automation architectures\\n- Design robustness and safety measures\\n- Create automation evaluation frameworks\\n- Implement transfer learning architectures\\n- Build continual learning systems\\n- Design automation communication protocols\\n- Create automation-human interaction patterns\\n- Implement automation resource optimization\\n- Build automation monitoring and control systems\\n- Design automation evolution strategies\\n- Create automation alignment mechanisms\\n- Implement automation security architectures\\n- Build automation testing and validation frameworks\\n\\nDo NOT use this agent for:\\n- Specific code implementation (use code-generation agents)\\n- Deployment tasks (use deployment-automation-master)\\n- Infrastructure management (use infrastructure-devops-manager)\\n- Testing implementation (use testing-qa-validator)\\n\\nThis agent specializes in designing and evolving the fundamental architecture of automation systems for maximum intelligence and capability.",
+    "ai-system-architect": {
+      "name": "ai-system-architect",
+      "description": "Use this agent when you need to:\\n\\n- Design comprehensive AI system architectures\\n- Create scalable and modular system designs\\n- Implement AI architectures for advanced automation\\n- Design multi-modal AI integration patterns\\n- Create self-improving system architectures\\n- Implement meta-learning frameworks\\n- Design distributed AI systems\\n- Create neural-symbolic hybrid architectures\\n- Implement advanced processing approaches\\n- Build iterative improvement mechanisms\\n- Design intelligent behavior patterns\\n- Create knowledge representation systems\\n- Implement reasoning and inference engines\\n- Build memory architecture for AI systems\\n- Design attention and focus mechanisms\\n- Create goal-oriented architecture patterns\\n- Implement ethical AI frameworks\\n- Build explainable AI architectures\\n- Design robustness and safety measures\\n- Create AI evaluation frameworks\\n- Implement transfer learning architectures\\n- Build continual learning systems\\n- Design AI communication protocols\\n- Create AI-human interaction patterns\\n- Implement AI resource optimization\\n- Build AI monitoring and control systems\\n- Design AI evolution strategies\\n- Create AI alignment mechanisms\\n- Implement AI security architectures\\n- Build AI testing and validation frameworks\\n\\nDo NOT use this agent for:\\n- Specific code implementation (use code-generation agents)\\n- Deployment tasks (use deployment-automation-master)\\n- Infrastructure management (use infrastructure-devops-manager)\\n- Testing implementation (use testing-qa-validator)\\n\\nThis agent specializes in designing and evolving the fundamental architecture of AI systems for maximum intelligence and capability.",
       "capabilities": [
         "security_analysis",
         "code_generation",
@@ -654,15 +654,15 @@
       ],
       "config_path": "configs/neural-architecture-search_universal.json"
     },
-    "quantum-ai-researcher": {
-      "name": "quantum-ai-researcher",
+    "ai-research-specialist": {
+      "name": "ai-research-specialist",
       "description": "Agent for ai-ml operations",
       "capabilities": [
         "code_generation",
         "analysis",
         "optimization"
       ],
-      "config_path": "configs/quantum-ai-researcher_universal.json"
+      "config_path": "configs/ai-research-specialist_universal.json"
     },
     "resource-arbitration-agent": {
       "name": "resource-arbitration-agent",

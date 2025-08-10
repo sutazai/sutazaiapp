@@ -7,7 +7,6 @@ Advanced monitoring and automatic intervention to prevent system freezes
 import asyncio
 import logging
 import os
-import sys
 import time
 import psutil
 import signal
@@ -15,7 +14,6 @@ import subprocess
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
-import json
 import sqlite3
 import aiohttp
 

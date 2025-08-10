@@ -3,9 +3,12 @@ Data Formatting Utilities - Extracted from monolith
 Common formatting functions for UI display
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import humanize
-from datetime import datetime, timedelta
-from typing import Union, Optional
 
 def format_bytes(bytes_value: Union[int, float], precision: int = 1) -> str:
     """
@@ -23,7 +26,8 @@ def format_bytes(bytes_value: Union[int, float], precision: int = 1) -> str:
     
     try:
         return humanize.naturalsize(bytes_value, binary=True, gnu=False)
-    except:
+    except Exception as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return f"{bytes_value} bytes"
 
 def format_duration(seconds: Union[int, float]) -> str:
@@ -51,7 +55,8 @@ def format_duration(seconds: Union[int, float]) -> str:
         else:
             days = seconds / 86400
             return f"{days:.1f}d"
-    except:
+    except Exception as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return f"{seconds}s"
 
 def format_timestamp(timestamp: Union[str, datetime], format_str: str = "%Y-%m-%d %H:%M:%S") -> str:
@@ -82,7 +87,8 @@ def format_timestamp(timestamp: Union[str, datetime], format_str: str = "%Y-%m-%
             return timestamp.strftime(format_str)
         else:
             return str(timestamp)
-    except:
+    except Exception as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return str(timestamp)
 
 def format_percentage(value: Union[int, float], precision: int = 1) -> str:
@@ -102,7 +108,8 @@ def format_percentage(value: Union[int, float], precision: int = 1) -> str:
     try:
         percentage = value * 100 if value <= 1.0 else value
         return f"{percentage:.{precision}f}%"
-    except:
+    except Exception as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return f"{value}%"
 
 def format_number(value: Union[int, float], precision: int = 0) -> str:
@@ -124,7 +131,8 @@ def format_number(value: Union[int, float], precision: int = 0) -> str:
             return f"{int(value):,}"
         else:
             return f"{float(value):,.{precision}f}"
-    except:
+    except Exception as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return str(value)
 
 def format_metric_delta(current: Union[int, float], previous: Union[int, float]) -> tuple:
@@ -149,7 +157,8 @@ def format_metric_delta(current: Union[int, float], previous: Union[int, float])
             return delta, f"+{format_number(delta)}"
         else:
             return delta, f"{format_number(delta)}"
-    except:
+    except Exception as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return None, "Error"
 
 def truncate_text(text: str, max_length: int = 100, suffix: str = "...") -> str:

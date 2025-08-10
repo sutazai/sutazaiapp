@@ -591,7 +591,9 @@ class UltraTestOrchestrator:
                         
                         if resp.status_code < 400:
                             endpoints_passed += 1
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
                 
                 if endpoints_passed == endpoints_tested:
@@ -667,7 +669,9 @@ class UltraTestOrchestrator:
                     try:
                         requests.get(url, timeout=5)
                         response_times.append((time.time() - start_req) * 1000)
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
                 
                 if response_times:

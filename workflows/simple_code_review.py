@@ -6,7 +6,6 @@ A practical example of using SutazAI for automated code review
 
 import asyncio
 import httpx
-import json
 import os
 from pathlib import Path
 from typing import List, Dict, Any

@@ -15,7 +15,6 @@ import time
 import logging
 import sys
 import statistics
-from datetime import datetime, timedelta
 from typing import Dict, List, Tuple
 from dataclasses import dataclass
 import random

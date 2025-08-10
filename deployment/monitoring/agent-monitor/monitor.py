@@ -267,7 +267,9 @@ class SutazAIAgentMonitor:
             # Load averages (Unix systems)
             try:
                 load_avg = os.getloadavg()
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 load_avg = [0.0, 0.0, 0.0]
             
             # Docker system info
@@ -289,7 +291,9 @@ class SutazAIAgentMonitor:
                     for key in self.redis_client.scan_iter(match="*queue*"):
                         try:
                             queue_sizes[key] = self.redis_client.llen(key)
-                        except:
+                        except Exception as e:
+                            # TODO: Review this exception handling
+                            logger.error(f"Unexpected exception: {e}", exc_info=True)
                             queue_sizes[key] = 0
                     
                     redis_info['queue_sizes'] = queue_sizes
@@ -594,7 +598,9 @@ class SutazAIAgentMonitor:
             if started_at:
                 start_time = datetime.fromisoformat(started_at.replace('Z', '+00:00').replace('+00:00', ''))
                 return int((datetime.utcnow() - start_time).total_seconds())
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         return 0
     

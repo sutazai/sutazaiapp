@@ -273,7 +273,8 @@ def sync_check_service_health(url: str = None, timeout: float = 2.0) -> bool:
     try:
         result = optimized_client.sync_health_check()
         return result.get("status") == "healthy"
-    except:
+    except (ValueError, TypeError, KeyError, AttributeError) as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return False
 
 # Cleanup function for app shutdown

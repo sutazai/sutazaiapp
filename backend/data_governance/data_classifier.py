@@ -12,7 +12,6 @@ from enum import Enum
 from typing import Dict, List, Optional, Set, Any, Pattern
 from dataclasses import dataclass, field
 from datetime import datetime
-import json
 
 
 class DataClassification(Enum):

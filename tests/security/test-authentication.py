@@ -10,8 +10,6 @@ import time
 import asyncio
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional, Tuple
-
 import httpx
 import structlog
 

@@ -845,7 +845,8 @@ class LearningAnalyzer:
                 domain = context.get('domain', 'general')
                 confidence = context.get('confidence', 0.5)
                 domain_stats[domain].append(confidence)
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                logger.debug(f"Continuing after exception: {e}")
                 continue
         
         domain_analysis = {}

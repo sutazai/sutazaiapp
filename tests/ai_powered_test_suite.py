@@ -249,7 +249,9 @@ class SutazAITestSuite:
             try:
                 response_data = response.json()
                 json_valid = True
-            except:
+            except (AssertionError, Exception) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 response_data = response.text
                 json_valid = False
             

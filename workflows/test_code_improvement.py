@@ -4,6 +4,11 @@ Test script for code improvement workflow
 Demonstrates analyzing the backend/app directory and getting improvement suggestions
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import asyncio
 import httpx
 import json
@@ -217,7 +222,9 @@ async def main():
             else:
                 print("Backend not responding, testing direct workflow...")
                 await test_direct_workflow()
-    except:
+    except Exception as e:
+        # TODO: Review this exception handling
+        logger.error(f"Unexpected exception: {e}", exc_info=True)
         print("Backend not available, testing direct workflow...")
         await test_direct_workflow()
 

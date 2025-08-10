@@ -3,7 +3,6 @@ TensorFlow adapter for deep learning operations
 """
 import tensorflow as tf
 import numpy as np
-from typing import Dict, Any, List, Optional, Union
 from ..base_adapter import ServiceAdapter
 import logging
 import asyncio
@@ -53,7 +52,8 @@ class TensorFlowAdapter(ServiceAdapter):
             test_tensor = tf.random.normal([10, 10])
             result = tf.reduce_sum(test_tensor)
             return True
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
             
     async def get_capabilities(self) -> Dict[str, Any]:

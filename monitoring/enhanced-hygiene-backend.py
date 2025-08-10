@@ -6,15 +6,17 @@ Author: Sutazai Backend API Architect
 Version: 3.0.0 - Perfect Containerized Edition
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import asyncio
 import json
-import logging
 import os
 import psutil
 import time
-from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Any
 import structlog
 import asyncpg
 import redis.asyncio as redis
@@ -266,7 +268,9 @@ class EnhancedHygieneBackend:
             try:
                 import socket
                 socket.create_connection(("8.8.8.8", 53), timeout=3)
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 network_status = 'DEGRADED'
             
             metrics = {

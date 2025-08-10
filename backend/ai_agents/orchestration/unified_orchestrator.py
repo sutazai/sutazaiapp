@@ -7,7 +7,6 @@ This orchestrator ensures all AI agents work together seamlessly
 import asyncio
 import json
 import logging
-import os
 import redis.asyncio as redis
 from typing import Dict, List, Any, Optional
 from datetime import datetime
@@ -288,7 +287,9 @@ class UnifiedOrchestrator:
                                             f"agent:registry:{agent_name}",
                                             "status", "unhealthy"
                                         )
-                        except:
+                        except (IOError, OSError, FileNotFoundError) as e:
+                            # TODO: Review this exception handling
+                            logger.error(f"Unexpected exception: {e}", exc_info=True)
                             # Agent not responding
                             await self.redis_client.hset(
                                 f"agent:registry:{agent_name}",

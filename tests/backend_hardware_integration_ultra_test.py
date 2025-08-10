@@ -276,7 +276,9 @@ class BackendHardwareIntegrationUltraTest:
                 elif response.status_code == endpoint.expected_status:
                     try:
                         data = response.json() if response.headers.get('content-type', '').startswith('application/json') else {}
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # TODO: Review this exception handling
+                        logger.error(f"Unexpected exception: {e}", exc_info=True)
                         data = {}
                     
                     results.append(TestResult(

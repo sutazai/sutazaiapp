@@ -84,7 +84,9 @@ async def startup_event():
                     if response.status_code == 200:
                         system_status["ollama_connected"] = True
                         logger.info("Connected to Ollama")
-                except:
+                except Exception as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     logger.warning("Could not connect to Ollama")
                     
         except ImportError:
@@ -195,7 +197,9 @@ async def process_voice_upload(audio: UploadFile = File(...)):
         # Cleanup
         try:
             os.remove(temp_path)
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         return result
@@ -300,7 +304,9 @@ async def get_status():
 # Mount static files
 try:
     app.mount("/static", StaticFiles(directory="/app/static"), name="static")
-except:
+except Exception as e:
+    # TODO: Review this exception handling
+    logger.error(f"Unexpected exception: {e}", exc_info=True)
     logger.warning("Static files directory not found")
 
 if __name__ == "__main__":

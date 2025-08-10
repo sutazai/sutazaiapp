@@ -6,7 +6,6 @@ Centralized API communication functions
 import asyncio
 import httpx
 import streamlit as st
-from typing import Dict, Any, Optional
 import logging
 
 # Configure logging
@@ -112,7 +111,8 @@ async def check_service_health(url: str, timeout: float = 2.0) -> bool:
         async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.get(url)
             return response.status_code == 200
-    except:
+    except (ValueError, TypeError, KeyError, AttributeError) as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return False
 
 # Synchronous wrapper for Streamlit compatibility

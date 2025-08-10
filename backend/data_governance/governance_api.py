@@ -106,7 +106,8 @@ async def get_compliance_dashboard():
                     "overall_risk": report.overall_risk_level,
                     "generated_at": report.generated_at.isoformat()
                 })
-            except:
+            except (ValueError, TypeError, KeyError, AttributeError) as e:
+                logger.debug(f"Continuing after exception: {e}")
                 continue
         
         return {

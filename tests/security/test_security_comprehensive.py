@@ -3,6 +3,11 @@ Comprehensive security tests for SutazAI system
 Tests authentication, authorization, input validation, and security hardening
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import pytest
 import requests
 import json
@@ -229,7 +234,9 @@ class TestInputValidationSecurity:
                         try:
                             response_data = response.json()
                             response_text = json.dumps(response_data).lower()
-                        except:
+                        except (AssertionError, Exception) as e:
+                            # TODO: Review this exception handling
+                            logger.error(f"Unexpected exception: {e}", exc_info=True)
                             response_text = response.text.lower()
                     else:
                         response_text = response.text.lower()
@@ -921,7 +928,9 @@ class TestSecurityMisconfiguration:
                 result = sock.connect_ex((localhost, port))
                 if result == 0:
                     open_ports.append((service_name, port))
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             finally:
                 sock.close()
@@ -977,7 +986,9 @@ class TestSecurityMonitoring:
             try:
                 requests.get(f"{BASE_URL}/health", timeout=1)
                 time.sleep(0.05)
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         # Multiple failed logins
@@ -988,7 +999,9 @@ class TestSecurityMonitoring:
                     json={"username": "admin", "password": "wrong"},
                     timeout=TIMEOUT
                 )
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         # This test is informational - actual IDS would be external

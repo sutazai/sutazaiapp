@@ -4,6 +4,11 @@ CORRECTED Security Test for Hardware Resource Optimizer
 Tests path traversal protection with proper response validation
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import requests
 import json
 import sys
@@ -77,7 +82,9 @@ def test_path_traversal_protection():
                         else:
                             # Success response = vulnerability
                             reason = "Success response (VULNERABILITY)"
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # TODO: Review this exception handling
+                        logger.error(f"Unexpected exception: {e}", exc_info=True)
                         reason = "Invalid JSON response"
                 else:
                     reason = f"HTTP {response.status_code}"

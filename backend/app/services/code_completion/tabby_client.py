@@ -3,7 +3,6 @@ TabbyML implementation of code completion client
 """
 import httpx
 import logging
-from typing import Optional, Dict, Any
 from .interfaces import CodeCompletionClient, CompletionRequest, CompletionResponse
 
 logger = logging.getLogger(__name__)
@@ -113,7 +112,9 @@ class TabbyCodeCompletionClient(CodeCompletionClient):
             try:
                 loop = asyncio.get_event_loop()
                 self._available = loop.run_until_complete(self.health_check())
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 self._available = False
         return self._available
     

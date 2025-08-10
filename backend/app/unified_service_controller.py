@@ -8,9 +8,7 @@ import httpx
 import docker
 import psutil
 import logging
-from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime
-import json
 import re
 
 logger = logging.getLogger("unified_controller")
@@ -314,7 +312,8 @@ class UnifiedServiceController:
                 url = f"http://{service_name}:{service_info['port']}{service_info['health']}"
                 response = await client.get(url)
                 return "healthy" if response.status_code in [200, 204] else "unhealthy"
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return "unhealthy"
     
     async def get_service_status(self, service_name: str) -> Dict[str, Any]:
@@ -544,7 +543,9 @@ class UnifiedServiceController:
                 container = self.docker_client.containers.get(f"sutazai-{service_name}")
                 status = container.status
                 health = await self.check_service_health(service_name) if status == "running" else "n/a"
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 status = "not_found"
                 health = "n/a"
                 
@@ -572,7 +573,9 @@ class UnifiedServiceController:
                     container = self.docker_client.containers.get(f"sutazai-{service_name}")
                     status = container.status
                     health = await self.check_service_health(service_name) if status == "running" else "n/a"
-                except:
+                except Exception as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     status = "not_found"
                     health = "n/a"
                     
@@ -627,7 +630,9 @@ class UnifiedServiceController:
                         "status": "skipped",
                         "message": f"{db} is not running"
                     })
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 backup_results.append({
                     "database": db,
                     "status": "error",
@@ -660,7 +665,9 @@ class UnifiedServiceController:
                     try:
                         container.stop()
                         optimizations.append(f"Stopped idle service: {name}")
-                    except:
+                    except Exception as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
         
         # Clear Docker caches
@@ -668,7 +675,9 @@ class UnifiedServiceController:
             self.docker_client.containers.prune()
             self.docker_client.images.prune()
             optimizations.append("Cleared Docker caches")
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         return {
@@ -684,7 +693,8 @@ class UnifiedServiceController:
             cpu_delta = stats['cpu_stats']['cpu_usage']['total_usage'] - stats['precpu_stats']['cpu_usage']['total_usage']
             system_delta = stats['cpu_stats']['system_cpu_usage'] - stats['precpu_stats']['system_cpu_usage']
             return (cpu_delta / system_delta) * 100.0 if system_delta > 0 else 0.0
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return 0.0
 
 

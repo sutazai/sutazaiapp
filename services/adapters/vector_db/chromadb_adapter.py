@@ -55,7 +55,8 @@ class ChromaDBAdapter(ServiceAdapter):
                 # Try to list collections as health check
                 collections = self.client.list_collections()
                 return True
-        except:
+        except (ConnectionError, TimeoutError, Exception) as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
             
     async def get_capabilities(self) -> Dict[str, Any]:

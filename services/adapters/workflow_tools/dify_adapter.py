@@ -1,7 +1,6 @@
 """
 Dify adapter for AI workflow orchestration
 """
-from typing import Dict, Any, List, Optional
 from ..base_adapter import ServiceAdapter
 import logging
 

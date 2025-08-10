@@ -60,7 +60,8 @@ class QdrantAdapter(ServiceAdapter):
                 # Try to get collection info
                 self.client.get_collection(self.collection_name)
                 return True
-        except:
+        except (ConnectionError, TimeoutError, Exception) as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
             
     async def get_capabilities(self) -> Dict[str, Any]:
@@ -69,7 +70,9 @@ class QdrantAdapter(ServiceAdapter):
         if self.client:
             try:
                 collection_info = self.client.get_collection(self.collection_name)
-            except:
+            except (ConnectionError, TimeoutError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
                 
         return {

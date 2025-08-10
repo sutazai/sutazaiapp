@@ -5,6 +5,11 @@ Agent: ARCH-001 (Master System Architect)
 Purpose: Continuous system analysis and 200-agent coordination monitoring
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import json
 import subprocess
 import time
@@ -105,7 +110,9 @@ class UltraSystemAnalyzer:
                         'status': 'healthy' if response.status_code == 200 else 'unhealthy',
                         'status_code': response.status_code
                     }
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 self.results['services'][service] = {'status': 'unreachable'}
                 
         return self.results['services']
@@ -159,7 +166,9 @@ class UltraSystemAnalyzer:
                                     for i, line in enumerate(lines) 
                                     if re.search(pattern, line, re.IGNORECASE)
                                 ])
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         # Summarize findings
@@ -216,10 +225,14 @@ class UltraSystemAnalyzer:
                         user_result = subprocess.run(user_cmd, shell=False, capture_output=True, text=True, timeout=5)
                         if user_result.stdout.strip() == 'root':
                             root_count += 1
-                    except:
+                    except Exception as e:
+                        # TODO: Review this exception handling
+                        logger.error(f"Unexpected exception: {e}", exc_info=True)
                         pass  # Skip containers that can't be queried
             security_checks['root_containers'] = root_count
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         # Check for .env file
@@ -358,7 +371,9 @@ class UltraSystemAnalyzer:
                 subprocess.run(["cls"], shell=False)
             else:  # Unix/Linux/macOS
                 subprocess.run(["clear"], shell=False)
-        except:
+        except Exception as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             # Fallback: print newlines if clear command fails
             print("\n" * 50)
     

@@ -147,7 +147,9 @@ class SystemBaselineTester:
                                 else:
                                     text = await response.text()
                                     health_results[service]["response_preview"] = text[:200]
-                            except:
+                            except (AssertionError, Exception) as e:
+                                # Suppressed exception (was bare except)
+                                logger.debug(f"Suppressed exception: {e}")
                                 pass
                         
                         logger.info(f"  {service}: {response.status} ({response_time:.2f}s)")
@@ -201,7 +203,9 @@ class SystemBaselineTester:
                             else:
                                 text = await response.text()
                                 api_results[endpoint]["response_preview"] = text[:200]
-                        except:
+                        except (AssertionError, Exception) as e:
+                            # Suppressed exception (was bare except)
+                            logger.debug(f"Suppressed exception: {e}")
                             pass
                         
                         logger.info(f"  {endpoint}: {response.status} ({response_time:.2f}s)")

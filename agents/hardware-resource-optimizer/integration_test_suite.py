@@ -48,7 +48,9 @@ class IntegrationTestSuite:
         try:
             self.docker_client = docker.from_env()
             self.docker_client.ping()
-        except:
+        except (IOError, OSError, FileNotFoundError) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             logger.warning("Docker not available for testing")
             
     def _call_endpoint(self, method: str, endpoint: str, params: Dict = None) -> Tuple[bool, Any]:
@@ -66,7 +68,8 @@ class IntegrationTestSuite:
             if response.status_code == 200:
                 try:
                     return True, response.json()
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    logger.warning(f"Exception caught, returning: {e}")
                     return True, {"status": "success", "message": "No JSON response"}
             else:
                 return False, {"status_code": response.status_code, "error": response.text}
@@ -534,7 +537,9 @@ class IntegrationTestSuite:
         # Cleanup
         try:
             shutil.rmtree(TEST_DIR)
-        except:
+        except (IOError, OSError, FileNotFoundError) as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
             
         return results

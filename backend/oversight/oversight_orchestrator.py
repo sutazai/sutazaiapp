@@ -11,7 +11,6 @@ import signal
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any
 import argparse
 
 # Add parent directory to path for imports

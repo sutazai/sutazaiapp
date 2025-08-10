@@ -4,7 +4,6 @@ Chainlit App for SutazAI - Conversational AI Interface
 """
 
 import chainlit as cl
-from typing import Optional, List
 import httpx
 import os
 

@@ -11,7 +11,6 @@ import torch.distributed as dist
 from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
 import transformers
 import uvicorn
-from typing import List, Optional, Dict, Any
 import logging
 import os
 

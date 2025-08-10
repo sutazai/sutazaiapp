@@ -361,7 +361,9 @@ class HardwareServiceClient:
                     try:
                         error_body = e.response.json()
                         error_detail += f" - {error_body.get('detail', e.response.text)}"
-                    except:
+                    except (ValueError, TypeError, KeyError, AttributeError) as e:
+                        # TODO: Review this exception handling
+                        logger.error(f"Unexpected exception: {e}", exc_info=True)
                         error_detail += f" - {e.response.text}"
                     
                     raise HTTPException(

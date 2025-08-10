@@ -361,7 +361,9 @@ class CorrectedBackendHardwareIntegrationTest:
                         error_data = response.json()
                         auth_details["error_message"] = error_data.get("detail", "")
                         auth_details["has_www_authenticate"] = "WWW-Authenticate" in response.headers
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
                         
                 results.append(TestResult(
@@ -714,7 +716,9 @@ class CorrectedBackendHardwareIntegrationTest:
                     },
                     category="error_handling"
                 ))
-            except:
+            except (AssertionError, Exception) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 results.append(TestResult(
                     test_name="Invalid Endpoint Error Handling",
                     status="WARN",

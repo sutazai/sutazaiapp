@@ -94,7 +94,9 @@ class IntegrationTestSuite:
                                   capture_output=True, text=True)
             if result.returncode == 0:
                 docker_count = len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0
-        except:
+        except (AssertionError, Exception) as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         return {
@@ -151,7 +153,8 @@ class IntegrationTestSuite:
         try:
             response = requests.get(f"{self.base_url}/health", timeout=5)
             return response.status_code == 200
-        except:
+        except (AssertionError, Exception) as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
     
     def _make_request(self, method: str, endpoint: str, **kwargs) -> Tuple[bool, Any]:
@@ -368,7 +371,9 @@ class IntegrationTestSuite:
         # Check if Docker is available
         try:
             subprocess.run(['docker', '--version'], check=True, capture_output=True)
-        except:
+        except (AssertionError, Exception) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             logger.warning("Docker not available, skipping scenario 4")
             return True  # Don't fail if Docker isn't available
         

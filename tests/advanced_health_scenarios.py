@@ -119,7 +119,9 @@ class AdvancedHealthScenarios:
                         cpu_samples.append(stats.get('cpu_percent', '0%'))
                         memory_samples.append(stats.get('memory_usage', '0B / 0B'))
                         time.sleep(5)
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
             
             monitor_thread = threading.Thread(target=monitor_resources)
@@ -191,7 +193,9 @@ class AdvancedHealthScenarios:
                 # Generate some activity
                 try:
                     requests.get(f"{service['url']}/health", timeout=10)
-                except:
+                except (AssertionError, Exception) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
                 
                 # Sample memory usage
@@ -216,7 +220,9 @@ class AdvancedHealthScenarios:
                             memory_values.append(float(mem_str.replace('MiB', '')))
                         elif 'GiB' in mem_str:
                             memory_values.append(float(mem_str.replace('GiB', '')) * 1024)
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # TODO: Review this exception handling
+                        logger.error(f"Unexpected exception: {e}", exc_info=True)
                         memory_values.append(0)
                 
                 if len(memory_values) >= 3:
@@ -258,7 +264,9 @@ class AdvancedHealthScenarios:
                     start = time.time()
                     response = requests.get(f"{service['url']}/health", timeout=10)
                     baseline_times.append(time.time() - start)
-                except:
+                except (AssertionError, Exception) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     baseline_times.append(10.0)
             
             baseline_avg = sum(baseline_times) / len(baseline_times)
@@ -276,7 +284,9 @@ class AdvancedHealthScenarios:
                     response = requests.get(f"{service['url']}/health", timeout=15)
                     spike_times.append(time.time() - start)
                     time.sleep(2)
-                except:
+                except (AssertionError, Exception) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     spike_times.append(15.0)
             
             spike_avg = sum(spike_times) / len(spike_times)
@@ -305,7 +315,9 @@ class AdvancedHealthScenarios:
         try:
             response = requests.get("http://localhost:10104/api/tags", timeout=5)
             ollama_available = response.status_code == 200
-        except:
+        except (AssertionError, Exception) as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         # Test secondary service AI endpoints
@@ -358,7 +370,9 @@ class AdvancedHealthScenarios:
             try:
                 response = requests.get(f"{service['url']}/health", timeout=10)
                 pre_restart_health = response.status_code == 200
-            except:
+            except (AssertionError, Exception) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 pre_restart_health = False
             
             # Restart container
@@ -385,7 +399,9 @@ class AdvancedHealthScenarios:
                             service_recovered = True
                             recovery_time = time.time() - start_wait
                             break
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
                     
                     time.sleep(5)
@@ -474,7 +490,9 @@ class AdvancedHealthScenarios:
                             if response.status_code == 200:
                                 success_count += 1
                             time.sleep(test_config["delay"])
-                        except:
+                        except (AssertionError, Exception) as e:
+                            # TODO: Review this exception handling
+                            logger.error(f"Unexpected exception: {e}", exc_info=True)
                             response_times.append(10.0)
                     
                     test_results[service_key] = {
@@ -493,7 +511,8 @@ class AdvancedHealthScenarios:
                         try:
                             response = requests.get(f"{service['url']}{endpoint}", timeout=10)
                             return {"endpoint": endpoint, "success": response.status_code == 200}
-                        except:
+                        except (AssertionError, Exception) as e:
+                            logger.warning(f"Exception caught, returning: {e}")
                             return {"endpoint": endpoint, "success": False}
                     
                     with concurrent.futures.ThreadPoolExecutor(max_workers=len(test_config["endpoints"])) as executor:

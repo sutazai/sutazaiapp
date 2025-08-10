@@ -4,6 +4,11 @@ Ultra QA Team Lead - Frontend Performance Validation Test
 Validates claimed 70% load time improvement and 60% memory reduction
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import time
 import requests
 import psutil
@@ -232,7 +237,9 @@ class FrontendPerformanceValidator:
             # Test health endpoint (though Streamlit doesn't have one by default)
             health_response = requests.get(f"{self.frontend_url}/health", timeout=5)
             tests["health_endpoint"] = health_response.status_code == 200
-        except:
+        except (AssertionError, Exception) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             pass  # Health endpoint may not exist for Streamlit
         
         try:

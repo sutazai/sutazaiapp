@@ -684,7 +684,9 @@ class ComprehensiveReportGenerator:
         
         try:
             template = self.jinja_env.get_template('comprehensive_report.html')
-        except:
+        except Exception as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             # Create a simple template if file doesn't exist
             template_content = """
 <!DOCTYPE html>

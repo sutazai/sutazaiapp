@@ -9,7 +9,6 @@ from typing import Dict, Any, Optional
 import logging
 import os
 import subprocess
-import json
 import yaml
 
 # Configure logging

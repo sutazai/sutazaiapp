@@ -4,6 +4,11 @@ Test script for Hardware Resource Optimizer Storage endpoints
 Tests all new storage optimization features
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import requests
 import json
 import time
@@ -34,7 +39,9 @@ def test_endpoint(endpoint: str, method: str = "GET", params: Dict = None, expec
         
         try:
             data = response.json()
-        except:
+        except (ValueError, TypeError, KeyError, AttributeError) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             data = response.text
         
         return {

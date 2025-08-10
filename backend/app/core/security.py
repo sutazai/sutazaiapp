@@ -397,7 +397,8 @@ class InputValidator:
             import json
             json.loads(json_str)
             return True
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
             
     def _validate_chat_message(self, message: str) -> str:

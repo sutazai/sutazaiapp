@@ -5,10 +5,8 @@ Provides real persistent memory AI agent capabilities with actual LLM integratio
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import Dict, Any, Optional, List
 import logging
 import os
-import json
 import requests
 import time
 

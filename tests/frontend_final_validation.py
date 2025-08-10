@@ -4,6 +4,11 @@ Ultra QA Team Lead - Final Frontend Validation
 Post-stress testing functional validation
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import requests
 import time
 import json
@@ -72,7 +77,9 @@ def validate_frontend_health():
             try:
                 mem_used = float(mem_used_str)
                 resource_ok = mem_used < 100  # Less than 100MB is good
-            except:
+            except (AssertionError, Exception) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 resource_ok = True
             
             print(f"   Memory: {mem_usage}")

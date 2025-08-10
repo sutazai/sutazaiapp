@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Final performance demonstration with realistic workload"""
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import sys
 import os
-import json
 import time
 sys.path.insert(0, '.')
 
@@ -229,7 +233,9 @@ def demonstrate_full_workflow():
         if os.path.exists(test_dry_run_dir):
             import shutil
             shutil.rmtree(test_dry_run_dir)
-    except:
+    except Exception as e:
+        # Suppressed exception (was bare except)
+        logger.debug(f"Suppressed exception: {e}")
         pass
     
     print(f"\n🎉 DEMONSTRATION COMPLETED SUCCESSFULLY!")

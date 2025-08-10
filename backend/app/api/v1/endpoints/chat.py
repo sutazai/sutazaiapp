@@ -3,7 +3,6 @@ Chat endpoint for SutazAI with comprehensive XSS protection
 """
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, validator
-from typing import List, Dict, Optional
 from app.services.model_manager import ModelManager
 from app.core.dependencies import get_model_manager
 from app.core.security import xss_protection

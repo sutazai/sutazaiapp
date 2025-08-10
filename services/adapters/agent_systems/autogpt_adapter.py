@@ -308,7 +308,8 @@ class AutoGPTAdapter(ServiceAdapter):
             if response:
                 return response.get('plugins', [])
             return []
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return []
             
     async def execute_command(self,

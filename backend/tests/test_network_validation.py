@@ -89,7 +89,8 @@ class NetworkValidator:
             sock.close()
             end_time = time.time()
             return round((end_time - start_time) * 1000, 2)  # Convert to milliseconds
-        except:
+        except (AssertionError, Exception) as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return None
     
     def detect_port_conflicts(self) -> List[Dict[str, Any]]:

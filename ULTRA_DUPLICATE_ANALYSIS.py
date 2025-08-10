@@ -12,7 +12,6 @@ from collections import defaultdict
 from pathlib import Path
 import subprocess
 import difflib
-from typing import Dict, List, Tuple, Set
 
 class UltraDuplicateAnalyzer:
     def __init__(self, root_path: str = "/opt/sutazaiapp"):

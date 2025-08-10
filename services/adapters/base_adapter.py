@@ -4,10 +4,8 @@ Base adapter class for all external AI service integrations
 import asyncio
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List
 import aiohttp
 from datetime import datetime
-import json
 
 logger = logging.getLogger(__name__)
 

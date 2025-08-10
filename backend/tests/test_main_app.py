@@ -3,6 +3,11 @@ Purpose: Test the actual main backend application
 Usage: pytest backend/tests/test_main_app.py
 Requirements: pytest, fastapi, app dependencies
 """
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import pytest
 import sys
 import os
@@ -162,7 +167,9 @@ class TestErrorHandling:
         try:
             data = response.json()
             assert "detail" in data or "error" in data or "message" in data
-        except:
+        except (AssertionError, Exception) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             # Might return HTML 404 page
             pass
     

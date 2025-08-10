@@ -415,7 +415,8 @@ class TestServiceDependencies:
                 user="postgres", password=os.getenv("POSTGRES_PASSWORD", "postgres"), connect_timeout=5
             )
             conn.close()
-        except:
+        except (AssertionError, Exception) as e:
+            logger.error(f"Re-raising exception: {e}")
             raise Exception("PostgreSQL connection failed")
 
     def _check_redis_health(self):
@@ -424,7 +425,8 @@ class TestServiceDependencies:
             import redis
             r = redis.Redis(host='localhost', port=6379, socket_timeout=5)
             r.ping()
-        except:
+        except (AssertionError, Exception) as e:
+            logger.error(f"Re-raising exception: {e}")
             raise Exception("Redis connection failed")
 
     def _check_backend_health(self):
@@ -686,7 +688,9 @@ class TestHealthCheckIntegration:
                             "response_time": 0.1,  # Redis is typically very fast
                             "last_check": datetime.now().isoformat()
                         }
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # TODO: Review this exception handling
+                        logger.error(f"Unexpected exception: {e}", exc_info=True)
                         service_health[service] = {
                             "status": "unhealthy",
                             "response_time": 3.0,

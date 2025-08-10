@@ -14,6 +14,11 @@ Test Categories:
 - Performance and reliability testing
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import os
 import sys
 import json
@@ -87,11 +92,15 @@ class TestEnhancedComplianceMonitor:
         finally:
             try:
                 monitor.system_state_db.close()
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             try:
                 os.unlink(config_path)
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
     
     def test_initialization(self, temp_project_root):

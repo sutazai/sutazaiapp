@@ -606,14 +606,18 @@ class ComplianceEngine:
             try:
                 result = subprocess.run(['iptables', '-L', '-n'], capture_output=True, text=True)
                 hardening_config['firewall_rules'] = result.stdout
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 hardening_config['firewall_rules'] = "Not available"
             
             # Check SSH configuration
             try:
                 with open('/etc/ssh/sshd_config', 'r') as f:
                     hardening_config['ssh_config'] = f.read()
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 hardening_config['ssh_config'] = "Not available"
             
             evidence_id = self._generate_evidence_id()
@@ -645,7 +649,9 @@ class ComplianceEngine:
             try:
                 result = subprocess.run(['dpkg', '-l'], capture_output=True, text=True)
                 inventory['dpkg_packages'] = result.stdout
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             
             # Get Docker images
@@ -653,14 +659,18 @@ class ComplianceEngine:
                 result = subprocess.run(['docker', 'images', '--format', 'json'], capture_output=True, text=True)
                 images = [json.loads(line) for line in result.stdout.strip().split('\n') if line]
                 inventory['docker_images'] = images
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             
             # Get Python packages
             try:
                 result = subprocess.run(['pip', 'list', '--format=json'], capture_output=True, text=True)
                 inventory['python_packages'] = json.loads(result.stdout)
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             
             evidence_id = self._generate_evidence_id()

@@ -7,13 +7,10 @@ import asyncio
 import json
 import logging
 import time
-from typing import Dict, List, Optional, Set, Any
-from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
 import aiohttp
 import docker
 import redis.asyncio as redis
-from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -310,7 +307,8 @@ class AgentDiscoveryService:
                                             "health_path": health_path
                                         }
                                     )
-                    except:
+                    except (IOError, OSError, FileNotFoundError) as e:
+                        logger.debug(f"Continuing after exception: {e}")
                         continue
         
         except Exception:

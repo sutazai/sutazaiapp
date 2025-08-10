@@ -3,6 +3,11 @@ SutazAI Frontend - Modernized Modular Architecture
 Clean, maintainable frontend using extracted page components
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import streamlit as st
 import asyncio
 import sys
@@ -101,7 +106,9 @@ def render_navigation():
                         st.warning(f"🟡 System Status: {status.title()}")
                 else:
                     st.error("🔴 Backend Unreachable")
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 st.error("🔴 Connection Failed")
         
         st.divider()

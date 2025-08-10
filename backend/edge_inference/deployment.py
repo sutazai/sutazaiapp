@@ -382,7 +382,8 @@ class DockerDeployer:
                 return [f"http://localhost:8000"]  # Simplified
             
             return []
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return []
     
     async def _run_docker_command(self, args: List[str]) -> Dict[str, Any]:

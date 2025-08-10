@@ -247,7 +247,9 @@ class HygieneMonitorBackend:
                 else:
                     network_status = "DEGRADED"
                     network_latency = 50.0
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 network_status = "UNKNOWN"
                 network_latency = 0.0
             

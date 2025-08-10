@@ -3,6 +3,11 @@ Docker container tests for SutazAI system
 Tests container functionality, health checks, and service interactions
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import pytest
 import docker
 import time
@@ -498,7 +503,9 @@ class TestContainerNetworking:
                 server_container.stop()
                 server_container.remove()
                 client_container.remove()
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             network.remove()
 
@@ -584,7 +591,9 @@ class TestContainerVolumes:
             try:
                 container.remove()
                 reader_container.remove()
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
             volume.remove()
 
@@ -804,13 +813,17 @@ services:
                 try:
                     container.stop()
                     container.remove()
-                except:
+                except (AssertionError, Exception) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
             
             if network:
                 try:
                     network.remove()
-                except:
+                except (AssertionError, Exception) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
 
 

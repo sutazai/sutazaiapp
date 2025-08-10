@@ -6,7 +6,6 @@ Aider AI Code Assistant Service
 from fastapi import FastAPI
 import uvicorn
 from datetime import datetime
-import json
 
 app = FastAPI(title="SutazAI Aider", version="1.0")
 

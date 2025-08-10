@@ -6,7 +6,6 @@ JAX ML Framework Service - CPU Version
 from fastapi import FastAPI
 import uvicorn
 from datetime import datetime
-import json
 
 app = FastAPI(title="SutazAI JAX Service", version="1.0")
 

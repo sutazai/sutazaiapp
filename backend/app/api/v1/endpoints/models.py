@@ -3,7 +3,6 @@ Models endpoint for SutazAI
 """
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from typing import List, Dict, Optional
 from app.services.model_manager import ModelManager
 from app.core.dependencies import get_model_manager
 from app.core.middleware import jwt_required

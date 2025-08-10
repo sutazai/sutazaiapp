@@ -5,9 +5,7 @@ Usage: from unified_ai_client import UnifiedAIClient
 Requirements: requests, redis, consul
 """
 
-import os
 import json
-import time
 import logging
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass

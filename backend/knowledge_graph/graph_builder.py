@@ -143,7 +143,9 @@ class CodeAnalyzer:
                             "value": value,
                             "line_number": node.lineno
                         })
-                    except:
+                    except Exception as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
     
     def _get_name(self, node: ast.AST) -> str:
@@ -330,7 +332,9 @@ class DocumentationParser:
             try:
                 config = json.loads(block)
                 configs.append({"type": "json", "config": config})
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         yaml_blocks = re.findall(r'```yaml\n(.*?)\n```', content, re.DOTALL)
@@ -338,7 +342,9 @@ class DocumentationParser:
             try:
                 config = yaml.safe_load(block)
                 configs.append({"type": "yaml", "config": config})
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         return configs

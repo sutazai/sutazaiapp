@@ -6,6 +6,11 @@ Purpose: Verify all test components are properly configured
 Usage: python validate_setup.py
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import os
 import sys
 import subprocess
@@ -51,7 +56,8 @@ def check_agent_running():
     try:
         response = requests.get("http://localhost:8116/health", timeout=2)
         return response.status_code == 200
-    except:
+    except (AssertionError, Exception) as e:
+        logger.warning(f"Exception caught, returning: {e}")
         return False
 
 def check_test_files():
@@ -93,7 +99,9 @@ def check_docker():
         result = subprocess.run(['docker', '--version'], 
                               capture_output=True, text=True)
         return result.returncode == 0
-    except:
+    except (AssertionError, Exception) as e:
+        # TODO: Review this exception handling
+        logger.error(f"Unexpected exception: {e}", exc_info=True)
         print("  Docker not installed or not in PATH")
         return False
 
@@ -115,7 +123,9 @@ def check_port_availability():
         sock.bind(('', 8117))
         sock.close()
         return True
-    except:
+    except (AssertionError, Exception) as e:
+        # TODO: Review this exception handling
+        logger.error(f"Unexpected exception: {e}", exc_info=True)
         print("  Port 8117 is in use")
         return False
 

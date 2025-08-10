@@ -168,11 +168,13 @@ class ServiceRegistry:
                                 "endpoint": endpoint,
                                 "response_time": response.elapsed.total_seconds()
                             }
-                except:
+                except Exception as e:
+                    logger.debug(f"Continuing after exception: {e}")
                     continue
             
             return {"service": service, "status": "unhealthy"}
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return {"service": service, "status": "unreachable"}
     
     async def orchestrate_task(self, task_type: str, task_data: Dict, agents: List[str] = None):

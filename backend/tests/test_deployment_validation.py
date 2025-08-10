@@ -245,7 +245,9 @@ class DeploymentValidator:
                     timestamp = parts[0]
                     if 'T' in timestamp:
                         return timestamp
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         return 'unknown'

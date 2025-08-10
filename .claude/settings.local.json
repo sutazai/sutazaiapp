@@ -153,7 +153,15 @@
       "Bash(ln:*)",
       "Bash(pip3 list:*)",
       "Bash(sudo ls:*)",
-      "Bash(./scripts/emergency-backup.sh:*)"
+      "Bash(./scripts/emergency-backup.sh:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"=== $script ===\")",
+      "Bash(head:*)",
+      "Bash(/opt/sutazaiapp/scripts/consolidated/master.sh:*)",
+      "Bash(/opt/sutazaiapp/tests/ultra_cleanup_test_suite.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/consolidated/security/master-security.sh validate:*)",
+      "Bash(/opt/sutazaiapp/tests/performance_benchmarks.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/consolidated/cleanup/archive-old-scripts.sh:*)"
     ],
     "deny": []
   }

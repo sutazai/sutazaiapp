@@ -309,7 +309,9 @@ class FinancialAnalyzer:
                 try:
                     data = await self.get_stock_data(symbol, "1y")
                     portfolio_data[symbol] = data['Close']
-                except:
+                except Exception as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     logger.warning(f"Could not fetch data for {symbol}")
                     continue
             

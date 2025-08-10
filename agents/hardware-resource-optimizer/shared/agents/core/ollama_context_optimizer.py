@@ -5,12 +5,10 @@ Usage: Optimizes context usage and implements model quantization strategies
 Requirements: ollama, transformers, torch, numpy
 """
 
-import os
 import json
 import time
 import logging
 import asyncio
-from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass
 from datetime import datetime
 import httpx

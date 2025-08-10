@@ -76,7 +76,8 @@ class BulletproofQuickTest:
             if response.status_code == 200:
                 try:
                     return True, response.json()
-                except:
+                except Exception as e:
+                    logger.warning(f"Exception caught, returning: {e}")
                     return True, {"status": "success", "message": "OK"}
             else:
                 return False, {"status_code": response.status_code, "error": response.text[:200]}

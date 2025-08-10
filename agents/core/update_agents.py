@@ -5,7 +5,6 @@ Usage: python update_agents.py
 Requirements: None - uses only standard library
 """
 
-import os
 import re
 from pathlib import Path
 

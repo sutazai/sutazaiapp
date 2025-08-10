@@ -387,7 +387,9 @@ class CapabilityReasoner:
                 try:
                     import json
                     performance_metrics = json.loads(performance_metrics)
-                except:
+                except Exception as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     performance_metrics = {}
             
             success_rate = performance_metrics.get("success_rate", 80.0)

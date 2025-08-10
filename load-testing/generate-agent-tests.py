@@ -5,8 +5,6 @@ Generates load tests for all 69+ agents dynamically from the agent registry.
 """
 
 import json
-import os
-import sys
 from pathlib import Path
 from typing import Dict, List, Any
 

@@ -4,7 +4,6 @@ FSDP trainer implementation for distributed training
 import uuid
 import httpx
 import logging
-from typing import Dict, Optional
 from .interfaces import Trainer, TrainingConfig, TrainingResult, TrainingStatus
 
 logger = logging.getLogger(__name__)
@@ -147,7 +146,9 @@ class FsdpTrainer(Trainer):
                     
                     job.metrics = status_data.get("metrics", job.metrics)
                     job.model_path = status_data.get("model_path", job.model_path)
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 pass  # Return cached status if service unavailable
             
             return self.jobs[job_id]
@@ -171,7 +172,9 @@ class FsdpTrainer(Trainer):
                     self.jobs[job_id].status = TrainingStatus.CANCELLED
                     self.jobs[job_id].logs.append("Job cancelled")
                 return True
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         return False
@@ -186,7 +189,9 @@ class FsdpTrainer(Trainer):
             try:
                 loop = asyncio.get_event_loop()
                 self._available = loop.run_until_complete(self.health_check())
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 self._available = False
         return self._available
     

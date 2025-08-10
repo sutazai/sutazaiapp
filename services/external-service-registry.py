@@ -11,7 +11,6 @@ import consul
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 import argparse
-import sys
 
 class ServiceRegistry:
     """Central registry for external service management"""

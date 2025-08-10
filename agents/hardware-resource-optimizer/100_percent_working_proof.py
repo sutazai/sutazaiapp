@@ -5,7 +5,6 @@ Quick demonstration of all features functioning perfectly
 """
 
 import requests
-import json
 import time
 from datetime import datetime
 

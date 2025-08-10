@@ -587,7 +587,8 @@ class FusionVisualizer:
                             'queue': queue_name,
                             'size': size
                         })
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    logger.debug(f"Continuing after exception: {e}")
                     continue
             
             if queue_data:
@@ -668,7 +669,8 @@ class FusionVisualizer:
                             'confidence': score,
                             'strategy': row['fusion_strategy']
                         })
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    logger.debug(f"Continuing after exception: {e}")
                     continue
             
             if confidence_data:
@@ -708,7 +710,8 @@ class FusionVisualizer:
                     'modality_count': repr_item['modality_count'],
                     'semantic_features': repr_item['semantic_features']
                 })
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                logger.debug(f"Continuing after exception: {e}")
                 continue
         
         if len(embeddings) < 2:
@@ -778,7 +781,8 @@ class FusionVisualizer:
                             'value': feature_value,
                             'representation_id': item['id']
                         })
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                logger.debug(f"Continuing after exception: {e}")
                 continue
         
         if semantic_data:

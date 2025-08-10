@@ -4,6 +4,11 @@ ULTRA-COMPREHENSIVE FRONTEND INTEGRATION TEST SUITE
 Complete validation of all frontend-to-backend integrations
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import requests
 import json
 import time
@@ -57,7 +62,9 @@ class FrontendIntegrationTester:
                 try:
                     data = response.json()
                     details += f", Response keys: {list(data.keys())[:5]}"
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
             
             self.log_test(f"{service_name} Health Check", success, details, response_time)
@@ -212,7 +219,9 @@ class FrontendIntegrationTester:
                     if response.status_code == 200:
                         response_times.append(response_time)
                     
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
             
             if response_times:

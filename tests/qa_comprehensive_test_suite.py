@@ -290,7 +290,9 @@ class UltraComprehensiveQATestSuite:
                                 self._record_pass(f"Security: Path traversal blocked in application logic for {endpoint}")
                             else:
                                 self._record_fail(f"🚨 SECURITY VULNERABILITY: Path traversal allowed on {endpoint} with payload: {payload}")
-                        except:
+                        except (AssertionError, Exception) as e:
+                            # TODO: Review this exception handling
+                            logger.error(f"Unexpected exception: {e}", exc_info=True)
                             self._record_fail(f"🚨 SECURITY VULNERABILITY: Path traversal potentially allowed on {endpoint}")
                     else:
                         security_results[endpoint]["errors"].append(f"HTTP {response.status_code} for payload {payload}")
@@ -496,7 +498,9 @@ class UltraComprehensiveQATestSuite:
                             self._record_pass(f"Error Handling: {description} handled in response body")
                         else:
                             self._record_warning(f"Error Handling: {description} may need better validation")
-                    except:
+                    except (AssertionError, Exception) as e:
+                        # TODO: Review this exception handling
+                        logger.error(f"Unexpected exception: {e}", exc_info=True)
                         self._record_warning(f"Error Handling: {description} response format unclear")
                 else:
                     self._record_fail(f"Error Handling: {description} returns unexpected HTTP {response.status_code}")

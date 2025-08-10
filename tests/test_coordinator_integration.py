@@ -413,7 +413,9 @@ class CoordinatorIntegrationTest:
         for agent in self.test_agents:
             try:
                 await agent.close()
-            except:
+            except (AssertionError, Exception) as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
     
     async def run_all_tests(self):

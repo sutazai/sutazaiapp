@@ -4,6 +4,11 @@ Simple demonstration of the code improvement workflow
 Shows how to analyze code and get actionable improvements
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import asyncio
 import sys
 import os
@@ -140,7 +145,9 @@ async def demonstrate_workflow():
                     if example_issue.suggested_fix:
                         print(f"\nSuggested fix:")
                         print(f"    {example_issue.suggested_fix}")
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
 
 

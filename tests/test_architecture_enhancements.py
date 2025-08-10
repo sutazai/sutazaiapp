@@ -4,6 +4,11 @@ Test Suite for SutazAI Architecture Enhancements
 Validates service mesh, AI agents, and system integration
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import asyncio
 import httpx
 import json
@@ -227,7 +232,9 @@ class EnhancementTestSuite:
                     if data.get("status") in ["healthy", "degraded"]:
                         print(f"✓ {name} is {data.get('status')}")
                         return True
-        except:
+        except (AssertionError, Exception) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             print(f"✗ {name} not responding")
         
         return False

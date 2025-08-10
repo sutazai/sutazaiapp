@@ -7,8 +7,6 @@ Handles PDF, DOCX, TXT, and other document formats
 import os
 import tempfile
 import logging
-from typing import List, Dict, Any, Optional
-from pathlib import Path
 import aiofiles
 # Note: Import specific implementation modules as needed
 

@@ -9,7 +9,6 @@ import time
 import logging
 import requests
 import docker
-from typing import Dict, List, Any
 from datetime import datetime
 
 # Setup logging

@@ -2,7 +2,6 @@
 Code completion service interfaces
 """
 from abc import ABC, abstractmethod
-from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
 
 @dataclass

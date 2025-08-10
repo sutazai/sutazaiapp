@@ -178,7 +178,8 @@ class ARIMAForecaster:
                         if fitted_model.aic < best_aic:
                             best_aic = fitted_model.aic
                             best_order = (p, d, q)
-                    except:
+                    except Exception as e:
+                        logger.debug(f"Continuing after exception: {e}")
                         continue
         
         return best_order
@@ -610,7 +611,8 @@ class PerformanceForecastingSystem:
             # Simple autocorrelation check for 24-hour seasonality
             autocorr_24h = data.autocorr(lag=24)
             return abs(autocorr_24h) > 0.3
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
     
     def predict_anomalies(self, predictions: np.ndarray) -> List[int]:
@@ -790,7 +792,9 @@ class PerformanceForecastingSystem:
             historical_data = self.load_historical_data(forecast_result.metric, days=7)
             plt.plot(historical_data['timestamp'], historical_data['value'], 
                     label='Historical', color='blue', alpha=0.7)
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
         
         # Plot predictions

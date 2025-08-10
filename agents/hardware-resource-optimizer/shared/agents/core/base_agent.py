@@ -245,7 +245,9 @@ class BaseAgent:
             try:
                 self.model_config = OllamaConfig.get_model_config(self.agent_name)
                 self.default_model = self.model_config["model"]
-            except:
+            except Exception as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 self.model_config = {"model": "tinyllama", "temperature": 0.7}
                 self.default_model = "tinyllama"
         else:
@@ -502,7 +504,9 @@ class BaseAgent:
                         self.logger.debug("Heartbeat sent successfully")
                     else:
                         self.logger.warning(f"Heartbeat failed: {response.status_code}")
-                except:
+                except Exception as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     pass  # Heartbeat failure is not critical
             
             # Also store in Redis if available
@@ -513,7 +517,9 @@ class BaseAgent:
                         self.heartbeat_interval * 2,
                         json.dumps(heartbeat_data)
                     )
-                except:
+                except Exception as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
                     
         except Exception as e:
@@ -967,7 +973,8 @@ class BaseAgent:
                 return response.status_code == 200
             else:
                 return False
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
     
     async def _check_backend_health(self) -> bool:
@@ -978,7 +985,8 @@ class BaseAgent:
         try:
             response = await self.http_client.get(f"{self.backend_url}/health")
             return response.status_code == 200
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
     
     async def _periodic_health_check(self):
@@ -1166,7 +1174,9 @@ class BaseAgent:
             try:
                 await self.async_redis.hdel("agent_registry", self.agent_id)
                 await self.async_redis.delete(f"heartbeat:{self.agent_id}")
-            except:
+            except Exception as e:
+                # Suppressed exception (was bare except)
+                logger.debug(f"Suppressed exception: {e}")
                 pass
         
         # Cleanup async components

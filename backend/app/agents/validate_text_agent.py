@@ -12,12 +12,15 @@ This script validates that the Text Analysis Agent is:
 Run this after starting the backend to confirm everything works.
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import asyncio
 import aiohttp
-import json
 import time
 from datetime import datetime
-from typing import Dict, Any, List
 import sys
 
 # Configuration
@@ -385,7 +388,9 @@ async def get_agent_statistics() -> Dict[str, Any]:
             async with session.get(f"{BACKEND_URL}/api/text-analysis/stats") as response:
                 if response.status == 200:
                     return await response.json()
-    except:
+    except Exception as e:
+        # Suppressed exception (was bare except)
+        logger.debug(f"Suppressed exception: {e}")
         pass
     return {}
 

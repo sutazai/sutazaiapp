@@ -248,7 +248,9 @@ class OllamaIntegrationTester:
                     with open(config_path) as f:
                         config = json.load(f)
                         result["model_assigned"] = config.get("model", "unknown")
-                except:
+                except (AssertionError, Exception) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
             
             # Determine overall status

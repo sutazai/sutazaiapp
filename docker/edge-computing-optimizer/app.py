@@ -1,3 +1,8 @@
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import json
 import time
 import asyncio
@@ -110,7 +115,9 @@ async def health():
         try:
             redis_client.ping()
             redis_healthy = True
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
     
     health_status["redis_connected"] = redis_healthy
@@ -122,7 +129,9 @@ async def health():
             response = await client.get(f"{OLLAMA_BASE_URL}/api/tags")
             if response.status_code == 200:
                 ollama_healthy = True
-    except:
+    except Exception as e:
+        # Suppressed exception (was bare except)
+        logger.debug(f"Suppressed exception: {e}")
         pass
     
     health_status["ollama_connected"] = ollama_healthy

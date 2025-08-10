@@ -237,7 +237,9 @@ class OllamaModelManager:
                 # Parse creation time
                 try:
                     created_at = datetime.fromisoformat(modified_at.replace('Z', '+00:00'))
-                except:
+                except Exception as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     created_at = datetime.now()
                 
                 model_version = ModelVersion(

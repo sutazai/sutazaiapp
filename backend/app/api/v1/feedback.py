@@ -2,7 +2,6 @@
 Feedback Loop API Integration
 """
 from fastapi import APIRouter, HTTPException, BackgroundTasks
-from typing import Dict, Any
 import logging
 import sys
 import os

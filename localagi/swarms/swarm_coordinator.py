@@ -11,9 +11,7 @@ This module implements self-organizing agent swarms that can:
 """
 
 import asyncio
-import json
 import logging
-from typing import Dict, List, Any, Optional, Set, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime, timedelta

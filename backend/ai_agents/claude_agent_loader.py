@@ -5,7 +5,6 @@ This module handles loading and managing Claude AI agent configurations
 from the .claude/agents directory and integrating them into the system.
 """
 
-import os
 import json
 import yaml
 import logging

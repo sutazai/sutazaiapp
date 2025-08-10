@@ -245,7 +245,9 @@ class ContinuousValidator:
                         "time_ms": (time.time() - start) * 1000,
                         "status_code": response.status_code
                     }
-                except:
+                except (AssertionError, Exception) as e:
+                    # TODO: Review this exception handling
+                    logger.error(f"Unexpected exception: {e}", exc_info=True)
                     response_times[endpoint] = {
                         "time_ms": -1,
                         "status_code": -1

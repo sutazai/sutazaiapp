@@ -5,17 +5,13 @@ Monitors critical services and automatically restarts failed containers
 """
 
 import os
-import time
 import json
 import logging
 import asyncio
 import aiohttp
 import docker
 import psutil
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional
 from dataclasses import dataclass, asdict
-import subprocess
 import signal
 import sys
 

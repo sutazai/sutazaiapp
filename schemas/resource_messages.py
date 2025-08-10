@@ -2,7 +2,6 @@
 Resource-related message schemas for allocation and management.
 """
 from typing import Dict, Any, Optional, List
-from datetime import datetime, timedelta
 from pydantic import Field
 from .base import BaseMessage, MessageType, Priority, ResourceType
 

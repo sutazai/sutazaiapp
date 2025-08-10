@@ -4,6 +4,11 @@ Ultra QA Team Lead - Frontend Stress Testing and Validation
 Extended testing for extreme load scenarios and memory pressure
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import time
 import requests
 import json
@@ -63,7 +68,9 @@ class FrontendStressValidator:
                             "memory_percent": stats["memory_percent"],
                             "cpu_percent": stats["cpu_percent"]
                         })
-                except:
+                except (AssertionError, Exception) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
                 time.sleep(2)
         

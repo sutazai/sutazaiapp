@@ -8,8 +8,6 @@ import asyncio
 import json
 import logging
 import time
-from datetime import datetime, timedelta
-from typing import Dict, List, Set, Optional, Any
 import redis.asyncio as redis
 import aiohttp
 from dataclasses import dataclass, field
@@ -209,7 +207,9 @@ class ContinuousCoordinator:
             for data in task_data:
                 try:
                     tasks.append(json.loads(data))
-                except:
+                except (IOError, OSError, FileNotFoundError) as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
         
         return tasks

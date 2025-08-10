@@ -3,6 +3,11 @@
 Rule Validator - Validates CLAUDE.md rules compliance
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import os
 import sys
 import json
@@ -163,7 +168,9 @@ class RuleValidator:
                         for term in forbidden_terms:
                             if term in content:
                                 return False
-                    except:
+                    except Exception as e:
+                        # Suppressed exception (was bare except)
+                        logger.debug(f"Suppressed exception: {e}")
                         pass
         
         return True

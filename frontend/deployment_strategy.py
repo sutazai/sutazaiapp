@@ -7,11 +7,8 @@ import subprocess
 import time
 import requests
 import logging
-import json
-from typing import Dict, Any, Optional, List
 from pathlib import Path
 import shutil
-import os
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +64,8 @@ class FrontendDeploymentManager:
                 timeout=timeout
             )
             return response.status_code == 200
-        except:
+        except Exception as e:
+            logger.warning(f"Exception caught, returning: {e}")
             return False
     
     def wait_for_health(self, port: int) -> bool:

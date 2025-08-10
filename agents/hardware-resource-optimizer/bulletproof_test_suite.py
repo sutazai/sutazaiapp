@@ -280,7 +280,9 @@ class BulletproofTestSuite:
             # Allocate some memory to test optimization
             for i in range(3):
                 memory_hogs.append(bytearray(10 * 1024 * 1024))  # 10MB each
-        except:
+        except Exception as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
             
         measurement = SystemMeasurement("memory_optimization")

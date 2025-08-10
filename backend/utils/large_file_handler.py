@@ -7,7 +7,6 @@ of the standard Read tool. It implements automatic chunking and transparent pagi
 
 import os
 from typing import Optional, Generator, List, Tuple
-from pathlib import Path
 
 
 class LargeFileHandler:

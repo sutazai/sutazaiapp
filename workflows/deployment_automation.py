@@ -4,13 +4,17 @@ Deployment Automation Workflow
 Practical example of automating deployments with SutazAI
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import asyncio
 import httpx
 import json
 import os
 import subprocess
 from datetime import datetime
-from typing import Dict, Any, List
 
 # Configuration
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
@@ -93,7 +97,9 @@ class DeploymentWorkflow:
                     healthy.append(service)
                 else:
                     unhealthy.append(service)
-            except:
+            except (IOError, OSError, FileNotFoundError) as e:
+                # TODO: Review this exception handling
+                logger.error(f"Unexpected exception: {e}", exc_info=True)
                 unhealthy.append(service)
         
         passed = len(unhealthy) == 0
@@ -282,7 +288,9 @@ class DeploymentWorkflow:
                 "passed": response.status_code == 200,
                 "details": "Connected" if response.status_code == 200 else "Not connected"
             })
-        except:
+        except (IOError, OSError, FileNotFoundError) as e:
+            # TODO: Review this exception handling
+            logger.error(f"Unexpected exception: {e}", exc_info=True)
             validations.append({
                 "check": "Database Connection",
                 "passed": False,

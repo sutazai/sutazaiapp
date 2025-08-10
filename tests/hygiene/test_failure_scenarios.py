@@ -5,6 +5,11 @@ Usage: python -m pytest tests/hygiene/test_failure_scenarios.py
 Requirements: pytest, unittest.mock, tempfile
 """
 
+import logging
+
+# Configure logger for exception handling
+logger = logging.getLogger(__name__)
+
 import unittest
 import tempfile
 import subprocess
@@ -578,7 +583,9 @@ finally:
     for f in opened_files:
         try:
             f.close()
-        except:
+        except (AssertionError, Exception) as e:
+            # Suppressed exception (was bare except)
+            logger.debug(f"Suppressed exception: {e}")
             pass
     print("FD_CLEANUP_COMPLETE")
 

@@ -1,0 +1,377 @@
+#!/usr/bin/env python3
+"""
+Security Utilities for SutazAI Scripts
+
+Provides security validation and hardening utilities for shell scripts.
+Identifies and helps fix common security issues like infinite loops,
+eval usage, and parameter injection vulnerabilities.
+
+Usage:
+    from scripts.lib.security_utils import validate_script_security
+    issues = validate_script_security("/path/to/script.sh")
+
+Author: SutazAI Infrastructure Team
+Created: 2025-08-10
+"""
+
+import re
+import os
+import subprocess
+from pathlib import Path
+from typing import List, Dict, Any, Optional
+import logging
+from .logging_utils import setup_logging
+
+# Security patterns to detect
+SECURITY_PATTERNS = {
+    'infinite_loops': [
+        r'while\s+true\s*;',
+        r'while\s+:\s*;',
+        r'for\s*\(\(\s*;\s*;\s*\)\)',
+        r'while\s+\[\s*1\s*\]',
+        r'while\s+\[\s*true\s*\]'
+    ],
+    'eval_usage': [
+        r'\beval\s+',
+        r'\bexec\s+\$',
+        r'\$\(\s*\$',
+        r'`\s*\$'
+    ],
+    'parameter_injection': [
+        r'\$\{[^}]*\}[^"\s]*\$',
+        r'\$[A-Za-z_][A-Za-z0-9_]*[^"\s]*\$',
+        r'echo\s+\$[A-Za-z_]',
+        r'rm\s+\$[A-Za-z_]',
+        r'cp\s+\$[A-Za-z_]'
+    ],
+    'unsafe_temp': [
+        r'/tmp/[^/\s"]+',
+        r'mktemp\s+[^-]',
+        r'>\s*/tmp/'
+    ],
+    'missing_quotes': [
+        r'\[\s+\$[A-Za-z_][A-Za-z0-9_]*\s+',
+        r'==\s*\$[A-Za-z_][A-Za-z0-9_]*[^"]',
+        r'rm\s+\$[A-Za-z_][A-Za-z0-9_]*[^"]'
+    ],
+    'missing_error_handling': [
+        r'#!/bin/bash(?!\s+.*set\s+-[euo])',
+        r'#!/bin/sh(?!\s+.*set\s+-[euo])'
+    ]
+}
+
+# Recommended fixes
+SECURITY_FIXES = {
+    'infinite_loops': {
+        'description': 'Infinite loops without timeout or signal handling',
+        'fix': 'Add timeout mechanisms and signal handlers (trap EXIT INT TERM)'
+    },
+    'eval_usage': {
+        'description': 'Dangerous eval/exec usage that can lead to code injection',
+        'fix': 'Replace eval with safer alternatives like arrays or case statements'
+    },
+    'parameter_injection': {
+        'description': 'Unquoted variables that can lead to parameter injection',
+        'fix': 'Quote all variables: "$variable" instead of $variable'
+    },
+    'unsafe_temp': {
+        'description': 'Unsafe temporary file handling',
+        'fix': 'Use mktemp -d for directories, mktemp for files, clean up in trap'
+    },
+    'missing_quotes': {
+        'description': 'Missing quotes around variables in tests and commands',
+        'fix': 'Always quote variables: [ "$var" = "value" ] instead of [ $var = value ]'
+    },
+    'missing_error_handling': {
+        'description': 'Missing error handling (set -euo pipefail)',
+        'fix': 'Add "set -euo pipefail" after shebang for strict error handling'
+    }
+}
+
+def setup_security_logging():
+    """Setup logging for security utilities."""
+    return setup_logging("security_utils", "INFO")
+
+def validate_script_security(script_path: str) -> Dict[str, List[Dict[str, Any]]]:
+    """
+    Validate a shell script for common security issues.
+    
+    Args:
+        script_path: Path to the shell script to validate
+        
+    Returns:
+        Dictionary mapping issue types to lists of found issues
+    """
+    logger = setup_security_logging()
+    
+    if not os.path.exists(script_path):
+        logger.error(f"Script not found: {script_path}")
+        return {}
+    
+    # Read script content
+    try:
+        with open(script_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as e:
+        logger.error(f"Failed to read script {script_path}: {e}")
+        return {}
+    
+    issues = {}
+    lines = content.split('\n')
+    
+    # Check each security pattern
+    for category, patterns in SECURITY_PATTERNS.items():
+        category_issues = []
+        
+        for i, line in enumerate(lines, 1):
+            for pattern in patterns:
+                matches = re.finditer(pattern, line, re.IGNORECASE)
+                for match in matches:
+                    category_issues.append({
+                        'line_number': i,
+                        'line_content': line.strip(),
+                        'match': match.group(),
+                        'pattern': pattern,
+                        'description': SECURITY_FIXES[category]['description'],
+                        'fix': SECURITY_FIXES[category]['fix']
+                    })
+        
+        if category_issues:
+            issues[category] = category_issues
+    
+    return issues
+
+def fix_infinite_loops(script_path: str, backup: bool = True) -> bool:
+    """
+    Fix infinite loops by adding timeout mechanisms and signal handlers.
+    
+    Args:
+        script_path: Path to the shell script
+        backup: Whether to create a backup before fixing
+        
+    Returns:
+        True if fixes were applied, False otherwise
+    """
+    logger = setup_security_logging()
+    
+    if backup:
+        backup_path = f"{script_path}.backup_security_{int(time.time())}"
+        try:
+            shutil.copy2(script_path, backup_path)
+            logger.info(f"Created backup: {backup_path}")
+        except Exception as e:
+            logger.error(f"Failed to create backup: {e}")
+            return False
+    
+    try:
+        with open(script_path, 'r') as f:
+            content = f.read()
+        
+        lines = content.split('\n')
+        modified = False
+        
+        # Add signal handlers after shebang
+        shebang_found = False
+        signal_handlers_added = False
+        
+        for i, line in enumerate(lines):
+            # Add signal handlers after shebang
+            if line.startswith('#!') and not shebang_found:
+                shebang_found = True
+                continue
+            
+            if shebang_found and not signal_handlers_added and line.strip() and not line.startswith('#'):
+                # Insert signal handlers
+                signal_handler_code = [
+                    "",
+                    "# Signal handlers for graceful shutdown",
+                    "cleanup_and_exit() {",
+                    "    local exit_code=\"${1:-0}\"",
+                    "    echo \"Script interrupted, cleaning up...\"",
+                    "    # Add cleanup code here",
+                    "    exit \"$exit_code\"",
+                    "}",
+                    "",
+                    "trap 'cleanup_and_exit 130' INT",
+                    "trap 'cleanup_and_exit 143' TERM",
+                    "trap 'cleanup_and_exit 1' ERR",
+                    ""
+                ]
+                
+                lines = lines[:i] + signal_handler_code + lines[i:]
+                signal_handlers_added = True
+                modified = True
+                break
+        
+        # Fix infinite loops with timeout
+        for i, line in enumerate(lines):
+            # Add timeout to while true loops
+            if re.search(r'while\s+(true|:|\[.*\])\s*;?\s*do', line):
+                # Look for the corresponding 'done'
+                indent = len(line) - len(line.lstrip())
+                timeout_var = "LOOP_TIMEOUT=${LOOP_TIMEOUT:-300}  # 5 minute timeout"
+                counter_init = f"{'    ' * (indent // 4)}local loop_start=$(date +%s)"
+                timeout_check = f"{'    ' * (indent // 4 + 1)}local current_time=$(date +%s)"
+                timeout_check2 = f"{'    ' * (indent // 4 + 1)}if [[ $((current_time - loop_start)) -gt $LOOP_TIMEOUT ]]; then"
+                timeout_check3 = f"{'    ' * (indent // 4 + 2)}echo 'Loop timeout reached, exiting...'"
+                timeout_check4 = f"{'    ' * (indent // 4 + 2)}break"
+                timeout_check5 = f"{'    ' * (indent // 4 + 1)}fi"
+                
+                # Insert timeout code after while line
+                lines = (lines[:i] + [timeout_var] + lines[i:i+1] + 
+                        [counter_init] + lines[i+1:])
+                
+                # Find the loop body and add timeout check
+                for j in range(i+3, len(lines)):
+                    if lines[j].strip().startswith('done'):
+                        lines = (lines[:j] + [timeout_check, timeout_check2, 
+                                timeout_check3, timeout_check4, timeout_check5] + 
+                                lines[j:])
+                        break
+                
+                modified = True
+                break
+        
+        if modified:
+            with open(script_path, 'w') as f:
+                f.write('\n'.join(lines))
+            logger.info(f"Applied infinite loop fixes to {script_path}")
+            return True
+    
+    except Exception as e:
+        logger.error(f"Failed to fix infinite loops in {script_path}: {e}")
+        return False
+    
+    return False
+
+def fix_eval_usage(script_path: str, backup: bool = True) -> bool:
+    """
+    Fix dangerous eval usage by replacing with safer alternatives.
+    
+    Args:
+        script_path: Path to the shell script
+        backup: Whether to create a backup before fixing
+        
+    Returns:
+        True if fixes were applied, False otherwise
+    """
+    logger = setup_security_logging()
+    
+    try:
+        with open(script_path, 'r') as f:
+            content = f.read()
+        
+        original_content = content
+        
+        # Replace common eval patterns
+        replacements = [
+            (r'\beval\s+\$([A-Za-z_][A-Za-z0-9_]*)', r'# SECURITY FIX: eval replaced with variable reference\n# Original: eval $\1\n"${\1}"'),
+            (r'\beval\s+"([^"]+)"', r'# SECURITY FIX: eval replaced with direct execution\n# Original: eval "\1"\n\1'),
+            (r'\bexec\s+\$([A-Za-z_][A-Za-z0-9_]*)', r'# SECURITY FIX: exec replaced with variable reference\n# Original: exec $\1\n"${\1}"')
+        ]
+        
+        for pattern, replacement in replacements:
+            content = re.sub(pattern, replacement, content, flags=re.MULTILINE)
+        
+        if content != original_content:
+            if backup:
+                backup_path = f"{script_path}.backup_eval_{int(time.time())}"
+                with open(backup_path, 'w') as f:
+                    f.write(original_content)
+            
+            with open(script_path, 'w') as f:
+                f.write(content)
+            
+            logger.info(f"Fixed eval usage in {script_path}")
+            return True
+    
+    except Exception as e:
+        logger.error(f"Failed to fix eval usage in {script_path}: {e}")
+        return False
+    
+    return False
+
+def validate_all_scripts(base_path: str) -> Dict[str, Dict[str, List[Dict[str, Any]]]]:
+    """
+    Validate all shell scripts in a directory for security issues.
+    
+    Args:
+        base_path: Base directory to search for scripts
+        
+    Returns:
+        Dictionary mapping script paths to their security issues
+    """
+    logger = setup_security_logging()
+    
+    script_issues = {}
+    script_extensions = ('.sh', '.bash')
+    
+    for root, dirs, files in os.walk(base_path):
+        for file in files:
+            if file.endswith(script_extensions):
+                script_path = os.path.join(root, file)
+                issues = validate_script_security(script_path)
+                
+                if issues:
+                    relative_path = os.path.relpath(script_path, base_path)
+                    script_issues[relative_path] = issues
+    
+    return script_issues
+
+def generate_security_report(script_issues: Dict[str, Any], output_file: str) -> None:
+    """
+    Generate a comprehensive security report.
+    
+    Args:
+        script_issues: Dictionary of script issues from validate_all_scripts
+        output_file: Path to save the security report
+    """
+    logger = setup_security_logging()
+    
+    try:
+        with open(output_file, 'w') as f:
+            f.write("# SutazAI Script Security Assessment Report\n\n")
+            f.write(f"Generated: {datetime.now().isoformat()}\n\n")
+            
+            # Executive summary
+            total_scripts = len(script_issues)
+            total_issues = sum(len(issues) for script_issues_dict in script_issues.values() 
+                             for issues in script_issues_dict.values())
+            
+            f.write("## Executive Summary\n\n")
+            f.write(f"- **Scripts Analyzed**: {total_scripts}\n")
+            f.write(f"- **Total Security Issues**: {total_issues}\n\n")
+            
+            # Issue breakdown by category
+            category_counts = {}
+            for script_issues_dict in script_issues.values():
+                for category, issues in script_issues_dict.items():
+                    category_counts[category] = category_counts.get(category, 0) + len(issues)
+            
+            f.write("## Issues by Category\n\n")
+            for category, count in sorted(category_counts.items()):
+                f.write(f"- **{category.replace('_', ' ').title()}**: {count} issues\n")
+            f.write("\n")
+            
+            # Detailed findings
+            f.write("## Detailed Findings\n\n")
+            for script_path, script_issues_dict in script_issues.items():
+                f.write(f"### {script_path}\n\n")
+                
+                for category, issues in script_issues_dict.items():
+                    f.write(f"#### {category.replace('_', ' ').title()}\n\n")
+                    
+                    for issue in issues:
+                        f.write(f"**Line {issue['line_number']}**: {issue['line_content']}\n")
+                        f.write(f"- **Issue**: {issue['description']}\n")
+                        f.write(f"- **Fix**: {issue['fix']}\n\n")
+        
+        logger.info(f"Security report generated: {output_file}")
+    
+    except Exception as e:
+        logger.error(f"Failed to generate security report: {e}")
+
+# Import time and shutil for backup functionality
+import time
+import shutil
+from datetime import datetime

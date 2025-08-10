@@ -7,7 +7,6 @@ import asyncio
 import logging
 import signal
 import sys
-from typing import Dict, Any, Optional, Callable
 from datetime import datetime
 import os
 
@@ -129,7 +128,9 @@ class MessagingAgent:
                     process = psutil.Process()
                     cpu_usage = process.cpu_percent()
                     memory_usage = process.memory_percent()
-                except:
+                except Exception as e:
+                    # Suppressed exception (was bare except)
+                    logger.debug(f"Suppressed exception: {e}")
                     pass
                 
                 # Send heartbeat

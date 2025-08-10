@@ -5,11 +5,9 @@ Monitors logs for suspicious activities
 """
 
 import re
-import time
 import logging
 from pathlib import Path
 from collections import defaultdict
-from datetime import datetime, timedelta
 
 class IntrusionDetector:
     def __init__(self):
