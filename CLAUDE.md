@@ -291,12 +291,13 @@ ENABLE_TABBY  # Default: false (code completion)
 ## Code Standards
 
 ### Python Development
-- Python 3.11+ required
+- **Python 3.12.8 REQUIRED** - Standardized across all services (August 10, 2025)
 - Use Poetry for dependency management (pyproject.toml)
 - Black for formatting, isort for imports
 - Type hints required for new code
 - Async/await patterns for I/O operations
 - UUID primary keys for all database tables
+- All Docker base images use python:3.12.8-slim-bookworm
 
 ### Testing Requirements
 - Minimum 80% test coverage

@@ -1,133 +1,84 @@
 {
-  "consolidation_mapping": {
-    "description": "Mapping of duplicate Dockerfiles to consolidated templates",
-    "analysis_date": "2025-08-10",
-    "total_dockerfiles": 318,
-    "target_dockerfiles": 50,
-    "reduction_percentage": 84
-  },
-  
-  "exact_duplicates_to_remove": {
-    "python_agent_services": [
-      {
-        "original": "/docker/agents/Dockerfile.agentgpt",
-        "hash": "b3ae17b188ebc750c24059cb33ffcccc",
-        "template": "Dockerfile.nodejs-agent-template",
-        "service_config": "agentgpt"
-      },
-      {
-        "original": "/docker/agents/Dockerfile.autogpt", 
-        "hash": "0c82566cc96b4874d1e5bbfe382d77fc",
-        "template": "Dockerfile.python-agent-template",
-        "service_config": "autogpt"
-      },
-      {
-        "original": "/docker/agents/Dockerfile.crewai",
-        "hash": "cdf86841c036904ea25be0d05e43251d", 
-        "template": "Dockerfile.python-agent-template",
-        "service_config": "crewai"
-      },
-      {
-        "original": "/docker/agents/Dockerfile.langchain",
-        "hash": "8acec202133b37b5c2cdd75217a8d748",
-        "template": "Dockerfile.python-agent-template", 
-        "service_config": "langchain"
-      },
-      {
-        "original": "/docker/agents/Dockerfile.langflow",
-        "hash": "9425354d1a2bb73e1358c953fe54e7a9",
-        "template": "Dockerfile.python-agent-template",
-        "service_config": "langflow"
-      },
-      {
-        "original": "/docker/agents/Dockerfile.llamaindex",
-        "hash": "c7efc09ce6791b019ee380ec4d09206c",
-        "template": "Dockerfile.python-agent-template",
-        "service_config": "llamaindex"
-      },
-      {
-        "original": "/docker/agents/Dockerfile.finrobot",
-        "hash": "d1b532183a7aba6631b5e3240d76dc98",
-        "template": "Dockerfile.python-agent-template",
-        "service_config": "finrobot"
-      }
-    ]
-  },
-  
-  "base_image_consolidation": {
-    "python_bases": [
-      {
-        "files_to_remove": [
-          "/docker/base/Dockerfile.python-agent",
-          "/docker/base/Dockerfile.python-agent-base", 
-          "/docker/base/Dockerfile.python-alpine-agent",
-          "/docker/base/python-base.Dockerfile"
-        ],
-        "replacement": "/docker/base/Dockerfile.python-agent-master"
-      }
-    ],
-    "nodejs_bases": [
-      {
-        "files_to_remove": [
-          "/docker/base/Dockerfile.nodejs-base"
-        ],
-        "replacement": "/docker/base/Dockerfile.nodejs-agent-master"
-      }
-    ]
-  },
-  
-  "service_specific_dockerfiles": {
-    "keep_as_unique": [
-      {
-        "path": "/agents/hardware-resource-optimizer/Dockerfile",
-        "reason": "Contains 1,249 lines of specific optimization logic",
-        "action": "Clean up but keep separate"
-      },
-      {
-        "path": "/backend/Dockerfile",
-        "reason": "Core backend service with specific requirements",
-        "action": "Clean up but keep separate"
-      },
-      {
-        "path": "/frontend/Dockerfile", 
-        "reason": "Streamlit frontend with specific configuration",
-        "action": "Clean up but keep separate"
-      }
-    ]
-  },
-  
-  "docker_compose_updates_needed": [
-    "docker-compose.yml - Update service image references",
-    "docker-compose.minimal.yml - Update minimal stack references", 
-    "docker-compose.secure.yml - Update security hardened references"
-  ],
-  
-  "build_process_changes": {
-    "new_build_order": [
-      "1. Build base images (python-agent-master, nodejs-agent-master)",
-      "2. Generate service Dockerfiles from templates", 
-      "3. Build service-specific images",
-      "4. Build unique service images (backend, frontend, hardware-optimizer)"
-    ],
-    "automation": "Use generate-dockerfile.py script for template processing"
-  },
-  
-  "validation_requirements": {
-    "functional_testing": [
-      "All services must start successfully",
-      "Health checks must pass",
-      "Service communication must work",
-      "Environment variables must be preserved"
-    ],
-    "performance_testing": [
-      "Build times should improve with layer caching",
-      "Container startup times should be equivalent",
-      "Memory usage should not increase"
-    ],
-    "security_testing": [
-      "All containers must run as non-root",
-      "No security regressions allowed",
-      "Vulnerability scans must pass"
-    ]
+  "version": "1.0.0",
+  "created": "2025-08-11T00:28:54.514877",
+  "templates": {
+    "python-base-master": {
+      "base_image": "python:3.12.8-slim-bookworm",
+      "description": "Universal Python base for all Python services",
+      "security": "non-root user (appuser:1000)",
+      "services": []
+    },
+    "nodejs-base-master": {
+      "base_image": "node:18-slim",
+      "description": "Universal Node.js base",
+      "security": "non-root user (node:1000)",
+      "services": []
+    },
+    "alpine-base-master": {
+      "base_image": "alpine:3.18",
+      "description": "Minimal Alpine base for microservices",
+      "security": "non-root user (appuser:1000)",
+      "services": []
+    },
+    "ai-agent-master": {
+      "inherits": "python-base-master",
+      "description": "AI agent services with ML libraries",
+      "services": []
+    },
+    "backend-api-master": {
+      "inherits": "python-base-master",
+      "description": "API services with FastAPI/Flask",
+      "services": []
+    },
+    "frontend-ui-master": {
+      "inherits": "nodejs-base-master or python-base-master",
+      "description": "UI services with Streamlit or React",
+      "services": []
+    },
+    "monitoring-master": {
+      "inherits": "alpine-base-master",
+      "description": "Monitoring and metrics services",
+      "services": []
+    },
+    "data-pipeline-master": {
+      "inherits": "python-base-master",
+      "description": "Data processing and ETL services",
+      "services": []
+    },
+    "ml-training-master": {
+      "inherits": "python-base-master",
+      "description": "ML training with PyTorch/TensorFlow",
+      "services": []
+    },
+    "security-service-master": {
+      "inherits": "alpine-base-master",
+      "description": "Security and compliance services",
+      "services": []
+    },
+    "database-client-master": {
+      "inherits": "python-base-master",
+      "description": "Database-heavy services",
+      "services": []
+    },
+    "gpu-compute-master": {
+      "base_image": "nvidia/cuda:12.0-runtime",
+      "description": "GPU-accelerated services",
+      "services": []
+    },
+    "edge-compute-master": {
+      "inherits": "alpine-base-master",
+      "description": "Edge/IoT deployment",
+      "services": []
+    },
+    "test-automation-master": {
+      "inherits": "python-base-master",
+      "description": "Testing and QA services",
+      "services": []
+    },
+    "third-party-wrapper": {
+      "base_image": "various",
+      "description": "Wrapper for third-party services",
+      "services": []
+    }
   }
 }

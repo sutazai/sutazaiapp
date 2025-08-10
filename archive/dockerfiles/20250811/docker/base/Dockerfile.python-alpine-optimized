@@ -1,0 +1,94 @@
+# SutazAI Python Alpine Ultra-Optimized Base Image
+# Target: 50% size reduction from current 899MB baseline
+# Multi-stage build with production hardening
+# Author: Edge Computing Optimization Specialist
+# Date: August 10, 2025
+
+# Build stage - Install build dependencies and compile packages
+FROM python:3.12.8-alpine3.20 as builder
+
+# Build essentials for compiling Python packages
+RUN apk add --no-cache --virtual .build-deps \
+    build-base \
+    linux-headers \
+    libffi-dev \
+    openssl-dev \
+    postgresql-dev \
+    musl-dev \
+    gcc \
+    g++ \
+    make \
+    cmake
+
+# Create virtual environment for cleaner dependencies
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Optimize pip and install core dependencies
+COPY docker/base/base-requirements-minimal-alpine.txt /tmp/base-requirements.txt
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir --compile -r /tmp/base-requirements.txt \
+    && find /opt/venv -type d -name '__pycache__' -exec rm -rf {} + || true \
+    && find /opt/venv -name '*.pyc' -delete \
+    && find /opt/venv -name '*.pyo' -delete
+
+# Production stage - Minimal runtime image
+FROM python:3.12.8-alpine3.20 as production
+
+# Install only runtime dependencies
+RUN apk add --no-cache \
+    # Essential runtime libraries
+    libpq \
+    libffi \
+    openssl \
+    # Minimal system tools for health checks and debugging
+    curl \
+    ca-certificates \
+    # Remove package cache in same layer
+    && rm -rf /var/cache/apk/*
+
+# Copy Python virtual environment from builder
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Security: Create non-root user with minimal permissions
+RUN addgroup -g 1001 -S appuser \
+    && adduser -u 1001 -S appuser -G appuser \
+    && mkdir -p /app /app/data /app/logs /app/workspace \
+    && chown -R appuser:appuser /app
+
+WORKDIR /app
+
+# Optimized environment variables
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    # Service defaults
+    SERVICE_PORT=8080 \
+    AGENT_ID=alpine-agent \
+    AGENT_NAME="Alpine Optimized Agent" \
+    # Performance settings
+    PYTHONIOENCODING=utf-8 \
+    # AI/ML settings
+    OLLAMA_HOST=http://sutazai-ollama:11434 \
+    MODEL_NAME=tinyllama \
+    # Logging
+    LOG_LEVEL=INFO
+
+# Minimal health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=2 \
+    CMD curl -f http://localhost:${SERVICE_PORT:-8080}/health || exit 1
+
+# Switch to non-root user
+USER appuser
+
+# Default command
+CMD ["python", "-u", "app.py"]
+
+# Metadata
+LABEL maintainer="SutazAI Edge Optimization Team" \
+      version="1.0.0" \
+      description="Ultra-optimized Alpine Python base for edge deployment" \
+      optimization="50% size reduction target"
