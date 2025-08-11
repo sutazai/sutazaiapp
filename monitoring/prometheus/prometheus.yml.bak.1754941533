@@ -18,23 +18,6 @@ alerting:
           - sutazai-alertmanager:9093
 
 scrape_configs:
-  - job_name: http-probes
-    metrics_path: /probe
-    params:
-      module: [http_2xx]
-    static_configs:
-      - targets:
-        - http://sutazai-frontend:8501
-        - http://sutazai-ollama:11434/api/tags
-        - http://sutazai-chromadb:8000/api/v1/heartbeat
-        - http://sutazai-faiss:8000/health
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__param_target]
-        target_label: instance
-      - target_label: __address__
-        replacement: sutazai-blackbox-exporter:9115
   - job_name: file_sd
     file_sd_configs:
     - files: ["/etc/prometheus/file_sd.d/*.yml"]

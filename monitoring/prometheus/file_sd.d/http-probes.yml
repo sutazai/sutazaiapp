@@ -1,0 +1,7 @@
+- labels:
+    job: http-probes
+  targets:
+    - http://sutazai-frontend:8501
+    - http://sutazai-ollama:11434/api/tags
+    - http://sutazai-chromadb:8000/api/v1/heartbeat
+    - http://sutazai-faiss:8000/health

@@ -89,33 +89,6 @@
         "extended_memory_mcp.server"
       ],
       "env": {}
-    },
-    "http": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-http"
-      ],
-      "env": {}
-    },
-    "github": {
-      "type": "stdio",
-      "command": "sh",
-      "args": [
-        "-lc",
-        "npx -y @modelcontextprotocol/server-github --repositories 'sutazai/sutazaiapp'"
-      ],
-      "env": {}
-    },
-    "chromadb": {
-      "type": "stdio",
-      "command": "sh",
-      "args": [
-        "-lc",
-        "CHROMA_URL='http://sutazai-chromadb:8000' CHROMA_API_URL='http://sutazai-chromadb:8000' node '/opt/sutazaiapp/.mcp/chromadb/dist/index.js'"
-      ],
-      "env": {}
     }
   }
 }

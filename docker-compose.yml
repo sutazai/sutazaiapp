@@ -129,10 +129,10 @@ services:
       OLLAMA_RUNNERS_DIR: /tmp
       OLLAMA_TMPDIR: /tmp/ollama
       OLLAMA_MAX_QUEUE: '10'
-      OLLAMA_TIMEOUT: 30s
-      OLLAMA_REQUEST_TIMEOUT: '30'
+      OLLAMA_TIMEOUT: 300s
+      OLLAMA_REQUEST_TIMEOUT: '300'
       OLLAMA_CONNECTION_POOL: '10'
-      OLLAMA_USE_MMAP: 'false'
+      OLLAMA_USE_MMAP: 'true'
       OLLAMA_USE_NUMA: 'false'
     healthcheck:
       test:

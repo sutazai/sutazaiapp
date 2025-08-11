@@ -75,7 +75,7 @@ class ConsolidatedOllamaService:
         self._request_queue = asyncio.Queue(maxsize=100)
         
         # Configuration from settings
-        self.ollama_host = getattr(settings, 'OLLAMA_HOST', 'http://sutazai-ollama:11434')
+        self.ollama_host = getattr(settings, 'OLLAMA_HOST', 'http://ollama:11434')
         self.default_model = getattr(settings, 'DEFAULT_MODEL', 'tinyllama')
         self.embedding_model = getattr(settings, 'EMBEDDING_MODEL', 'tinyllama')
         

@@ -196,13 +196,29 @@
       "Bash(/opt/sutazaiapp/scripts/ultra_final_perfection.sh:*)",
       "mcp__sequentialthinking__sequentialthinking",
       "Bash(snap install:*)",
-      "Bash(semgrep:*)"
+      "Bash(semgrep:*)",
+      "mcp__extended-memory__load_contexts",
+      "mcp__extended-memory__save_context",
+      "mcp__files__directory_tree",
+      "mcp__files__read_multiple_files",
+      "mcp__files__directory_tree",
+      "mcp__files__read_multiple_files",
+      "mcp__files__read_text_file"
     ],
     "deny": []
   },
   "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
     "sequentialthinking",
-    "context7"
+    "context7",
+    "mcp_ssh",
+    "nx-mcp",
+    "language-server",
+    "files",
+    "postgres",
+    "extended-memory",
+    "http",
+    "github",
+    "chromadb"
   ]
 }
