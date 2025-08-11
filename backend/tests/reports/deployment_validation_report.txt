@@ -1,51 +1,75 @@
 ================================================================================
 SUTAZAI DEPLOYMENT VALIDATION REPORT
 ================================================================================
-Generated: 2025-08-02T23:43:42.994579
+Generated: 2025-08-11T14:57:40.206121
 Overall Status: FAILED
 
 DEPLOYMENT STATUS:
 ----------------------------------------
   ✓ Docker Available: True
-  Running Containers: 0/4
-  ✓ Docker Compose: accessible
+  Running Containers: 6/4
+    ✓ sutazai-redis-exporter
+    ✓ sutazai-redis
+    ✓ sutazai-chromadb
+    ✓ sutazai-neo4j
+    ✓ sutazai-postgres-exporter
+    ✓ sutazai-postgres
+  ✗ Docker Compose: unknown
 
 CONTAINER HEALTH:
 ----------------------------------------
-  ✗ sutazai-postgres: Not accessible
-    Error: Error: No such object: sutazai-postgres
-  ✗ sutazai-redis: Not accessible
-    Error: Error: No such object: sutazai-redis
-  ✗ sutazai-neo4j: Not accessible
-    Error: Error: No such object: sutazai-neo4j
-  ✗ sutazai-chromadb: Not accessible
-    Error: Error: No such object: sutazai-chromadb
+  ✓ sutazai-postgres:
+    Status: running
+    Health: healthy
+    CPU: 0.00%
+    Memory: 62.35MiB / 512MiB
+    Restarts: 0
+  ✓ sutazai-redis:
+    Status: running
+    Health: healthy
+    CPU: 0.59%
+    Memory: 4.719MiB / 1GiB
+    Restarts: 0
+  ✓ sutazai-neo4j:
+    Status: running
+    Health: healthy
+    CPU: 0.62%
+    Memory: 505.2MiB / 1GiB
+    Restarts: 0
+  ✓ sutazai-chromadb:
+    Status: running
+    Health: healthy
+    CPU: 0.21%
+    Memory: 86.11MiB / 1GiB
+    Restarts: 0
 
 LOG ANALYSIS:
 ----------------------------------------
   ✗ sutazai-postgres:
-    Status: error
-    Log Lines: 0
+    Status: unknown
+    Log Lines: 1
     Errors: 0
     Warnings: 0
-  ✗ sutazai-redis:
-    Status: error
-    Log Lines: 0
+  ✓ sutazai-redis:
+    Status: healthy
+    Log Lines: 45
     Errors: 0
-    Warnings: 0
+    Warnings: 1
   ✗ sutazai-neo4j:
-    Status: error
-    Log Lines: 0
-    Errors: 0
-    Warnings: 0
+    Status: errors_present
+    Log Lines: 21
+    Errors: 1
+    Warnings: 8
+    Recent Errors:
+      - 2025-08-10T22:07:52.655066005Z 2025-08-10 22:07:52.654+0000 WARN  Failed authentication attempt for ...
   ✗ sutazai-chromadb:
-    Status: error
-    Log Lines: 0
+    Status: unknown
+    Log Lines: 50
     Errors: 0
     Warnings: 0
 
 RESOURCE USAGE:
 ----------------------------------------
-  Memory: 3.5GB / 29.4GB (12.03%)
-  CPU Load: 0.32 (1m), 0.52 (5m), 0.49 (15m)
-  Disk: 138.9GB / 1006.9GB (15%)
+  Memory: 8.3GB / 23.3GB (35.71%)
+  CPU Load: 6.33 (1m), 6.01 (5m), 5.2 (15m)
+  Disk: 66.8GB / 1006.9GB (7%)

@@ -8,7 +8,7 @@ info:
     ## Features
     - Multi-model AI reasoning and chat capabilities
     - Agent orchestration and management  
-    - Deep reasoning and consciousness simulation
+    - Deep reasoning and advanced processing
     - System monitoring and metrics
     - Enterprise workflow management
     - Real-time WebSocket streaming
@@ -196,7 +196,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ThinkRequest'
             example:
-              query: "What are the implications of artificial general intelligence?"
+              query: "What are the implications of artificial intelligence automation?"
               reasoning_type: "deductive"
       responses:
         '200':
@@ -506,7 +506,7 @@ components:
           example: "17.0.0"
         description:
           type: string
-          example: "Enterprise Autonomous General Intelligence Platform"
+          example: "Enterprise AI Automation and Orchestration Platform"
         status:
           type: string
           enum: [running, degraded, maintenance]
@@ -644,7 +644,7 @@ components:
           type: array
           items:
             type: string
-          example: ["reasoning", "learning", "consciousness"]
+          example: ["task_routing", "workflow_management", "resource_allocation"]
         health:
           type: string
           enum: [healthy, degraded, unhealthy]
@@ -731,16 +731,16 @@ components:
           description: Agent that processed the request
         processing_enhancement:
           type: boolean
-          description: Whether consciousness processing was used
+          description: Whether advanced processing was used
         reasoning_pathways:
           type: array
           items:
             type: string
           description: Activated reasoning pathways
-        consciousness_level:
+        confidence_level:
           type: number
           format: float
-          description: Current consciousness level
+          description: Current confidence level
         vector_context_used:
           type: boolean
           description: Whether vector context was injected
@@ -817,11 +817,11 @@ components:
           type: array
           items:
             type: string
-        consciousness_pathways:
+        analysis_pathways:
           type: array
           items:
             type: string
-        consciousness_level:
+        confidence_level:
           type: number
           format: float
         reasoning_depth:

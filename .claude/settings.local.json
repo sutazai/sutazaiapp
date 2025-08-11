@@ -170,8 +170,39 @@
       "Bash(redis-cli:*)",
       "Bash(wget:*)",
       "Bash(./scripts/security/validate_xss_fixes.sh:*)",
-      "Bash(/opt/sutazaiapp/scripts/security/validate_enterprise_security.sh:*)"
+      "Bash(/opt/sutazaiapp/scripts/security/validate_enterprise_security.sh:*)",
+      "Bash(scripts/master/validate.sh:*)",
+      "Bash(scripts/master/deploy.sh:*)",
+      "Bash(/opt/sutazaiapp/ULTRAFIX_IMMEDIATE_ACTION.sh:*)",
+      "Bash(apt-get:*)",
+      "Bash(apt-get install:*)",
+      "Bash(./ULTRACLEANUP_IMMEDIATE_ACTION_SCRIPT.sh:*)",
+      "Bash(./scripts/security/secure-monitoring-migration.sh:*)",
+      "Bash(./load_test_health.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/security/validate-container-security-final.sh:*)",
+      "Bash(./scripts/maintenance/ultra-organization-cleanup.sh:*)",
+      "Bash(./scripts/maintenance/database-connectivity-test.sh:*)",
+      "Bash(./scripts/maintenance/validate-ultra-organization.sh:*)",
+      "Bash(./scripts/maintenance/backup/master-backup.sh:*)",
+      "Bash(./scripts/validate-100-percent-connectivity.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/ultra_cleanup_todos.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/ultra_dockerfile_consolidation.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/ultra_fantasy_cleanup.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/ultra_script_organization.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/maintenance/cleanup/ultra_backup_removal.sh:*)",
+      "Bash(./scripts/ultra_final_validation.sh:*)",
+      "Bash(apt:*)",
+      "Bash(./scripts/ultra_final_perfection.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/ultra_final_perfection.sh:*)",
+      "mcp__sequentialthinking__sequentialthinking",
+      "Bash(snap install:*)",
+      "Bash(semgrep:*)"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": false,
+  "enabledMcpjsonServers": [
+    "sequentialthinking",
+    "context7"
+  ]
 }

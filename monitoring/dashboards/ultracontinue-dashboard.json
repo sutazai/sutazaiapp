@@ -1,0 +1,467 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "ultracontinue-main",
+    "title": "ULTRACONTINUE CI/CD & System Monitoring",
+    "tags": ["cicd", "performance", "hardware", "deployment"],
+    "timezone": "browser",
+    "schemaVersion": 30,
+    "version": 1,
+    "refresh": "10s",
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "type": "graph",
+        "title": "Deployment Success Rate",
+        "targets": [
+          {
+            "expr": "sum(rate(deployment_success_total[1h])) / sum(rate(deployment_total[1h])) * 100",
+            "legendFormat": "Success Rate",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "percent", "min": 0, "max": 100 },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 2,
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+        "type": "graph",
+        "title": "Build & Test Duration",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(ci_pipeline_duration_seconds_bucket[1h]))",
+            "legendFormat": "P95 Duration",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.50, rate(ci_pipeline_duration_seconds_bucket[1h]))",
+            "legendFormat": "P50 Duration",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          { "format": "s", "min": 0 },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 3,
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+        "type": "graph",
+        "title": "Hardware Resource Utilization",
+        "targets": [
+          {
+            "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "legendFormat": "CPU Usage",
+            "refId": "A"
+          },
+          {
+            "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+            "legendFormat": "Memory Usage",
+            "refId": "B"
+          },
+          {
+            "expr": "nvidia_gpu_utilization",
+            "legendFormat": "GPU Usage",
+            "refId": "C"
+          }
+        ],
+        "yaxes": [
+          { "format": "percent", "min": 0, "max": 100 },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 4,
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+        "type": "graph",
+        "title": "API Performance Metrics",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) * 1000",
+            "legendFormat": "P95 Latency",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m])) * 1000",
+            "legendFormat": "P99 Latency",
+            "refId": "B"
+          },
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "Request Rate",
+            "refId": "C"
+          }
+        ],
+        "yaxes": [
+          { "format": "ms", "min": 0 },
+          { "format": "ops" }
+        ]
+      },
+      {
+        "id": 5,
+        "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 },
+        "type": "stat",
+        "title": "Test Coverage",
+        "targets": [
+          {
+            "expr": "test_coverage_percentage",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": ["lastNotNull"]
+          },
+          "graphMode": "area",
+          "colorMode": "background",
+          "orientation": "horizontal"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": 0 },
+                { "color": "yellow", "value": 70 },
+                { "color": "green", "value": 80 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 6,
+        "gridPos": { "h": 8, "w": 8, "x": 8, "y": 16 },
+        "type": "stat",
+        "title": "Security Score",
+        "targets": [
+          {
+            "expr": "security_score",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": ["lastNotNull"]
+          },
+          "graphMode": "area",
+          "colorMode": "background"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": 0 },
+                { "color": "yellow", "value": 85 },
+                { "color": "green", "value": 95 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 7,
+        "gridPos": { "h": 8, "w": 8, "x": 16, "y": 16 },
+        "type": "stat",
+        "title": "Deployment Frequency",
+        "targets": [
+          {
+            "expr": "sum(increase(deployment_total[24h]))",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": ["lastNotNull"]
+          },
+          "graphMode": "none",
+          "colorMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0
+          }
+        }
+      },
+      {
+        "id": 8,
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 24 },
+        "type": "table",
+        "title": "Recent Deployments",
+        "targets": [
+          {
+            "expr": "deployment_info",
+            "format": "table",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "showHeader": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto"
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
+        "type": "graph",
+        "title": "Container Health Status",
+        "targets": [
+          {
+            "expr": "sum(up) by (service)",
+            "legendFormat": "{{ service }}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "short", "min": 0, "max": 1, "decimals": 0 },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 10,
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
+        "type": "graph",
+        "title": "Error Rates by Service",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) by (service)",
+            "legendFormat": "{{ service }}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          { "format": "percentunit", "min": 0 },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 11,
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 40 },
+        "type": "heatmap",
+        "title": "Response Time Heatmap",
+        "targets": [
+          {
+            "expr": "sum(rate(http_request_duration_seconds_bucket[5m])) by (le)",
+            "format": "heatmap",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "calculate": true,
+          "calculation": {
+            "xBuckets": { "mode": "count", "value": "30" },
+            "yBuckets": { "mode": "count" }
+          },
+          "color": {
+            "mode": "spectrum",
+            "scheme": "Oranges"
+          }
+        }
+      },
+      {
+        "id": 12,
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 40 },
+        "type": "graph",
+        "title": "Database Performance",
+        "targets": [
+          {
+            "expr": "rate(pg_stat_database_xact_commit[5m])",
+            "legendFormat": "Commits/sec",
+            "refId": "A"
+          },
+          {
+            "expr": "rate(pg_stat_database_xact_rollback[5m])",
+            "legendFormat": "Rollbacks/sec",
+            "refId": "B"
+          },
+          {
+            "expr": "pg_stat_database_numbackends",
+            "legendFormat": "Active Connections",
+            "refId": "C"
+          }
+        ],
+        "yaxes": [
+          { "format": "ops", "min": 0 },
+          { "format": "short" }
+        ]
+      },
+      {
+        "id": 13,
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 48 },
+        "type": "logs",
+        "title": "Deployment Logs",
+        "targets": [
+          {
+            "expr": "{job=\"deployment\"}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "showTime": true,
+          "showLabels": true,
+          "showCommonLabels": false,
+          "wrapLogMessage": true,
+          "sortOrder": "Descending",
+          "dedupStrategy": "none"
+        }
+      },
+      {
+        "id": 14,
+        "gridPos": { "h": 6, "w": 6, "x": 0, "y": 56 },
+        "type": "gauge",
+        "title": "CPU Efficiency",
+        "targets": [
+          {
+            "expr": "100 - (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100))",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": ["lastNotNull"]
+          },
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": 0 },
+                { "color": "yellow", "value": 50 },
+                { "color": "green", "value": 70 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 15,
+        "gridPos": { "h": 6, "w": 6, "x": 6, "y": 56 },
+        "type": "gauge",
+        "title": "Memory Efficiency",
+        "targets": [
+          {
+            "expr": "(node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": ["lastNotNull"]
+          },
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": 0 },
+                { "color": "yellow", "value": 40 },
+                { "color": "green", "value": 60 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 16,
+        "gridPos": { "h": 6, "w": 6, "x": 12, "y": 56 },
+        "type": "gauge",
+        "title": "Quality Score",
+        "targets": [
+          {
+            "expr": "code_quality_score",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": ["lastNotNull"]
+          },
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": 0 },
+                { "color": "yellow", "value": 80 },
+                { "color": "green", "value": 90 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 17,
+        "gridPos": { "h": 6, "w": 6, "x": 18, "y": 56 },
+        "type": "gauge",
+        "title": "Performance Score",
+        "targets": [
+          {
+            "expr": "performance_score",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "calcs": ["lastNotNull"]
+          },
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": 0 },
+                { "color": "yellow", "value": 85 },
+                { "color": "green", "value": 95 }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}

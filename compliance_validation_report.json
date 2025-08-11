@@ -2,20 +2,20 @@
   "timestamp": "2025-08-07T21:26:07.802255",
   "overall_score": 31,
   "rules": {
-    "Rule 1: No Fantasy Elements": {
+    "Rule 1: No conceptual Elements": {
       "score": 0,
       "status": "\u274c FAIL",
       "issues": [
-        "detailed_import_analysis.py: contains 'wizard'",
-        "import_audit.py: contains 'wizard'",
+        "detailed_import_analysis.py: contains 'configuration'",
+        "import_audit.py: contains 'configuration'",
         "test_ollama_integration.py: contains 'quantum'",
-        "scripts/compliance-monitor-core.py: contains 'wizard'",
+        "scripts/compliance-monitor-core.py: contains 'configuration'",
         "scripts/validate_ports.py: contains 'agi'",
         "scripts/update-agent-auth.py: contains 'agi'",
         "scripts/hygiene-monitor.py: contains 'agi'",
-        "scripts/enforce_claude_md_rules.py: contains 'wizard'",
+        "scripts/enforce_claude_md_rules.py: contains 'configuration'",
         "scripts/analyze-agent-readiness.py: contains 'agi'",
-        "scripts/complete-cleanup-and-prepare.py: contains 'wizard'"
+        "scripts/complete-cleanup-and-prepare.py: contains 'configuration'"
       ]
     },
     "Rule 2: Don't Break Existing": {

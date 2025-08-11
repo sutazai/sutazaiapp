@@ -53,9 +53,9 @@ AUDIT_PASSED=true
 # 1. Check for backup files
 log ""
 log "Checking for backup files..."
-if find "$PROJECT_ROOT" -name "*.backup*" -o -name "*.fantasy*" -o -name "*.agi_backup" 2>/dev/null | grep -v "/logs/" | grep -q .; then
+if find "$PROJECT_ROOT" -name "*.backup*" -o -name "*.conceptual*" -o -name "*.agi_backup" 2>/dev/null | grep -v "/logs/" | grep -q .; then
     log "Found backup files:"
-    find "$PROJECT_ROOT" -name "*.backup*" -o -name "*.fantasy*" -o -name "*.agi_backup" 2>/dev/null | grep -v "/logs/" | tee -a "$REPORT_FILE"
+    find "$PROJECT_ROOT" -name "*.backup*" -o -name "*.conceptual*" -o -name "*.agi_backup" 2>/dev/null | grep -v "/logs/" | tee -a "$REPORT_FILE"
     AUDIT_PASSED=false
 else
     log "✅ No backup files found"

@@ -18,9 +18,9 @@ These rules are MANDATORY for all contributors. They ensure codebase hygiene, pr
 - Think like Architect/Engineer/QA/PM; prioritize clarity; leave code better than found
 - Avoid anti-patterns (“for now”, “tiny change”, “clean later”, duplicate utils)
 
-## Rule 1: No Fantasy Elements
+## Rule 1: No conceptual Elements
 - Only real, production-ready implementations; avoid speculative code
-- Use real libraries and verifiable APIs; banned magical terms and placeholders
+- Use real libraries and verifiable APIs; banned automated terms and placeholders
 - Pre-commit checks for banned keywords and dependency validation
 
 ## Rule 2: Do Not Break Existing Functionality

@@ -84,7 +84,7 @@ Mount Point Analysis:
 ├── /host/proc (ro) - ❌ CRITICAL: Full host /proc access
 ├── /host/sys (ro) - ❌ CRITICAL: Full host /sys access  
 ├── /host/tmp (rw) - ❌ CRITICAL: Write access to host /tmp
-└── /var/run/docker.sock (rw) - ❌ CRITICAL: Docker daemon access
+└── /var/run/docker.sock (rw) - ❌ CRITICAL: Docker service access
 ```
 
 **🚨 Security Impact:**

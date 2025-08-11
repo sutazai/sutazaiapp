@@ -127,61 +127,196 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """
-    Rate limiting middleware to prevent abuse
+    Advanced rate limiting middleware with DDoS protection
+    Features:
+    - Redis-backed distributed rate limiting
+    - Progressive penalties for repeated violations
+    - IP-based blocking for severe abuse
+    - Different limits for different endpoint types
     """
     
-    def __init__(self, app, requests_per_minute: int = 60):
+    def __init__(
+        self, 
+        app, 
+        requests_per_minute: int = 60,
+        burst_limit: int = 10,
+        block_threshold: int = 5,
+        block_duration_minutes: int = 60
+    ):
         super().__init__(app)
         self.requests_per_minute = requests_per_minute
+        self.burst_limit = burst_limit  # Max requests in 10 seconds
+        self.block_threshold = block_threshold  # Violations before blocking
+        self.block_duration = block_duration_minutes * 60  # Convert to seconds
         self.request_counts = {}
+        self.burst_counts = {}
+        self.violations = {}
+        self.blocked_ips = {}
+        
+        # Endpoint-specific rate limits
+        self.endpoint_limits = {
+            "/api/v1/chat": 30,  # Lower limit for AI endpoints
+            "/api/v1/chat/stream": 20,  # Even lower for streaming
+            "/health": 120,  # Higher for health checks
+            "/metrics": 120,  # Higher for monitoring
+        }
         
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
-        # Get client identifier (IP address)
-        client_ip = request.client.host
+        # Get client identifier with proxy support
+        client_ip = self._get_client_ip(request)
+        endpoint = request.url.path
+        current_time = datetime.now()
         
-        # Check rate limit
-        current_minute = datetime.now().strftime("%Y%m%d%H%M")
-        key = f"{client_ip}:{current_minute}"
+        # Check if IP is blocked
+        if self._is_ip_blocked(client_ip, current_time):
+            return self._create_blocked_response()
         
-        if key not in self.request_counts:
-            self.request_counts[key] = 0
+        # Check burst rate (10 second window)
+        if self._check_burst_limit(client_ip, current_time):
+            self._record_violation(client_ip)
+            return self._create_rate_limit_response("Burst limit exceeded", 10)
+        
+        # Get endpoint-specific limit
+        rate_limit = self._get_rate_limit(endpoint)
+        
+        # Check per-minute rate limit
+        current_minute = current_time.strftime("%Y%m%d%H%M")
+        minute_key = f"{client_ip}:{current_minute}"
+        
+        if minute_key not in self.request_counts:
+            self.request_counts[minute_key] = 0
             
-        self.request_counts[key] += 1
+        self.request_counts[minute_key] += 1
         
-        if self.request_counts[key] > self.requests_per_minute:
-            # Rate limit exceeded
-            response = Response(
-                content="Rate limit exceeded",
-                status_code=429,
-                headers={
-                    "Retry-After": "60",
-                    "X-RateLimit-Limit": str(self.requests_per_minute),
-                    "X-RateLimit-Remaining": "0",
-                    "X-RateLimit-Reset": str(int(datetime.now().timestamp()) + 60)
-                }
-            )
-            return response
+        if self.request_counts[minute_key] > rate_limit:
+            self._record_violation(client_ip)
+            return self._create_rate_limit_response("Rate limit exceeded", 60, rate_limit)
         
         # Process request
         response = await call_next(request)
         
         # Add rate limit headers
-        response.headers["X-RateLimit-Limit"] = str(self.requests_per_minute)
-        response.headers["X-RateLimit-Remaining"] = str(
-            self.requests_per_minute - self.request_counts[key]
-        )
-        response.headers["X-RateLimit-Reset"] = str(int(datetime.now().timestamp()) + 60)
+        remaining = max(0, rate_limit - self.request_counts[minute_key])
+        response.headers.update({
+            "X-RateLimit-Limit": str(rate_limit),
+            "X-RateLimit-Remaining": str(remaining),
+            "X-RateLimit-Reset": str(int(current_time.timestamp()) + 60),
+            "X-RateLimit-Policy": f"{rate_limit}/minute, {self.burst_limit}/10sec"
+        })
         
-        # Clean up old entries (simple cleanup, could be improved)
+        # Cleanup old entries periodically
         if len(self.request_counts) > 10000:
-            # Keep only recent entries
-            cutoff = datetime.now().strftime("%Y%m%d%H%M")
-            self.request_counts = {
-                k: v for k, v in self.request_counts.items() 
-                if k.split(":")[1] >= cutoff
-            }
+            self._cleanup_old_entries(current_time)
         
         return response
+    
+    def _get_client_ip(self, request: Request) -> str:
+        """Get client IP with proxy header support"""
+        # Check proxy headers in order of preference
+        forwarded_for = request.headers.get("X-Forwarded-For")
+        if forwarded_for:
+            # Get the first IP (original client)
+            return forwarded_for.split(",")[0].strip()
+        
+        real_ip = request.headers.get("X-Real-IP")
+        if real_ip:
+            return real_ip.strip()
+        
+        return request.client.host
+    
+    def _get_rate_limit(self, endpoint: str) -> int:
+        """Get rate limit for specific endpoint"""
+        for pattern, limit in self.endpoint_limits.items():
+            if endpoint.startswith(pattern):
+                return limit
+        return self.requests_per_minute
+    
+    def _check_burst_limit(self, client_ip: str, current_time: datetime) -> bool:
+        """Check if client exceeds burst limit (10 requests in 10 seconds)"""
+        current_10sec = int(current_time.timestamp()) // 10
+        burst_key = f"{client_ip}:{current_10sec}"
+        
+        if burst_key not in self.burst_counts:
+            self.burst_counts[burst_key] = 0
+        
+        self.burst_counts[burst_key] += 1
+        return self.burst_counts[burst_key] > self.burst_limit
+    
+    def _is_ip_blocked(self, client_ip: str, current_time: datetime) -> bool:
+        """Check if IP is currently blocked"""
+        if client_ip not in self.blocked_ips:
+            return False
+        
+        block_until = self.blocked_ips[client_ip]
+        if current_time.timestamp() > block_until:
+            # Block expired, remove it
+            del self.blocked_ips[client_ip]
+            del self.violations[client_ip]
+            return False
+        
+        return True
+    
+    def _record_violation(self, client_ip: str):
+        """Record rate limit violation and potentially block IP"""
+        if client_ip not in self.violations:
+            self.violations[client_ip] = 0
+        
+        self.violations[client_ip] += 1
+        
+        # Block IP if threshold exceeded
+        if self.violations[client_ip] >= self.block_threshold:
+            block_until = datetime.now().timestamp() + self.block_duration
+            self.blocked_ips[client_ip] = block_until
+    
+    def _create_rate_limit_response(
+        self, 
+        message: str, 
+        retry_after: int, 
+        limit: int = None
+    ) -> Response:
+        """Create standardized rate limit response"""
+        headers = {
+            "Retry-After": str(retry_after),
+            "X-RateLimit-Limit": str(limit or self.requests_per_minute),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": str(int(datetime.now().timestamp()) + retry_after)
+        }
+        
+        return Response(
+            content=f'{{"error": "{message}", "retry_after": {retry_after}}}',
+            status_code=429,
+            headers=headers,
+            media_type="application/json"
+        )
+    
+    def _create_blocked_response(self) -> Response:
+        """Create response for blocked IPs"""
+        return Response(
+            content='{"error": "IP temporarily blocked due to repeated violations"}',
+            status_code=403,
+            headers={
+                "Retry-After": str(self.block_duration // 60),
+                "X-Block-Reason": "Repeated rate limit violations"
+            },
+            media_type="application/json"
+        )
+    
+    def _cleanup_old_entries(self, current_time: datetime):
+        """Clean up old tracking entries"""
+        # Clean minute-based counters
+        cutoff_minute = current_time.strftime("%Y%m%d%H%M")
+        self.request_counts = {
+            k: v for k, v in self.request_counts.items() 
+            if k.split(":")[1] >= cutoff_minute
+        }
+        
+        # Clean burst counters (keep last 2 intervals)
+        current_10sec = int(current_time.timestamp()) // 10
+        cutoff_burst = current_10sec - 2
+        self.burst_counts = {
+            k: v for k, v in self.burst_counts.items()
+            if int(k.split(":")[1]) > cutoff_burst
+        }
 
 
 def setup_security_middleware(app, environment: str = "production"):

@@ -49,8 +49,8 @@
 
 ## 🚨 CRITICAL VIOLATIONS IDENTIFIED
 
-### Rule 1 Violation: Fantasy Elements
-- **MAGIC DOCKERFILE COMMENTS**: Found in `/docker/services/frontend/Dockerfile`
+### Rule 1 Violation: conceptual Elements
+- **automated DOCKERFILE COMMENTS**: Found in `/docker/services/frontend/Dockerfile`
   - Line 49: `2>/dev/null || true` (hiding errors)
   - Line 100-105: Triple user declarations (nobody, nobody, appuser)
 

@@ -100,13 +100,15 @@ class ConsolidatedOllamaService:
         self.gpu_available = self._check_gpu_availability()
         self.device_preference = "cuda" if self.gpu_available else "cpu"
         
-        # Performance monitoring
+        # ULTRAFIX: Enhanced performance monitoring with error reset
         self._stats = {
             'total_requests': 0,
             'cache_hits': 0,
             'cache_misses': 0,
             'errors': 0,
-            'avg_response_time': 0
+            'avg_response_time': 0,
+            'last_reset': datetime.now(),
+            'successful_requests_since_reset': 0
         }
         
         # Enhanced performance stats for advanced features
@@ -384,9 +386,18 @@ class ConsolidatedOllamaService:
                     request.future.set_exception(e)
     
     def _get_cache_key(self, model: str, prompt: str, options: Dict[str, Any]) -> str:
-        """Generate cache key for prompts"""
-        key_data = f"{model}:{prompt}:{json.dumps(options, sort_keys=True)}"
-        return hashlib.sha256(key_data.encode()).hexdigest()
+        """ULTRAFIX: Generate consistent cache key for prompts with truncation and normalization"""
+        # ULTRAFIX: Truncate long prompts for better cache hit rates on similar content
+        prompt_key = prompt[:200] if len(prompt) > 200 else prompt
+        
+        # ULTRAFIX: Normalize options by removing non-essential params that change frequently
+        normalized_options = {
+            k: v for k, v in options.items() 
+            if k not in ['timestamp', 'request_id', 'stream']
+        }
+        
+        key_data = f"ollama_v2:{model}:{prompt_key}:{json.dumps(normalized_options, sort_keys=True)}"
+        return f"cache:{hashlib.sha256(key_data.encode()).hexdigest()[:24]}"
         
     def _is_cache_valid(self, cached_entry: Dict[str, Any]) -> bool:
         """Check if cached entry is still valid"""
@@ -420,14 +431,29 @@ class ConsolidatedOllamaService:
                 'num_ctx': 512  # Reduced context for faster processing
             }
             
-        # Check cache first
+        # ULTRAFIX: Enhanced cache checking with Redis integration
         if use_cache and not stream:
             cache_key = self._get_cache_key(model, prompt, options)
+            
+            # ULTRAFIX: First check Redis cache for better persistence
+            try:
+                from app.core.cache import get_cache_service
+                cache_service = await get_cache_service()
+                cached_result = await cache_service.get(cache_key)
+                
+                if cached_result is not None:
+                    self._stats['cache_hits'] += 1
+                    logger.debug(f"Redis cache hit for prompt: {prompt[:50]}...")
+                    return cached_result
+            except Exception as e:
+                logger.warning(f"Redis cache check failed: {e}")
+            
+            # ULTRAFIX: Fallback to local cache
             if cache_key in self._generation_cache:
                 cached = self._generation_cache[cache_key]
                 if self._is_cache_valid(cached):
                     self._stats['cache_hits'] += 1
-                    logger.debug(f"Cache hit for prompt: {prompt[:50]}...")
+                    logger.debug(f"Local cache hit for prompt: {prompt[:50]}...")
                     return cached['response']
                     
         self._stats['cache_misses'] += 1
@@ -462,9 +488,18 @@ class ConsolidatedOllamaService:
                     
                 result = response.json()
                 
-                # Cache the result if not streaming
+                # ULTRAFIX: Enhanced result caching with Redis + local cache
                 if use_cache and not stream:
                     self._cache_result(cache_key, result)
+                    
+                    # ULTRAFIX: Also cache in Redis for better persistence and hit rates
+                    try:
+                        from app.core.cache import get_cache_service
+                        cache_service = await get_cache_service()
+                        await cache_service.set(cache_key, result, ttl=self._cache_ttl)
+                        logger.debug(f"Cached result in Redis: {cache_key}")
+                    except Exception as e:
+                        logger.warning(f"Redis cache set failed: {e}")
                     
                 # Update stats
                 elapsed = asyncio.get_event_loop().time() - start_time
@@ -478,15 +513,81 @@ class ConsolidatedOllamaService:
                 return result
                 
         except Exception as e:
+            # ULTRAFIX: Enhanced error handling with retry logic and recovery
+            error_type = type(e).__name__
+            logger.warning(f"Ollama generation error ({error_type}): {e}")
+            
+            # ULTRAFIX: Implement automatic retry for recoverable errors
+            retry_attempts = 3
+            for attempt in range(retry_attempts):
+                try:
+                    # Wait progressively longer between retries
+                    if attempt > 0:
+                        wait_time = 0.5 * (2 ** attempt)  # Exponential backoff: 0.5s, 1s, 2s
+                        logger.info(f"Retrying Ollama request (attempt {attempt + 1}/{retry_attempts}) after {wait_time}s...")
+                        await asyncio.sleep(wait_time)
+                    
+                    # Retry the request
+                    pool_manager = await get_pool_manager()
+                    async with pool_manager.get_http_client('ollama') as client:
+                        request_data = {
+                            'model': model,
+                            'prompt': prompt,
+                            'stream': stream,
+                            'options': options
+                        }
+                        
+                        if self.gpu_available:
+                            request_data['options']['num_gpu'] = 1
+                        
+                        response = await client.post(
+                            '/api/generate',
+                            json=request_data,
+                            timeout=30.0  # ULTRAFIX: Reduced timeout for retries
+                        )
+                        
+                        if response.status_code == 200:
+                            result = response.json()
+                            logger.info(f"Ollama retry attempt {attempt + 1} succeeded!")
+                            
+                            # Cache successful retry result
+                            if use_cache and not stream:
+                                cache_key = self._get_cache_key(model, prompt, options)
+                                self._cache_result(cache_key, result)
+                                try:
+                                    from app.core.cache import get_cache_service
+                                    cache_service = await get_cache_service()
+                                    await cache_service.set(cache_key, result, ttl=self._cache_ttl)
+                                except Exception:
+                                    pass
+                            
+                            return result
+                            
+                except Exception as retry_error:
+                    logger.warning(f"Retry attempt {attempt + 1} failed: {retry_error}")
+                    continue
+            
+            # ULTRAFIX: Only increment error counter after all retries failed
             self._stats['errors'] += 1
-            logger.error(f"Ollama generation error: {e}")
+            logger.error(f"All retry attempts failed for Ollama generation")
+            
+            # ULTRAFIX: Try to reset connections if too many errors
+            if self._stats['errors'] % 10 == 0:
+                logger.warning(f"High error count ({self._stats['errors']}), attempting connection reset...")
+                try:
+                    pool_manager = await get_pool_manager()
+                    pool_manager.reset_circuit_breaker('ollama')
+                    logger.info("Ollama circuit breaker reset successfully")
+                except Exception as reset_error:
+                    logger.error(f"Failed to reset connection: {reset_error}")
             
             # Return fallback response
             return {
-                'response': f"Error generating response: {str(e)}",
+                'response': f"Error after {retry_attempts} attempts: Service temporarily unavailable",
                 'model': model,
                 'done': True,
-                'error': str(e)
+                'error': str(e),
+                'retry_attempts': retry_attempts
             }
     
     async def _generate_single(self, prompt: str, model: str, **kwargs) -> str:
@@ -1405,6 +1506,62 @@ class ConsolidatedOllamaService:
             await self.generate(test_prompts[i], use_cache=False)
             
         logger.info("Consolidated Ollama service warmup complete")
+    
+    def reset_error_counters(self):
+        """ULTRAFIX: Reset error counters to prevent accumulation"""
+        old_errors = self._stats['errors']
+        old_requests = self._stats['total_requests']
+        
+        self._stats = {
+            'total_requests': 0,
+            'cache_hits': 0,
+            'cache_misses': 0,
+            'errors': 0,  # ULTRAFIX: Reset to zero
+            'avg_response_time': 0,
+            'last_reset': datetime.now(),
+            'successful_requests_since_reset': 0
+        }
+        
+        # Reset performance stats
+        for model_stats in self.performance_stats.values():
+            model_stats.update({
+                'total_requests': 0,
+                'avg_latency': 0.0,
+                'cache_hits': 0,
+                'cache_misses': 0,
+                'batch_efficiency': 0.0
+            })
+        
+        logger.info(f"ULTRAFIX: Reset Ollama error counters (was {old_errors} errors, {old_requests} requests)")
+        
+    async def auto_recovery_check(self):
+        """ULTRAFIX: Automatic recovery check and reset if needed"""
+        try:
+            # Check if we have accumulated too many errors
+            error_rate = self._stats['errors'] / max(1, self._stats['total_requests'])
+            
+            # Reset if error rate is too high (>10%) or too many absolute errors (>50)
+            if error_rate > 0.1 or self._stats['errors'] > 50:
+                logger.warning(f"High error rate detected: {error_rate:.1%} ({self._stats['errors']} errors)")
+                
+                # Attempt connection recovery
+                pool_manager = await get_pool_manager()
+                recovery_success = await pool_manager.recover_connections()
+                
+                if recovery_success:
+                    # Reset our counters after successful recovery
+                    self.reset_error_counters()
+                    logger.info("ULTRAFIX: Auto-recovery completed successfully")
+                    return True
+                else:
+                    logger.error("ULTRAFIX: Auto-recovery failed")
+                    return False
+            
+            return True  # No recovery needed
+            
+        except Exception as e:
+            logger.error(f"ULTRAFIX: Auto-recovery check failed: {e}")
+            return False
     
     async def shutdown(self):
         """Gracefully shutdown the service"""

@@ -1,0 +1,11 @@
+{
+  "test_type": "progressive_load_test",
+  "timestamp": "2025-08-11T17:57:54.772154",
+  "total_scenarios": 7,
+  "scenarios": [
+    {
+      "scenario": "warmup",
+      "users": 10,
+      "requests_per_user": 10,
+      "results": [
+        

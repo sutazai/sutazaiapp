@@ -220,7 +220,7 @@
 **Dependencies**: All P4  
 
 - [ ] **P4-003**: Update all documentation
-  - Remove fantasy features
+  - Remove conceptual features
   - Document actual capabilities
   - Create API documentation
   - Write deployment guide

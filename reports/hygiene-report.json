@@ -6,323 +6,323 @@
       "type": "forbidden_fantasy_elements",
       "file": "scripts/compliance-monitor-core.py",
       "line": 93,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/compliance-monitor-core.py",
       "line": 94,
-      "pattern": "magic\\w*",
-      "match": "magicHandler"
+      "pattern": "automated\\w*",
+      "match": "automationHandler"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/compliance-monitor-core.py",
       "line": 95,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/compliance-monitor-core.py",
       "line": 93,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/compliance-monitor-core.py",
       "line": 94,
-      "pattern": "wizard\\w*",
-      "match": "wizardService"
+      "pattern": "configuration\\w*",
+      "match": "configurationService"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/compliance-monitor-core.py",
       "line": 93,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/enforce_claude_md_rules.py",
       "line": 230,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-monitoring-integration.py",
       "line": 268,
-      "pattern": "magic\\w*",
-      "match": "magic_function"
+      "pattern": "automated\\w*",
+      "match": "automated_function"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-monitoring-integration.py",
       "line": 274,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-monitoring-integration.py",
       "line": 269,
-      "pattern": "wizard\\w*",
-      "match": "wizard_result"
+      "pattern": "configuration\\w*",
+      "match": "config_result"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-monitoring-integration.py",
       "line": 270,
-      "pattern": "wizard\\w*",
-      "match": "wizard_result"
+      "pattern": "configuration\\w*",
+      "match": "config_result"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-monitoring-integration.py",
       "line": 269,
-      "pattern": "teleport\\w*",
+      "pattern": "transfer\\w*",
       "match": "teleport_data"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-monitoring-integration.py",
       "line": 272,
-      "pattern": "teleport\\w*",
+      "pattern": "transfer\\w*",
       "match": "teleport_data"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-all-rule-combinations.py",
       "line": 411,
-      "pattern": "magic\\w*",
-      "match": "magic_terms"
+      "pattern": "automated\\w*",
+      "match": "automated_terms"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-all-rule-combinations.py",
       "line": 411,
-      "pattern": "magic\\w*",
-      "match": "magic_terms"
+      "pattern": "automated\\w*",
+      "match": "automated_terms"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-all-rule-combinations.py",
       "line": 759,
-      "pattern": "magic\\w*",
-      "match": "magic_terms"
+      "pattern": "automated\\w*",
+      "match": "automated_terms"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-all-rule-combinations.py",
       "line": 760,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-all-rule-combinations.py",
       "line": 762,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-all-rule-combinations.py",
       "line": 763,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-all-rule-combinations.py",
       "line": 763,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-all-rule-combinations.py",
       "line": 763,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/enforce_claude_md_simple.py",
       "line": 80,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/test-hygiene-system.py",
       "line": 19,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/comprehensive_monitor_validation.py",
       "line": 26,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/comprehensive_monitor_validation.py",
       "line": 157,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/comprehensive_monitor_validation.py",
       "line": 422,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/comprehensive_monitor_validation.py",
       "line": 157,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/comprehensive_monitor_validation.py",
       "line": 422,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/comprehensive_monitor_validation.py",
       "line": 157,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/comprehensive_monitor_validation.py",
       "line": 422,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/comprehensive_monitor_validation.py",
       "line": 157,
       "pattern": "black[_-]?box",
-      "match": "black-box"
+      "match": "encapsulated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/comprehensive_monitor_validation.py",
       "line": 422,
       "pattern": "black[_-]?box",
-      "match": "black-box"
+      "match": "encapsulated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/continuous-compliance-monitor.py",
       "line": 55,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/continuous-compliance-monitor.py",
       "line": 154,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/continuous-compliance-monitor.py",
       "line": 55,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/continuous-compliance-monitor.py",
       "line": 154,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/continuous-compliance-monitor.py",
       "line": 55,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/continuous-compliance-monitor.py",
       "line": 154,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/continuous-compliance-monitor.py",
       "line": 55,
       "pattern": "black[_-]?box",
-      "match": "black-box"
+      "match": "encapsulated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/monitoring/continuous-compliance-monitor.py",
       "line": 154,
       "pattern": "black[_-]?box",
-      "match": "black-box"
+      "match": "encapsulated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/ci-cd/analyze-rule.py",
       "line": 63,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/ci-cd/analyze-rule.py",
       "line": 65,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/ci-cd/analyze-rule.py",
       "line": 70,
-      "pattern": "magic\\w*",
-      "match": "magically"
+      "pattern": "automated\\w*",
+      "match": "automatically"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/ci-cd/analyze-rule.py",
       "line": 71,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/ci-cd/analyze-rule.py",
       "line": 66,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/ci-cd/analyze-rule.py",
       "line": 67,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
@@ -342,376 +342,376 @@
       "type": "forbidden_fantasy_elements",
       "file": "scripts/agents/cleanup_agent_standards.py",
       "line": 100,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "magick"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/agents/fix_all_agents_compliance.py",
       "line": 58,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/agents/fix_all_agents_compliance.py",
       "line": 76,
-      "pattern": "magic\\w*",
-      "match": "magical"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/agents/fix_all_agents_compliance.py",
       "line": 57,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/agents/ensure_agent_compliance.py",
       "line": 23,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "scripts/agents/ensure_agent_compliance.py",
       "line": 23,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 38,
-      "pattern": "magic\\w*",
-      "match": "magic_service"
+      "pattern": "automated\\w*",
+      "match": "automated_service"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 44,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicProcessor"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 45,
-      "pattern": "magic\\w*",
-      "match": "magical"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 51,
-      "pattern": "magic\\w*",
-      "match": "magic_transform"
+      "pattern": "automated\\w*",
+      "match": "automated_transform"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 69,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicProcessor"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 84,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "magicEnabled"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 89,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "magicProcess"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 121,
-      "pattern": "magic\\w*",
-      "match": "magic_config"
+      "pattern": "automated\\w*",
+      "match": "automated_config"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 125,
-      "pattern": "magic\\w*",
-      "match": "magic_settings"
+      "pattern": "automated\\w*",
+      "match": "automated_settings"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 131,
-      "pattern": "magic\\w*",
-      "match": "magic_processor"
+      "pattern": "automated\\w*",
+      "match": "automated_processor"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 212,
-      "pattern": "magic\\w*",
-      "match": "magic_service"
+      "pattern": "automated\\w*",
+      "match": "automated_service"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 48,
-      "pattern": "wizard\\w*",
-      "match": "wizard_config"
+      "pattern": "configuration\\w*",
+      "match": "config_config"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 52,
-      "pattern": "wizard\\w*",
+      "pattern": "configuration\\w*",
       "match": "wizardry"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 78,
-      "pattern": "wizard\\w*",
-      "match": "wizard_client"
+      "pattern": "configuration\\w*",
+      "match": "config_client"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 126,
-      "pattern": "wizard\\w*",
-      "match": "wizard_mode"
+      "pattern": "configuration\\w*",
+      "match": "config_mode"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 135,
-      "pattern": "wizard\\w*",
-      "match": "wizard_service"
+      "pattern": "configuration\\w*",
+      "match": "config_service"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 49,
-      "pattern": "teleport\\w*",
+      "pattern": "transfer\\w*",
       "match": "teleport_enabled"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 54,
-      "pattern": "teleport\\w*",
+      "pattern": "transfer\\w*",
       "match": "teleport_data"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 56,
-      "pattern": "teleport\\w*",
+      "pattern": "transfer\\w*",
       "match": "teleport_data"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 85,
-      "pattern": "teleport\\w*",
+      "pattern": "transfer\\w*",
       "match": "teleportConfig"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 127,
-      "pattern": "teleport\\w*",
+      "pattern": "transfer\\w*",
       "match": "teleport_enabled"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 61,
       "pattern": "black[_-]?box",
       "match": "black_box"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 101,
       "pattern": "black[_-]?box",
-      "match": "blackBox"
+      "match": "encapsulated"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 128,
       "pattern": "black[_-]?box",
       "match": "black_box"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 245,
       "pattern": "unicorn",
       "match": "unicorn"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 250,
       "pattern": "unicorn",
       "match": "unicorn"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 15,
-      "pattern": "magic\\w*",
-      "match": "Magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 16,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 17,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 17,
-      "pattern": "magic\\w*",
-      "match": "magicHandler"
+      "pattern": "automated\\w*",
+      "match": "automationHandler"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 17,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "magicService"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 21,
-      "pattern": "magic\\w*",
-      "match": "magically"
+      "pattern": "automated\\w*",
+      "match": "automatically"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 22,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 24,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 28,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 29,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 95,
-      "pattern": "magic\\w*",
-      "match": "magicMailer"
+      "pattern": "automated\\w*",
+      "match": "mailService"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 15,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 16,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 18,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 18,
-      "pattern": "wizard\\w*",
-      "match": "wizardService"
+      "pattern": "configuration\\w*",
+      "match": "configurationService"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 18,
-      "pattern": "wizard\\w*",
+      "pattern": "configuration\\w*",
       "match": "wizardModule"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 22,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 24,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 16,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 22,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 21,
       "pattern": "someday",
       "match": "someday"
     },
     {
       "type": "forbidden_fantasy_elements",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 21,
       "pattern": "imagine.*future",
       "match": "imagine|someday|future"
@@ -720,36 +720,36 @@
       "type": "forbidden_fantasy_elements",
       "file": "docker/hygiene-validator/rule_validator.py",
       "line": 139,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "docker/hygiene-validator/rule_validator.py",
       "line": 151,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "docker/hygiene-validator/rule_validator.py",
       "line": 151,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "docker/hygiene-validator/rule_validator.py",
       "line": 151,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "docker/hygiene-validator/rule_validator.py",
       "line": 151,
       "pattern": "black[_-]?box",
-      "match": "black-box"
+      "match": "encapsulated"
     },
     {
       "type": "forbidden_fantasy_elements",
@@ -762,22 +762,22 @@
       "type": "forbidden_fantasy_elements",
       "file": "docker/hygiene-scanner/hygiene_scanner.py",
       "line": 60,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "docker/hygiene-scanner/hygiene_scanner.py",
       "line": 60,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "docker/hygiene-scanner/hygiene_scanner.py",
       "line": 60,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
@@ -797,204 +797,204 @@
       "type": "forbidden_fantasy_elements",
       "file": "backend/tests/test_api_endpoints.py",
       "line": 9,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "backend/tests/test_main_app.py",
       "line": 9,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "backend/tests/test_main_app.py",
       "line": 29,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "backend/tests/test_main_app.py",
       "line": 34,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "backend/tests/test_main_comprehensive.py",
       "line": 9,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/test_connection_pool.py",
       "line": 13,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/test_failure_scenarios.py",
       "line": 12,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/test_integration.py",
       "line": 13,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/test_base_agent_v2.py",
       "line": 12,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/test_ollama_integration.py",
       "line": 11,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/test_regression.py",
       "line": 11,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_failure_scenarios.py",
       "line": 17,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_git_hooks.py",
       "line": 89,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_git_hooks.py",
       "line": 89,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_git_hooks.py",
       "line": 89,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_monitoring.py",
       "line": 12,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_orchestrator.py",
       "line": 13,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_orchestrator.py",
       "line": 120,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_orchestrator.py",
       "line": 148,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_coordinator.py",
       "line": 12,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_coordinator.py",
       "line": 104,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_coordinator.py",
       "line": 125,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_coordinator.py",
       "line": 148,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "tests/hygiene/test_coordinator.py",
       "line": 211,
-      "pattern": "magic\\w*",
+      "pattern": "automated\\w*",
       "match": "MagicMock"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/agent-orchestrator.py",
       "line": 382,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/agent-orchestrator.py",
       "line": 382,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/enhanced-hygiene-backend.py",
       "line": 283,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/enhanced-hygiene-backend.py",
       "line": 283,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/enhanced-hygiene-backend.py",
       "line": 283,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
@@ -1014,70 +1014,70 @@
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/logging-infrastructure.py",
       "line": 533,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/hygiene-monitor-backend.py",
       "line": 338,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/hygiene-monitor-backend.py",
       "line": 341,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/hygiene-monitor-backend.py",
       "line": 342,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/hygiene-monitor-backend.py",
       "line": 341,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/hygiene-monitor-backend.py",
       "line": 341,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/simple-hygiene-backend.py",
       "line": 131,
-      "pattern": "magic\\w*",
-      "match": "magic"
+      "pattern": "automated\\w*",
+      "match": "automated"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/simple-hygiene-backend.py",
       "line": 131,
-      "pattern": "wizard\\w*",
-      "match": "wizard"
+      "pattern": "configuration\\w*",
+      "match": "configuration"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "monitoring/simple-hygiene-backend.py",
       "line": 131,
-      "pattern": "teleport\\w*",
-      "match": "teleport"
+      "pattern": "transfer\\w*",
+      "match": "transfer"
     },
     {
       "type": "forbidden_fantasy_elements",
       "file": "agents/startup_with_rules.sh",
       "line": 28,
-      "pattern": "wizard\\w*",
+      "pattern": "configuration\\w*",
       "match": "wizards"
     },
     {
@@ -7315,7 +7315,7 @@
       "file": "scripts/monitoring/live_logs.sh",
       "line": 690,
       "pattern": "temp_?.*",
-      "match": "tempt Docker daemon recovery"
+      "match": "tempt Docker service recovery"
     },
     {
       "type": "forbidden_garbage_patterns",
@@ -7329,7 +7329,7 @@
       "file": "scripts/monitoring/live_logs.sh",
       "line": 692,
       "pattern": "temp_?.*",
-      "match": "tempting Docker daemon recovery...${NC}\""
+      "match": "tempting Docker service recovery...${NC}\""
     },
     {
       "type": "forbidden_garbage_patterns",
@@ -9594,140 +9594,140 @@
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 175,
       "pattern": "temp_?.*",
       "match": "temp.*fix\","
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 176,
       "pattern": "temp_?.*",
       "match": "Temporary fix references\""
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 129,
       "pattern": "old_?.*",
       "match": "older_patterns\": ["
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 155,
       "pattern": "old_?.*",
       "match": "older.*function\","
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 156,
       "pattern": "old_?.*",
       "match": "older function\""
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 274,
       "pattern": "old_?.*",
       "match": "older_pattern(self, pattern: str, description: str):"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 275,
       "pattern": "old_?.*",
       "match": "older pattern\"\"\""
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 279,
       "pattern": "old_?.*",
       "match": "older_patterns\"]:"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 281,
       "pattern": "old_?.*",
       "match": "older pattern '{pattern}' already exists\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 284,
       "pattern": "old_?.*",
       "match": "older_patterns\"].append(new_pattern)"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 285,
       "pattern": "old_?.*",
       "match": "older pattern: {pattern}\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 310,
       "pattern": "old_?.*",
       "match": "older Patterns ({len(self.config['placeholder_patterns'])}):\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 311,
       "pattern": "old_?.*",
       "match": "older_patterns\"]:"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 359,
       "pattern": "old_?.*",
       "match": "older_patterns\"), list):"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 360,
       "pattern": "old_?.*",
       "match": "older_patterns must be a list\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 407,
       "pattern": "old_?.*",
       "match": "older-pattern',"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 410,
       "pattern": "old_?.*",
       "match": "older pattern: PATTERN DESCRIPTION'"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 467,
       "pattern": "old_?.*",
       "match": "older_pattern:"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 468,
       "pattern": "old_?.*",
       "match": "older_pattern"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "line": 469,
       "pattern": "old_?.*",
       "match": "older_pattern(pattern, description):"
@@ -9762,133 +9762,133 @@
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 15,
       "pattern": "temp_?.*",
       "match": "tempfile"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 67,
       "pattern": "temp_?.*",
       "match": "Temporary fix for the service'''"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 115,
       "pattern": "temp_?.*",
       "match": "temporaryFix() {"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 139,
       "pattern": "temp_?.*",
       "match": "temp fix"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 58,
       "pattern": "old_?.*",
       "match": "older function"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 103,
       "pattern": "old_?.*",
       "match": "older function"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 139,
       "pattern": "old_?.*",
       "match": "older configuration - temp fix"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 142,
       "pattern": "old_?.*",
       "match": "older: true"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 160,
       "pattern": "old_?.*",
-      "match": "old green]Fantasy Elements Enforcement System Demo[/bold green]\\n\\n\""
+      "match": "old green]conceptual Elements Enforcement System Demo[/bold green]\\n\\n\""
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 174,
       "pattern": "old_?.*",
-      "match": "old yellow]Step 1: Creating demo files with fantasy elements[/bold yellow]\")"
+      "match": "old yellow]Step 1: Creating demo files with conceptual elements[/bold yellow]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 183,
       "pattern": "old_?.*",
-      "match": "old yellow]Step 2: Scanning for fantasy elements[/bold yellow]\")"
+      "match": "old yellow]Step 2: Scanning for conceptual elements[/bold yellow]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 198,
       "pattern": "old_?.*",
       "match": "old yellow]Step 3: Applying automatic fixes[/bold yellow]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 211,
       "pattern": "old_?.*",
       "match": "old yellow]Step 4: Showing fixed file example[/bold yellow]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 224,
       "pattern": "old_?.*",
       "match": "old yellow]Step 5: Re-scanning after fixes[/bold yellow]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 241,
       "pattern": "old_?.*",
       "match": "old yellow]Step 6: Configuration management demo[/bold yellow]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 262,
       "pattern": "old_?.*",
       "match": "old yellow]Step 7: Pre-commit hook integration[/bold yellow]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 274,
       "pattern": "old_?.*",
       "match": "old yellow]Step 8: Generating detailed report[/bold yellow]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 296,
       "pattern": "old_?.*",
       "match": "old green]Demo Complete![/bold green]\\n\\n\""
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "line": 303,
       "pattern": "old_?.*",
       "match": "old blue]Next steps:[/bold blue]\\n\""
@@ -10602,175 +10602,175 @@
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 275,
       "pattern": "temp_?.*",
       "match": "temp.*fix', 'Temporary fix references'),"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 6,
       "pattern": "old_?.*",
       "match": "older code, and integrates with pre-commit hooks."
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 56,
       "pattern": "old_?.*",
       "match": "older_code_found: int"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 175,
       "pattern": "old_?.*",
       "match": "old blue]Scanning for forbidden terms...[/bold blue]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 256,
       "pattern": "old_?.*",
       "match": "older_code(self) -> List[Violation]:"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 257,
       "pattern": "old_?.*",
       "match": "older and speculative code patterns\"\"\""
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 260,
       "pattern": "old_?.*",
       "match": "old blue]Scanning for placeholder code...[/bold blue]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 262,
       "pattern": "old_?.*",
       "match": "older or speculative code"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 263,
       "pattern": "old_?.*",
       "match": "older_patterns = ["
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 270,
       "pattern": "old_?.*",
       "match": "older.*function', 'Placeholder function'),"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 282,
       "pattern": "old_?.*",
       "match": "older_patterns:"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 316,
       "pattern": "old_?.*",
       "match": "older_code',"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 336,
       "pattern": "old_?.*",
       "match": "old blue]Validating dependencies...[/bold blue]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 641,
       "pattern": "old_?.*",
       "match": "older_code_count = sum(1 for v in violations if v.violation_type == 'placeholder_code')"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 651,
       "pattern": "old_?.*",
       "match": "older_code_count > 0:"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 652,
       "pattern": "old_?.*",
       "match": "older code with concrete implementations\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 662,
       "pattern": "old_?.*",
       "match": "older_code_found=placeholder_code_count,"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 715,
       "pattern": "old_?.*",
       "match": "old red]Detailed Violations:[/bold red]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 736,
       "pattern": "old_?.*",
       "match": "old red]Dependency Issues:[/bold red]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 745,
       "pattern": "old_?.*",
       "match": "old blue]Recommendations:[/bold blue]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 762,
       "pattern": "old_?.*",
-      "match": "old green]Fantasy Elements Validator[/bold green]\")"
+      "match": "old green]conceptual Elements Validator[/bold green]\")"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 767,
       "pattern": "old_?.*",
       "match": "older_violations = self.scan_placeholder_code()"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 768,
       "pattern": "old_?.*",
       "match": "older_violations"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 780,
       "pattern": "old_?.*",
       "match": "older_violations = self.scan_placeholder_code()"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "line": 781,
       "pattern": "old_?.*",
       "match": "older_violations"
@@ -10780,14 +10780,14 @@
       "file": "scripts/agents/clean_agent_definitions.py",
       "line": 103,
       "pattern": "old_?.*",
-      "match": "old fantasy backup files"
+      "match": "old conceptual backup files"
     },
     {
       "type": "forbidden_garbage_patterns",
       "file": "scripts/agents/clean_agent_definitions.py",
       "line": 106,
       "pattern": "old_?.*",
-      "match": "old fantasy backup files...\")"
+      "match": "old conceptual backup files...\")"
     },
     {
       "type": "forbidden_garbage_patterns",
@@ -11057,42 +11057,42 @@
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 3,
       "pattern": "old_?.*",
       "match": "older code elements (Rule 1 enforcement)"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 13,
       "pattern": "old_?.*",
       "match": "older patterns to detect"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 20,
       "pattern": "old_?.*",
       "match": "older functions"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 31,
       "pattern": "old_?.*",
       "match": "older data"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 34,
       "pattern": "old_?.*",
       "match": "older_\\w+',"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "line": 94,
       "pattern": "old_?.*",
       "match": "older comments and implement actual functionality\")"
@@ -21602,7 +21602,7 @@
       "file": "archive/script_consolidation_20250803_205657/live_logs_dev.sh",
       "line": 651,
       "pattern": "temp_?.*",
-      "match": "tempt Docker daemon recovery"
+      "match": "tempt Docker service recovery"
     },
     {
       "type": "forbidden_garbage_patterns",
@@ -21616,7 +21616,7 @@
       "file": "archive/script_consolidation_20250803_205657/live_logs_dev.sh",
       "line": 653,
       "pattern": "temp_?.*",
-      "match": "tempting Docker daemon recovery...${NC}\""
+      "match": "tempting Docker service recovery...${NC}\""
     },
     {
       "type": "forbidden_garbage_patterns",
@@ -24880,7 +24880,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "expected_location": "scripts",
       "pattern": "*.py"
     },
@@ -24898,7 +24898,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "expected_location": "scripts",
       "pattern": "*.py"
     },
@@ -24928,7 +24928,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "expected_location": "scripts",
       "pattern": "*.py"
     },
@@ -25210,7 +25210,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "expected_location": "scripts",
       "pattern": "*.py"
     },
@@ -31948,7 +31948,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "scripts/agents/README-fantasy-elements-validator.md",
+      "file": "scripts/agents/README-conceptual-elements-validator.md",
       "expected_location": "docs",
       "pattern": "*.md"
     },
@@ -35213,7 +35213,7 @@
     },
     {
       "type": "naming_convention",
-      "file": "scripts/agents/fantasy-elements-config.py",
+      "file": "scripts/agents/conceptual-elements-config.py",
       "expected_pattern": "^[a-z][a-z0-9_]*\\.py$"
     },
     {
@@ -35243,7 +35243,7 @@
     },
     {
       "type": "naming_convention",
-      "file": "scripts/agents/demo-fantasy-elements-enforcement.py",
+      "file": "scripts/agents/demo-conceptual-elements-enforcement.py",
       "expected_pattern": "^[a-z][a-z0-9_]*\\.py$"
     },
     {
@@ -35273,12 +35273,12 @@
     },
     {
       "type": "naming_convention",
-      "file": "scripts/agents/fantasy-elements-validator.py",
+      "file": "scripts/agents/conceptual-elements-validator.py",
       "expected_pattern": "^[a-z][a-z0-9_]*\\.py$"
     },
     {
       "type": "naming_convention",
-      "file": "scripts/agents/README-fantasy-elements-validator.md",
+      "file": "scripts/agents/README-conceptual-elements-validator.md",
       "expected_pattern": "^[a-z][a-z0-9-]*\\.(py|sh)$"
     },
     {
@@ -35433,7 +35433,7 @@
     },
     {
       "type": "naming_convention",
-      "file": "scripts/pre-commit/check-fantasy-elements.py",
+      "file": "scripts/pre-commit/check-conceptual-elements.py",
       "expected_pattern": "^[a-z][a-z0-9_]*\\.py$"
     },
     {

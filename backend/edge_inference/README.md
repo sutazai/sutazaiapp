@@ -491,11 +491,11 @@ async def integrate_with_agents():
 ### Energy Optimization Integration
 
 ```python
-# Note: Energy optimization module removed (fantasy module - Rule 1 violation)
+# Note: Energy optimization module removed (conceptual module - Rule 1 violation)
 # from energy.power_optimizer import get_global_optimizer
 from edge_inference import get_memory_manager, get_telemetry_system
 
-# Standard resource management without fantasy modules
+# Standard resource management without conceptual modules
 memory_manager = get_memory_manager()
 telemetry = get_telemetry_system()
 

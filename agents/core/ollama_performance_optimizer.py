@@ -320,7 +320,6 @@ class OllamaPerformanceOptimizer:
         """Unload a specific model"""
         try:
             logger.info(f"Unloading unused model: {model_name}")
-            # Note: Ollama doesn't have a direct unload API, but we can track this
             if model_name in self.model_metrics:
                 del self.model_metrics[model_name]
         except Exception as e:
@@ -621,4 +620,3 @@ async def main():
         sys.exit(1)
 
 if __name__ == '__main__':
-    asyncio.run(main())

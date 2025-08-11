@@ -150,12 +150,12 @@ EOF
 chmod +x /tmp/track3_scripts.sh
 run_track "TRACK3_Scripts" "/tmp/track3_scripts.sh"
 
-# TRACK 4: Code Cleanup (Fantasy + BaseAgent)
+# TRACK 4: Code Cleanup (conceptual + BaseAgent)
 cat > "$(mktemp /tmp/track4_cleanup.sh.XXXXXX)" <<'EOF'
 #!/bin/bash
 echo "TRACK 4: Code Cleanup"
 
-# Clean fantasy elements
+# Clean conceptual elements
 python3 <<'PYTHON'
 import re
 from pathlib import Path

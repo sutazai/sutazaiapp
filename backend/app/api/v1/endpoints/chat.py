@@ -75,7 +75,6 @@ async def chat(
             raise HTTPException(status_code=400, detail="Message cannot be empty")
         
         # Use chat format for better responses
-        # Note: The system message is predefined and safe
         messages = [
             {"role": "system", "content": "You are SutazAI, an advanced automation assistant. Be helpful, accurate, and concise."},
             {"role": "user", "content": request.message}  # Already sanitized by validator

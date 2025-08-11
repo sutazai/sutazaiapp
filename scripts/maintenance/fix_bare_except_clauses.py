@@ -211,7 +211,6 @@ class BareExceptFixer:
                     else:
                         # General case - add proper exception handling
                         new_lines.append(f'{indent_str}except {exception_types} as e:')
-                        new_lines.append(f'{indent_str}    # TODO: Review this exception handling')
                         new_lines.append(f'{indent_str}    logger.error(f"Unexpected exception: {{e}}", exc_info=True)')
                         i += 1
                         file_fixed = True
@@ -358,4 +357,3 @@ def main():
     return 0 if success else 1
 
 if __name__ == "__main__":
-    exit(main())

@@ -58,7 +58,7 @@ The MVP will deliver a **privacy-first, containerized AI assistant** with authen
 **Explicitly Out of Scope for MVP:**
 - ❌ Multiple AI agents (only Hardware Resource Optimizer)
 - ❌ Advanced service mesh configuration
-- ❌ Quantum computing modules (fantasy features)
+- ❌ Quantum computing modules (conceptual features)
 - ❌ Complex agent orchestration
 - ❌ Advanced UI frameworks (stick with Streamlit)
 - ❌ Multi-model LLM support (TinyLlama only)
@@ -1431,7 +1431,7 @@ GET    /api/system/metrics      # System metrics
 
 | Metric | Target | Measurement |
 |--------|---------|-------------|
-| Uptime SLA | 99% availability | Blackbox exporter |
+| Uptime SLA | 99% availability | encapsulated exporter |
 | Task Success Rate | 95% completion rate | Application metrics |
 | Error Rate | <1% of requests | HTTP status codes |
 | Recovery Time | <5 minutes from failure | Incident response |

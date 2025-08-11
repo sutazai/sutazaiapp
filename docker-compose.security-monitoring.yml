@@ -1,0 +1,227 @@
+# Security Override for Monitoring Services
+# This file converts all monitoring services to run as non-root users
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.security-monitoring.yml up -d
+
+version: '3.8'
+
+services:
+  # Secure Promtail - runs as promtail:promtail (10001:10001)
+  promtail:
+    build:
+      context: ./docker/monitoring-secure/promtail
+      dockerfile: Dockerfile
+    image: sutazai-promtail-secure:latest
+    container_name: sutazai-promtail
+    user: "10001:10001"
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./docker/monitoring-secure/promtail/config.yml:/etc/promtail/config.yml:ro
+      - promtail_positions:/tmp/promtail
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - DAC_READ_SEARCH  # Required to read log files
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    depends_on:
+      - loki
+
+  # Secure cAdvisor - runs as nobody with minimal privileges
+  cadvisor:
+    build:
+      context: ./docker/monitoring-secure/cadvisor
+      dockerfile: Dockerfile
+    image: sutazai-cadvisor-secure:latest
+    container_name: sutazai-cadvisor
+    user: nobody
+    devices:
+      - /dev/kmsg:/dev/kmsg:ro
+    networks:
+      - sutazai-network
+    ports:
+      - 10206:8080
+    privileged: false
+    cap_drop:
+      - ALL
+    cap_add:
+      - SYS_ADMIN  # Required for container metrics
+      - DAC_READ_SEARCH  # Required to read container info
+    read_only: false
+    restart: unless-stopped
+    command:
+      - --housekeeping_interval=60s
+      - --max_housekeeping_interval=120s
+      - --allow_dynamic_housekeeping=true
+      - --global_housekeeping_interval=2m
+      - --disable_metrics=advtcp,cpu_topology,disk,hugetlb,memory_numa,percpu,referenced_memory,resctrl,tcp,udp,process,accelerator
+      - --store_container_labels=false
+      - --whitelisted_container_labels=io.kubernetes.container.name,io.kubernetes.pod.name
+      - --docker_only=true
+      - --disable_root_cgroup_stats=true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+      - /proc:/proc:ro
+      - cadvisor_tmp:/tmp
+
+  # Secure Blackbox Exporter - runs as nobody
+  blackbox-exporter:
+    build:
+      context: ./docker/monitoring-secure/blackbox-exporter
+      dockerfile: Dockerfile
+    image: sutazai-blackbox-exporter-secure:latest
+    container_name: sutazai-blackbox-exporter
+    user: nobody
+    command:
+      - --config.file=/etc/blackbox_exporter/config.yml
+      - --web.listen-address=:9115
+      - --log.level=info
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+        - CMD
+        - wget
+        - --no-verbose
+        - --tries=1
+        - --spider
+        - http://localhost:9115/health
+      timeout: 30s
+    networks:
+      - sutazai-network
+    ports:
+      - 10204:9115
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    volumes:
+      - ./docker/monitoring-secure/blackbox-exporter/config.yml:/etc/blackbox_exporter/config.yml:ro
+
+  # Secure Consul - runs as consul:consul (existing user in image)
+  consul:
+    build:
+      context: ./docker/monitoring-secure/consul
+      dockerfile: Dockerfile
+    image: sutazai-consul-secure:latest
+    container_name: sutazai-consul
+    user: consul
+    command:
+      - agent
+      - -server
+      - -bootstrap-expect=1
+      - -ui
+      - -client=0.0.0.0
+      - -config-dir=/consul/config
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test:
+        - CMD
+        - consul
+        - members
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - sutazai-network
+    ports:
+      - 10006:8500
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    volumes:
+      - ./docker/monitoring-secure/consul/consul.hcl:/consul/config/consul.hcl:ro
+      - consul_data:/consul/data
+
+  # Secure Redis Exporter - runs as redis-exporter:redis-exporter (10003:10003)
+  redis-exporter:
+    build:
+      context: ./docker/monitoring-secure/redis-exporter
+      dockerfile: Dockerfile
+    image: sutazai-redis-exporter-secure:latest
+    container_name: sutazai-redis-exporter
+    user: "10003:10003"
+    depends_on:
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 32M
+    environment:
+      REDIS_ADDR: redis://redis:6379
+      REDIS_EXPORTER_LOG_FORMAT: json
+      REDIS_EXPORTER_WEB_LISTEN_ADDRESS: :9121
+    networks:
+      - sutazai-network
+    ports:
+      - 10208:9121
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      test:
+        - CMD
+        - wget
+        - --no-verbose
+        - --tries=1
+        - --spider
+        - http://localhost:9121/health
+
+volumes:
+  promtail_positions:
+    driver: local
+  cadvisor_tmp:
+    driver: local

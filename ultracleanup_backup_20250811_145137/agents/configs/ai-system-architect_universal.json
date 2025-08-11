@@ -1,0 +1,18 @@
+{
+  "name": "ai-system-architect",
+  "description": "Agent for system operations",
+  "model": "ollama",
+  "base_model": "tinyllama",
+  "port": 9503,
+  "capabilities": [
+    "architecture",
+    "validation",
+    "optimization"
+  ],
+  "memory_limit": "1G",
+  "cpu_limit": "1.0",
+  "environment": {
+    "PYTHONUNBUFFERED": "1",
+    "AGENT_TYPE": "system"
+  }
+}

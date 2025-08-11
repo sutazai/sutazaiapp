@@ -2305,7 +2305,7 @@ if __name__ == "__main__":
    □ New functionality has corresponding unit tests
    □ Tests cover both happy path and error scenarios  
    □ Test names clearly describe what is being tested
-   □ No hardcoded values or magic numbers in tests
+   □ No hardcoded values or automated numbers in tests
    □ Appropriate mocking of external dependencies
    □ Tests are independent and can run in any order
    □ Performance assertions included for critical paths

@@ -30,7 +30,7 @@
 - **AlertManager**: Port 10203 - RUNNING
 - **Node Exporter**: Port 10220 - RUNNING
 - **cAdvisor**: Port 10221 - HEALTHY
-- **Blackbox Exporter**: Port 10229 - RUNNING
+- **encapsulated Exporter**: Port 10229 - RUNNING
 - **Promtail**: Log shipper - RUNNING
 
 #### AI Agents (Limited set actually running)
@@ -164,7 +164,7 @@ These services are defined but NOT currently running:
   10203: AlertManager
   10220: Node Exporter
   10221: cAdvisor
-  10229: Blackbox Exporter
+  10229: encapsulated Exporter
 
 11000-11999: Additional agents
   11015: Ollama Integration Specialist
@@ -226,7 +226,7 @@ docker logs sutazai-frontend
 ### Documentation Cleanup Required
 1. Remove references to non-existent services
 2. Update model references from gpt-oss to tinyllama
-3. Remove fantasy features (quantum, AGI, etc.)
+3. Remove conceptual features (quantum, AGI, etc.)
 4. Document only the 7 agents that actually run
 
 ### Start Missing Services (If Needed)

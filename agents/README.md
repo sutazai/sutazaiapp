@@ -58,7 +58,7 @@ Each agent directory typically contains:
 The `/agents/configs/` directory contains:
 - JSON configuration files claiming capabilities
 - Modelfiles for Ollama (unused)
-- All describe fantasy features not implemented
+- All describe conceptual features not implemented
 
 ### If You Want Real AI Agents:
 1. Stop pretending stubs are features

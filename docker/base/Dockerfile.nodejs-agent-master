@@ -1,104 +1,28 @@
-# SutazAI Node.js Agent Master Base Image - ULTRA CONSOLIDATION
-# Consolidates Node.js agent Dockerfiles with Python AI integration
-# Author: System Reorganization Expert - ULTRA Deduplication Operation
-# Date: August 10, 2025 - CRITICAL FIX: Updated Python integration to 3.12.8 compatibility
-# Purpose: Eliminate redundancy in Node.js-based agent containers
-# ULTRAFIX: Aligned Python components with master base versions
+FROM node:18-alpine
 
-FROM node:18-slim as base
+# Security: Create non-root user
+RUN addgroup -g 1001 appgroup && \
+    adduser -D -u 1001 -G appgroup appuser
 
-# COMPREHENSIVE system dependencies for Node.js + Python AI integration
-RUN apt-get update && apt-get install -y \
-    # Core essentials for Node.js services
-    curl \
-    wget \
-    git \
-    unzip \
-    # Build tools for native Node.js modules
-    build-essential \
-    gcc \
-    g++ \
-    make \
-    # Python integration for AI capabilities
-    python3 \
-    python3-pip \
-    python3-dev \
-    # System utilities
-    procps \
-    htop \
-    vim \
-    # Network tools
-    netcat-openbsd \
-    iputils-ping \
-    # Development libraries
-    libffi-dev \
-    libssl-dev \
-    # Clean up
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean \
-    && apt-get autoremove -y
-
-# Install comprehensive Node.js packages globally (covers most service needs)
-RUN npm install -g \
-    pm2 \
-    typescript \
-    ts-node \
-    nodemon \
-    @types/node \
-    eslint \
-    prettier \
-    jest \
-    webpack \
-    webpack-cli
-
-# Install Python AI packages for hybrid Node.js/Python services
-COPY base-requirements-nodejs.txt /tmp/
-RUN pip3 install --no-cache-dir --break-system-packages -r /tmp/base-requirements-nodejs.txt \
-    && rm /tmp/base-requirements-nodejs.txt
-
-# SECURITY: Create secure non-root user with comprehensive permissions
-RUN groupadd -r appuser && useradd -r -g appuser -s /bin/bash appuser \
-    && mkdir -p /app /app/data /app/logs /app/workspace /app/models /app/temp /app/node_modules \
-    && chown -R appuser:appuser /app
-
-# Production stage - ULTRA OPTIMIZED for Node.js agents with AI capabilities
-FROM base as production
-
+# Set working directory
 WORKDIR /app
 
-# COMPREHENSIVE environment variables for Node.js + AI integration
-ENV NODE_ENV=production \
-    NPM_CONFIG_CACHE=/tmp/.npm \
-    PATH=/app/node_modules/.bin:$PATH \
-    # Service configuration (overridden by individual services)
-    SERVICE_PORT=3000 \
-    AGENT_ID=nodejs-base-agent \
-    AGENT_NAME="Node.js Base Agent" \
-    # Python/AI integration
-    PYTHON_PATH=/usr/bin/python3 \
-    OLLAMA_HOST=http://sutazai-ollama:11434 \
-    MODEL_NAME=tinyllama \
-    # Performance optimizations
-    NODE_OPTIONS="--max-old-space-size=1024" \
-    UV_THREADPOOL_SIZE=4 \
-    # Logging configuration
-    LOG_LEVEL=info \
-    LOG_FORMAT=json
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
 
-# Copy comprehensive package.json template
-COPY base-package.json package.json
+# Copy application code
+COPY . .
 
-# Install common dependencies with optimization
-RUN npm install --only=production \
-    && npm cache clean --force \
-    && rm -rf /tmp/*
+# Change ownership to non-root user
+RUN chown -R appuser:appgroup /app
 
-# FLEXIBLE health check for Node.js services
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:${SERVICE_PORT:-3000}/health || curl -f http://localhost:${SERVICE_PORT:-3000}/ || exit 1
-
-# SECURITY: Switch to non-root user (fixes Node.js security issues)
+# Switch to non-root user
 USER appuser
 
-# FLEXIBLE default command (handles most Node.js patterns)
-CMD ["node", "index.js"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-3000}/health || exit 1
+
+# Default command
+CMD ["node", "server.js"]

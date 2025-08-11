@@ -464,18 +464,27 @@ class HardwareResourceOptimizerAgent(BaseAgent):
             # 2. Clean cache directories
             cache_paths = ['/var/cache', '/home/*/.cache'] if not dry_run else []
             for cache_pattern in cache_paths:
+                # ULTRA-FIX: Validate glob patterns to prevent traversal
+                if '..' in cache_pattern or not cache_pattern.startswith('/'):
+                    self.logger.warning(f"Blocked unsafe cache pattern: {cache_pattern}")
+                    continue
                 for cache_path in glob.glob(cache_pattern):
-                    if os.path.isdir(cache_path) and self._is_safe_path(cache_path):
-                        try:
-                            # Clean cache older than 7 days
-                            result = subprocess.run([
-                                'find', cache_path, '-type', 'f', '-mtime', '+7', '-delete'
-                            ], capture_output=True, text=True, timeout=30)
-                            
-                            if result.returncode == 0:
-                                actions_taken.append(f"Cleaned cache: {cache_path}")
-                        except Exception as e:
-                            actions_taken.append(f"Could not clean cache {cache_path}: {e}")
+                    try:
+                        safe_cache_path = validate_safe_path(cache_path, "/")
+                        if os.path.isdir(safe_cache_path) and self._is_safe_path(safe_cache_path):
+                            try:
+                                # Clean cache older than 7 days - ULTRA-FIX: Use safe path
+                                result = subprocess.run([
+                                    'find', safe_cache_path, '-type', 'f', '-mtime', '+7', '-delete'
+                                ], capture_output=True, text=True, timeout=30)
+                                
+                                if result.returncode == 0:
+                                    actions_taken.append(f"Cleaned cache: {safe_cache_path}")
+                            except Exception as e:
+                                actions_taken.append(f"Could not clean cache {safe_cache_path}: {e}")
+                    except ValueError:
+                        self.logger.warning(f"Blocked unsafe cache path: {cache_path}")
+                        continue
             
             # 3. Application-specific cleanup
             app_cleanups = {
@@ -488,17 +497,26 @@ class HardwareResourceOptimizerAgent(BaseAgent):
             for app_name, paths in app_cleanups.items():
                 if paths and not dry_run:
                     for path_pattern in paths:
+                        # ULTRA-FIX: Validate glob patterns
+                        if '..' in path_pattern:
+                            self.logger.warning(f"Blocked unsafe app cleanup pattern: {path_pattern}")
+                            continue
                         for path in glob.glob(path_pattern):
-                            if os.path.exists(path):
-                                try:
-                                    if os.path.isfile(path):
-                                        os.remove(path)
-                                        actions_taken.append(f"Cleaned {app_name} cache file: {os.path.basename(path)}")
-                                    elif os.path.isdir(path):
-                                        shutil.rmtree(path)
-                                        actions_taken.append(f"Cleaned {app_name} cache dir: {path}")
-                                except Exception as e:
-                                    actions_taken.append(f"Could not clean {app_name} cache: {e}")
+                            try:
+                                safe_path = validate_safe_path(path, "/")
+                                if os.path.exists(safe_path):
+                                    try:
+                                        if os.path.isfile(safe_path):
+                                            os.remove(safe_path)
+                                            actions_taken.append(f"Cleaned {app_name} cache file: {os.path.basename(safe_path)}")
+                                        elif os.path.isdir(safe_path):
+                                            shutil.rmtree(safe_path)
+                                            actions_taken.append(f"Cleaned {app_name} cache dir: {safe_path}")
+                                    except Exception as e:
+                                        actions_taken.append(f"Could not clean {app_name} cache: {e}")
+                            except ValueError:
+                                self.logger.warning(f"Blocked unsafe app cleanup path: {path}")
+                                continue
             
             # 4. Log rotation
             if not dry_run:
@@ -605,13 +623,22 @@ class HardwareResourceOptimizerAgent(BaseAgent):
             ]
             
             for cache_pattern in browser_caches:
+                # ULTRA-FIX: Validate browser cache patterns
+                if '..' in cache_pattern:
+                    self.logger.warning(f"Blocked unsafe browser cache pattern: {cache_pattern}")
+                    continue
                 for cache_path in glob.glob(cache_pattern):
-                    if os.path.isdir(cache_path):
-                        try:
-                            shutil.rmtree(cache_path)
-                            actions_taken.append(f"Cleared browser cache: {cache_path}")
-                        except Exception as e:
-                            actions_taken.append(f"Could not clear browser cache {cache_path}: {e}")
+                    try:
+                        safe_cache_path = validate_safe_path(cache_path, "/")
+                        if os.path.isdir(safe_cache_path):
+                            try:
+                                shutil.rmtree(safe_cache_path)
+                                actions_taken.append(f"Cleared browser cache: {safe_cache_path}")
+                            except Exception as e:
+                                actions_taken.append(f"Could not clear browser cache {safe_cache_path}: {e}")
+                    except ValueError:
+                        self.logger.warning(f"Blocked unsafe browser cache path: {cache_path}")
+                        continue
             
             return {
                 "status": "success",
@@ -742,21 +769,32 @@ class HardwareResourceOptimizerAgent(BaseAgent):
             sqlite_files = []
             for log_path in log_paths:
                 if os.path.exists(log_path):
-                    sqlite_files.extend(glob.glob(os.path.join(log_path, '**/*.db'), recursive=True))
-                    sqlite_files.extend(glob.glob(os.path.join(log_path, '**/*.sqlite'), recursive=True))
+                    # ULTRA-FIX: Validate log path before globbing
+                    try:
+                        safe_log_path = validate_safe_path(log_path, "/")
+                        sqlite_files.extend(glob.glob(os.path.join(safe_log_path, '**/*.db'), recursive=True))
+                        sqlite_files.extend(glob.glob(os.path.join(safe_log_path, '**/*.sqlite'), recursive=True))
+                    except ValueError:
+                        self.logger.warning(f"Blocked unsafe log path for SQLite scan: {log_path}")
+                        continue
             
             for db_file in sqlite_files:
                 try:
-                    if self._is_safe_path(db_file):
-                        original_size = os.path.getsize(db_file)
-                        conn = sqlite3.connect(db_file)
+                    # ULTRA-FIX: Double validate SQLite database paths
+                    safe_db_path = validate_safe_path(db_file, "/")
+                    if self._is_safe_path(safe_db_path):
+                        original_size = os.path.getsize(safe_db_path)
+                        conn = sqlite3.connect(safe_db_path)
                         conn.execute('VACUUM')
                         conn.close()
                         
-                        new_size = os.path.getsize(db_file)
+                        new_size = os.path.getsize(safe_db_path)
                         if new_size < original_size:
                             space_freed += (original_size - new_size)
-                            actions_taken.append(f"Vacuumed SQLite database: {os.path.basename(db_file)}")
+                            actions_taken.append(f"Vacuumed SQLite database: {os.path.basename(safe_db_path)}")
+                except ValueError:
+                    self.logger.warning(f"Blocked unsafe SQLite database path: {db_file}")
+                    continue
                             
                 except Exception as e:
                     actions_taken.append(f"Could not vacuum database {os.path.basename(db_file)}: {e}")
@@ -1137,30 +1175,40 @@ class HardwareResourceOptimizerAgent(BaseAgent):
             # Clean temporary files older than 7 days
             temp_dirs = ['/tmp', '/var/tmp']
             for temp_dir in temp_dirs:
-                if os.path.exists(temp_dir):
-                    try:
-                        result = subprocess.run([
-                            'find', temp_dir, '-type', 'f', '-atime', '+7', '-delete'
-                        ], capture_output=True, text=True, timeout=30)
-                        
-                        if result.returncode == 0:
-                            actions_taken.append(f"Cleaned old files from {temp_dir}")
-                        else:
-                            actions_taken.append(f"Could not clean {temp_dir}: {result.stderr}")
+                try:
+                    # ULTRA-FIX: Validate temp directory paths
+                    safe_temp_dir = validate_safe_path(temp_dir, "/")
+                    if os.path.exists(safe_temp_dir):
+                        try:
+                            result = subprocess.run([
+                                'find', safe_temp_dir, '-type', 'f', '-atime', '+7', '-delete'
+                            ], capture_output=True, text=True, timeout=30)
                             
-                    except (subprocess.TimeoutExpired, subprocess.CalledProcessError) as e:
-                        actions_taken.append(f"Error cleaning {temp_dir}: {e}")
+                            if result.returncode == 0:
+                                actions_taken.append(f"Cleaned old files from {safe_temp_dir}")
+                            else:
+                                actions_taken.append(f"Could not clean {safe_temp_dir}: {result.stderr}")
+                                
+                        except (subprocess.TimeoutExpired, subprocess.CalledProcessError) as e:
+                            actions_taken.append(f"Error cleaning {safe_temp_dir}: {e}")
+                except ValueError:
+                    self.logger.warning(f"Blocked unsafe temp directory: {temp_dir}")
+                    actions_taken.append(f"Blocked unsafe temp directory access: {temp_dir}")
+                    continue
             
             # Clean system logs older than 30 days (if space is really tight)
             if initial_percent > 90:
                 try:
+                    # ULTRA-FIX: Validate log directory path
+                    safe_log_dir = validate_safe_path('/var/log', "/")
                     result = subprocess.run([
-                        'find', '/var/log', '-name', '*.log', '-mtime', '+30', '-delete'
+                        'find', safe_log_dir, '-name', '*.log', '-mtime', '+30', '-delete'
                     ], capture_output=True, text=True, timeout=30)
                     
                     if result.returncode == 0:
                         actions_taken.append("Cleaned old log files")
-                        
+                except ValueError:
+                    actions_taken.append("Blocked unsafe log directory access")        
                 except (subprocess.TimeoutExpired, subprocess.CalledProcessError) as e:
                     actions_taken.append(f"Could not clean log files: {e}")
             

@@ -1,0 +1,295 @@
+# CLAUDE.md Hygiene Enforcement Pre-commit Configuration
+# Automatically enforces codebase hygiene standards before commits
+# Version: 2.0.0 - Complete integration with all hygiene agents
+# Last Updated: 2025-08-03
+
+# Pre-commit configuration settings
+minimum_pre_commit_version: '2.20.0'
+default_language_version:
+  python: python3.11
+fail_fast: false  # Continue checking all hooks even if one fails
+default_stages: [commit]
+
+repos:
+  # Standard hooks for basic hygiene (Rules 1, 13)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: "Hygiene: Remove trailing whitespace"
+      - id: end-of-file-fixer
+        name: "Hygiene: Fix end of file"
+      - id: check-yaml
+        name: "Config: Validate YAML syntax"
+        args: ['--unsafe']  # Allow custom tags
+      - id: check-json
+        name: "Config: Validate JSON syntax"
+      - id: check-toml
+        name: "Config: Validate TOML syntax"
+      - id: check-xml
+        name: "Config: Validate XML syntax"
+      - id: check-added-large-files
+        name: "Rule 13: Block large files"
+        args: ['--maxkb=5000']
+      - id: check-case-conflict
+        name: "Rule 13: Check filename case conflicts"
+      - id: check-merge-conflict
+        name: "Rule 13: Check for merge conflicts"
+      - id: detect-private-key
+        name: "Security: Detect private keys"
+      - id: no-commit-to-branch
+        name: "Protection: Block direct commits to protected branches"
+        args: ['--branch', 'main', '--branch', 'master', '--branch', 'production']
+
+  # Python code formatting (Rule 8)
+  - repo: https://github.com/psf/black
+    rev: 24.1.1
+    hooks:
+      - id: black
+        name: "Rule 8: Python code formatting (Black)"
+        language_version: python3.11
+        args: ['--line-length=100']
+
+  # Python import sorting (Rule 8)
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: "Rule 8: Python import sorting"
+        args: ['--profile=black', '--line-length=100']
+
+  # Python linting with Ruff (faster than flake8)
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.1.9
+    hooks:
+      - id: ruff
+        name: "Rule 8: Python linting (Ruff)"
+        args: ['--fix', '--exit-non-zero-on-fix']
+
+  # Security scanning
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        name: "Security: Python security scanning"
+        args: ['-r', '--skip', 'B101', '-ll']
+
+  # Secret detection
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: "Security: Detect secrets"
+        args: ['--baseline', '.secrets.baseline']
+        exclude: '^(\.secrets\.baseline|tests/|\.env\.example)$'
+
+  # Dockerfile linting (Rule 11)
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        name: "Rule 11: Dockerfile linting"
+        entry: hadolint/hadolint:v2.12.0 hadolint
+        types: [dockerfile]
+
+  # Shell script linting (Rule 7)
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.6
+    hooks:
+      - id: shellcheck
+        name: "Rule 7: Shell script validation"
+        types: [shell]
+        args: ['-x', '--severity=warning']
+
+  # Custom hygiene enforcement hooks
+  - repo: local
+    hooks:
+      # Phase 1: Critical violations (Rules 13, 12, 9)
+      - id: no-garbage-files
+        name: "Rule 13: Block garbage/backup files"
+        entry: bash -c 'find . -type f \( -name "*.backup*" -o -name "*.tmp" -o -name "*.bak" -o -name "*~" -o -name "*.old" -o -name "*copy*" -o -name "*.agi_backup" -o -name "*.fantasy*" \) -not -path "./archive/*" -not -path "./.git/*" | grep -q . && echo "ERROR: Garbage files detected (Rule 13)" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: single-deployment-script
+        name: "Rule 12: Verify single deployment script"
+        entry: python scripts/pre-commit/check-deployment-scripts.py
+        language: python
+        pass_filenames: false
+        always_run: true
+
+      - id: no-duplicate-directories
+        name: "Rule 9: Check for duplicate directories"
+        entry: python scripts/pre-commit/check-directory-duplication.py
+        language: python
+        pass_filenames: false
+        always_run: true
+
+      # Phase 2: Structural violations (Rules 11, 8, 1, 2, 3)
+      - id: docker-structure
+        name: "Rule 11: Validate Docker structure"
+        entry: python scripts/pre-commit/check-docker-structure.py
+        language: python
+        files: '(Dockerfile|docker-compose\.ya?ml)$'
+        pass_filenames: true
+
+      - id: python-documentation
+        name: "Rule 8: Verify Python documentation"
+        entry: python scripts/pre-commit/check-python-docs.py
+        language: python
+        types: [python]
+        pass_filenames: true
+
+      - id: no-fantasy-elements
+        name: "Rule 1: Block fantasy/placeholder code"
+        entry: python scripts/pre-commit/check-fantasy-elements.py
+        language: python
+        pass_filenames: true
+        types: [python, javascript, typescript, java, go]
+
+      - id: no-breaking-changes
+        name: "Rule 2: Detect breaking changes"
+        entry: python scripts/pre-commit/check-breaking-changes.py
+        language: python
+        pass_filenames: false
+        always_run: true
+
+      - id: system-analysis
+        name: "Rule 3: Quick system analysis"
+        entry: python scripts/pre-commit/quick-system-check.py
+        language: python
+        pass_filenames: false
+        always_run: true
+
+      # Phase 3: Organizational violations (Rules 7, 6, 15, 4, 5, 10, 14, 16)
+      - id: script-organization
+        name: "Rule 7: Validate script organization"
+        entry: python scripts/pre-commit/check-script-organization.py
+        language: python
+        pass_filenames: true
+        files: '^scripts/'
+
+      - id: documentation-structure
+        name: "Rule 6: Validate documentation structure"
+        entry: python scripts/pre-commit/check-doc-structure.py
+        language: python
+        types: [markdown]
+        pass_filenames: true
+
+      - id: no-doc-duplication
+        name: "Rule 15: Check documentation duplication"
+        entry: python scripts/pre-commit/check-doc-duplication.py
+        language: python
+        types: [markdown]
+        pass_filenames: true
+
+      - id: script-reuse
+        name: "Rule 4: Verify script reuse"
+        entry: python scripts/pre-commit/check-script-duplication.py
+        language: python
+        types: [python, shell]
+        pass_filenames: true
+
+      - id: safe-deletion
+        name: "Rule 10: Verify safe deletions"
+        entry: python scripts/pre-commit/check-safe-deletion.py
+        language: python
+        pass_filenames: false
+        always_run: true
+
+      - id: require-changelog-update
+        name: "Rule 19: Require docs/CHANGELOG.md update"
+        entry: python scripts/pre-commit/check-changelog-updated.py
+        language: python
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
+      - id: agent-selection
+        name: "Rule 14: Verify correct agent usage"
+        entry: python scripts/pre-commit/check-agent-usage.py
+        language: python
+        pass_filenames: true
+        types: [python]
+
+      - id: llm-usage
+        name: "Rule 16: Verify Ollama/tinyllama usage"
+        entry: python scripts/pre-commit/check-llm-usage.py
+        language: python
+        types: [python, yaml]
+        pass_filenames: true
+
+      # Existing custom checks (migrated and enhanced)
+      - id: no-hardcoded-secrets
+        name: "Security: Check for hardcoded secrets"
+        entry: python scripts/check_secrets.py
+        language: python
+        pass_filenames: false
+        always_run: true
+
+      - id: enforce-naming-conventions
+        name: "Hygiene: Enforce naming conventions"
+        entry: python scripts/check_naming.py
+        language: python
+        types: [python]
+
+      - id: check-duplicate-files
+        name: "Hygiene: Check for duplicate files"
+        entry: python scripts/check_duplicates.py
+        language: python
+        pass_filenames: false
+
+      - id: validate-agent-format
+        name: "Agents: Validate agent configurations"
+        entry: python scripts/validate_agents.py
+        language: python
+        files: '^(\.claude/agents/.*\.md|agents/.*\.json|config/agents/.*\.json)$'
+
+      - id: check-requirements
+        name: "Dependencies: Check requirements files"
+        entry: python scripts/check_requirements.py
+        language: python
+        files: 'requirements.*\.txt$'
+
+      # Master orchestration hooks (run last)
+      - id: hygiene-coordinator
+        name: "Master: Run hygiene enforcement coordinator"
+        entry: python scripts/hygiene-enforcement-coordinator.py --phase=1 --dry-run
+        language: python
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
+      - id: agent-orchestrator
+        name: "Master: Run agent orchestration check"
+        entry: python scripts/agents/hygiene-agent-orchestrator.py --phase=1 --dry-run
+        language: python
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
+      # Final comprehensive check
+      - id: enforce-all-claude-rules
+        name: "Final: Enforce all CLAUDE.md rules"
+        entry: python scripts/enforce_claude_md_rules.py --comprehensive
+        language: python
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+        
+      # Continuous compliance monitoring integration
+      - id: continuous-compliance-check
+        name: "Compliance: Run continuous compliance monitor"
+        entry: python scripts/monitoring/continuous-compliance-monitor.py --report-only
+        language: python
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
+# Emergency bypass configuration
+# To bypass in emergency (requires justification):
+#   SKIP=hook-id git commit -m "Emergency fix: [justification]"
+# Or to skip all checks (logged for audit):
+#   git commit --no-verify -m "Emergency bypass: [justification]"
+# All bypasses are logged to: .git/hooks/bypass.log

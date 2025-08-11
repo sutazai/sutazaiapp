@@ -2677,8 +2677,8 @@
       "sha1": "0ab36345bd27964767dc56847a57ef9b2e38983f"
     },
     {
-      "id": "scripts.pre-commit.check-fantasy-elements",
-      "path": "scripts/pre-commit/check-fantasy-elements.py",
+      "id": "scripts.pre-commit.check-conceptual-elements",
+      "path": "scripts/pre-commit/check-conceptual-elements.py",
       "sha1": "709a1d8eb7e508e48b8a253254e06f6958b273dc"
     },
     {
@@ -20867,19 +20867,19 @@
       "to": "yaml"
     },
     {
-      "from": "scripts.pre-commit.check-fantasy-elements",
+      "from": "scripts.pre-commit.check-conceptual-elements",
       "to": "pathlib"
     },
     {
-      "from": "scripts.pre-commit.check-fantasy-elements",
+      "from": "scripts.pre-commit.check-conceptual-elements",
       "to": "re"
     },
     {
-      "from": "scripts.pre-commit.check-fantasy-elements",
+      "from": "scripts.pre-commit.check-conceptual-elements",
       "to": "sys"
     },
     {
-      "from": "scripts.pre-commit.check-fantasy-elements",
+      "from": "scripts.pre-commit.check-conceptual-elements",
       "to": "typing"
     },
     {

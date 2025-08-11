@@ -212,7 +212,7 @@ def generate():
    # Target: 28 defined, 28 running
    ```
 
-3. **Remove Fantasy Documentation**:
+3. **Remove conceptual Documentation**:
    ```bash
    # Delete files about non-existent features
    - Quantum computing docs
@@ -256,7 +256,7 @@ def generate():
 - Implement real logic, not stubs
 
 ### DON'T ❌
-- Create fantasy features
+- Create conceptual features
 - Reference non-existent services
 - Use models we don't have
 - Write placeholder code
@@ -299,7 +299,7 @@ docker-compose logs -f [service-name]
 
 ## CONCLUSION
 
-This roadmap is based on what's ACTUALLY RUNNING RIGHT NOW. No fantasy, no fiction, just the real system state and achievable improvements.
+This roadmap is based on what's ACTUALLY RUNNING RIGHT NOW. No conceptual, no fiction, just the real system state and achievable improvements.
 
 **The System Has**:
 - 28 running containers

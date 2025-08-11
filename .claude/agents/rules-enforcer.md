@@ -46,12 +46,12 @@ Centralize Logic: Do not duplicate code across files, modules, or services.
 
 Avoid Redundancy: Prohibit multiple versions of APIs, UI components, or scripts that perform the same task.
 
-B. No Fantasy Elements (Rule 1)
+B. No conceptual Elements (Rule 1)
 Reality Only: All code must be real, production-ready, and grounded in current platform constraints. No speculative, placeholder, or over-engineered code.
 
-Concrete Naming: Name things based on their function (e.g., emailSender), not metaphors (magicMailer).
+Concrete Naming: Name things based on their function (e.g., emailSender), not metaphors (mailService).
 
-Forbidden Terms: Reject any code or comments containing wizard, magic, teleport, black-box, telekinesis, or other fictional concepts.
+Forbidden Terms: Reject any code or comments containing configuration, automated, transfer, encapsulated, telekinesis, or other fictional concepts.
 
 Verifiable Dependencies: All external APIs and libraries must be real, documented, and have a valid entry in the project's dependency file (e.g., package.json, requirements.txt).
 

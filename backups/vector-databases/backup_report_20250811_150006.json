@@ -1,0 +1,19 @@
+{
+  "backup_timestamp": "20250811_150006",
+  "backup_date": "2025-08-11T15:00:19+02:00",
+  "containers": {
+    "qdrant": "sutazai-qdrant",
+    "chromadb": "sutazai-chromadb",
+    "faiss": "sutazai-faiss"
+  },
+  "backup_directory": "/opt/sutazaiapp/backups/vector-databases",
+  "retention_days": 30,
+  "backups_created": {
+    "qdrant_files": 3,
+    "chromadb_files": 3,
+    "faiss_files": 3
+  },
+  "total_backup_files": 9,
+  "log_file": "/opt/sutazaiapp/logs/backup_vector_20250811_150006.log",
+  "status": "SUCCESS"
+}

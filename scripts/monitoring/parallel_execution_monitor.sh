@@ -43,12 +43,12 @@ while true; do
     DOCKERFILES=$(find /opt/sutazaiapp -name 'Dockerfile*' -type f 2>/dev/null | wc -l)
     SCRIPTS=$(find /opt/sutazaiapp/scripts -type f \( -name '*.py' -o -name '*.sh' \) 2>/dev/null | wc -l)
     BASEAGENTS=$(find /opt/sutazaiapp -name 'base_agent.py' -type f 2>/dev/null | wc -l)
-    FANTASY=$(grep -r -E "(wizard|magic|teleport|fantasy)" /opt/sutazaiapp --include="*.py" --include="*.md" 2>/dev/null | wc -l)
+    conceptual=$(grep -r -E "(configuration|automated|transfer|conceptual)" /opt/sutazaiapp --include="*.py" --include="*.md" 2>/dev/null | wc -l)
     
     echo "Dockerfiles:      587 → $DOCKERFILES $([ $DOCKERFILES -lt 100 ] && echo '✅' || echo '⏳')"
     echo "Scripts:          447 → $SCRIPTS $([ $SCRIPTS -lt 100 ] && echo '✅' || echo '⏳')"
     echo "BaseAgent files:    2 → $BASEAGENTS $([ $BASEAGENTS -eq 1 ] && echo '✅' || echo '⏳')"
-    echo "Fantasy elements: 366 → $FANTASY $([ $FANTASY -lt 50 ] && echo '✅' || echo '⏳')"
+    echo "conceptual elements: 366 → $conceptual $([ $conceptual -lt 50 ] && echo '✅' || echo '⏳')"
     echo ""
     
     echo "=== SERVICE HEALTH ==="

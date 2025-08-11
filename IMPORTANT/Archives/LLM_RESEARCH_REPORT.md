@@ -161,7 +161,7 @@ This report presents factual, verified information about local LLM capabilities 
 ## 10. Recommendations for SutazAI
 
 ### Immediate Actions
-1. **Accept TinyLlama limitations** - it's a 1B model, not magic
+1. **Accept TinyLlama limitations** - it's a 1B model, not automated
 2. **Stop claiming GPT-OSS support** without proper hardware
 3. **Focus on single-agent implementation** first
 4. **Implement proper benchmarking** before claims
@@ -208,7 +208,7 @@ Success in local LLM deployment requires:
 1. **Honest assessment** of model capabilities
 2. **Proper hardware** for target model size
 3. **Realistic expectations** about performance
-4. **Focus on implementation** over architecture fantasy
+4. **Focus on implementation** over architecture conceptual
 5. **Incremental improvement** over revolutionary claims
 
 The SutazAI system has potential as a local deployment framework, but needs to align its claims with reality and focus on making one simple agent work well before attempting complex multi-agent orchestration.

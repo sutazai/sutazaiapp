@@ -14,7 +14,7 @@ Migration Status: In Progress
 ### Medium Priority Files (2 TODOs)
 - agents/ai_agent_orchestrator/app.py: 2 TODOs
 - backend/app/api/v1/jarvis.py: 2 TODOs
-- scripts/pre-commit/check-fantasy-elements.py: 2 TODOs
+- scripts/pre-commit/check-conceptual-elements.py: 2 TODOs
 - monitoring/ollama_agent_monitor.py: 2 TODOs
 - monitoring/enhanced-hygiene-backend.py: 2 TODOs
 

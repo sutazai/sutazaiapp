@@ -121,7 +121,6 @@ def render_optimized_header():
         else:
             backend_healthy = sync_check_service_health("http://127.0.0.1:10010/health")
     except Exception as e:
-        # TODO: Review this exception handling
         logger.error(f"Unexpected exception: {e}", exc_info=True)
         backend_healthy = False
     
@@ -468,4 +467,3 @@ def main():
         """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
-    main()

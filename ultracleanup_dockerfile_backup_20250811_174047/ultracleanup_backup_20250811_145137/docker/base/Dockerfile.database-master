@@ -1,0 +1,26 @@
+
+FROM python:3.11-slim
+
+# Master Database Service Base Image
+# Consolidates database utilities and connectors
+
+# Security: Run as non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# System dependencies
+RUN apt-get update && apt-get install -y     gcc     curl     postgresql-client     && rm -rf /var/lib/apt/lists/*
+
+# Database packages
+RUN pip install --no-cache-dir     psycopg2-binary==2.9.9     redis==5.0.1     neo4j==5.14.1     chromadb==0.4.17     qdrant-client==1.6.9     sqlalchemy==2.0.23     alembic==1.12.1
+
+# Working directory
+WORKDIR /app
+
+# Switch to non-root user
+USER appuser
+
+# Default health check
+HEALTHCHEK --interval=30s --timeout=10s --start-period=5s --retries=3     CMD ["python", "-c", "print('healthy')"]
+
+# Default command
+CMD ["python", "database_service.py"]

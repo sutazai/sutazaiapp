@@ -538,5 +538,3 @@ if __name__ == "__main__":
     compressor = create_compression_pipeline()
     analyzer = CompressionAnalyzer()
     
-    # Note: This would be integrated with actual model loading
-    logger.info("Model compression framework initialized successfully")

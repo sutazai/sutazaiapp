@@ -186,7 +186,7 @@ services:
 
 ## Compliance with CLAUDE.md Rules
 
-✅ **Rule 1**: No fantasy elements - all metrics are real, measurable values  
+✅ **Rule 1**: No conceptual elements - all metrics are real, measurable values  
 ✅ **Rule 2**: Preserves existing functionality - metrics are additive only  
 ✅ **Rule 3**: Analyzed entire system before implementation  
 ✅ **Rule 4**: Reused existing Prometheus/Grafana infrastructure  

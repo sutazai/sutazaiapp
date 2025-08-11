@@ -35,9 +35,9 @@ As a Senior Manual QA Engineer with 15+ years of experience, I have successfully
 
 Successfully validated the system handles current violations:
 
-#### Rule 1 (Fantasy Elements): 167 violations detected
+#### Rule 1 (conceptual Elements): 167 violations detected
 - **Detection Accuracy**: Enhanced pattern matching with context awareness
-- **Auto-fix Capability**: Intelligent term replacement (magic → automated, wizard → configurator)
+- **Auto-fix Capability**: Intelligent term replacement (automated → automated, configuration → configurator)
 - **Safety**: Preserves test data and legitimate usage contexts
 
 #### Rule 12 (Deployment Scripts): 25 violations detected  
@@ -149,8 +149,8 @@ Successfully validated the system handles current violations:
 
 ### Advanced Usage:
 ```bash
-# Daemon mode for continuous monitoring
-./scripts/monitoring/enhanced-compliance-monitor.py --daemon
+# service mode for continuous monitoring
+./scripts/monitoring/enhanced-compliance-monitor.py --service
 
 # Comprehensive validation with load testing
 ./scripts/monitoring/production-readiness-validator.py --comprehensive --load-test

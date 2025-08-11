@@ -33,7 +33,6 @@ class User(Base):
     failed_login_attempts = Column(Integer, default=0)
     locked_until = Column(DateTime(timezone=True))
     
-    # Note: permissions column removed to match actual database schema
     
     def __repr__(self):
         return f"<User(username='{self.username}', email='{self.email}')>"
@@ -129,4 +128,3 @@ class PasswordResetConfirm(BaseModel):
 class PasswordChange(BaseModel):
     """Password change request"""
     current_password: str
-    new_password: str = Field(..., min_length=8)

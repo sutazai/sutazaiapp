@@ -296,7 +296,7 @@ GET  /health           - System health check
 POST /chat             - Send chat message
 POST /documents/upload - Upload document
 GET  /agents           - List available agents
-POST /agents/{id}/invoke - Invoke specific agent
+POST /agents/{id}/call - call specific agent
 ```
 
 #### Exercise 12: API Testing with curl

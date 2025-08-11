@@ -110,7 +110,7 @@ Get comprehensive system information.
 {
   "name": "SutazAI Jarvis System",
   "version": "17.0.0",
-  "description": "Enterprise Autonomous General Intelligence Platform",
+  "description": "Enterprise AI Automation and Orchestration Platform",
   "status": "running",
   "capabilities": [
     "Multi-model AI reasoning",
@@ -152,9 +152,9 @@ Get list of all available AI agents and their status.
       "id": "task_coordinator",
       "name": "Jarvis Coordinator",
       "status": "active",
-      "type": "reasoning",
-      "description": "Central Jarvis reasoning system",
-      "capabilities": ["reasoning", "learning", "consciousness"],
+      "type": "coordination",
+      "description": "Central task coordination and orchestration system",
+      "capabilities": ["task_routing", "workflow_management", "resource_allocation"],
       "health": "healthy"
     },
     {
@@ -237,9 +237,9 @@ Generate text using specific AI models.
 **Response:**
 ```json
 {
-  "analysis": "Model generation completed for: Explain quantum computing",
+  "analysis": "Model generation completed for: Explain containerization technology",
   "model_used": "tinyllama",
-  "generated_text": "Quantum computing is a revolutionary technology...",
+  "generated_text": "Containerization is a proven technology for application deployment...",
   "tokens_used": 150,
   "temperature": 0.7,
   "insights": [
@@ -290,8 +290,8 @@ Interactive chat with AI models supporting multiple agents.
   "model": "tinyllama",
   "agent": "task_coordinator",
   "processing_enhancement": false,
-  "reasoning_pathways": [],
-  "consciousness_level": 0.0,
+  "analysis_pathways": [],
+  "confidence_level": 0.0,
   "vector_context_used": false,
   "timestamp": "2025-08-08T10:30:00.000Z",
   "processing_time": "1.2s"
@@ -362,8 +362,8 @@ Access Jarvis's deep reasoning capabilities.
     "synthesis",
     "metacognition"
   ],
-  "consciousness_level": 0.8,
-  "reasoning_depth": 3,
+  "confidence_level": 0.8,
+  "analysis_depth": 3,
   "timestamp": "2025-08-08T10:30:00.000Z"
 }
 ```
@@ -438,9 +438,9 @@ Execute complex tasks through appropriate agents.
   "success_probability": 0.92,
   "orchestrated": false,
   "resources_used": [
-    "cognitive_processing",
+    "text_processing",
     "knowledge_retrieval",
-    "planning_system"
+    "task_planning"
   ],
   "timestamp": "2025-08-08T10:30:00.000Z"
 }

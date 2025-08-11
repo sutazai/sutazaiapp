@@ -388,7 +388,6 @@ class CapabilityReasoner:
                     import json
                     performance_metrics = json.loads(performance_metrics)
                 except Exception as e:
-                    # TODO: Review this exception handling
                     logger.error(f"Unexpected exception: {e}", exc_info=True)
                     performance_metrics = {}
             
@@ -783,4 +782,3 @@ def get_reasoning_engine() -> Optional[ReasoningEngine]:
 def set_reasoning_engine(engine: ReasoningEngine):
     """Set the global reasoning engine instance"""
     global _reasoning_engine
-    _reasoning_engine = engine

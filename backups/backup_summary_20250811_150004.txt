@@ -1,0 +1,24 @@
+SutazAI Database Backup Summary
+========================================
+
+Backup Date: 2025-08-11T15:00:20+02:00
+Backup ID: 20250811_150004
+
+Results:
+
+
+Statistics:
+  Successful: 0
+  Failed: 0
+  Success Rate: 0%
+
+Storage:
+  Total Size: 2MB
+  Total Files: 4
+  Location: /opt/sutazaiapp/backups
+
+Compliance:
+  RTO: NON-COMPLIANT
+  RPO: COMPLIANT
+
+Logs: /opt/sutazaiapp/logs/master_backup_20250811_150004.log

@@ -151,11 +151,11 @@ GET /agents
   "agents": [
     {
       "id": "task_coordinator",
-      "name": "AGI Coordinator",
+      "name": "Task Coordinator",
       "status": "active",
-      "type": "reasoning",
-      "description": "Central AGI reasoning system",
-      "capabilities": ["reasoning", "learning", "consciousness"],
+      "type": "coordination",
+      "description": "Task coordination and workflow management",
+      "capabilities": ["task_routing", "workflow_management", "resource_allocation"],
       "health": "healthy"
     },
     {
@@ -231,27 +231,27 @@ POST /chat
   "response": "Docker containerization packages applications with dependencies...",
   "model": "tinyllama",
   "agent": "task_coordinator",
-  "consciousness_enhancement": true,
-  "reasoning_pathways": ["analytical", "creative"],
-  "consciousness_level": 0.8,
+  "context_enhancement": true,
+  "processing_pathways": ["analytical", "structured"],
+  "confidence_score": 0.8,
   "vector_context_used": false,
   "timestamp": "2025-08-08T10:30:00Z",
   "processing_time": "1.2s"
 }
 ```
 
-### Advanced Thinking
+### Advanced Processing
 ```http
 POST /think
 ```
 
-**Description:** AGI Coordinator deep thinking process  
+**Description:** Advanced text processing and analysis  
 **Authentication:** Optional  
 **Request:**
 ```json
 {
   "query": "How can we solve climate change?",
-  "reasoning_type": "deductive"
+  "processing_type": "analytical"
 }
 ```
 
@@ -288,7 +288,7 @@ POST /execute
   "execution_time": "3.4s",
   "success_probability": 0.92,
   "orchestrated": false,
-  "resources_used": ["cognitive_processing", "knowledge_retrieval"],
+  "resources_used": ["text_processing", "knowledge_retrieval"],
   "timestamp": "2025-08-08T10:30:00Z"
 }
 ```
@@ -515,57 +515,57 @@ GET /api/v1/orchestration/status
 
 ---
 
-## Consciousness Processing Endpoints
+## Data Processing Endpoints
 
-### Consciousness Process
+### Advanced Data Processing
 ```http
-POST /api/v1/consciousness/process
+POST /api/v1/processing/analyze
 ```
 
-**Description:** Process data through consciousness reasoning engine  
+**Description:** Process data through advanced analytics engine  
 **Request:**
 ```json
 {
   "input_data": "Analyze market trends",
   "processing_type": "analytical",
-  "use_consciousness": true,
-  "reasoning_depth": 3
+  "use_advanced_processing": true,
+  "analysis_depth": 3
 }
 ```
 
-### Creative Synthesis
+### Creative Text Generation
 ```http
-POST /api/v1/consciousness/creative
+POST /api/v1/processing/creative
 ```
 
-**Description:** Creative synthesis through consciousness engine  
+**Description:** Creative text generation and synthesis  
 **Request:**
 ```json
 {
   "prompt": "Design a sustainable city",
-  "synthesis_mode": "cross_domain",
-  "reasoning_depth": 3,
-  "use_consciousness": true
+  "generation_mode": "creative",
+  "analysis_depth": 3,
+  "use_advanced_processing": true
 }
 ```
 
-### Consciousness State
+### Processing Status
 ```http
-GET /api/v1/consciousness/consciousness
+GET /api/v1/processing/status
 ```
 
-**Description:** Get current consciousness state  
+**Description:** Get current processing system status  
 **Response:**
 ```json
 {
-  "consciousness_active": true,
-  "awareness_level": 0.8,
-  "cognitive_load": 0.6,
-  "active_processes": ["reasoning", "learning"],
-  "consciousness_activity": {
-    "perception": 0.7,
-    "cognition": 0.8,
-    "metacognition": 0.6
+  "processing_active": true,
+  "system_load": 0.8,
+  "queue_depth": 0.6,
+  "active_processes": ["analysis", "generation"],
+  "processing_metrics": {
+    "requests_per_minute": 45,
+    "average_response_time": 0.8,
+    "success_rate": 0.95
   }
 }
 ```

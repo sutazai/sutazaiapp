@@ -882,7 +882,7 @@ python scripts/validate_production.py
 - Some containers have connection issues
 
 **Follow These Rules:**
-1. No fantasy elements - only real, working code
+1. No conceptual elements - only real, working code
 2. Never break existing functionality
 3. Analyze everything before changes
 4. Reuse before creating

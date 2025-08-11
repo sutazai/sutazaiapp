@@ -1,0 +1,86 @@
+{
+  "files_exist": {
+    "app_optimized.py": false,
+    "requirements_optimized.txt": false,
+    "optimized_api_client.py": false,
+    "performance_cache.py": false,
+    "lazy_loader.py": false
+  },
+  "syntax_valid": {},
+  "import_analysis": {},
+  "requirements_validation": {
+    "valid": false
+  },
+  "optimization_features": {},
+  "structure_valid": false,
+  "no_circular_imports": true,
+  "issues": [
+    {
+      "severity": "CRITICAL",
+      "component": "File Check",
+      "message": "Optimized App missing: app_optimized.py"
+    },
+    {
+      "severity": "CRITICAL",
+      "component": "File Check",
+      "message": "Optimized Requirements missing: requirements_optimized.txt"
+    },
+    {
+      "severity": "CRITICAL",
+      "component": "File Check",
+      "message": "Optimized API Client missing: utils/optimized_api_client.py"
+    },
+    {
+      "severity": "CRITICAL",
+      "component": "File Check",
+      "message": "Performance Cache missing: utils/performance_cache.py"
+    },
+    {
+      "severity": "CRITICAL",
+      "component": "File Check",
+      "message": "Lazy Loader missing: components/lazy_loader.py"
+    },
+    {
+      "severity": "CRITICAL",
+      "component": "Requirements",
+      "message": "Requirements file missing: requirements_optimized.txt"
+    },
+    {
+      "severity": "ERROR",
+      "component": "Structure",
+      "message": "Directory utils missing"
+    },
+    {
+      "severity": "ERROR",
+      "component": "Structure",
+      "message": "Directory components missing"
+    },
+    {
+      "severity": "ERROR",
+      "component": "Structure",
+      "message": "Directory pages missing"
+    },
+    {
+      "severity": "ERROR",
+      "component": "Structure",
+      "message": "Directory styles missing"
+    }
+  ],
+  "warnings": [
+    {
+      "component": "Structure",
+      "message": "services/__init__.py missing"
+    }
+  ],
+  "successes": [
+    {
+      "component": "Structure",
+      "message": "Directory services exists"
+    },
+    {
+      "component": "Circular Imports",
+      "message": "No obvious circular import issues detected"
+    }
+  ],
+  "overall_score": 15.384615384615385
+}

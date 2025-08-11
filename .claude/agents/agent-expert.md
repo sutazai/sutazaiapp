@@ -430,7 +430,7 @@ This will:
 - Enable the agent for Claude Code usage
 
 ### 6. Usage in Claude Code
-Users can then invoke the agent in conversations:
+Users can then call the agent in conversations:
 - Claude Code will automatically suggest this agent for frontend security questions
 - Users can reference it explicitly when needed
 

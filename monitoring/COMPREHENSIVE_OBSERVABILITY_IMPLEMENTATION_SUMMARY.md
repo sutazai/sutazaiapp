@@ -8,7 +8,7 @@
 ## Overview
 
 Successfully implemented enterprise-grade full-stack observability for SutazAI system following all 19 codebase rules, with emphasis on:
-- **Rule 1**: Real monitoring only (no fantasy metrics)
+- **Rule 1**: Real monitoring only (no conceptual metrics)
 - **Rule 4**: Reused existing infrastructure
 - **Rule 5**: Professional production-grade implementation
 - **Rule 10**: No breaking changes to existing functionality
@@ -29,7 +29,7 @@ Successfully implemented enterprise-grade full-stack observability for SutazAI s
   - Vector database metrics (Qdrant, ChromaDB, FAISS)
   - AI agent service monitoring (7 agents)
   - Service mesh monitoring (Kong, Consul, RabbitMQ)
-  - Blackbox monitoring (HTTP/TCP health checks)
+  - encapsulated monitoring (HTTP/TCP health checks)
 
 #### 2. Distributed Tracing with Jaeger
 - **Service**: `sutazai-jaeger`

@@ -115,7 +115,6 @@ class CrewManager:
                             result_data = llm_response.json()
                             demo_response = result_data.get("response", demo_response)
                 except Exception as e:
-                    # TODO: Review this exception handling
                     logger.error(f"Unexpected exception: {e}", exc_info=True)
                     pass  # Use demo response if Ollama fails
                 
@@ -211,4 +210,3 @@ async def get_examples():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)

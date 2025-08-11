@@ -1,0 +1,413 @@
+# ============================================================================
+# SUTAZAI MASTER TEMPLATE: Backend API Base
+# ============================================================================
+# Purpose: Production-ready backend API service (FastAPI/Flask)
+# Security: Non-root user, API security hardening
+# Performance: Optimized for high-throughput APIs
+# Compatibility: FastAPI, Flask, Django REST Framework
+# Author: ULTRA DEPLOYMENT ENGINEER
+# Date: August 10, 2025
+# Version: v1.0.0
+# ============================================================================
+
+# Use Python 3.12.8 slim for optimal API performance
+FROM python:3.12.8-slim-bookworm as base
+
+# ============================================================================
+# SYSTEM CONFIGURATION & SECURITY HARDENING
+# ============================================================================
+
+# Set environment variables for API optimization
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DEBIAN_FRONTEND=noninteractive \
+    PYTHONPATH=/app
+
+# Install system dependencies for API services
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+        ca-certificates \
+        git \
+        postgresql-client \
+        redis-tools \
+        && rm -rf /var/lib/apt/lists/* \
+        && apt-get clean
+
+# Create API service user
+RUN groupadd --gid 1000 apiuser && \
+    useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash apiuser
+
+# ============================================================================
+# APPLICATION DIRECTORY SETUP
+# ============================================================================
+
+# Create API service directories
+RUN mkdir -p /app /app/api /app/logs /app/uploads /app/cache \
+    && chown -R apiuser:apiuser /app
+
+WORKDIR /app
+
+# ============================================================================
+# API DEPENDENCIES INSTALLATION
+# ============================================================================
+
+# Install core API dependencies
+RUN pip install --upgrade pip setuptools wheel
+
+# Copy consolidated requirements
+COPY docker/base/base-requirements.txt /tmp/base-requirements.txt
+
+# Create API-specific requirements
+RUN cat > /tmp/api-requirements.txt << 'EOF'
+# Core API frameworks
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+flask>=3.0.0
+gunicorn>=21.2.0
+
+# Database and ORM
+sqlalchemy>=2.0.23
+alembic>=1.13.0
+asyncpg>=0.29.0
+psycopg2-binary>=2.9.7
+
+# Authentication and security
+passlib[bcrypt]>=1.7.4
+python-jose[cryptography]>=3.3.0
+python-multipart>=0.0.6
+
+# API utilities
+pydantic>=2.5.1
+pydantic-settings>=2.1.0
+requests>=2.31.0
+httpx>=0.25.2
+
+# Caching and async
+redis>=5.0.1
+aioredis>=2.0.1
+celery>=5.3.4
+
+# Monitoring and logging
+prometheus-client>=0.19.0
+structlog>=23.2.0
+
+# Testing
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+httpx>=0.25.2
+EOF
+
+# Install all dependencies
+RUN pip install --no-cache-dir -r /tmp/base-requirements.txt && \
+    pip install --no-cache-dir -r /tmp/api-requirements.txt && \
+    rm -rf /tmp/*requirements.txt
+
+# ============================================================================
+# API CONFIGURATION
+# ============================================================================
+
+# Create API configuration template
+RUN cat > /app/config.py << 'EOF'
+"""API Configuration Template"""
+import os
+from functools import lru_cache
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    # API Configuration
+    api_title: str = "SutazAI API"
+    api_version: str = "v1"
+    debug: bool = False
+    
+    # Server Configuration
+    host: str = "0.0.0.0"
+    port: int = 8000
+    workers: int = 1
+    
+    # Database Configuration
+    database_url: str = "postgresql://user:pass@localhost:5432/db"
+    database_echo: bool = False
+    
+    # Redis Configuration
+    redis_url: str = "redis://localhost:6379/0"
+    
+    # Security Configuration
+    secret_key: str = "your-secret-key-change-in-production"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+    
+    # CORS Configuration
+    cors_origins: list = ["*"]
+    cors_methods: list = ["*"]
+    cors_headers: list = ["*"]
+    
+    # Logging Configuration
+    log_level: str = "INFO"
+    
+    class Config:
+        env_file = ".env"
+        case_sensitive = True
+
+@lru_cache()
+def get_settings():
+    return Settings()
+
+settings = get_settings()
+EOF
+
+# Create FastAPI application template
+RUN cat > /app/main.py << 'EOF'
+"""FastAPI Application Template"""
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from starlette.responses import Response
+import time
+import logging
+from config import settings
+
+# Configure logging
+logging.basicConfig(
+    level=getattr(logging, settings.log_level),
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Prometheus metrics
+REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP requests', ['method', 'endpoint'])
+REQUEST_DURATION = Histogram('http_request_duration_seconds', 'HTTP request duration')
+
+# Create FastAPI app
+app = FastAPI(
+    title=settings.api_title,
+    version=settings.api_version,
+    debug=settings.debug
+)
+
+# Add security middleware
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["*"]  # Configure for production
+)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
+    allow_methods=settings.cors_methods,
+    allow_headers=settings.cors_headers,
+)
+
+# Middleware for metrics
+@app.middleware("http")
+async def add_metrics_middleware(request, call_next):
+    start_time = time.time()
+    
+    response = await call_next(request)
+    
+    # Record metrics
+    REQUEST_COUNT.labels(
+        method=request.method,
+        endpoint=request.url.path
+    ).inc()
+    
+    REQUEST_DURATION.observe(time.time() - start_time)
+    
+    return response
+
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "service": settings.api_title,
+        "version": settings.api_version,
+        "timestamp": time.time()
+    }
+
+# Metrics endpoint for Prometheus
+@app.get("/metrics")
+async def get_metrics():
+    """Prometheus metrics endpoint"""
+    return Response(
+        generate_latest(),
+        media_type=CONTENT_TYPE_LATEST
+    )
+
+# API routes
+@app.get("/")
+async def root():
+    """Root endpoint"""
+    return {
+        "message": f"Welcome to {settings.api_title}",
+        "version": settings.api_version,
+        "docs": "/docs"
+    }
+
+@app.get("/api/v1/status")
+async def get_status():
+    """API status endpoint"""
+    return {
+        "status": "operational",
+        "api_version": settings.api_version,
+        "uptime": "running"
+    }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app",
+        host=settings.host,
+        port=settings.port,
+        workers=settings.workers,
+        log_level=settings.log_level.lower()
+    )
+EOF
+
+# Create Flask application template
+RUN cat > /app/flask_app.py << 'EOF'
+"""Flask Application Template"""
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+import time
+import logging
+from config import settings
+
+# Configure logging
+logging.basicConfig(
+    level=getattr(logging, settings.log_level),
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Create Flask app
+app = Flask(__name__)
+CORS(app)
+
+# Configure app
+app.config['SECRET_KEY'] = settings.secret_key
+app.config['DEBUG'] = settings.debug
+
+@app.route('/health')
+def health_check():
+    """Health check endpoint"""
+    return jsonify({
+        "status": "healthy",
+        "service": settings.api_title,
+        "version": settings.api_version,
+        "timestamp": time.time()
+    })
+
+@app.route('/')
+def root():
+    """Root endpoint"""
+    return jsonify({
+        "message": f"Welcome to {settings.api_title}",
+        "version": settings.api_version
+    })
+
+@app.route('/api/v1/status')
+def get_status():
+    """API status endpoint"""
+    return jsonify({
+        "status": "operational",
+        "api_version": settings.api_version,
+        "uptime": "running"
+    })
+
+if __name__ == '__main__':
+    app.run(
+        host=settings.host,
+        port=settings.port,
+        debug=settings.debug
+    )
+EOF
+
+# ============================================================================
+# APPLICATION CODE SETUP
+# ============================================================================
+
+# Copy application code
+COPY --chown=apiuser:apiuser . /app/
+
+# Switch to API user
+USER apiuser
+
+# Create additional directories
+RUN mkdir -p /app/logs /app/uploads /app/cache /app/migrations
+
+# ============================================================================
+# HEALTH CHECK & MONITORING
+# ============================================================================
+
+# Health check for API service
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# ============================================================================
+# RUNTIME CONFIGURATION
+# ============================================================================
+
+# Expose API service port
+EXPOSE 8000
+
+# Set API environment variables
+ENV API_HOST=0.0.0.0 \
+    API_PORT=8000 \
+    API_WORKERS=1 \
+    LOG_LEVEL=INFO \
+    PYTHONPATH=/app
+
+# Create volume mount points
+VOLUME ["/app/logs", "/app/uploads", "/app/cache"]
+
+# Default entrypoint for API services
+ENTRYPOINT ["python", "-m", "uvicorn"]
+CMD ["main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+
+# ============================================================================
+# TEMPLATE USAGE INSTRUCTIONS
+# ============================================================================
+#
+# To use this template:
+#
+# FastAPI (default):
+# docker build -t api-service:fastapi .
+# docker run -p 8000:8000 api-service:fastapi
+#
+# Flask:
+# docker run -p 8000:8000 api-service:fastapi python flask_app.py
+#
+# With custom configuration:
+# docker run -e API_PORT=9000 -e LOG_LEVEL=DEBUG -p 9000:9000 api-service
+#
+# Features:
+# - FastAPI and Flask templates included
+# - Production-ready configuration management
+# - Prometheus metrics integration
+# - Health checks and monitoring
+# - Database and Redis connectivity
+# - Authentication and security middleware
+# - CORS and trusted host protection
+# - Non-root execution for security
+# - Comprehensive logging
+#
+# API Endpoints:
+# - GET / - Root endpoint
+# - GET /health - Health check
+# - GET /metrics - Prometheus metrics
+# - GET /api/v1/status - API status
+# - GET /docs - FastAPI documentation (FastAPI only)
+#
+# Configuration:
+# - Environment variables via .env file
+# - Pydantic settings for type safety
+# - Production/development modes
+# ============================================================================

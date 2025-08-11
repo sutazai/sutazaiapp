@@ -1,0 +1,29 @@
+=== Vector Databases Information ===
+Backup Timestamp: 2025-08-11T15:00:06+02:00
+Containers: sutazai-qdrant, sutazai-chromadb, sutazai-faiss
+
+=== Qdrant Information ===
+[2025-08-11 15:00:06] Qdrant connectivity: OK
+Qdrant Status: Active
+{"result":{"collections":[]},"status":"ok","time":7.302e-6}
+Qdrant Cluster Info:
+{"result":{"status":"disabled"},"status":"ok","time":0.000011261}
+
+=== ChromaDB Information ===
+[2025-08-11 15:00:07] ChromaDB connectivity: OK
+ChromaDB Status: Active
+ChromaDB Version:
+"0.5.0"
+ChromaDB Collections:
+[]
+
+=== FAISS Information ===
+FAISS Status: Running
+total 28
+drwxr-xr-x 1 appuser appuser 4096 Aug  9 17:50 .
+drwxr-xr-x 1 root    root    4096 Aug 10 11:36 ..
+-rw-rw-r-- 1 appuser appuser  452 Aug  8 16:08 .dockerignore
+-rwxrwxr-x 1 appuser appuser 2386 Aug  9 17:50 Dockerfile
+-rwxrwxr-x 1 appuser appuser 1578 Aug  9 17:50 faiss_service.py
+-rwxrwxr-x 1 appuser appuser  996 Aug  8 16:08 health_check.py
+

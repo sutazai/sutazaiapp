@@ -213,7 +213,7 @@ class OllamaConfig:
         "neural-architecture-search": OPUS_MODEL,
         "neuromorphic-computing-expert": OPUS_MODEL,
         "product-strategy-architect": OPUS_MODEL,
-        "quantum-ai-researcher": OPUS_MODEL,
+        "data-analysis-researcher": OPUS_MODEL,
         "reinforcement-learning-trainer": OPUS_MODEL,
         "resource-arbitration-agent": OPUS_MODEL,
         "runtime-behavior-anomaly-detector": OPUS_MODEL,
@@ -249,7 +249,6 @@ class OllamaConfig:
         "intelligence-optimization-monitor": SONNET_MODEL,
         "jarvis-voice-interface": SONNET_MODEL,
         "kali-security-specialist": SONNET_MODEL,
-        "kali-hacker": SONNET_MODEL,
         "knowledge-graph-builder": SONNET_MODEL,
         "langflow-workflow-designer": SONNET_MODEL,
         "localagi-orchestration-manager": SONNET_MODEL,
@@ -346,4 +345,3 @@ class OllamaConfig:
             config["max_tokens"] = 1024
             config["top_p"] = 0.8
             
-        return config

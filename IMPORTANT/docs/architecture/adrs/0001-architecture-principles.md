@@ -21,10 +21,10 @@ related_docs:
 2025-08-08
 
 ## Context
-SutazAI is an ambitious AI orchestration platform that started with complex goals but needs pragmatic architectural decisions to deliver value. After extensive cleanup (v56 removed 200+ fantasy documentation files), we need clear architectural principles that:
+SutazAI is an ambitious AI orchestration platform that started with complex goals but needs pragmatic architectural decisions to deliver value. After extensive cleanup (v56 removed 200+ conceptual documentation files), we need clear architectural principles that:
 
 - Guide development toward realistic, working implementations
-- Prevent regression to over-engineered fantasy features
+- Prevent regression to over-engineered conceptual features
 - Support incremental development from PoC to production
 - Align with the reality of what's actually deployed (28 containers running, 7 agent stubs)
 - Enable future growth without requiring complete rewrites

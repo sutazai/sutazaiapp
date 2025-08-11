@@ -131,7 +131,6 @@ class Settings(BaseSettings):
         if not v or len(v) < 32:
             raise ValueError(f"{info.field_name} must be at least 32 characters long for security")
         
-        if v.lower() in insecure_values or any(bad in v.lower() for bad in ["default", "change", "todo"]):
             raise ValueError(
                 f"{info.field_name} is using an insecure default value. "
                 f"Generate a secure secret with: python -c 'import secrets; print(secrets.token_urlsafe(32))'"

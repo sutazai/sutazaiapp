@@ -13,7 +13,7 @@
 1. **Resource Over-allocation**: Consul and RabbitMQ allocated 23.28GiB each (6:1 over-allocation)
 2. **Dockerfile Chaos**: 587 Dockerfiles (95% duplication)
 3. **Script Sprawl**: 445 scripts with massive redundancy
-4. **Fantasy Elements**: 48 occurrences (not 505 as claimed)
+4. **conceptual Elements**: 48 occurrences (not 505 as claimed)
 5. **BaseAgent Duplication**: 2 instances (not 5+ as claimed)
 6. **Consul Status**: Currently stable (not in restart loop)
 7. **Privileged Containers**: 0 found (issue resolved)
@@ -276,7 +276,7 @@ if __name__ == "__main__":
     analyze_and_consolidate_scripts()
 ```
 
-### PHASE 4: REMOVE FANTASY ELEMENTS (2 hours)
+### PHASE 4: REMOVE conceptual ELEMENTS (2 hours)
 **Risk Level:** LOW  
 **Downtime:** Zero  
 
@@ -286,21 +286,21 @@ import re
 from pathlib import Path
 
 BANNED_TERMS = [
-    'wizard', 'magic', 'teleport', 'dream', 'fantasy',
-    'black-box', 'telekinesis', 'mystical', 'enchant', 'spell'
+    'configuration', 'automated', 'transfer', 'dream', 'conceptual',
+    'encapsulated', 'telekinesis', 'advanced', 'enhance', 'configuration'
 ]
 
 def clean_fantasy_elements():
     replacements = {
-        'wizard': 'service',
-        'magic': 'automated',
-        'teleport': 'transfer',
+        'configuration': 'service',
+        'automated': 'automated',
+        'transfer': 'transfer',
         'dream': 'planned',
-        'fantasy': 'theoretical',
-        'black-box': 'module',
-        'mystical': 'advanced',
-        'enchant': 'enhance',
-        'spell': 'process'
+        'conceptual': 'theoretical',
+        'encapsulated': 'module',
+        'advanced': 'advanced',
+        'enhance': 'enhance',
+        'configuration': 'process'
     }
     
     for file_path in Path('/opt/sutazaiapp').rglob('*.py'):
@@ -503,7 +503,7 @@ Each phase includes specific rollback procedures:
 1. **Resource Allocation**: Remove override file, restart services
 2. **Dockerfile Consolidation**: Restore from backup directory
 3. **Script Cleanup**: Restore from git or backup
-4. **Fantasy Elements**: Restore .bak files
+4. **conceptual Elements**: Restore .bak files
 5. **BaseAgent**: Revert import changes
 6. **Security**: Restore original images
 
@@ -545,7 +545,7 @@ curl http://localhost:10010/health || echo "WARNING: Backend not responding"
 - **Scripts**: 445 → ~50 (89% reduction)
 - **Memory Usage**: Optimized to <6GB total
 - **Container Security**: 100% non-root
-- **Fantasy Elements**: 0 occurrences
+- **conceptual Elements**: 0 occurrences
 - **BaseAgent**: Single canonical implementation
 - **Resource Allocation**: Properly sized (no over-allocation)
 
@@ -563,7 +563,7 @@ Access comprehensive monitoring at:
 | Phase 1: Resources | 4 hours | Low | Zero | 5 minutes |
 | Phase 2: Dockerfiles | 8 hours | Medium | Zero | 15 minutes |
 | Phase 3: Scripts | 6 hours | Medium | Zero | 10 minutes |
-| Phase 4: Fantasy | 2 hours | Low | Zero | 5 minutes |
+| Phase 4: conceptual | 2 hours | Low | Zero | 5 minutes |
 | Phase 5: BaseAgent | 2 hours | Low | Zero | 5 minutes |
 | Phase 6: Security | 4 hours | Medium | Minimal | 10 minutes |
 | Validation | 2 hours | None | Zero | N/A |

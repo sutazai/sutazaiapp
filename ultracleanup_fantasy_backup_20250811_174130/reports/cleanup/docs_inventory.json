@@ -1,0 +1,726 @@
+{
+  "generated_at": "2025-08-08T19:49:49.618771+00:00",
+  "root": "/opt/sutazaiapp/docs",
+  "files": [
+    {
+      "path": "AGENT_IMPLEMENTATION_GUIDE.md",
+      "bytes": 7925,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "701bf6f03874df99f0943dc31229c84f16b33288"
+    },
+    {
+      "path": "BLUE_GREEN_DEPLOYMENT_GUIDE.md",
+      "bytes": 11797,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "568b861b24abc2db2eec5d2bfdea53cfa0dcf320"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 5086,
+      "mtime": "2025-08-08T19:45:17.952909+00:00",
+      "ext": ".md",
+      "sha1": "1458d8ece70debf02a7491e20a2ce158a7b25ab7"
+    },
+    {
+      "path": "DEVOPS_README.md",
+      "bytes": 13064,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "3075279e9e844fc431a67a3e4a76c068f623a560"
+    },
+    {
+      "path": "FINAL_DOCUMENTATION_SUMMARY.md",
+      "bytes": 9983,
+      "mtime": "2025-08-08T19:34:27.632244+00:00",
+      "ext": ".md",
+      "sha1": "a3c371ec4bcd84596be72dabe691111ec338dfa3"
+    },
+    {
+      "path": "INDEX.md",
+      "bytes": 14801,
+      "mtime": "2025-08-08T17:58:58.504383+00:00",
+      "ext": ".md",
+      "sha1": "65b84b8248464225430e7359a7427a7491564514"
+    },
+    {
+      "path": "OPTIONAL_FEATURES.md",
+      "bytes": 6663,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "2b9defb6ea783d6a6002ea8fd319f0196c328a1d"
+    },
+    {
+      "path": "PERFORMANCE_OPTIMIZATION.md",
+      "bytes": 4546,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "73a0d2b9d62d0d60a54c4d4715af5fe0a0876506"
+    },
+    {
+      "path": "PHASE_0_WORKING_ENDPOINTS.md",
+      "bytes": 2407,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "9d004ae5ad32515b23aa209d70336b8bc9adaad1"
+    },
+    {
+      "path": "POST_GOLIVE_MONITORING.md",
+      "bytes": 9823,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "0a7c5c7f641b9dd6a837a133797b86370a1b9122"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1240,
+      "mtime": "2025-08-08T17:18:36.383279+00:00",
+      "ext": ".md",
+      "sha1": "efd014ff8dc213c9dc271c34e63253905f86a5d4"
+    },
+    {
+      "path": "RULES_COMPLIANCE_CHECKLIST.md",
+      "bytes": 4749,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "5382d5376340b8a15847b2b8b03df3ce61aedc1f"
+    },
+    {
+      "path": "agents/README.md",
+      "bytes": 367,
+      "mtime": "2025-08-08T17:20:24.107871+00:00",
+      "ext": ".md",
+      "sha1": "ed399d19a9ea59740537e28406c1fb32e80f3388"
+    },
+    {
+      "path": "agents/implementation-guide.md",
+      "bytes": 25115,
+      "mtime": "2025-08-08T18:17:18.403108+00:00",
+      "ext": ".md",
+      "sha1": "dbb43f50240f5dfd5245f4903d4a9552f5d14637"
+    },
+    {
+      "path": "agents/local-multi-agent-launcher.md",
+      "bytes": 1158,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "9081cd24954ee3a1064df6e32d375c0416435531"
+    },
+    {
+      "path": "agents/ollama-integration.md",
+      "bytes": 8847,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "d4ec4724712d62daad70c4185d01b6dc79ce4177"
+    },
+    {
+      "path": "api/JARVIS_API_REFERENCE.md",
+      "bytes": 27646,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "850ec9d1f24a63ca25346179345a9dba7ab119a6"
+    },
+    {
+      "path": "api/README.md",
+      "bytes": 358,
+      "mtime": "2025-08-08T17:20:51.325104+00:00",
+      "ext": ".md",
+      "sha1": "3f719a272c2b0b6600bd73929e09a7369ac9d7df"
+    },
+    {
+      "path": "api/jarvis-openapi.yaml",
+      "bytes": 36720,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".yaml",
+      "sha1": "cec0652384dcb5a4421f8db363408fed263a6976"
+    },
+    {
+      "path": "api/reference.md",
+      "bytes": 20600,
+      "mtime": "2025-08-08T18:46:33.642766+00:00",
+      "ext": ".md",
+      "sha1": "46ac6144a0ab860d3d992c2f30ebab539e32edd9"
+    },
+    {
+      "path": "architecture/01-system-overview.md",
+      "bytes": 6056,
+      "mtime": "2025-08-08T17:23:19.033628+00:00",
+      "ext": ".md",
+      "sha1": "54ec4fad706a45370a8ce676d06540c2a2d9790e"
+    },
+    {
+      "path": "architecture/02-component-architecture.md",
+      "bytes": 9918,
+      "mtime": "2025-08-08T17:25:11.533865+00:00",
+      "ext": ".md",
+      "sha1": "2616b2a9f5c2e6f880b6f8a4910f8e34e1304595"
+    },
+    {
+      "path": "architecture/03-data-flow.md",
+      "bytes": 28207,
+      "mtime": "2025-08-08T17:39:29.212416+00:00",
+      "ext": ".md",
+      "sha1": "e38bf2e69a450346c6964c8fcf74dd4421197af3"
+    },
+    {
+      "path": "architecture/04-technology-stack.md",
+      "bytes": 18158,
+      "mtime": "2025-08-08T17:43:47.775783+00:00",
+      "ext": ".md",
+      "sha1": "aed5e0ed02e03fd15414b70dbf575c28b898f98c"
+    },
+    {
+      "path": "architecture/05-scalability-design.md",
+      "bytes": 21870,
+      "mtime": "2025-08-08T17:47:20.435825+00:00",
+      "ext": ".md",
+      "sha1": "4c136a02bb88cbd2c21a8151c1315f3192c23ff2"
+    },
+    {
+      "path": "architecture/adrs/0001-architecture-principles.md",
+      "bytes": 9528,
+      "mtime": "2025-08-08T17:53:44.216815+00:00",
+      "ext": ".md",
+      "sha1": "2cca511d6d7d728061b1949a79e91db2df5144c1"
+    },
+    {
+      "path": "architecture/adrs/0002-technology-choices.md",
+      "bytes": 12071,
+      "mtime": "2025-08-08T17:55:03.275205+00:00",
+      "ext": ".md",
+      "sha1": "9f01e862cf13ee92e066dabfebbd8e161febd4d8"
+    },
+    {
+      "path": "architecture/adrs/adr-template.md",
+      "bytes": 3080,
+      "mtime": "2025-08-08T17:52:44.625675+00:00",
+      "ext": ".md",
+      "sha1": "929795f9b41dc7c17500d48941282c3acea37054"
+    },
+    {
+      "path": "architecture/agents/01_AI_AGENT_ORCHESTRATOR.md",
+      "bytes": 9432,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "604db7ff3bf51cb64ebfad5865e83c7ce42afb22"
+    },
+    {
+      "path": "architecture/agents/02_HARDWARE_RESOURCE_OPTIMIZER.md",
+      "bytes": 16099,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "419f20575ac8204a41244831c6720c07967c5bd1"
+    },
+    {
+      "path": "architecture/agents/03_TASK_ASSIGNMENT_COORDINATOR.md",
+      "bytes": 13095,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "2971118d83c427d5303b66711416ab6359c117bb"
+    },
+    {
+      "path": "architecture/agents/AGENT_IMPLEMENTATION_REALITY.md",
+      "bytes": 17033,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "2a1fb234f3df6697c013a50601cd4a0e7a27b830"
+    },
+    {
+      "path": "architecture/diagrams/component-overview.mmd",
+      "bytes": 462,
+      "mtime": "2025-08-08T17:19:58.354768+00:00",
+      "ext": ".mmd",
+      "sha1": "af188cdf04ca933194a3fb93a7338642c4aca6e1"
+    },
+    {
+      "path": "architecture/diagrams/data-flow.mmd",
+      "bytes": 526,
+      "mtime": "2025-08-08T17:20:03.219459+00:00",
+      "ext": ".mmd",
+      "sha1": "3f232863d8ec5ff1e85960539eaeec68c21693be"
+    },
+    {
+      "path": "architecture/diagrams/system-context.mmd",
+      "bytes": 325,
+      "mtime": "2025-08-08T17:19:54.745583+00:00",
+      "ext": ".mmd",
+      "sha1": "0f42e7414b21e6166e4f2756550c58015792581c"
+    },
+    {
+      "path": "backend_endpoints.md",
+      "bytes": 802,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "9990738bab0ae5f7ed91e71281c2f630a1ea7af6"
+    },
+    {
+      "path": "backend_openapi.json",
+      "bytes": 27121,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".json",
+      "sha1": "8d3103a3dc98d6bb192f0a49e7bde048192e4b09"
+    },
+    {
+      "path": "blueprint/README.md",
+      "bytes": 592,
+      "mtime": "2025-08-08T17:20:20.356657+00:00",
+      "ext": ".md",
+      "sha1": "2b1edaa67d072a34fbe914054ed03c2801f499f1"
+    },
+    {
+      "path": "blueprint/system-architecture-blueprint.md",
+      "bytes": 27940,
+      "mtime": "2025-08-08T18:07:39.958063+00:00",
+      "ext": ".md",
+      "sha1": "986a18612c798f88994dfccaabb837a1c6fe40b3"
+    },
+    {
+      "path": "blueprint/system-blueprint.md",
+      "bytes": 24794,
+      "mtime": "2025-08-08T17:51:01.693404+00:00",
+      "ext": ".md",
+      "sha1": "44f5bdd5c67bc44ee3b6b13998951737aef9d60e"
+    },
+    {
+      "path": "ci_cd/branching_strategy.md",
+      "bytes": 10960,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "5a1dcfc5c656eab697b66771640fc584f538e281"
+    },
+    {
+      "path": "ci_cd/github_health_check.yml",
+      "bytes": 509,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".yml",
+      "sha1": "566a43a3fbd6ac4e4969d92d22257370fd144448"
+    },
+    {
+      "path": "ci_cd/gitlab_health_check.yml",
+      "bytes": 366,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".yml",
+      "sha1": "b9fa59c9eda3b5e0705000494719f251cdf5cc9a"
+    },
+    {
+      "path": "ci_cd/roles_and_workflows.md",
+      "bytes": 1880,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "dcb85027d02f57b86e18b79e9ddd6462c110b3f3"
+    },
+    {
+      "path": "ci_cd/team_roles_responsibilities.md",
+      "bytes": 9043,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "399396fa50ec75989246b0ea90eadac54c179e0c"
+    },
+    {
+      "path": "coordinator_design.md",
+      "bytes": 11843,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "b111245e49f254c692924229f068f2a1b7b22c7d"
+    },
+    {
+      "path": "decisions/2025-08-07-remove-service-mesh.md",
+      "bytes": 1671,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "4f876117271613b37fa4ebcb248f183ed2d0c10a"
+    },
+    {
+      "path": "development/README.md",
+      "bytes": 400,
+      "mtime": "2025-08-08T17:20:27.428207+00:00",
+      "ext": ".md",
+      "sha1": "c332084c158a7acd15b85517d3b538a862a4123d"
+    },
+    {
+      "path": "development/workflows.md",
+      "bytes": 19364,
+      "mtime": "2025-08-08T18:19:59.948197+00:00",
+      "ext": ".md",
+      "sha1": "2882f15784093d8b145479aa7caa1d392c23538e"
+    },
+    {
+      "path": "infrastructure/README.md",
+      "bytes": 428,
+      "mtime": "2025-08-08T17:20:31.130639+00:00",
+      "ext": ".md",
+      "sha1": "7550c7629584ca98ae587a9f1273c58d0556e86c"
+    },
+    {
+      "path": "infrastructure/setup-guide.md",
+      "bytes": 62424,
+      "mtime": "2025-08-08T18:25:58.585575+00:00",
+      "ext": ".md",
+      "sha1": "3133a867cdfaf239e876d98df2668b6f417c91e0"
+    },
+    {
+      "path": "mcp/README.md",
+      "bytes": 2867,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "e9d81dfca056be40358a5a55f9e8c1a7a3dc937f"
+    },
+    {
+      "path": "mesh/lightweight-mesh.md",
+      "bytes": 2410,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "16c73d6e9435054ab05256e897c613e804c07447"
+    },
+    {
+      "path": "messaging-contracts.md",
+      "bytes": 11563,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "ae48c61af9a2619401faed200ff480df65bcb630"
+    },
+    {
+      "path": "monitoring/AGENT_OBSERVABILITY_SUMMARY.md",
+      "bytes": 7230,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "9d96801352808cfdcc5df7afda61d9267ff65c4d"
+    },
+    {
+      "path": "monitoring/agent-dashboards.md",
+      "bytes": 7743,
+      "mtime": "2025-08-08T16:08:18.193884+00:00",
+      "ext": ".md",
+      "sha1": "b4cb7c373203ac57f03e4b4c4e32935acab85e0d"
+    },
+    {
+      "path": "monitoring/observability-guide.md",
+      "bytes": 54405,
+      "mtime": "2025-08-08T18:37:15.805332+00:00",
+      "ext": ".md",
+      "sha1": "0bfe4d4569f73bea6483b0d447eaafb46d5cb6be"
+    },
+    {
+      "path": "mvp/README.md",
+      "bytes": 349,
+      "mtime": "2025-08-08T17:21:11.888513+00:00",
+      "ext": ".md",
+      "sha1": "c978e40cbc1a87e995d58a0592a42b9ea636d048"
+    },
+    {
+      "path": "observability/README.md",
+      "bytes": 344,
+      "mtime": "2025-08-08T17:20:45.255481+00:00",
+      "ext": ".md",
+      "sha1": "671ca3a19e4633be190bfcf75a7154cd1bcdfbf8"
+    },
+    {
+      "path": "observability/grafana/jarvis-error-tracking.json",
+      "bytes": 11887,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".json",
+      "sha1": "ddc59dc8865a9ebe2f97cfc1a5af3f0f8f9fd111"
+    },
+    {
+      "path": "observability/grafana/jarvis-request-performance.json",
+      "bytes": 10193,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".json",
+      "sha1": "7f17d36109c6fc76b11becde9f7bd5a826374b1a"
+    },
+    {
+      "path": "observability/grafana/jarvis-system-overview.json",
+      "bytes": 9881,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".json",
+      "sha1": "25cb3d13fdfe05c68a5b2413402996fee4ed6ba6"
+    },
+    {
+      "path": "onboarding/STAKEHOLDER_SYNTHESIS_PLAN_UNVERIFIED.md",
+      "bytes": 2550,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "aadb506efd3e56eb49ee6bfb92447501755fa0fd"
+    },
+    {
+      "path": "onboarding/kickoff_deck_v1.md",
+      "bytes": 7973,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "a488094aedbe659c1c84e88c2e4668272b97ecc0"
+    },
+    {
+      "path": "onboarding/kickoff_deck_v1.pptx",
+      "bytes": 32431,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".pptx",
+      "sha1": "64221209a8a743a567cc1d1a1261f20b1441a663"
+    },
+    {
+      "path": "onboarding/kickoff_overview.md",
+      "bytes": 16096,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "7ba9e219e9d1f4673d7491bfa37053010b3ead60"
+    },
+    {
+      "path": "operations/README.md",
+      "bytes": 367,
+      "mtime": "2025-08-08T17:20:34.610304+00:00",
+      "ext": ".md",
+      "sha1": "2573c00747852bead78463b7fe7b0d8e7fb01c4d"
+    },
+    {
+      "path": "operations/playbook.md",
+      "bytes": 51568,
+      "mtime": "2025-08-08T18:31:35.747202+00:00",
+      "ext": ".md",
+      "sha1": "07a000e8a4e03ca8853fdd85737d88d2f016bac8"
+    },
+    {
+      "path": "performance/optimization-guide.md",
+      "bytes": 87468,
+      "mtime": "2025-08-08T19:09:48.324927+00:00",
+      "ext": ".md",
+      "sha1": "93458bd93f9a620618ccfc9cb9d9ac797f9192e1"
+    },
+    {
+      "path": "poc/README.md",
+      "bytes": 356,
+      "mtime": "2025-08-08T17:21:19.643174+00:00",
+      "ext": ".md",
+      "sha1": "ace80ef6cf8f8380a9f1d90e605522863e913d96"
+    },
+    {
+      "path": "product/README.md",
+      "bytes": 313,
+      "mtime": "2025-08-08T17:21:01.710580+00:00",
+      "ext": ".md",
+      "sha1": "a0f4824b045ad0cfb77ee91794f5595ef5cf2995"
+    },
+    {
+      "path": "product/mvp-guide.md",
+      "bytes": 50456,
+      "mtime": "2025-08-08T19:21:01.726954+00:00",
+      "ext": ".md",
+      "sha1": "600780355b5a98f20a83b767d2839bf0a35cbe1f"
+    },
+    {
+      "path": "product/poc-to-production.md",
+      "bytes": 21791,
+      "mtime": "2025-08-08T19:31:48.751183+00:00",
+      "ext": ".md",
+      "sha1": "1c48dbbb84088d2b4e96aeb67aa8724b389214d3"
+    },
+    {
+      "path": "product/strategy.md",
+      "bytes": 56026,
+      "mtime": "2025-08-08T19:16:10.380028+00:00",
+      "ext": ".md",
+      "sha1": "c431920df60f74f13cc681cf2360d78ce55cc31c"
+    },
+    {
+      "path": "runbooks/DEPLOYMENT_RUNBOOK.md",
+      "bytes": 38756,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "fea9c687b39d34675a7038c27eaa63d5543369d2"
+    },
+    {
+      "path": "runbooks/DISASTER_RECOVERY.md",
+      "bytes": 32591,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "40204aae594e98922ff6672005c714ca0515e3d7"
+    },
+    {
+      "path": "runbooks/INCIDENT_RESPONSE.md",
+      "bytes": 19484,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "b0f0b727172845d18e194d98b1e3ced896bd0bd8"
+    },
+    {
+      "path": "runbooks/MAINTENANCE_PROCEDURES.md",
+      "bytes": 54820,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "73b3aae900f0bbf91dec2022b318fa62c446c199"
+    },
+    {
+      "path": "runbooks/OPERATIONS_RUNBOOK.md",
+      "bytes": 20053,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "a4992af03f9de139f19ee2866b5681cf0e84b00a"
+    },
+    {
+      "path": "runbooks/SECURITY_RUNBOOK.md",
+      "bytes": 59942,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "71d0ef33313c061b2850bb51c3c921422ecc974c"
+    },
+    {
+      "path": "security/README.md",
+      "bytes": 331,
+      "mtime": "2025-08-08T17:20:54.630003+00:00",
+      "ext": ".md",
+      "sha1": "8810fcb2cf357c0f2df171c0b67153730eed2b9e"
+    },
+    {
+      "path": "security/security-guide.md",
+      "bytes": 41536,
+      "mtime": "2025-08-08T18:52:36.891362+00:00",
+      "ext": ".md",
+      "sha1": "16538ae102c19c6399f6dcb85d74df52f9965478"
+    },
+    {
+      "path": "strategy/README.md",
+      "bytes": 361,
+      "mtime": "2025-08-08T17:20:57.814143+00:00",
+      "ext": ".md",
+      "sha1": "c417c1b2409c941928a375618ee129e7d50d02cf"
+    },
+    {
+      "path": "testing/PLAYWRIGHT.md",
+      "bytes": 2360,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "01f452a99109de19ab7b6299b73e75314a550841"
+    },
+    {
+      "path": "testing/README.md",
+      "bytes": 16397,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "792cbf9b5e1566d3387aa34b1ad76d78979f3f2c"
+    },
+    {
+      "path": "testing/cypress_e2e_tests.js",
+      "bytes": 14442,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".js",
+      "sha1": "1addcff40daf1c8afac41e4cc289f07e9884dcee"
+    },
+    {
+      "path": "testing/k6_load_tests.js",
+      "bytes": 16059,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".js",
+      "sha1": "a4a127c2c55169ac3b610fcabc0e025a67c09fc3"
+    },
+    {
+      "path": "testing/newman_ci_integration.js",
+      "bytes": 12999,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".js",
+      "sha1": "22c1bd51eb2a14364e3f05c8b551156b9475dc33"
+    },
+    {
+      "path": "testing/postman_collection_jarvis_endpoints.json",
+      "bytes": 17850,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".json",
+      "sha1": "2b046dfade5806fd826ccf014531d315473e7b2a"
+    },
+    {
+      "path": "testing/strategy.md",
+      "bytes": 85468,
+      "mtime": "2025-08-08T19:00:10.092602+00:00",
+      "ext": ".md",
+      "sha1": "92fc081bc7f6ef9aca10cf03577c187ffb6dacf1"
+    },
+    {
+      "path": "tiered-deployment-guide.md",
+      "bytes": 6192,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "6baf8230c44882d789d5cb5cc2f363c84ff0ea57"
+    },
+    {
+      "path": "training/ADMINISTRATOR_GUIDE.md",
+      "bytes": 11871,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "41d46379858f58e620a429370401ba1210bae665"
+    },
+    {
+      "path": "training/DEVELOPER_GUIDE.md",
+      "bytes": 21956,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "c610490cbfd63e1df0f6742912fbf10b43e6b6dd"
+    },
+    {
+      "path": "training/QUICK_START.md",
+      "bytes": 4874,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "e454dc358ac3fd2218fd7106514b5f5c94999d38"
+    },
+    {
+      "path": "training/USER_MANUAL.md",
+      "bytes": 13308,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "2804e8edd2b0e16cd7dcdf84ff55a76cc1654a1b"
+    },
+    {
+      "path": "training/workshop/DAY_1_SYSTEM_OVERVIEW.md",
+      "bytes": 16519,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "06303c45c5dcc53e38d96325f246fa7af5e488a3"
+    },
+    {
+      "path": "training/workshop/DAY_2_ADVANCED_FEATURES.md",
+      "bytes": 25727,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "3f36fcf48d4486aa19715a507cacd9182077ed63"
+    },
+    {
+      "path": "training/workshop/DAY_3_ADMINISTRATION_MAINTENANCE.md",
+      "bytes": 29077,
+      "mtime": "2025-08-08T16:08:18.197826+00:00",
+      "ext": ".md",
+      "sha1": "957727272066b88fd2c8eba3dd378da1c3bdccac"
+    }
+  ],
+  "summary": {
+    "count": 98,
+    "bytes": 1588132,
+    "by_ext": {
+      ".md": {
+        "count": 83,
+        "bytes": 1396361
+      },
+      ".json": {
+        "count": 5,
+        "bytes": 76932
+      },
+      ".pptx": {
+        "count": 1,
+        "bytes": 32431
+      },
+      ".mmd": {
+        "count": 3,
+        "bytes": 1313
+      },
+      ".js": {
+        "count": 3,
+        "bytes": 43500
+      },
+      ".yml": {
+        "count": 2,
+        "bytes": 875
+      },
+      ".yaml": {
+        "count": 1,
+        "bytes": 36720
+      }
+    }
+  }
+}

@@ -59,7 +59,7 @@ The SutazAI system has achieved **enterprise-grade security** posture following 
 | cAdvisor | 1 | ✅ root* | Container metrics (requires root) |
 | Postgres Exporter | 1 | ✅ nobody | Database metrics |
 | Redis Exporter | 1 | ✅ nobody | Cache metrics |
-| Blackbox Exporter | 1 | ✅ nobody | Endpoint monitoring |
+| encapsulated Exporter | 1 | ✅ nobody | Endpoint monitoring |
 | **Tracing** | | | |
 | Jaeger | 1 | ✅ jaeger | Distributed tracing |
 | Promtail | 1 | ✅ promtail | Log shipping |

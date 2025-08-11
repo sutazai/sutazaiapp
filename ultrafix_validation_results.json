@@ -1,0 +1,38 @@
+{
+  "test_timestamp": "2025-08-11 14:55:24",
+  "single_request_test": {
+    "avg_ms": 3.7513256072998047,
+    "min_ms": 2.702474594116211,
+    "max_ms": 4.979848861694336,
+    "all_times": [
+      4.896402359008789,
+      4.979848861694336,
+      4.397153854370117,
+      2.8657913208007812,
+      3.5619735717773438,
+      4.110574722290039,
+      3.265857696533203,
+      2.869844436645508,
+      2.702474594116211,
+      3.8633346557617188
+    ]
+  },
+  "concurrent_test": {
+    "total_requests": 100,
+    "successful_requests": 100,
+    "failed_requests": 0,
+    "success_rate_percent": 100.0,
+    "test_duration_seconds": 0.18956708908081055,
+    "throughput_rps": 527.5177272853043,
+    "avg_response_time_ms": 26.242384910583496,
+    "p95_response_time_ms": 43.26653480529785,
+    "max_response_time_ms": 59.305429458618164,
+    "sample_failures": []
+  },
+  "assessment": {
+    "overall_success": true,
+    "criteria_met": 3,
+    "total_criteria": 3,
+    "performance_grade": "A+"
+  }
+}

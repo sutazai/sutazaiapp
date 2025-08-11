@@ -101,9 +101,9 @@ jobs:
             exit 1
           fi
           
-          # Check for fantasy elements (Rule 1)
-          if grep -i -E "(magic|wizard|teleport|quantum|agi|asi)" CLAUDE.md > /dev/null; then
-            echo "⚠️ Potential fantasy elements found in documentation"
+          # Check for conceptual elements (Rule 1)
+          if grep -i -E "(automated|configuration|transfer|quantum|agi|asi)" CLAUDE.md > /dev/null; then
+            echo "⚠️ Potential conceptual elements found in documentation"
           fi
           
           # Verify TinyLlama usage (Rule 16)

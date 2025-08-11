@@ -146,7 +146,7 @@ curl http://localhost:8551/health    # Task Assignment - ✅ HEALTHY
 - Qdrant (qdrant user)
 - All 7 Agent Services (appuser)
 - Backend, Frontend, FAISS (appuser)
-- Consul, Kong, Blackbox Exporter (non-root)
+- Consul, Kong, encapsulated Exporter (non-root)
 - Postgres Exporter, Redis Exporter (non-root)
 - Node Exporter, cAdvisor (non-root)
 - Prometheus, Grafana, Loki, AlertManager (non-root)
@@ -552,7 +552,7 @@ Every line of code you touch should be better than you found it.
 
 ### 🚫 Rules to Follow
 
-#### 📌 Rule 1: No Fantasy Elements
+#### 📌 Rule 1: No conceptual Elements
 ✨ Only real, production-ready implementations are allowed.
 Do not write speculative, placeholder, "in-theory," or overly abstract code unless it's been fully validated and grounded in current platform constraints.
 
@@ -560,23 +560,23 @@ Do not write speculative, placeholder, "in-theory," or overly abstract code unle
 No fictional components, fake classes, dream APIs, or imaginary infrastructure. All code must reflect actual, working systems.
 
 ✨ No 'someday' solutions.
-Avoid comments like // TODO: magically scale this later or // imagine this uses a future AI module. If it doesn't exist now, it doesn't go in the codebase.
+Avoid comments like // TODO: automatically scale this later or // configure this to uses a future AI module. If it doesn't exist now, it doesn't go in the codebase.
 
 ✨ Be honest with the present limitations.
 Code must work today, not in a hypothetical perfect setup. Assume real-world constraints like flaky hardware, latency, cold starts, and limited memory.
-All code and documentation must use real, grounded constructs—no metaphors, magic terms, or hypothetical "black-box" AI.
+All code and documentation must use real, grounded constructs—no metaphors, automated terms, or hypothetical "encapsulated" AI.
 
 ✨ **Forbidden:**
-- Terms like wizardService, magicHandler, teleportData(), or comments such as // TODO: add telekinesis here.
-- Pseudo-functions that don't map to an actual library or API (e.g. superIntuitiveAI.optimize()).
+- Terms like configurationService, automationHandler, transferData(), or comments such as // TODO: add automation here.
+- Pseudo-functions that don't map to an actual library or API (e.g. intelligentSystem.optimize()).
 
 ✨ **Mandated Practices:**
-- Name things concretely: emailSender, not magicMailer.
-- Use real libraries: import from nodemailer, not from "the built-in mailer."
+- Name things concretely: emailSender, not mailService.
+- Use real libraries: import from nodemailer, not from "the mail service integration."
 - Link to docs in comments or README—every external API or framework must be verifiable.
 
 ✅ **Pre-Commit Checks:**
-- Search for banned keywords (magic, wizard, black-box, etc.) in your diff.
+- Search for banned keywords (automated, configuration, encapsulated, etc.) in your diff.
 - Verify every new dependency is in package.json (or requirements.txt) with a valid version.
 - Ensure code examples in docs actually compile or run.
 

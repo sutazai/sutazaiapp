@@ -113,7 +113,6 @@ class TabbyCodeCompletionClient(CodeCompletionClient):
                 loop = asyncio.get_event_loop()
                 self._available = loop.run_until_complete(self.health_check())
             except (IOError, OSError, FileNotFoundError) as e:
-                # TODO: Review this exception handling
                 logger.error(f"Unexpected exception: {e}", exc_info=True)
                 self._available = False
         return self._available
@@ -126,4 +125,3 @@ class TabbyCodeCompletionClient(CodeCompletionClient):
         """Async context manager exit - cleanup client"""
         if self._client:
             await self._client.aclose()
-            self._client = None

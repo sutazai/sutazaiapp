@@ -627,7 +627,6 @@ class AgentManager:
                                 agent.update_heartbeat()
 
                             # Update resource metrics
-                            # Note: psutil.Process() gets the *current* process (AgentManager)
                             # Getting individual agent process metrics is more complex
                             # and likely requires agents to run as separate processes.
                             # For now, we comment out the potentially misleading psutil calls.

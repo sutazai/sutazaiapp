@@ -1,0 +1,347 @@
+#!/usr/bin/env python3
+"""
+ULTRAPERFORMANCE Memory Optimizer
+Reduces memory consumption and improves efficiency
+"""
+
+import subprocess
+import json
+import psutil
+from datetime import datetime
+import time
+
+
+class MemoryOptimizer:
+    """Optimize memory usage across all containers"""
+    
+    def __init__(self):
+        self.containers = []
+        self.optimizations = []
+        self.baseline_memory = {}
+        
+    def get_container_stats(self):
+        """Get memory stats for all containers"""
+        try:
+            result = subprocess.run(
+                ["docker", "stats", "--no-stream", "--format", 
+                 "{{json .}}"],
+                capture_output=True,
+                text=True
+            )
+            
+            stats = []
+            for line in result.stdout.strip().split('\n'):
+                if line:
+                    container_stat = json.loads(line)
+                    # Parse memory usage
+                    mem_usage = container_stat['MemUsage'].split('/')[0].strip()
+                    mem_limit = container_stat['MemUsage'].split('/')[1].strip()
+                    
+                    # Convert to MB
+                    mem_usage_mb = self._parse_memory(mem_usage)
+                    mem_limit_mb = self._parse_memory(mem_limit)
+                    
+                    stats.append({
+                        'name': container_stat['Name'],
+                        'container_id': container_stat['Container'],
+                        'memory_usage_mb': mem_usage_mb,
+                        'memory_limit_mb': mem_limit_mb,
+                        'memory_percent': container_stat['MemPerc'].replace('%', ''),
+                        'cpu_percent': container_stat['CPUPerc'].replace('%', '')
+                    })
+                    
+            return stats
+            
+        except Exception as e:
+            print(f"Error getting container stats: {e}")
+            return []
+            
+    def _parse_memory(self, mem_str):
+        """Parse memory string to MB"""
+        mem_str = mem_str.strip()
+        if 'GiB' in mem_str:
+            return float(mem_str.replace('GiB', '')) * 1024
+        elif 'MiB' in mem_str:
+            return float(mem_str.replace('MiB', ''))
+        elif 'GB' in mem_str:
+            return float(mem_str.replace('GB', '')) * 1000
+        elif 'MB' in mem_str:
+            return float(mem_str.replace('MB', ''))
+        elif 'KB' in mem_str or 'KiB' in mem_str:
+            return float(mem_str.replace('KB', '').replace('KiB', '')) / 1024
+        return 0
+        
+    def optimize_container_memory(self, container_name, target_mb):
+        """Set memory limit for a container"""
+        try:
+            cmd = f"docker update --memory={target_mb}m --memory-swap={target_mb * 2}m {container_name}"
+            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                self.optimizations.append({
+                    'container': container_name,
+                    'action': 'memory_limit',
+                    'value': f"{target_mb}MB"
+                })
+                return True
+            else:
+                print(f"Failed to set memory limit for {container_name}: {result.stderr}")
+                return False
+                
+        except Exception as e:
+            print(f"Error optimizing {container_name}: {e}")
+            return False
+            
+    def apply_optimizations(self):
+        """Apply memory optimizations to all containers"""
+        print("\nApplying memory optimizations...")
+        
+        # Get current stats
+        stats = self.get_container_stats()
+        
+        # Define optimized memory limits based on actual usage
+        memory_limits = {
+            # Core services - based on observed usage
+            'sutazai-postgres': 512,          # PostgreSQL needs buffer cache
+            'sutazai-redis': 256,              # Redis in-memory store
+            'sutazai-neo4j': 1024,             # Graph database needs memory
+            'sutazai-ollama': 2048,            # AI model server
+            
+            # Vector databases
+            'sutazai-qdrant': 512,
+            'sutazai-chromadb': 512,
+            'sutazai-faiss': 256,
+            
+            # Application services
+            'sutazai-backend': 512,            # FastAPI backend
+            'sutazai-frontend': 256,           # Streamlit frontend
+            
+            # Agent services - lightweight
+            'sutazai-hardware-resource-optimizer': 256,
+            'sutazai-ai-agent-orchestrator': 256,
+            'sutazai-ollama-integration': 256,
+            'sutazai-resource-arbitration-agent': 128,
+            'sutazai-task-assignment-coordinator': 128,
+            'sutazai-jarvis-automation-agent': 128,
+            'sutazai-jarvis-hardware-resource-optimizer': 128,
+            
+            # Monitoring - minimal memory
+            'sutazai-prometheus': 512,
+            'sutazai-grafana': 256,
+            'sutazai-loki': 256,
+            'sutazai-alertmanager': 128,
+            
+            # Service mesh
+            'sutazai-consul': 128,
+            'sutazai-kong': 256,
+            'sutazai-rabbitmq': 512,
+            
+            # Exporters - very lightweight
+            'sutazai-node-exporter': 64,
+            'sutazai-postgres-exporter': 64,
+            'sutazai-redis-exporter': 64,
+            'sutazai-blackbox-exporter': 64,
+            'sutazai-cadvisor': 128,
+        }
+        
+        # Apply limits
+        for container_stat in stats:
+            container_name = container_stat['name']
+            current_usage = container_stat['memory_usage_mb']
+            
+            if container_name in memory_limits:
+                target_limit = memory_limits[container_name]
+                
+                # Only optimize if current usage allows (with 20% buffer)
+                if current_usage * 1.2 < target_limit:
+                    print(f"  Optimizing {container_name}: {current_usage:.0f}MB -> {target_limit}MB limit")
+                    self.optimize_container_memory(container_name, target_limit)
+                else:
+                    print(f"  Skipping {container_name}: usage ({current_usage:.0f}MB) too close to target ({target_limit}MB)")
+            else:
+                # Default optimization for unknown containers
+                if current_usage < 100:
+                    target = 128
+                elif current_usage < 200:
+                    target = 256
+                else:
+                    target = int(current_usage * 1.5)
+                    
+                print(f"  Setting default limit for {container_name}: {target}MB")
+                self.optimize_container_memory(container_name, target)
+                
+    def optimize_system_settings(self):
+        """Optimize system-wide memory settings"""
+        print("\nOptimizing system settings...")
+        
+        optimizations = [
+            # Reduce swap usage (prefer RAM)
+            ("echo 10 > /proc/sys/vm/swappiness", "Reduce swap usage"),
+            
+            # Optimize page cache
+            ("echo 1 > /proc/sys/vm/drop_caches", "Clear page cache"),
+            
+            # Optimize dirty page writeback
+            ("echo 5 > /proc/sys/vm/dirty_ratio", "Reduce dirty page ratio"),
+            ("echo 10 > /proc/sys/vm/dirty_background_ratio", "Reduce background dirty ratio"),
+            
+            # Optimize network buffers
+            ("sysctl -w net.core.rmem_max=134217728", "Increase receive buffer"),
+            ("sysctl -w net.core.wmem_max=134217728", "Increase send buffer"),
+            
+            # Optimize file handles
+            ("sysctl -w fs.file-max=2097152", "Increase file handle limit"),
+        ]
+        
+        for cmd, description in optimizations:
+            try:
+                subprocess.run(cmd, shell=True, check=True, capture_output=True)
+                print(f"  ✅ {description}")
+                self.optimizations.append({
+                    'type': 'system',
+                    'action': description,
+                    'command': cmd
+                })
+            except Exception as e:
+                print(f"  ⚠️  Failed: {description} - {e}")
+                
+    def cleanup_unused_resources(self):
+        """Clean up unused Docker resources"""
+        print("\nCleaning up unused resources...")
+        
+        cleanup_commands = [
+            ("docker container prune -f", "Remove stopped containers"),
+            ("docker image prune -f", "Remove dangling images"),
+            ("docker network prune -f", "Remove unused networks"),
+            ("docker volume prune -f", "Remove unused volumes"),
+            ("docker builder prune -f", "Clear build cache"),
+        ]
+        
+        for cmd, description in cleanup_commands:
+            try:
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                print(f"  ✅ {description}")
+                
+                # Parse space reclaimed if available
+                if "reclaimed" in result.stdout.lower():
+                    for line in result.stdout.split('\n'):
+                        if "reclaimed" in line.lower():
+                            print(f"     Space reclaimed: {line.strip()}")
+                            
+                self.optimizations.append({
+                    'type': 'cleanup',
+                    'action': description
+                })
+                
+            except Exception as e:
+                print(f"  ⚠️  Failed: {description} - {e}")
+                
+    def measure_impact(self):
+        """Measure the impact of optimizations"""
+        print("\nMeasuring optimization impact...")
+        
+        # Get current stats
+        after_stats = self.get_container_stats()
+        
+        total_before = sum(self.baseline_memory.values())
+        total_after = sum(s['memory_usage_mb'] for s in after_stats)
+        
+        reduction = total_before - total_after
+        reduction_percent = (reduction / total_before * 100) if total_before > 0 else 0
+        
+        # Get system memory
+        mem = psutil.virtual_memory()
+        
+        impact = {
+            'total_memory_before_mb': round(total_before, 2),
+            'total_memory_after_mb': round(total_after, 2),
+            'memory_saved_mb': round(reduction, 2),
+            'reduction_percent': round(reduction_percent, 2),
+            'system_memory_available_mb': round(mem.available / 1024 / 1024, 2),
+            'system_memory_percent': round(mem.percent, 2),
+            'optimizations_applied': len(self.optimizations)
+        }
+        
+        return impact
+        
+    def generate_report(self):
+        """Generate optimization report"""
+        impact = self.measure_impact()
+        
+        report = {
+            'timestamp': datetime.now().isoformat(),
+            'impact': impact,
+            'optimizations': self.optimizations,
+            'recommendations': [
+                "Enable memory limits in docker-compose.yml for production",
+                "Use Alpine-based images where possible for smaller footprint",
+                "Implement memory profiling in application code",
+                "Consider using jemalloc for better memory allocation",
+                "Enable garbage collection tuning for Python services",
+                "Use connection pooling to reduce memory overhead",
+                "Implement caching to reduce memory pressure from repeated operations"
+            ],
+            'container_stats': self.get_container_stats()
+        }
+        
+        return report
+        
+def main():
+    print("=" * 80)
+    print("ULTRAPERFORMANCE MEMORY OPTIMIZER")
+    print("=" * 80)
+    
+    optimizer = MemoryOptimizer()
+    
+    # Get baseline
+    print("\nGathering baseline memory usage...")
+    baseline_stats = optimizer.get_container_stats()
+    
+    print("\nCurrent Memory Usage:")
+    print("-" * 40)
+    total_memory = 0
+    for stat in baseline_stats:
+        print(f"  {stat['name']:<40} {stat['memory_usage_mb']:>8.0f} MB ({stat['memory_percent']}%)")
+        optimizer.baseline_memory[stat['name']] = stat['memory_usage_mb']
+        total_memory += stat['memory_usage_mb']
+        
+    print(f"\nTotal Memory Usage: {total_memory:.0f} MB")
+    
+    # Apply optimizations
+    optimizer.apply_optimizations()
+    optimizer.cleanup_unused_resources()
+    
+    # Wait for changes to take effect
+    print("\nWaiting for optimizations to take effect...")
+    time.sleep(5)
+    
+    # Generate report
+    report = optimizer.generate_report()
+    
+    print("\n" + "=" * 80)
+    print("OPTIMIZATION RESULTS")
+    print("=" * 80)
+    
+    impact = report['impact']
+    print(f"Memory Before: {impact['total_memory_before_mb']:.0f} MB")
+    print(f"Memory After:  {impact['total_memory_after_mb']:.0f} MB")
+    print(f"Memory Saved:  {impact['memory_saved_mb']:.0f} MB ({impact['reduction_percent']:.1f}%)")
+    print(f"Optimizations Applied: {impact['optimizations_applied']}")
+    
+    print("\nRECOMMENDATIONS:")
+    for rec in report['recommendations']:
+        print(f"  • {rec}")
+        
+    # Save report
+    report_file = f"/opt/sutazaiapp/reports/memory_optimization_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    with open(report_file, "w") as f:
+        json.dump(report, f, indent=2)
+        
+    print(f"\nReport saved to: {report_file}")
+    
+    # Return success if we saved at least 10% memory
+    return impact['reduction_percent'] >= 10
+
+if __name__ == "__main__":
+    success = main()
+    exit(0 if success else 1)

@@ -28,7 +28,6 @@ class AgentCommunication:
             return
             
         self.running = True
-        # Note: In a real system, this would start async message processing
         logger.info("Agent communication system started")
         
     def stop(self):
@@ -92,4 +91,3 @@ class AgentCommunication:
             "total_messages": sum(agent["message_count"] for agent in self.agents.values()),
             "agents": dict(self.agents),
             "running": self.running
-        }

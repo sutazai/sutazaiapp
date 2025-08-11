@@ -1,0 +1,212 @@
+{
+  "timestamp": "2025-08-11T14:57:34.358396",
+  "service_health": {
+    "Backend": {
+      "service": "Backend",
+      "url": "http://localhost:10010/health",
+      "status_code": 200,
+      "response_time_ms": 2.368,
+      "healthy": true,
+      "endpoint_used": "/health"
+    },
+    "Frontend": {
+      "service": "Frontend",
+      "url": "http://localhost:10011/health",
+      "status_code": 200,
+      "response_time_ms": 1.5590000000000002,
+      "healthy": true,
+      "endpoint_used": "/health"
+    },
+    "Ollama": {
+      "service": "Ollama",
+      "url": "http://localhost:10104/",
+      "status_code": 200,
+      "response_time_ms": 0.652,
+      "healthy": true,
+      "endpoint_used": "/"
+    },
+    "Hardware Optimizer": {
+      "service": "Hardware Optimizer",
+      "url": "http://localhost:11110/health",
+      "status_code": 200,
+      "response_time_ms": 1.4469999999999998,
+      "healthy": true,
+      "endpoint_used": "/health"
+    },
+    "AI Orchestrator": {
+      "service": "AI Orchestrator",
+      "url": "http://localhost:8589/health",
+      "status_code": 200,
+      "response_time_ms": 1.504,
+      "healthy": true,
+      "endpoint_used": "/health"
+    },
+    "Ollama Integration": {
+      "service": "Ollama Integration",
+      "url": "http://localhost:8090/health",
+      "status_code": 200,
+      "response_time_ms": 2.589,
+      "healthy": true,
+      "endpoint_used": "/health"
+    },
+    "FAISS Vector": {
+      "service": "FAISS Vector",
+      "url": "http://localhost:10103/health",
+      "status_code": 200,
+      "response_time_ms": 1.524,
+      "healthy": true,
+      "endpoint_used": "/health"
+    },
+    "Resource Arbitration": {
+      "service": "Resource Arbitration",
+      "url": "http://localhost:8588/health",
+      "status_code": 200,
+      "response_time_ms": 1.445,
+      "healthy": true,
+      "endpoint_used": "/health"
+    },
+    "Task Assignment": {
+      "service": "Task Assignment",
+      "url": "http://localhost:8551/health",
+      "status_code": 200,
+      "response_time_ms": 1.276,
+      "healthy": true,
+      "endpoint_used": "/health"
+    },
+    "Prometheus": {
+      "service": "Prometheus",
+      "url": "http://localhost:10200/",
+      "status_code": 200,
+      "response_time_ms": 0.656,
+      "healthy": true,
+      "endpoint_used": "/"
+    },
+    "Grafana": {
+      "service": "Grafana",
+      "url": "http://localhost:10201/health",
+      "status_code": 200,
+      "response_time_ms": 2.644,
+      "healthy": true,
+      "endpoint_used": "/health"
+    }
+  },
+  "database_connectivity": {
+    "PostgreSQL": {
+      "healthy": true,
+      "response": "/var/run/postgresql:5432 - accepting connections"
+    },
+    "Redis": {
+      "healthy": true,
+      "response": "PONG"
+    },
+    "Neo4j": {
+      "healthy": false,
+      "response": "The client is unauthorized due to authentication failure."
+    }
+  },
+  "service_dependencies": {
+    "Backend-Database": {
+      "healthy": true,
+      "details": {
+        "status": "healthy",
+        "timestamp": "2025-08-11T12:53:37.287669",
+        "services": {
+          "redis": "healthy",
+          "database": "healthy",
+          "http_ollama": "configured",
+          "http_agents": "configured",
+          "http_external": "configured"
+        },
+        "performance": {
+          "cache_stats": {
+            "gets": 1,
+            "sets": 6,
+            "hits": 0,
+            "misses": 1,
+            "evictions": 0,
+            "compressions": 0,
+            "hit_rate": 0.0,
+            "hit_rate_percent": 0.0,
+            "local_cache_size": 6,
+            "compression_ratio": 0.0,
+            "cache_efficiency": "poor"
+          },
+          "ollama_stats": {
+            "total_requests": 6,
+            "cache_hits": 0,
+            "cache_misses": 6,
+            "errors": 6,
+            "avg_response_time": 0,
+            "cache_hit_rate": 0.0,
+            "cache_size": 0,
+            "queue_size": 0
+          },
+          "task_queue_stats": {
+            "tasks_created": 0,
+            "tasks_completed": 0,
+            "tasks_failed": 0,
+            "tasks_retried": 0,
+            "avg_processing_time": 0,
+            "pending_high": 0,
+            "pending_normal": 0,
+            "pending_low": 0,
+            "in_memory_tasks": 0,
+            "num_workers": 5
+          },
+          "connection_pool_stats": {
+            "http_requests": 6,
+            "db_queries": 1,
+            "redis_operations": 7,
+            "connection_errors": 6,
+            "pool_exhaustion": 0,
+            "db_pool_size": 10,
+            "db_pool_free": 10
+          }
+        }
+      }
+    },
+    "AI-Orchestrator-RabbitMQ": {
+      "healthy": true,
+      "details": {
+        "status": "healthy",
+        "agent": "ai-agent-orchestrator",
+        "timestamp": "2025-08-11T12:57:34.331323",
+        "registered_agents": 0,
+        "online_agents": 0,
+        "active_tasks": 0,
+        "pending_tasks": 0,
+        "completed_tasks": 0,
+        "failed_tasks": 0
+      }
+    },
+    "Ollama-Integration-Ollama": {
+      "healthy": true,
+      "details": {
+        "status": "healthy",
+        "ollama_reachable": true,
+        "tinyllama_available": true,
+        "models_count": 1
+      }
+    }
+  },
+  "container_communication": {
+    "Docker Network": {
+      "healthy": true,
+      "network_name": "sutazai-network"
+    }
+  },
+  "monitoring_stack": {
+    "Prometheus": {
+      "healthy": true,
+      "status_code": 200
+    },
+    "Grafana": {
+      "healthy": true,
+      "status_code": 200
+    },
+    "Metrics Collection": {
+      "healthy": true,
+      "metrics_count": 34
+    }
+  }
+}

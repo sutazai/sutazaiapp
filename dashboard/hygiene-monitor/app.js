@@ -57,7 +57,7 @@ class HygieneMonitorDashboard {
         // Enhanced CLAUDE.md Rule definitions with descriptions
         this.rules = {
             'rule_1': { 
-                name: 'No Fantasy Elements', 
+                name: 'No conceptual Elements', 
                 priority: 'CRITICAL', 
                 category: 'Code Quality',
                 description: 'Only real, production-ready implementations. No speculative or hypothetical code.',

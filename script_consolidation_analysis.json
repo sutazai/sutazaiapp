@@ -1681,7 +1681,7 @@
           "lines": 163
         },
         {
-          "path": "scripts/pre-commit/check-fantasy-elements.py",
+          "path": "scripts/pre-commit/check-conceptual-elements.py",
           "lines": 101
         },
         {
@@ -3349,7 +3349,7 @@
           "lines": 163
         },
         {
-          "path": "scripts/pre-commit/check-fantasy-elements.py",
+          "path": "scripts/pre-commit/check-conceptual-elements.py",
           "lines": 101
         },
         {
@@ -7647,7 +7647,7 @@
         "/opt/sutazaiapp/scripts/pre-commit/check-doc-duplication.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-python-docs.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-deployment-scripts.py",
-        "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "/opt/sutazaiapp/scripts/pre-commit/check-conceptual-elements.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-breaking-changes.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-doc-structure.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-script-duplication.py",
@@ -8075,7 +8075,7 @@
         "/opt/sutazaiapp/scripts/pre-commit/check-doc-duplication.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-python-docs.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-deployment-scripts.py",
-        "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "/opt/sutazaiapp/scripts/pre-commit/check-conceptual-elements.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-breaking-changes.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-doc-structure.py",
         "/opt/sutazaiapp/scripts/pre-commit/check-script-duplication.py",
@@ -9520,7 +9520,7 @@
         "class:SutazAIWorkflows",
         "__init__"
       ],
-      "description": "Practical workflow examples for SutazAI task automation platform\nDemonstrates real-world use cases without fantasy elements",
+      "description": "Practical workflow examples for SutazAI task automation platform\nDemonstrates real-world use cases without conceptual elements",
       "shebang": true,
       "executable": false
     },
@@ -14389,9 +14389,9 @@
       "executable": false
     },
     {
-      "path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
-      "relative_path": "scripts/pre-commit/check-fantasy-elements.py",
-      "name": "check-fantasy-elements.py",
+      "path": "/opt/sutazaiapp/scripts/pre-commit/check-conceptual-elements.py",
+      "relative_path": "scripts/pre-commit/check-conceptual-elements.py",
+      "name": "check-conceptual-elements.py",
       "size": 3357,
       "lines": 101,
       "hash": "fc14b6718cc06be99855e1f0be2bb8b4",
@@ -14409,7 +14409,7 @@
         "check_file_for_fantasy_elements",
         "main"
       ],
-      "description": "Purpose: Check for fantasy/placeholder code elements (Rule 1 enforcement)\nUsage: python check-fantasy-elements.py <file1> <file2> ...\nRequirements: Python 3.8+",
+      "description": "Purpose: Check for conceptual/placeholder code elements (Rule 1 enforcement)\nUsage: python check-conceptual-elements.py <file1> <file2> ...\nRequirements: Python 3.8+",
       "shebang": true,
       "executable": false
     },
@@ -14622,7 +14622,7 @@
         "create_coding_ready_docs",
         "consolidate_requirements"
       ],
-      "description": "COMPLETE CLEANUP AND DOCUMENTATION PREPARATION SCRIPT\nRemoves ALL fantasy elements and prepares coding-ready documentation",
+      "description": "COMPLETE CLEANUP AND DOCUMENTATION PREPARATION SCRIPT\nRemoves ALL conceptual elements and prepares coding-ready documentation",
       "shebang": true,
       "executable": false
     },
@@ -14678,7 +14678,7 @@
         "clean_file",
         "class:FantasyRemover"
       ],
-      "description": "INTELLIGENT Fantasy Elements Remover\nRemoves AGI/ASI/quantum/magic references WITHOUT breaking LocalAGI/BigAGI services",
+      "description": "INTELLIGENT conceptual Elements Remover\nRemoves AGI/ASI/quantum/automated references WITHOUT breaking LocalAGI/BigAGI services",
       "shebang": true,
       "executable": false
     },
@@ -15667,7 +15667,7 @@
         "_load_config",
         "_compress_file"
       ],
-      "description": "Comprehensive Garbage Collection System for Sutazai App\nPurpose: Automatically manage all report files, logs, and temporary files\nUsage: python garbage-collection-system.py [--daemon] [--dry-run]\nRequ",
+      "description": "Comprehensive Garbage Collection System for Sutazai App\nPurpose: Automatically manage all report files, logs, and temporary files\nUsage: python garbage-collection-system.py [--service] [--dry-run]\nRequ",
       "shebang": true,
       "executable": true
     },
@@ -18902,7 +18902,7 @@
         "_load_rules_config",
         "auto_fix_violations"
       ],
-      "description": "Continuous Compliance Monitoring System for SutazAI\nPurpose: Real-time monitoring and enforcement of 16 codebase hygiene rules\nUsage: python continuous-compliance-monitor.py [--daemon] [--report-only]",
+      "description": "Continuous Compliance Monitoring System for SutazAI\nPurpose: Real-time monitoring and enforcement of 16 codebase hygiene rules\nUsage: python continuous-compliance-monitor.py [--service] [--report-only]",
       "shebang": true,
       "executable": true
     },
@@ -22549,7 +22549,7 @@
         "iter_files",
         "main"
       ],
-      "description": "check_banned_keywords.py\n\nRule 1 enforcement: fail if banned fantasy terms appear in code or docs.\n\nExit codes:\n  0 -> OK\n  1 -> Found banned keywords\n  2 -> Error",
+      "description": "check_banned_keywords.py\n\nRule 1 enforcement: fail if banned conceptual terms appear in code or docs.\n\nExit codes:\n  0 -> OK\n  1 -> Found banned keywords\n  2 -> Error",
       "shebang": true,
       "executable": false
     },

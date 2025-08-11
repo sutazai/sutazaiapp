@@ -288,7 +288,6 @@ class UnifiedOrchestrator:
                                             "status", "unhealthy"
                                         )
                         except (IOError, OSError, FileNotFoundError) as e:
-                            # TODO: Review this exception handling
                             logger.error(f"Unexpected exception: {e}", exc_info=True)
                             # Agent not responding
                             await self.redis_client.hset(
@@ -432,4 +431,3 @@ async def main():
         logger.info("Shutting down orchestrator...")
 
 if __name__ == "__main__":
-    asyncio.run(main())

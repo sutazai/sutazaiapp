@@ -9,9 +9,16 @@ from __future__ import annotations
 
 import json
 import os
+import asyncio
 from typing import Any, Dict, List, Optional, Tuple
 
 import redis
+import redis.asyncio as redis_async
+
+
+# Global connection pool instance - shared across all requests
+_redis_pool = None
+_redis_async_pool = None
 
 
 def _redis_url() -> str:
@@ -19,7 +26,46 @@ def _redis_url() -> str:
 
 
 def get_redis() -> "redis.Redis":
-    return redis.from_url(_redis_url(), decode_responses=True)
+    """Get Redis client with connection pooling for better performance"""
+    global _redis_pool
+    if _redis_pool is None:
+        # Create connection pool with optimized settings
+        _redis_pool = redis.ConnectionPool.from_url(
+            _redis_url(),
+            decode_responses=True,
+            max_connections=50,
+            socket_connect_timeout=5,
+            socket_timeout=5,
+            socket_keepalive=True,
+            socket_keepalive_options={
+                1: 1,  # TCP_KEEPIDLE
+                2: 3,  # TCP_KEEPINTVL  
+                3: 5,  # TCP_KEEPCNT
+            },
+            health_check_interval=30
+        )
+    return redis.Redis(connection_pool=_redis_pool)
+
+
+async def get_redis_async() -> "redis_async.Redis":
+    """Get async Redis client with connection pooling"""
+    global _redis_async_pool
+    if _redis_async_pool is None:
+        _redis_async_pool = redis_async.ConnectionPool.from_url(
+            _redis_url(),
+            decode_responses=True,
+            max_connections=50,
+            socket_connect_timeout=5,
+            socket_timeout=5,
+            socket_keepalive=True,
+            socket_keepalive_options={
+                1: 1,  # TCP_KEEPIDLE
+                2: 3,  # TCP_KEEPINTVL
+                3: 5,  # TCP_KEEPCNT
+            },
+            health_check_interval=30
+        )
+    return redis_async.Redis(connection_pool=_redis_async_pool)
 
 
 # Stream keys
@@ -54,30 +100,70 @@ def heartbeat_agent(agent_id: str, ttl_seconds: int = 60) -> None:
 
 
 def list_agents() -> List[Dict[str, Any]]:
+    """List agents with optimized batch fetching"""
     r = get_redis()
-    keys = r.keys("mesh:agent:*")
+    
+    # Use SCAN instead of KEYS for production safety
+    cursor = 0
+    keys = []
+    while True:
+        cursor, batch = r.scan(cursor, match="mesh:agent:*", count=100)
+        keys.extend(batch)
+        if cursor == 0:
+            break
+    
+    if not keys:
+        return []
+    
+    # Batch fetch all values using pipeline
+    with r.pipeline() as pipe:
+        for k in keys:
+            pipe.get(k)
+        values = pipe.execute()
+    
     agents: List[Dict[str, Any]] = []
-    for k in keys:
-        try:
-            val = r.get(k)
-            if val:
+    for val in values:
+        if val:
+            try:
                 agents.append(json.loads(val))
-        except Exception:
-            continue
+            except Exception:
+                continue
     return agents
 
 
 def enqueue_task(topic: str, payload: Dict[str, Any], maxlen: int = 10000) -> str:
+    """Enqueue task with connection pooling and caching"""
     r = get_redis()
+    stream_key = task_stream(topic)
+    
+    # Cache the stream key existence check to reduce Redis calls
+    cache_key = f"stream_exists:{stream_key}"
+    if not hasattr(enqueue_task, '_stream_cache'):
+        enqueue_task._stream_cache = {}
+    
+    if cache_key not in enqueue_task._stream_cache:
+        enqueue_task._stream_cache[cache_key] = True
+        # Ensure stream exists with consumer group
+        try:
+            r.xgroup_create(stream_key, "default", id="$", mkstream=True)
+        except redis.exceptions.ResponseError:
+            pass  # Group already exists
+    
     # Store as a single JSON field for flexibility
-    msg_id = r.xadd(task_stream(topic), {"json": json.dumps(payload)}, maxlen=maxlen, approximate=True)
+    msg_id = r.xadd(stream_key, {"json": json.dumps(payload)}, maxlen=maxlen, approximate=True)
     return msg_id
 
 
 def tail_results(topic: str, count: int = 10) -> List[Tuple[str, Dict[str, Any]]]:
+    """Tail results with optimized batch reading"""
     r = get_redis()
-    # XREVRANGE returns latest first
-    raw = r.xrevrange(result_stream(topic), count=count)
+    stream_key = result_stream(topic)
+    
+    # Use pipeline for batch operations
+    with r.pipeline() as pipe:
+        pipe.xrevrange(stream_key, count=count)
+        raw = pipe.execute()[0]
+    
     out: List[Tuple[str, Dict[str, Any]]] = []
     for msg_id, fields in raw:
         try:

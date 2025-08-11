@@ -414,7 +414,6 @@ Please analyze this task and provide appropriate results. If the task requiremen
                 "task_data": task_data,
                 "interpretation": result,
                 "handled_at": datetime.utcnow().isoformat(),
-                "note": "This was an unknown task type handled with flexible approach"
             },
             "task_id": task_id
         }
@@ -519,4 +518,3 @@ Please analyze this task and provide appropriate results. If the task requiremen
     
     async def on_shutdown(self):
         """Cleanup when shutting down"""
-        self.logger.info("Generic Agent shutting down")

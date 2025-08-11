@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-This guide provides a practical roadmap for transforming the current 7 Flask stub agents into functional, production-ready AI agents. Based on the verified system state documented in CLAUDE.md, this guide focuses on **realistic implementation** rather than fantasy features.
+This guide provides a practical roadmap for transforming the current 7 Flask stub agents into functional, production-ready AI agents. Based on the verified system state documented in CLAUDE.md, this guide focuses on **realistic implementation** rather than conceptual features.
 
 ## Current State Assessment
 
@@ -31,7 +31,7 @@ This guide provides a practical roadmap for transforming the current 7 Flask stu
 - **RabbitMQ** (10007/10008): Message queue available but not integrated
 - **Monitoring Stack**: Prometheus, Grafana, Loki all operational
 
-### What's Fantasy (Doesn't Work)
+### What's conceptual (Doesn't Work)
 
 The existing `/opt/sutazaiapp/docs/AGENT_IMPLEMENTATION_GUIDE.md` describes a complex implementation with:
 - ❌ RabbitMQ message processing (agents don't consume messages)
@@ -738,7 +738,7 @@ async def process_with_fallback(self, request: Dict[str, Any]) -> Dict[str, Any]
 ### Resource Allocation
 - **Current**: No resource monitoring
 - **Realistic**: Basic CPU, memory, disk monitoring with psutil
-- **Fantasy**: Complex distributed resource allocation
+- **conceptual**: Complex distributed resource allocation
 
 ## Deployment Commands
 

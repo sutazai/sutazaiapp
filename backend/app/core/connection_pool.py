@@ -62,11 +62,12 @@ class ConnectionPoolManager:
             self._breaker_manager = await get_circuit_breaker_manager()
         
         # Create circuit breakers for different services
+        # ULTRAFIX: Increased Ollama circuit breaker timeout to match HTTP client
         await self._breaker_manager.get_or_create_breaker(
             'ollama',
             failure_threshold=5,
-            recovery_timeout=30.0,
-            timeout=30.0
+            recovery_timeout=60.0,  # ULTRAFIX: Increased recovery timeout
+            timeout=120.0  # ULTRAFIX: Match HTTP client timeout for consistency
         )
         
         await self._breaker_manager.get_or_create_breaker(
@@ -128,18 +129,24 @@ class ConnectionPoolManager:
             self._redis_pool = redis.ConnectionPool(**redis_config)
             self._redis_client = redis.Redis(connection_pool=self._redis_pool)
             
-            # Initialize PostgreSQL pool
+            # ULTRAFIX: Optimized PostgreSQL pool for high concurrency
+            # Based on formula: pool_size = (num_workers * 2) + max_overflow
+            # For 28 containers with avg 2 connections each = 56 + 20 = 76
             self._db_pool = await asyncpg.create_pool(
                 host=config.get('db_host', 'sutazai-postgres'),
                 port=config.get('db_port', 5432),
                 user=config.get('db_user', 'sutazai'),
                 password=config.get('db_password', 'sutazai'),
                 database=config.get('db_name', 'sutazai'),
-                min_size=10,
-                max_size=20,
-                max_queries=50000,
-                max_inactive_connection_lifetime=300,
-                command_timeout=60
+                min_size=20,  # ULTRAFIX: Increased from 10 for better warm pool
+                max_size=50,  # ULTRAFIX: Increased from 20 for high concurrency
+                max_queries=100000,  # ULTRAFIX: Doubled for longer connection reuse
+                max_inactive_connection_lifetime=600,  # ULTRAFIX: 10 min for stable connections
+                command_timeout=60,
+                # ULTRAFIX: Remove runtime-changeable parameters that require restart
+                server_settings={
+                    'jit': 'on'  # Enable JIT compilation - safe to set at connection time
+                }
             )
             
             # Initialize HTTP clients for different services
@@ -165,13 +172,14 @@ class ConnectionPoolManager:
         )
         
         # Ollama client with longer timeout for LLM operations
+        # ULTRAFIX: Increased timeout from 30s to 120s for reliable LLM operations
         self._http_clients['ollama'] = httpx.AsyncClient(
             base_url=config.get('ollama_url', 'http://sutazai-ollama:11434'),
             limits=limits,
             timeout=httpx.Timeout(
                 connect=5.0,
-                read=30.0,  # Reduced from 120s
-                write=10.0,
+                read=120.0,  # ULTRAFIX: Restored to 120s for reliable LLM operations
+                write=30.0,  # ULTRAFIX: Increased write timeout for large prompts
                 pool=5.0
             ),
             http2=False  # Disabled until h2 package is installed
@@ -475,6 +483,55 @@ class ConnectionPoolManager:
         """Reset all circuit breakers"""
         self._breaker_manager.reset_all()
         logger.info("All circuit breakers have been reset")
+    
+    def reset_error_counters(self):
+        """ULTRAFIX: Reset all error counters to prevent accumulation"""
+        old_errors = self._stats['connection_errors']
+        self._stats = {
+            'http_requests': self._stats['http_requests'],
+            'db_queries': self._stats['db_queries'],
+            'redis_operations': self._stats['redis_operations'],
+            'connection_errors': 0,  # ULTRAFIX: Reset to zero
+            'pool_exhaustion': 0,    # ULTRAFIX: Reset to zero
+            'circuit_breaker_trips': 0  # ULTRAFIX: Reset to zero
+        }
+        logger.info(f"ULTRAFIX: Reset error counters (was {old_errors} connection errors)")
+        
+    async def recover_connections(self):
+        """ULTRAFIX: Attempt to recover all connections by recreating pools"""
+        try:
+            logger.info("ULTRAFIX: Attempting connection recovery...")
+            
+            # Close and recreate HTTP clients
+            for service_name, client in self._http_clients.items():
+                try:
+                    await client.aclose()
+                    logger.info(f"Closed HTTP client for {service_name}")
+                except Exception as e:
+                    logger.warning(f"Error closing HTTP client {service_name}: {e}")
+            
+            # Reinitialize HTTP clients with current config
+            config = {
+                'ollama_url': 'http://sutazai-ollama:11434',
+                'redis_host': 'sutazai-redis',
+                'redis_port': 6379,
+                'db_host': 'sutazai-postgres',
+                'db_port': 5432
+            }
+            self._initialize_http_clients(config)
+            
+            # Reset circuit breakers
+            self.reset_all_circuit_breakers()
+            
+            # Reset error counters
+            self.reset_error_counters()
+            
+            logger.info("ULTRAFIX: Connection recovery completed successfully")
+            return True
+            
+        except Exception as e:
+            logger.error(f"ULTRAFIX: Connection recovery failed: {e}")
+            return False
         
     async def close(self):
         """Close all connection pools"""

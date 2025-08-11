@@ -505,7 +505,7 @@
 │ │ ```yaml                                                                       │ │
 │ │ Operating System & Docker: 2GB                                                │ │
 │ │   - Base OS: 1GB                                                              │ │
-│ │   - Docker daemon: 1GB                                                        │ │
+│ │   - Docker service: 1GB                                                        │ │
 │ │                                                                               │ │
 │ │ Ollama Models: 10GB                                                           │ │
 │ │   - TinyLlama: 0.6GB (always loaded)                                          │ │
@@ -1961,7 +1961,7 @@
 │ │                                                                               │ │
 │ │         # Generate response                                                   │ │
 │ │         prompt = f"Context: {context}\n\nQuestion: {question}\n\nAnswer:"     │ │
-│ │         response = self.llm.invoke(prompt)                                    │ │
+│ │         response = self.llm.call(prompt)                                    │ │
 │ │                                                                               │ │
 │ │         return response                                                       │ │
 │ │ ```                                                                           │ │
@@ -2606,7 +2606,7 @@
 │ │ ✅ **Scalable**: Multi-agent systems work with proper configuration            │ │
 │ │ ✅ **Measurable**: 100-200 requests/minute is achievable                       │ │
 │ │                                                                               │ │
-│ │ **This is what you can ACTUALLY build, not fantasy.**                         │ │
+│ │ **This is what you can ACTUALLY build, not conceptual.**                         │ │
 │ │                                                                               │ │
 │ │ ---                                                                           │ │
 │ │                                                                               │ │

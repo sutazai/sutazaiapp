@@ -13,16 +13,16 @@ The scripts directory exhibits severe violations of codebase hygiene rules, with
 
 ## CRITICAL VIOLATIONS FOUND
 
-### Rule 1: No Fantasy Elements (PARTIAL VIOLATION - 85% Compliant)
+### Rule 1: No conceptual Elements (PARTIAL VIOLATION - 85% Compliant)
 - **Status**: YELLOW - Needs Improvement
 - **Findings**:
-  - Most scripts properly avoid fantasy terms
-  - Pre-commit hooks actively check for fantasy elements (good)
+  - Most scripts properly avoid conceptual terms
+  - Pre-commit hooks actively check for conceptual elements (good)
   - Some placeholder references found in utility scripts
-  - Check scripts themselves use fantasy terms for detection (acceptable)
+  - Check scripts themselves use conceptual terms for detection (acceptable)
 
 **Evidence**:
-- `/scripts/utils/check_banned_keywords.py` - Contains fantasy detection patterns (legitimate use)
+- `/scripts/utils/check_banned_keywords.py` - Contains conceptual detection patterns (legitimate use)
 - `/scripts/utils/otp_override.py:114` - Contains "placeholder" comment
 - `/scripts/onboarding/generate_kickoff_deck.py` - Uses "placeholders" (PowerPoint API term, acceptable)
 
@@ -97,8 +97,8 @@ Health/Monitor Scripts (86 instances):
 ```python
 #!/usr/bin/env python3
 """
-Purpose: Check for fantasy/placeholder code elements (Rule 1 enforcement)
-Usage: python check-fantasy-elements.py <file1> <file2> ...
+Purpose: Check for conceptual/placeholder code elements (Rule 1 enforcement)
+Usage: python check-conceptual-elements.py <file1> <file2> ...
 Requirements: Python 3.8+
 """
 ```
@@ -212,7 +212,7 @@ Requirements: Python 3.8+
 ```
 
 ### Rule 14: Correct AI Agent Usage (NOT APPLICABLE)
-- Scripts don't directly invoke AI agents
+- Scripts don't directly call AI agents
 
 ### Rule 15: Documentation Deduplication (VIOLATION - 60% Compliant)
 - **Status**: YELLOW
@@ -323,7 +323,7 @@ Requirements: Python 3.8+
 
 | Rule | Compliance | Status | Action Required |
 |------|------------|--------|----------------|
-| Rule 1 (No Fantasy) | 85% | YELLOW | Minor cleanup |
+| Rule 1 (No conceptual) | 85% | YELLOW | Minor cleanup |
 | Rule 2 (Don't Break) | 60% | RED | Critical review |
 | Rule 3 (Analyze) | 90% | GREEN | Maintain |
 | Rule 4 (Reuse) | 20% | RED | CRITICAL - Mass consolidation |

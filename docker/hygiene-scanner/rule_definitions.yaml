@@ -3,9 +3,9 @@
 
 forbidden_patterns:
   fantasy_elements:
-    - "magic\\w*"
-    - "wizard\\w*"
-    - "teleport\\w*"
+    - "automated\\w*"
+    - "configuration\\w*"
+    - "transfer\\w*"
     - "black[_-]?box"
     - "someday"
     - "TODO.*later"

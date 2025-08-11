@@ -1,183 +1,101 @@
 {
-  "timestamp": 1754170873.4782023,
+  "timestamp": 1754916947.9579377,
   "port_availability": {
     "5432": {
       "service": "PostgreSQL",
-      "status": "open",
-      "accessible": true,
-      "response_time_ms": 0.07,
-      "message": "PostgreSQL port 5432 is accessible"
+      "status": "closed",
+      "accessible": false,
+      "response_time_ms": null,
+      "message": "PostgreSQL port 5432 is not accessible"
     },
     "6379": {
       "service": "Redis",
-      "status": "open",
-      "accessible": true,
-      "response_time_ms": 0.04,
-      "message": "Redis port 6379 is accessible"
+      "status": "closed",
+      "accessible": false,
+      "response_time_ms": null,
+      "message": "Redis port 6379 is not accessible"
     },
     "7474": {
       "service": "Neo4j HTTP",
-      "status": "open",
-      "accessible": true,
-      "response_time_ms": 0.04,
-      "message": "Neo4j HTTP port 7474 is accessible"
+      "status": "closed",
+      "accessible": false,
+      "response_time_ms": null,
+      "message": "Neo4j HTTP port 7474 is not accessible"
     },
     "7687": {
       "service": "Neo4j Bolt",
-      "status": "open",
-      "accessible": true,
-      "response_time_ms": 0.06,
-      "message": "Neo4j Bolt port 7687 is accessible"
+      "status": "closed",
+      "accessible": false,
+      "response_time_ms": null,
+      "message": "Neo4j Bolt port 7687 is not accessible"
     },
     "8001": {
       "service": "ChromaDB",
-      "status": "open",
-      "accessible": true,
-      "response_time_ms": 0.03,
-      "message": "ChromaDB port 8001 is accessible"
+      "status": "closed",
+      "accessible": false,
+      "response_time_ms": null,
+      "message": "ChromaDB port 8001 is not accessible"
     }
   },
   "port_conflicts": [
     {
-      "port": 53,
-      "services": [
-        "tcp        0      0 10.255.255.254:53       0.0.0.0:*               LISTEN      -",
-        "tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      120/systemd-resolve"
-      ],
-      "severity": "high",
-      "message": "Port 53 has multiple listeners"
-    },
-    {
-      "port": 53,
-      "services": [
-        "tcp        0      0 10.255.255.254:53       0.0.0.0:*               LISTEN      -",
-        "tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      120/systemd-resolve"
-      ],
-      "severity": "high",
-      "message": "Port 53 has multiple listeners"
-    },
-    {
-      "port": 22,
-      "services": [
-        "tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1/init",
-        "tcp6       0      0 :::22                   :::*                    LISTEN      1/init"
-      ],
-      "severity": "high",
-      "message": "Port 22 has multiple listeners"
-    },
-    {
-      "port": 80,
-      "services": [
-        "tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      259/nginx: master p",
-        "tcp6       0      0 :::80                   :::*                    LISTEN      259/nginx: master p"
-      ],
-      "severity": "high",
-      "message": "Port 80 has multiple listeners"
-    },
-    {
-      "port": 7687,
-      "services": [
-        "tcp        0      0 0.0.0.0:7687            0.0.0.0:*               LISTEN      26103/docker-proxy",
-        "tcp6       0      0 :::7687                 :::*                    LISTEN      26111/docker-proxy"
-      ],
-      "severity": "high",
-      "message": "Port 7687 has multiple listeners"
-    },
-    {
-      "port": 8001,
-      "services": [
-        "tcp        0      0 0.0.0.0:8001            0.0.0.0:*               LISTEN      26766/docker-proxy",
-        "tcp6       0      0 :::8001                 :::*                    LISTEN      26773/docker-proxy"
-      ],
-      "severity": "high",
-      "message": "Port 8001 has multiple listeners"
-    },
-    {
-      "port": 7474,
-      "services": [
-        "tcp        0      0 0.0.0.0:7474            0.0.0.0:*               LISTEN      26088/docker-proxy",
-        "tcp6       0      0 :::7474                 :::*                    LISTEN      26094/docker-proxy"
-      ],
-      "severity": "high",
-      "message": "Port 7474 has multiple listeners"
-    },
-    {
-      "port": 6379,
-      "services": [
-        "tcp        0      0 0.0.0.0:6379            0.0.0.0:*               LISTEN      25597/docker-proxy",
-        "tcp6       0      0 :::6379                 :::*                    LISTEN      25604/docker-proxy"
-      ],
-      "severity": "high",
-      "message": "Port 6379 has multiple listeners"
-    },
-    {
-      "port": 5432,
-      "services": [
-        "tcp        0      0 0.0.0.0:5432            0.0.0.0:*               LISTEN      25147/docker-proxy",
-        "tcp6       0      0 :::5432                 :::*                    LISTEN      25153/docker-proxy"
-      ],
-      "severity": "high",
-      "message": "Port 5432 has multiple listeners"
+      "port": null,
+      "services": [],
+      "severity": "medium",
+      "message": "Could not check for port conflicts: [Errno 2] No such file or directory: 'netstat'"
     }
   ],
   "network_connectivity": {
     "postgres": {
-      "status": "accessible",
-      "response_time_ms": 0.15,
+      "status": "not_accessible",
+      "error": "Connection failed with code 111",
       "endpoint": "localhost:5432"
     },
     "redis": {
-      "status": "accessible",
-      "response_time_ms": 0.04,
+      "status": "not_accessible",
+      "error": "Connection failed with code 111",
       "endpoint": "localhost:6379"
     },
     "neo4j_http": {
-      "status": "accessible",
-      "status_code": 200,
-      "response_time_ms": 56.88,
-      "endpoint": "http://localhost:7474/"
+      "status": "error",
+      "error": "HTTPConnectionPool(host='localhost', port=7474): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f086b1a0110>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+      "endpoint": "localhost:7474"
     },
     "neo4j_bolt": {
-      "status": "accessible",
-      "response_time_ms": 0.13,
+      "status": "not_accessible",
+      "error": "Connection failed with code 111",
       "endpoint": "localhost:7687"
     },
     "chromadb": {
-      "status": "accessible",
-      "status_code": 200,
-      "response_time_ms": 4.65,
-      "endpoint": "http://localhost:8001/api/v1/heartbeat"
+      "status": "error",
+      "error": "HTTPConnectionPool(host='localhost', port=8001): Max retries exceeded with url: /api/v1/heartbeat (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f086b13ef60>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+      "endpoint": "localhost:8001"
     }
   },
   "docker_networking": {
     "networks": [
       {
-        "id": "cc1c15586df8",
+        "id": "b17a1413fe26",
         "name": "bridge",
         "driver": "bridge"
       },
       {
-        "id": "b8498846ae40",
+        "id": "02b0f9c2d3fc",
         "name": "host",
         "driver": "host"
       },
       {
-        "id": "01cb0f448ed3",
+        "id": "6799da15ef52",
         "name": "none",
         "driver": "null"
       },
       {
-        "id": "f95204fe7ab9",
+        "id": "321e2e63a581",
         "name": "sutazai-network",
-        "driver": "bridge"
-      },
-      {
-        "id": "c1a1646da97c",
-        "name": "sutazai_network",
         "driver": "bridge"
       }
     ],
-    "network_count": 5,
+    "network_count": 4,
     "container_connectivity": {
       "sutazai-postgres": {
         "ip": null,
@@ -201,5 +119,5 @@
       }
     }
   },
-  "overall_status": "warning"
+  "overall_status": "failed"
 }

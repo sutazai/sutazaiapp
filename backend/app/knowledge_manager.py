@@ -479,7 +479,6 @@ class KnowledgeManager:
                     if await result.single():
                         neo4j_status = "connected"
             except Exception as e:
-                # TODO: Review this exception handling
                 logger.error(f"Unexpected exception: {e}", exc_info=True)
                 neo4j_status = "error"
                 
@@ -498,4 +497,3 @@ class KnowledgeManager:
             
     async def get_knowledge_count(self) -> int:
         """Get total knowledge count"""
-        return len(self.knowledge_base) 

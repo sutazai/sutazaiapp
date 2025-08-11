@@ -1,0 +1,31 @@
+
+FROM python:3.11-slim
+
+# Master Python Agent Base Image
+# Consolidates 100+ Python-based service containers
+
+# Security: Run as non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# System dependencies
+RUN apt-get update && apt-get install -y     gcc     curl     && rm -rf /var/lib/apt/lists/*
+
+# Python environment
+RUN pip install --no-cache-dir     fastapi==0.104.1     uvicorn==0.24.0     pydantic==2.5.0     httpx==0.25.2     aioredis==2.0.1     psycopg2-binary==2.9.9     python-multipart==0.0.6     python-jose[cryptography]==3.3.0     bcrypt==4.1.2     prometheus-client==0.19.0
+
+# Health check utility
+RUN echo '#!/bin/bash
+echo "healthy"' > /usr/local/bin/health_check &&     chmod +x /usr/local/bin/health_check
+
+# Working directory
+WORKDIR /app
+
+# Switch to non-root user
+USER appuser
+
+# Default health check - FIXED TYPO
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD ["health_check"]
+
+# Default command
+CMD ["python", "app.py"]

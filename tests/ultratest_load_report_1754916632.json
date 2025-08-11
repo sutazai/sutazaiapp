@@ -1,0 +1,448 @@
+{
+  "test_summary": {
+    "total_duration_seconds": 7.87,
+    "total_requests": 116,
+    "total_successes": 100,
+    "total_failures": 16,
+    "success_rate_percent": 86.21,
+    "overall_avg_response_time": 0.22,
+    "throughput_requests_per_second": 14.75,
+    "concurrent_users": 120,
+    "endpoints_tested": 29
+  },
+  "service_health": {
+    "total_services": 29,
+    "healthy_services": 25,
+    "failed_services": 4,
+    "health_percentage": 86.2
+  },
+  "detailed_results": {
+    "Backend API Health": {
+      "success_count": 0,
+      "failure_count": 4,
+      "success_rate": 0.0,
+      "avg_response_time": 0.005,
+      "min_response_time": 0.005,
+      "max_response_time": 0.006,
+      "status_codes": {
+        "-1": 4
+      },
+      "error_count": 4,
+      "sample_errors": [
+        "Server disconnected",
+        "Server disconnected",
+        "Server disconnected"
+      ]
+    },
+    "Backend API Models": {
+      "success_count": 0,
+      "failure_count": 4,
+      "success_rate": 0.0,
+      "avg_response_time": 0.003,
+      "min_response_time": 0.003,
+      "max_response_time": 0.003,
+      "status_codes": {
+        "-1": 4
+      },
+      "error_count": 4,
+      "sample_errors": [
+        "Server disconnected",
+        "Server disconnected",
+        "Server disconnected"
+      ]
+    },
+    "Frontend UI": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.006,
+      "min_response_time": 0.005,
+      "max_response_time": 0.007,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Ollama API Tags": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.003,
+      "min_response_time": 0.003,
+      "max_response_time": 0.004,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Ollama Integration Health": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.08,
+      "min_response_time": 0.08,
+      "max_response_time": 0.081,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "AI Agent Orchestrator": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.006,
+      "min_response_time": 0.005,
+      "max_response_time": 0.007,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Hardware Resource Optimizer": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.004,
+      "min_response_time": 0.003,
+      "max_response_time": 0.004,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Jarvis Hardware Optimizer": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 5.424,
+      "min_response_time": 4.221,
+      "max_response_time": 6.619,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Resource Arbitration Agent": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.003,
+      "min_response_time": 0.003,
+      "max_response_time": 0.004,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Task Assignment Coordinator": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.003,
+      "min_response_time": 0.002,
+      "max_response_time": 0.004,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "PostgreSQL Port Check": {
+      "success_count": 0,
+      "failure_count": 4,
+      "success_rate": 0.0,
+      "avg_response_time": 0.015,
+      "min_response_time": 0.015,
+      "max_response_time": 0.015,
+      "status_codes": {
+        "-1": 4
+      },
+      "error_count": 4,
+      "sample_errors": [
+        "Server disconnected",
+        "Server disconnected",
+        "Server disconnected"
+      ]
+    },
+    "Redis Health via Backend": {
+      "success_count": 0,
+      "failure_count": 4,
+      "success_rate": 0.0,
+      "avg_response_time": 0.003,
+      "min_response_time": 0.003,
+      "max_response_time": 0.003,
+      "status_codes": {
+        "-1": 4
+      },
+      "error_count": 4,
+      "sample_errors": [
+        "[Errno 104] Connection reset by peer",
+        "[Errno 104] Connection reset by peer",
+        "[Errno 104] Connection reset by peer"
+      ]
+    },
+    "Neo4j Database": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.008,
+      "min_response_time": 0.008,
+      "max_response_time": 0.009,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Qdrant Vector DB": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.008,
+      "min_response_time": 0.008,
+      "max_response_time": 0.009,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "ChromaDB Heartbeat": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.009,
+      "min_response_time": 0.008,
+      "max_response_time": 0.009,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "FAISS Vector Service": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.009,
+      "min_response_time": 0.008,
+      "max_response_time": 0.009,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Prometheus Metrics": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.003,
+      "min_response_time": 0.003,
+      "max_response_time": 0.003,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Grafana Health": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.006,
+      "min_response_time": 0.002,
+      "max_response_time": 0.012,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Loki Logs": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.002,
+      "min_response_time": 0.002,
+      "max_response_time": 0.002,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "AlertManager": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.001,
+      "min_response_time": 0.001,
+      "max_response_time": 0.001,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Node Exporter": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.458,
+      "min_response_time": 0.254,
+      "max_response_time": 0.662,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Redis Exporter": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.027,
+      "min_response_time": 0.016,
+      "max_response_time": 0.039,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Postgres Exporter": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.224,
+      "min_response_time": 0.13,
+      "max_response_time": 0.257,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Blackbox Exporter": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.04,
+      "min_response_time": 0.039,
+      "max_response_time": 0.04,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Kong Gateway Health": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.004,
+      "min_response_time": 0.003,
+      "max_response_time": 0.004,
+      "status_codes": {
+        "404": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "RabbitMQ Management": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.014,
+      "min_response_time": 0.014,
+      "max_response_time": 0.015,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Qdrant Collections": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.003,
+      "min_response_time": 0.002,
+      "max_response_time": 0.003,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "ChromaDB Version": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.009,
+      "min_response_time": 0.008,
+      "max_response_time": 0.009,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    },
+    "Jaeger Health": {
+      "success_count": 4,
+      "failure_count": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.003,
+      "min_response_time": 0.003,
+      "max_response_time": 0.003,
+      "status_codes": {
+        "200": 4
+      },
+      "error_count": 0,
+      "sample_errors": []
+    }
+  },
+  "failed_services": [
+    "Backend API Health",
+    "Backend API Models",
+    "PostgreSQL Port Check",
+    "Redis Health via Backend"
+  ],
+  "healthy_services": [
+    "Frontend UI",
+    "Ollama API Tags",
+    "Ollama Integration Health",
+    "AI Agent Orchestrator",
+    "Hardware Resource Optimizer",
+    "Jarvis Hardware Optimizer",
+    "Resource Arbitration Agent",
+    "Task Assignment Coordinator",
+    "Neo4j Database",
+    "Qdrant Vector DB",
+    "ChromaDB Heartbeat",
+    "FAISS Vector Service",
+    "Prometheus Metrics",
+    "Grafana Health",
+    "Loki Logs",
+    "AlertManager",
+    "Node Exporter",
+    "Redis Exporter",
+    "Postgres Exporter",
+    "Blackbox Exporter",
+    "Kong Gateway Health",
+    "RabbitMQ Management",
+    "Qdrant Collections",
+    "ChromaDB Version",
+    "Jaeger Health"
+  ],
+  "performance_grade": "C (Needs Improvement)"
+}

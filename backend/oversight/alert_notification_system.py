@@ -889,7 +889,6 @@ class AlertNotificationSystem:
             logger.error(f"Error acknowledging alert {alert_id}: {e}")
             return False
     
-    async def resolve_alert(self, alert_id: str, resolved_by: str, resolution_note: str = "") -> bool:
         """Resolve an alert"""
         try:
             alert = self.active_alerts.get(alert_id)

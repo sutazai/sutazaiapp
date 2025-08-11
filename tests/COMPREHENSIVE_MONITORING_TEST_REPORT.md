@@ -143,7 +143,7 @@ The SutazAI monitoring system has been thoroughly tested and validated. The syst
 ## Error Handling Validation
 
 ### Tested Error Scenarios ✅
-- Docker daemon unavailable
+- Docker service unavailable
 - Network timeouts during health checks
 - Malformed configuration files
 - Missing agent registry

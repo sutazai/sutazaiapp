@@ -1,318 +1,36 @@
-version: '3.8'
-
-# Minimal SutazAI Configuration - 8 core services only
-# This replaces the 60-service monstrosity with a functional minimum
-
 networks:
   sutazai-network:
     external: true
+    name: sutazai-network
 
 services:
-  # ====================
-  # DATA LAYER (2 services)
-  # ====================
-  
-  postgres:
-    image: postgres:16-alpine
-    container_name: sutazai-postgres-minimal
+  kong:
+    image: kong:3.5
+    container_name: sutazai-kong-test
+    mem_limit: 512M
+    cpus: 0.5
+    mem_reservation: 128M
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-sutazai}
-      POSTGRES_USER: ${POSTGRES_USER:-sutazai}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    networks:
-      - sutazai-network
-    ports:
-      - "10000:5432"
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 256M
+      KONG_DATABASE: 'off'
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_LOG_LEVEL: notice
+      KONG_NGINX_WORKER_PROCESSES: '2'
+      KONG_NGINX_WORKER_CONNECTIONS: '1024'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sutazai}"]
-      interval: 10s
+      test:
+      - CMD-SHELL
+      - ps aux | grep '[k]ong' > /dev/null || exit 1
+      interval: 30s
       timeout: 5s
-      retries: 5
-      start_period: 30s
-    restart: unless-stopped
-
-  redis:
-    image: redis:7-alpine
-    container_name: sutazai-redis-minimal
-    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save ""
-    volumes:
-      - redis_data:/data
-    networks:
-      - sutazai-network
-    ports:
-      - "10001:6379"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-        reservations:
-          cpus: '0.1'
-          memory: 64M
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-  # ====================
-  # APPLICATION LAYER (2 services)
-  # ====================
-  
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: sutazai-backend-minimal
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
-    environment:
-      # Database
-      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: ${POSTGRES_DB:-sutazai}
-      POSTGRES_USER: ${POSTGRES_USER:-sutazai}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      
-      # Redis
-      REDIS_URL: redis://redis:6379/0
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      
-      # Ollama
-      OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_HOST: ollama
-      
-      # Application
-      API_V1_STR: /api/v1
-      SECRET_KEY: ${SECRET_KEY}
-      ENVIRONMENT: production
-      LOG_LEVEL: INFO
-      
-      # CORS
-      BACKEND_CORS_ORIGINS: '["http://localhost:3000", "http://localhost:8501"]'
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      ollama:
-        condition: service_started
-    networks:
-      - sutazai-network
-    ports:
-      - "10010:8000"
-    volumes:
-      - ./backend:/app
-      - ./data:/data
-      - ./logs:/logs
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 2G
-        reservations:
-          cpus: '0.5'
-          memory: 512M
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
       retries: 3
-      start_period: 60s
-    restart: unless-stopped
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: sutazai-frontend-minimal
-    command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
-    environment:
-      BACKEND_URL: http://backend:8000
-      STREAMLIT_SERVER_ADDRESS: 0.0.0.0
-      STREAMLIT_SERVER_PORT: 8501
-    depends_on:
-      backend:
-        condition: service_healthy
+      start_period: 10s
     networks:
-      - sutazai-network
+    - sutazai-network
     ports:
-      - "10011:8501"
-    volumes:
-      - ./frontend:/app
-      - ./data:/data:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    healthcheck:
-      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(5); exit(0 if s.connect_ex(('localhost', 8501))==0 else 1)"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+    - 10005:8000
+    - 10015:8001
     restart: unless-stopped
-
-  # ====================
-  # AI LAYER (1 service)
-  # ====================
-  
-  ollama:
-    image: ollama/ollama:latest
-    container_name: sutazai-ollama-minimal
-    environment:
-      OLLAMA_HOST: 0.0.0.0
-      OLLAMA_ORIGINS: '*'
-      OLLAMA_NUM_PARALLEL: 2
-      OLLAMA_NUM_THREADS: 4
-      OLLAMA_MAX_LOADED_MODELS: 1
-      OLLAMA_KEEP_ALIVE: 5m
-      OLLAMA_DEBUG: false
     volumes:
-      - ollama_data:/root/.ollama
-      - ./models:/models
-    networks:
-      - sutazai-network
-    ports:
-      - "10104:11434"
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 4G
-        reservations:
-          cpus: '0.5'
-          memory: 1G
-    healthcheck:
-      test: ["CMD-SHELL", "ollama list > /dev/null || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    restart: unless-stopped
-
-  # ====================
-  # VECTOR STORE (1 service)
-  # ====================
-  
-  qdrant:
-    image: qdrant/qdrant:v1.9.2
-    container_name: sutazai-qdrant-minimal
-    environment:
-      QDRANT__SERVICE__HTTP_PORT: 6333
-      QDRANT__SERVICE__GRPC_PORT: 6334
-      QDRANT__LOG_LEVEL: INFO
-    volumes:
-      - qdrant_data:/qdrant/storage
-    networks:
-      - sutazai-network
-    ports:
-      - "10101:6333"
-      - "10102:6334"
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://localhost:6333/healthz || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
-
-  # ====================
-  # MONITORING (2 services)
-  # ====================
-  
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: sutazai-prometheus-minimal
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=7d'
-      - '--storage.tsdb.retention.size=1GB'
-      - '--web.enable-lifecycle'
-    volumes:
-      - ./monitoring/prometheus/prometheus.minimal.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
-    networks:
-      - sutazai-network
-    ports:
-      - "10200:9090"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.1'
-          memory: 128M
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: sutazai-grafana-minimal
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
-      GF_USERS_ALLOW_SIGN_UP: false
-      GF_ANALYTICS_REPORTING_ENABLED: false
-      GF_ANALYTICS_CHECK_FOR_UPDATES: false
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
-    networks:
-      - sutazai-network
-    ports:
-      - "10201:3000"
-    depends_on:
-      - prometheus
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.1'
-          memory: 128M
-    healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://localhost:3000/api/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    restart: unless-stopped
-
-volumes:
-  postgres_data:
-  redis_data:
-  ollama_data:
-  qdrant_data:
-  prometheus_data:
-  grafana_data:
+    - ./config/kong/kong.yml:/etc/kong/kong.yml:ro

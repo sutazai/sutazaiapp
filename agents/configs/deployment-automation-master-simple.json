@@ -2,10 +2,10 @@
   "name": "deployment-automation-master",
   "role": "Deployment Specialist",
   "capabilities": [
-    "automated_deployment",
+    "docker_deployment",
     "ci_cd_pipeline_management",
     "container_orchestration",
-    "infrastructure_automation",
+    "infrastructure_scripting",
     "release_management"
   ],
   "ollama_endpoint": "http://ollama:11435",
@@ -13,5 +13,5 @@
   "max_tokens": 2048,
   "priority": "high",
   "agent_type": "deployment_specialist",
-  "description": "Deployment automation specialist for managing CI/CD pipelines and automated deployments"
+  "description": "Deployment specialist for managing CI/CD pipelines and Docker deployments"
 }

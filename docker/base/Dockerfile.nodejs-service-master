@@ -1,0 +1,30 @@
+
+FROM node:18-slim
+
+# Master NodeJS Service Base Image
+# Consolidates all NodeJS-based services
+
+# Security: Run as non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# System dependencies
+RUN apt-get update && apt-get install -y     curl     && rm -rf /var/lib/apt/lists/*
+
+# Global packages
+RUN npm install -g pm2
+
+# Health check utility
+RUN echo '#!/bin/bash
+echo "healthy"' > /usr/local/bin/health_check &&     chmod +x /usr/local/bin/health_check
+
+# Working directory
+WORKDIR /app
+
+# Switch to non-root user
+USER appuser
+
+# Default health check
+HEALTHCHEK --interval=30s --timeout=10s --start-period=5s --retries=3     CMD ["health_check"]
+
+# Default command
+CMD ["npm", "start"]

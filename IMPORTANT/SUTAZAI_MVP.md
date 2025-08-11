@@ -1098,7 +1098,7 @@ volumes:
                     </div>
                     <div class="bg-white p-4 rounded-lg border">
                       <div class="flex items-center mb-2">
-                        <i class="fas fa-magic text-green-500 mr-2"></i>
+                        <i class="fas fa-automated text-green-500 mr-2"></i>
                         <span class="font-medium">Boilerplate Automation</span>
                       </div>
                       <p class="text-gray-600 text-sm">Automate generation of common boilerplate code</p>

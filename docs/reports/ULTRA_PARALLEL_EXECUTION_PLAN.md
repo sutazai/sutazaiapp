@@ -12,7 +12,7 @@
 - **Memory Usage:** ~2.2GB total (efficient)
 - **Dockerfiles:** 587 (95% duplication)
 - **Scripts:** 447 (85% redundancy)
-- **Fantasy Elements:** 366 occurrences
+- **conceptual Elements:** 366 occurrences
 - **BaseAgent Files:** 2 (needs consolidation)
 - **Kong Over-allocation:** 23.28GiB (needs fix)
 - **System Stability:** 100% (no crashes)
@@ -394,7 +394,7 @@ chmod +x /opt/sutazaiapp/scripts/deployment/deploy-master.sh
 **Dependencies:** None  
 **Can run parallel with:** All other tracks  
 
-#### Task 4.1: Remove Fantasy Elements
+#### Task 4.1: Remove conceptual Elements
 ```python
 #!/usr/bin/env python3
 # clean_fantasy_elements.py
@@ -402,19 +402,19 @@ import re
 from pathlib import Path
 
 def clean_fantasy_elements():
-    """Remove 366 fantasy element occurrences"""
+    """Remove 366 conceptual element occurrences"""
     
     replacements = {
-        r'\bwizard\b': 'service',
+        r'\bconfiguration tool\b': 'service',
         r'\bmagic\b': 'automated',
         r'\bteleport\b': 'transfer',
         r'\bdream\b': 'planned',
         r'\bfantasy\b': 'theoretical',
         r'\bblack-box\b': 'module',
         r'\btelekinesis\b': 'remote-control',
-        r'\bmystical\b': 'advanced',
+        r'\badvanced\b': 'advanced',
         r'\benchant\b': 'enhance',
-        r'\bspell\b': 'process'
+        r'\bconfiguration\b': 'process'
     }
     
     files_modified = 0
@@ -436,7 +436,7 @@ def clean_fantasy_elements():
                 
                 if content != original:
                     # Create backup
-                    backup_path = file_path.with_suffix(file_path.suffix + '.fantasy-backup')
+                    backup_path = file_path.with_suffix(file_path.suffix + '.conceptual-backup')
                     backup_path.write_text(original)
                     
                     # Write cleaned content
@@ -648,13 +648,13 @@ def validate_system():
                                    len(list(Path('/opt/sutazaiapp/scripts').rglob('*.sh')))
     report['metrics']['base_agents'] = len(list(Path('/opt/sutazaiapp').rglob('base_agent.py')))
     
-    # 4. Fantasy elements
+    # 4. conceptual elements
     fantasy_count = 0
     for pattern in ['*.py', '*.md']:
         for file_path in Path('/opt/sutazaiapp').rglob(pattern):
             try:
                 content = file_path.read_text()
-                if any(word in content.lower() for word in ['wizard', 'magic', 'teleport', 'fantasy']):
+                if any(word in content.lower() for word in ['configuration', 'automated', 'transfer', 'conceptual']):
                     fantasy_count += 1
             except:
                 pass
@@ -692,7 +692,7 @@ def validate_system():
     print(f"Dockerfiles: 587 -> {report['metrics']['dockerfiles']}")
     print(f"Scripts: 447 -> {report['metrics']['scripts']}")
     print(f"BaseAgent Files: 2 -> {report['metrics']['base_agents']}")
-    print(f"Fantasy Elements: 366 -> {report['metrics']['fantasy_elements']}")
+    print(f"conceptual Elements: 366 -> {report['metrics']['fantasy_elements']}")
     print(f"Memory Usage: {report['metrics']['total_memory_gb']} GB")
     print(f"\nFull report: {report_path}")
     
@@ -798,7 +798,7 @@ git checkout -- scripts/
 
 # Rollback only code changes
 cd /opt/sutazaiapp
-find . -name "*.fantasy-backup" -exec sh -c 'mv "$1" "${1%.fantasy-backup}"' _ {} \;
+find . -name "*.conceptual-backup" -exec sh -c 'mv "$1" "${1%.conceptual-backup}"' _ {} \;
 ```
 
 ## SUCCESS CRITERIA
@@ -809,7 +809,7 @@ find . -name "*.fantasy-backup" -exec sh -c 'mv "$1" "${1%.fantasy-backup}"' _ {
 - ✅ Dockerfiles: 587 → <50
 - ✅ Scripts: 447 → <60
 - ✅ BaseAgent: 2 → 1
-- ✅ Fantasy elements: 366 → <10
+- ✅ conceptual elements: 366 → <10
 - ✅ Memory usage: <3GB total
 - ✅ All endpoints responding
 

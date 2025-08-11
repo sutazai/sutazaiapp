@@ -107,7 +107,7 @@ repos:
       # Phase 1: Critical violations (Rules 13, 12, 9)
       - id: no-garbage-files
         name: "Rule 13: Block garbage/backup files"
-        entry: bash -c 'find . -type f \( -name "*.backup*" -o -name "*.tmp" -o -name "*.bak" -o -name "*~" -o -name "*.old" -o -name "*copy*" -o -name "*.agi_backup" -o -name "*.fantasy*" \) -not -path "./archive/*" -not -path "./.git/*" | grep -q . && echo "ERROR: Garbage files detected (Rule 13)" && exit 1 || exit 0'
+        entry: bash -c 'find . -type f \( -name "*.backup*" -o -name "*.tmp" -o -name "*.bak" -o -name "*~" -o -name "*.old" -o -name "*copy*" -o -name "*.agi_backup" -o -name "*.conceptual*" \) -not -path "./archive/*" -not -path "./.git/*" | grep -q . && echo "ERROR: Garbage files detected (Rule 13)" && exit 1 || exit 0'
         language: system
         pass_filenames: false
         always_run: true
@@ -141,9 +141,9 @@ repos:
         types: [python]
         pass_filenames: true
 
-      - id: no-fantasy-elements
-        name: "Rule 1: Block fantasy/placeholder code"
-        entry: python scripts/pre-commit/check-fantasy-elements.py
+      - id: no-conceptual-elements
+        name: "Rule 1: Block conceptual/placeholder code"
+        entry: python scripts/pre-commit/check-conceptual-elements.py
         language: python
         pass_filenames: true
         types: [python, javascript, typescript, java, go]

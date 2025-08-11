@@ -1,60 +1,16 @@
-# SutazAI Python Agent ULTRA-CONSOLIDATED Base Requirements
-# Comprehensive packages used across 400+ Python agent Dockerfiles
-# Author: System Reorganization Expert - ULTRA Deduplication Operation
-# Date: August 10, 2025 - CRITICAL FIX: Updated for Python 3.12.8 compatibility
-# Purpose: Single requirements file eliminating 80% of duplicate dependencies
-# ULTRAFIX: Resolved version conflicts blocking 172 service migrations
-
-# ========== CORE WEB FRAMEWORKS (found in 95% of agent Dockerfiles) ==========
-fastapi>=0.104.1,<1.0.0
-uvicorn[standard]==0.32.0
-flask==3.0.3
-pydantic>=2.5.1,<3.0.0
-httpx>=0.27.0,<0.28.0
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
 requests==2.31.0
-
-# ========== AI/ML INTEGRATION (found in 85% of agent Dockerfiles) ==========
-ollama==0.4.4
-openai==1.58.1
-anthropic==0.41.0
-langchain==0.3.11
-transformers>=4.36.0
-torch>=2.2.0
-numpy==1.26.4
-pandas>=2.0.3
-
-# ========== DATABASE AND STORAGE (found in 80% of agent Dockerfiles) ==========
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+httpx==0.25.2
+asyncio-mqtt==0.16.1
 redis==5.0.1
-neo4j==5.14.1
-qdrant-client==1.6.9
-chromadb==0.4.18
+psycopg2-binary==2.9.9
 sqlalchemy==2.0.23
-asyncpg==0.29.0
-
-# ========== MESSAGING AND QUEUE (found in 70% of agent Dockerfiles) ==========
-pika==1.3.2
-celery==5.3.4
-aio-pika==9.3.1
-
-# ========== MONITORING AND LOGGING (found in 90% of agent Dockerfiles) ==========
+alembic==1.13.0
 prometheus-client==0.19.0
 structlog==23.2.0
-loguru==0.7.2
-
-# ========== CORE UTILITIES (found in 100% of agent Dockerfiles) ==========
-python-dotenv==1.0.0
-click==8.1.7
-typing-extensions>=4.12.2
-pyyaml==6.0.1
-aiofiles==23.2.1
-
-# ========== HEALTH AND TESTING (found in 95% of agent Dockerfiles) ==========
-pytest==7.4.3
-pytest-asyncio==0.21.1
-
-# ========== ASYNC AND CONCURRENCY (found in 75% of agent Dockerfiles) ==========
-aiohttp==3.9.1
-websockets==12.0
-
-# ========== SYSTEM INTEGRATION (found in 40% of agent Dockerfiles) ==========
-psutil==5.9.6

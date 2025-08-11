@@ -2455,7 +2455,7 @@
           "potentially_covered": 9,
           "coverage": 11.25
         },
-        "scripts/pre-commit/check-fantasy-elements.py": {
+        "scripts/pre-commit/check-conceptual-elements.py": {
           "total_lines": 102,
           "executable_lines": 43,
           "potentially_covered": 4,

@@ -1,0 +1,18 @@
+{
+  "name": "genetic-algorithm-tuner",
+  "description": "Agent for ai-ml operations",
+  "model": "ollama",
+  "base_model": "tinyllama",
+  "port": 9214,
+  "capabilities": [
+    "code_generation",
+    "analysis",
+    "optimization"
+  ],
+  "memory_limit": "1G",
+  "cpu_limit": "1.0",
+  "environment": {
+    "PYTHONUNBUFFERED": "1",
+    "AGENT_TYPE": "ai-ml"
+  }
+}

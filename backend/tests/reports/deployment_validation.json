@@ -1,80 +1,150 @@
 {
-  "timestamp": "2025-08-02T23:43:42.994579",
+  "timestamp": "2025-08-11T14:57:40.206121",
   "deployment_status": {
     "docker_available": true,
-    "running_containers": [],
+    "running_containers": [
+      "sutazai-redis-exporter",
+      "sutazai-redis",
+      "sutazai-chromadb",
+      "sutazai-neo4j",
+      "sutazai-postgres-exporter",
+      "sutazai-postgres"
+    ],
     "stopped_containers": [],
-    "total_containers": 0,
+    "total_containers": 6,
     "expected_containers": 4,
     "all_containers_running": false,
-    "compose_file_exists": true,
-    "compose_status": "accessible"
+    "error": "[Errno 2] No such file or directory: 'docker-compose'"
   },
   "container_health": {
     "sutazai-postgres": {
-      "status": "not_found",
-      "health": "not_found",
-      "accessible": false,
-      "error": "Error: No such object: sutazai-postgres"
+      "status": "running",
+      "health": "healthy",
+      "started_at": "2025-08-10T11:34:35.681363572Z",
+      "restart_count": 0,
+      "cpu_usage": "0.00%",
+      "memory_usage": "62.35MiB / 512MiB",
+      "network_io": "16.9MB / 71.9MB",
+      "block_io": "47.3MB / 43.2MB",
+      "accessible": true
     },
     "sutazai-redis": {
-      "status": "not_found",
-      "health": "not_found",
-      "accessible": false,
-      "error": "Error: No such object: sutazai-redis"
+      "status": "running",
+      "health": "healthy",
+      "started_at": "2025-08-11T12:24:15.216310247Z",
+      "restart_count": 0,
+      "cpu_usage": "0.59%",
+      "memory_usage": "4.719MiB / 1GiB",
+      "network_io": "876kB / 2.96MB",
+      "block_io": "504kB / 24.6kB",
+      "accessible": true
     },
     "sutazai-neo4j": {
-      "status": "not_found",
-      "health": "not_found",
-      "accessible": false,
-      "error": "Error: No such object: sutazai-neo4j"
+      "status": "running",
+      "health": "healthy",
+      "started_at": "2025-08-10T22:02:58.547856048Z",
+      "restart_count": 0,
+      "cpu_usage": "0.62%",
+      "memory_usage": "505.2MiB / 1GiB",
+      "network_io": "594kB / 325kB",
+      "block_io": "77.9MB / 18.2MB",
+      "accessible": true
     },
     "sutazai-chromadb": {
-      "status": "not_found",
-      "health": "not_found",
-      "accessible": false,
-      "error": "Error: No such object: sutazai-chromadb"
+      "status": "running",
+      "health": "healthy",
+      "started_at": "2025-08-11T00:43:19.748031238Z",
+      "restart_count": 0,
+      "cpu_usage": "0.21%",
+      "memory_usage": "86.11MiB / 1GiB",
+      "network_io": "1.8MB / 1.29MB",
+      "block_io": "47MB / 6.93MB",
+      "accessible": true
     }
   },
   "log_analysis": {
     "sutazai-postgres": {
-      "status": "error",
-      "error": "Error response from daemon: No such container: sutazai-postgres",
-      "log_lines": 0
+      "status": "unknown",
+      "total_lines": 1,
+      "error_count": 0,
+      "warning_count": 0,
+      "info_count": 0,
+      "recent_errors": [],
+      "recent_warnings": [],
+      "startup_events": [],
+      "last_log_time": "unknown"
     },
     "sutazai-redis": {
-      "status": "error",
-      "error": "Error response from daemon: No such container: sutazai-redis",
-      "log_lines": 0
+      "status": "healthy",
+      "total_lines": 45,
+      "error_count": 0,
+      "warning_count": 1,
+      "info_count": 0,
+      "recent_errors": [],
+      "recent_warnings": [
+        "2025-08-11T12:24:15.536804361Z 1:C 11 Aug 2025 12:24:15.536 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect."
+      ],
+      "startup_events": [
+        "2025-08-11T12:34:17.005403883Z 1:M 11 Aug 2025 12:34:17.005 * Background saving started by pid 344",
+        "2025-08-11T12:39:18.006438253Z 1:M 11 Aug 2025 12:39:18.005 * Background saving started by pid 506",
+        "2025-08-11T12:44:19.011330282Z 1:M 11 Aug 2025 12:44:19.011 * Background saving started by pid 682",
+        "2025-08-11T12:49:20.016455201Z 1:M 11 Aug 2025 12:49:20.016 * Background saving started by pid 856",
+        "2025-08-11T12:54:21.004440976Z 1:M 11 Aug 2025 12:54:21.004 * Background saving started by pid 1020"
+      ],
+      "last_log_time": "2025-08-11T12:55:59.763190742Z"
     },
     "sutazai-neo4j": {
-      "status": "error",
-      "error": "Error response from daemon: No such container: sutazai-neo4j",
-      "log_lines": 0
+      "status": "errors_present",
+      "total_lines": 21,
+      "error_count": 1,
+      "warning_count": 8,
+      "info_count": 11,
+      "recent_errors": [
+        "2025-08-10T22:07:52.655066005Z 2025-08-10 22:07:52.654+0000 WARN  Failed authentication attempt for 'neo4j' from 172.18.0.1"
+      ],
+      "recent_warnings": [
+        "2025-08-10T22:03:03.321234993Z 2025-08-10 22:03:03.320+0000 WARN  Unrecognized setting. No declared setting with name: dbms.cluster.discovery.type.",
+        "2025-08-10T22:03:03.321250463Z 2025-08-10 22:03:03.321+0000 WARN  Unrecognized setting. No declared setting with name: db.transaction.bookmark.ready.timeout.",
+        "2025-08-11T09:17:49.388986754Z 2025-08-11 09:17:49.383+0000 WARN  [bolt-2042] The client is unauthorized due to authentication failure.",
+        "2025-08-11T09:17:54.280072080Z 2025-08-11 09:17:54.279+0000 WARN  [bolt-2043] The client is unauthorized due to authentication failure.",
+        "2025-08-11T10:46:22.816568093Z 2025-08-11 10:46:22.811+0000 WARN  [bolt-2288] The client is unauthorized due to authentication failure."
+      ],
+      "startup_events": [
+        "2025-08-10T22:03:01.039721206Z Changed password for user 'neo4j'. IMPORTANT: this change will only take effect if performed before the database is started for the first time.",
+        "2025-08-10T22:03:03.321250463Z 2025-08-10 22:03:03.321+0000 WARN  Unrecognized setting. No declared setting with name: db.transaction.bookmark.ready.timeout.",
+        "2025-08-10T22:03:07.625025731Z 2025-08-10 22:03:07.624+0000 INFO  Started."
+      ],
+      "last_log_time": "2025-08-11T12:57:34.100120932Z"
     },
     "sutazai-chromadb": {
-      "status": "error",
-      "error": "Error response from daemon: No such container: sutazai-chromadb",
-      "log_lines": 0
+      "status": "unknown",
+      "total_lines": 50,
+      "error_count": 0,
+      "warning_count": 0,
+      "info_count": 50,
+      "recent_errors": [],
+      "recent_warnings": [],
+      "startup_events": [],
+      "last_log_time": "2025-08-11T12:57:43.596021712Z"
     }
   },
   "resource_usage": {
     "memory": {
-      "total_bytes": 31542411264,
-      "used_bytes": 3795529728,
-      "available_bytes": 27746881536,
-      "usage_percent": 12.03
+      "total_bytes": 24999272448,
+      "used_bytes": 8927969280,
+      "available_bytes": 16071303168,
+      "usage_percent": 35.71
     },
     "cpu": {
-      "load_1min": 0.32,
-      "load_5min": 0.52,
-      "load_15min": 0.49
+      "load_1min": 6.33,
+      "load_5min": 6.01,
+      "load_15min": 5.2
     },
     "disk": {
       "total_kb": 1055762868,
-      "used_kb": 145676476,
-      "available_kb": 856382920,
-      "usage_percent": 15
+      "used_kb": 70022972,
+      "available_kb": 932036424,
+      "usage_percent": 7
     }
   },
   "overall_status": "failed"

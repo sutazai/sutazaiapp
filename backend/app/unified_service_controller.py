@@ -544,7 +544,6 @@ class UnifiedServiceController:
                 status = container.status
                 health = await self.check_service_health(service_name) if status == "running" else "n/a"
             except Exception as e:
-                # TODO: Review this exception handling
                 logger.error(f"Unexpected exception: {e}", exc_info=True)
                 status = "not_found"
                 health = "n/a"
@@ -574,7 +573,6 @@ class UnifiedServiceController:
                     status = container.status
                     health = await self.check_service_health(service_name) if status == "running" else "n/a"
                 except Exception as e:
-                    # TODO: Review this exception handling
                     logger.error(f"Unexpected exception: {e}", exc_info=True)
                     status = "not_found"
                     health = "n/a"
@@ -631,7 +629,6 @@ class UnifiedServiceController:
                         "message": f"{db} is not running"
                     })
             except Exception as e:
-                # TODO: Review this exception handling
                 logger.error(f"Unexpected exception: {e}", exc_info=True)
                 backup_results.append({
                     "database": db,
@@ -706,4 +703,3 @@ def get_unified_controller() -> UnifiedServiceController:
     global _controller
     if _controller is None:
         _controller = UnifiedServiceController()
-    return _controller

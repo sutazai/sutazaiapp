@@ -104,7 +104,7 @@ curl http://127.0.0.1:10104/api/tags
 These directories were removed during cleanup:
 - `/archive/` - Multiple backup directories
 - Root-level analysis scripts (`*_test.py`, `*_audit.py`)
-- Fantasy documentation files
+- conceptual documentation files
 - Duplicate agent directories
 - Non-functional service configurations
 
@@ -389,7 +389,7 @@ python -m pytest tests/health/test_my_service.py -v
 ✅ **Test framework** - Test structure and utilities  
 
 ### What Was Removed  
-❌ **Fantasy documentation** - Quantum computing, AGI/ASI claims  
+❌ **conceptual documentation** - Quantum computing, AGI/ASI claims  
 ❌ **Duplicate code** - Multiple BaseAgent implementations  
 ❌ **Analysis scripts** - Temporary root-level scripts  
 ❌ **Empty directories** - Non-functional agent services  
@@ -430,7 +430,7 @@ docker-compose logs -f my-service
 - Update this guide when adding major features
 - Document API endpoints with examples
 - Keep comments honest and reality-based
-- No fantasy features or capabilities
+- No conceptual features or capabilities
 
 ## Common Development Tasks
 

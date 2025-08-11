@@ -31,7 +31,7 @@ graph TD
     %% Phase 4: Code Quality
     P2_Complete --> P4_Start[Phase 4 Start]
     P1_Complete --> P4_Start
-    P4_Start --> P4_Fantasy[Remove Fantasy]
+    P4_Start --> P4_Fantasy[Remove conceptual]
     P4_Fantasy --> P4_Imports[Clean Imports]
     P4_Imports --> P4_Lint[Linting]
     P4_Lint --> P4_Tests[Testing]
@@ -121,7 +121,7 @@ graph TD
 | **R012** | Git merge conflicts from parallel work | HIGH | LOW | Frequent rebasing, clear file ownership | All Agents |
 | **R013** | Monitoring overhead affects performance | LOW | MEDIUM | Sampling strategies, async collection | Agent 151-170 |
 | **R014** | Test coverage goals delay deployment | MEDIUM | LOW | Prioritize critical path testing | Agent 116-125 |
-| **R015** | Fantasy removal breaks existing features | LOW | MEDIUM | Careful analysis before removal | Agent 76-85 |
+| **R015** | conceptual removal breaks existing features | LOW | MEDIUM | Careful analysis before removal | Agent 76-85 |
 
 ## ROLLBACK DECISION TREE
 

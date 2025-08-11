@@ -132,7 +132,6 @@ async def jarvis_health():
                 response = await client.get("http://ollama:11434/api/tags")
                 ollama_available = response.status_code == 200
         except (ValueError, TypeError, KeyError, AttributeError) as e:
-            # TODO: Review this exception handling
             logger.error(f"Unexpected exception: {e}", exc_info=True)
             try:
                 async with httpx.AsyncClient(timeout=5.0) as client:
@@ -409,4 +408,3 @@ async def jarvis_system_status(current_user: Dict = Depends(get_current_user_bas
         
     except Exception as e:
         logger.error(f"JARVIS status check failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Status check failed: {str(e)}")

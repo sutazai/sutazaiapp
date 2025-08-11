@@ -39,7 +39,7 @@ The SutazAI infrastructure demonstrates professional-grade container orchestrati
 **SECURITY IMPLICATIONS:**
 
 1. **Docker Socket Mount (`/var/run/docker.sock`)**: 
-   - Grants **full Docker daemon access** to containers
+   - Grants **full Docker service access** to containers
    - Equivalent to **root access on host system**
    - Can start/stop/modify ANY container
    - **Container escape vulnerability**
@@ -245,7 +245,7 @@ docker exec sutazai-redis redis-cli ping
 1. **Infrastructure Monitoring**: 
    - System metrics via Node Exporter
    - Container metrics via cAdvisor  
-   - Network monitoring via Blackbox Exporter
+   - Network monitoring via encapsulated Exporter
 
 2. **Application Monitoring**:
    - Backend API health and performance

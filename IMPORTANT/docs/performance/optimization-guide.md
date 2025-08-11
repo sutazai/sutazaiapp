@@ -1993,7 +1993,7 @@ class StreamlitWebSocket:
         )
         
         # Run in background thread
-        Thread(target=self.ws.run_forever, daemon=True).start()
+        Thread(target=self.ws.run_forever, service=True).start()
         
     def on_message(self, ws, message):
         """Handle incoming messages"""

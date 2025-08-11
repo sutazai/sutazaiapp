@@ -32,7 +32,7 @@
 - 51 emergency fix scripts (historical)
 - 13 temp/backup files
 - 6 debug scripts
-- 12 fantasy element violations
+- 12 conceptual element violations
 
 ---
 

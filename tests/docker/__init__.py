@@ -1,1 +1,0 @@
-# Docker container tests package

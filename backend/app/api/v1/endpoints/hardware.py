@@ -362,7 +362,6 @@ class HardwareServiceClient:
                         error_body = e.response.json()
                         error_detail += f" - {error_body.get('detail', e.response.text)}"
                     except (ValueError, TypeError, KeyError, AttributeError) as e:
-                        # TODO: Review this exception handling
                         logger.error(f"Unexpected exception: {e}", exc_info=True)
                         error_detail += f" - {e.response.text}"
                     
@@ -1077,7 +1076,6 @@ async def get_hardware_alerts(
 @router.post("/alerts/{alert_id}/acknowledge", summary="Acknowledge Hardware Alert")
 async def acknowledge_alert(
     alert_id: str = Path(..., description="Alert ID to acknowledge"),
-    note: Optional[str] = Query(None, description="Optional acknowledgment note"),
     current_user = Depends(get_current_user)
 ):
     """
@@ -1085,7 +1083,6 @@ async def acknowledge_alert(
     
     Acknowledgment includes:
     - User identification and timestamp
-    - Optional note for documentation
     - Audit trail entry
     - Notification to monitoring systems
     
@@ -1097,7 +1094,6 @@ async def acknowledge_alert(
         ack_data = {
             "acknowledged_by": getattr(current_user, 'id', 'unknown'),
             "acknowledged_at": datetime.utcnow().isoformat(),
-            "acknowledgment_note": note,
             "source": "api_request"
         }
         
@@ -1213,7 +1209,6 @@ async def run_system_benchmark(
     - Optimization recommendations based on results
     - Historical trend analysis
     
-    ⚠️ Note: Benchmarking may temporarily impact system performance.
     Schedule during maintenance windows for production systems.
     """
     client = await get_hardware_client()
@@ -1558,7 +1553,6 @@ async def track_benchmark_progress(task_id: str, benchmark_type: str, user_id: s
         logger.error(f"Error in benchmark progress tracking: {e}")
 
 # Error Handlers with comprehensive error mapping
-# Note: Exception handlers need to be registered at the FastAPI app level, not router level
 
 # Health check for router itself
 @router.get("/router/health", summary="Hardware Router Health Check")
@@ -1605,4 +1599,3 @@ async def router_health_check():
                 "timestamp": datetime.utcnow().isoformat(),
                 "error": str(e)
             }
-        )

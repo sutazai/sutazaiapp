@@ -177,7 +177,7 @@ docker exec sutazai-ollama ollama list
 3. **Fix ChromaDB**: Resolve connection issues
 4. **Configure Kong**: Add actual API routes
 5. **Integrate Vector DBs**: Connect to application
-6. **Remove Fantasy Docs**: Clean misleading files
+6. **Remove conceptual Docs**: Clean misleading files
 
 ---
 

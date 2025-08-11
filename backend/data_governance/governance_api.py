@@ -317,14 +317,12 @@ async def get_compliance_report(
 async def resolve_compliance_violation(
     violation_id: str,
     resolution_method: str,
-    resolution_notes: str
 ):
     """Mark a compliance violation as resolved"""
     try:
         framework = get_governance_framework()
         
         success = framework.compliance_manager.resolve_violation(
-            violation_id, resolution_method, resolution_notes
         )
         
         if success:
@@ -794,4 +792,3 @@ async def get_admin_statistics():
         
     except Exception as e:
         logger.error(f"Error getting admin statistics: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get admin statistics")

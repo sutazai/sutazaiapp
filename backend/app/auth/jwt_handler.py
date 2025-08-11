@@ -178,7 +178,6 @@ class JWTHandler:
             # This should be enhanced to fetch actual user data
             
             # Create new access token
-            # Note: In production, fetch user details from database
             new_access_token = self.create_access_token(
                 user_id=user_id,
                 username="",  # Should be fetched from database
@@ -227,4 +226,3 @@ def create_refresh_token(
 
 def verify_token(token: str, token_type: str = "access") -> Dict[str, Any]:
     """Verify a JWT token"""
-    return jwt_handler.verify_token(token=token, token_type=token_type)

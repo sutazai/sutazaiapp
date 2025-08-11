@@ -2305,7 +2305,7 @@ This realistic architecture evolution plan transforms SutazAI from a proof-of-co
 1. **Pragmatic Hardware Scaling**: Starting with $500 and scaling to $15,000 over a year
 2. **GPT-OSS-20B as Target**: Achievable with RTX 4090, not requiring exotic hardware
 3. **Phased Tool Integration**: 100+ tools integrated systematically, not all at once
-4. **Realistic Costs**: $1,500/month operating costs, not $21,000 fantasy
+4. **Realistic Costs**: $1,500/month operating costs, not $21,000 conceptual
 5. **Measurable Progress**: Clear KPIs and milestones each quarter
 
 The plan prioritizes:

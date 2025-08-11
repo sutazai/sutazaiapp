@@ -1,0 +1,18 @@
+{
+  "name": "agent-debugger",
+  "description": "Agent for utility operations",
+  "model": "ollama",
+  "base_model": "tinyllama2.5-coder:7b",
+  "port": 9900,
+  "capabilities": [
+    "automation",
+    "integration",
+    "support"
+  ],
+  "memory_limit": "512M",
+  "cpu_limit": "0.5",
+  "environment": {
+    "PYTHONUNBUFFERED": "1",
+    "AGENT_TYPE": "utility"
+  }
+}

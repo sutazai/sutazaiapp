@@ -1,0 +1,114 @@
+# SutazAI System - Base Production Requirements
+# Last updated: 2025-08-09
+# Version resolution: Latest stable with security patches
+
+# Core Web Framework
+fastapi==0.115.6                    # Latest stable - security validated
+uvicorn[standard]==0.32.1            # ASGI server with standard features
+starlette==0.41.3                   # ASGI framework core
+pydantic==2.10.4                    # Data validation - security patches
+pydantic-settings==2.8.1            # Settings management
+python-multipart==0.0.18            # Form data parsing
+
+# HTTP Clients & Networking
+requests==2.32.3                    # HTTP library - CRITICAL security fix
+httpx[http2]==0.27.2                 # Async HTTP client - CVE patched
+aiohttp==3.11.10                     # Async HTTP server/client - security validated
+websockets==13.0                    # WebSocket support - latest stable
+websocket-client==1.8.0             # WebSocket client
+urllib3==2.2.3                      # HTTP client utility - security patches
+certifi==2024.8.30                  # SSL certificates bundle
+
+# Database Drivers
+sqlalchemy==2.0.36                  # ORM - performance improvements
+alembic==1.14.0                     # Database migrations
+psycopg2-binary==2.9.10             # PostgreSQL adapter - compiled
+asyncpg==0.29.0                     # Async PostgreSQL driver
+redis==5.2.1                        # Redis client - latest stable
+aioredis==2.0.1                     # Async Redis client
+pymongo==4.10.1                     # MongoDB driver
+neo4j==5.27.0                       # Neo4j graph database
+
+# Vector Databases
+chromadb==0.5.23                    # Vector database client
+qdrant-client==1.12.1               # Qdrant vector database
+faiss-cpu==1.9.0                    # Facebook AI similarity search
+
+# AI/ML Core
+torch==2.5.1                        # PyTorch - latest stable
+transformers==4.46.3                # Hugging Face transformers - security patches
+sentence-transformers==3.3.1        # Sentence embeddings
+huggingface-hub==0.27.0             # HF model hub client
+tiktoken==0.8.0                     # OpenAI tokenizer
+
+# Scientific Computing
+numpy>=1.23.5,<2.0                  # Numerical computing - compatible version
+pandas==2.2.3                       # Data analysis - security validated
+scipy==1.14.1                       # Scientific computing
+scikit-learn==1.6.0                 # Machine learning - latest features
+matplotlib==3.10.0                  # Plotting library
+plotly==5.24.1                      # Interactive plotting
+
+# API Clients
+openai==1.58.1                      # OpenAI API client - latest
+anthropic==0.42.0                   # Anthropic API client
+
+# Security & Authentication
+cryptography==43.0.1                # Cryptographic library - CRITICAL security fix
+PyJWT==2.9.0                        # JWT token handling
+passlib[bcrypt]==1.7.4              # Password hashing - includes bcrypt
+bcrypt==4.2.0                       # Password hashing backend
+python-jose[cryptography]==3.3.0    # JWT/JWE library
+
+# Data Processing & Validation
+bleach==6.1.0                       # HTML sanitization
+email-validator==2.2.0              # Email validation utility
+jsonschema==4.24.0                  # JSON schema validation
+marshmallow==3.20.1                 # Object serialization
+
+# File Operations
+pillow==10.4.0                      # Image processing - security patches
+aiofiles==24.1.0                    # Async file operations
+
+# Message Queues & Service Discovery
+celery==5.4.0                       # Task queue
+aio-pika==9.3.1                     # Async RabbitMQ client
+pika==1.3.2                         # RabbitMQ client
+python-consul==1.1.0                # Consul service discovery
+
+# Monitoring & Metrics
+prometheus-client==0.21.1           # Prometheus metrics - security validated
+psutil==6.1.0                       # System monitoring - security patches
+docker==7.1.0                       # Docker API client
+grafana-api==1.0.3                  # Grafana API client
+
+# Configuration & Environment
+python-dotenv==1.0.1                # Environment variables
+pyyaml==6.0.2                       # YAML parsing - security fix
+click==8.1.8                        # CLI framework
+
+# Utilities & Infrastructure
+jinja2==3.1.4                       # Template engine - XSS fixes
+schedule==1.2.2                     # Task scheduling
+tqdm==4.67.1                        # Progress bars
+rich==13.9.4                        # Rich terminal output
+structlog==24.4.0                   # Structured logging
+asyncio-mqtt==0.13.0                # Async MQTT client
+uvloop==0.19.0                      # Fast asyncio event loop
+joblib==1.4.2                       # Parallel processing
+typer==0.15.1                       # CLI framework (FastAPI style)
+langchain==0.3.11                   # LLM framework
+
+# Streamlit UI Framework
+streamlit==1.40.2                   # Main UI framework - latest stable
+streamlit-ace==0.1.1                # Code editor component
+streamlit-aggrid==0.3.4             # Data grid component
+streamlit-chat==0.1.1               # Chat interface
+streamlit-elements==0.1.0           # React components
+streamlit-extras==0.4.7             # Additional components
+streamlit-lottie==0.0.5             # Lottie animations
+streamlit-option-menu==0.3.13       # Navigation menu
+streamlit-webrtc==0.47.7            # WebRTC support
+st-pages==0.5.0                     # Multi-page apps
+altair==4.2.2                       # Declarative visualization
+pydeck==0.9.1                       # Deck.gl visualization

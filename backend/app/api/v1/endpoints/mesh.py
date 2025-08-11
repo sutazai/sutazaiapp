@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from fastapi import APIRouter, HTTPException, Query
 import httpx
 import os
+import hashlib
 
 from app.mesh.redis_bus import enqueue_task, tail_results, list_agents, get_redis
 from app.services.rate_limiter import default_ollama_bucket
@@ -81,6 +82,10 @@ class GenerateRequest(BaseModel):
 
 @router.post("/ollama/generate")
 async def ollama_generate(req: GenerateRequest) -> Dict[str, Any]:
+    """Generate text using Ollama with connection pooling and caching"""
+    from app.core.connection_pool import get_pool_manager
+    from app.core.cache import get_cache_service, cache_model_data
+    
     # Enforce simple prompt size limit to protect RAM/CPU
     if len(req.prompt.encode("utf-8")) > 32 * 1024:
         raise HTTPException(status_code=400, detail="prompt too large (32KB limit)")
@@ -90,23 +95,34 @@ async def ollama_generate(req: GenerateRequest) -> Dict[str, Any]:
     if not allowed:
         # Communicate backpressure to caller
         raise HTTPException(status_code=429, detail={"retry_after_ms": wait_ms})
-
-    base = os.environ.get("OLLAMA_BASE_URL", os.environ.get("OLLAMA_URL", "http://ollama:10104"))
-    url = f"{base.rstrip('/')}/api/generate"
-    payload = {"model": req.model, "prompt": req.prompt}
+    
+    # Check cache first for repeated prompts
+    cache_service = await get_cache_service()
+    cache_key = f"ollama:generate:{req.model}:{hashlib.md5(req.prompt.encode()).hexdigest()[:16]}"
+    
+    cached_response = await cache_service.get(cache_key, force_redis=True)
+    if cached_response:
+        return cached_response
+    
+    # Use connection pool for Ollama requests
+    pool_manager = await get_pool_manager()
+    
+    payload = {"model": req.model, "prompt": req.prompt, "stream": False}
     if req.options:
         payload["options"] = req.options
-
-    timeout = httpx.Timeout(30.0)
-    async with httpx.AsyncClient(timeout=timeout) as client:
-        try:
-            resp = await client.post(url, json=payload)
-        except Exception as e:
-            raise HTTPException(status_code=502, detail=f"ollama connection error: {e}")
-
-    if resp.status_code != 200:
-        raise HTTPException(status_code=resp.status_code, detail=resp.text)
+    
     try:
-        return resp.json()
-    except Exception:
-        return {"raw": resp.text}
+        async with pool_manager.get_http_client("ollama") as client:
+            resp = await client.post("/api/generate", json=payload)
+            resp.raise_for_status()
+            result = resp.json()
+            
+            # Cache successful responses
+            await cache_service.set(cache_key, result, ttl=1800, redis_priority=True)
+            
+            return result
+            
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=e.response.status_code, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"ollama connection error: {e}")

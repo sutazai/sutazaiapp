@@ -36,9 +36,9 @@ jobs:
     - name: Check for backup files
       run: |
         echo "Checking for backup files..."
-        if find . -name "*.backup*" -o -name "*.fantasy*" -o -name "*.agi_backup" | grep -q .; then
+        if find . -name "*.backup*" -o -name "*.conceptual*" -o -name "*.agi_backup" | grep -q .; then
           echo "ERROR: Backup files found!"
-          find . -name "*.backup*" -o -name "*.fantasy*" -o -name "*.agi_backup"
+          find . -name "*.backup*" -o -name "*.conceptual*" -o -name "*.agi_backup"
           exit 1
         fi
         echo "✓ No backup files found"

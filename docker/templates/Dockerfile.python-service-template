@@ -1,0 +1,18 @@
+
+FROM sutazai/python-agent-master:latest
+
+# Service-specific configuration
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY app.py .
+
+# Expose port
+EXPOSE 8080
+
+# Service-specific health check
+HEALTHCHEK --interval=30s --timeout=10s --start-period=5s --retries=3     CMD ["curl", "-f", "http://localhost:8080/health"]
+
+# Run application
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]

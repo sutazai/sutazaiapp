@@ -46,7 +46,7 @@ docker network create sutazai-network 2>/dev/null || true
 ```
 
 **Configuration Verification:**
-- [ ] Docker daemon running
+- [ ] Docker service running
 - [ ] No port conflicts on target ports
 - [ ] Firewall rules configured for internal communication
 - [ ] System time synchronized
@@ -78,7 +78,7 @@ docker-compose up -d kong consul rabbitmq
 sleep 20
 
 # Phase 3: Monitoring Stack (15 seconds)
-docker-compose up -d prometheus grafana loki alertmanager node-exporter cadvisor blackbox-exporter
+docker-compose up -d prometheus grafana loki alertmanager node-exporter cadvisor encapsulated-exporter
 sleep 15
 
 # Phase 4: Vector Databases (20 seconds)
@@ -1496,7 +1496,7 @@ curl http://127.0.0.1:10006/v1/catalog/services
 
 **Resolution:**
 ```bash
-# Restart Docker daemon (if network issues)
+# Restart Docker service (if network issues)
 sudo systemctl restart docker
 docker-compose up -d
 
@@ -1816,7 +1816,7 @@ docker-compose down --timeout 10
 # Force kill any remaining containers
 docker ps -q | xargs -r docker kill
 
-# Stop Docker daemon if necessary
+# Stop Docker service if necessary
 # sudo systemctl stop docker
 
 echo "EMERGENCY SHUTDOWN COMPLETE $(date)"
@@ -1939,7 +1939,7 @@ echo "Manual investigation and remediation required"
 10203: AlertManager
 10220: Node Exporter
 10221: cAdvisor Container Metrics
-10229: Blackbox Exporter
+10229: encapsulated Exporter
 ```
 
 **Agent Services (Stubs):**

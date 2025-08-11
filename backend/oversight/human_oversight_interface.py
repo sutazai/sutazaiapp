@@ -83,7 +83,6 @@ class ApprovalRequest:
     status: ApprovalStatus = ApprovalStatus.PENDING
     approver_id: Optional[str] = None
     approval_timestamp: Optional[datetime] = None
-    approval_note: Optional[str] = None
 
 @dataclass
 class AuditEvent:
@@ -164,7 +163,6 @@ class HumanOversightInterface:
                     status TEXT DEFAULT 'pending',
                     approver_id TEXT,
                     approval_timestamp TEXT,
-                    approval_note TEXT
                 )
             ''')
             
@@ -1134,14 +1132,12 @@ class HumanOversightInterface:
             }
             
             async approveRequest(approvalId) {
-                const note = prompt('Approval note (optional):');
                 try {
                     const response = await fetch(`/api/approvals/${approvalId}/approve`, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
                             approver_id: prompt('Enter your operator ID:') || 'anonymous',
-                            note: note
                         })
                     });
                     
@@ -1157,15 +1153,12 @@ class HumanOversightInterface:
             }
             
             async rejectRequest(approvalId) {
-                const note = prompt('Rejection reason:');
-                if (note) {
                     try {
                         const response = await fetch(`/api/approvals/${approvalId}/reject`, {
                             method: 'POST',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({
                                 approver_id: prompt('Enter your operator ID:') || 'anonymous',
-                                note: note
                             })
                         });
                         
@@ -1639,10 +1632,8 @@ class HumanOversightInterface:
                 # Update approval status
                 conn.execute('''
                     UPDATE approval_requests 
-                    SET status = 'approved', approver_id = ?, approval_timestamp = ?, approval_note = ?
                     WHERE id = ?
                 ''', (data.get('approver_id'), datetime.utcnow().isoformat(), 
-                      data.get('note'), approval_id))
                 
                 # Create audit event
                 audit_event = AuditEvent(
@@ -1652,7 +1643,6 @@ class HumanOversightInterface:
                     operator_id=data.get('approver_id', 'anonymous'),
                     description=f"Approval {approval_id} granted",
                     before_state={'status': 'pending'},
-                    after_state={'status': 'approved', 'note': data.get('note')},
                     timestamp=datetime.utcnow(),
                     compliance_tags=['approval_workflow', 'human_decision']
                 )
@@ -1686,10 +1676,8 @@ class HumanOversightInterface:
                 # Update approval status
                 conn.execute('''
                     UPDATE approval_requests 
-                    SET status = 'rejected', approver_id = ?, approval_timestamp = ?, approval_note = ?
                     WHERE id = ?
                 ''', (data.get('approver_id'), datetime.utcnow().isoformat(), 
-                      data.get('note'), approval_id))
                 
                 # Create audit event
                 audit_event = AuditEvent(
@@ -1699,7 +1687,6 @@ class HumanOversightInterface:
                     operator_id=data.get('approver_id', 'anonymous'),
                     description=f"Approval {approval_id} rejected",
                     before_state={'status': 'pending'},
-                    after_state={'status': 'rejected', 'note': data.get('note')},
                     timestamp=datetime.utcnow(),
                     compliance_tags=['approval_workflow', 'human_decision']
                 )
@@ -2059,4 +2046,3 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())

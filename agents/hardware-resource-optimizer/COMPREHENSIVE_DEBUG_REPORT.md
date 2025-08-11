@@ -53,7 +53,7 @@ I performed comprehensive debugging and manual testing of the hardware-resource-
 **Verification Method:**
 - Counted containers before/after with `docker ps -a`
 - Verified specific container names were removed
-- Confirmed Docker daemon state changes
+- Confirmed Docker service state changes
 
 ### 3. CPU Optimization - ✅ VERIFIED WORKING
 

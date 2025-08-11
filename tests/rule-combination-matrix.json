@@ -15,7 +15,7 @@
   "rules": {
     "rule_01_no_fantasy_elements": {
       "id": 1,
-      "name": "No Fantasy Elements",
+      "name": "No conceptual Elements",
       "category": "code_quality",
       "priority": "critical",
       "dependencies": [],

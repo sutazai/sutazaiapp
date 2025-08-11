@@ -1,11 +1,25 @@
 """
-Utility modules for SutazAI automation/advanced automation System
+SutazAI Backend Utils Package
+
+This package contains utility functions for validation, security, and common operations.
 """
 
-from .logger import setup_logger, get_logger, PerformanceLogger
+from .validation import (
+    validate_model_name,
+    validate_agent_id, 
+    validate_task_id,
+    validate_cache_pattern,
+    sanitize_user_input,
+    validate_file_path,
+    SecurityValidationError
+)
 
 __all__ = [
-    'setup_logger',
-    'get_logger',
-    'PerformanceLogger'
-] 
+    "validate_model_name",
+    "validate_agent_id", 
+    "validate_task_id",
+    "validate_cache_pattern",
+    "sanitize_user_input",
+    "validate_file_path",
+    "SecurityValidationError"
+]

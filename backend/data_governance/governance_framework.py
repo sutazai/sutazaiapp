@@ -76,7 +76,6 @@ class GovernanceViolation:
     asset_id: Optional[str] = None
     detected_at: datetime = field(default_factory=datetime.utcnow)
     resolved_at: Optional[datetime] = None
-    resolution_notes: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -523,12 +522,9 @@ class DataGovernanceFramework:
         
         return dashboard_data
     
-    def resolve_violation(self, violation_id: str, resolution_notes: str) -> bool:
         """Mark a violation as resolved"""
         violation = self.violations.get(violation_id)
         if violation:
             violation.resolved_at = datetime.utcnow()
-            violation.resolution_notes = resolution_notes
             self.logger.info(f"Resolved violation {violation_id}")
             return True
-        return False

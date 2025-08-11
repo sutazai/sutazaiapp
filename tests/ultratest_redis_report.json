@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-08-11T13:28:18.425263",
+  "redis_info": {
+    "version": "7.2.10",
+    "uptime_seconds": 86022,
+    "connected_clients": 8,
+    "used_memory": 1526576,
+    "used_memory_human": "1.46M",
+    "keyspace_hits": 7830,
+    "keyspace_misses": 18818,
+    "instantaneous_ops_per_sec": 954,
+    "total_commands_processed": 7488110
+  },
+  "initial_hit_rate": 11.223286314101053,
+  "final_hit_rate": 29.383068147703394,
+  "performance_metrics": {
+    "avg_write_time_ms": 0.21024799346923828,
+    "avg_read_time_ms": 0.20321035385131836,
+    "min_write_time_ms": 0.10085105895996094,
+    "max_write_time_ms": 3.386259078979492,
+    "min_read_time_ms": 0.09083747863769531,
+    "max_read_time_ms": 2.9191970825195312,
+    "operations_tested": 500
+  },
+  "usage_simulation": {
+    "total_operations": 7090,
+    "operations_per_second": 709.0,
+    "duration_seconds": 10
+  },
+  "target_hit_rate": 85.0,
+  "performance_targets": {
+    "target_read_time_ms": 2.0,
+    "target_write_time_ms": 5.0,
+    "read_performance_achieved": true,
+    "write_performance_achieved": true
+  }
+}

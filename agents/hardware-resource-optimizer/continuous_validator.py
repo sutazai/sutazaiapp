@@ -182,7 +182,6 @@ class ContinuousValidator:
                     "status": "ok" if elapsed < 1.0 else "slow"
                 }
             except Exception as e:
-                # TODO: Review this exception handling
                 logger.error(f"Unexpected exception: {e}", exc_info=True)
                 metrics["response_times"][endpoint] = {"status": "error"}
                 
@@ -382,4 +381,3 @@ def main():
         
 
 if __name__ == "__main__":
-    main()

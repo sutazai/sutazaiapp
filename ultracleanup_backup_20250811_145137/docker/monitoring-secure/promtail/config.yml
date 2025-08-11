@@ -1,0 +1,77 @@
+# Secure Promtail Configuration
+# Optimized for non-root user operation
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9095
+  log_level: warn
+
+positions:
+  filename: /tmp/promtail/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+    tenant_id: sutazai
+    batchwait: 1s
+    batchsize: 1048576
+    basic_auth:
+      username: ${LOKI_USER:-}
+      password: ${LOKI_PASSWORD:-}
+    timeout: 10s
+
+scrape_configs:
+  # Scrape Docker container logs
+  - job_name: containers
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: containers
+          __path__: /var/lib/docker/containers/*/*-json.log
+    pipeline_stages:
+      - json:
+          expressions:
+            output: log
+            stream: stream
+            time: time
+            container: attrs.tag
+      - timestamp:
+          format: RFC3339Nano
+          source: time
+      - labels:
+          stream:
+          container:
+      - output:
+          source: output
+
+  # Scrape system logs
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: system
+          __path__: /var/log/*.log
+    pipeline_stages:
+      - match:
+          selector: '{job="system"}'
+          stages:
+            - regex:
+                expression: '^(?P<time>\S+\s+\S+\s+\S+)\s+(?P<host>\S+)\s+(?P<process>\S+?):\s+(?P<message>.+)$'
+            - timestamp:
+                format: Jan _2 15:04:05
+                source: time
+            - labels:
+                host:
+                process:
+
+  # Scrape journal logs (if available)
+  - job_name: journal
+    journal:
+      max_age: 12h
+      labels:
+        job: systemd-journal
+    relabel_configs:
+      - source_labels: ['__journal__systemd_unit']
+        target_label: 'unit'
+      - source_labels: ['__journal__hostname']
+        target_label: 'hostname'

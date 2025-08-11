@@ -64,15 +64,15 @@ All notable changes to the `/docs` workspace are tracked here. Use Conventional 
   - **Critical Improvements:**
     - PostgreSQL now has working schema (was empty)
     - Requirements organized by category (backend/frontend/agents/dev)
-    - All fantasy elements removed while protecting active services
+    - All conceptual elements removed while protecting active services
     - Documentation reduced from 721 to 17 CHANGELOGs
   - **Testing:** Every change validated with comprehensive health checks
   - **Scripts Created:** consolidate_requirements.py, final_system_test.sh
 
-### Fantasy Elements Removal - 2025-08-09 10:15 UTC
+### conceptual Elements Removal - 2025-08-09 10:15 UTC
 - [Component] System-wide cleanup
 - [Type] refactor
-- [Changes] Removed fantasy terms from 44 files
+- [Changes] Removed conceptual terms from 44 files
 - [Protected] LocalAGI/BigAGI services preserved
 - [Status] No functionality affected
 
@@ -145,7 +145,7 @@ All notable changes to the `/docs` workspace are tracked here. Use Conventional 
 #### Documentation Updates (v67.6)
 - docs(CLAUDE.md): Updated to reflect current system reality
   - Accurate port registry with user security status
-  - Real agent service status (not fantasy)
+  - Real agent service status (not conceptual)
   - Security improvements documented
   - Honest capability assessment
 - docs(deployment): Created comprehensive deployment documentation
@@ -155,7 +155,7 @@ All notable changes to the `/docs` workspace are tracked here. Use Conventional 
 
 #### Rules Enforcement and Cleanup (v67.1-v67.2)
 - cleanup(scripts): Organized 435+ scripts into 14 functional directories
-- cleanup(codebase): Removed fantasy documentation and non-functional code
+- cleanup(codebase): Removed conceptual documentation and non-functional code
 - rules(enforcement): Applied all 19 comprehensive codebase rules
 - rules(compliance): Created Rule 12 compliant single deploy.sh master script
 
@@ -235,7 +235,7 @@ All notable changes to the `/docs` workspace are tracked here. Use Conventional 
   - Impact: Establishes mandatory engineering standards for all contributors
   - Includes rules for:
     - Codebase hygiene and consistency
-    - No fantasy elements (production-ready only)
+    - No conceptual elements (production-ready only)
     - Preserving existing functionality
     - Documentation requirements
     - Script organization

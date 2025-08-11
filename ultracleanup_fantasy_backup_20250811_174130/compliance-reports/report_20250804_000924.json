@@ -1,0 +1,1598 @@
+{
+  "timestamp": "2025-08-04T00:09:24.874974",
+  "compliance_score": 75.0,
+  "total_violations": 158,
+  "rules_violated": 4,
+  "violations_by_rule": {
+    "1": [
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/compliance-monitor-core.py",
+        "line_number": 93,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.066437",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/compliance-monitor-core.py",
+        "line_number": 93,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.066450",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/compliance-monitor-core.py",
+        "line_number": 93,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.066455",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/compliance-monitor-core.py",
+        "line_number": 94,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.066457",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/compliance-monitor-core.py",
+        "line_number": 94,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.066458",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/compliance-monitor-core.py",
+        "line_number": 95,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.066460",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/enforce_claude_md_rules.py",
+        "line_number": 230,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.067333",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/test-all-rule-combinations.py",
+        "line_number": 411,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.068896",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/test-all-rule-combinations.py",
+        "line_number": 759,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.069055",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/test-all-rule-combinations.py",
+        "line_number": 760,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.069059",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/test-all-rule-combinations.py",
+        "line_number": 763,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.069062",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/test-all-rule-combinations.py",
+        "line_number": 763,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.069064",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/test-all-rule-combinations.py",
+        "line_number": 763,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.069065",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/enforce_claude_md_simple.py",
+        "line_number": 80,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.069373",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/test-hygiene-system.py",
+        "line_number": 19,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.070165",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/continuous-compliance-monitor.py",
+        "line_number": 55,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.091430",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/continuous-compliance-monitor.py",
+        "line_number": 55,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.091445",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/continuous-compliance-monitor.py",
+        "line_number": 55,
+        "description": "Found forbidden term 'black-box' in code",
+        "timestamp": "2025-08-04T00:09:24.091448",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/continuous-compliance-monitor.py",
+        "line_number": 55,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.091450",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/continuous-compliance-monitor.py",
+        "line_number": 154,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.091484",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/continuous-compliance-monitor.py",
+        "line_number": 154,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.091485",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/continuous-compliance-monitor.py",
+        "line_number": 154,
+        "description": "Found forbidden term 'black-box' in code",
+        "timestamp": "2025-08-04T00:09:24.091487",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/continuous-compliance-monitor.py",
+        "line_number": 154,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.091488",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/continuous-compliance-monitor.py",
+        "line_number": 154,
+        "description": "Found forbidden term 'mystical' in code",
+        "timestamp": "2025-08-04T00:09:24.091490",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/ci-cd/analyze-rule.py",
+        "line_number": 65,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.092361",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/ci-cd/analyze-rule.py",
+        "line_number": 66,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.092365",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/ci-cd/analyze-rule.py",
+        "line_number": 67,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.092368",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/ci-cd/analyze-rule.py",
+        "line_number": 70,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.092370",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/ci-cd/analyze-rule.py",
+        "line_number": 71,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.092372",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/cleanup_agent_standards.py",
+        "line_number": 23,
+        "description": "Found forbidden term 'mystical' in code",
+        "timestamp": "2025-08-04T00:09:24.093075",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/cleanup_agent_standards.py",
+        "line_number": 100,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.093109",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/cleanup_agent_standards.py",
+        "line_number": 196,
+        "description": "Found forbidden term 'mystical' in code",
+        "timestamp": "2025-08-04T00:09:24.093149",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/fix_all_agents_compliance.py",
+        "line_number": 57,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.095218",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/fix_all_agents_compliance.py",
+        "line_number": 58,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.095225",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/fix_all_agents_compliance.py",
+        "line_number": 65,
+        "description": "Found forbidden term 'mystical' in code",
+        "timestamp": "2025-08-04T00:09:24.095231",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/fix_all_agents_compliance.py",
+        "line_number": 76,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.095236",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/ensure_agent_compliance.py",
+        "line_number": 23,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.096734",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/ensure_agent_compliance.py",
+        "line_number": 23,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.096739",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/ensure_agent_compliance.py",
+        "line_number": 24,
+        "description": "Found forbidden term 'mystical' in code",
+        "timestamp": "2025-08-04T00:09:24.096742",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 38,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.098952",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 44,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.098963",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 45,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.098965",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 48,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.098968",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 49,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.098970",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 51,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.098971",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 52,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.098973",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 54,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.098976",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 56,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.098977",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 69,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.098984",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 78,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.098988",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 84,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.098992",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 85,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.098994",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 89,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.098996",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 121,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.099009",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 125,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.099012",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 126,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.099014",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 127,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.099016",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 131,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.099019",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 135,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.099022",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 212,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.099050",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/demo-fantasy-elements-enforcement.py",
+        "line_number": 245,
+        "description": "Found forbidden term 'mystical' in code",
+        "timestamp": "2025-08-04T00:09:24.099068",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 16,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.103081",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 16,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.103092",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 16,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.103095",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 17,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.103097",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 18,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.103099",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 21,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.103101",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 22,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.103103",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 22,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.103104",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 22,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.103105",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 24,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.103107",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 24,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.103108",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 28,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.103111",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 29,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.103112",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/pre-commit/check-fantasy-elements.py",
+        "line_number": 95,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.103141",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/backend/tests/test_api_endpoints.py",
+        "line_number": 9,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.119786",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/backend/tests/test_main_app.py",
+        "line_number": 9,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.120633",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/backend/tests/test_main_app.py",
+        "line_number": 29,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.120648",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/backend/tests/test_main_app.py",
+        "line_number": 34,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.120653",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/backend/tests/test_main_comprehensive.py",
+        "line_number": 9,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.121972",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_failure_scenarios.py",
+        "line_number": 17,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.161177",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_git_hooks.py",
+        "line_number": 89,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.161713",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_git_hooks.py",
+        "line_number": 89,
+        "description": "Found forbidden term 'wizard' in code",
+        "timestamp": "2025-08-04T00:09:24.161724",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_git_hooks.py",
+        "line_number": 89,
+        "description": "Found forbidden term 'teleport' in code",
+        "timestamp": "2025-08-04T00:09:24.161728",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_monitoring.py",
+        "line_number": 12,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.162761",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_orchestrator.py",
+        "line_number": 13,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.162967",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_orchestrator.py",
+        "line_number": 120,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.163033",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_orchestrator.py",
+        "line_number": 148,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.163047",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_coordinator.py",
+        "line_number": 12,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.163142",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_coordinator.py",
+        "line_number": 104,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.163183",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_coordinator.py",
+        "line_number": 125,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.163193",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_coordinator.py",
+        "line_number": 148,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.163204",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/hygiene/test_coordinator.py",
+        "line_number": 211,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.163230",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_internal/locations/_sysconfig.py",
+        "line_number": 43,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.178316",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/packaging/_manylinux.py",
+        "line_number": 22,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.214137",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/packaging/_manylinux.py",
+        "line_number": 44,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.214159",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/packaging/_manylinux.py",
+        "line_number": 45,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.214162",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/packaging/_musllinux.py",
+        "line_number": 33,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.215185",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexer.py",
+        "line_number": 39,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.265940",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/token.py",
+        "line_number": 150,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.266714",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/token.py",
+        "line_number": 160,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.266723",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/requests/adapters.py",
+        "line_number": 415,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.296126",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/colorama/tests/ansitowin32_test.py",
+        "line_number": 11,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.304838",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/colorama/tests/ansitowin32_test.py",
+        "line_number": 13,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.304851",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/colorama/tests/ansitowin32_test.py",
+        "line_number": 42,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.304865",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 180,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309521",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 181,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309529",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 276,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309574",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 299,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309587",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 301,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309590",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 308,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309595",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 325,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309602",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 469,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309655",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 470,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309657",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 533,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309687",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 553,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309698",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 555,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309700",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 562,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309704",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 1,
+        "rule_name": "No Fantasy Elements",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/venv/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/python.py",
+        "line_number": 581,
+        "description": "Found forbidden term 'magic' in code",
+        "timestamp": "2025-08-04T00:09:24.309712",
+        "auto_fixable": true
+      }
+    ],
+    "7": [
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/docker/validate.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.328812",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/docker/build.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.328844",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/mcp_server/setup.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.329180",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/agents/startup_with_rules.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.329350",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/agents/startup.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.329377",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/docker/code-improver/improve_cron.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.331538",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/tests/fixtures/hygiene/deploy_scripts/deploy_staging.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.343135",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/tests/fixtures/hygiene/deploy_scripts/deploy.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.343205",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/chaos/scripts/init-chaos.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.343308",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/chaos/scripts/make-executable.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.343329",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/chaos/scripts/validate-chaos-deployment.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.343347",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/chaos/scripts/run-experiment.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.343365",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/deployment/backup/scripts/backup-database.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.344249",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/deployment/autoscaling/scripts/test-autoscaler.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.344497",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/agents/deployment-automation-master/startup.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.349214",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/agents/ollama-integration-specialist/startup.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.349302",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/agents/testing-qa-validator/startup.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.349553",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/agents/infrastructure-devops-manager/startup.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.349599",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 7,
+        "rule_name": "Script Organization",
+        "severity": "medium",
+        "file_path": "/opt/sutazaiapp/agents/senior-ai-engineer/startup.sh",
+        "line_number": null,
+        "description": "Script found outside /scripts/ directory",
+        "timestamp": "2025-08-04T00:09:24.349763",
+        "auto_fixable": true
+      }
+    ],
+    "12": [
+      {
+        "rule_number": 12,
+        "rule_name": "Single Deployment Script",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/install-hygiene-hooks.sh",
+        "line_number": null,
+        "description": "Extra deployment script (should be consolidated into deploy.sh)",
+        "timestamp": "2025-08-04T00:09:24.462485",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 12,
+        "rule_name": "Single Deployment Script",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/setup-hygiene-cron.sh",
+        "line_number": null,
+        "description": "Extra deployment script (should be consolidated into deploy.sh)",
+        "timestamp": "2025-08-04T00:09:24.462501",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 12,
+        "rule_name": "Single Deployment Script",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/setup-hygiene-automation.sh",
+        "line_number": null,
+        "description": "Extra deployment script (should be consolidated into deploy.sh)",
+        "timestamp": "2025-08-04T00:09:24.462504",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 12,
+        "rule_name": "Single Deployment Script",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/mcp_server/setup.sh",
+        "line_number": null,
+        "description": "Extra deployment script (should be consolidated into deploy.sh)",
+        "timestamp": "2025-08-04T00:09:24.462506",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 12,
+        "rule_name": "Single Deployment Script",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/utils/setup_monitoring.sh",
+        "line_number": null,
+        "description": "Extra deployment script (should be consolidated into deploy.sh)",
+        "timestamp": "2025-08-04T00:09:24.462507",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 12,
+        "rule_name": "Single Deployment Script",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/monitoring/setup-compliance-monitoring.sh",
+        "line_number": null,
+        "description": "Extra deployment script (should be consolidated into deploy.sh)",
+        "timestamp": "2025-08-04T00:09:24.462509",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 12,
+        "rule_name": "Single Deployment Script",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/scripts/agents/setup-functionality-validator.sh",
+        "line_number": null,
+        "description": "Extra deployment script (should be consolidated into deploy.sh)",
+        "timestamp": "2025-08-04T00:09:24.462511",
+        "auto_fixable": true
+      }
+    ],
+    "13": [
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/fixtures/hygiene/junk_files/test_file.backup",
+        "line_number": null,
+        "description": "Garbage file detected: *.backup",
+        "timestamp": "2025-08-04T00:09:24.480460",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/fixtures/hygiene/junk_files/old_script.py.bak",
+        "line_number": null,
+        "description": "Garbage file detected: *.bak",
+        "timestamp": "2025-08-04T00:09:24.506799",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/fixtures/hygiene/junk_files/config.old",
+        "line_number": null,
+        "description": "Garbage file detected: *.old",
+        "timestamp": "2025-08-04T00:09:24.530516",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/fixtures/hygiene/docker_chaos/Dockerfile.old",
+        "line_number": null,
+        "description": "Garbage file detected: *.old",
+        "timestamp": "2025-08-04T00:09:24.530546",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/fixtures/hygiene/junk_files/temporary_file.tmp",
+        "line_number": null,
+        "description": "Garbage file detected: *.tmp",
+        "timestamp": "2025-08-04T00:09:24.554762",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/data/loki/checkpoint.000013.tmp",
+        "line_number": null,
+        "description": "Garbage file detected: *.tmp",
+        "timestamp": "2025-08-04T00:09:24.562568",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/data/loki_backup_20250726_193548/checkpoint.000179.tmp",
+        "line_number": null,
+        "description": "Garbage file detected: *.tmp",
+        "timestamp": "2025-08-04T00:09:24.562750",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/tests/fixtures/hygiene/junk_files/editor_backup~",
+        "line_number": null,
+        "description": "Garbage file detected: *~",
+        "timestamp": "2025-08-04T00:09:24.603393",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/archive/cleanup_20250803_182729/mystery_version_files/=0.21.1",
+        "line_number": null,
+        "description": "Garbage file detected: =0.*",
+        "timestamp": "2025-08-04T00:09:24.726889",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/archive/cleanup_20250803_182729/mystery_version_files/=0.29.0",
+        "line_number": null,
+        "description": "Garbage file detected: =0.*",
+        "timestamp": "2025-08-04T00:09:24.726907",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/archive/cleanup_20250803_182729/mystery_version_files/=2.0.36",
+        "line_number": null,
+        "description": "Garbage file detected: =2.*",
+        "timestamp": "2025-08-04T00:09:24.771647",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/archive/cleanup_20250803_182729/mystery_version_files/=2.10.1",
+        "line_number": null,
+        "description": "Garbage file detected: =2.*",
+        "timestamp": "2025-08-04T00:09:24.771668",
+        "auto_fixable": true
+      },
+      {
+        "rule_number": 13,
+        "rule_name": "No Garbage Files",
+        "severity": "high",
+        "file_path": "/opt/sutazaiapp/archive/cleanup_20250803_182729/mystery_version_files/=6.1.0",
+        "line_number": null,
+        "description": "Garbage file detected: =6.*",
+        "timestamp": "2025-08-04T00:09:24.867075",
+        "auto_fixable": true
+      }
+    ]
+  },
+  "auto_fixable_count": 158,
+  "critical_violations": 0
+}

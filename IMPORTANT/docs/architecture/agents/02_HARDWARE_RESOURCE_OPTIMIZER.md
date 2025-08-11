@@ -486,7 +486,7 @@ def find_duplicates(self, directory: str) -> Dict[str, List[str]]:
 ### Scalability Considerations
 - **File System Size:** Performance degrades with millions of files
 - **Hash Calculation:** MD5 is fast but still I/O bound
-- **Docker Operations:** Limited by Docker daemon performance
+- **Docker Operations:** Limited by Docker service performance
 - **Memory Analysis:** Limited by available system RAM
 
 ## Configuration
@@ -525,7 +525,7 @@ DUPLICATE_BATCH_SIZE = 1000
   "errors": [
     {
       "operation": "docker_cleanup",
-      "error": "Docker daemon not responding"
+      "error": "Docker service not responding"
     }
   ],
   "completed_operations": ["memory", "disk"]

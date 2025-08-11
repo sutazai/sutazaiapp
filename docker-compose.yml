@@ -8,7 +8,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
+          cpus: '2.0'
           memory: 2G
         reservations:
           cpus: '0.5'
@@ -40,11 +40,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.0'  # Increased for thread I/O performance
-          memory: 2G    # Increased to 2GB as per optimization
+          cpus: '1.0'
+          memory: 1G
         reservations:
           cpus: '0.25'
-          memory: 512M
+          memory: 256M
     healthcheck:
       interval: 10s
       retries: 5
@@ -66,10 +66,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.5'
+          cpus: '1.0'
           memory: 1G
         reservations:
-          cpus: '0.5'
+          cpus: '0.25'
           memory: 512M
     environment:
       NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
@@ -81,8 +81,8 @@ services:
       NEO4J_initial_dbms_default__database: sutazai
       NEO4J_db_checkpoint_interval_time: 30s
       NEO4J_db_transaction_timeout: 30s
-      NEO4J_db_logs_query_enabled: OFF
-      NEO4J_server_config_strict__validation_enabled: false
+      NEO4J_db_logs_query_enabled: "OFF"
+      NEO4J_server_config_strict__validation_enabled: "false"
       NEO4J_db_transaction_bookmark_ready_timeout: 5s
       NEO4J_dbms_cluster_discovery_type: SINGLE
     healthcheck:
@@ -107,17 +107,17 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '8'
-          memory: 16G
+          cpus: '4.0'
+          memory: 4G
         reservations:
-          cpus: '4'
-          memory: 8G
+          cpus: '1.0'
+          memory: 1G
     environment:
       CLAUDE_RULES_PATH: /app/CLAUDE.md
       ENFORCE_CLAUDE_RULES: 'true'
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_DEBUG: false
+      OLLAMA_DEBUG: "false"
       OLLAMA_FLASH_ATTENTION: '0'
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_KEEP_ALIVE: 5m
@@ -140,7 +140,7 @@ services:
       - timeout 5 ollama list > /dev/null || exit 1
       interval: 30s
       timeout: 5s
-      retries: '3'
+      retries: 3
       start_period: 60s
     image: sutazai-ollama-secure:latest
     networks:
@@ -270,17 +270,29 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
-          memory: 2G
-        reservations:
           cpus: '0.5'
           memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
     environment:
       KONG_DATABASE: 'off'
-      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong-optimized.yml
       KONG_PROXY_LISTEN: 0.0.0.0:8000
       KONG_ADMIN_LISTEN: 0.0.0.0:8001
-      KONG_LOG_LEVEL: notice
+      KONG_LOG_LEVEL: error
+      KONG_NGINX_WORKER_PROCESSES: '1'
+      KONG_NGINX_WORKER_CONNECTIONS: '512'
+      KONG_MEM_CACHE_SIZE: '64m'
+      KONG_SSL_CIPHER_SUITE: 'intermediate'
+      KONG_PROXY_ACCESS_LOG: 'off'
+      KONG_ADMIN_ACCESS_LOG: 'off'
+      KONG_PROXY_ERROR_LOG: '/dev/stderr'
+      KONG_ADMIN_ERROR_LOG: '/dev/stderr'
+      KONG_CLIENT_BODY_BUFFER_SIZE: '8k'
+      KONG_CLIENT_MAX_BODY_SIZE: '8m'
+      KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE: '8k'
+      KONG_NGINX_HTTP_CLIENT_MAX_BODY_SIZE: '8m'
     healthcheck:
       test:
       - CMD-SHELL
@@ -296,16 +308,21 @@ services:
     - 10015:8001
     restart: unless-stopped
     volumes:
-    - ./config/kong/kong.yml:/etc/kong/kong.yml:ro
+    - ./config/kong/kong-optimized.yml:/etc/kong/kong-optimized.yml:ro
   consul:
-    image: hashicorp/consul:1.17
+    image: sutazai-consul-secure:latest
     container_name: sutazai-consul
+    # ULTRA-FIX: Remove user: root - image now runs as consul user
+    environment:
+      CONSUL_ALLOW_PRIVILEGED_PORTS: 'true'
+      CONSUL_DISABLE_PERM: 'true'
     command:
     - agent
     - -server
     - -bootstrap-expect=1
     - -ui
     - -client=0.0.0.0
+    - -data-dir=/consul/data
     deploy:
       resources:
         limits:
@@ -396,7 +413,7 @@ services:
       CHROMADB_HOST: chromadb
       CHROMADB_PORT: 8000
       CHROMADB_URL: http://chromadb:8000
-      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       FAISS_INDEX_PATH: /data/faiss
       GRAFANA_PASSWORD: ${GRAFANA_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
@@ -637,9 +654,8 @@ services:
     - ./monitoring/alertmanager:/etc/alertmanager
     - alertmanager_data:/alertmanager
   blackbox-exporter:
-    command:
-    - --config.file=/etc/blackbox_exporter/config.yml
     container_name: sutazai-blackbox-exporter
+    user: nobody
     deploy:
       resources:
         limits:
@@ -659,7 +675,7 @@ services:
       - --spider
       - http://localhost:9115/
       timeout: 30s
-    image: prom/blackbox-exporter:latest
+    image: sutazai-blackbox-exporter-secure:latest
     networks:
     - sutazai-network
     ports:
@@ -696,22 +712,32 @@ services:
     container_name: sutazai-cadvisor
     devices:
     - /dev/kmsg
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: sutazai-cadvisor-secure:latest
+    # ULTRA-FIX: Changed user from 'cadvisor' to 'nobody' to match Dockerfile
+    user: nobody
     networks:
     - sutazai-network
     ports:
     - 10206:8080
-    privileged: true
+    privileged: false
+    cap_add:
+    - SYS_ADMIN
+    - SYS_RESOURCE
+    - SYS_PTRACE
+    - DAC_READ_SEARCH
     security_opt:
     - no-new-privileges:true
-    read_only: false
+    # ULTRA-FIX: Set read_only to true with tmpfs for writable areas
+    read_only: true
     restart: unless-stopped
     command:
-    - --housekeeping_interval=30s
-    - --max_housekeeping_interval=35s
+    - --housekeeping_interval=60s
+    - --max_housekeeping_interval=120s
     - --allow_dynamic_housekeeping=true
-    - --global_housekeeping_interval=1m
-    - --disable_metrics=advtcp,cpu_topology,disk,hugetlb,memory_numa,percpu,referenced_memory,resctrl,tcp,udp
+    - --global_housekeeping_interval=2m
+    - --disable_metrics=advtcp,cpu_topology,disk,hugetlb,memory_numa,percpu,referenced_memory,resctrl,tcp,udp,process
+    - --store_container_labels=false
+    - --whitelisted_container_labels=io.kubernetes.container.name,io.kubernetes.pod.name
     deploy:
       resources:
         limits:
@@ -726,6 +752,10 @@ services:
     - /sys:/sys:ro
     - /var/lib/docker/:/var/lib/docker:ro
     - /dev/disk/:/dev/disk:ro
+    # ULTRA-FIX: Add tmpfs volumes for writable areas needed by cAdvisor
+    tmpfs:
+    - /tmp:size=100M,mode=1777
+    - /var/cache:size=50M,mode=1777
   postgres-exporter:
     container_name: sutazai-postgres-exporter
     depends_on:
@@ -763,7 +793,7 @@ services:
     environment:
       REDIS_ADDR: redis://redis:6379
       # REDIS_PASSWORD not needed - Redis runs without authentication
-    image: oliver006/redis_exporter:latest
+    image: sutazai-redis-exporter-secure:latest
     networks:
     - sutazai-network
     ports:
@@ -782,11 +812,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
+          cpus: '1'
           memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
     environment:
       AGENT_TYPE: ollama-integration
       API_ENDPOINT: http://backend:8000
@@ -841,7 +871,7 @@ services:
     environment:
       AGENT_TYPE: hardware-resource-optimizer
       API_ENDPOINT: http://backend:8000
-      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       LOG_LEVEL: INFO
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
@@ -895,11 +925,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
+          cpus: '1'
           memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
     environment:
       AGENT_TYPE: jarvis-hardware-resource-optimizer
       API_ENDPOINT: http://backend:8000
@@ -961,7 +991,7 @@ services:
     environment:
       AGENT_TYPE: jarvis-automation-agent
       API_ENDPOINT: http://backend:8000
-      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       LOG_LEVEL: INFO
       OLLAMA_BASE_URL: http://ollama:11434
       PORT: 8080
@@ -1004,11 +1034,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
+          cpus: '1'
           memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
     environment:
       AGENT_TYPE: ai-agent-orchestrator
       API_ENDPOINT: http://backend:8000
@@ -1049,11 +1079,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
+          cpus: '1'
           memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
     environment:
       AGENT_TYPE: task-assignment-coordinator
       API_ENDPOINT: http://backend:8000
@@ -1140,7 +1170,7 @@ services:
   # Distributed Tracing
   jaeger:
     container_name: sutazai-jaeger
-    image: jaegertracing/all-in-one:latest
+    image: sutazai-jaeger-secure:latest
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
       - COLLECTOR_OTLP_ENABLED=true
@@ -1178,13 +1208,13 @@ services:
   # Log Shipping (Promtail for Loki)
   promtail:
     container_name: sutazai-promtail
-    image: grafana/promtail:2.9.0
+    image: sutazai-promtail-secure:latest
+    user: promtail
     volumes:
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./monitoring/promtail/config.yml:/etc/promtail/config.yml:ro
-    command: -config.file=/etc/promtail/config.yml
     networks:
       - sutazai-network
     restart: unless-stopped
@@ -1196,8 +1226,17 @@ services:
         reservations:
           cpus: '0.1'
           memory: 64M
+    privileged: true
     depends_on:
       - loki
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pgrep promtail
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
 volumes:
   agent_outputs: null
@@ -1220,7 +1259,7 @@ x-common-variables:
   SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
   TZ: ${TZ:-UTC}
 x-database-config:
-  DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+  DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
   REDIS_URL: redis://redis:6379/0
 x-ollama-config:
   OLLAMA_API_KEY: local

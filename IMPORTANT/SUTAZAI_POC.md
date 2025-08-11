@@ -831,7 +831,7 @@ Availability Target
               <h3 class="font-serif text-xl font-bold text-primary mb-4">Developer Experience</h3>
               <div class="space-y-4">
                 <div class="flex items-start space-x-3">
-                  <i class="fas fa-magic text-accent mt-1"></i>
+                  <i class="fas fa-automated text-accent mt-1"></i>
                   <div>
                     <h4 class="font-semibold">GPT-Engineer Integration</h4>
                     <p class="text-sm text-neutral">Rapid prototyping with natural language descriptions</p>

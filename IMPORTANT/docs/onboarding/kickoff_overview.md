@@ -5,7 +5,7 @@
 **Document Type:** Architecture & Onboarding Overview  
 **Compliance:** CLAUDE.md Rules 1-19 Verified
 
-This onboarding package provides a comprehensive, reality-based synthesis of the Perfect Jarvis architecture, combining verified capabilities from external repositories with SutazAI's actual running infrastructure. All details are production-ready implementations only - no fantasy elements or speculative features.
+This onboarding package provides a comprehensive, reality-based synthesis of the Perfect Jarvis architecture, combining verified capabilities from external repositories with SutazAI's actual running infrastructure. All details are production-ready implementations only - no conceptual elements or speculative features.
 
 ## Technology Stack Analysis (5 Key Repositories)
 
@@ -177,7 +177,7 @@ flowchart TB
 CLAUDE.md                  @system-architect @team-lead
 ```
 
-## Current System Limitations (No Fantasy)
+## Current System Limitations (No conceptual)
 
 ### Technical Constraints
 1. **Model Mismatch**: Backend expects "gpt-oss" but only TinyLlama loaded
@@ -286,7 +286,7 @@ CLAUDE.md                  @system-architect @team-lead
 
 ### Quality Gates
 - All code must pass CLAUDE.md rules 1-19
-- No fantasy elements or speculative features
+- No conceptual elements or speculative features
 - All changes must preserve existing functionality
 - Documentation must be updated with changes
 - Tests must pass before deployment
@@ -414,7 +414,7 @@ CLAUDE.md                  @system-architect @team-lead
 | Risk | Impact | Mitigation |
 |------|--------|-----------|
 | Scope creep | High | Strict adherence to CLAUDE.md rules |
-| Fantasy features | High | Rule 1: No speculative code |
+| conceptual features | High | Rule 1: No speculative code |
 | Breaking changes | High | Rule 2: Preserve functionality |
 | Documentation drift | Medium | Rule 19: Mandatory CHANGELOG |
 
@@ -427,6 +427,6 @@ Key success factors:
 2. Implement incrementally (one component at a time)
 3. Test thoroughly (no production without validation)
 4. Document everything (CHANGELOG.md mandatory)
-5. No fantasy features (Rule 1 compliance)
+5. No conceptual features (Rule 1 compliance)
 
 **Ready to begin implementation following this reality-based plan.**

@@ -48,7 +48,7 @@
         "module": "/opt/sutazaiapp/scripts/enforcement/rule1_reality_enforcer.py",
         "async": true,
         "checks": [
-          "Fantasy keyword scanner",
+          "conceptual keyword scanner",
           "Abstract code detector",
           "Placeholder identifier",
           "TODO/specific implementation name (e.g., emailSender, dataProcessor) comment finder"
@@ -254,7 +254,7 @@
           "location": ".git/hooks/pre-commit",
           "script": "/opt/sutazaiapp/scripts/hooks/hygiene-pre-commit.sh",
           "checks": [
-            "Fantasy element scanner",
+            "conceptual element scanner",
             "Junk file detector",
             "Documentation validator",
             "Python header checker"

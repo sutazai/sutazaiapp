@@ -1,0 +1,82 @@
+{
+  "sequential_test": {
+    "test_type": "sequential",
+    "results": {
+      "total_requests": 100,
+      "successful_requests": 0,
+      "failed_requests": 100,
+      "success_rate_percent": 0.0
+    },
+    "sample_results": [
+      {
+        "request_id": 0,
+        "success": false,
+        "response_time_ms": 1.8,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      },
+      {
+        "request_id": 1,
+        "success": false,
+        "response_time_ms": 1.1,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      },
+      {
+        "request_id": 2,
+        "success": false,
+        "response_time_ms": 0.94,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      },
+      {
+        "request_id": 3,
+        "success": false,
+        "response_time_ms": 0.91,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      },
+      {
+        "request_id": 4,
+        "success": false,
+        "response_time_ms": 0.65,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      },
+      {
+        "request_id": 95,
+        "success": false,
+        "response_time_ms": 0.78,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      },
+      {
+        "request_id": 96,
+        "success": false,
+        "response_time_ms": 1.55,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      },
+      {
+        "request_id": 97,
+        "success": false,
+        "response_time_ms": 0.84,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      },
+      {
+        "request_id": 98,
+        "success": false,
+        "response_time_ms": 0.99,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      },
+      {
+        "request_id": 99,
+        "success": false,
+        "response_time_ms": 0.82,
+        "error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+      }
+    ]
+  },
+  "rapid_fire_test": {
+    "test_type": "rapid_fire",
+    "error": "No successful requests"
+  },
+  "assessment": {
+    "success": false,
+    "success_rate": 0.0,
+    "avg_response_time": 0
+  }
+}

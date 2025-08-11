@@ -5494,7 +5494,7 @@
       "parameters_count": 1,
       "nested_functions": 0,
       "is_async": false,
-      "docstring": "Enhanced daemon mode with health monitoring and graceful shutdown",
+      "docstring": "Enhanced service mode with health monitoring and graceful shutdown",
       "issues": [
         "High cyclomatic complexity: 21",
         "Too many lines of code: 70",

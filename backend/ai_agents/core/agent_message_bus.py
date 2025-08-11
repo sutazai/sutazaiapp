@@ -436,7 +436,6 @@ class AgentMessageBus:
                     heartbeat = json.loads(heartbeat_data)
                     agent_loads[agent_id] = heartbeat.get("active_tasks", 0)
                 except Exception as e:
-                    # TODO: Review this exception handling
                     logger.error(f"Unexpected exception: {e}", exc_info=True)
                     agent_loads[agent_id] = 0
             else:

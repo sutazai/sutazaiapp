@@ -1,0 +1,141 @@
+{
+  "system_memory": {
+    "total_memory_mb": 23841,
+    "used_memory_mb": 8552,
+    "free_memory_mb": 2096,
+    "available_memory_mb": 15289,
+    "memory_usage_percentage": 35.8709785663353,
+    "swap_total_mb": 6144,
+    "swap_used_mb": 349
+  },
+  "docker_memory": {
+    "containers": [],
+    "total_containers": 0,
+    "total_docker_memory_mb": 0,
+    "total_docker_memory_gb": 0.0
+  },
+  "process_memory": {
+    "top_processes": [
+      {
+        "user": "root",
+        "pid": "771075",
+        "cpu_percent": 10.8,
+        "memory_percent": 7.4,
+        "vsz_kb": 34472796,
+        "rss_kb": 1825212,
+        "memory_mb": 1782.43359375,
+        "command": "claude"
+      },
+      {
+        "user": "ai",
+        "pid": "512248",
+        "cpu_percent": 0.4,
+        "memory_percent": 3.1,
+        "vsz_kb": 87147588,
+        "rss_kb": 773108,
+        "memory_mb": 754.98828125,
+        "command": "/home/ai/.vscode-server/cli/servers/Stable-e3550cf..."
+      },
+      {
+        "user": "1002",
+        "pid": "1780789",
+        "cpu_percent": 169.0,
+        "memory_percent": 3.0,
+        "vsz_kb": 3189916,
+        "rss_kb": 736372,
+        "memory_mb": 719.11328125,
+        "command": "/usr/bin/ollama runner --model /home/ollama/.ollam..."
+      },
+      {
+        "user": "root",
+        "pid": "2200620",
+        "cpu_percent": 0.6,
+        "memory_percent": 2.1,
+        "vsz_kb": 33203836,
+        "rss_kb": 528712,
+        "memory_mb": 516.3203125,
+        "command": "claude"
+      },
+      {
+        "user": "7474",
+        "pid": "3481777",
+        "cpu_percent": 0.5,
+        "memory_percent": 2.0,
+        "vsz_kb": 5993096,
+        "rss_kb": 507148,
+        "memory_mb": 495.26171875,
+        "command": "/opt/java/openjdk/bin/java -cp /var/lib/neo4j/plug..."
+      },
+      {
+        "user": "root",
+        "pid": "3198504",
+        "cpu_percent": 1.6,
+        "memory_percent": 1.8,
+        "vsz_kb": 33084276,
+        "rss_kb": 451916,
+        "memory_mb": 441.32421875,
+        "command": "claude"
+      },
+      {
+        "user": "root",
+        "pid": "59150",
+        "cpu_percent": 3.4,
+        "memory_percent": 0.9,
+        "vsz_kb": 483132,
+        "rss_kb": 244004,
+        "memory_mb": 238.28515625,
+        "command": "/usr/bin/python3 /usr/bin/glances"
+      },
+      {
+        "user": "nobody",
+        "pid": "3331431",
+        "cpu_percent": 0.5,
+        "memory_percent": 0.8,
+        "vsz_kb": 1974536,
+        "rss_kb": 198420,
+        "memory_mb": 193.76953125,
+        "command": "/bin/prometheus --config.file=/etc/prometheus/prom..."
+      },
+      {
+        "user": "root",
+        "pid": "26106",
+        "cpu_percent": 0.0,
+        "memory_percent": 0.7,
+        "vsz_kb": 32894732,
+        "rss_kb": 190536,
+        "memory_mb": 186.0703125,
+        "command": "claude"
+      },
+      {
+        "user": "root",
+        "pid": "475191",
+        "cpu_percent": 0.0,
+        "memory_percent": 0.7,
+        "vsz_kb": 32915996,
+        "rss_kb": 186692,
+        "memory_mb": 182.31640625,
+        "command": "claude"
+      }
+    ],
+    "total_top_processes_memory_mb": 5509.8828125
+  },
+  "analysis": {
+    "system_total_gb": 23.2822265625,
+    "system_used_gb": 8.3515625,
+    "docker_used_gb": 0.0,
+    "non_docker_memory_gb": 8.3515625,
+    "docker_efficiency_percentage": 0.0,
+    "memory_target_8gb_met": false,
+    "previous_usage_15gb": 15.0,
+    "optimization_achieved_gb": 6.6484375,
+    "optimization_percentage": 44.322916666666664
+  },
+  "stress_test": {
+    "baseline_memory_mb": 8498,
+    "peak_memory_mb": 8597,
+    "recovery_memory_mb": 8504,
+    "memory_increase_mb": 99,
+    "memory_recovery_mb": 93,
+    "recovery_percentage": 93.93939393939394
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "Medium Load Test": {
+    "test_config": {
+      "concurrent_users": 50,
+      "requests_per_user": 5,
+      "endpoint": "http://localhost:10010/health"
+    },
+    "results": {
+      "total_requests": 250,
+      "successful_requests": 0,
+      "failed_requests": 250,
+      "success_rate_percent": 0.0,
+      "total_time_seconds": 0.09,
+      "requests_per_second": 2806.37
+    },
+    "sample_failures": [
+      {
+        "user_id": "0-0",
+        "success": false,
+        "response_time_ms": 26.25,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-1",
+        "success": false,
+        "response_time_ms": 26.15,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-2",
+        "success": false,
+        "response_time_ms": 26.03,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-3",
+        "success": false,
+        "response_time_ms": 25.95,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-4",
+        "success": false,
+        "response_time_ms": 25.89,
+        "error": "Server disconnected"
+      }
+    ]
+  },
+  "High Load Test": {
+    "test_config": {
+      "concurrent_users": 100,
+      "requests_per_user": 10,
+      "endpoint": "http://localhost:10010/health"
+    },
+    "results": {
+      "total_requests": 1000,
+      "successful_requests": 0,
+      "failed_requests": 1000,
+      "success_rate_percent": 0.0,
+      "total_time_seconds": 0.42,
+      "requests_per_second": 2395.01
+    },
+    "sample_failures": [
+      {
+        "user_id": "0-0",
+        "success": false,
+        "response_time_ms": 63.05,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-1",
+        "success": false,
+        "response_time_ms": 62.91,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-2",
+        "success": false,
+        "response_time_ms": 62.82,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-3",
+        "success": false,
+        "response_time_ms": 62.74,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-4",
+        "success": false,
+        "response_time_ms": 62.58,
+        "error": "Server disconnected"
+      }
+    ]
+  },
+  "Extreme Concurrency Test": {
+    "test_config": {
+      "concurrent_users": 200,
+      "requests_per_user": 5,
+      "endpoint": "http://localhost:10010/health"
+    },
+    "results": {
+      "total_requests": 1000,
+      "successful_requests": 0,
+      "failed_requests": 1000,
+      "success_rate_percent": 0.0,
+      "total_time_seconds": 0.38,
+      "requests_per_second": 2644.86
+    },
+    "sample_failures": [
+      {
+        "user_id": "0-0",
+        "success": false,
+        "response_time_ms": 46.81,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-1",
+        "success": false,
+        "response_time_ms": 46.51,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-2",
+        "success": false,
+        "response_time_ms": 46.4,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-3",
+        "success": false,
+        "response_time_ms": 46.2,
+        "error": "Server disconnected"
+      },
+      {
+        "user_id": "0-4",
+        "success": false,
+        "response_time_ms": 45.98,
+        "error": "Server disconnected"
+      }
+    ]
+  }
+}

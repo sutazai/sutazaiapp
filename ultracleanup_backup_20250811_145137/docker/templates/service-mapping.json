@@ -1,0 +1,84 @@
+{
+  "version": "1.0.0",
+  "created": "2025-08-11T00:28:54.514877",
+  "templates": {
+    "python-base-master": {
+      "base_image": "python:3.12.8-slim-bookworm",
+      "description": "Universal Python base for all Python services",
+      "security": "non-root user (appuser:1000)",
+      "services": []
+    },
+    "nodejs-base-master": {
+      "base_image": "node:18-slim",
+      "description": "Universal Node.js base",
+      "security": "non-root user (node:1000)",
+      "services": []
+    },
+    "alpine-base-master": {
+      "base_image": "alpine:3.18",
+      "description": "Minimal Alpine base for microservices",
+      "security": "non-root user (appuser:1000)",
+      "services": []
+    },
+    "ai-agent-master": {
+      "inherits": "python-base-master",
+      "description": "AI agent services with ML libraries",
+      "services": []
+    },
+    "backend-api-master": {
+      "inherits": "python-base-master",
+      "description": "API services with FastAPI/Flask",
+      "services": []
+    },
+    "frontend-ui-master": {
+      "inherits": "nodejs-base-master or python-base-master",
+      "description": "UI services with Streamlit or React",
+      "services": []
+    },
+    "monitoring-master": {
+      "inherits": "alpine-base-master",
+      "description": "Monitoring and metrics services",
+      "services": []
+    },
+    "data-pipeline-master": {
+      "inherits": "python-base-master",
+      "description": "Data processing and ETL services",
+      "services": []
+    },
+    "ml-training-master": {
+      "inherits": "python-base-master",
+      "description": "ML training with PyTorch/TensorFlow",
+      "services": []
+    },
+    "security-service-master": {
+      "inherits": "alpine-base-master",
+      "description": "Security and compliance services",
+      "services": []
+    },
+    "database-client-master": {
+      "inherits": "python-base-master",
+      "description": "Database-heavy services",
+      "services": []
+    },
+    "gpu-compute-master": {
+      "base_image": "nvidia/cuda:12.0-runtime",
+      "description": "GPU-accelerated services",
+      "services": []
+    },
+    "edge-compute-master": {
+      "inherits": "alpine-base-master",
+      "description": "Edge/IoT deployment",
+      "services": []
+    },
+    "test-automation-master": {
+      "inherits": "python-base-master",
+      "description": "Testing and QA services",
+      "services": []
+    },
+    "third-party-wrapper": {
+      "base_image": "various",
+      "description": "Wrapper for third-party services",
+      "services": []
+    }
+  }
+}

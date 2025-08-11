@@ -2,9 +2,9 @@
   "version": "1.0.0",
   "generated": "2025-08-03",
   "agents": {
-    "fantasy-elements-validator": {
-      "name": "Fantasy Elements Validator",
-      "description": "Validates code contains no fantasy or placeholder elements",
+    "conceptual-elements-validator": {
+      "name": "conceptual Elements Validator",
+      "description": "Validates code contains no conceptual or placeholder elements",
       "enforces_rules": ["no_fantasy_elements"],
       "resource_limits": {
         "max_cpu_percent": 20,

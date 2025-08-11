@@ -86,7 +86,6 @@ class ComplianceViolation:
     detected_at: datetime = field(default_factory=datetime.utcnow)
     resolved_at: Optional[datetime] = None
     resolution_method: Optional[str] = None
-    resolution_notes: Optional[str] = None
     
     # Metadata
     metadata: Dict[str, Any] = field(default_factory=dict)
@@ -895,14 +894,12 @@ class ComplianceManager:
         return report
     
     def resolve_violation(self, violation_id: str, resolution_method: str, 
-                         resolution_notes: str) -> bool:
         """Mark a compliance violation as resolved"""
         
         violation = self.violations.get(violation_id)
         if violation:
             violation.resolved_at = datetime.utcnow()
             violation.resolution_method = resolution_method
-            violation.resolution_notes = resolution_notes
             
             self.logger.info(f"Resolved compliance violation {violation_id}: {resolution_method}")
             return True
@@ -969,4 +966,3 @@ class ComplianceManager:
             # Any cleanup tasks would go here
             self.logger.info("Compliance manager shutdown complete")
         except Exception as e:
-            self.logger.error(f"Error during compliance manager shutdown: {e}")

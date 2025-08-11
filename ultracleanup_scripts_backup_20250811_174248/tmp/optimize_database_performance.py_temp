@@ -1,0 +1,284 @@
+#!/usr/bin/env python3
+"""
+ULTRAPERFORMANCE Database Optimizer
+Optimizes PostgreSQL for maximum performance
+"""
+
+import psycopg2
+import json
+from datetime import datetime
+
+class DatabaseOptimizer:
+    def __init__(self):
+        self.conn = psycopg2.connect(
+            host="localhost",
+            port=10000,
+            database="sutazai",
+            user="sutazai",
+            password="sutazai123"
+        )
+        self.cursor = self.conn.cursor()
+        self.optimizations = []
+        
+    def analyze_current_state(self):
+        """Analyze current database performance"""
+        print("Analyzing current database state...")
+        
+        # Check table statistics
+        self.cursor.execute("""
+            SELECT 
+                schemaname,
+                tablename,
+                n_live_tup as live_rows,
+                n_dead_tup as dead_rows,
+                last_vacuum,
+                last_autovacuum
+            FROM pg_stat_user_tables
+            ORDER BY n_live_tup DESC;
+        """)
+        
+        tables = self.cursor.fetchall()
+        print(f"Found {len(tables)} tables")
+        
+        # Check for missing indexes
+        self.cursor.execute("""
+            SELECT 
+                schemaname,
+                tablename,
+                attname,
+                n_distinct,
+                correlation
+            FROM pg_stats
+            WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+            AND n_distinct > 100
+            AND correlation < 0.1
+            ORDER BY n_distinct DESC;
+        """)
+        
+        potential_indexes = self.cursor.fetchall()
+        
+        return {
+            "tables": tables,
+            "potential_indexes": potential_indexes
+        }
+        
+    def create_optimized_indexes(self):
+        """Create performance-critical indexes"""
+        print("\nCreating optimized indexes...")
+        
+        index_queries = [
+            # Users table indexes
+            "CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);",
+            "CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at);",
+            "CREATE INDEX IF NOT EXISTS idx_users_is_active ON users(is_active) WHERE is_active = true;",
+            
+            # Sessions table indexes
+            "CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);",
+            "CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON sessions(created_at);",
+            "CREATE INDEX IF NOT EXISTS idx_sessions_active ON sessions(user_id) WHERE is_active = true;",
+            
+            # Tasks table indexes
+            "CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);",
+            "CREATE INDEX IF NOT EXISTS idx_tasks_created_at ON tasks(created_at);",
+            "CREATE INDEX IF NOT EXISTS idx_tasks_user_status ON tasks(user_id, status);",
+            
+            # Agents table indexes
+            "CREATE INDEX IF NOT EXISTS idx_agents_status ON agents(status);",
+            "CREATE INDEX IF NOT EXISTS idx_agents_type ON agents(type);",
+            
+            # Composite indexes for common queries
+            "CREATE INDEX IF NOT EXISTS idx_tasks_user_created ON tasks(user_id, created_at DESC);",
+            "CREATE INDEX IF NOT EXISTS idx_sessions_user_active ON sessions(user_id, is_active, created_at DESC);",
+        ]
+        
+        for query in index_queries:
+            try:
+                self.cursor.execute(query)
+                self.conn.commit()
+                index_name = query.split("INDEX IF NOT EXISTS ")[1].split(" ")[0]
+                print(f"  ✅ Created index: {index_name}")
+                self.optimizations.append(f"Created index: {index_name}")
+            except Exception as e:
+                print(f"  ⚠️  Error creating index: {e}")
+                self.conn.rollback()
+                
+    def optimize_connection_settings(self):
+        """Optimize PostgreSQL connection and performance settings"""
+        print("\nOptimizing database settings...")
+        
+        optimization_queries = [
+            # Connection pooling settings
+            "ALTER SYSTEM SET max_connections = 200;",
+            "ALTER SYSTEM SET shared_buffers = '256MB';",
+            
+            # Performance settings
+            "ALTER SYSTEM SET effective_cache_size = '1GB';",
+            "ALTER SYSTEM SET maintenance_work_mem = '64MB';",
+            "ALTER SYSTEM SET work_mem = '4MB';",
+            
+            # Query optimization
+            "ALTER SYSTEM SET random_page_cost = 1.1;",
+            "ALTER SYSTEM SET effective_io_concurrency = 200;",
+            
+            # Checkpoint settings
+            "ALTER SYSTEM SET checkpoint_completion_target = 0.9;",
+            "ALTER SYSTEM SET wal_buffers = '16MB';",
+            "ALTER SYSTEM SET default_statistics_target = 100;",
+            
+            # Autovacuum optimization
+            "ALTER SYSTEM SET autovacuum_max_workers = 4;",
+            "ALTER SYSTEM SET autovacuum_naptime = '30s';",
+        ]
+        
+        for query in optimization_queries:
+            try:
+                self.cursor.execute(query)
+                self.conn.commit()
+                setting = query.split("SET ")[1].split(" =")[0]
+                print(f"  ✅ Optimized: {setting}")
+                self.optimizations.append(f"Optimized setting: {setting}")
+            except Exception as e:
+                print(f"  ⚠️  Error optimizing: {e}")
+                self.conn.rollback()
+                
+    def vacuum_and_analyze(self):
+        """Run VACUUM and ANALYZE for better performance"""
+        print("\nRunning VACUUM and ANALYZE...")
+        
+        # Get all user tables
+        self.cursor.execute("""
+            SELECT tablename 
+            FROM pg_tables 
+            WHERE schemaname = 'public';
+        """)
+        
+        tables = self.cursor.fetchall()
+        
+        for table in tables:
+            table_name = table[0]
+            try:
+                # Close current transaction to run VACUUM
+                self.conn.commit()
+                self.conn.autocommit = True
+                
+                # VACUUM and ANALYZE
+                self.cursor.execute(f"VACUUM ANALYZE {table_name};")
+                print(f"  ✅ Optimized table: {table_name}")
+                self.optimizations.append(f"VACUUM ANALYZE: {table_name}")
+                
+            except Exception as e:
+                print(f"  ⚠️  Error optimizing {table_name}: {e}")
+            finally:
+                self.conn.autocommit = False
+                
+    def create_materialized_views(self):
+        """Create materialized views for expensive queries"""
+        print("\nCreating materialized views...")
+        
+        views = [
+            (
+                "user_task_summary",
+                """
+                CREATE MATERIALIZED VIEW IF NOT EXISTS user_task_summary AS
+                SELECT 
+                    u.id as user_id,
+                    u.username,
+                    COUNT(t.id) as total_tasks,
+                    COUNT(CASE WHEN t.status = 'completed' THEN 1 END) as completed_tasks,
+                    COUNT(CASE WHEN t.status = 'pending' THEN 1 END) as pending_tasks,
+                    MAX(t.created_at) as last_task_created
+                FROM users u
+                LEFT JOIN tasks t ON u.id = t.user_id
+                GROUP BY u.id, u.username;
+                """
+            ),
+            (
+                "agent_performance",
+                """
+                CREATE MATERIALIZED VIEW IF NOT EXISTS agent_performance AS
+                SELECT 
+                    a.id as agent_id,
+                    a.name,
+                    a.type,
+                    COUNT(t.id) as tasks_processed,
+                    AVG(EXTRACT(EPOCH FROM (t.updated_at - t.created_at))) as avg_processing_time
+                FROM agents a
+                LEFT JOIN tasks t ON a.id = t.agent_id
+                WHERE t.status = 'completed'
+                GROUP BY a.id, a.name, a.type;
+                """
+            )
+        ]
+        
+        for view_name, query in views:
+            try:
+                self.cursor.execute(query)
+                self.cursor.execute(f"CREATE INDEX IF NOT EXISTS idx_{view_name}_refresh ON {view_name}(user_id);")
+                self.conn.commit()
+                print(f"  ✅ Created materialized view: {view_name}")
+                self.optimizations.append(f"Created materialized view: {view_name}")
+            except Exception as e:
+                print(f"  ⚠️  Error creating view {view_name}: {e}")
+                self.conn.rollback()
+                
+    def generate_report(self):
+        """Generate optimization report"""
+        report = {
+            "timestamp": datetime.now().isoformat(),
+            "optimizations_applied": self.optimizations,
+            "total_optimizations": len(self.optimizations),
+            "recommendations": [
+                "Restart PostgreSQL to apply system settings: docker restart sutazai-postgres",
+                "Monitor query performance with pg_stat_statements",
+                "Set up connection pooling with PgBouncer for production",
+                "Consider partitioning large tables (>1M rows)",
+                "Implement query result caching in Redis"
+            ]
+        }
+        
+        return report
+        
+    def cleanup(self):
+        """Close database connection"""
+        self.cursor.close()
+        self.conn.close()
+        
+def main():
+    print("=" * 80)
+    print("ULTRAPERFORMANCE DATABASE OPTIMIZER")
+    print("=" * 80)
+    
+    optimizer = DatabaseOptimizer()
+    
+    try:
+        # Analyze current state
+        state = optimizer.analyze_current_state()
+        
+        # Apply optimizations
+        optimizer.create_optimized_indexes()
+        optimizer.optimize_connection_settings()
+        optimizer.vacuum_and_analyze()
+        optimizer.create_materialized_views()
+        
+        # Generate report
+        report = optimizer.generate_report()
+        
+        print("\n" + "=" * 80)
+        print(f"OPTIMIZATIONS COMPLETED: {report['total_optimizations']}")
+        print("=" * 80)
+        
+        print("\nNEXT STEPS:")
+        for rec in report['recommendations']:
+            print(f"  • {rec}")
+            
+        # Save report
+        with open("/opt/sutazaiapp/reports/db_optimization_report.json", "w") as f:
+            json.dump(report, f, indent=2)
+            
+        print(f"\nReport saved to: /opt/sutazaiapp/reports/db_optimization_report.json")
+        
+    finally:
+        optimizer.cleanup()
+
+if __name__ == "__main__":
+    main()

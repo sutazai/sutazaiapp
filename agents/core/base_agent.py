@@ -246,7 +246,6 @@ class BaseAgent:
                 self.model_config = OllamaConfig.get_model_config(self.agent_name)
                 self.default_model = self.model_config["model"]
             except Exception as e:
-                # TODO: Review this exception handling
                 logger.error(f"Unexpected exception: {e}", exc_info=True)
                 self.model_config = {"model": "tinyllama", "temperature": 0.7}
                 self.default_model = "tinyllama"
@@ -505,7 +504,6 @@ class BaseAgent:
                     else:
                         self.logger.warning(f"Heartbeat failed: {response.status_code}")
                 except Exception as e:
-                    # TODO: Review this exception handling
                     logger.error(f"Unexpected exception: {e}", exc_info=True)
                     pass  # Heartbeat failure is not critical
             
@@ -1327,4 +1325,3 @@ BaseAgentV2 = BaseAgent
 if __name__ == "__main__":
     # Simple test when run directly
     agent = BaseAgent()
-    agent.run()

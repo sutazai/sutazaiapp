@@ -23,7 +23,7 @@
       "sutazai-cadvisor": "healthy",
       "sutazai-qdrant": "healthy",
       "sutazai-ollama": "healthy",
-      "sutazai-blackbox-exporter": "healthy",
+      "sutazai-encapsulated-exporter": "healthy",
       "sutazai-chromadb": "healthy",
       "sutazai-prometheus": "healthy",
       "sutazai-alertmanager": "healthy",

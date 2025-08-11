@@ -242,7 +242,7 @@ graph TD
 ## Container Optimization Opportunities
 
 ### Services to Remove (31 unused)
-- All fantasy AI agents (agentgpt, autogpt, etc.)
+- All conceptual AI agents (agentgpt, autogpt, etc.)
 - Unused ML frameworks (tensorflow, pytorch, jax)
 - Duplicate services (multiple code assistants)
 - Non-integrated tools (dify, flowise, langflow)
@@ -264,7 +264,7 @@ graph TD
 ### Step 1: Stabilize Current State (Week 1)
 - Fix critical bugs (model, schema, auth)
 - Document actual capabilities
-- Remove fantasy documentation
+- Remove conceptual documentation
 
 ### Step 2: Build Core Features (Week 2)
 - Implement one end-to-end flow
@@ -292,7 +292,7 @@ graph TD
 | Model failure | High | Medium | Fix configuration |
 
 ### Technical Debt Inventory
-- 200+ fantasy documentation files (removed in v56)
+- 200+ conceptual documentation files (removed in v56)
 - 31 unused service definitions
 - 6 stub agent implementations
 - Missing test coverage (0%)

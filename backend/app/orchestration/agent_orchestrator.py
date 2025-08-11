@@ -258,7 +258,6 @@ class SutazAIAgentOrchestrator:
         """
         
         # Execute initialization
-        # Note: In production, use proper async database connection
         logger.info("Database tables initialized")
     
     async def _discover_agents(self):

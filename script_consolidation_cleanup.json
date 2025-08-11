@@ -226,7 +226,7 @@
     "scripts/consolidation_analysis.py",
     "scripts/__init__.py",
     "scripts/update_dockerfiles.py",
-    "scripts/pre-commit/check-fantasy-elements.py",
+    "scripts/pre-commit/check-conceptual-elements.py",
     "scripts/pre-commit/check-breaking-changes.py",
     "scripts/analysis/__init__.py",
     "scripts/maintenance/__init__.py",

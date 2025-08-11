@@ -8,7 +8,7 @@ This guide covers the **new consolidated Docker deployment system** for SutazAI.
 
 ### ❌ REMOVED (Phantom Services)
 - 100+ conflicting Docker Compose files
-- Fantasy network configurations
+- conceptual network configurations
 - Non-existent service definitions
 - Broken port mappings
 - Restart loops and dependency hell
@@ -337,7 +337,7 @@ Health check intervals:
 
 #### Services Won't Start
 ```bash
-# Check Docker daemon
+# Check Docker service
 sudo systemctl status docker
 
 # Check logs

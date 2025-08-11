@@ -238,7 +238,6 @@ class OllamaModelManager:
                 try:
                     created_at = datetime.fromisoformat(modified_at.replace('Z', '+00:00'))
                 except Exception as e:
-                    # TODO: Review this exception handling
                     logger.error(f"Unexpected exception: {e}", exc_info=True)
                     created_at = datetime.now()
                 
@@ -824,4 +823,3 @@ async def main():
         await manager.client.aclose()
 
 if __name__ == '__main__':
-    asyncio.run(main())

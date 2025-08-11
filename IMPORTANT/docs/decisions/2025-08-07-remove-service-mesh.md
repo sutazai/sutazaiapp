@@ -6,7 +6,7 @@
 
 ## Context
 
-CLAUDE.md reflects the current reality: Kong/Consul/RabbitMQ are running but not configured or integrated with application flows. They add operational complexity without delivering value, and they contradict Rule 2 (don’t break) and Rule 1 (no fantasy) when advertised capabilities aren’t actually wired up. The mesh lived in a separate Compose file: `docker-compose.service-mesh.yml`.
+CLAUDE.md reflects the current reality: Kong/Consul/RabbitMQ are running but not configured or integrated with application flows. They add operational complexity without delivering value, and they contradict Rule 2 (don’t break) and Rule 1 (no conceptual) when advertised capabilities aren’t actually wired up. The mesh lived in a separate Compose file: `docker-compose.service-mesh.yml`.
 
 ## Decision
 

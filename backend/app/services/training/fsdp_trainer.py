@@ -147,7 +147,6 @@ class FsdpTrainer(Trainer):
                     job.metrics = status_data.get("metrics", job.metrics)
                     job.model_path = status_data.get("model_path", job.model_path)
             except Exception as e:
-                # TODO: Review this exception handling
                 logger.error(f"Unexpected exception: {e}", exc_info=True)
                 pass  # Return cached status if service unavailable
             
@@ -190,7 +189,6 @@ class FsdpTrainer(Trainer):
                 loop = asyncio.get_event_loop()
                 self._available = loop.run_until_complete(self.health_check())
             except Exception as e:
-                # TODO: Review this exception handling
                 logger.error(f"Unexpected exception: {e}", exc_info=True)
                 self._available = False
         return self._available
@@ -215,4 +213,3 @@ class FsdpTrainer(Trainer):
         """Async context manager exit - cleanup client"""
         if self._client:
             await self._client.aclose()
-            self._client = None

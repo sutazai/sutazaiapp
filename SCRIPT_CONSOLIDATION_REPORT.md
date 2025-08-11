@@ -36,7 +36,7 @@ This represents a 90.2% reduction in script count.
 - scripts/monitoring/__init__.py
 - scripts/monitoring/system_monitor.py
 - scripts/pre-commit/check-breaking-changes.py
-- scripts/pre-commit/check-fantasy-elements.py
+- scripts/pre-commit/check-conceptual-elements.py
 - scripts/security/__init__.py
 - scripts/testing/__init__.py
 - scripts/testing/test_runner.py

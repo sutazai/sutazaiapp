@@ -20,7 +20,7 @@ This document coordinates 200 specialized AI agents across 8 phases to transform
 - **Scripts:** 235 shell scripts + 864 Python files (disorganized)
 
 ### Violation Summary
-- **Rule #1 (No Fantasy):** 74 fantasy references in 20 files
+- **Rule #1 (No conceptual):** 74 conceptual references in 20 files
 - **Rule #2 (Don't Break):** Backend was broken, now 95% functional
 - **Rule #7 (Script Chaos):** 235 scripts need organization
 - **Rule #9 (No Duplication):** Multiple BaseAgent implementations
@@ -246,15 +246,15 @@ Agent_71-75 (Changelog_Maintainers):
 **Timeline:** 16-32 hours  
 **Priority:** P1 HIGH
 
-### Agent 76-85: Fantasy Removal Team
+### Agent 76-85: conceptual Removal Team
 ```yaml
 Agent_76-80 (Fantasy_Hunters):
-  role: Remove all 74 fantasy references
+  role: Remove all 74 conceptual references
   targets:
-    - wizard, magic, teleport, mystical
-    - enchant, spell, alchemy, supernatural
+    - configuration, automated, transfer, advanced
+    - enhance, configuration, alchemy, advanced
   tasks:
-    - Find all fantasy terms
+    - Find all conceptual terms
     - Replace with real implementations
     - Update function names
     - Test functionality
@@ -621,7 +621,7 @@ phase_3:
   - CHANGELOG.md updated
 
 phase_4:
-  - Zero fantasy references
+  - Zero conceptual references
   - 80% test coverage
   - All linting passing
   - No unused imports
