@@ -5,6 +5,7 @@ Agent Models for SutazAI
 from pydantic import BaseModel, Field
 from datetime import datetime
 from enum import Enum
+from typing import Optional, Dict, Any
 from app.schemas.message_types import TaskPriority
 
 

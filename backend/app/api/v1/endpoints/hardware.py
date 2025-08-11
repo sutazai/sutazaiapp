@@ -589,14 +589,19 @@ async def stream_system_metrics(
         finally:
             logger.info(f"Metrics streaming session {session_id} ended")
     
+    # Get secure CORS configuration
+    from app.core.cors_security import cors_security
+    allowed_origins = cors_security.get_allowed_origins()
+    
     return StreamingResponse(
         generate_metrics(),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers": "Cache-Control"
+            "Access-Control-Allow-Origin": ", ".join(allowed_origins),
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, Cache-Control",
+            "Access-Control-Allow-Credentials": "true"
         }
     )
 

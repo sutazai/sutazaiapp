@@ -1,0 +1,67 @@
+apiVersion: 1
+
+providers:
+  # SutazAI System Dashboards Provider
+  - name: 'sutazai-dashboards'
+    orgId: 1
+    folder: 'SutazAI System'
+    folderUid: 'sutazai-system'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/sutazai
+      foldersFromFilesStructure: true
+
+  # SutazAI Performance Dashboards Provider
+  - name: 'sutazai-performance'
+    orgId: 1
+    folder: 'Performance Monitoring'
+    folderUid: 'sutazai-performance'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/performance
+      foldersFromFilesStructure: false
+
+  # SutazAI Infrastructure Dashboards Provider  
+  - name: 'sutazai-infrastructure'
+    orgId: 1
+    folder: 'Infrastructure'
+    folderUid: 'sutazai-infra'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/infrastructure
+      foldersFromFilesStructure: false
+
+  # SutazAI Business Dashboards Provider
+  - name: 'sutazai-business'
+    orgId: 1
+    folder: 'Business Metrics'
+    folderUid: 'sutazai-business'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/business
+      foldersFromFilesStructure: false
+
+  # Custom Dashboards Provider
+  - name: 'sutazai-custom'
+    orgId: 1
+    folder: 'Custom Dashboards'
+    folderUid: 'sutazai-custom'
+    type: file
+    disableDeletion: true
+    updateIntervalSeconds: 60
+    allowUiUpdates: true
+    options:
+      path: /opt/sutazaiapp/monitoring/dashboards
+      foldersFromFilesStructure: false

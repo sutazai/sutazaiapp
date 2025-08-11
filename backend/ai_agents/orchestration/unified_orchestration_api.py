@@ -211,8 +211,8 @@ class UnifiedOrchestrationAPI:
         "http://127.0.0.1:10010",  # Alternative localhost
     ],  # Configure appropriately for production
             allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
+            allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+            allow_headers=["Accept", "Accept-Language", "Content-Type", "Content-Language", "Authorization", "X-Requested-With", "X-CSRFToken", "Cache-Control"],
         )
     
     def _setup_routes(self):

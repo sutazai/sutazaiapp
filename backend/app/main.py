@@ -26,8 +26,13 @@ from app.core.cache import (
     cache_static_data, bulk_cache_set, cache_with_tags, invalidate_by_tags
 )
 from app.core.task_queue import get_task_queue, create_background_task
-from app.services.ollama_async import get_ollama_service
+from app.services.consolidated_ollama_service import get_ollama_service
 from app.core.config import settings
+from app.core.health_monitoring import get_health_monitoring_service, ServiceStatus, SystemStatus
+from app.core.circuit_breaker_integration import (
+    get_circuit_breaker_manager, get_redis_circuit_breaker, 
+    get_database_circuit_breaker, get_ollama_circuit_breaker
+)
 
 # Use uvloop for better async performance
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -45,6 +50,15 @@ class HealthResponse(BaseModel):
     timestamp: str
     services: Dict[str, str]
     performance: Dict[str, Any]
+    
+class DetailedHealthResponse(BaseModel):
+    overall_status: str
+    timestamp: str
+    services: Dict[str, Dict[str, Any]]
+    performance_metrics: Dict[str, Any]
+    system_resources: Dict[str, Any]
+    alerts: List[str]
+    recommendations: List[str]
     
 class AgentResponse(BaseModel):
     id: str
@@ -93,6 +107,22 @@ async def lifespan(app: FastAPI):
     # Initialize task queue
     task_queue = await get_task_queue()
     
+    # Initialize circuit breakers for resilience
+    circuit_manager = await get_circuit_breaker_manager()
+    redis_breaker = await get_redis_circuit_breaker()
+    db_breaker = await get_database_circuit_breaker()
+    ollama_breaker = await get_ollama_circuit_breaker()
+    logger.info("Circuit breakers initialized for improved resilience")
+    
+    # Initialize health monitoring service
+    health_monitor = await get_health_monitoring_service(cache_service, pool_manager)
+    
+    # Register circuit breakers with health monitor
+    health_monitor.register_circuit_breaker('redis', redis_breaker)
+    health_monitor.register_circuit_breaker('database', db_breaker)
+    health_monitor.register_circuit_breaker('ollama', ollama_breaker)
+    logger.info("Health monitoring service initialized with circuit breaker integration")
+    
     # Register task handlers
     async def process_automation_task(payload: Dict[str, Any]) -> Dict[str, Any]:
         """Process automation tasks"""
@@ -110,8 +140,9 @@ async def lifespan(app: FastAPI):
     
     logger.info("Task queue initialized with handlers")
     
-    # Warmup caches and connections
-    await ollama_service.warmup(3)
+    # Skip Ollama warmup - system responds quickly without it (200-400µs)
+    # Warmup was causing unnecessary startup delays
+    # await ollama_service.warmup(3)  # Removed - not needed for responsive system
     
     # Pre-warm health endpoint cache for instant first response
     logger.info("Pre-warming health endpoint cache...")
@@ -197,6 +228,16 @@ app.add_middleware(CORSMiddleware, **cors_config)
 
 logger.info(f"CORS Security: Configured {len(cors_config['allow_origins'])} explicit allowed origins")
 logger.info(f"CORS Origins: {', '.join(cors_config['allow_origins'])}")
+
+# Add security headers middleware for enterprise-grade protection
+try:
+    from app.middleware.security_headers import SecurityHeadersMiddleware, RateLimitMiddleware
+    environment = os.getenv("SUTAZAI_ENV", "production")
+    app.add_middleware(SecurityHeadersMiddleware, environment=environment)
+    app.add_middleware(RateLimitMiddleware, requests_per_minute=60)
+    logger.info("Security headers and rate limiting middleware loaded successfully")
+except ImportError:
+    logger.warning("Security headers middleware not available - using basic security")
 
 # Add compression middleware for better performance
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -286,166 +327,142 @@ AGENT_SERVICES = {
 }
 
 
-# Optimized health check endpoint with <200ms response time
+# Ultra-fast basic health check endpoint with <50ms response time
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
-    """Ultra-fast health check with 30-second caching and async service checks"""
+    """Ultra-fast basic health check optimized for high-frequency monitoring"""
     
-    # Check cache first for instant response
-    cache_service = await get_cache_service()
-    cache_key = "health:endpoint:response"
-    cached_response = await cache_service.get(cache_key, force_redis=True)
-    
-    if cached_response:
-        # Return cached response immediately (<10ms)
-        return HealthResponse(**cached_response)
-    
-    # If no cache, perform async health checks with timeouts
-    start_time = datetime.now()
-    
-    # Initialize response structure
-    services_health = {}
-    performance_metrics = {}
-    overall_status = "healthy"
-    
-    # Define critical services (check first, affect overall status)
-    critical_services = {
-        "redis": check_redis_health,
-        "database": check_database_health,
-    }
-    
-    # Define non-critical services (check async, don't affect overall status)
-    non_critical_services = {
-        "ollama": check_ollama_health,
-        "task_queue": check_task_queue_health,
-    }
-    
-    # Check critical services with 2-second timeout each
-    critical_tasks = []
-    for service_name, check_func in critical_services.items():
-        task = asyncio.create_task(
-            check_service_with_timeout(service_name, check_func, timeout=2.0)
-        )
-        critical_tasks.append((service_name, task))
-    
-    # Wait for critical services (max 2 seconds)
-    for service_name, task in critical_tasks:
-        try:
-            status = await task
-            services_health[service_name] = status
-            if status != "healthy":
-                overall_status = "degraded"
-        except Exception as e:
-            services_health[service_name] = "timeout"
-            overall_status = "degraded"
-    
-    # Launch non-critical service checks in background (don't wait)
-    non_critical_tasks = []
-    for service_name, check_func in non_critical_services.items():
-        task = asyncio.create_task(
-            check_service_with_timeout(service_name, check_func, timeout=1.0)
-        )
-        non_critical_tasks.append((service_name, task))
-    
-    # Gather non-critical results with 100ms max wait
     try:
-        done, pending = await asyncio.wait(
-            [task for _, task in non_critical_tasks],
-            timeout=0.1  # 100ms max wait for non-critical
+        # Use enhanced health monitoring service
+        health_monitor = await get_health_monitoring_service()
+        basic_health = await health_monitor.get_basic_health()
+        
+        # Transform the response to match HealthResponse model
+        response_data = {
+            "status": basic_health["status"],
+            "timestamp": basic_health["timestamp"],
+            "services": basic_health["services"],
+            "performance": {
+                "response_time_ms": basic_health.get("response_time_ms", 0),
+                "check_type": basic_health.get("check_type", "basic")
+            }
+        }
+        
+        return HealthResponse(**response_data)
+        
+    except Exception as e:
+        logger.error(f"Error in basic health check: {e}")
+        # Fallback to minimal response
+        return HealthResponse(
+            status="error",
+            timestamp=datetime.now().isoformat(),
+            services={"system": "error"},
+            performance={"error": str(e), "response_time_ms": 0}
+        )
+
+
+# New comprehensive health endpoint with detailed metrics
+@app.get("/api/v1/health/detailed", response_model=DetailedHealthResponse)
+async def detailed_health_check():
+    """Comprehensive health check with detailed service metrics, circuit breaker status, and recommendations"""
+    
+    try:
+        # Get comprehensive health report
+        health_monitor = await get_health_monitoring_service()
+        health_report = await health_monitor.get_detailed_health()
+        
+        # Convert ServiceMetrics to dict format for response
+        services_dict = {}
+        for service_name, metrics in health_report.services.items():
+            services_dict[service_name] = {
+                "status": metrics.status.value,
+                "response_time_ms": metrics.response_time_ms,
+                "last_check": metrics.last_check.isoformat() if metrics.last_check else None,
+                "last_success": metrics.last_success.isoformat() if metrics.last_success else None,
+                "last_failure": metrics.last_failure.isoformat() if metrics.last_failure else None,
+                "error_message": metrics.error_message,
+                "consecutive_failures": metrics.consecutive_failures,
+                "circuit_breaker_state": metrics.circuit_breaker_state,
+                "circuit_breaker_failures": metrics.circuit_breaker_failures,
+                "uptime_percentage": metrics.uptime_percentage,
+                "custom_metrics": metrics.custom_metrics
+            }
+        
+        return DetailedHealthResponse(
+            overall_status=health_report.overall_status.value,
+            timestamp=health_report.timestamp.isoformat(),
+            services=services_dict,
+            performance_metrics=health_report.performance_metrics,
+            system_resources=health_report.system_resources,
+            alerts=health_report.alerts,
+            recommendations=health_report.recommendations
         )
         
-        for service_name, task in non_critical_tasks:
-            if task in done:
-                try:
-                    services_health[service_name] = await task
-                except:
-                    services_health[service_name] = "error"
-            else:
-                services_health[service_name] = "checking"  # Still running
-                task.cancel()  # Cancel pending tasks
-    except:
-        pass  # Non-critical failures don't affect response
-    
-    # Get quick performance stats (non-blocking)
-    try:
-        cache_stats = cache_service.get_stats()
-        performance_metrics["cache_hit_rate"] = cache_stats.get("hits", 0) / max(cache_stats.get("gets", 1), 1)
-        performance_metrics["response_time_ms"] = (datetime.now() - start_time).total_seconds() * 1000
-    except:
-        performance_metrics["response_time_ms"] = (datetime.now() - start_time).total_seconds() * 1000
-    
-    # Build response
-    response_data = {
-        "status": overall_status,
-        "timestamp": datetime.now().isoformat(),
-        "services": services_health,
-        "performance": performance_metrics
-    }
-    
-    # Cache the response for 30 seconds
-    await cache_service.set(
-        cache_key,
-        response_data,
-        ttl=30,  # Cache for 30 seconds
-        redis_priority=True  # Ensure Redis storage for sharing across workers
-    )
-    
-    return HealthResponse(**response_data)
-
-
-# Health check helper functions with timeouts
-async def check_service_with_timeout(service_name: str, check_func: Callable, timeout: float) -> str:
-    """Check a service with timeout"""
-    try:
-        return await asyncio.wait_for(check_func(), timeout=timeout)
-    except asyncio.TimeoutError:
-        logger.warning(f"Health check timeout for {service_name} after {timeout}s")
-        return "timeout"
     except Exception as e:
-        logger.error(f"Health check error for {service_name}: {e}")
-        return "error"
+        logger.error(f"Error in detailed health check: {e}")
+        # Return error response
+        return DetailedHealthResponse(
+            overall_status="error",
+            timestamp=datetime.now().isoformat(),
+            services={"system": {"status": "error", "error_message": str(e)}},
+            performance_metrics={"error": str(e)},
+            system_resources={"error": str(e)},
+            alerts=[f"Health monitoring system error: {str(e)}"],
+            recommendations=["Investigate health monitoring system issues"]
+        )
 
 
-async def check_redis_health() -> str:
-    """Quick Redis health check"""
+# Circuit breaker status endpoint
+@app.get("/api/v1/health/circuit-breakers")
+async def get_circuit_breaker_status():
+    """Get status of all circuit breakers"""
+    
     try:
-        redis_client = await get_redis()
-        await redis_client.ping()
-        return "healthy"
-    except:
-        return "unhealthy"
+        circuit_manager = await get_circuit_breaker_manager()
+        all_stats = circuit_manager.get_all_stats()
+        
+        return {
+            "timestamp": datetime.now().isoformat(),
+            "circuit_breakers": all_stats,
+            "total_breakers": len(all_stats),
+            "healthy_breakers": len([stats for stats in all_stats.values() if stats["state"] == "closed"]),
+            "open_breakers": len([stats for stats in all_stats.values() if stats["state"] == "open"])
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting circuit breaker status: {e}")
+        return {
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }
 
 
-async def check_database_health() -> str:
-    """Quick database health check"""
+# Circuit breaker reset endpoint
+@app.post("/api/v1/health/circuit-breakers/reset")
+async def reset_circuit_breakers():
+    """Reset all circuit breakers"""
+    
     try:
-        pool_manager = await get_pool_manager()
-        await pool_manager.execute_db_query("SELECT 1", fetch_one=True)
-        return "healthy"
-    except:
-        return "unhealthy"
+        circuit_manager = await get_circuit_breaker_manager()
+        await circuit_manager.reset_all()
+        
+        return {
+            "message": "All circuit breakers have been reset",
+            "timestamp": datetime.now().isoformat(),
+            "status": "success"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error resetting circuit breakers: {e}")
+        return {
+            "error": str(e),
+            "timestamp": datetime.now().isoformat(),
+            "status": "failed"
+        }
 
 
-async def check_ollama_health() -> str:
-    """Quick Ollama health check (non-critical)"""
-    try:
-        ollama_service = await get_ollama_service()
-        if ollama_service:
-            return "healthy"
-        return "unavailable"
-    except:
-        return "unavailable"
-
-
-async def check_task_queue_health() -> str:
-    """Quick task queue health check (non-critical)"""
-    try:
-        task_queue = await get_task_queue()
-        if task_queue:
-            return "healthy"
-        return "unavailable"
-    except:
-        return "unavailable"
+# Note: Health check helper functions have been moved to app.core.health_monitoring
+# for better organization and comprehensive monitoring capabilities
 
 
 # Root endpoint
@@ -605,14 +622,28 @@ async def get_task(task_id: str):
 # Optimized chat endpoint with async Ollama
 @app.post("/api/v1/chat")
 async def chat(request: ChatRequest):
-    """High-performance chat endpoint with caching"""
+    """High-performance chat endpoint with caching and security validation"""
+    
+    # CRITICAL SECURITY: Validate model name to prevent injection attacks
+    try:
+        from app.utils.validation import validate_model_name
+        validated_model = validate_model_name(request.model)
+        logger.info(f"✅ Chat security: model validated {repr(request.model)} -> {repr(validated_model)}")
+        
+        # Use validated model name
+        if validated_model is None:
+            validated_model = "tinyllama"  # Use default if None
+            
+    except ValueError as e:
+        logger.warning(f"🚨 Chat security: BLOCKED malicious model name {repr(request.model)}: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid model name: {str(e)}")
     
     ollama_service = await get_ollama_service()
     
-    # Generate response with caching
+    # Generate response with caching using validated model
     result = await ollama_service.generate(
         prompt=request.message,
-        model=request.model,
+        model=validated_model,
         use_cache=request.use_cache,
         options={
             'num_predict': 100,
@@ -622,7 +653,7 @@ async def chat(request: ChatRequest):
     
     return {
         "response": result.get('response', 'Error generating response'),
-        "model": request.model,
+        "model": validated_model,
         "cached": result.get('cached', False)
     }
 
@@ -630,7 +661,21 @@ async def chat(request: ChatRequest):
 # Streaming chat endpoint for real-time responses
 @app.post("/api/v1/chat/stream")
 async def chat_stream(request: ChatRequest):
-    """Stream chat responses for better UX"""
+    """Stream chat responses for better UX with security validation"""
+    
+    # CRITICAL SECURITY: Validate model name to prevent injection attacks
+    try:
+        from app.utils.validation import validate_model_name
+        validated_model = validate_model_name(request.model)
+        logger.info(f"✅ Stream security: model validated {repr(request.model)} -> {repr(validated_model)}")
+        
+        # Use validated model name
+        if validated_model is None:
+            validated_model = "tinyllama"  # Use default if None
+            
+    except ValueError as e:
+        logger.warning(f"🚨 Stream security: BLOCKED malicious model name {repr(request.model)}: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid model name: {str(e)}")
     
     from fastapi.responses import StreamingResponse
     
@@ -639,7 +684,7 @@ async def chat_stream(request: ChatRequest):
     async def generate():
         async for chunk in ollama_service.generate_streaming(
             prompt=request.message,
-            model=request.model
+            model=validated_model
         ):
             yield f"data: {chunk}\n\n"
             
@@ -700,6 +745,51 @@ async def get_metrics():
     }
     
     return metrics
+
+
+# Enhanced Prometheus metrics endpoint with comprehensive monitoring
+@app.get("/metrics")
+async def prometheus_metrics():
+    """Enhanced Prometheus-compatible metrics endpoint with detailed service monitoring"""
+    
+    try:
+        # Use enhanced health monitoring service for comprehensive metrics
+        health_monitor = await get_health_monitoring_service()
+        prometheus_metrics_str = await health_monitor.get_prometheus_metrics()
+        
+        return prometheus_metrics_str
+        
+    except Exception as e:
+        logger.error(f"Error generating enhanced Prometheus metrics: {e}")
+        
+        # Fallback to basic metrics
+        try:
+            import psutil
+            from datetime import datetime
+            
+            cpu_percent = psutil.cpu_percent(interval=0.1)
+            memory = psutil.virtual_memory()
+            
+            fallback_metrics = [
+                "# HELP sutazai_system_error System error occurred during metrics collection",
+                "# TYPE sutazai_system_error gauge", 
+                "sutazai_system_error 1",
+                "",
+                "# HELP sutazai_cpu_usage_percent Current CPU usage percentage",
+                "# TYPE sutazai_cpu_usage_percent gauge",
+                f"sutazai_cpu_usage_percent {cpu_percent}",
+                "",
+                "# HELP sutazai_memory_usage_percent Current memory usage percentage", 
+                "# TYPE sutazai_memory_usage_percent gauge",
+                f"sutazai_memory_usage_percent {memory.percent}",
+                f"# Error: {str(e)}"
+            ]
+            
+            return "\n".join(fallback_metrics)
+            
+        except Exception as fallback_error:
+            logger.error(f"Error in fallback metrics: {fallback_error}")
+            return f"# CRITICAL ERROR: Unable to generate metrics - {str(e)}"
 
 
 # Cache management endpoints with enhanced functionality

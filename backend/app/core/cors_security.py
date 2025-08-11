@@ -75,12 +75,37 @@ class CORSSecurityConfig(BaseModel):
 
     def get_cors_middleware_config(self, include_monitoring: bool = True, include_services: bool = True) -> dict:
         """Get complete CORS middleware configuration"""
+        # Secure headers list instead of wildcards
+        secure_allowed_headers = [
+            "Accept",
+            "Accept-Language", 
+            "Content-Type",
+            "Content-Language",
+            "Authorization",
+            "X-Requested-With",
+            "X-CSRFToken",
+            "Cache-Control",
+            "Pragma",
+            "If-Modified-Since",
+            "If-None-Match"
+        ]
+        
+        secure_expose_headers = [
+            "Content-Type",
+            "Content-Length", 
+            "Content-Disposition",
+            "Cache-Control",
+            "Expires",
+            "Last-Modified",
+            "ETag"
+        ]
+        
         return {
             "allow_origins": self.get_allowed_origins(include_monitoring, include_services),
             "allow_credentials": True,
             "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-            "allow_headers": ["*"],  # Can be more restrictive if needed
-            "expose_headers": ["*"],  # Can be more restrictive if needed
+            "allow_headers": secure_allowed_headers,
+            "expose_headers": secure_expose_headers,
         }
 
 

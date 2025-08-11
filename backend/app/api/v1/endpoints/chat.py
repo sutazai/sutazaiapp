@@ -1,9 +1,10 @@
 """
 Chat endpoint for SutazAI with comprehensive XSS protection
 """
+from typing import Optional
 from fastapi import APIRouter, HTTPException, Depends
-from pydantic import BaseModel, validator
-from app.services.model_manager import ModelManager
+from pydantic import BaseModel, field_validator
+from app.services.consolidated_ollama_service import ConsolidatedOllamaService
 from app.core.dependencies import get_model_manager
 from app.core.security import xss_protection
 import logging
@@ -19,7 +20,8 @@ class ChatRequest(BaseModel):
     temperature: Optional[float] = 0.7
     max_tokens: Optional[int] = 2048
     
-    @validator('message')
+    @field_validator('message')
+    @classmethod
     def validate_message(cls, v):
         """Validate and sanitize chat message for XSS protection"""
         if not v or not v.strip():
@@ -32,7 +34,8 @@ class ChatRequest(BaseModel):
         except ValueError as e:
             raise ValueError(f"Invalid message content: {str(e)}")
     
-    @validator('model')
+    @field_validator('model')
+    @classmethod
     def validate_model(cls, v):
         from app.utils.validation import validate_model_name
         return validate_model_name(v)
@@ -45,12 +48,24 @@ class ChatResponse(BaseModel):
 @router.post("/", response_model=ChatResponse)
 async def chat(
     request: ChatRequest,
-    model_manager: ModelManager = Depends(get_model_manager)
+    model_manager: ConsolidatedOllamaService = Depends(get_model_manager)
 ):
     """
     Chat with an AI model - XSS protected endpoint
     """
+    logger.info(f"🎯 CHAT ENDPOINT HIT: model={repr(request.model)}, message_len={len(request.message) if request.message else 0}")
     try:
+        # EXPLICIT VALIDATION: Validate model name first thing
+        from app.utils.validation import validate_model_name
+        try:
+            validated_model = validate_model_name(request.model)
+            logger.info(f"✅ Model validation passed: {repr(request.model)} -> {repr(validated_model)}")
+            # Update the request with validated model
+            request.model = validated_model
+        except ValueError as e:
+            logger.warning(f"🚨 Model validation failed: {e}")
+            raise HTTPException(status_code=400, detail=f"Invalid model name: {str(e)}")
+        
         # Log sanitized request (first 50 chars only for security)
         sanitized_preview = html.escape(request.message[:50])
         logger.info(f"Chat request received: {sanitized_preview}...")
@@ -75,12 +90,19 @@ async def chat(
         
         if not response:
             # Fallback to simple generation if chat fails
-            response = await model_manager.generate(
+            logger.info("Chat method returned empty response, falling back to generate method")
+            generate_result = await model_manager.generate(
                 prompt=request.message,
                 model=request.model,
                 temperature=request.temperature,
                 options={"num_predict": request.max_tokens}
             )
+            # Extract the actual response text from the generate result dictionary
+            if generate_result and isinstance(generate_result, dict):
+                response = generate_result.get("response", "")
+                logger.info(f"Generate method returned: {response[:100]}...")
+            else:
+                response = ""
         
         # Sanitize the AI response before returning
         safe_response = response or "I apologize, but I couldn't generate a response. Please try again."

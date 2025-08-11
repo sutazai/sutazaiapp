@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field, validator
 import logging
 from datetime import datetime
 
-from app.services.advanced_model_manager import AdvancedModelManager, StreamingResponse as ModelStreamingResponse
+from app.services.consolidated_ollama_service import ConsolidatedOllamaService, StreamingResponse as ModelStreamingResponse
 from app.core.dependencies import get_advanced_model_manager
 from app.core.security import xss_protection
 
@@ -109,7 +109,7 @@ class CacheManagementRequest(BaseModel):
     description="Generate streaming chat responses for real-time conversation")
 async def stream_chat(
     request: StreamingChatRequest,
-    advanced_model_manager: AdvancedModelManager = Depends(get_advanced_model_manager)
+    advanced_model_manager: ConsolidatedOllamaService = Depends(get_advanced_model_manager)
 ):
     """
     Stream chat responses in real-time
@@ -171,14 +171,19 @@ async def stream_chat(
                     "timestamp": datetime.now().isoformat()
                 }) + "\n\n"
         
+        # Get secure CORS configuration
+        from app.core.cors_security import cors_security
+        allowed_origins = cors_security.get_allowed_origins()
+        
         return StreamingResponse(
             generate_stream(),
             media_type="text/event-stream",
             headers={
                 "Cache-Control": "no-cache",
                 "Connection": "keep-alive",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "*"
+                "Access-Control-Allow-Origin": ", ".join(allowed_origins),
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, Cache-Control",
+                "Access-Control-Allow-Credentials": "true"
             }
         )
         
@@ -192,7 +197,7 @@ async def stream_chat(
     description="Generate streaming text responses for real-time text generation")
 async def stream_text(
     request: StreamingTextRequest,
-    advanced_model_manager: AdvancedModelManager = Depends(get_advanced_model_manager)
+    advanced_model_manager: ConsolidatedOllamaService = Depends(get_advanced_model_manager)
 ):
     """
     Stream text generation responses in real-time
@@ -252,14 +257,19 @@ async def stream_text(
                     "timestamp": datetime.now().isoformat()
                 }) + "\n\n"
         
+        # Get secure CORS configuration
+        from app.core.cors_security import cors_security
+        allowed_origins = cors_security.get_allowed_origins()
+        
         return StreamingResponse(
             generate_stream(),
             media_type="text/event-stream",
             headers={
                 "Cache-Control": "no-cache",
                 "Connection": "keep-alive",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Headers": "*"
+                "Access-Control-Allow-Origin": ", ".join(allowed_origins),
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, Cache-Control",
+                "Access-Control-Allow-Credentials": "true"
             }
         )
         
@@ -274,7 +284,7 @@ async def stream_text(
 async def process_batch(
     request: BatchRequest,
     background_tasks: BackgroundTasks,
-    advanced_model_manager: AdvancedModelManager = Depends(get_advanced_model_manager)
+    advanced_model_manager: ConsolidatedOllamaService = Depends(get_advanced_model_manager)
 ):
     """
     Process multiple requests in batches for optimal throughput
@@ -342,7 +352,7 @@ async def process_batch(
     description="Manage model cache for performance optimization")
 async def manage_cache(
     request: CacheManagementRequest,
-    advanced_model_manager: AdvancedModelManager = Depends(get_advanced_model_manager)
+    advanced_model_manager: ConsolidatedOllamaService = Depends(get_advanced_model_manager)
 ):
     """
     Manage model cache for performance optimization
@@ -416,7 +426,7 @@ async def manage_cache(
     summary="Performance Metrics",
     description="Get comprehensive performance metrics for the advanced model manager")
 async def get_performance_metrics(
-    advanced_model_manager: AdvancedModelManager = Depends(get_advanced_model_manager)
+    advanced_model_manager: ConsolidatedOllamaService = Depends(get_advanced_model_manager)
 ):
     """
     Get comprehensive performance metrics
@@ -432,7 +442,7 @@ async def get_performance_metrics(
     summary="Advanced Health Check",
     description="Comprehensive health check for advanced model manager")
 async def advanced_health_check(
-    advanced_model_manager: AdvancedModelManager = Depends(get_advanced_model_manager)
+    advanced_model_manager: ConsolidatedOllamaService = Depends(get_advanced_model_manager)
 ):
     """
     Comprehensive health check for the advanced model manager

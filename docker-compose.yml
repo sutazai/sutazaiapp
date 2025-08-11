@@ -35,17 +35,16 @@ services:
     - postgres_data:/var/lib/postgresql/data
     - ./IMPORTANT/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
   redis:
-    command: redis-server --save "" --appendonly no --maxmemory 512mb --maxmemory-policy
-      allkeys-lru
+    command: redis-server /usr/local/etc/redis/redis.conf
     container_name: sutazai-redis
     deploy:
       resources:
         limits:
-          cpus: '0.5'
-          memory: 512M
+          cpus: '1.0'  # Increased for thread I/O performance
+          memory: 2G    # Increased to 2GB as per optimization
         reservations:
-          cpus: '0.1'
-          memory: 128M
+          cpus: '0.25'
+          memory: 512M
     healthcheck:
       interval: 10s
       retries: 5
@@ -61,6 +60,7 @@ services:
     restart: unless-stopped
     volumes:
     - redis_data:/data
+    - ./config/redis-optimized.conf:/usr/local/etc/redis/redis.conf:ro
   neo4j:
     container_name: sutazai-neo4j
     deploy:
@@ -419,7 +419,7 @@ services:
       QDRANT_PORT: 6333
       QDRANT_URL: http://qdrant:6333
       REDIS_HOST: sutazai-redis
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      # REDIS_PASSWORD not needed - Redis runs without authentication
       REDIS_PORT: 6379
       REDIS_URL: redis://sutazai-redis:6379/0
       SECRET_KEY: ${SECRET_KEY}
@@ -762,7 +762,7 @@ services:
           memory: 32M
     environment:
       REDIS_ADDR: redis://redis:6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      # REDIS_PASSWORD not needed - Redis runs without authentication
     image: oliver006/redis_exporter:latest
     networks:
     - sutazai-network

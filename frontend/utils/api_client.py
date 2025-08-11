@@ -7,6 +7,7 @@ import asyncio
 import httpx
 import streamlit as st
 import logging
+from typing import Dict, Optional
 
 # Configure logging
 logger = logging.getLogger(__name__)

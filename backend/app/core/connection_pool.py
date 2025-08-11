@@ -1,6 +1,7 @@
 """
 High-Performance Connection Pooling Manager
 Handles HTTP, Database, and Redis connections with proper pooling
+Now with Circuit Breaker pattern for resilient service communication
 """
 
 import os
@@ -13,6 +14,13 @@ import httpx
 import asyncpg
 import redis.asyncio as redis
 from datetime import datetime, timedelta
+
+# Import circuit breaker components
+from .circuit_breaker_integration import (
+    SimpleCircuitBreaker,
+    CircuitBreakerManager,
+    get_circuit_breaker_manager
+)
 
 logger = logging.getLogger(__name__)
 
@@ -35,31 +43,89 @@ class ConnectionPoolManager:
             self._db_pool: Optional[asyncpg.Pool] = None
             self._redis_pool: Optional[redis.ConnectionPool] = None
             self._redis_client: Optional[redis.Redis] = None
+            self._breaker_manager = None  # Will be initialized async
             self._stats = {
                 'http_requests': 0,
                 'db_queries': 0,
                 'redis_operations': 0,
                 'connection_errors': 0,
-                'pool_exhaustion': 0
+                'pool_exhaustion': 0,
+                'circuit_breaker_trips': 0
             }
+            
+            # Circuit breakers will be initialized async
+            pass
+    
+    async def _init_circuit_breakers(self):
+        """Initialize circuit breakers for different services (async)"""
+        if self._breaker_manager is None:
+            self._breaker_manager = await get_circuit_breaker_manager()
+        
+        # Create circuit breakers for different services
+        await self._breaker_manager.get_or_create_breaker(
+            'ollama',
+            failure_threshold=5,
+            recovery_timeout=30.0,
+            timeout=30.0
+        )
+        
+        await self._breaker_manager.get_or_create_breaker(
+            'redis',
+            failure_threshold=3,
+            recovery_timeout=30.0,
+            timeout=5.0
+        )
+        
+        await self._breaker_manager.get_or_create_breaker(
+            'database',
+            failure_threshold=3,
+            recovery_timeout=30.0,
+            timeout=10.0
+        )
+        
+        await self._breaker_manager.get_or_create_breaker(
+            'agents',
+            failure_threshold=5,
+            recovery_timeout=30.0,
+            timeout=10.0
+        )
+        
+        await self._breaker_manager.get_or_create_breaker(
+            'external',
+            failure_threshold=5,
+            recovery_timeout=30.0,
+            timeout=30.0
+        )
+        
+        logger.info("Circuit breakers initialized for all services")
             
     async def initialize(self, config: Dict[str, Any]):
         """Initialize all connection pools"""
         try:
-            # Initialize Redis pool
-            self._redis_pool = redis.ConnectionPool(
-                host=config.get('redis_host', 'sutazai-redis'),
-                port=config.get('redis_port', 6379),
-                db=0,
-                max_connections=50,
-                socket_keepalive=True,
-                socket_keepalive_options={
+            # Initialize Redis pool with optional authentication
+            redis_config = {
+                'host': config.get('redis_host', 'sutazai-redis'),
+                'port': config.get('redis_port', 6379),
+                'db': 0,
+                'max_connections': 50,
+                'socket_keepalive': True,
+                'socket_keepalive_options': {
                     socket.TCP_KEEPIDLE: 1,  # TCP_KEEPIDLE
                     socket.TCP_KEEPINTVL: 3,  # TCP_KEEPINTVL
                     socket.TCP_KEEPCNT: 5,  # TCP_KEEPCNT
                 },
-                decode_responses=False
-            )
+                'decode_responses': False
+            }
+            
+            # Add password only if provided and not empty
+            redis_password = config.get('redis_password')
+            if redis_password and redis_password.strip():
+                redis_config['password'] = redis_password
+                logger.info("Redis configured with authentication")
+            else:
+                logger.info("Redis configured without authentication")
+                
+            self._redis_pool = redis.ConnectionPool(**redis_config)
             self._redis_client = redis.Redis(connection_pool=self._redis_pool)
             
             # Initialize PostgreSQL pool
@@ -78,6 +144,9 @@ class ConnectionPoolManager:
             
             # Initialize HTTP clients for different services
             self._initialize_http_clients(config)
+            
+            # Initialize circuit breakers
+            await self._init_circuit_breakers()
             
             logger.info("Connection pools initialized successfully")
             
@@ -135,7 +204,7 @@ class ConnectionPoolManager:
         
     @asynccontextmanager
     async def get_http_client(self, service: str = 'default'):
-        """Get HTTP client for specific service"""
+        """Get HTTP client for specific service with circuit breaker protection"""
         if service not in self._http_clients:
             service = 'agents'  # Default to agents client
             
@@ -151,6 +220,46 @@ class ConnectionPoolManager:
         except Exception as e:
             self._stats['connection_errors'] += 1
             logger.error(f"HTTP request error for {service}: {e}")
+            raise
+    
+    async def make_http_request(
+        self, 
+        service: str, 
+        method: str, 
+        url: str, 
+        **kwargs
+    ) -> httpx.Response:
+        """
+        Make HTTP request with circuit breaker protection
+        
+        Args:
+            service: Service name (ollama, agents, external)
+            method: HTTP method (GET, POST, etc.)
+            url: URL to request
+            **kwargs: Additional arguments for httpx request
+            
+        Returns:
+            httpx.Response object
+            
+        Raises:
+            CircuitBreakerError: If circuit is open
+            httpx.HTTPError: For HTTP errors
+        """
+        breaker = self._breaker_manager.get_breaker(service)
+        if not breaker:
+            breaker = self._breaker_manager.get_or_create(service)
+        
+        async def _make_request():
+            async with self.get_http_client(service) as client:
+                response = await client.request(method, url, **kwargs)
+                response.raise_for_status()
+                return response
+        
+        try:
+            return await breaker.call(_make_request)
+        except CircuitBreakerError:
+            self._stats['circuit_breaker_trips'] += 1
+            logger.warning(f"Circuit breaker OPEN for service '{service}', request to {url} blocked")
             raise
             
     @asynccontextmanager
@@ -180,25 +289,76 @@ class ConnectionPoolManager:
             
         self._stats['redis_operations'] += 1
         return self._redis_client
+    
+    async def execute_redis_command(self, command: str, *args, **kwargs):
+        """
+        Execute Redis command with circuit breaker protection
+        
+        Args:
+            command: Redis command name (get, set, hget, etc.)
+            *args: Command arguments
+            **kwargs: Command keyword arguments
+            
+        Returns:
+            Command result
+            
+        Raises:
+            CircuitBreakerError: If circuit is open
+            redis.RedisError: For Redis errors
+        """
+        breaker = self._breaker_manager.get_breaker('redis')
+        
+        async def _execute():
+            client = self.get_redis_client()
+            method = getattr(client, command)
+            return await method(*args, **kwargs)
+        
+        try:
+            return await breaker.call(_execute)
+        except CircuitBreakerError:
+            self._stats['circuit_breaker_trips'] += 1
+            logger.warning(f"Circuit breaker OPEN for Redis, command '{command}' blocked")
+            raise
         
     async def execute_db_query(self, query: str, *args, fetch_one: bool = False):
-        """Execute database query with automatic connection management"""
-        async with self.get_db_connection() as conn:
-            if fetch_one:
-                return await conn.fetchrow(query, *args)
-            return await conn.fetch(query, *args)
+        """Execute database query with circuit breaker protection"""
+        breaker = self._breaker_manager.get_breaker('database')
+        
+        async def _execute():
+            async with self.get_db_connection() as conn:
+                if fetch_one:
+                    return await conn.fetchrow(query, *args)
+                return await conn.fetch(query, *args)
+        
+        try:
+            return await breaker.call(_execute)
+        except CircuitBreakerError:
+            self._stats['circuit_breaker_trips'] += 1
+            logger.warning(f"Circuit breaker OPEN for database, query blocked")
+            raise
             
     async def execute_db_command(self, query: str, *args):
-        """Execute database command (INSERT, UPDATE, DELETE)"""
-        async with self.get_db_connection() as conn:
-            return await conn.execute(query, *args)
+        """Execute database command with circuit breaker protection"""
+        breaker = self._breaker_manager.get_breaker('database')
+        
+        async def _execute():
+            async with self.get_db_connection() as conn:
+                return await conn.execute(query, *args)
+        
+        try:
+            return await breaker.call(_execute)
+        except CircuitBreakerError:
+            self._stats['circuit_breaker_trips'] += 1
+            logger.warning(f"Circuit breaker OPEN for database, command blocked")
+            raise
             
     async def health_check(self, timeout: float = 5.0) -> Dict[str, Any]:
         """Optimized health check with parallel execution and timeouts"""
         health = {
             'status': 'healthy',
             'pools': {},
-            'stats': self._stats
+            'stats': self._stats,
+            'circuit_breakers': self.get_circuit_breaker_status()
         }
         
         # Create health check tasks to run in parallel
@@ -293,6 +453,28 @@ class ConnectionPoolManager:
             stats['db_pool_free'] = self._db_pool.get_idle_size()
             
         return stats
+    
+    def get_circuit_breaker_status(self) -> Dict[str, Any]:
+        """Get status of all circuit breakers"""
+        return self._breaker_manager.get_metrics()
+    
+    def get_circuit_breaker(self, service: str) -> Optional[SimpleCircuitBreaker]:
+        """Get a specific circuit breaker"""
+        return self._breaker_manager.get_breaker(service)
+    
+    def reset_circuit_breaker(self, service: str):
+        """Reset a specific circuit breaker"""
+        breaker = self._breaker_manager.get_breaker(service)
+        if breaker:
+            breaker.reset()
+            logger.info(f"Circuit breaker for '{service}' has been reset")
+        else:
+            logger.warning(f"Circuit breaker for '{service}' not found")
+    
+    def reset_all_circuit_breakers(self):
+        """Reset all circuit breakers"""
+        self._breaker_manager.reset_all()
+        logger.info("All circuit breakers have been reset")
         
     async def close(self):
         """Close all connection pools"""
@@ -330,6 +512,7 @@ async def get_pool_manager() -> ConnectionPoolManager:
                 await _pool_manager.initialize({
                     'redis_host': os.getenv('REDIS_HOST', 'redis'),
                     'redis_port': int(os.getenv('REDIS_PORT', '6379')),
+                    'redis_password': os.getenv('REDIS_PASSWORD'),  # Optional Redis password
                     'db_host': os.getenv('POSTGRES_HOST', 'postgres'),
                     'db_port': int(os.getenv('POSTGRES_PORT', '5432')),
                     'db_user': os.getenv('POSTGRES_USER', 'sutazai'),

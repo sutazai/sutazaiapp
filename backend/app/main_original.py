@@ -23,18 +23,17 @@ app = FastAPI(
     version="0.1.0"
 )
 
-# Configure CORS
+# Configure secure CORS
+from app.core.cors_security import cors_security
+
+cors_config = cors_security.get_cors_middleware_config()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:10011",  # Frontend Streamlit UI
-        "http://localhost:10010",  # Backend API
-        "http://127.0.0.1:10011",  # Alternative localhost
-        "http://127.0.0.1:10010",  # Alternative localhost
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=cors_config["allow_origins"],
+    allow_credentials=cors_config["allow_credentials"], 
+    allow_methods=cors_config["allow_methods"],
+    allow_headers=cors_config["allow_headers"],
+    expose_headers=cors_config["expose_headers"],
 )
 
 # Include authentication router (CRITICAL)

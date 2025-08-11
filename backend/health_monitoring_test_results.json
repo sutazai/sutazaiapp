@@ -1,0 +1,67 @@
+{
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 8,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "total_time": 3.4485223293304443
+  },
+  "detailed_results": [
+    {
+      "test": "Circuit Breaker Basic Functionality",
+      "status": "\u2705 PASS",
+      "passed": true,
+      "details": "",
+      "timestamp": 1754899369.7451372
+    },
+    {
+      "test": "Circuit Breaker Manager",
+      "status": "\u2705 PASS",
+      "passed": true,
+      "details": "",
+      "timestamp": 1754899369.7452047
+    },
+    {
+      "test": "Health Monitoring Service Creation",
+      "status": "\u2705 PASS",
+      "passed": true,
+      "details": "",
+      "timestamp": 1754899369.7452264
+    },
+    {
+      "test": "Basic Health Check Performance",
+      "status": "\u2705 PASS",
+      "passed": true,
+      "details": "Response time: 0.1ms (target: <100ms)",
+      "timestamp": 1754899369.7454774
+    },
+    {
+      "test": "Detailed Health Check Structure",
+      "status": "\u2705 PASS",
+      "passed": true,
+      "details": "",
+      "timestamp": 1754899369.8574257
+    },
+    {
+      "test": "Prometheus Metrics Generation",
+      "status": "\u2705 PASS",
+      "passed": true,
+      "details": "",
+      "timestamp": 1754899372.6924927
+    },
+    {
+      "test": "Service Timeout Handling",
+      "status": "\u2705 PASS",
+      "passed": true,
+      "details": "",
+      "timestamp": 1754899373.1928413
+    },
+    {
+      "test": "Circuit Breaker Integration with Health Check",
+      "status": "\u2705 PASS",
+      "passed": true,
+      "details": "",
+      "timestamp": 1754899373.1930773
+    }
+  ]
+}

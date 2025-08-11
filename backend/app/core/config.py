@@ -87,14 +87,17 @@ class Settings(BaseSettings):
     
     # Model Configuration - Fixed to use correct Ollama internal port
     OLLAMA_HOST: str = Field("http://ollama:11434", env="OLLAMA_HOST")
-    OLLAMA_ORIGINS: str = Field("*", env="OLLAMA_ORIGINS")
+    # Security: Specific origins for Ollama instead of wildcard
+    OLLAMA_ORIGINS: str = Field("http://localhost:10011,http://localhost:10010", env="OLLAMA_ORIGINS")
     OLLAMA_NUM_PARALLEL: str = Field("2", env="OLLAMA_NUM_PARALLEL")
     OLLAMA_MAX_LOADED_MODELS: str = Field("2", env="OLLAMA_MAX_LOADED_MODELS")
+    OLLAMA_TIMEOUT: int = Field(15, env="OLLAMA_TIMEOUT")  # Reduced timeout for faster response
+    OLLAMA_STREAM: bool = Field(True, env="OLLAMA_STREAM")  # Enable streaming by default
     
     DEFAULT_MODEL: str = "tinyllama"  # Fixed to use available tinyllama model
     FALLBACK_MODEL: str = "tinyllama"  # Fixed to use available tinyllama model
     EMBEDDING_MODEL: str = "nomic-embed-text"
-    MODEL_TIMEOUT: int = 300  # seconds
+    MODEL_TIMEOUT: int = 15  # seconds - reduced for faster response
     
     # Performance optimization settings
     MODEL_PRELOAD_ENABLED: bool = True

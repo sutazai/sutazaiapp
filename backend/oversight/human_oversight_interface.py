@@ -279,9 +279,9 @@ class HumanOversightInterface:
         cors = aiohttp_cors.setup(self.app, defaults={
             "*": aiohttp_cors.ResourceOptions(
                 allow_credentials=True,
-                expose_headers="*",
-                allow_headers="*",
-                allow_methods="*"
+                expose_headers="Content-Type, Content-Length, Authorization, Cache-Control, Expires",
+                allow_headers="Accept, Accept-Language, Content-Type, Content-Language, Authorization, X-Requested-With, X-CSRFToken, Cache-Control",
+                allow_methods="GET, POST, PUT, DELETE, OPTIONS, PATCH"
             )
         })
         

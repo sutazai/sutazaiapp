@@ -14,7 +14,7 @@ import httpx
 # NumPy not required for basic vector operations
 
 # Import Ollama embedding service
-from ..services.ollama_embedding import get_ollama_embedding_service
+from ..services.consolidated_ollama_service import get_ollama_embedding_service
 
 # Configure logging
 logger = logging.getLogger(__name__)

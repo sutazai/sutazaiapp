@@ -3,7 +3,7 @@ API Router for v1 endpoints
 """
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import agents, models, documents, chat, system, hardware
+from app.api.v1.endpoints import agents, models, documents, chat, system, hardware, cache, circuit_breaker
 from app.api.v1 import features
 
 api_router = APIRouter()
@@ -15,4 +15,6 @@ api_router.include_router(documents.router, prefix="/documents", tags=["document
 api_router.include_router(chat.router, prefix="/chat", tags=["chat"])
 api_router.include_router(system.router, prefix="/system", tags=["system"])
 api_router.include_router(hardware.router, prefix="/hardware", tags=["hardware"])
+api_router.include_router(cache.router, prefix="/cache", tags=["cache"])
+api_router.include_router(circuit_breaker.router, prefix="/circuit-breaker", tags=["circuit-breaker"])
 api_router.include_router(features.router, prefix="/features", tags=["features"])

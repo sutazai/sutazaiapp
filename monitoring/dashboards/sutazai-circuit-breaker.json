@@ -1,0 +1,535 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "sutazai-circuit-breaker",
+    "title": "SutazAI Circuit Breaker Monitoring",
+    "tags": ["sutazai", "circuit-breaker", "reliability", "self-healing"],
+    "timezone": "browser",
+    "schemaVersion": 30,
+    "version": 1,
+    "refresh": "10s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m"],
+      "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d"]
+    },
+    "templating": {
+      "list": [
+        {
+          "name": "service",
+          "type": "query",
+          "datasource": "Prometheus",
+          "query": "label_values(circuit_breaker_state, service)",
+          "refresh": 1,
+          "includeAll": true,
+          "allValue": ".*"
+        }
+      ]
+    },
+    "panels": [
+      {
+        "id": 1,
+        "gridPos": {"h": 6, "w": 24, "x": 0, "y": 0},
+        "type": "stat",
+        "title": "Circuit Breaker Status Overview",
+        "targets": [
+          {
+            "expr": "count by (state) (circuit_breaker_state{service=~\"$service\"})",
+            "legendFormat": "{{state}}",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {"type": "value", "value": "0", "text": "CLOSED", "color": "green"},
+              {"type": "value", "value": "1", "text": "OPEN", "color": "red"},
+              {"type": "value", "value": "2", "text": "HALF_OPEN", "color": "yellow"}
+            ],
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "red", "value": 2}
+              ]
+            }
+          }
+        },
+        "options": {
+          "reduceOptions": {
+            "values": false,
+            "fields": "",
+            "calcs": ["lastNotNull"]
+          },
+          "orientation": "horizontal",
+          "textMode": "auto",
+          "colorMode": "background"
+        }
+      },
+      {
+        "id": 2,
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 6},
+        "type": "timeseries",
+        "title": "Circuit Breaker State Changes",
+        "targets": [
+          {
+            "expr": "circuit_breaker_state{service=~\"$service\"}",
+            "legendFormat": "{{service}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "stepAfter",
+              "pointSize": 5,
+              "stacking": {"mode": "none"},
+              "fillOpacity": 0
+            },
+            "mappings": [
+              {"type": "value", "value": "0", "text": "CLOSED"},
+              {"type": "value", "value": "1", "text": "OPEN"},
+              {"type": "value", "value": "2", "text": "HALF_OPEN"}
+            ],
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 2},
+                {"color": "red", "value": 1}
+              ]
+            },
+            "unit": "short",
+            "min": 0,
+            "max": 2
+          }
+        },
+        "options": {
+          "tooltip": {"mode": "multi"},
+          "legend": {"displayMode": "table", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 3,
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 6},
+        "type": "timeseries",
+        "title": "Failure Rate per Service",
+        "targets": [
+          {
+            "expr": "rate(circuit_breaker_failures_total{service=~\"$service\"}[5m])",
+            "legendFormat": "{{service}} failures/sec",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps",
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 20
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 0.1},
+                {"color": "red", "value": 1}
+              ]
+            }
+          }
+        },
+        "alert": {
+          "name": "High Circuit Breaker Failure Rate",
+          "frequency": "30s",
+          "conditions": [
+            {
+              "evaluator": {"type": "gt", "params": [1]},
+              "operator": {"type": "and"},
+              "query": {"model": "A", "params": ["A", "5m", "now"]},
+              "reducer": {"type": "avg", "params": []},
+              "type": "query"
+            }
+          ],
+          "executionErrorState": "alerting",
+          "message": "Circuit breaker failure rate exceeded 1 failure/sec for {{service}}",
+          "noDataState": "no_data"
+        }
+      },
+      {
+        "id": 4,
+        "gridPos": {"h": 8, "w": 8, "x": 0, "y": 14},
+        "type": "timeseries",
+        "title": "Success Rate by Service",
+        "targets": [
+          {
+            "expr": "(circuit_breaker_success_count{service=~\"$service\"} / (circuit_breaker_success_count{service=~\"$service\"} + circuit_breaker_failure_count{service=~\"$service\"})) * 100",
+            "legendFormat": "{{service}} success %",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 30
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 90},
+                {"color": "green", "value": 95}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "gridPos": {"h": 8, "w": 8, "x": 8, "y": 14},
+        "type": "timeseries",
+        "title": "Average Response Time",
+        "targets": [
+          {
+            "expr": "circuit_breaker_avg_response_time_seconds{service=~\"$service\"}",
+            "legendFormat": "{{service}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 10
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 5},
+                {"color": "red", "value": 10}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 6,
+        "gridPos": {"h": 8, "w": 8, "x": 16, "y": 14},
+        "type": "timeseries",
+        "title": "Request Volume",
+        "targets": [
+          {
+            "expr": "rate(circuit_breaker_total_requests{service=~\"$service\"}[5m])",
+            "legendFormat": "{{service}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqps",
+            "custom": {
+              "drawStyle": "line",
+              "fillOpacity": 20
+            }
+          }
+        }
+      },
+      {
+        "id": 7,
+        "gridPos": {"h": 4, "w": 4, "x": 0, "y": 22},
+        "type": "stat",
+        "title": "Services OPEN",
+        "targets": [
+          {
+            "expr": "count(circuit_breaker_state{service=~\"$service\"} == 1)",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "red", "value": 1}
+              ]
+            }
+          }
+        },
+        "options": {
+          "colorMode": "background",
+          "textMode": "value"
+        }
+      },
+      {
+        "id": 8,
+        "gridPos": {"h": 4, "w": 4, "x": 4, "y": 22},
+        "type": "stat",
+        "title": "Services HALF_OPEN",
+        "targets": [
+          {
+            "expr": "count(circuit_breaker_state{service=~\"$service\"} == 2)",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 1}
+              ]
+            }
+          }
+        },
+        "options": {
+          "colorMode": "background",
+          "textMode": "value"
+        }
+      },
+      {
+        "id": 9,
+        "gridPos": {"h": 4, "w": 4, "x": 8, "y": 22},
+        "type": "stat",
+        "title": "Total Trips (1h)",
+        "targets": [
+          {
+            "expr": "increase(circuit_breaker_trips_total{service=~\"$service\"}[1h])",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "red", "value": 5}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 10,
+        "gridPos": {"h": 4, "w": 4, "x": 12, "y": 22},
+        "type": "stat",
+        "title": "Recovery Time",
+        "targets": [
+          {
+            "expr": "circuit_breaker_recovery_time_seconds{service=~\"$service\"}",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s"
+          }
+        }
+      },
+      {
+        "id": 11,
+        "gridPos": {"h": 4, "w": 4, "x": 16, "y": 22},
+        "type": "stat",
+        "title": "Failure Threshold",
+        "targets": [
+          {
+            "expr": "circuit_breaker_failure_threshold{service=~\"$service\"}",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 12,
+        "gridPos": {"h": 4, "w": 4, "x": 20, "y": 22},
+        "type": "stat",
+        "title": "Half Open Calls",
+        "targets": [
+          {
+            "expr": "circuit_breaker_half_open_calls{service=~\"$service\"}",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 13,
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 26},
+        "type": "heatmap",
+        "title": "Response Time Heatmap",
+        "targets": [
+          {
+            "expr": "rate(circuit_breaker_response_time_bucket{service=~\"$service\"}[5m])",
+            "legendFormat": "{{le}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "vis": false
+              },
+              "scaleDistribution": {
+                "type": "linear"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": 14,
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 26},
+        "type": "logs",
+        "title": "Circuit Breaker Events",
+        "targets": [
+          {
+            "expr": "{job=\"circuit-breaker\"} |= \"OPEN\" or |= \"HALF_OPEN\" or |= \"CLOSED\" or |= \"trip\" or |= \"recovery\"",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "showTime": true,
+          "showLabels": true,
+          "showCommonLabels": false,
+          "wrapLogMessage": true,
+          "prettifyLogMessage": false,
+          "enableLogDetails": true
+        }
+      },
+      {
+        "id": 15,
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 34},
+        "type": "table",
+        "title": "Circuit Breaker Health Summary",
+        "targets": [
+          {
+            "expr": "circuit_breaker_state{service=~\"$service\"}",
+            "format": "table",
+            "instant": true,
+            "refId": "A"
+          },
+          {
+            "expr": "circuit_breaker_failure_count{service=~\"$service\"}",
+            "format": "table",
+            "instant": true,
+            "refId": "B"
+          },
+          {
+            "expr": "circuit_breaker_success_count{service=~\"$service\"}",
+            "format": "table",
+            "instant": true,
+            "refId": "C"
+          },
+          {
+            "expr": "circuit_breaker_avg_response_time_seconds{service=~\"$service\"}",
+            "format": "table",
+            "instant": true,
+            "refId": "D"
+          },
+          {
+            "expr": "circuit_breaker_total_requests{service=~\"$service\"}",
+            "format": "table",
+            "instant": true,
+            "refId": "E"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "merge",
+            "options": {"reducers": ["last"]}
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {"Time": true, "__name__": true, "job": true, "instance": true},
+              "renameByName": {
+                "Value #A": "State",
+                "Value #B": "Failures",
+                "Value #C": "Successes",
+                "Value #D": "Avg Response (s)",
+                "Value #E": "Total Requests"
+              }
+            }
+          }
+        ],
+        "fieldConfig": {
+          "overrides": [
+            {
+              "matcher": {"id": "byName", "options": "State"},
+              "properties": [
+                {
+                  "id": "mappings",
+                  "value": [
+                    {"type": "value", "value": "0", "text": "CLOSED"},
+                    {"type": "value", "value": "1", "text": "OPEN"},
+                    {"type": "value", "value": "2", "text": "HALF_OPEN"}
+                  ]
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "colored-background",
+                    "mode": "basic"
+                  }
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "steps": [
+                      {"color": "green", "value": 0},
+                      {"color": "yellow", "value": 2},
+                      {"color": "red", "value": 1}
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {"id": "byName", "options": "Avg Response (s)"},
+              "properties": [
+                {"id": "unit", "value": "s"},
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "steps": [
+                      {"color": "green", "value": null},
+                      {"color": "yellow", "value": 5},
+                      {"color": "red", "value": 10}
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

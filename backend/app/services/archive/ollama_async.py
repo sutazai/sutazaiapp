@@ -61,7 +61,7 @@ class OllamaAsyncService:
         model: str = "tinyllama",
         options: Optional[Dict[str, Any]] = None,
         use_cache: bool = True,
-        stream: bool = False
+        stream: bool = True
     ) -> Dict[str, Any]:
         """Generate text using Ollama with caching and non-blocking execution"""
         
@@ -71,11 +71,11 @@ class OllamaAsyncService:
         # Default options for performance
         if options is None:
             options = {
-                'num_predict': 150,
+                'num_predict': 50,  # Reduced for faster generation
                 'temperature': 0.7,
                 'top_k': 40,
                 'top_p': 0.9,
-                'num_ctx': 2048  # Reduced context for faster processing
+                'num_ctx': 512  # Reduced context for faster processing
             }
             
         # Check cache first
@@ -104,10 +104,11 @@ class OllamaAsyncService:
                     'options': options
                 }
                 
-                # Make async request
+                # Make async request with timeout
                 response = await client.post(
                     '/api/generate',
-                    json=request_data
+                    json=request_data,
+                    timeout=15.0
                 )
                 
                 if response.status_code != 200:
@@ -147,7 +148,7 @@ class OllamaAsyncService:
         
         if options is None:
             options = {
-                'num_predict': 150,
+                'num_predict': 50,  # Reduced for faster generation
                 'temperature': 0.7
             }
             
@@ -370,7 +371,7 @@ async def get_ollama_service() -> OllamaAsyncService:
     if _ollama_service is None:
         _ollama_service = OllamaAsyncService()
         await _ollama_service.initialize()
-        # Warmup with a few requests
-        await _ollama_service.warmup(3)
+        # Skip warmup - system responds quickly without it (200-400µs)
+        # await _ollama_service.warmup(3)  # Removed - not needed for responsive system
         
     return _ollama_service

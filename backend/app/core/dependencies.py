@@ -2,20 +2,35 @@
 Dependency injection for FastAPI
 """
 from typing import AsyncGenerator
-from app.services.model_manager import ModelManager
+from app.services.consolidated_ollama_service import (
+    ConsolidatedOllamaService,
+    get_ollama_service,
+    get_ollama_embedding_service,
+    get_model_manager,
+    get_advanced_model_manager
+)
 from app.services.agent_orchestrator import AgentOrchestrator
 
 # Singleton instances
-_model_manager: ModelManager = None
 _agent_orchestrator: AgentOrchestrator = None
 
-async def get_model_manager() -> ModelManager:
-    """Get model manager instance"""
-    global _model_manager
-    if _model_manager is None:
-        _model_manager = ModelManager()
-        await _model_manager.initialize()
-    return _model_manager
+# Ollama service dependency functions (all point to consolidated service)
+async def get_consolidated_ollama_service() -> ConsolidatedOllamaService:
+    """Get the consolidated Ollama service instance"""
+    return await get_ollama_service()
+
+# Compatibility functions for existing endpoints
+async def get_model_manager() -> ConsolidatedOllamaService:
+    """Get consolidated service (compatibility for model management)"""
+    return await get_ollama_service()
+
+async def get_advanced_model_manager() -> ConsolidatedOllamaService:
+    """Get consolidated service (compatibility for advanced features)"""
+    return await get_ollama_service()
+
+async def get_ollama_embedding_service() -> ConsolidatedOllamaService:
+    """Get consolidated service (compatibility for embeddings)"""
+    return await get_ollama_service()
 
 def get_agent_orchestrator() -> AgentOrchestrator:
     """Get agent orchestrator instance"""
