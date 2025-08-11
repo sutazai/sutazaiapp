@@ -45,7 +45,7 @@ class UltraOllamaTestSuite:
         
         # Import ULTRA service
         try:
-            from ultra_ollama_service import get_ultra_ollama_service
+            from consolidated_ollama_service import get_ollama_service as get_ultra_ollama_service
             self.service = await get_ultra_ollama_service()
             logger.info("✅ ULTRA Ollama Service loaded successfully")
         except Exception as e:

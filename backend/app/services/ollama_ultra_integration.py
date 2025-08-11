@@ -11,7 +11,7 @@ import asyncio
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 
-from app.services.ultra_ollama_service import get_ultra_ollama_service, UltraOllamaService
+from app.services.consolidated_ollama_service import get_ollama_service as get_ultra_ollama_service, ConsolidatedOllamaService as UltraOllamaService
 
 logger = logging.getLogger(__name__)
 

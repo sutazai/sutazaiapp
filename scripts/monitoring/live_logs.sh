@@ -2202,9 +2202,8 @@ redeploy_all_containers() {
     # Extract services that use build contexts (need building)
     # Use yq if available, otherwise use grep-based approach
     if command -v yq &> /dev/null; then
-        BUILD_SERVICES=$(yq # SECURITY FIX: eval usage removed
-# Original: eval '.services | to_entries | .[] | select(.value.build) | .key' docker-compose.yml 2>/dev/null | sort -u || echo "")
-# TODO: Replace with safer alternative
+        # SECURITY FIX: Use safer yq command without eval
+        BUILD_SERVICES=$(yq '.services | to_entries | .[] | select(.value.build) | .key' docker-compose.yml 2>/dev/null | sort -u || echo "")
     else
         # Fallback: Find services with build sections using grep
         BUILD_SERVICES=$(grep -B 5 "^    build:" docker-compose.yml | grep "^  [a-zA-Z][a-zA-Z0-9_-]*:" | awk -F: '{print $1}' | sed 's/^  //' | sort -u)
@@ -2213,9 +2212,8 @@ redeploy_all_containers() {
     # Extract services that use external images (need pulling)
     # Only include images from services that DON'T have build contexts
     if command -v yq &> /dev/null; then
-        EXTERNAL_IMAGES=$(yq # SECURITY FIX: eval usage removed
-# Original: eval '.services | to_entries | .[] | select(.value.build | not) | .value.image' docker-compose.yml 2>/dev/null | grep -v "null" | sort -u || echo "")
-# TODO: Replace with safer alternative
+        # SECURITY FIX: Use safer yq command without eval
+        EXTERNAL_IMAGES=$(yq '.services | to_entries | .[] | select(.value.build | not) | .value.image' docker-compose.yml 2>/dev/null | grep -v "null" | sort -u || echo "")
     else
         # Fallback: Get all images, then filter out those from services with build contexts
         ALL_IMAGES=$(grep "^\s*image:" docker-compose.yml | awk '{print $2}')
