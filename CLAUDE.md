@@ -1,11 +1,11 @@
-# CLAUDE.md - SutazAI System Truth Document
+# CLAUDE.md
 
-This file provides the SINGLE SOURCE OF TRUTH for Claude Code (claude.ai/code) when working with this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**Last Modified:** August 10, 2025 (Updated with security fixes and performance optimizations)  
-**System Version:** SutazAI v76 (Current Deployment Status)  
-**Document Status:** PRODUCTION READY ✅ - Critical Updates Applied  
-**Verified By:** Document Knowledge Manager (System Truth Updated)
+**Last Modified:** August 12, 2025 (MCP servers updated, commands consolidated)  
+**System Version:** SutazAI v86 (Current branch)  
+**Document Status:** PRODUCTION READY ✅ - MCP Integration Complete  
+**Verified By:** System Architecture Review
 
 ## ⚠️ CURRENT SYSTEM DEPLOYMENT STATUS (August 10, 2025) ⚠️
 
@@ -74,29 +74,56 @@ This file provides the SINGLE SOURCE OF TRUTH for Claude Code (claude.ai/code) w
 **Service Mesh:**
 - **RabbitMQ** (10007/10008) - ✅ HEALTHY with active queues (still root)
 
-## Development Commands
+## Essential Development Commands
 
-### System Management
+### Quick Start
 ```bash
-# Minimal stack (recommended - 8 containers)
+# Start minimal stack (recommended - 8 containers: Postgres, Redis, Qdrant, Ollama, Backend, Frontend, Prometheus, Grafana)
 make up-minimal
 make health-minimal
-make down-minimal
 
-# Full system (59 containers defined, 28 currently running)
+# Stop minimal stack
+make down-minimal
+```
+
+### Full System Management
+```bash
+# Start all services
 docker-compose up -d
+
+# Stop all services
 docker-compose down
 
-# Service health checks - ALL OPERATIONAL
-curl http://localhost:10010/health  # Backend - ✅ HEALTHY (database, Redis connected)
-curl http://localhost:10011/        # Frontend - ✅ OPERATIONAL (Streamlit UI)
-curl http://localhost:10104/api/tags  # Ollama - ✅ TinyLlama model loaded
-curl http://localhost:11110/health   # Hardware Optimizer - ✅ Real optimization service
-curl http://localhost:8589/health    # AI Agent Orchestrator - ✅ HEALTHY (RabbitMQ)
-curl http://localhost:8090/health    # Ollama Integration - ✅ HEALTHY (text generation)
-curl http://localhost:10103/health   # FAISS Vector DB - ✅ HEALTHY
-curl http://localhost:8588/health    # Resource Arbitration - ✅ HEALTHY
-curl http://localhost:8551/health    # Task Assignment - ✅ HEALTHY
+# View logs
+docker-compose logs -f [service-name]
+
+# Restart specific service
+docker-compose restart [service-name]
+```
+
+### Health Checks
+```bash
+# Core services
+curl http://localhost:10010/health   # Backend API
+curl http://localhost:10011/         # Frontend UI
+curl http://localhost:10104/api/tags # Ollama models
+
+# Databases
+docker exec sutazai-postgres pg_isready
+docker exec sutazai-redis redis-cli ping
+curl http://localhost:10002         # Neo4j browser
+```
+
+### MCP Server Management
+```bash
+# Test all MCP servers
+scripts/mcp/selfcheck_all.sh
+
+# Test individual MCP wrapper
+scripts/mcp/wrappers/[server-name].sh --selfcheck
+
+# List MCP server status (in Claude)
+/mcp list
 ```
 
 ## 🔍 Reality Check: What's Actually Running (August 10, 2025)
@@ -156,42 +183,54 @@ curl http://localhost:8551/health    # Task Assignment - ✅ HEALTHY
 - Ollama (still root - needs ollama user setup)
 - RabbitMQ (still root - needs rabbitmq user setup)
 
-### Testing & Quality
+### Testing Commands
 ```bash
-# Run tests (target: 80% coverage)
+# Unit tests
 make test-unit
+pytest backend/tests/unit -v
+
+# Integration tests  
 make test-integration
+pytest backend/tests/integration -v
+
+# E2E tests
 make test-e2e
+
+# Performance tests
 make test-performance
 
-# Code quality
-make lint        # Black, isort, flake8, mypy
-make format      # Auto-format code
-make security-scan  # Bandit + Safety
+# Run single test
+pytest backend/tests/unit/test_file.py::test_function -v
 
-# Coverage report
+# Coverage
 make coverage
 make coverage-report
 ```
 
-### Documentation
+### Code Quality
 ```bash
-# Generate API docs
-python3 scripts/export_openapi.py
-python3 scripts/summarize_openapi.py
+# Linting and formatting
+make lint        # Black, isort, flake8, mypy
+make format      # Auto-format code
 
-# Access live docs
-open http://localhost:10010/docs  # FastAPI Swagger UI
+# Security scanning
+make security-scan  # Bandit + Safety
+semgrep --config=auto backend/
+
+# Type checking
+mypy backend/app --ignore-missing-imports
 ```
 
-### Service Groups (Makefile targets)
+### Build & Documentation
 ```bash
-make dbs-up         # All databases
-make mesh-up        # Kong, Consul, RabbitMQ
-make monitoring-up  # Prometheus, Grafana, Loki
-make core-up        # Ollama, Backend, Frontend
-make agents-up      # Agent services (currently stubs)
-make stack-up       # Full platform in order
+# API documentation
+python3 scripts/export_openapi.py
+open http://localhost:10010/docs   # Swagger UI
+open http://localhost:10010/redoc  # ReDoc
+
+# Build Docker images
+docker-compose build [service-name]
+docker-compose build --no-cache [service-name]
 ```
 
 ## Current System Reality
@@ -267,6 +306,245 @@ ENABLE_TABBY  # Default: false (code completion)
 - `/api/v1/knowledge-graph/*` - Knowledge graph operations
 - `/api/v1/cognitive/*` - Cognitive architecture
 
+## High-Level Architecture
+
+### Core Architecture Pattern
+The system follows a **microservices architecture** with clear separation of concerns:
+
+1. **API Layer** (FastAPI Backend on port 10010)
+   - Handles all REST API requests
+   - Integrates with Ollama for LLM operations  
+   - Manages task queuing via Redis Streams
+   - Database connections via SQLAlchemy ORM
+
+2. **Data Layer** 
+   - **PostgreSQL** (10000): Primary relational database with 10 tables
+   - **Redis** (10001): Caching layer and task queue (Redis Streams)
+   - **Neo4j** (10002/10003): Graph database for knowledge graph features
+   - **Vector DBs**: Qdrant (10101/10102), ChromaDB (10100), FAISS (10103)
+
+3. **AI/ML Layer**
+   - **Ollama** (10104): Local LLM server running TinyLlama model
+   - **Agent Services**: 7 Flask-based agent stubs ready for implementation
+   - **MCP Servers**: 17 Model Context Protocol servers for extended capabilities
+
+4. **Service Mesh**
+   - **RabbitMQ** (10007/10008): Message broker for agent coordination
+   - **Kong**: API Gateway (when enabled)
+   - **Consul**: Service discovery (when enabled)
+
+5. **Monitoring Stack**
+   - **Prometheus** (10200): Metrics collection
+   - **Grafana** (10201): Visualization dashboards
+   - **Loki** (10202): Log aggregation
+   - **AlertManager** (10203): Alert routing
+
+### Request Flow
+1. User → Frontend (Streamlit) → Backend API → Ollama/Database
+2. Background tasks: Backend → Redis Streams → Agent Services → RabbitMQ
+3. Vector search: Backend → Qdrant/ChromaDB/FAISS → Results
+
+### MCP Integration (Model Context Protocol)
+
+**Total MCP Servers:** 17 fully integrated servers extending Claude's capabilities
+**Configuration File:** `/opt/sutazaiapp/.mcp.json`
+**Wrapper Scripts:** `/opt/sutazaiapp/scripts/mcp/wrappers/`
+**Testing:** `scripts/mcp/selfcheck_all.sh` ✅ ALL 15 testable servers pass (100% success rate)
+
+#### Core MCP Servers (All Operational ✅)
+
+##### 1. **language-server** - Code Intelligence
+- **Command:** `/root/go/bin/mcp-language-server`
+- **Purpose:** Provides language server protocol support for code analysis
+- **Features:** Symbol definitions, references, hover info, diagnostics, rename refactoring
+- **Workspace:** `/opt/sutazaiapp`
+- **LSP Backend:** TypeScript Language Server
+
+##### 2. **github** - GitHub Integration
+- **Command:** `npx @modelcontextprotocol/server-github`
+- **Purpose:** Full GitHub repository management and operations
+- **Features:** Create/update files, manage issues/PRs, search code, fork repos, manage branches
+- **Repository:** `sutazai/sutazaiapp`
+- **Auth:** Uses `GITHUB_PERSONAL_ACCESS_TOKEN` environment variable
+
+##### 3. **files** - File System Operations ✅
+- **Wrapper:** `scripts/mcp/wrappers/files.sh`
+- **Purpose:** Local file system access and manipulation
+- **Features:** Read/write files, create directories, list contents, search files
+- **Allowed Directory:** `/opt/sutazaiapp`
+
+##### 4. **postgres** - Database Operations ✅
+- **Wrapper:** `scripts/mcp/wrappers/postgres.sh`
+- **Purpose:** PostgreSQL database management and queries
+- **Features:** Execute SQL, analyze performance, suggest indexes, health checks
+- **Connection:** `postgresql://sutazai:***@postgres:5432/sutazai`
+- **Container:** `sutazai-postgres`
+
+##### 5. **ultimatecoder** - Advanced File Operations ✅
+- **Wrapper:** `scripts/mcp/wrappers/ultimatecoder.sh`
+- **Purpose:** Extended file manipulation and code operations
+- **Features:** Multi-file processing, diff operations, patch application, code search
+- **Resources:** Project configuration available
+
+##### 6. **context7** - Library Documentation ✅
+- **Wrapper:** `scripts/mcp/wrappers/context7.sh`
+- **Purpose:** Retrieve up-to-date documentation for any library
+- **Features:** Library ID resolution, documentation fetching, code examples
+- **Usage:** First resolve library ID, then fetch docs
+
+##### 7. **ddg** - DuckDuckGo Search ✅
+- **Wrapper:** `scripts/mcp/wrappers/ddg.sh`
+- **Purpose:** Web search and content fetching
+- **Features:** Search queries, fetch webpage content, parse results
+- **Max Results:** Configurable (default 10)
+
+##### 8. **http** - HTTP Fetch ✅
+- **Wrapper:** `scripts/mcp/wrappers/http_fetch.sh`
+- **Purpose:** Fetch and process web content
+- **Features:** URL fetching, HTML to markdown conversion, content extraction
+- **Note:** Grants internet access for up-to-date information
+
+##### 9. **extended-memory** - Persistent Memory ✅
+- **Wrapper:** `scripts/mcp/wrappers/extended-memory.sh`
+- **Purpose:** Remember information between conversations
+- **Features:** Save/load context, project tracking, tag management
+- **Resource:** Startup memory context available
+- **Usage:** Always load context at conversation start
+
+##### 10. **mcp_ssh** - SSH Operations ✅
+- **Wrapper:** `scripts/mcp/wrappers/mcp_ssh.sh`
+- **Purpose:** Execute commands on remote hosts via SSH
+- **Features:** Command execution, file transfer, status monitoring
+- **Resource:** List of available SSH hosts
+
+##### 11. **sequentialthinking** - Chain of Thought ✅
+- **Wrapper:** `scripts/mcp/wrappers/sequentialthinking.sh`
+- **Purpose:** Dynamic problem-solving through sequential thoughts
+- **Features:** Thought chaining, hypothesis generation/verification, branching logic
+- **Use Cases:** Complex problem decomposition, planning, analysis
+
+##### 12. **nx-mcp** - Nx Monorepo Support ✅
+- **Wrapper:** `scripts/mcp/wrappers/nx-mcp.sh`
+- **Purpose:** Nx workspace management and documentation
+- **Features:** Nx docs retrieval, plugin listing, workspace configuration
+- **Important:** Always use for Nx-related questions
+
+##### 13. **playwright-mcp** - Browser Automation ✅
+- **Wrapper:** `scripts/mcp/wrappers/playwright-mcp.sh`
+- **Purpose:** Web browser automation and testing
+- **Features:** Navigation, screenshots, element interaction, network monitoring
+- **Status:** Fully operational with Chromium browser installed
+- **Environment:** Browser installed via `npx playwright install chromium`
+
+##### 14. **puppeteer-mcp** - Alternative Browser Automation ✅
+- **Wrapper:** `scripts/mcp/wrappers/puppeteer-mcp.sh`
+- **Purpose:** Chrome automation via Puppeteer
+- **Features:** Connect to Chrome, navigate, screenshot, click, evaluate JS
+- **Resource:** Browser console logs available
+- **Note:** Can connect to existing Chrome with debugging enabled
+
+##### 15. **memory-bank-mcp** - Memory Management ✅
+- **Wrapper:** `scripts/mcp/wrappers/memory-bank-mcp.sh`
+- **Purpose:** Manage persistent memory bank
+- **Features:** Update memory, check status, process memory requests
+- **Status:** Fully operational using npx fallback (Python module optional)
+
+##### 16. **knowledge-graph-mcp** - Graph Database ✅
+- **Wrapper:** `scripts/mcp/wrappers/knowledge-graph-mcp.sh`
+- **Purpose:** Knowledge graph operations
+- **Features:** Create entities/relations, add observations, search nodes
+- **Operations:** CRUD for graph nodes and relationships
+
+##### 17. **compass-mcp** - MCP Discovery ✅
+- **Wrapper:** `scripts/mcp/wrappers/compass-mcp.sh`
+- **Purpose:** Find and recommend MCP servers from the internet
+- **Features:** Search for MCP servers by functionality, similarity scoring
+- **Use Case:** When needing additional MCP capabilities
+
+#### MCP Server Management Commands
+
+```bash
+# Test all MCP servers
+scripts/mcp/selfcheck_all.sh
+
+# Test individual MCP server
+scripts/mcp/wrappers/[server-name].sh --selfcheck
+
+# View MCP logs
+tail -f logs/mcp_selfcheck_*.log
+
+# List MCP server status in Claude
+/mcp list
+
+# Reload MCP configuration
+# (Restart Claude Code session required)
+```
+
+#### MCP Server Health Status
+
+| Server | Status | Selfcheck | Notes |
+|--------|--------|-----------|-------|
+| language-server | ✅ Operational | N/A | Go binary |
+| github | ✅ Operational | N/A | Direct npx |
+| files | ✅ Operational | ✅ Pass | File system access |
+| postgres | ✅ Operational | ✅ Pass | Database connected |
+| ultimatecoder | ✅ Operational | ✅ Pass | Advanced file ops |
+| context7 | ✅ Operational | ✅ Pass | Library docs |
+| ddg | ✅ Operational | ✅ Pass | Web search |
+| http | ✅ Operational | ✅ Pass | Web fetch |
+| extended-memory | ✅ Operational | ✅ Pass | Persistent memory |
+| mcp_ssh | ✅ Operational | ✅ Pass | SSH operations |
+| sequentialthinking | ✅ Operational | ✅ Pass | Problem solving |
+| nx-mcp | ✅ Operational | ✅ Pass | Nx support |
+| playwright-mcp | ✅ Operational | ✅ Pass | Browser installed, fully functional |
+| puppeteer-mcp | ✅ Operational | ✅ Pass | Chrome automation |
+| memory-bank-mcp | ✅ Operational | ✅ Pass | Working via npx fallback |
+| knowledge-graph-mcp | ✅ Operational | ✅ Pass | Graph operations |
+| compass-mcp | ✅ Operational | ✅ Pass | MCP discovery |
+
+#### MCP Usage Guidelines
+
+1. **File Operations:** Use `files` MCP for standard file operations, `ultimatecoder` for advanced operations
+2. **Web Access:** Use `ddg` for search, `http` for direct URL fetching
+3. **Memory:** Always load `extended-memory` at conversation start
+4. **Documentation:** Use `context7` for library docs, `nx-mcp` for Nx-specific docs
+5. **Database:** Use `postgres` MCP for all PostgreSQL operations
+6. **Browser:** Prefer `puppeteer-mcp` over `playwright-mcp` (more stable)
+7. **GitHub:** All GitHub operations through `github` MCP server
+
+#### MCP Server Dependencies & Requirements
+
+**System Requirements:**
+- Node.js with npx (required for most MCP servers)
+- Go runtime (for language-server)
+- Python 3.12+ with uv (for some servers)
+- Docker (for postgres MCP connection)
+
+**Environment Variables:**
+- `GITHUB_PERSONAL_ACCESS_TOKEN` - Required for GitHub MCP
+- `DATABASE_URI` - PostgreSQL connection string (auto-configured)
+- `PLAYWRIGHT_BROWSERS_PATH` - Browser cache for Playwright
+
+**Network Requirements:**
+- Docker network: `sutazai-network` (for postgres)
+- Internet access for: ddg, http, context7, compass-mcp
+- Local access only: files, ultimatecoder, memory servers
+
+#### Important MCP Notes
+
+⚠️ **CRITICAL:** Never modify or remove MCP server configurations without explicit user permission
+- MCP servers are critical infrastructure components
+- Wrapper scripts in `/scripts/mcp/wrappers/` must be preserved
+- `.mcp.json` configuration is protected and should not be changed
+- If an MCP server appears broken, investigate and report but do not remove
+
+**MCP Server Locations:**
+- Configuration: `/opt/sutazaiapp/.mcp.json`
+- Wrapper scripts: `/opt/sutazaiapp/scripts/mcp/wrappers/`
+- Common functions: `/opt/sutazaiapp/scripts/mcp/_common.sh`
+- Test script: `/opt/sutazaiapp/scripts/mcp/selfcheck_all.sh`
+- Logs: `/opt/sutazaiapp/logs/mcp_selfcheck_*.log`
+
 ## Project Structure
 
 ```
@@ -280,6 +558,7 @@ ENABLE_TABBY  # Default: false (code completion)
 ├── docker/          # Container definitions
 ├── config/          # Service configurations
 ├── scripts/         # Utility scripts
+│   └── mcp/         # MCP server wrappers
 ├── tests/           # Integration tests
 └── IMPORTANT/       # Critical documentation
     ├── 00_inventory/  # System inventory
@@ -311,31 +590,52 @@ ENABLE_TABBY  # Default: false (code completion)
 - PR requires passing tests and linting
 - Update CHANGELOG.md for all changes
 
-## Common Tasks
+## Common Development Tasks
 
-### Fix Model Mismatch
+### Database Operations
 ```bash
-# Option 1: Load gpt-oss model
-docker exec sutazai-ollama ollama pull gpt-oss
+# Connect to PostgreSQL
+docker exec -it sutazai-postgres psql -U sutazai
 
-# Option 2: Update backend to use tinyllama
-# Edit backend config to use "tinyllama" instead of "gpt-oss"
+# View tables
+docker exec sutazai-postgres psql -U sutazai -c '\dt'
+
+# Run migrations
+docker exec sutazai-backend alembic upgrade head
+
+# Redis operations
+docker exec sutazai-redis redis-cli
+docker exec sutazai-redis redis-cli FLUSHDB  # Clear cache
 ```
 
-### Database Schema Status
+### Ollama Model Management
 ```bash
-# PostgreSQL schema already initialized with 10 tables
-# Tables use UUID primary keys and proper indexing
-# Automated backup strategy active for all databases
-docker exec -it sutazai-postgres psql -U sutazai -c '\dt'  # View tables
+# List models
+curl http://localhost:10104/api/tags
+
+# Pull new model
+docker exec sutazai-ollama ollama pull llama2
+
+# Use specific model in API
+curl -X POST http://localhost:10010/api/v1/chat/ \
+  -H 'Content-Type: application/json' \
+  -d '{"message": "Hello", "model": "llama2"}'
 ```
 
-### Convert Agent Stub to Real Implementation
-1. Navigate to `/agents/[agent-name]/app.py`
-2. Replace Flask with FastAPI
-3. Implement actual logic instead of returning hardcoded JSON
-4. Integrate with Ollama for AI capabilities
-5. Add proper error handling and logging
+### Debugging Services
+```bash
+# Check container resource usage
+docker stats
+
+# Inspect service configuration
+docker inspect sutazai-backend | jq '.[0].Config.Env'
+
+# View real-time logs
+docker-compose logs -f backend
+
+# Shell into container
+docker exec -it sutazai-backend /bin/bash
+```
 
 ## Performance Considerations
 
@@ -482,7 +782,7 @@ open http://localhost:10201  # Grafana dashboards
 **Added:** December 19, 2024  
 **Purpose:** Establish firm engineering standards and discipline for this codebase
 
-These rules are MANDATORY for all contributors. They ensure codebase hygiene, prevent regression, and maintain professional standards.
+**ULTRATHINK:** These rules are MANDATORY for all contributors. They ensure codebase hygiene, prevent regression, and maintain professional standards.
 
 ### 🔧 Codebase Hygiene
 A clean, consistent, and organized codebase is non-negotiable. It reflects engineering discipline and enables scalability, team velocity, and fault tolerance.
@@ -743,13 +1043,21 @@ Every change must preserve or improve current behavior—no regressions, ever.
 ✨ This is not optional. Zero tolerance for skipping this step.
 ✨ Document your understanding and any discrepancies found.
 
-#### 📌 Rule 19: Mandatory Change Tracking in /opt/sutazaiapp/docs/CHANGELOG.md
+#### 📌 Rule 19: Mandatory Change Tracking in /opt/sutazaiapp/docs/CHANGELOG.md or in respective directory where the file is found
 ✨ Every single change, no matter how small, must be documented in the CHANGELOG.
-✨ Format: [Date] - [Version] - [Component] - [Change Type] - [Description]
+✨ Format: [Time] - [Date] - [Version] - [Component] - [Change Type] - [Description]
 ✨ Include:
 • What was changed
 • Why it was changed
 • Who made the change (AI agent or human)
 • Potential impact or dependencies
 ✨ No exceptions. Undocumented changes will be reverted.
-- 📋 COMPREHENSIVE CODEBASE RULES
+✨ All agents must study and review this file first: CHANGELOG.md in respective directory where the file is found
+
+#### 📌 Rule 20: DO NOT CHANGE OR REMOVE MY MCP SERVERS UNLESS I SPECIFICALLY SAY SO
+✨ MCP (Model Context Protocol) servers are critical infrastructure components
+✨ Never modify, remove, or disable any MCP server configuration without explicit user permission
+✨ Never change wrapper scripts in /opt/sutazaiapp/scripts/mcp/ without explicit authorization
+✨ Never modify .mcp.json configuration without explicit user request
+✨ If an MCP server appears broken, investigate and report the issue, but do not remove it
+✨ Always preserve existing MCP server integrations when making other system changes

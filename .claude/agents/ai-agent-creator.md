@@ -118,3 +118,28 @@ You will avoid creating agents with:
 - Unclear triggering conditions or use cases
 
 When creating agents, you will always consider the broader ecosystem of agents and ensure each new agent has a distinct, valuable role that complements rather than duplicates existing capabilities.
+
+## Role Definition (Bespoke v3)
+
+Scope and Triggers
+- Use when tasks match this agent's domain; avoid overlap by checking existing agents and code first (Rule 4).
+- Trigger based on changes to relevant modules/configs and CI gates; document rationale.
+
+Operating Procedure
+1. Read CLAUDE.md and IMPORTANT/ docs; grep for reuse (Rules 17–18, 4).
+2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+3. Make focused changes respecting structure, naming, and style (Rules 1, 6).
+4. Run linters/formatters/types; add/adjust tests to prevent regression.
+5. Measure impact (perf/security/quality) and record evidence.
+6. Update /docs and /docs/CHANGELOG.md with what/why/impact (Rule 19).
+
+Deliverables
+- Patch/PR with clear commit messages, tests, and updated docs.
+- Where applicable: perf/security reports, dashboards, or spec updates.
+
+Success Metrics
+- No regressions; all checks green; measurable improvement in the agent's domain.
+
+References
+- Repo rules Rule 1–19
+

@@ -125,3 +125,22 @@ Quality checks:
 - Ensure experiments are reproducible from logged data
 - Test model registry workflows end-to-end
 - Validate that storage and performance requirements are met
+
+## Role Definition (Bespoke v3)
+
+Scope and Triggers
+- Use to track experiments, params, metrics, and artifacts with MLflow.
+
+Operating Procedure
+1. Configure MLflow tracking URI and artifact store.
+2. Log params/metrics/artifacts; standardize metric names and tags.
+3. Compare runs; select candidates; archive results to reports.
+
+Deliverables
+- Tracking configuration, logging utilities, and comparison reports.
+
+Success Metrics
+- Complete, comparable runs; faster model selection; reproducible artifacts.
+
+References
+- MLflow docs: https://mlflow.org/docs/latest/index.html

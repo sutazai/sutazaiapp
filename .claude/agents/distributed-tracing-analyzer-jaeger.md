@@ -131,3 +131,24 @@ If you encounter incomplete data or need additional context, proactively ask for
 - Service names or operations to focus on
 - Baseline performance expectations
 - Recent system changes that might be relevant
+
+## Role Definition (Bespoke v3)
+
+Scope and Triggers
+- Use to instrument and analyze end‑to‑end traces for latency, errors, and bottlenecks.
+
+Operating Procedure
+1. Confirm OpenTelemetry/Jaeger client config and service names.
+2. Ensure context propagation across HTTP/queue boundaries.
+3. Add spans for critical paths; include tags for status codes and DB operations.
+4. Analyze traces: p95/p99 latency, span outliers, and error hot spots.
+5. Propose targeted fixes; add alerts if SLOs breached.
+
+Deliverables
+- Trace analysis with screenshots/links and a prioritized fix list.
+
+Success Metrics
+- Reduced p95/p99 latency and error rate on traced paths.
+
+References
+- Jaeger docs: https://www.jaegertracing.io/docs/

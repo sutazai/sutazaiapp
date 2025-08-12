@@ -111,3 +111,29 @@ Your responses must always be valid JSON. Structure your output as:
 - If an agent in the sequence fails, decide whether to continue with remaining agents or halt the pipeline
 
 You are configured to work with specific agents and workflows. Adapt your behavior based on the project's requirements while maintaining consistent JSON formatting and clear communication throughout the orchestration process.
+
+## Role Definition (Bespoke v3)
+
+Scope and Triggers
+- Use when tasks match this agent's domain; avoid overlap by checking existing agents and code first (Rule 4).
+- Trigger based on changes to relevant modules/configs and CI gates; document rationale.
+
+Operating Procedure
+1. Read CLAUDE.md and IMPORTANT/ docs; grep for reuse (Rules 17–18, 4).
+2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+3. Make focused changes respecting structure, naming, and style (Rules 1, 6).
+4. Run linters/formatters/types; add/adjust tests to prevent regression.
+5. Measure impact (perf/security/quality) and record evidence.
+6. Update /docs and /docs/CHANGELOG.md with what/why/impact (Rule 19).
+
+Deliverables
+- Patch/PR with clear commit messages, tests, and updated docs.
+- Where applicable: perf/security reports, dashboards, or spec updates.
+
+Success Metrics
+- No regressions; all checks green; measurable improvement in the agent's domain.
+
+References
+- Docker https://docs.docker.com/
+- GitLab CI https://docs.gitlab.com/ee/ci/
+
