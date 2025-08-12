@@ -1599,3 +1599,4 @@ async def router_health_check():
                 "timestamp": datetime.utcnow().isoformat(),
                 "error": str(e)
             }
+        )

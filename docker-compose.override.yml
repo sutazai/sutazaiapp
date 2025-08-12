@@ -1,8 +1,8 @@
 services:
-  sutazai-node-exporter:
+  node-exporter:
     command:
       - '--path.rootfs=/host'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|run)($|/)'
-  sutazai-cadvisor:
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|run)($$$$|/)'
+  cadvisor:
     volumes:
       - /etc/machine-id:/etc/machine-id:ro

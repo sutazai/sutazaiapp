@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.pool import StaticPool, QueuePool
+from sqlalchemy.pool import StaticPool
 
 logger = logging.getLogger(__name__)
 
@@ -32,8 +32,7 @@ engine = create_async_engine(
     pool_timeout=30,  # Seconds to wait for connection
     pool_recycle=3600,  # Recycle connections every hour
     pool_pre_ping=True,  # Validate connections before use
-    # Pool class for PostgreSQL
-    poolclass=QueuePool,
+    # Pool class automatically handled by SQLAlchemy async engine (AsyncAdaptedQueuePool)
     # Echo SQL queries in development
     echo=os.getenv("DATABASE_ECHO", "false").lower() == "true",
     # Connection arguments

@@ -41,6 +41,7 @@ class ConnectionPoolManager:
             self._initialized = True
             self._http_clients: Dict[str, httpx.AsyncClient] = {}
             self._db_pool: Optional[asyncpg.Pool] = None
+            self._db_cfg: Dict[str, Any] = {}
             self._redis_pool: Optional[redis.ConnectionPool] = None
             self._redis_client: Optional[redis.Redis] = None
             self._breaker_manager = None  # Will be initialized async
@@ -132,22 +133,22 @@ class ConnectionPoolManager:
             # ULTRAFIX: Optimized PostgreSQL pool for high concurrency
             # Based on formula: pool_size = (num_workers * 2) + max_overflow
             # For 28 containers with avg 2 connections each = 56 + 20 = 76
-            self._db_pool = await asyncpg.create_pool(
-                host=config.get('db_host', 'sutazai-postgres'),
-                port=config.get('db_port', 5432),
-                user=config.get('db_user', 'sutazai'),
-                password=config.get('db_password', 'sutazai'),
-                database=config.get('db_name', 'sutazai'),
-                min_size=20,  # ULTRAFIX: Increased from 10 for better warm pool
-                max_size=50,  # ULTRAFIX: Increased from 20 for high concurrency
-                max_queries=100000,  # ULTRAFIX: Doubled for longer connection reuse
-                max_inactive_connection_lifetime=600,  # ULTRAFIX: 10 min for stable connections
-                command_timeout=60,
-                # ULTRAFIX: Remove runtime-changeable parameters that require restart
-                server_settings={
+            self._db_cfg = {
+                'host': config.get('db_host', 'sutazai-postgres'),
+                'port': config.get('db_port', 5432),
+                'user': config.get('db_user', 'sutazai'),
+                'password': config.get('db_password', 'sutazai'),
+                'database': config.get('db_name', 'sutazai'),
+                'min_size': 20,  # ULTRAFIX: Increased from 10 for better warm pool
+                'max_size': 50,  # ULTRAFIX: Increased from 20 for high concurrency
+                'max_queries': 100000,  # ULTRAFIX: Doubled for longer connection reuse
+                'max_inactive_connection_lifetime': 600,  # ULTRAFIX: 10 min for stable connections
+                'command_timeout': 60,
+                'server_settings': {
                     'jit': 'on'  # Enable JIT compilation - safe to set at connection time
                 }
-            )
+            }
+            self._db_pool = await asyncpg.create_pool(**self._db_cfg)
             
             # Initialize HTTP clients for different services
             self._initialize_http_clients(config)
@@ -285,10 +286,49 @@ class ConnectionPoolManager:
             self._stats['pool_exhaustion'] += 1
             logger.warning("Database connection pool exhausted")
             raise
+        except (asyncpg.InterfaceError,
+                asyncpg.CannotConnectNowError,
+                asyncpg.PostgresConnectionError,
+                ConnectionError,
+                OSError) as e:
+            # Attempt to transparently recreate the pool and retry once
+            self._stats['connection_errors'] += 1
+            logger.warning(f"Database connection lost: {e}. Attempting to recreate pool...")
+            try:
+                await self._recreate_db_pool()
+                async with self._db_pool.acquire() as connection:
+                    logger.info("Re-established PostgreSQL connection pool successfully")
+                    yield connection
+                    return
+            except Exception as re:
+                logger.error(f"Failed to reconnect to PostgreSQL: {re}")
+                raise
         except Exception as e:
             self._stats['connection_errors'] += 1
             logger.error(f"Database connection error: {e}")
             raise
+
+    async def _recreate_db_pool(self, max_retries: int = 5) -> None:
+        """Close and recreate the asyncpg pool with exponential backoff."""
+        # Close old pool if present
+        try:
+            if self._db_pool:
+                await self._db_pool.close()
+        finally:
+            self._db_pool = None
+
+        delay = 0.5
+        last_err: Optional[Exception] = None
+        for attempt in range(1, max_retries + 1):
+            try:
+                self._db_pool = await asyncpg.create_pool(**self._db_cfg)
+                return
+            except Exception as e:
+                last_err = e
+                logger.warning(f"Recreate DB pool attempt {attempt}/{max_retries} failed: {e}")
+                await asyncio.sleep(delay)
+                delay = min(delay * 2, 10.0)
+        raise RuntimeError(f"Unable to recreate PostgreSQL pool after {max_retries} attempts: {last_err}")
             
     def get_redis_client(self) -> redis.Redis:
         """Get Redis client (uses internal connection pool)"""

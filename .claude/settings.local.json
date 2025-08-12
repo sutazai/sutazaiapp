@@ -203,11 +203,24 @@
       "mcp__files__read_multiple_files",
       "mcp__files__directory_tree",
       "mcp__files__read_multiple_files",
-      "mcp__files__read_text_file"
+      "mcp__files__read_text_file",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:cookbook.openai.com)",
+      "WebFetch(domain:arxiv.org)",
+      "Bash(do wc:*)",
+      "Bash(do grep \"^model:\" \"$f\")",
+      "mcp__files__list_directory",
+      "mcp__ddg__search",
+      "mcp__http__fetch",
+      "mcp__mcp_ssh__execute_command",
+      "mcp__github__get_file_contents",
+      "mcp__github__search_repositories",
+      "mcp__github__get_file_contents",
+      "mcp__http__fetch"
     ],
     "deny": []
   },
-  "enableAllProjectMcpServers": false,
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "sequentialthinking",
     "context7",
@@ -219,6 +232,10 @@
     "extended-memory",
     "http",
     "github",
-    "chromadb"
+    "chromadb",
+    "leettools",
+    "web-search",
+    "chroma",
+    "ddg"
   ]
 }

@@ -33,13 +33,12 @@
       ],
       "env": {}
     },
-    "files": {
+    "github": {
       "type": "stdio",
-      "command": "npx",
+      "command": "sh",
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/opt/sutazaiapp"
+        "-lc",
+        "npx -y @modelcontextprotocol/server-github --repositories 'sutazai/sutazaiapp'"
       ],
       "env": {}
     },
@@ -63,6 +62,27 @@
       ],
       "env": {}
     },
+    "files": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/opt/sutazaiapp"
+      ],
+      "env": {}
+    },
+    "http": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "mcp/fetch"
+      ],
+      "env": {}
+    },
     "postgres": {
       "type": "stdio",
       "command": "docker",
@@ -70,16 +90,14 @@
         "run",
         "--network",
         "sutazai-network",
-        "-i",
         "--rm",
+        "-i",
         "-e",
-        "DATABASE_URI",
+        "DATABASE_URI=postgresql://sutazai:8lfYZjSlJrSCCmWyKOTtxI3ydNFVAMA4@sutazai-postgres:5432/sutazai",
         "crystaldba/postgres-mcp",
         "--access-mode=restricted"
       ],
-      "env": {
-        "DATABASE_URI": "postgresql://sutazai:Erp3Ou4hWhcdK5Zr8DeFBuNs8@sutazai-postgres:5432/sutazai"
-      }
+      "env": {}
     },
     "extended-memory": {
       "type": "stdio",
@@ -90,30 +108,14 @@
       ],
       "env": {}
     },
-    "http": {
+    "ddg": {
       "type": "stdio",
-      "command": "npx",
+      "command": "docker",
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-http"
-      ],
-      "env": {}
-    },
-    "github": {
-      "type": "stdio",
-      "command": "sh",
-      "args": [
-        "-lc",
-        "npx -y @modelcontextprotocol/server-github --repositories 'sutazai/sutazaiapp'"
-      ],
-      "env": {}
-    },
-    "chromadb": {
-      "type": "stdio",
-      "command": "sh",
-      "args": [
-        "-lc",
-        "CHROMA_URL='http://sutazai-chromadb:8000' CHROMA_API_URL='http://sutazai-chromadb:8000' node '/opt/sutazaiapp/.mcp/chromadb/dist/index.js'"
+        "run",
+        "--rm",
+        "-i",
+        "mcp/duckduckgo"
       ],
       "env": {}
     }

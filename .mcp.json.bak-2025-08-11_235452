@@ -1,0 +1,121 @@
+{
+  "mcpServers": {
+    "mcp_ssh": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/opt/sutazaiapp/mcp_ssh",
+        "run",
+        "mcp_ssh"
+      ],
+      "env": {}
+    },
+    "nx-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "nx-mcp@latest"
+      ],
+      "env": {}
+    },
+    "language-server": {
+      "type": "stdio",
+      "command": "/root/go/bin/mcp-language-server",
+      "args": [
+        "--workspace",
+        "/opt/sutazaiapp",
+        "--lsp",
+        "/root/.nvm/versions/node/v22.18.0/bin/typescript-language-server",
+        "--",
+        "--stdio"
+      ],
+      "env": {}
+    },
+    "files": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/opt/sutazaiapp"
+      ],
+      "env": {}
+    },
+    "sequentialthinking": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "mcp/sequentialthinking"
+      ],
+      "env": {}
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ],
+      "env": {}
+    },
+    "postgres": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "run",
+        "--network",
+        "sutazai-network",
+        "-i",
+        "--rm",
+        "-e",
+        "DATABASE_URI",
+        "crystaldba/postgres-mcp",
+        "--access-mode=restricted"
+      ],
+      "env": {
+        "DATABASE_URI": "postgresql://sutazai:Erp3Ou4hWhcdK5Zr8DeFBuNs8@sutazai-postgres:5432/sutazai"
+      }
+    },
+    "extended-memory": {
+      "type": "stdio",
+      "command": "/opt/sutazaiapp/.venvs/extended-memory/bin/python",
+      "args": [
+        "-m",
+        "extended_memory_mcp.server"
+      ],
+      "env": {}
+    },
+    "http": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-http"
+      ],
+      "env": {}
+    },
+    "github": {
+      "type": "stdio",
+      "command": "sh",
+      "args": [
+        "-lc",
+        "npx -y @modelcontextprotocol/server-github --repositories 'sutazai/sutazaiapp'"
+      ],
+      "env": {}
+    },
+    "chromadb": {
+      "type": "stdio",
+      "command": "sh",
+      "args": [
+        "-lc",
+        "CHROMA_URL='http://sutazai-chromadb:8000' CHROMA_API_URL='http://sutazai-chromadb:8000' node '/opt/sutazaiapp/.mcp/chromadb/dist/index.js'"
+      ],
+      "env": {}
+    }
+  }
+}

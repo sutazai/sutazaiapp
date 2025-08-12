@@ -326,11 +326,30 @@ class IntrusionDetector:
                 self.block_ip(ip)
                 
     def block_ip(self, ip):
-        """Block an IP address (placeholder - implement with iptables)"""
+        """Block an IP address using iptables"""
         if ip not in self.blocked_ips:
             self.blocked_ips.add(ip)
             logging.error(f"IP {ip} has been flagged for blocking")
-            # TODO: Implement actual IP blocking
+            
+            # Implement actual IP blocking with iptables
+            try:
+                import subprocess
+                result = subprocess.run([
+                    'iptables', '-A', 'INPUT', '-s', ip, '-j', 'DROP'
+                ], capture_output=True, text=True)
+                
+                if result.returncode == 0:
+                    logging.info(f"Successfully blocked IP {ip} via iptables")
+                    # Log blocked IP for persistence
+                    with open('/opt/sutazaiapp/logs/blocked_ips.log', 'a') as f:
+                        f.write(f"{datetime.now().isoformat()} - BLOCKED: {ip}\n")
+                else:
+                    logging.warning(f"Failed to block IP {ip}: {result.stderr}")
+            except Exception as e:
+                logging.error(f"Error blocking IP {ip}: {e}")
+                # Fallback: log the IP for manual blocking
+                with open('/opt/sutazaiapp/logs/ips_to_block.log', 'a') as f:
+                    f.write(f"{datetime.now().isoformat()} - MANUAL_BLOCK_NEEDED: {ip}\n")
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)

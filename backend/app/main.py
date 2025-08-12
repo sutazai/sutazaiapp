@@ -1035,3 +1035,4 @@ if __name__ == "__main__":
         loop="uvloop",  # Use uvloop for better performance
         access_log=False,  # Disable access logs for performance
         log_level="info"
+    )

@@ -448,3 +448,4 @@ async def get_vector_stats(service: VectorDBService = Depends(get_vector_service
         total_documents=total_documents,
         total_collections=total_collections,
         backend_status=backend_status
+    )

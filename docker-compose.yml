@@ -137,7 +137,7 @@ services:
     healthcheck:
       test:
       - CMD-SHELL
-      - curl -f http://localhost:11434/api/tags || exit 1
+      - ollama list || exit 1
       interval: 30s
       timeout: 10s
       retries: 3
@@ -233,9 +233,7 @@ services:
     volumes:
     - qdrant_data:/qdrant/storage
   faiss:
-    build:
-      context: ./docker/faiss
-      dockerfile: Dockerfile
+    image: sutazaiapp-faiss:latest
     container_name: sutazai-faiss
     deploy:
       resources:
@@ -383,9 +381,7 @@ services:
     volumes:
     - rabbitmq_data:/var/lib/rabbitmq
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: sutazaiapp-backend:latest
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     container_name: sutazai-backend
     depends_on:
@@ -464,9 +460,7 @@ services:
     - ./logs:/logs
     - agent_workspaces:/app/agent_workspaces
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: sutazaiapp-frontend:latest
     command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
     container_name: sutazai-frontend
     depends_on:
@@ -688,7 +682,7 @@ services:
     - --path.procfs=/host/proc
     - --path.sysfs=/host/sys
     - --path.rootfs=/rootfs
-    - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+    - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$$$|/)'
     container_name: sutazai-node-exporter
     deploy:
       resources:
@@ -800,9 +794,7 @@ services:
     - 10208:9121
     restart: unless-stopped
   ollama-integration:
-    build:
-      context: ./agents/ollama_integration
-      dockerfile: Dockerfile
+    image: sutazaiapp-ollama-integration:latest
     container_name: sutazai-ollama-integration
     depends_on:
       ollama:
@@ -849,9 +841,7 @@ services:
     volumes:
     - ./agents/core:/app/agents/core:ro
   hardware-resource-optimizer:
-    build:
-      context: ./agents/hardware-resource-optimizer
-      dockerfile: Dockerfile
+    image: sutazaiapp-hardware-resource-optimizer:latest
     container_name: sutazai-hardware-resource-optimizer
     depends_on:
       backend:
@@ -911,9 +901,7 @@ services:
     - ./configs:/app/configs:ro
     - ./logs:/app/logs:rw,noexec
   jarvis-hardware-resource-optimizer:
-    build:
-      context: ./agents/jarvis-hardware-resource-optimizer
-      dockerfile: Dockerfile
+    image: sutazaiapp-jarvis-hardware-resource-optimizer:latest
     container_name: sutazai-jarvis-hardware-resource-optimizer
     depends_on:
       backend:
@@ -1067,9 +1055,7 @@ services:
     - ./agents/core:/app/agents/core:ro
     - ./logs:/app/logs
   task-assignment-coordinator:
-    build:
-      context: ./agents
-      dockerfile: task_assignment_coordinator/Dockerfile
+    image: sutazaiapp-task-assignment-coordinator:latest
     container_name: sutazai-task-assignment-coordinator
     depends_on:
       rabbitmq:
@@ -1112,9 +1098,7 @@ services:
     - ./agents/core:/app/agents/core:ro
     - ./logs:/app/logs
   resource-arbitration-agent:
-    build:
-      context: ./agents/resource_arbitration_agent
-      dockerfile: Dockerfile
+    image: sutazaiapp-resource-arbitration-agent:latest
     container_name: sutazai-resource-arbitration-agent
     depends_on:
       rabbitmq:

@@ -72,11 +72,11 @@ class ConsolidatedOllamaService:
         # Core async infrastructure
         self._executor = ThreadPoolExecutor(max_workers=10)
         self._processing = False
-        self._request_queue = asyncio.Queue(maxsize=100)
+        self._request_queue = asyncio.Queue(maxsize=1000)  # ULTRA: Increased queue size
         
-        # Configuration from settings
-        self.ollama_host = getattr(settings, 'OLLAMA_HOST', 'http://ollama:11434')
-        self.default_model = getattr(settings, 'DEFAULT_MODEL', 'tinyllama')
+        # Configuration from settings (ULTRA-OPTIMIZED)
+        self.ollama_host = getattr(settings, 'OLLAMA_HOST', 'http://sutazai-ollama:11434')  # ULTRA: Use correct service name
+        self.default_model = 'tinyllama'  # ULTRA: Fastest model
         self.embedding_model = getattr(settings, 'EMBEDDING_MODEL', 'tinyllama')
         
         # Generation cache
@@ -90,23 +90,29 @@ class ConsolidatedOllamaService:
         self.cache_directory.mkdir(parents=True, exist_ok=True)
         self.max_cache_size = getattr(settings, 'MODEL_CACHE_SIZE', 3)
         
-        # Request batching
+        # Request batching (ULTRA-OPTIMIZED)
         self.batch_queue: Dict[str, List[BatchRequest]] = defaultdict(list)
-        self.batch_size = getattr(settings, 'BATCH_SIZE', 8)
-        self.batch_timeout_ms = getattr(settings, 'BATCH_TIMEOUT_MS', 100)
+        self.batch_size = 4  # ULTRA: Optimal batch size for speed
+        self.batch_timeout_ms = 50  # ULTRA: Faster batch window for <2s responses
         self.batch_processors: Dict[str, asyncio.Task] = {}
         
         # GPU acceleration
         self.gpu_available = self._check_gpu_availability()
         self.device_preference = "cuda" if self.gpu_available else "cpu"
         
-        # ULTRAFIX: Enhanced performance monitoring with error reset
+        # ULTRAFIX: Enhanced performance monitoring with error reset (ULTRA-OPTIMIZED)
+        from collections import deque
+        self._response_times = deque(maxlen=100)  # ULTRA: Track detailed response times
         self._stats = {
             'total_requests': 0,
             'cache_hits': 0,
             'cache_misses': 0,
             'errors': 0,
             'avg_response_time': 0,
+            'avg_response_ms': 0,  # ULTRA: Track in milliseconds
+            'p95_response_ms': 0,  # ULTRA: Performance percentiles
+            'p99_response_ms': 0,  # ULTRA: Performance percentiles
+            'batches_processed': 0,  # ULTRA: Batch efficiency
             'last_reset': datetime.now(),
             'successful_requests_since_reset': 0
         }
@@ -1364,12 +1370,25 @@ class ConsolidatedOllamaService:
     
     # PERFORMANCE AND MONITORING METHODS
     def _update_avg_response_time(self, elapsed: float):
-        """Update average response time"""
+        """Update average response time (ULTRA-ENHANCED)"""
         current_avg = self._stats['avg_response_time']
         total_requests = self._stats['total_requests']
         self._stats['avg_response_time'] = (
             (current_avg * (total_requests - 1) + elapsed) / total_requests
         )
+        
+        # ULTRA: Track response times in milliseconds for detailed metrics
+        elapsed_ms = elapsed * 1000
+        self._response_times.append(elapsed_ms)
+        self._stats['avg_response_ms'] = elapsed_ms if len(self._response_times) == 1 else sum(self._response_times) / len(self._response_times)
+        
+        # ULTRA: Calculate percentiles for performance monitoring
+        if self._response_times:
+            sorted_times = sorted(self._response_times)
+            p95_idx = int(len(sorted_times) * 0.95)
+            p99_idx = int(len(sorted_times) * 0.99)
+            self._stats['p95_response_ms'] = sorted_times[min(p95_idx, len(sorted_times)-1)]
+            self._stats['p99_response_ms'] = sorted_times[min(p99_idx, len(sorted_times)-1)]
     
     def _calculate_cache_hit_rate(self) -> float:
         """Calculate overall cache hit rate"""

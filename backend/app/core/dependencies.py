@@ -9,10 +9,10 @@ from app.services.consolidated_ollama_service import (
     get_model_manager,
     get_advanced_model_manager
 )
-from app.services.agent_orchestrator import AgentOrchestrator
+from app.agent_orchestration.orchestrator import UnifiedAgentOrchestrator
 
 # Singleton instances
-_agent_orchestrator: AgentOrchestrator = None
+_agent_orchestrator: UnifiedAgentOrchestrator = None
 
 # Ollama service dependency functions (all point to consolidated service)
 async def get_consolidated_ollama_service() -> ConsolidatedOllamaService:
@@ -32,9 +32,10 @@ async def get_ollama_embedding_service() -> ConsolidatedOllamaService:
     """Get consolidated service (compatibility for embeddings)"""
     return await get_ollama_service()
 
-def get_agent_orchestrator() -> AgentOrchestrator:
-    """Get agent orchestrator instance"""
+async def get_agent_orchestrator() -> UnifiedAgentOrchestrator:
+    """Get unified agent orchestrator instance"""
     global _agent_orchestrator
     if _agent_orchestrator is None:
-        _agent_orchestrator = AgentOrchestrator()
+        _agent_orchestrator = UnifiedAgentOrchestrator()
+        # No need to call start() here - it's handled by lifecycle management
     return _agent_orchestrator
