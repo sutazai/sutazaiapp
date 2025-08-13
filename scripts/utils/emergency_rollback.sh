@@ -266,7 +266,7 @@ rollback_full_system() {
     # Try using restored deployment scripts
     if [ -f "$PROJECT_ROOT/scripts/master/deploy.sh" ]; then
         log_info "Using master deployment script..."
-        timeout 600 "$PROJECT_ROOT/scripts/master/deploy.sh" minimal || {
+        timeout 600 "$PROJECT_ROOT/scripts/master/deploy.sh"   || {
             log_warning "Master deploy failed, using fallback"
             fallback_system_start
         }

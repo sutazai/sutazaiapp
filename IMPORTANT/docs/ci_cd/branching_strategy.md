@@ -348,7 +348,7 @@ Protection Rules:
 
 ### Guidelines
 1. **Regular Syncing:** Pull from target branch daily
-2. **Small PRs:** Keep changes focused and minimal
+2. **Small PRs:** Keep changes focused and  
 3. **Communication:** Coordinate with team on shared files
 4. **Testing:** Always test after resolving conflicts
 

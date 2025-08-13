@@ -305,7 +305,7 @@ function calculateFocusAlignmentScore(entity, focus) {
     }
   }
 
-  // Minimal focus alignment
+  //   focus alignment
   return 0.1;
 }
 

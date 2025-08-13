@@ -1229,7 +1229,7 @@ CMD ["python", "-O", "-m", "uvicorn", "app.main:app", \
 ### 7.4 Image Size Optimization
 
 ```dockerfile
-# Multi-stage build for minimal image size
+# Multi-stage build for   image size
 # Stage 1: Build dependencies
 FROM python:3.11-slim as builder
 

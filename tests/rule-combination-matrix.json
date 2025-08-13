@@ -20,7 +20,7 @@
       "priority": "critical",
       "dependencies": [],
       "conflicts": [],
-      "performance_impact": "minimal",
+      "performance_impact": " ",
       "test_scenarios": [
         "validate_no_magic_terms",
         "validate_concrete_naming",
@@ -65,7 +65,7 @@
       "priority": "medium",
       "dependencies": ["rule_07_eliminate_script_chaos"],
       "conflicts": [],
-      "performance_impact": "minimal",
+      "performance_impact": " ",
       "test_scenarios": [
         "duplicate_detection",
         "reusability_analysis",
@@ -80,7 +80,7 @@
       "priority": "high",
       "dependencies": [],
       "conflicts": [],
-      "performance_impact": "minimal",
+      "performance_impact": " ",
       "test_scenarios": [
         "code_quality_standards",
         "documentation_completeness",
@@ -95,7 +95,7 @@
       "priority": "medium",
       "dependencies": ["rule_15_clean_documentation"],
       "conflicts": [],
-      "performance_impact": "minimal",
+      "performance_impact": " ",
       "test_scenarios": [
         "doc_structure_validation",
         "duplicate_content_check",
@@ -230,7 +230,7 @@
       "priority": "medium",
       "dependencies": [],
       "conflicts": [],
-      "performance_impact": "minimal",
+      "performance_impact": " ",
       "test_scenarios": [
         "doc_cleanliness_check",
         "version_sync_validation",
@@ -268,7 +268,7 @@
     "all_disabled": {
       "description": "All rules disabled (baseline)",
       "binary_pattern": "0000000000000000",
-      "expected_performance_impact": "minimal",
+      "expected_performance_impact": " ",
       "use_case": "Performance baseline measurement"
     },
     "critical_only": {
@@ -283,8 +283,8 @@
       "rules": [1, 2, 3, 5, 7, 8, 9, 10, 11, 13],
       "expected_performance_impact": "very_high"
     },
-    "performance_minimal": {
-      "description": "Rules with minimal performance impact",
+    "performance_ ": {
+      "description": "Rules with   performance impact",
       "binary_pattern": "1000010100001100",
       "rules": [1, 4, 6, 13, 15],
       "expected_performance_impact": "low"
@@ -327,7 +327,7 @@
     },
     "phase_4_categories": {
       "description": "Test predefined rule categories",
-      "combinations": ["critical_only", "high_priority", "performance_minimal"],
+      "combinations": ["critical_only", "high_priority", "performance_ "],
       "focus": "practical_scenarios"
     },
     "phase_5_stress": {

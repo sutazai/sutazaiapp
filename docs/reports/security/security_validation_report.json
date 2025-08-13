@@ -555,7 +555,7 @@
       "severity": "HIGH"
     },
     {
-      "file": "/opt/sutazaiapp/backend/minimal_app.py",
+      "file": "/opt/sutazaiapp/backend/ _app.py",
       "line": 71,
       "type": "potential base64 secret",
       "content": "@app.get(\"/api/v1/system/status\")",
@@ -2506,7 +2506,7 @@
       "recommendation": "Add USER directive to run as non-root"
     },
     {
-      "file": "/opt/sutazaiapp/backend/Dockerfile.minimal",
+      "file": "/opt/sutazaiapp/backend/Dockerfile. ",
       "type": "No USER directive found",
       "severity": "MEDIUM",
       "recommendation": "Add USER directive to run as non-root"

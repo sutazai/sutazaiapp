@@ -393,13 +393,13 @@ class SutazAISystemTester:
             root_count = len(root_user_containers)
             if root_count <= 3:
                 self.log_test_result(
-                    "Security_Minimal_Root_Containers",
+                    "Security_ _Root_Containers",
                     "PASS",
                     f"Only {root_count} containers running as root: {', '.join(root_user_containers)}"
                 )
             else:
                 self.log_test_result(
-                    "Security_Minimal_Root_Containers",
+                    "Security_ _Root_Containers",
                     "FAIL",
                     f"Too many root containers ({root_count}): {', '.join(root_user_containers)}"
                 )

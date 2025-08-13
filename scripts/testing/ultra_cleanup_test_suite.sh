@@ -70,7 +70,7 @@ emergency_rollback() {
         # Restart system
         cd "$PROJECT_ROOT"
         if [ -f "scripts/master/deploy.sh" ]; then
-            timeout 300 ./scripts/master/deploy.sh minimal || {
+            timeout 300 ./scripts/master/deploy.sh   || {
                 log_critical "Master deploy failed, using fallback"
                 docker-compose up -d postgres redis backend frontend || true
             }
@@ -333,13 +333,13 @@ phase4_integration_testing() {
     cp -r "$PROJECT_ROOT/scripts" "$BACKUP_DIR/scripts" 2>/dev/null || true
     cp "$PROJECT_ROOT/docker-compose.yml" "$BACKUP_DIR/docker-compose.yml" 2>/dev/null || true
     
-    # Test minimal deployment
+    # Test   deployment
     if [ -f "$PROJECT_ROOT/scripts/master/deploy.sh" ]; then
-        log_info "Testing minimal deployment..."
+        log_info "Testing   deployment..."
         
         # Run deployment
-        if timeout 300 "$PROJECT_ROOT/scripts/master/deploy.sh" minimal > "$TEST_LOG_DIR/deploy_test.log" 2>&1; then
-            log_info "✓ Minimal deployment completed"
+        if timeout 300 "$PROJECT_ROOT/scripts/master/deploy.sh"   > "$TEST_LOG_DIR/deploy_test.log" 2>&1; then
+            log_info "✓   deployment completed"
             
             # Wait for services to stabilize
             sleep 30

@@ -196,7 +196,7 @@ sequenceDiagram
 
 **Current Status:**
 - Kong is running but has NO routes configured
-- Service discovery via Consul is minimal
+- Service discovery via Consul is  
 - No authentication middleware configured
 - Rate limiting not implemented
 

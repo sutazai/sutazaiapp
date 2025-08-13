@@ -5,7 +5,7 @@ SIMPLIFIED LOAD TESTING FOR HARDWARE OPTIMIZER
 
 Comprehensive load testing using only Python standard libraries.
 This provides the same functionality as the ultra test suite but with
-minimal dependencies.
+  dependencies.
 
 Author: Ultra-Critical Automated Testing Specialist
 Version: 1.0.0
@@ -279,7 +279,7 @@ class SimplifiedLoadTester:
         
         except Exception as e:
             logger.error(f"  ❌ Executor error: {e}")
-            # Create minimal failure result
+            # Create   failure result
             return LoadTestResult(
                 endpoint=endpoint.path,
                 method=endpoint.method,

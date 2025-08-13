@@ -48,7 +48,7 @@
     "systemd_services": [],
     "docker_references": [
       "docker-compose.yml",
-      "docker-compose.minimal.yml"
+      "docker-compose. .yml"
     ]
   }
 }

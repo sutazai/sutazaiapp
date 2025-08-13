@@ -634,7 +634,7 @@ class PerformanceTuner:
                 "priority": "medium",
                 "category": "models",
                 "recommendation": "Enable model quantization for faster inference",
-                "impact": "2-3x inference speed with minimal accuracy loss"
+                "impact": "2-3x inference speed with   accuracy loss"
             }
         ]
         

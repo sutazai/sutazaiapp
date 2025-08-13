@@ -24,7 +24,7 @@ mcp_devcontext_update_conversation_context({
     }
   ],
   preserveContextOnTopicShift: true, // Whether to maintain context when topic changes
-  contextIntegrationLevel: "balanced", // Options: "minimal", "balanced", "aggressive"
+  contextIntegrationLevel: "balanced", // Options: " ", "balanced", "aggressive"
   trackIntentTransitions: true, // Whether to track changes in conversation intent
   tokenBudget: 4000 // Maximum token budget for context
 });
@@ -54,7 +54,7 @@ mcp_devcontext_update_conversation_context({
   - Each change needs `filePath` and `newContent`
   - Include `languageHint` for better code analysis
 - **contextIntegrationLevel**: 
-  - "minimal" - Light integration for simple updates
+  - " " - Light integration for simple updates
   - "balanced" - Default level (recommended)
   - "aggressive" - Deep integration for critical changes
 - **preserveContextOnTopicShift**: Set to true to maintain context during topic changes (recommended)

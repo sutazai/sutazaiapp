@@ -1,6 +1,6 @@
 """
 ULTRAPERFORMANCE Connection Pool Manager
-Optimized for maximum throughput and minimal latency
+Optimized for maximum throughput and   latency
 """
 
 import asyncio

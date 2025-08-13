@@ -37,7 +37,7 @@ class QuantizationStrategy(Enum):
     """Quantization strategies"""
     AGGRESSIVE = "aggressive"    # Maximum compression, may impact accuracy
     BALANCED = "balanced"        # Balance between size and accuracy  
-    CONSERVATIVE = "conservative" # Minimal accuracy impact
+    CONSERVATIVE = "conservative" #   accuracy impact
     CUSTOM = "custom"            # Custom quantization parameters
 
 @dataclass
@@ -214,7 +214,7 @@ class ModelAnalyzer:
         elif file_size_mb > 500:  # > 500MB
             recommendations.append("INT8 quantization recommended for good balance")
         else:
-            recommendations.append("FP16 quantization for minimal accuracy loss")
+            recommendations.append("FP16 quantization for   accuracy loss")
         
         if model_format == "gguf":
             recommendations.append("GGUF format supports efficient quantization")

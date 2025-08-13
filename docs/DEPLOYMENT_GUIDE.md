@@ -123,7 +123,7 @@ export OLLAMA_MAX_LOADED_MODELS="2"   # Model concurrency limit
 ### Optimized Resource-Constrained
 ```bash
 LIGHTWEIGHT_MODE=true ./deploy.sh deploy optimized
-# - Minimal resource usage
+# -   resource usage
 # - Essential services only
 # - Reduced memory footprint
 # - Single-node deployment

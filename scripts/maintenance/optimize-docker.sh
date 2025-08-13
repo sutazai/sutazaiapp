@@ -97,7 +97,7 @@ echo "Docker disk usage after cleanup:"
 docker system df
 echo ""
 echo "To start SutazAI:"
-echo "  Minimal mode: ./scripts/start-minimal.sh"
+echo "    mode: ./scripts/start- .sh"
 echo "  With features: ./scripts/start-with-features.sh"
 echo ""
 echo "Tips for better performance:"

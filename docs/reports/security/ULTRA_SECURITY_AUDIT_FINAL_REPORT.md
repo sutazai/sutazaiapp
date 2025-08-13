@@ -29,7 +29,7 @@ The SutazAI system has achieved **enterprise-grade security** with significant i
 
 #### Current State
 - **28 of 28 containers running as non-root** (100% secure)
-- Minimal capabilities enforced
+-   capabilities enforced
 - Read-only root filesystems where applicable
 
 #### Containers Fixed

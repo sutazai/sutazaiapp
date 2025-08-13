@@ -1,5 +1,5 @@
 """
-Minimal Working Backend for SutazAI
+  Working Backend for SutazAI
 Provides essential endpoints to get the system running
 """
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # Create FastAPI app
 app = FastAPI(
     title="SutazAI Backend API",
-    description="Minimal working backend for SutazAI system",
+    description="  working backend for SutazAI system",
     version="0.1.0"
 )
 
@@ -233,7 +233,7 @@ async def get_metrics():
             "disk_usage": 35.0
         }
 
-# Chat endpoint (minimal implementation)
+# Chat endpoint (  implementation)
 @app.post("/api/v1/chat")
 async def chat(message: Dict[str, str]):
     """Simple chat endpoint"""

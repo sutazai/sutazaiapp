@@ -230,7 +230,7 @@ test_node_package() {
         return 2  # npx not available
     fi
     
-    # Test package resolution with minimal timeout
+    # Test package resolution with   timeout
     if timeout 15 npx -y "$package_name" --help >/dev/null 2>&1; then
         return 0
     else

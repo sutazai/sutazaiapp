@@ -77,12 +77,12 @@ Based on Architecture Decision Records (ADRs) in `/opt/sutazaiapp/IMPORTANT/10_c
 | Backend API | sutazai-backend | 10010 | FastAPI v17.0.0 | ✅ HEALTHY | PostgreSQL, Redis, Ollama |
 | Frontend UI | sutazai-frontend | 10011 | Streamlit interface | ⚠️ STARTING | Backend API |
 
-### Service Mesh Infrastructure (Running - Minimal Configuration)
+### Service Mesh Infrastructure (Running -   Configuration)
 
 | Component | Container Name | Port(s) | Purpose | Status | Configuration |
 |-----------|---------------|---------|---------|--------|---------------|
 | Kong Gateway | sutazai-kong | 10005, 8001 | API gateway | ✅ RUNNING | No routes configured |
-| Consul | sutazai-consul | 10006 | Service discovery | ✅ RUNNING | Minimal usage |
+| Consul | sutazai-consul | 10006 | Service discovery | ✅ RUNNING |   usage |
 | RabbitMQ | sutazai-rabbitmq | 10007-10008 | Message queue | ✅ RUNNING | Not actively used |
 
 ### Vector Databases (Running - Not Integrated)

@@ -12,7 +12,7 @@ import os
 try:
     from app.core.security import security_manager
 except ImportError:
-    # Mock for minimal backend
+    # Mock for   backend
     class MockSecurityManager:
         def __init__(self):
             self.auth = MockAuth()

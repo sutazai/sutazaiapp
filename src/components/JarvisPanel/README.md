@@ -320,7 +320,7 @@ Receive:
 ### CSS Optimizations
 - **GPU acceleration** for animations
 - **Efficient selectors** for faster rendering
-- **Minimal repaints** with optimized transitions
+- **  repaints** with optimized transitions
 - **Responsive images** and assets
 
 ### Memory Management

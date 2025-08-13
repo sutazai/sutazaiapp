@@ -186,7 +186,7 @@ check_base_image_security() {
             return 0
             ;;
         *alpine*|*slim*)
-            log_success "✅ $relative_path: Uses minimal base image ($base_image)"
+            log_success "✅ $relative_path: Uses   base image ($base_image)"
             return 0
             ;;
         *latest)
@@ -262,7 +262,7 @@ generate_security_report() {
     "Ensure all containers run as non-root users",
     "Add health checks to all services",
     "Use environment variables or mounted secrets instead of hardcoded values",
-    "Prefer minimal base images (Alpine, slim variants)",
+    "Prefer   base images (Alpine, slim variants)",
     "Pin base image versions instead of using 'latest'"
   ],
   "compliance_status": "$([ $overall_security_percentage -ge 90 ] && echo "COMPLIANT" || echo "NEEDS_IMPROVEMENT")"

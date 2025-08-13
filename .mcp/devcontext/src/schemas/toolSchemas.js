@@ -25,7 +25,7 @@ export const initializeConversationContextInputSchema = {
   maxCodeContextItems: z.number().optional().default(5),
   maxRecentChanges: z.number().optional().default(5),
   contextDepth: z
-    .enum(["minimal", "standard", "comprehensive"])
+    .enum([" ", "standard", "comprehensive"])
     .optional()
     .default("standard"),
   tokenBudget: z.number().optional().default(DEFAULT_TOKEN_BUDGET),
@@ -124,7 +124,7 @@ export const updateConversationContextInputSchema = {
     .default([]),
   preserveContextOnTopicShift: z.boolean().optional().default(true),
   contextIntegrationLevel: z
-    .enum(["minimal", "balanced", "aggressive"])
+    .enum([" ", "balanced", "aggressive"])
     .optional()
     .default("balanced"),
   trackIntentTransitions: z.boolean().optional().default(true),

@@ -25,7 +25,7 @@ class TestAgentOrchestrator(unittest.TestCase):
         self.project_root = Path("/tmp/test_project")
         self.project_root.mkdir(exist_ok=True)
         
-        # Create minimal directory structure
+        # Create   directory structure
         (self.project_root / "logs").mkdir(exist_ok=True)
         (self.project_root / "tmp").mkdir(exist_ok=True)
         

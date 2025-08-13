@@ -266,7 +266,7 @@ app = FastAPI(
 
 ## Error Handling
 
-Current error handling is minimal:
+Current error handling is  :
 
 ```python
 try:
@@ -298,8 +298,8 @@ No proper error propagation or client notification.
 
 ### Resource Usage
 - **Memory:** ~50-100MB baseline
-- **CPU:** Minimal (< 1% idle)
-- **Network:** Minimal traffic
+- **CPU:**   (< 1% idle)
+- **Network:**   traffic
 - **Disk:** No persistent storage
 
 ### Scalability

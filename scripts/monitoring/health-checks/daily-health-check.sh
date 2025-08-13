@@ -156,7 +156,7 @@ check_docker() {
 check_core_services() {
     log "INFO" "Checking core services..."
     
-    local services=("sutazai-postgres-minimal" "sutazai-redis-minimal" "sutazai-ollama")
+    local services=("sutazai-postgres- " "sutazai-redis- " "sutazai-ollama")
     
     for service in "${services[@]}"; do
         if docker ps --format "{{.Names}}" | grep -q "^${service}$"; then
@@ -199,16 +199,16 @@ check_database_connectivity() {
     log "INFO" "Checking database connectivity..."
     
     # PostgreSQL
-    if docker exec sutazai-postgres-minimal pg_isready -U sutazai >/dev/null 2>&1; then
-        local db_size=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT pg_size_pretty(pg_database_size('sutazai'));" 2>/dev/null | xargs)
+    if docker exec sutazai-postgres-  pg_isready -U sutazai >/dev/null 2>&1; then
+        local db_size=$(docker exec sutazai-postgres-  psql -U sutazai -d sutazai -t -c "SELECT pg_size_pretty(pg_database_size('sutazai'));" 2>/dev/null | xargs)
         add_check_result "PostgreSQL Connection" "PASS" "Database is accessible" "{\"database_size\": \"$db_size\"}"
     else
         add_check_result "PostgreSQL Connection" "FAIL" "Cannot connect to PostgreSQL" "{}"
     fi
     
     # Redis
-    if docker exec sutazai-redis-minimal redis-cli ping >/dev/null 2>&1; then
-        local redis_info=$(docker exec sutazai-redis-minimal redis-cli info memory | grep used_memory_human | cut -d: -f2 | tr -d '\r')
+    if docker exec sutazai-redis-  redis-cli ping >/dev/null 2>&1; then
+        local redis_info=$(docker exec sutazai-redis-  redis-cli info memory | grep used_memory_human | cut -d: -f2 | tr -d '\r')
         add_check_result "Redis Connection" "PASS" "Redis is responding" "{\"memory_usage\": \"$redis_info\"}"
     else
         add_check_result "Redis Connection" "FAIL" "Cannot connect to Redis" "{}"

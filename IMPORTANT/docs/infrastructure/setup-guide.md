@@ -386,7 +386,7 @@ Service: sutazai-consul
 Port: 10006
 Image: hashicorp/consul:1.17
 Configuration: Single-node server with UI
-Status: Running but minimal usage
+Status: Running but   usage
 ```
 
 #### RabbitMQ Message Queue

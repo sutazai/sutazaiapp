@@ -60,7 +60,7 @@
 ### Deployment Scripts (16 files → 3 canonical)
 **CONSOLIDATE TO:**
 - `/opt/sutazaiapp/scripts/deployment/deployment-master.sh` (full deployment)
-- `/opt/sutazaiapp/scripts/deployment/start-minimal.sh` (minimal deployment)
+- `/opt/sutazaiapp/scripts/deployment/start- .sh` (  deployment)
 - `/opt/sutazaiapp/scripts/deployment/fast_start.sh` (development)
 
 ## 📋 STEP-BY-STEP EXECUTION PLAN
@@ -118,7 +118,7 @@ find /opt/sutazaiapp -type f | wc -l
 find /opt/sutazaiapp -type f | wc -l
 
 # Test system health
-make health-minimal
+make health- 
 ```
 
 ## 📊 EXPECTED RESULTS
@@ -152,6 +152,6 @@ make health-minimal
 
 ---
 
-**READY TO EXECUTE:** Phase 1A (Archive cleanup) can be run immediately with minimal risk
+**READY TO EXECUTE:** Phase 1A (Archive cleanup) can be run immediately with   risk
 **ESTIMATED TIME:** 30 minutes for Phase 1, 2 hours for Phase 2
 **SUCCESS CRITERIA:** System remains fully operational with 50% fewer duplicate files

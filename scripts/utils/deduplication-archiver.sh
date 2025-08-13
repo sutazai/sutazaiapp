@@ -101,7 +101,7 @@ archive_scripts() {
     local deployment_scripts=(
         "scripts/deployment/deploy.sh"
         "scripts/deployment/build-all-images.sh"
-        "scripts/deployment/start-minimal.sh"
+        "scripts/deployment/start- .sh"
         "scripts/deployment/fast_start.sh"
         "scripts/deployment/ultimate-deployment-master.py"
         "scripts/deployment/prepare-20-agents.py"
@@ -217,7 +217,7 @@ After rollback, run these commands to validate:
 docker-compose build --parallel
 
 # Test script execution
-bash scripts/deployment/deploy.sh --dry-run minimal
+bash scripts/deployment/deploy.sh --dry-run  
 
 # Verify service health
 python3 scripts/monitoring/monitoring-master.py --mode check

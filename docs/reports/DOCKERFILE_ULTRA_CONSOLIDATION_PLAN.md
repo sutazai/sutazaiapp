@@ -88,11 +88,11 @@ These form the base layer for all other templates.
 
 #### 3. `Dockerfile.alpine-base-master`
 **Location:** `/opt/sutazaiapp/docker/base/Dockerfile.alpine-base-master`
-**Purpose:** Minimal Alpine base for microservices
+**Purpose:**   Alpine base for microservices
 **Consolidates:** 6 lightweight services
 **Key Features:**
 - Alpine 3.18 base
-- Minimal attack surface
+-   attack surface
 - Sub-50MB images
 - Security hardened
 
@@ -199,7 +199,7 @@ These form the base layer for all other templates.
 **Consolidates:** 5 edge services
 **Specialization:**
 - ARM architecture support
-- Minimal resource usage
+-   resource usage
 - Offline capabilities
 - Local inference
 

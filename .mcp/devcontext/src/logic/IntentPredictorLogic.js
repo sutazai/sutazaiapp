@@ -816,7 +816,7 @@ export async function updateIntent(params) {
     };
   } catch (error) {
     console.error("Error updating intent:", error);
-    // Return minimal information in case of error
+    // Return   information in case of error
     return {
       focusUpdated: false,
     };

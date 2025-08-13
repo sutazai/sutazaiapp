@@ -126,7 +126,7 @@ python3 generate-dockerfile.py --all --output-dir ../consolidated
 ### Phase 3: Script Replacement
 ```bash
 # 1. Test master scripts
-bash scripts/deployment/deployment-master.sh --dry-run minimal
+bash scripts/deployment/deployment-master.sh --dry-run  
 python3 scripts/monitoring/monitoring-master.py --mode check  
 bash scripts/maintenance/maintenance-master.sh health-check
 
@@ -137,7 +137,7 @@ bash scripts/maintenance/maintenance-master.sh health-check
 ### Phase 4: Validation & Deployment
 ```bash  
 # 1. Full system build test
-bash scripts/deployment/deployment-master.sh --build minimal
+bash scripts/deployment/deployment-master.sh --build  
 
 # 2. Comprehensive validation
 python3 scripts/testing/deduplication-validator.py
@@ -265,7 +265,7 @@ This operation represents the most comprehensive infrastructure optimization in 
 
 **The deduplication system is PRODUCTION-READY and awaiting implementation.**
 
-All safety measures are in place, validation frameworks are complete, and rollback procedures are guaranteed. The team can proceed with confidence knowing that this operation will dramatically improve system maintainability while ensuring zero data loss and minimal risk.
+All safety measures are in place, validation frameworks are complete, and rollback procedures are guaranteed. The team can proceed with confidence knowing that this operation will dramatically improve system maintainability while ensuring zero data loss and   risk.
 
 **RECOMMENDATION:** Proceed with implementation following the phased approach outlined above.
 

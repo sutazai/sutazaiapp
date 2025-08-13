@@ -265,7 +265,7 @@ curl -X POST "http://localhost:8116/optimize/storage/logs"
 ### Performance ✅
 - Efficient scanning algorithms
 - Intelligent caching for repeated operations
-- Minimal resource utilization
+-   resource utilization
 - Scalable to large file systems
 
 ### Usability ✅

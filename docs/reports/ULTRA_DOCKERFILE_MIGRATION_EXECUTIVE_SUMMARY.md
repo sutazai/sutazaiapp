@@ -77,7 +77,7 @@ These services require specialized base images and were correctly excluded:
 - **Maintenance overhead:** High (updating dependencies in 174 places)
 
 ### After Migration
-- **2 master base images** + minimal service layers
+- **2 master base images** +   service layers
 - **Average build time:** 1-2 minutes (70% reduction)
 - **Average image size:** 400MB-700MB (40-50% reduction)
 - **Maintenance overhead:** Low (update 2 base images only)

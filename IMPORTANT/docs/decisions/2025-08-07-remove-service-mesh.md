@@ -27,6 +27,6 @@ CLAUDE.md reflects the current reality: Kong/Consul/RabbitMQ are running but not
 
 ## How to Reintroduce Later (If Needed)
 
-- Restore the file in a feature branch and add minimal, verified routes and health for a single service end-to-end.
+- Restore the file in a feature branch and add  , verified routes and health for a single service end-to-end.
 - Add tests verifying Kong routes and Consul service registry functionality before merging.
 

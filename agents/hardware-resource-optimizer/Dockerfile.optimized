@@ -16,7 +16,7 @@ RUN if [ -f /tmp/agent-requirements.txt ]; then \
       && find /opt/venv -name '*.pyc' -delete; \
     fi
 
-# Copy application code (minimal)
+# Copy application code ( )
 COPY app.py .
 COPY shared/ ./shared/
 

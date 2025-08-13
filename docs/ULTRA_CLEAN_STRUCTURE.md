@@ -55,7 +55,7 @@ Following all 19 CLAUDE.md rules
 │   ├── nginx/               # Nginx configs
 │   └── env/                 # Environment configs
 │
-├── docker/                     # Minimal Docker files
+├── docker/                     #   Docker files
 │   └── faiss/               # Only FAISS Dockerfile kept
 │       └── Dockerfile
 │
@@ -113,7 +113,7 @@ Following all 19 CLAUDE.md rules
 - **Python files**: <1,000 (core functionality only)
 - **Directories**: ~50 organized directories
 - **Disk usage**: ~8GB
-- **Complexity**: MINIMAL (professional structure)
+- **Complexity**:   (professional structure)
 
 ## 🔒 PRESERVED ESSENTIAL COMPONENTS
 

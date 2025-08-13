@@ -41,7 +41,7 @@ Other Services:     81 files → Target: 15 files (81% reduction)
 1. sutazai-base-python-3.12     # Python 3.12.8-slim-bookworm + essentials
 2. sutazai-base-nodejs-20       # Node.js 20-alpine + Python integration  
 3. sutazai-base-golang-1.21     # Golang 1.21-alpine + multi-arch support
-4. sutazai-base-alpine-3.19     # Ultra-minimal Alpine for utilities
+4. sutazai-base-alpine-3.19     # Ultra-  Alpine for utilities
 ```
 
 ### Tier 2: Service-Specific Base Images (8 images)
@@ -53,7 +53,7 @@ Other Services:     81 files → Target: 15 files (81% reduction)
 5. sutazai-monitoring-stack     # Prometheus, Grafana, observability
 6. sutazai-frontend-streamlit   # Streamlit + visualization libraries
 7. sutazai-backend-fastapi      # FastAPI + async database connectors
-8. sutazai-security-hardened    # Security services with minimal attack surface
+8. sutazai-security-hardened    # Security services with   attack surface
 ```
 
 ### Tier 3: Application Dockerfiles (26 images)
@@ -111,7 +111,7 @@ docker/base/Dockerfile.database-secure        # 🆕 CREATE - Database hardening
 docker/base/Dockerfile.monitoring-base        # ✅ EXISTS - CONSOLIDATE
 docker/base/Dockerfile.frontend-base          # 🆕 CREATE - Streamlit optimized
 docker/base/Dockerfile.backend-base           # 🆕 CREATE - FastAPI optimized
-docker/base/Dockerfile.security-base          # 🆕 CREATE - Minimal attack surface
+docker/base/Dockerfile.security-base          # 🆕 CREATE -   attack surface
 ```
 
 ### Phase 2: Service Consolidation (Week 2)

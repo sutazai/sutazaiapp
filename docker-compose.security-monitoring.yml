@@ -39,7 +39,7 @@ services:
     depends_on:
       - loki
 
-  # Secure cAdvisor - runs as nobody with minimal privileges
+  # Secure cAdvisor - runs as nobody with   privileges
   cadvisor:
     build:
       context: ./docker/monitoring-secure/cadvisor

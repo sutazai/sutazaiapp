@@ -16,7 +16,7 @@ from .task_planner import TaskPlanner
 try:
     from .voice_interface import VoiceInterface
 except ImportError:
-    from .voice_interface_minimal import VoiceInterface
+    from .voice_interface_  import VoiceInterface
 from .plugin_manager import PluginManager
 from .agent_coordinator import AgentCoordinator
 from .memory_manager import MemoryManager

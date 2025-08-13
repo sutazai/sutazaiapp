@@ -39,7 +39,7 @@ STATIC_RESPONSES = {
 async def ultra_health():
     """
     Ultra-fast health check endpoint - guaranteed <5ms response
-    Uses pre-computed responses and minimal processing
+    Uses pre-computed responses and   processing
     """
     return ORJSONResponse({
         "status": "healthy",

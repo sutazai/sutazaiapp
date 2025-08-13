@@ -85,7 +85,7 @@ def test_health_endpoint_sequential(num_requests: int = 100) -> dict:
     }
 
 def test_rapid_fire(num_requests: int = 50, delay_ms: int = 10) -> dict:
-    """Test with minimal delay between requests"""
+    """Test with   delay between requests"""
     print(f"🔥 ULTRATEST: Rapid-fire test with {num_requests} requests, {delay_ms}ms delay")
     
     results = []
@@ -104,7 +104,7 @@ def test_rapid_fire(num_requests: int = 50, delay_ms: int = 10) -> dict:
                 successful += 1
                 results.append(response_time_ms)
                 
-            # Minimal delay
+            #   delay
             time.sleep(delay_ms / 1000.0)
             
         except Exception as e:

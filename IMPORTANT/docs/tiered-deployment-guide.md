@@ -5,14 +5,14 @@ The SutazAI system has been redesigned with a tiered architecture to optimize re
 
 ## Available Tiers
 
-### 🟢 Minimal Tier
+### 🟢   Tier
 - **Containers**: 5 (PostgreSQL, Redis, Ollama, Backend, Frontend)
 - **Resources**: 2 CPU cores, 4GB RAM
 - **Use Case**: Development, testing, demos
 - **Features**: Core functionality only
 
 ### 🔵 Standard Tier  
-- **Containers**: 10 (Minimal + Qdrant, Prometheus, Grafana, Loki, Node-Exporter)
+- **Containers**: 10 (  + Qdrant, Prometheus, Grafana, Loki, Node-Exporter)
 - **Resources**: 4 CPU cores, 8GB RAM
 - **Use Case**: Production deployments
 - **Features**: Core + Vector DB + Monitoring
@@ -27,8 +27,8 @@ The SutazAI system has been redesigned with a tiered architecture to optimize re
 
 ### Deploy a Tier
 ```bash
-# Deploy minimal tier (recommended to start)
-./scripts/deploy-tier.sh minimal up
+# Deploy   tier (recommended to start)
+./scripts/deploy-tier.sh   up
 
 # Deploy standard tier
 ./scripts/deploy-tier.sh standard up
@@ -75,8 +75,8 @@ The SutazAI system has been redesigned with a tiered architecture to optimize re
 
 ### Step 4: Deploy New Tier
 ```bash
-# Start with minimal
-./scripts/deploy-tier.sh minimal up
+# Start with  
+./scripts/deploy-tier.sh   up
 
 # Test functionality
 curl http://localhost:10010/health
@@ -88,7 +88,7 @@ curl http://localhost:10011
 
 ## Service Endpoints by Tier
 
-### Minimal Tier Endpoints
+###   Tier Endpoints
 | Service | Port | URL |
 |---------|------|-----|
 | PostgreSQL | 10000 | `postgresql://localhost:10000` |
@@ -116,7 +116,7 @@ curl http://localhost:10011
 - **Issues**: Neo4j high CPU, cAdvisor crashes, unused services
 
 ### After (Tiered System)
-| Metric | Minimal | Standard | Full |
+| Metric |   | Standard | Full |
 |--------|---------|----------|------|
 | Containers | 5 | 10 | 15-20 |
 | Memory | 4GB | 8GB | 16GB |
@@ -148,8 +148,8 @@ docker stats --no-stream
 # Apply resource limits manually
 docker update --memory="512m" --cpus="0.5" [container-name]
 
-# Use minimal tier instead
-./scripts/deploy-tier.sh minimal up
+# Use   tier instead
+./scripts/deploy-tier.sh   up
 ```
 
 ### Issue: Service connectivity
@@ -182,7 +182,7 @@ docker-compose up -d
 ## Configuration Files
 
 ### Core Files
-- `docker-compose.minimal.yml` - Minimal tier definition
+- `docker-compose. .yml` -   tier definition
 - `docker-compose.standard.yml` - Standard tier overlay
 - `docker-compose.full.yml` - Full tier overlay (to be created as needed)
 
@@ -196,7 +196,7 @@ docker-compose up -d
 
 ## Best Practices
 
-1. **Start Small**: Begin with minimal tier and scale up as needed
+1. **Start Small**: Begin with   tier and scale up as needed
 2. **Monitor Resources**: Use `docker stats` to track actual usage
 3. **Test Thoroughly**: Validate each tier before production use
 4. **Document Changes**: Keep track of customizations

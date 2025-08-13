@@ -1,6 +1,6 @@
 """
 ULTRA-PERFORMANCE Connection Pool Manager
-Optimized for 1000+ concurrent users with minimal resource usage
+Optimized for 1000+ concurrent users with   resource usage
 """
 
 import os

@@ -317,7 +317,7 @@ create_master_deployment_script() {
 # Master Deployment Script - SutazAI System
 # Consolidates all deployment functionality
 # Usage: deploy-master.sh [mode] [options]
-# Modes: minimal, standard, full, security-hardened
+# Modes:  , standard, full, security-hardened
 
 set -euo pipefail
 
@@ -327,10 +327,10 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 MODE="${1:-standard}"
 FEATURE_FLAGS="${2:-}"
 
-deploy_minimal() {
-    echo "🚀 Deploying minimal stack..."
+deploy_ () {
+    echo "🚀 Deploying   stack..."
     cd "$PROJECT_ROOT"
-    docker-compose -f docker-compose.minimal.yml up -d
+    docker-compose -f docker-compose. .yml up -d
 }
 
 deploy_standard() {
@@ -352,13 +352,13 @@ deploy_security_hardened() {
 }
 
 case $MODE in
-    minimal) deploy_minimal ;;
+     ) deploy_  ;;
     standard) deploy_standard ;;
     full) deploy_full ;;
     security-hardened) deploy_security_hardened ;;
     *)
         echo "Usage: $0 [mode] [options]"
-        echo "Modes: minimal, standard, full, security-hardened"
+        echo "Modes:  , standard, full, security-hardened"
         exit 1
         ;;
 esac
@@ -391,7 +391,7 @@ update_documentation() {
 
 ```bash
 # Master deployment
-./deployment/deploy-master.sh [minimal|standard|full|security-hardened]
+./deployment/deploy-master.sh [ |standard|full|security-hardened]
 
 # Master health check
 ./utils/health-check-master.sh [component] [--fix] [--verbose]

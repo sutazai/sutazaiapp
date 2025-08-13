@@ -46,7 +46,7 @@ find /opt/sutazaiapp -type f -name "Dockerfile*" \
 - **Base Image:** python:3.12.8-slim-bookworm
 - **Security:** Non-root user (appuser)
 - **Dependencies:** Comprehensive Python packages pre-installed
-- **Optimization:** Multi-stage build with minimal final image
+- **Optimization:** Multi-stage build with   final image
 
 ### Running Services Status
 | Service | Status | Python Version |

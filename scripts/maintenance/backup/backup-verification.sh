@@ -242,27 +242,27 @@ verify_database_backup() {
     log "INFO" "Database backup contains $table_count tables and $insert_count data operations"
     
     # Try to restore to test database (if PostgreSQL is available)
-    if docker ps --format "{{.Names}}" | grep -q "sutazai-postgres-minimal"; then
+    if docker ps --format "{{.Names}}" | grep -q "sutazai-postgres- "; then
         log "INFO" "Testing database restoration..."
         
         # Create test database
-        if docker exec sutazai-postgres-minimal createdb -U sutazai "$test_db_name" >/dev/null 2>&1; then
+        if docker exec sutazai-postgres-  createdb -U sutazai "$test_db_name" >/dev/null 2>&1; then
             # Try to restore backup
-            if timeout $MAX_VERIFICATION_TIME docker exec -i sutazai-postgres-minimal psql -U sutazai -d "$test_db_name" < "$temp_sql_file" >/dev/null 2>&1; then
+            if timeout $MAX_VERIFICATION_TIME docker exec -i sutazai-postgres-  psql -U sutazai -d "$test_db_name" < "$temp_sql_file" >/dev/null 2>&1; then
                 log "SUCCESS" "Database backup restoration test passed"
                 
                 # Get some statistics from restored database
-                local restored_tables=$(docker exec sutazai-postgres-minimal psql -U sutazai -d "$test_db_name" -t -c "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';" 2>/dev/null | xargs || echo 0)
+                local restored_tables=$(docker exec sutazai-postgres-  psql -U sutazai -d "$test_db_name" -t -c "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';" 2>/dev/null | xargs || echo 0)
                 log "INFO" "Restored database contains $restored_tables tables"
             else
                 log "ERROR" "Database backup restoration test failed: $backup_file"
-                docker exec sutazai-postgres-minimal dropdb -U sutazai "$test_db_name" >/dev/null 2>&1 || true
+                docker exec sutazai-postgres-  dropdb -U sutazai "$test_db_name" >/dev/null 2>&1 || true
                 rm -f "$temp_sql_file"
                 return 1
             fi
             
             # Clean up test database
-            docker exec sutazai-postgres-minimal dropdb -U sutazai "$test_db_name" >/dev/null 2>&1 || true
+            docker exec sutazai-postgres-  dropdb -U sutazai "$test_db_name" >/dev/null 2>&1 || true
         else
             log "WARN" "Could not create test database for restoration test"
         fi

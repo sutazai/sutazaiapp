@@ -1,0 +1,7 @@
+FROM rabbitmq:3.12-management-alpine
+LABEL maintainer="SutazAI Security Team" 
+LABEL security.hardening="enabled"
+
+# Use rabbitmq user
+USER rabbitmq
+EXPOSE 5672 15672

@@ -263,7 +263,7 @@ docker-compose logs -f ollama
 # Database logs (connection issues)
 docker-compose logs -f postgres redis neo4j
 
-# Agent stub logs (minimal output expected)
+# Agent stub logs (  output expected)
 docker-compose logs -f ai-agent-orchestrator
 ```
 
@@ -1275,7 +1275,7 @@ curl http://127.0.0.1:10100/api/v1/heartbeat
 **Temporary Workaround:**
 ```bash
 # Acknowledge current limitations in monitoring
-echo "Agent services are stubs - expect minimal functionality"
+echo "Agent services are stubs - expect   functionality"
 
 # Monitor stub health only
 for port in 8589 8587 8588 8551 8002 11015; do
@@ -1629,7 +1629,7 @@ esac
 # Database connection issues
 {container_name=~"sutazai-(postgres|redis)"} |~ "connection|timeout"
 
-# Agent activity (minimal expected)
+# Agent activity (  expected)
 {container_name=~"sutazai-.*-agent.*"} |~ "health|process"
 ```
 

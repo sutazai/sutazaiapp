@@ -389,7 +389,7 @@ class FrontendPerformanceValidator:
             if caching.get("caching_effective", False):
                 print("CACHING: EFFECTIVE")
             else:
-                print("CACHING: MINIMAL OR NOT DETECTED")
+                print("CACHING:   OR NOT DETECTED")
         
         # Load testing validation
         load_test = self.results["test_results"].get("load_testing", {})

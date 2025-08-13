@@ -4,7 +4,7 @@
 # Purpose: Comprehensive health monitoring for SutazAI system components
 # Author: Shell Automation Specialist (CLEAN-001)
 # Date: August 8, 2025
-# Usage: ./health_check.sh [--cron] [--auto-cleanup] [--minimal] [--component=<name>]
+# Usage: ./health_check.sh [--cron] [--auto-cleanup] [-- ] [--component=<name>]
 # Dependencies: curl, docker, jq (optional)
 # Environment: Production, staging, development
 #
@@ -63,7 +63,7 @@ LOG_DIR="${PROJECT_ROOT}/logs"
 LOG_FILE="${LOG_DIR}/health_check.log"
 CRON_MODE=0
 AUTO_CLEANUP=0
-MINIMAL_MODE=0
+ _MODE=0
 COMPONENT_CHECK=""
 
 # Thresholds
@@ -100,8 +100,8 @@ parse_args() {
             --auto-cleanup)
                 AUTO_CLEANUP=1
                 ;;
-            --minimal)
-                MINIMAL_MODE=1
+            -- )
+                 _MODE=1
                 ;;
             --component=*)
                 COMPONENT_CHECK="${arg#*=}"
@@ -129,13 +129,13 @@ Usage: $0 [OPTIONS]
 OPTIONS:
     --cron              Run in cron mode (log only, auto-cleanup enabled)
     --auto-cleanup      Enable automatic cleanup of issues
-    --minimal           Run minimal checks only (faster)
+    --            Run   checks only (faster)
     --component=NAME    Check specific component only
     --help, -h          Show this help message
 
 EXAMPLES:
     $0                      # Full interactive health check
-    $0 --minimal            # Quick health check
+    $0 --             # Quick health check
     $0 --component=Ollama   # Check only Ollama service
     $0 --cron               # Cron-friendly mode with auto-cleanup
 
@@ -278,7 +278,7 @@ check_service() {
 
 # System resource monitoring
 check_system_resources() {
-    if [ $MINIMAL_MODE -eq 1 ]; then
+    if [ $ _MODE -eq 1 ]; then
         return 0
     fi
     
@@ -326,7 +326,7 @@ check_system_resources() {
 
 # Container resource usage
 check_container_resources() {
-    if [ $MINIMAL_MODE -eq 1 ] || ! command_exists docker; then
+    if [ $ _MODE -eq 1 ] || ! command_exists docker; then
         return 0
     fi
     
@@ -346,7 +346,7 @@ check_container_resources() {
 
 # Test model functionality
 test_model_functionality() {
-    if [ $MINIMAL_MODE -eq 1 ]; then
+    if [ $ _MODE -eq 1 ]; then
         return 0
     fi
     

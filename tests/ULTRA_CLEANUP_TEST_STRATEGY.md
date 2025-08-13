@@ -104,7 +104,7 @@ done < critical_scripts.list
 #### 2.2 Master Script Validation Tests
 ```bash
 # Test all master script modes
-/opt/sutazaiapp/scripts/master/deploy.sh minimal --dry-run
+/opt/sutazaiapp/scripts/master/deploy.sh   --dry-run
 /opt/sutazaiapp/scripts/master/deploy.sh full --dry-run
 /opt/sutazaiapp/scripts/master/health.sh services
 /opt/sutazaiapp/scripts/master/health.sh resources
@@ -117,8 +117,8 @@ done < critical_scripts.list
 test_deployment_replacement() {
   echo "Testing deployment script replacement..."
   
-  # Test minimal deployment
-  timeout 300 /opt/sutazaiapp/scripts/master/deploy.sh minimal
+  # Test   deployment
+  timeout 300 /opt/sutazaiapp/scripts/master/deploy.sh  
   
   # Verify services started correctly
   sleep 30
@@ -152,7 +152,7 @@ test_health_replacement() {
 ```bash
 # Test all base images build successfully
 base_images=(
-  "docker/base/Dockerfile.python-agent-minimal"
+  "docker/base/Dockerfile.python-agent- "
   "docker/base/Dockerfile.nodejs-agent-master"
   "docker/base/Dockerfile.monitoring-base"
 )

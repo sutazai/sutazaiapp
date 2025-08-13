@@ -45,7 +45,7 @@
 | Location | Purpose | Framework | Port | Notes |
 |----------|---------|-----------|------|-------|
 | `/docker/jax/Dockerfile` | ML Interface | FastAPI | 8080 | Multiple user violations |
-| Various agent containers | API Stubs | Flask/FastAPI | Various | Minimal web interfaces |
+| Various agent containers | API Stubs | Flask/FastAPI | Various |   web interfaces |
 
 ## 🚨 CRITICAL VIOLATIONS IDENTIFIED
 
@@ -354,7 +354,7 @@ cryptography==43.0.1          # Security library (latest)
 | Screen Reader Support | ❌ | Limited ARIA labels |
 | Keyboard Navigation | ⚠️ | Basic Streamlit defaults only |
 | High Contrast Mode | ❌ | Not implemented |
-| Focus Management | ❌ | Minimal implementation |
+| Focus Management | ❌ |   implementation |
 | Color Contrast | ⚠️ | Some violations found |
 
 ---

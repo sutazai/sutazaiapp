@@ -35,7 +35,7 @@ class DegradationLevel(Enum):
     """Degradation levels for graceful fallback"""
     FULL = "full"           # Full functionality
     REDUCED = "reduced"     # Reduced functionality
-    MINIMAL = "minimal"     # Minimal functionality
+      = " "     #   functionality
     OFFLINE = "offline"     # Offline mode
 
 @dataclass
@@ -466,7 +466,7 @@ class FeatureFlagManager:
         elif health_percentage >= 0.7:
             return DegradationLevel.REDUCED
         elif health_percentage >= 0.3:
-            return DegradationLevel.MINIMAL
+            return DegradationLevel. 
         else:
             return DegradationLevel.OFFLINE
     

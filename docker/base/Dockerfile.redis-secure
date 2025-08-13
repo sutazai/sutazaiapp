@@ -1,0 +1,10 @@
+FROM redis:7-alpine
+LABEL maintainer="SutazAI Security Team"
+LABEL security.hardening="enabled"
+
+# Security hardening
+RUN apk --no-cache add su-exec
+
+# Non-root user setup
+USER redis
+EXPOSE 6379

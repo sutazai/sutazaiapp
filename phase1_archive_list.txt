@@ -17,6 +17,6 @@
 
 # Variant files that should be archived (keeping main versions)
 /opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile.hardened
-/opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile.minimal
+/opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile. 
 /opt/sutazaiapp/backend/Dockerfile.optimized
-/opt/sutazaiapp/backend/Dockerfile.minimal
+/opt/sutazaiapp/backend/Dockerfile. 

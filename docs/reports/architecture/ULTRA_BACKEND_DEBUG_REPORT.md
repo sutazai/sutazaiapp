@@ -99,7 +99,7 @@ timeout=httpx.Timeout(
 -----+----------+-------
 (0 rows)
 ```
-- Table statistics show minimal activity (appropriate for system scale)
+- Table statistics show   activity (appropriate for system scale)
 - Connection pool healthy with proper sizing
 
 **STATUS:** ✅ PERFORMING WELL

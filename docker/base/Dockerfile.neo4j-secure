@@ -1,0 +1,7 @@
+FROM neo4j:5.15-community
+LABEL maintainer="SutazAI Security Team"  
+LABEL security.hardening="enabled"
+
+# Create non-root neo4j user
+USER 7474:7474
+EXPOSE 7474 7687

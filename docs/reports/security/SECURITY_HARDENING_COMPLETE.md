@@ -49,12 +49,12 @@ USER appuser
 
 **Files Modified:**
 - `/opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile`
-- `/opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile.minimal`
+- `/opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile. `
 
 **Security Features:**
 - Runs as uid=1000(appuser)
 - No root privileges
-- Minimal attack surface
+-   attack surface
 - Health checks enabled
 
 ### 2. Consul Security Configuration
@@ -121,7 +121,7 @@ This file provides:
 - Volume permission hardening
 
 ### 2. Principle of Least Privilege
-- All containers run with minimal required permissions
+- All containers run with   required permissions
 - Root access completely eliminated
 - Capabilities limited to essential operations
 

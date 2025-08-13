@@ -23,11 +23,11 @@ This will:
 - Clean build cache
 - Optimize Docker daemon settings
 
-### 2. Use Minimal Startup
+### 2. Use   Startup
 
-For development, use minimal services:
+For development, use   services:
 ```bash
-./scripts/start-minimal.sh
+./scripts/start- .sh
 ```
 
 Only starts:
@@ -120,7 +120,7 @@ docker system prune -af
 docker builder prune -af
 
 # Restart with fresh state
-./scripts/start-minimal.sh
+./scripts/start- .sh
 ```
 
 ### 8. Development Tips
@@ -174,8 +174,8 @@ rm -rf ~/.docker/buildx
 
 For daily development:
 ```bash
-# Morning: Start minimal
-./scripts/start-minimal.sh
+# Morning: Start  
+./scripts/start- .sh
 
 # Check health
 curl http://localhost:10010/health
@@ -192,8 +192,8 @@ docker compose down
 ## Performance Metrics
 
 After optimization:
-- **Startup time**: 30s → 10s (minimal mode)
-- **Memory usage**: 8GB → 3GB (minimal mode)
+- **Startup time**: 30s → 10s (  mode)
+- **Memory usage**: 8GB → 3GB (  mode)
 - **Disk usage**: 180GB → 20GB (after cleanup)
 - **CPU usage**: 60% → 20% (with resource limits)
 
@@ -234,7 +234,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 ## Summary
 
 1. **Clean regularly** - Don't let Docker accumulate waste
-2. **Start minimal** - Only run what you need
+2. **Start  ** - Only run what you need
 3. **Set limits** - Prevent services from consuming all resources
 4. **Monitor usage** - Watch for problems early
 5. **Optimize builds** - Use .dockerignore and BuildKit

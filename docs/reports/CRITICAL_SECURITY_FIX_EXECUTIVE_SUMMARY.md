@@ -24,7 +24,7 @@
 - ✅ `pid: host` removed - Process isolation enforced
 - ✅ Docker socket mount removed - Container escape prevented
 - ✅ `cap_drop: ALL` - All capabilities dropped
-- ✅ `cap_add: SYS_PTRACE` - Only minimal required capability
+- ✅ `cap_add: SYS_PTRACE` - Only   required capability
 - ✅ `security_opt: no-new-privileges:true` - Privilege escalation blocked
 - ✅ `user: "1001:1001"` - Non-root user enforced
 - ✅ Volume mounts restricted with `noexec` flags
@@ -38,7 +38,7 @@
 **AFTER (SECURED):**
 - ✅ `privileged: false` - No elevated privileges  
 - ✅ `pid: host` removed - Process isolation enforced
-- ✅ `cap_drop: ALL` + `cap_add: SYS_PTRACE` - Minimal capabilities
+- ✅ `cap_drop: ALL` + `cap_add: SYS_PTRACE` -   capabilities
 - ✅ `security_opt: no-new-privileges:true` - Privilege escalation blocked
 - ✅ `user: "1001:1001"` - Non-root user enforced
 - ✅ Dangerous host mounts removed
@@ -80,7 +80,7 @@ Critical vulnerabilities: 0 remaining
 
 ### Enhanced Container Security
 1. **Capability Dropping:** `cap_drop: ALL` removes all Linux capabilities
-2. **Minimal Privileges:** `cap_add: SYS_PTRACE` grants only required capability  
+2. **  Privileges:** `cap_add: SYS_PTRACE` grants only required capability  
 3. **Non-Root Users:** `user: "1001:1001"` enforces non-privileged execution
 4. **Privilege Prevention:** `no-new-privileges:true` blocks escalation
 5. **Secure Mounts:** `noexec` flags prevent code execution from data volumes

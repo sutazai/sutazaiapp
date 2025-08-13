@@ -34,7 +34,7 @@ def get_memory_registry() -> Optional["MemoryRegistry"]:
 
 
 class RegistryFacade:
-    """Facade that exposes a minimal common subset across both registries."""
+    """Facade that exposes a   common subset across both registries."""
 
     def __init__(self):
         self.process = get_process_registry()

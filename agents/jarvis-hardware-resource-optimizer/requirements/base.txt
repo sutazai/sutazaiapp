@@ -1,4 +1,4 @@
-# Jarvis Hardware Resource Optimizer - Minimal Requirements
+# Jarvis Hardware Resource Optimizer -   Requirements
 # Only essential dependencies for the hardware optimizer service
 
 # Core Web Framework

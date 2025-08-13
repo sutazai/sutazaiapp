@@ -1,0 +1,2660 @@
+# Query: minimal
+
+1574 results - 574 files
+
+docker-compose.security-monitoring.yml:
+  42:   # Secure cAdvisor - runs as nobody with  privileges
+
+docker-compose.standard.yml:
+  2: # Adds monitoring and vector database to  tier
+  3: # Requirements: 4 CPU cores, 8GB RAM (in addition to minimal)
+  4: # Services: +5 containers (10 total with minimal)
+
+Makefile:
+    9: .PHONY: ensure-network up-minimal down-minimal ps-minimal logs-minimal restart-minimal health-minimal
+  411: # Minimal stack helpers (recommended)
+  417: up-minimal: ensure-network ## Start minimal 8-service stack
+  418: 	@echo "$(YELLOW)🐳 Starting minimal SutazAI stack...$(NC)"
+  419: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml up -d
+  420: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml ps
+  421: 	@echo "$(GREEN)✅ Minimal stack started$(NC)"
+  423: down-minimal: ## Stop minimal stack
+  424: 	@echo "$(YELLOW)🐳 Stopping minimal SutazAI stack...$(NC)"
+  425: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml down
+  426: 	@echo "$(GREEN)✅ Minimal stack stopped$(NC)"
+  428: ps-minimal: ## Show minimal stack status
+  429: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml ps
+  431: logs-minimal: ## Tail minimal stack logs
+  432: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml logs -f --tail=200
+  434: restart-minimal: ## Restart minimal stack
+  435: 	$(MAKE) down-minimal
+  436: 	$(MAKE) up-minimal
+  438: health-minimal: ## Check minimal stack health endpoints
+
+Makefile.bak-2025-08-11_214515:
+    9: .PHONY: ensure-network up-minimal down-minimal ps-minimal logs-minimal restart-minimal health-minimal
+  411: # Minimal stack helpers (recommended)
+  417: up-minimal: ensure-network ## Start minimal 8-service stack
+  418: 	@echo "$(YELLOW)🐳 Starting minimal SutazAI stack...$(NC)"
+  419: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml up -d
+  420: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml ps
+  421: 	@echo "$(GREEN)✅ Minimal stack started$(NC)"
+  423: down-minimal: ## Stop minimal stack
+  424: 	@echo "$(YELLOW)🐳 Stopping minimal SutazAI stack...$(NC)"
+  425: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml down
+  426: 	@echo "$(GREEN)✅ Minimal stack stopped$(NC)"
+  428: ps-minimal: ## Show minimal stack status
+  429: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml ps
+  431: logs-minimal: ## Tail minimal stack logs
+  432: 	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml logs -f --tail=200
+  434: restart-minimal: ## Restart minimal stack
+  435: 	$(MAKE) down-minimal
+  436: 	$(MAKE) up-minimal
+  438: health-minimal: ## Check minimal stack health endpoints
+
+phase1_archive_list_comprehensive.txt:
+  21: /opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile.minimal
+  23: /opt/sutazaiapp/backend/Dockerfile.minimal
+
+phase1_archive_list.txt:
+  20: /opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile.minimal
+  22: /opt/sutazaiapp/backend/Dockerfile.minimal
+
+README.md:
+  22: ## 🚀 Quick Start (Minimal Stack — Recommended)
+  25: # 1) Start the minimal stack (8 containers)
+  26: make up-minimal
+  33: make health-minimal
+
+SCRIPT_DELETION_LIST.txt:
+  234: /opt/sutazaiapp/backend/app/main_minimal.py
+  235: /opt/sutazaiapp/backend/minimal_app.py
+
+scripts-dependency-map.json:
+  51:       "docker-compose.minimal.yml"
+
+.claude/settings.local.json:
+  91:       "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain -f backend/Dockerfile.minimal -t sutazaiapp-backend:latest backend/)",
+
+.claude/agents/adversarial-attack-detector.md:
+  40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/agent-architect.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  340: - Ensure composability, reuse, and minimal coupling
+  346: 4) Deliver minimal slice; add metrics/logging/tracing
+
+.claude/agents/agent-config-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  362: Ensure every agent you create is an autonomous expert capable of handling its designated tasks with minimal additional guidance. Avoid generic instructions - be specific and comprehensive while maintaining clarity.
+  372: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/agent-debugger.md:
+    3: description: Debugs failing agents: tracing, logs, repros, and root‑cause fixes with minimal change; use for incident triage and targeted remediation.
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  400: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/agent-diagnostic-specialist.md:
+   45: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  432: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/agent-expert.md:
+  41: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/agent-overview.md:
+  40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/agentgpt-autonomous-executor.md:
+  40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/agentzero-coordinator.md:
+  40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/ai-agent-creator.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  377: - Can operate autonomously with minimal additional guidance
+  396: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-agent-debugger.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  352: - Clear root cause, minimal fix patch/PR, validation steps and results, regression tests, and rollback plan.
+  371: - Repro confirmed; root cause documented; minimal fix applied; tests added/updated; all checks green; CHANGELOG updated; no MCP changes; cross-agent reviews requested where applicable.
+  433: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-agent-orchestrator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  399: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-engineer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  371: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-manual-tester.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  390: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-product-manager.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  402: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-qa-team-lead.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  409: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-scrum-master.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  410: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-senior-automated-tester.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  398: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-senior-engineer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  405: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-senior-frontend-developer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  404: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-senior-full-stack-developer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  394: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-senior-manual-qa-engineer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  397: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-system-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  410: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-system-validator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  383: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ai-testing-qa-validator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  389: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/api-documenter.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  375: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/api-security-audit.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  432: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/architect-review.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  386: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/audio-quality-controller.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  404: - Apply minimal processing to achieve goals
+  426: Always explain your processing decisions and how they address specific issues. If the audio quality is already excellent, acknowledge this and suggest only minimal enhancements. Be prepared to handle various audio formats and provide format conversion recommendations when necessary.
+  438: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/automated-incident-responder.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  446: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/autonomous-system-controller.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  401: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/autonomous-task-executor.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  408: You operate with the autonomy of a senior project manager combined with the precision of an automated orchestration system. Your goal is to transform high-level objectives into completed outcomes with minimal human intervention while maintaining the highest standards of reliability, efficiency, and transparency.
+  418: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/backend-api-architect.md:
+  39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/backend-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  369: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/bias-and-fairness-auditor.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  409: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/bigagi-system-manager.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  412: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/browser-automation-orchestrator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  387: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/business-analyst.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  374: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/c-pro.md:
+   46: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  131: - ultradebug: Reproduce defects with minimal repros.
+  381: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/causal-inference-expert.md:
+   46: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  386: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/cicd-pipeline-orchestrator.md:
+  47: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/cloud-architect.md:
+   46: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  378: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/code-generation-improver.md:
+   47: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  379: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/code-quality-gateway-sonarqube.md:
+   47: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  424: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/code-review-specialist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  404: 4. Approve only minimal, reversible changes with clear rollback.
+
+.claude/agents/code-reviewer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  368: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/codebase-team-lead.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  384: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/cognitive-architecture-designer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  396: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/cognitive-load-monitor.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  424: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/command-expert.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  761: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/complex-problem-solver.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  391: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/comprehensive-researcher.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  387: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/compute-scheduler-optimizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  398: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/container-orchestrator-k3s.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  409: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/container-vulnerability-scanner-trivy.md:
+  39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/content-marketer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  374: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/context-manager.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  349: 1. Prepare minimal, relevant context for each agent
+  403: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/context-optimization-engineer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  391: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/cpp-pro.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  381: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/cpu-only-hardware-optimizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  395: You should be proactive in identifying optimization opportunities but pragmatic about which optimizations provide meaningful benefits. Focus on optimizations that provide substantial improvements rather than micro-optimizations with minimal impact.
+  405: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/customer-support.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  374: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/data-analysis-engineer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  398: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/data-analyst.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  450: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/data-drift-detector.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  394: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/data-engineer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  370: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/data-lifecycle-manager.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  413: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/data-pipeline-engineer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  392: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/data-scientist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  367: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/data-version-controller-dvc.md:
+  39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/database-admin.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  370: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/database-optimization.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  438: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/database-optimizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  375: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/debugger.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  346: 4. Implement minimal fix
+  373: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/deep-learning-brain-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  385: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/deep-learning-brain-manager.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  389: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/deep-local-brain-builder.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  399: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/deploy-automation-master.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  391: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/deployment-engineer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  371: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/devops-troubleshooter.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  349: 4. Implement fix with minimal disruption
+  370: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/distributed-computing-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  390: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/distributed-tracing-analyzer-jaeger.md:
+  39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/document-knowledge-manager.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  394: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/docusaurus-expert.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  390: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/dx-optimizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  401: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/edge-computing-optimizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  347:    - Optimize data structures and algorithms for minimal memory footprint
+  362:    - Design stateless or minimally stateful services
+  413: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/edge-inference-proxy.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  378: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/emergency-shutdown-coordinator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  416: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/energy-consumption-optimizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  385: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/episode-orchestrator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  389: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/episodic-memory-engineer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  379: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/error-detective.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  370: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ethical-governor.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  383: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/evolution-strategy-trainer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  402: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/expert-code-reviewer.md:
+  39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/explainability-transparency-agent.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  393: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/explainable-ai-specialist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  405: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/federated-learning-coordinator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  382: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/financial-analysis-specialist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  387: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/flowiseai-flow-manager.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  416: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/frontend-developer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  369: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/frontend-ui-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  397: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/garbage-collector.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  393: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/genetic-algorithm-tuner.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  392: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/goal-setting-and-planning-agent.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  391: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/gpu-hardware-optimizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  405: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/gradient-compression-specialist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  385: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/graphql-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  375: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/hackathon-ai-strategist.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  385: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/hardware-resource-optimizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  432: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/honeypot-deployment-agent.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  388: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/human-oversight-interface-agent.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  391: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/incident-responder.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  382: 1. Minimal viable fix first
+  413: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/infrastructure-devops-manager.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  344: 2) Reuse existing modules; propose minimal, idempotent plans
+
+.claude/agents/intelligence-optimization-monitor.md:
+  40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/ios-developer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: 2) Reuse components; implement minimal changes with MV* patterns
+
+.claude/agents/jarvis-voice-interface.md:
+  41: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/java-kotlin-backend-expert.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  348: 2) Reuse modules; propose minimal interfaces; acceptance tests first
+
+.claude/agents/javascript-pro.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  342: 2) Reuse libs/patterns; implement minimal changes
+
+.claude/agents/kali-hacker.md:
+  40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/kali-security-specialist.md:
+  40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/knowledge-distillation-expert.md:
+  40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+
+.claude/agents/knowledge-graph-builder.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/langflow-workflow-designer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/legacy-modernizer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/legal-advisor.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/llms-maintainer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/localagi-orchestration-manager.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/log-aggregator-loki.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/manual-tester.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  339: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/markdown-syntax-formatter.md:
+   41: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  339: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/market-research-analyst.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/mcp-deployment-orchestrator.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/mcp-expert.md:
+   41: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  339: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/mcp-registry-navigator.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/mcp-security-auditor.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  340: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/mcp-server-architect.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/mcp-testing-engineer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/mega-code-auditor.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/memory-persistence-manager.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/meta-agent-designer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/meta-learning-specialist.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/metadata-agent.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/metrics-collector-prometheus.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/minimal-task-executor.md:
+    2: name: minimal-task-executor
+    3: description: Executes minimal, well‑scoped tasks with zero overhead; use for atomic changes and quick actions; use proactively.
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  340: You are a specialized Claude Code subagent for minimal task executor.
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/ml-engineer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/ml-experiment-tracker-mlflow.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/ml-ops-experiment-monitor.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/mlops-engineer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/mobile-developer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/moc-agent.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/model-training-specialist.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/multi-agent-coordinator.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  355: - Decompose into minimal verifiable sub-tasks; reuse existing capabilities; parallelize safely; checkpoint results; keep state explicit and auditable.
+
+.claude/agents/multi-modal-fusion-coordinator.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  339: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/multimodal-fusion-orchestrator.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/network-engineer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/neural-architecture-optimizer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/neuromorphic-computing-expert.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/nextjs-frontend-expert.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/observability-dashboard-manager-grafana.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/observability-monitoring-engineer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/ocr-grammar-fixer.md:
+   41: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  339: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/ocr-quality-assurance.md:
+   41: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  339: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/ollama-integration-specialist.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/opendevin-code-generator.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/performance-engineer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/php-pro.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/podcast-content-analyzer.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/podcast-metadata-specialist.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/podcast-transcriber.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/private-data-analyst.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  343: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/private-registry-manager-harbor.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  338: - Execute domain tasks with minimal, composable changes and strong safety
+
+.claude/agents/product-strategy-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  418: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/product-vision-strategist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  391: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/project-supervisor-orchestrator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  385: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/prompt-engineer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  439: Remember: The best prompt is one that consistently produces the desired output with minimal post-processing. ALWAYS show the prompt, never just describe it.
+  449: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/prompt-injection-guard.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  391: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/python-pro.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  373: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/qa-team-lead.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  394: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/quant-analyst.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  370: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/query-clarifier.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  415: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/react-performance-optimization.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  403: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/reinforcement-learning-trainer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  400: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/report-generator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  445: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/research-brief-generator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  445: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/research-coordinator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  431: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/research-orchestrator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  461: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/research-synthesizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  447: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/resource-arbitration-agent.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  389: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/review-agent.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  437: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/rules-enforcer.md:
+  100: 2. Draft a minimal, reversible plan with risks/rollback (Rule 2).
+  170: - Output: root cause, minimal fix plan, reversible patch with safeguards (Rule 2)
+  232: Keep a full-functionality, not-minimal, reversible plan with risks and rollback (Rule 2). If context is lost, investigate the entire codebase and correctly recombine all functionality.
+
+.claude/agents/runtime-behavior-anomaly-detector.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  414: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/rust-pro.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  373: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/sales-automator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  373: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/scrum-master.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  376: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/secrets-vault-manager.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  394: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/security-auditor.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  374: 6. Propose the minimal fix; add tests for the exploit and the fix.
+
+.claude/agents/security-pentesting-specialist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  408: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/self-healing-orchestrator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  412: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/semgrep-security-analyzer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  395: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/senior-automated-tester.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  356: 2. **Select Appropriate Testing Strategy**: Choose the right level of testing (unit, integration, E2E) based on the context. Prioritize tests that provide maximum value and coverage with minimal maintenance overhead.
+  403: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/senior-backend-developer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  362:    - Write self-documenting code with clear variable names and minimal comments
+  410: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/senior-full-stack-developer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  424: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/senior-qa-manual-tester.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  404: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/senior-software-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  400: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/shell-automation-specialist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  408: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/social-media-clip-creator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  406: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/sql-pro.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  373: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/symbolic-reasoning-engine.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  376: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/synthetic-data-generator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  378: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/system-architect.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  400: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/system-knowledge-curator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  384: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/system-optimizer-reorganizer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  407: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/system-performance-forecaster.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  384: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/system-validator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  440: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/tag-agent.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  430: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/task-assignment-coordinator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  408: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/technical-researcher.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  395:         "testing": "comprehensive|adequate|minimal|none",
+  397:         "maintenance": "active|moderate|minimal|abandoned"
+  432: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/terraform-specialist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  378: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/test-automator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  346: 1. Test pyramid - many unit, fewer integration, minimal E2E
+  370: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/testing-qa-team-lead.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  392: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/testing-qa-validator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  407: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/text-comparison-validator.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  398: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/timestamp-precision-specialist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  435: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/transformers-migration-specialist.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  438: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/ui-ux-designer.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  373: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/url-context-validator.md:
+   39: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  398: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/url-link-extractor.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  397: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.claude/agents/visual-analysis-ocr.md:
+   40: Keep a full functionality only not minimal, reversible plan with risks and rollback (Rule 2). if lost investigate the entire codebase and combine all functionality properly 
+  390: 2. Draft a minimal, reversible plan with risks and rollback (Rule 2).
+
+.github/workflows/continuous-testing.yml:
+   38:         pip install -r requirements-test.txt || echo "Test requirements not available, using minimal setup"
+  117:         # Try to start minimal services for testing
+  118:         if [ -f docker-compose.minimal.yml ]; then
+  119:           docker-compose -f docker-compose.minimal.yml up -d postgres redis
+  121:           echo "Minimal docker-compose not available, skipping integration tests"
+  143:         docker-compose -f docker-compose.minimal.yml down || true
+
+.github/workflows/feature-matrix.yml:
+   15:           # Minimal configuration (all features disabled)
+   16:           - name: "Minimal"
+  142:     - name: Integration test (minimal)
+  143:       if: matrix.name == 'Minimal'
+  145:         # Start minimal services
+  175:     - name: Test minimal startup script
+  177:         chmod +x scripts/start-minimal.sh
+  179:         bash -n scripts/start-minimal.sh
+  195:         # Test minimal mode
+  196:         ./scripts/start-with-features.sh --minimal --dry-run 2>/dev/null || true
+  209:         echo "- ✅ Minimal configuration"
+
+.mcp/devcontext/.cursorrules:
+  11:   contextDepth: "standard", // Options: "minimal", "standard", "comprehensive"
+  55:   contextIntegrationLevel: "balanced", // Options: "minimal", "balanced", "aggressive"
+
+.mcp/devcontext/.cursor/rules/000-context-system.mdc:
+  34:   contextDepth: "standard", // Options: "minimal", "standard", "comprehensive"
+  78:   contextIntegrationLevel: "balanced", // Options: "minimal", "balanced", "aggressive"
+
+.mcp/devcontext/.cursor/rules/001-initialize-conversation-context.mdc:
+  15:   contextDepth: "standard", // Options: "minimal", "standard", "comprehensive"
+  45:   - "minimal" - Light context for simple queries
+
+.mcp/devcontext/.cursor/rules/002-update-conversation-context.mdc:
+  27:   contextIntegrationLevel: "balanced", // Options: "minimal", "balanced", "aggressive"
+  57:   - "minimal" - Light integration for simple updates
+
+.mcp/devcontext/src/logic/ContextPrioritizerLogic.js:
+  308:   // Minimal focus alignment
+
+.mcp/devcontext/src/logic/IntentPredictorLogic.js:
+  819:     // Return minimal information in case of error
+
+.mcp/devcontext/src/schemas/toolSchemas.js:
+   28:     .enum(["minimal", "standard", "comprehensive"])
+  127:     .enum(["minimal", "balanced", "aggressive"])
+
+.mcp/devcontext/src/tools/recordMilestoneContext.tool.js:
+  365:       // Return a minimal assessment
+  565:     // Return a minimal assessment with error info
+
+.mcp/devcontext/src/tools/updateConversationContext.tool.js:
+   890:       case "minimal":
+   891:         // For minimal integration, only keep core focus and clear most context
+  1137:     // Return minimal synthesis in case of error
+
+agents/agent_registry.json:
+  155:       "description": "Use this agent when you need to:\\n\\n- Build AI-powered automation workflows quickly\\n- Create conversational AI applications\\n- Implement RAG systems with minimal code\\n- Design AI agents with integrated tools\\n- Build no-code AI applications\\n- Create knowledge base chatbots\\n- Implement document Q&A systems\\n- Design workflow automations with AI\\n- Build customer service AI agents\\n- Create AI-powered data processing\\n- Implement content generation workflows\\n- Design AI form processors\\n- Build intelligent email responders\\n- Create AI data extraction pipelines\\n- Implement smart notification systems\\n- Design AI-powered search interfaces\\n- Build recommendation systems\\n- Create AI content moderators\\n- Implement intelligent routing systems\\n- Design AI analytics dashboards\\n- Build conversational forms\\n- Create AI-powered APIs\\n- Implement batch processing with AI\\n- Design multi-tenant AI applications\\n- Build AI marketplace applications\\n\\nDo NOT use this agent for:\\n- Low-level system programming\\n- Real-time trading systems\\n- High-frequency data processing\\n- Custom ML model training\\n\\nThis agent
+  166: ⟪ 1176 characters skipped ⟫requiring human approval at each step\\n- Real-time responsive systems\\n\\nThis agent manages AgentGPT's autonomous execution framework, enabling AI agents to pursue complex goals independently with minimal supervision.",
+  331: ⟪ 1164 characters skipped ⟫ Performance-critical operations\\n- Tasks with strict compliance requirements\\n\\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.",
+
+agents/agent_status.json:
+   49: ⟪ 1164 characters skipped ⟫ Performance-critical operations\\n- Tasks with strict compliance requirements\\n\\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.",
+  470: ⟪ 1176 characters skipped ⟫requiring human approval at each step\\n- Real-time responsive systems\\n\\nThis agent manages AgentGPT's autonomous execution framework, enabling AI agents to pursue complex goals independently with minimal supervision.",
+  552:       "description": "Use this agent when you need to:\\n\\n- Build AI-powered automation workflows quickly\\n- Create conversational AI applications\\n- Implement RAG systems with minimal code\\n- Design AI agents with integrated tools\\n- Build no-code AI applications\\n- Create knowledge base chatbots\\n- Implement document Q&A systems\\n- Design workflow automations with AI\\n- Build customer service AI agents\\n- Create AI-powered data processing\\n- Implement content generation workflows\\n- Design AI form processors\\n- Build intelligent email responders\\n- Create AI data extraction pipelines\\n- Implement smart notification systems\\n- Design AI-powered search interfaces\\n- Build recommendation systems\\n- Create AI content moderators\\n- Implement intelligent routing systems\\n- Design AI analytics dashboards\\n- Build conversational forms\\n- Create AI-powered APIs\\n- Implement batch processing with AI\\n- Design multi-tenant AI applications\\n- Build AI marketplace applications\\n\\nDo NOT use this agent for:\\n- Low-level system programming\\n- Real-time trading systems\\n- High-frequency data processing\\n- Custom ML model training\\n\\nThis agent
+
+agents/ai_agent_orchestrator/Dockerfile.optimized:
+  10: # Orchestrator specific dependencies (minimal)
+
+agents/configs/agentgpt-autonomous-executor_ollama.json:
+  3:   "modelfile": "FROM tinyllama:latest\n\nSYSTEM You are the AgentGPT Autonomous Executor for the SutazAI automation/advanced automation Autonomous System, managing autonomous AI agents that can pursue complex goals independently. You configure goal-driven agents, manage execution chains, monitor progress, and ensure agents complete objectives efficiently. Your expertise enables truly autonomous AI behavior with minimal human intervention.\nCore Responsibilities\n\n\n**CRITICAL REQUIREMENT**: Before performing any task, you MUST first review /opt/sutazaiapp/CLAUDE.md to understand the codebase standards, implementation requirements, and rules for maintaining code quality and system stability. This file contains mandatory guidelines that must be followed.\n\n\nAutonomous Agent Management\n\nDeploy autonomous agents\nConfigure goal parameters\nSet execution constraints\nMonitor agent progress\nHandle agent lifecycle\nTrack goal completion\n\n\nGoal Decomposition\n\nBreak complex goals into tasks\nCreate execution strategies\nImplement milestone tracking\nConfigure success criteria\nEnable adaptive planning\nMonitor task dependencies\n\n\nExecution Monitoring\n\nTrack agent activities\nMonitor resource usage\nDetect stuck agents\nImplement timeouts\nHandle failures gracefully\nGenerate progress reports\n\n\nLearning & Improvement\n\nAnalyze execution patterns\nIdentify optimization opportunities\⟪ 7209 characters skipped ⟫requiring human approval at each step\\n- Real-time responsive systems\\n\\nThis agent manages AgentGPT's autonomous execution framework, enabling AI agents to pursue complex goals independently with minimal supervision.\n",
+
+agents/configs/agentgpt-autonomous-executor_universal.json:
+  3:   "modelfile": "FROM tinyllama:latest\n\nSYSTEM You are the AgentGPT Autonomous Executor for the SutazAI automation/advanced automation Autonomous System, managing autonomous AI agents that can pursue complex goals independently. You configure goal-driven agents, manage execution chains, monitor progress, and ensure agents complete objectives efficiently. Your expertise enables truly autonomous AI behavior with minimal human intervention.\nCore Responsibilities\n\n\n**CRITICAL REQUIREMENT**: Before performing any task, you MUST first review /opt/sutazaiapp/CLAUDE.md to understand the codebase standards, implementation requirements, and rules for maintaining code quality and system stability. This file contains mandatory guidelines that must be followed.\n\n\nAutonomous Agent Management\n\nDeploy autonomous agents\nConfigure goal parameters\nSet execution constraints\nMonitor agent progress\nHandle agent lifecycle\nTrack goal completion\n\n\nGoal Decomposition\n\nBreak complex goals into tasks\nCreate execution strategies\nImplement milestone tracking\nConfigure success criteria\nEnable adaptive planning\nMonitor task dependencies\n\n\nExecution Monitoring\n\nTrack agent activities\nMonitor resource usage\nDetect stuck agents\nImplement timeouts\nHandle failures gracefully\nGenerate progress reports\n\n\nLearning & Improvement\n\nAnalyze execution patterns\nIdentify optimization opportunities\⟪ 7209 characters skipped ⟫requiring human approval at each step\\n- Real-time responsive systems\\n\\nThis agent manages AgentGPT's autonomous execution framework, enabling AI agents to pursue complex goals independently with minimal supervision.\n",
+
+agents/configs/agentzero-coordinator_ollama.json:
+  3:   "modelfile": "FROM tinyllama:latest\n\nSYSTEM You are the AgentZero Coordinator for the SutazAI automation/advanced automation Autonomous System, managing the AgentZero framework that provides general-purpose AI agent capabilities with minimal configuration. You enable rapid agent deployment, handle dynamic task assignment, manage agent lifecycle, and ensure AgentZero agents can adapt to any task without specialized training. Your role is to provide flexible, general-purpose AI capabilities across the system.\nCore Responsibilities\n\n\n**CRITICAL REQUIREMENT**: Before performing any task, you MUST first review /opt/sutazaiapp/CLAUDE.md to understand the codebase standards, implementation requirements, and rules for maintaining code quality and system stability. This file contains mandatory guidelines that must be followed.\n\n\nAgentZero Deployment\n\nDeploy general-purpose agents quickly\nConfigure minimal agent requirements\nEnable zero-shot task handling\nManage agent pools\nScale agents dynamically\nMonitor agent health\n\n\nDynamic Task Adaptation\n\nRoute diverse tasks to agents\nEnable task learning on-the-fly\nImplement few-shot learning\nHandle unknown task types\nCreate task templates\nBuild adaptation strategies\n\n\nAgent Lifecycle Management\n\nSpawn agents as needed\nManage agent resources\nImplement agent recycling\nHandle agent failures\nCoordinate agent updates\nTrack agent performance\n\n\nGeneral Intelligence Features\n\nEnable reasoning capabilities\nImplement tool usage\nConfigure memory systems\nEnable learning from feedback\nBuild knowledge transfer\nCreate agent specialization\n\n\n\nTechnical Implementation\nDocker Configuration:\nyamlagentzero:\n  container_name: sutazai-agentzero\n  image: agentzero/agentzero:latest\n  ports:\n    - \"8200:8200\"\n  environment:\n    - MODEL_PROVIDER=litellm\n    - MODEL_BASE_URL=http://litellm:4000\n    - AGENT_MEMORY=p⟪ 2570 characters skipped ⟫ Performance-critical operations\\n- Tasks with strict compliance requirements\\n\\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.\n",
+
+agents/configs/agentzero-coordinator_universal.json:
+  3:   "modelfile": "FROM tinyllama:latest\n\nSYSTEM You are the AgentZero Coordinator for the SutazAI automation/advanced automation Autonomous System, managing the AgentZero framework that provides general-purpose AI agent capabilities with minimal configuration. You enable rapid agent deployment, handle dynamic task assignment, manage agent lifecycle, and ensure AgentZero agents can adapt to any task without specialized training. Your role is to provide flexible, general-purpose AI capabilities across the system.\nCore Responsibilities\n\n\n**CRITICAL REQUIREMENT**: Before performing any task, you MUST first review /opt/sutazaiapp/CLAUDE.md to understand the codebase standards, implementation requirements, and rules for maintaining code quality and system stability. This file contains mandatory guidelines that must be followed.\n\n\nAgentZero Deployment\n\nDeploy general-purpose agents quickly\nConfigure minimal agent requirements\nEnable zero-shot task handling\nManage agent pools\nScale agents dynamically\nMonitor agent health\n\n\nDynamic Task Adaptation\n\nRoute diverse tasks to agents\nEnable task learning on-the-fly\nImplement few-shot learning\nHandle unknown task types\nCreate task templates\nBuild adaptation strategies\n\n\nAgent Lifecycle Management\n\nSpawn agents as needed\nManage agent resources\nImplement agent recycling\nHandle agent failures\nCoordinate agent updates\nTrack agent performance\n\n\nGeneral Intelligence Features\n\nEnable reasoning capabilities\nImplement tool usage\nConfigure memory systems\nEnable learning from feedback\nBuild knowledge transfer\nCreate agent specialization\n\n\n\nTechnical Implementation\nDocker Configuration:\nyamlagentzero:\n  container_name: sutazai-agentzero\n  image: agentzero/agentzero:latest\n  ports:\n    - \"8200:8200\"\n  environment:\n    - MODEL_PROVIDER=litellm\n    - MODEL_BASE_URL=http://litellm:4000\n    - AGENT_MEMORY=p⟪ 2573 characters skipped ⟫ Performance-critical operations\\n- Tasks with strict compliance requirements\\n\\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.\n",
+
+agents/configs/agentzero-coordinator.modelfile:
+    3: SYSTEM You are the AgentZero Coordinator for the SutazAI SUTAZAI Autonomous System, managing the AgentZero framework that provides general-purpose AI agent capabilities with minimal configuration. You enable rapid agent deployment, handle dynamic task assignment, manage agent lifecycle, and ensure AgentZero agents can adapt to any task without specialized training. Your role is to provide flexible, general-purpose AI capabilities across the system.
+    9: Configure minimal agent requirements
+  107: ⟪ 1128 characters skipped ⟫\n- Performance-critical operations\n- Tasks with strict compliance requirements\n\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.
+
+agents/configs/dify-automation-specialist_ollama.json:
+  3: ⟪ 4153 characters skipped ⟫tegration, documentation\n# Description: Use this agent when you need to:\\n\\n- Build AI-powered automation workflows quickly\\n- Create conversational AI applications\\n- Implement RAG systems with minimal code\\n- Design AI agents with integrated tools\\n- Build no-code AI applications\\n- Create knowledge base chatbots\\n- Implement document Q&A systems\\n- Design workflow automations with AI\\n- Build customer service AI agents\\n- Create AI-powered data processing\\n- Implement content generation workflows\\n- Design AI form processors\\n- Build intelligent email responders\\n- Create AI data extraction pipelines\\n- Implement smart notification systems\\n- Design AI-powered search interfaces\\n- Build recommendation systems\\n- Create AI content moderators\\n- Implement intelligent routing systems\\n- Design AI analytics dashboards\\n- Build conversational forms\\n- Create AI-powered APIs\\n- Implement batch processing with AI\\n- Design multi-tenant AI applications\\n- Build AI marketplace applications\\n\\nDo NOT use this agent for:\\n- Low-level system programming\\n- Real-time trading systems\\n- High-frequency data processing\\n- Custom ML model training\\n\\nThis agent
+
+agents/configs/dify-automation-specialist_universal.json:
+  3: ⟪ 4157 characters skipped ⟫tegration, documentation\n# Description: Use this agent when you need to:\\n\\n- Build AI-powered automation workflows quickly\\n- Create conversational AI applications\\n- Implement RAG systems with minimal code\\n- Design AI agents with integrated tools\\n- Build no-code AI applications\\n- Create knowledge base chatbots\\n- Implement document Q&A systems\\n- Design workflow automations with AI\\n- Build customer service AI agents\\n- Create AI-powered data processing\\n- Implement content generation workflows\\n- Design AI form processors\\n- Build intelligent email responders\\n- Create AI data extraction pipelines\\n- Implement smart notification systems\\n- Design AI-powered search interfaces\\n- Build recommendation systems\\n- Create AI content moderators\\n- Implement intelligent routing systems\\n- Design AI analytics dashboards\\n- Build conversational forms\\n- Create AI-powered APIs\\n- Implement batch processing with AI\\n- Design multi-tenant AI applications\\n- Build AI marketplace applications\\n\\nDo NOT use this agent for:\\n- Low-level system programming\\n- Real-time trading systems\\n- High-frequency data processing\\n- Custom ML model training\\n\\nThis agent
+
+agents/configs/dify-automation-specialist.modelfile:
+  153: # Description: Use this agent when you need to:\n\n- Build AI-powered automation workflows quickly\n- Create conversational AI applications\n- Implement RAG systems with minimal code\n- Design AI agents with integrated tools\n- Build no-code AI applications\n- Create knowledge base chatbots\n- Implement document Q&A systems\n- Design workflow automations with AI\n- Build customer service AI agents\n- Create AI-powered data processing\n- Implement content generation workflows\n- Design AI form processors\n- Build intelligent email responders\n- Create AI data extraction pipelines\n- Implement smart notification systems\n- Design AI-powered search interfaces\n- Build recommendation systems\n- Create AI content moderators\n- Implement intelligent routing systems\n- Design AI analytics dashboards\n- Build conversational forms\n- Create AI-powered APIs\n- Implement batch processing with AI\n- Design multi-tenant AI applications\n- Build AI marketplace applications\n\nDo NOT use this agent for:\n- Low-level system programming\n- Real-time trading systems\n- High-frequency data processing\n- Custom ML model training\n\nThis agent manages Dify's AI application
+
+agents/configs/senior-ai-engineer-simple.json:
+  11:   "ollama_endpoint": "http://sutazai-ollama-minimal:11434",
+
+agents/core/circuit_breaker.py:
+  72:     - Minimal resource overhead
+
+agents/core/ollama_context_optimizer.py:
+  268:             'Q8_0': {'size_factor': 0.6, 'performance_impact': 0.02},   # 8-bit, minimal impact
+
+agents/core/ollama_pool.py:
+  80:     - Minimal memory footprint
+
+agents/core/prompt_optimizer.py:
+  75:             compression_level=0.2,  # Minimal compression
+
+agents/hardware-resource-optimizer/COMPREHENSIVE_DEBUG_REPORT.md:
+   66: - **Performance impact:** Minimal overhead for scanning processes
+  164: - **Disk I/O:** Minimal, mostly reads for analysis
+
+agents/hardware-resource-optimizer/comprehensive_validation_report.md:
+  268: - Minimal resource utilization
+
+agents/hardware-resource-optimizer/Dockerfile.optimized:
+  19: # Copy application code (minimal)
+
+agents/hardware-resource-optimizer/README.md:
+  120: - Minimal CPU usage when idle
+
+agents/hardware-resource-optimizer/requirements.txt:
+   1: # Hardware Resource Optimizer - Minimal Requirements
+  14: # Database Drivers (minimal)
+
+agents/hardware-resource-optimizer/TESTING_EXECUTIVE_SUMMARY.md:
+  177: ### Risk Level: 🟢 **MINIMAL RISK** - Excellent safety and performance characteristics
+
+agents/hardware-resource-optimizer/TESTING_FIXES_SUMMARY.md:
+  122: - Minimal system impact during testing
+
+agents/hardware-resource-optimizer/shared/agents/core/circuit_breaker.py:
+  71:     - Minimal resource overhead
+
+agents/hardware-resource-optimizer/shared/agents/core/ollama_context_optimizer.py:
+  268:             'Q8_0': {'size_factor': 0.6, 'performance_impact': 0.02},   # 8-bit, minimal impact
+
+agents/hardware-resource-optimizer/shared/agents/core/ollama_pool.py:
+  80:     - Minimal memory footprint
+
+agents/hardware-resource-optimizer/shared/agents/core/prompt_optimizer.py:
+  75:             compression_level=0.2,  # Minimal compression
+
+agents/jarvis-hardware-resource-optimizer/requirements/base.txt:
+  1: # Jarvis Hardware Resource Optimizer - Minimal Requirements
+
+agents/ollama_integration/app.py:
+  456:         await asyncio.sleep(0.001)  # Minimal delay
+
+backend/Dockerfile.optimized:
+  33: # Production stage - Minimal runtime
+
+backend/minimal_app.py:
+  3: Quick minimal automation backend for immediate deployment
+
+backend/app/main_minimal.py:
+    2: Minimal Working Backend for SutazAI
+   22:     description="Minimal working backend for SutazAI system",
+  200: # Chat endpoint (minimal implementation)
+
+backend/app/main_original.py:
+    2: Minimal Working Backend for SutazAI
+   22:     description="Minimal working backend for SutazAI system",
+  236: # Chat endpoint (minimal implementation)
+
+backend/app/agents/registry_facade.py:
+  37:     """Facade that exposes a minimal common subset across both registries."""
+
+backend/app/api/v1/agents.py:
+  19: # Simple agent manager for minimal backend
+
+backend/app/api/v1/feedback.py:
+  15:     # Create a simple mock for minimal backend
+
+backend/app/api/v1/vectors.py:
+  29: # Simple vector operations for minimal backend
+
+backend/app/api/v1/endpoints/performance.py:
+  42:     Uses pre-computed responses and minimal processing
+
+backend/app/core/connection_pool_optimized.py:
+  3: Optimized for maximum throughput and minimal latency
+
+backend/app/core/connection_pool_ultra.py:
+  3: Optimized for 1000+ concurrent users with minimal resource usage
+
+backend/app/core/health_monitoring.py:
+  157:         # Perform minimal critical checks only
+
+backend/app/core/logging.py:
+  20:         # Final fallback - create minimal compatible class
+
+backend/app/core/performance_tuning.py:
+  637:                 "impact": "2-3x inference speed with minimal accuracy loss"
+
+backend/app/mesh/redis_bus.py:
+  4: Provides minimal helpers for enqueueing tasks, consuming results, and a simple
+
+backend/app/services/archive/model_manager.py:
+  67:                     "num_predict": 1,  # Minimal prediction
+
+backend/edge_inference/quantization.py:
+   40:     CONSERVATIVE = "conservative" # Minimal accuracy impact
+  217:             recommendations.append("FP16 quantization for minimal accuracy loss")
+
+backend/tests/agent_hygiene_compliance_report.json:
+   5170:     "minimal-task-executor": {
+  12100:       "agent": "minimal-task-executor",
+
+backups/deploy_20250813_103632/config/ollama_performance_optimization.yaml:
+  146:       minimal_resources: true
+
+backups/deploy_20250813_103632/config/ollama-optimized.yaml:
+  34:   repeat_penalty: 1.05    # Minimal penalty for speed
+
+backups/deploy_20250813_103632/config/port-registry-actual.yaml:
+   2: # Based on real running containers (minimal stack)
+  32: deployment: docker-compose.minimal
+
+backups/deploy_20250813_103632/config/rule-profiles.json:
+  39:     "minimal": {
+  58:   "current": "minimal"
+
+backups/deploy_20250813_103632/config/kong/kong-optimized.yml:
+   4: # Optimized Kong configuration for minimal memory and I/O usage
+  49: # Global plugins for minimal overhead
+
+config/ollama_performance_optimization.yaml:
+  146:       minimal_resources: true
+
+config/ollama-optimized.yaml:
+  34:   repeat_penalty: 1.05    # Minimal penalty for speed
+
+config/port-registry-actual.yaml:
+   2: # Based on real running containers (minimal stack)
+  32: deployment: docker-compose.minimal
+
+config/rule-profiles.json:
+  39:     "minimal": {
+  58:   "current": "minimal"
+
+config/kong/kong-optimized.yml:
+   4: # Optimized Kong configuration for minimal memory and I/O usage
+  49: # Global plugins for minimal overhead
+
+docker/README.md:
+  40: - Minimal attack surface
+  46: - Minimal base images
+
+docker/base/base-requirements-alpine.txt:
+   1: # SutazAI Alpine-Optimized Minimal Requirements
+   3: # Target: 50% dependency reduction from base-requirements-minimal.txt
+  25: # AI/ML integration (minimal)
+
+docker/base/base-requirements-minimal-alpine.txt:
+   1: # SutazAI Alpine Ultra-Minimal Requirements
+   6: # Core web framework (minimal)
+  17: # Monitoring (minimal)
+
+docker/base/base-requirements-minimal.txt:
+  1: # SutazAI Python Agent MINIMAL Base Requirements - Python 3.12.8 Compatible
+
+docker/base/base-requirements-nodejs.txt:
+  2: # Minimal set for ML/AI bridge functionality
+
+docker/base/minimal-requirements.txt:
+  1: # SutazAI Minimal Requirements for Testing
+
+docker/base/production-base.Dockerfile:
+   5: # Purpose: Minimal attack surface, maximum security, production-ready base
+  35: # PRODUCTION STAGE - Minimal runtime image
+  40:     # Minimal runtime essentials
+  57: # MAXIMUM SECURITY: Create dedicated production user with minimal privileges
+
+docker/base/security-base.Dockerfile:
+  29: # Install minimal runtime dependencies
+
+docker/faiss/Dockerfile.optimized:
+  35: # Production stage - Minimal runtime
+
+docs/CHANGELOG.md:
+   364: - **Real-Time Monitoring:** Real-time observability with minimal performance impact
+   626: - **Performance**: Minimal overhead (<1ms) for healthy services
+  1323: 3. **Minimal UUID Migration** ✅ AVAILABLE
+  1324:    - **File**: `/opt/sutazaiapp/scripts/database/uuid_migration_minimal.sql`
+  1682:    - Added redis>=5.0.1, sqlalchemy>=2.0.23, ollama>=0.4.4 to minimal requirements
+  1780: - deps(backend): Rationalized minimal requirements
+  1781:   - `backend/requirements-minimal.txt` now includes `-r requirements_minimal.txt` (single canonical minimal spec)
+  1820: [2025-08-09 14:12 UTC] - [v67.7] - [Backend] - [Refactor/Deps] - Unified agent orchestrator import path and reduced duplicate minimal requirement specs. Agent: Coding Agent (backend + API architects). Impact: fewer duplicate codepaths, simpler dependency management; no breaking changes for existing imports or Docker builds.
+
+docs/DEPLOYMENT_GUIDE.md:
+  126: # - Minimal resource usage
+
+docs/DOCKER_BUILD_STATUS_REPORT.md:
+   48: - **Minimal:** 5 core services (postgres, redis, ollama, backend, frontend)
+   49: - **Standard:** 11 services (minimal + vector DBs + monitoring)
+   84: make up-minimal  # Uses public images automatically
+  103: make up-minimal
+  126: - **Minimal:** ~4GB RAM (5 containers)
+  131: - **Minimal:** 2-3 minutes
+  155: # Start minimal tier
+  156: make up-minimal
+  211: 1. **Test minimal deployment:** `make up-minimal`
+  234: - Minimal tier: 100% success rate
+  243: The system is now ready for deployment with the minimal tier providing core functionality. Standard and full tiers available for enhanced features and production deployment.
+  248: make up-minimal
+  255: **Validation Required:** Test deployment with `make up-minimal`  
+
+docs/DOCKER_OPTIMIZATION_REPORT.md:
+   19: - **Security Maintained:** Non-root users and minimal attack surface
+   58: - **Security:** Minimal attack surface
+   68: # Production stage - Minimal runtime
+   76: - Created ultra-minimal requirements files
+  162: - **Network Impact:** Minimal data transfer for deployments
+  176: - Minimal privilege requirements
+  179: - Minimal runtime dependencies
+  185: - Minimal package inventory
+  194: - `/docker/base/base-requirements-minimal-alpine.txt` - Minimal dependencies
+  282: - Log aggregation with minimal overhead
+  303: - **Progressive Updates:** Delta updates for minimal bandwidth usage
+  318: - **Minimal resource footprint**
+
+docs/FRONTEND_CLEANUP_PLAN.md:
+  95: - **Focus Management:** Minimal implementation
+
+docs/MCP_POSTGRES_FIX_REPORT.md:
+  95: - **Network Latency:** Minimal (Docker bridge network)
+
+docs/SUTAZAI_CODEBASE_OVERVIEW.md:
+  421:    - Backend API minimal config
+
+docs/ULTRA_CLEAN_STRUCTURE.md:
+   58: ├── docker/                     # Minimal Docker files
+  116: - **Complexity**: MINIMAL (professional structure)
+
+docs/ULTRACONTINUE_CICD_SYSTEM.md:
+  237: - Minimal extra resources
+
+docs/architecture/TECHNICAL_ARCHITECTURE_DOCUMENTATION.md:
+  477: - **Profiles:** Default, Minimal, Security
+  656: #### 9.1.1 Minimal Deployment
+  860:   - /opt/sutazaiapp/docker-compose.minimal.yml
+
+docs/operations/DEPLOYMENT_OPERATIONS_PLAYBOOK.md:
+   20: - Tiered deployment system (minimal, standard, full)
+   27: ### Tier 1: Minimal (Development)
+   34: # Start minimal tier
+   35: make up-minimal
+   37: ./scripts/deployment_manager.sh start --tier minimal
+   41: **Services:** Minimal + neo4j, qdrant, chromadb, faiss, prometheus, grafana  
+   70: # Start minimal system (recommended for development)
+   71: make up-minimal
+  167: - `docker-compose.minimal.yml` - Minimal service subset
+  236: make health-minimal
+  296: ### Minimal Tier
+  365: ./scripts/deployment_manager.sh start --tier minimal
+  380: make up-minimal
+  405: - **Minimal tier:** 2-3 minutes startup time
+  421: 1. Test minimal tier deployment: `make up-minimal`
+
+docs/operations/DOCKER_BUILD_QUICKSTART.md:
+   16: ### Option 1: Minimal Deployment (Recommended)
+   19: ./scripts/deploy.sh deploy --tier minimal
+   61: ### Tier 1: Minimal (4GB RAM, 5 services)
+   64: ./scripts/deploy.sh deploy --tier minimal
+   73: **Services:** Minimal + neo4j, vector DBs, prometheus, grafana
+   90: ./scripts/deploy.sh health --tier minimal
+  114: ./scripts/deployment_manager.sh start --tier minimal
+  117: make up-minimal
+  135: ./scripts/deploy.sh health --tier minimal --validate-all
+  149: - **Capability Management:** Minimal capabilities, drop ALL then add specific ones
+  166: | Minimal | 4GB | 2 cores | 10GB | 5 | 2-3 min |
+  213: ./scripts/deploy.sh health --tier minimal
+  242: ./scripts/deploy.sh deploy --tier minimal --validate-all
+  252: ### Core Services (Minimal Tier)
+  276: make up-minimal
+  281: scripts/ultra_deployment_engine.sh deploy --tier minimal --build-images
+  314: ./scripts/deploy.sh deploy --tier minimal
+
+docs/reports/BACKEND_ARCHITECTURE_ANALYSIS_REPORT.md:
+  212: **Impact:** Minimal - backend has fallback mechanisms
+
+docs/reports/BACKEND_ARCHITECTURE_ASSESSMENT_REPORT.md:
+  224: - Jarvis service: Basic Flask stub with minimal functionality
+
+docs/reports/CODEBASE_HYGIENE_REPORT.md:
+  26: - Redundant minimal README files in subdirectories
+  29: - ✅ Removed `/scripts/utils/README.md` (minimal, redundant)
+  30: - ✅ Removed `/scripts/devops/README.md` (minimal, redundant)
+
+docs/reports/CONTAINER_OPTIMIZATION_PLAN.md:
+  348: - [ ] Minimal port exposure
+
+docs/reports/CONTAINER_SECURITY_MIGRATION_PLAN.md:
+  114: **Risk:** Minimal - custom application code
+  362: This migration will significantly improve the security posture of the SutazAI system by eliminating unnecessary root privileges while maintaining full functionality. The phased approach ensures minimal risk and provides multiple rollback points.
+
+docs/reports/CONTAINER_SECURITY_MIGRATION_REPORT.md:
+  9: - **Downtime:** Minimal (containers restarted in phases)
+
+docs/reports/CORS_SECURITY_FIX_REPORT.md:
+  30:  5. `/opt/sutazaiapp/backend/minimal_app.py` [simple]
+  46: 21. `/opt/sutazaiapp/backend/app/main_minimal.py` [simple]
+
+docs/reports/CRITICAL_SECURITY_FIX_EXECUTIVE_SUMMARY.md:
+  27: - ✅ `cap_add: SYS_PTRACE` - Only minimal required capability
+  41: - ✅ `cap_drop: ALL` + `cap_add: SYS_PTRACE` - Minimal capabilities
+  83: 2. **Minimal Privileges:** `cap_add: SYS_PTRACE` grants only required capability  
+
+docs/reports/DOCKER_OPTIMIZATION_SUMMARY.md:
+  23: /opt/sutazaiapp/docker/base/base-requirements-minimal-alpine.txt
+
+docs/reports/docker-straggler-migration-20250811_013846.md:
+  9: - /opt/sutazaiapp/docker/base/Dockerfile.python-agent-minimal
+
+docs/reports/DOCKERFILE_DEDUPLICATION_REPORT.md:
+  9: Successfully architected and initiated the consolidation of **587 Dockerfiles** into a streamlined architecture using **2 master base images** plus minimal service-specific configurations. This represents a **91% reduction** in Dockerfile complexity and will deliver **80% faster builds** with **99% less maintenance overhead**.
+
+docs/reports/DOCKERFILE_ULTRA_CONSOLIDATION_PLAN.md:
+   91: **Purpose:** Minimal Alpine base for microservices
+   95: - Minimal attack surface
+  202: - Minimal resource usage
+
+docs/reports/EMERGENCY_STABILIZATION_REPORT.md:
+  57: - **Impact:** Minimal - successful migration via base image consolidation
+
+docs/reports/FRONTEND_ARCHITECTURE_ASSESSMENT_REPORT.md:
+   48: | Various agent containers | API Stubs | Flask/FastAPI | Various | Minimal web interfaces |
+  357: | Focus Management | ❌ | Minimal implementation |
+
+docs/reports/HARDWARE_API_ULTRA_VALIDATION_REPORT.md:
+  246: - **Response Time Consistency**: Minimal variance across requests
+
+docs/reports/HARDWARE_OPTIMIZER_ACTION_PLAN.md:
+  568: - Minimal volume mounts
+
+docs/reports/HARDWARE_OPTIMIZER_ULTRA_ARCHITECTURE_REPORT.md:
+  188:     # Minimal blocking operations
+
+docs/reports/HARDWARE_RESOURCE_OPTIMIZER_INFRASTRUCTURE_VALIDATION_REPORT.md:
+  476: - **Maintenance Overhead**: Minimal due to containerized architecture
+
+docs/reports/HARDWARE_RESOURCE_OPTIMIZER_INTEGRATION_VALIDATION_REPORT.md:
+   95: - Network Overhead: Minimal (sub-millisecond routing)
+  154: - Minimal proxy overhead (3ms average)
+
+docs/reports/MASTER_ARCHITECT_EXECUTIVE_SUMMARY.md:
+  106:                  --tier=[minimal|standard|full] \
+  251: TIER=${TIER:-minimal}
+  392:     "/scripts/deployment/deploy-minimal.sh": "/scripts/core/deploy.sh --tier=minimal",
+  504:                 "old": "/scripts/deployment/deploy-minimal.sh",
+  505:                 "new": "/scripts/core/deploy.sh --tier=minimal --dry-run",
+  506:                 "expected_output": "Would deploy minimal tier"
+
+docs/reports/QA_DOCKERFILE_MIGRATION_VALIDATION_REPORT.md:
+  12: The claimed 85.3% migration rate (139 of 163 services) has been validated through comprehensive testing. The migration to master base images has been executed successfully with minimal impact on system functionality.
+
+docs/reports/QA_FRONTEND_PERFORMANCE_VALIDATION_EXECUTIVE_SUMMARY.md:
+  80:    - Minimal caching effectiveness detected (-4.6% "improvement")
+
+docs/reports/REDIS_CACHE_OPTIMIZATION_SUCCESS_REPORT.md:
+  13: - **Cache Strategy:** Basic local caching with minimal Redis usage
+
+docs/reports/SECURITY_AUDIT_FINAL_REPORT.md:
+   29: - **Risk Level:** MINIMAL ✅
+  148: - **Current Risk Level:** MINIMAL (0 root containers)
+  160: - ✅ **AC-6 (Least Privilege):** All containers operate with minimal necessary permissions
+
+docs/reports/ULTRA_AGENT_DEBUGGING_REPORT.md:
+  210:   "disk_io": "minimal (read-only scanning)",
+  409: - **Network Usage**: Minimal HTTP API overhead
+
+docs/reports/ULTRA_ARCHITECT_SYNTHESIS_ACTION_PLAN.md:
+  382: **Downtime:** Minimal (rolling updates)  
+  568: | Phase 6: Security | 4 hours | Medium | Minimal | 10 minutes |
+
+docs/reports/ULTRA_DEDUPLICATION_EXECUTIVE_SUMMARY.md:
+  129: bash scripts/deployment/deployment-master.sh --dry-run minimal
+  140: bash scripts/deployment/deployment-master.sh --build minimal
+  268: All safety measures are in place, validation frameworks are complete, and rollback procedures are guaranteed. The team can proceed with confidence knowing that this operation will dramatically improve system maintainability while ensuring zero data loss and minimal risk.
+
+docs/reports/ULTRA_DOCKERFILE_CONSOLIDATION_STATUS_REPORT.md:
+  198: **TIMELINE:** With proper execution, full migration achievable in 2-3 weeks with minimal risk to production systems.
+
+docs/reports/ULTRA_DOCKERFILE_MIGRATION_EXECUTIVE_SUMMARY.md:
+  80: - **2 master base images** + minimal service layers
+
+docs/reports/ULTRA_PERFORMANCE_VALIDATION_REPORT.md:
+   68: - Minimal memory utilization indicates cache underutilization
+  193:    - CPU usage minimal at 5%
+
+docs/reports/ULTRA_SCRIPT_CONSOLIDATION_EXECUTIVE_SUMMARY.md:
+  14: - **70 stub scripts** with minimal functionality
+
+docs/reports/ULTRA_SCRIPT_DEBUGGING_REPORT.md:
+  202: - **Production Risk:** MINIMAL (after fixing BaseAgentV1 issue)
+
+docs/reports/architecture/ULTRA_BACKEND_DEBUG_REPORT.md:
+  102: - Table statistics show minimal activity (appropriate for system scale)
+
+docs/reports/cleanup/code_quality_report.json:
+   22562:         "file": "backend/minimal_app.py",
+   66994:         "file": "services/jarvis/core/voice_interface_minimal.py",
+   67002:         "file": "services/jarvis/core/voice_interface_minimal.py",
+   67058:         "file": "docker-compose.minimal.yml",
+   96476:         "file": "backend/minimal_app.py",
+   96484:         "file": "backend/minimal_app.py",
+   96492:         "file": "backend/minimal_app.py",
+   96500:         "file": "backend/minimal_app.py",
+   96508:         "file": "backend/minimal_app.py",
+  152820:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152828:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152836:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152844:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152852:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152860:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152868:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152876:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152884:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152892:         "file": "services/jarvis/core/voice_interface_minimal.py",
+  152998:         "issue": "Unused import: voice_interface_minimal",
+  152999:         "fix": "Remove unused import: voice_interface_minimal"
+  153324:         "file": "services/jarvis/tests/test_routes_minimal.py",
+  153332:         "file": "services/jarvis/tests/test_routes_minimal.py",
+  153340:         "file": "services/jarvis/tests/test_routes_minimal.py",
+  153348:         "file": "services/jarvis/tests/test_routes_minimal.py",
+  153356:         "file": "services/jarvis/tests/test_routes_minimal.py",
+  153364:         "file": "services/jarvis/tests/test_routes_minimal.py",
+
+docs/reports/cleanup/deduplication_plan.json:
+  1076:       "master": "/opt/sutazaiapp/scripts/deployment/migrate_to_minimal.sh",
+  1078:         "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/migrate_to_minimal.sh"
+  1133:       "master": "/opt/sutazaiapp/scripts/deployment/start-minimal.sh",
+  1135:         "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/start-minimal.sh"
+  7336:           "path": "/opt/sutazaiapp/scripts/deployment/migrate_to_minimal.sh",
+  7350:           "path": "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/migrate_to_minimal.sh",
+  7564:           "path": "/opt/sutazaiapp/scripts/deployment/start-minimal.sh",
+  7576:           "path": "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/start-minimal.sh",
+
+docs/reports/cleanup/detailed_import_analysis.json:
+   12719:       "file": "backend/minimal_app.py",
+  137826:           "module": "core.voice_interface_minimal",
+  137888:           "message": "Module 'core.voice_interface_minimal' not found at line 30",
+  137890:           "module": "core.voice_interface_minimal"
+  139893:           "module": "voice_interface_minimal",
+  139937:           "message": "Module 'voice_interface_minimal' not found at line 19",
+  139939:           "module": "voice_interface_minimal"
+  140137:       "file": "services/jarvis/core/voice_interface_minimal.py",
+  152921:       "file": "opt/sutazaiapp/jarvis/backend/minimal_app.py",
+  217426:           "module": "core.voice_interface_minimal",
+  217488:           "message": "Module 'core.voice_interface_minimal' not found at line 30",
+  217490:           "module": "core.voice_interface_minimal"
+  219493:           "module": "voice_interface_minimal",
+  219537:           "message": "Module 'voice_interface_minimal' not found at line 19",
+  219539:           "module": "voice_interface_minimal"
+  219737:       "file": "opt/sutazaiapp/jarvis/services/jarvis/core/voice_interface_minimal.py",
+  241274:         "module": "core.voice_interface_minimal",
+  241794:         "module": "core.voice_interface_minimal",
+
+docs/reports/cleanup/DOCKERFILE_MIGRATION_REPORT.txt:
+  103:     - docker/base/Dockerfile.python-agent-minimal
+
+docs/reports/cleanup/MERGEABLE_FILES_ACTION_LIST.md:
+   63: - `/opt/sutazaiapp/scripts/deployment/start-minimal.sh` (minimal deployment)
+  121: make health-minimal
+  155: **READY TO EXECUTE:** Phase 1A (Archive cleanup) can be run immediately with minimal risk
+
+docs/reports/cleanup/PHASE2_CONSOLIDATION_COMPLETE.md:
+  50:    - Critical service checking with minimal overhead
+
+docs/reports/cleanup/PYTHON_CONSOLIDATION_SUMMARY.md:
+  29: - **Total Python files:** 967 (system-wide, minimal increase due to __init__.py files)
+
+docs/reports/cleanup/PYTHON_MIGRATION_COMPLETE.md:
+  49: - **Optimization:** Multi-stage build with minimal final image
+
+docs/reports/cleanup/script_consolidation_analysis.json:
+    896:           "path": "services/jarvis/tests/test_routes_minimal.py",
+   2448:           "path": "services/jarvis/tests/test_routes_minimal.py",
+   3018:           "path": "services/jarvis/tests/test_routes_minimal.py",
+   4456:           "path": "services/jarvis/core/voice_interface_minimal.py",
+   4476:           "path": "services/jarvis/tests/test_routes_minimal.py",
+   7442:         "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py"
+   7841:         "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py"
+   7989:         "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py"
+   8354:         "/opt/sutazaiapp/services/jarvis/core/voice_interface_minimal.py",
+   8359:         "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py"
+  13163:       "description": "Simple Hygiene Monitor Backend - Minimal Real-time Data Collection\nPurpose: Simplified version for immediate testing\nAuthor: AI Observability and Monitoring Engineer\nVersion: 1.0.0 - Minimal Working V",
+  16209:       "description": "Agent Stream Consumer (optional)\n\nRuns a minimal Redis Streams consumer loop and, for each task, invokes the\nGenericAgentWithHealth's `_execute_task` implementation to process the task.\n\nUsage:\n  pyth",
+  25475:       "description": "Minimal placeholder metrics; replace with real Prometheus output if needed",
+  29369:       "description": "SutazAI Autonomous Goal Achievement System\n\nThis system enables AI agents to pursue and achieve complex goals independently,\nwith minimal human intervention. It implements goal decomposition, planning",
+  29771:         "class:MinimalJarvis",
+  29805:       "description": "Basic Jarvis AI System - Web Interface Only\nMinimal implementation to get the web interface working",
+  30512:       "path": "/opt/sutazaiapp/services/jarvis/core/voice_interface_minimal.py",
+  30513:       "relative_path": "services/jarvis/core/voice_interface_minimal.py",
+  30514:       "name": "voice_interface_minimal.py",
+  30541:       "description": "Minimal Voice Interface for JARVIS AI System\nBasic voice capabilities without heavy ML dependencies",
+  30565:         "voice_interface_minimal",
+  30691:       "path": "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py",
+  30692:       "relative_path": "services/jarvis/tests/test_routes_minimal.py",
+  30693:       "name": "test_routes_minimal.py",
+
+docs/reports/cleanup/ULTRA_CLEANUP_EXECUTION_COMPLETE_REPORT.md:
+  140: - **Technical Debt:** MINIMAL (98% eliminated)
+  165: ✅ **Minimal Technical Debt:** 99.7% TODO/FIXME elimination  
+  173: - **+200% reduced technical debt** - Minimal TODOs remaining
+
+docs/reports/cleanup/ULTRA_DOCKERFILE_ANALYSIS_RESULTS.json:
+   506:           "docker/base/Dockerfile.python-agent-minimal",
+   507:           "docker/base/Dockerfile.python-agent-minimal"
+  2395:         "path": "docker/base/Dockerfile.python-agent-minimal",
+  2535:         "path": "docker/base/Dockerfile.python-agent-minimal",
+
+docs/reports/cleanup/ULTRA_DOCKERFILE_MIGRATION_ANALYSIS.md:
+   60: **Analysis**: These require Alpine/Nginx for minimal footprint monitoring services.
+   66: - `docker/base/Dockerfile.python-agent-minimal`: FROM python:3.12.8-slim-bookworm (minimal variant)
+  105: **Monitoring Services (5)**: Require Alpine/Nginx for minimal footprint
+  120: ### ✅ SECURITY IMPACT: MINIMAL  
+  125: ### ✅ MAINTENANCE IMPACT: MINIMAL
+  176: - **Monitoring**: ✅ Using Alpine/vendor images for minimal footprint
+
+docs/reports/cleanup/ULTRA_DOCKERFILE_MIGRATION_STRATEGY.md:
+  442: - **After:** 2 master bases + minimal service-specific layers
+
+docs/reports/cleanup/ULTRA_DUPLICATION_INVESTIGATION_REPORT.md:
+   21: - `/opt/sutazaiapp/backend/app/main_minimal.py` (251 lines) - **MINIMAL FALLBACK**
+   22: - `/opt/sutazaiapp/backend/app/main_original.py` (291 lines) - **ENHANCED MINIMAL**
+   62:   - **87% more code** than minimal versions
+   64: #### main_minimal.py (MINIMAL - 251 lines):
+   68:   - Minimal authentication attempt (lines 41-50)
+   72: #### main_original.py (ENHANCED MINIMAL - 291 lines):
+  139:   - Full MinimalJarvis fallback class (lines 102-136)
+  152:   - Minimal HTML interface (lines 106-118)
+  205:     MINIMAL_MODE = "minimal" # Current main_minimal.py
+  241: - `frontend/test_runtime_issues.py` → References main_minimal
+
+docs/reports/cleanup/ULTRA_SCRIPTS_TO_REMOVE.txt:
+  42: /opt/sutazaiapp/scripts/deployment/migrate_to_minimal.sh
+  57: /opt/sutazaiapp/scripts/deployment/start-minimal.sh
+
+docs/reports/cleanup/ULTRACLEANUP_TECHNICAL_DEBT_REMOVAL_REPORT.md:
+   89: ✅ Deleted minimal test stub file
+  113: **Problem:** Test files with minimal or stub implementations
+  127: ✅ Removed minimal stub test file
+
+docs/reports/cleanup/ULTRAFIX_DOCKERFILE_CONSOLIDATION_EXECUTIVE_SUMMARY.md:
+   59: 8. sutazai-security-hardened:v1      # Minimal attack surface base
+   90: - **Minimal Attack Surface**: Alpine/slim base images only
+  104: | **Layer Caching** | Minimal | Optimized | **5x faster rebuilds** |
+
+docs/reports/cleanup/ULTRAFIX_DOCKERFILE_CONSOLIDATION_PLAN.md:
+   44: 4. sutazai-base-alpine-3.19     # Ultra-minimal Alpine for utilities
+   56: 8. sutazai-security-hardened    # Security services with minimal attack surface
+  114: docker/base/Dockerfile.security-base          # 🆕 CREATE - Minimal attack surface
+
+docs/reports/performance/HARDWARE_OPTIMIZER_ULTRA_COMPLETE.md:
+  25: - **After:** LOW RISK - Minimal attack surface, proper isolation
+  82: └── Minimal volume mounts
+
+docs/reports/performance/PERFORMANCE_VALIDATION_REPORT.md:
+  115: The system handles concurrent load exceptionally well with perfect success rate and minimal latency.
+  129: - Improvement: 1.72% (minimal)
+
+docs/reports/performance/ULTRA_DATABASE_OPTIMIZATION_REPORT.md:
+   56: -- 6 more tables with minimal data
+  303: **RECOMMENDATION:** Implement Priority 1 (Redis fixes) immediately. This single change will provide the largest performance improvement with minimal risk.
+
+docs/reports/performance/ULTRA_PERFORMANCE_FIX_REPORT.md:
+  175: The system is now optimized for production-level performance with proper connection pooling, efficient caching, and minimal resource usage.
+
+docs/reports/performance/ULTRAFIX_VALIDATION_REPORT.md:
+  20: - **Risk Level**: MINIMAL (enterprise-grade security achieved)
+
+docs/reports/security/SECURITY_AUDIT_FINAL_REPORT.md:
+  107: | CIS Docker Benchmark | ✅ COMPLIANT | Non-root users, minimal images |
+  118: 3. **Container Layer:** Non-root users, minimal attack surface
+
+docs/reports/security/SECURITY_HARDENING_COMPLETE.md:
+   52: - `/opt/sutazaiapp/agents/ai_agent_orchestrator/Dockerfile.minimal`
+   57: - Minimal attack surface
+  124: - All containers run with minimal required permissions
+
+docs/reports/security/security_validation_report.json:
+   558:       "file": "/opt/sutazaiapp/backend/minimal_app.py",
+  2509:       "file": "/opt/sutazaiapp/backend/Dockerfile.minimal",
+
+docs/reports/security/SECURITY_VALIDATION_REPORT.md:
+  137: | **A06: Vulnerable Components** | Regular dependency updates, vulnerability scanning, minimal dependencies | ✅ PROTECTED |
+
+docs/reports/security/ULTRA_SECURITY_AUDIT_FINAL_REPORT.md:
+  32: - Minimal capabilities enforced
+
+docs/reports/security/ULTRA_SECURITY_VALIDATION_REPORT.md:
+  17: All system changes from recent cleanup and optimization efforts have been thoroughly validated for security vulnerabilities. The system demonstrates enterprise-grade security posture with minimal residual risks.
+
+docs/reports/validation/ULTRAPERFECTION_FINAL_VALIDATION_REPORT.md:
+  68: - Import Star Usage: 3 files only (minimal impact)
+
+docs/security/SECURITY_COMPLIANCE_DOCUMENTATION.md:
+  148: - **Impact:** Minimal information disclosure
+
+frontend/app_optimized.py:
+  450:     css_complexity = "full" if st.session_state.get("performance_mode") != "fast" else "minimal"
+
+frontend/FRONTEND_OPTIMIZATION_IMPLEMENTATION_GUIDE.md:
+   77: # Install system dependencies (minimal)
+  154: - **Features**: Minimal CSS, synchronous loading, basic UI
+  155: - **Performance**: Maximum speed, minimal resource usage
+
+frontend/requirements_optimized.txt:
+  2: # Minimal dependencies for maximum performance
+
+frontend/pages/ai_services/ai_chat.py:
+  110: ⟪ 427 characters skipped ⟫padding: 2rem;\n                border-radius: 12px;\n                max-width: 600px;\n                width: 90%;\n            ">\n                <h3>🎯 Focus Mode Active</h3>\n                <p>Minimal interface for distraction-free chatting</p>\n                <button onclick="window.parent.postMessage({type: \'streamlit:toggleFocusMode\'}, \'*\')">\n                    Exit Focus Mode\n                </button>\n            </div>\n        </div>\n        ', unsafe_allow_html=True)
+
+IMPORTANT/CHANGELOG.md:
+  267:    - Minimal repaints and reflows
+  620: - **Multi-stage Builds:** Optimized for minimal final image size
+  662: | 2025-08-08T01:00:00Z | scripts/register_with_consul.py | Enhancement | Basic registration with minimal retry | Added exponential backoff retry logic with 3 attempts | Production reliability |
+  956: - **Render Performance:** Minimal re-renders with selector optimization
+
+IMPORTANT/COMPREHENSIVE_ENGINEERING_STANDARDS_FULL.md:
+  239: - Self-documenting with minimal comments
+  400: # Minimal layers
+
+IMPORTANT/COMPREHENSIVE_ENGINEERING_STANDARDS.md:
+  239: - Self-documenting with minimal comments
+  400: # Minimal layers
+
+IMPORTANT/SUTAZAI_POC.md:
+  1433: The decision to favor Qdrant over ChromaDB, a popular alternative, is rooted in a strategic trade-off between immediate developer convenience and long-term system resilience. ChromaDB is widely recognized for its simplicity and ease of use, making it an excellent choice for rapid prototyping and small-scale applications . It can be set up with minimal configuration, often running as an embedded database, which accelerates initial development cycles . However, this simplicity comes with significant limitations in scalability and performance under load. ChromaDB is primarily designed for single-node usage and lacks native support for horizontal scaling or distributed deployments, which presents a major bottleneck as the volume of vector embeddings and query load increases . Furthermore, its filtering capabilities, while functional for basic metadata queries, are not as deeply integrated or performant as Qdrant's, which can lead to slower response times in complex RAG scenarios that require sophisticated filtering . For a POC intended to demonstrate future-proof capabilities, relying on a system with a known scalability ceiling would be a significant architectural risk.
+  1571: The AI landscape is evolving at a rapid pace, with new models and frameworks being released constantly. To ensure the platform remains relevant and cutting-edge, it is designed to be highly adaptable. The use of Ollama as the LLM inference engine provides a layer of abstraction that makes it easy to swap out models. As new, more powerful models become available, they can be pulled and served by Ollama with minimal changes to the rest of the application. Similarly, the modular design of the agent layer, based on frameworks like LangChain, allows for easy integration of new tools and capabilities. This flexibility ensures that the platform can evolve and incorporate the latest advancements in AI technology, protecting our investment and ensuring its long-term value.
+
+IMPORTANT/SUTAZAI_PRD.md:
+   22: Service Mesh (Minimal Configuration)
+  650:                   <h4 class="font-semibold text-blue-800 mb-2">Service Mesh (Minimal Configuration)</h4>
+
+IMPORTANT/SUTAZAI_SYSTEM_ARCHITECTURE_BLUEPRINT_Part_2.md:
+   135: Reduce model size and improve inference speed by using lower precision weights with minimal accuracy impact.
+   910:                     Reduce model size and improve inference speed by using lower precision weights with minimal accuracy impact.
+  1483: ⟪ 593 characters skipped ⟫ngle, cohesive unit, making it easy to start, stop, and scale the services. This is particularly important for a local deployment, as it allows users to get the system up and running quickly and with minimal effort.
+  1520: In addition to Lollms-Webui, there are a number of other UI options available that could be considered as alternatives. These include other web-based UIs, such as Open WebUI and LibreChat, as well as desktop applications, such as enhanced and Ollamac . The choice of an alternative UI will depend on the specific requirements of the system and the preferences of the user. For example, if a more lightweight and minimalist UI is required, a simple web-based UI like Hollama or a command-line interface might be a better choice. If a more feature-rich and customizable UI is required, a desktop application like enhanced or a more advanced web-based UI like LibreChat might be a better choice. The availability of a wide range of UI options ensures that the system can be tailored to the specific needs of the user, providing a flexible and adaptable platform for interacting with the AI engine.
+
+IMPORTANT/SUTAZAI_SYSTEM_ARCHITECTURE_BLUEPRINT.md:
+  1277: ⟪ 598 characters skipped ⟫aged through Ollama's built-in model management capabilities. The `ollama pull` command can be used to download the new model, and services can be reconfigured to point to the new model endpoint with minimal disruption . This ability to dynamically switch or even run multiple models concurrently is a core strength of the Ollama-based architecture. The system can be configured to route specific tasks to the most appropriate model; for example, lightweight tasks or those requiring fast response times could continue to use TinyLlama, while more demanding, complex queries could be directed to the gpt-oss:20b model. This tiered approach to model serving allows for optimal resource allocation and ensures that the system can scale its intelligence as hardware capabilities improve or as new, more powerful open-source models become available.
+  1423: ⟪ 326 characters skipped ⟫s of microservices design. This approach ensures that the AI inference engine does not become a monolithic bottleneck, but rather a flexible and resilient service that can be updated or replaced with minimal impact on the rest of the system. The use of Docker also facilitates environment consistency across different development and production stages, mitigating the "it works on my machine" problem and simplifying the overall deployment process. Furthermore, Ollama's support for GPU acceleration, when configured with the `nvidia-container-toolkit`, allows the system to leverage specialized hardware to significantly improve inference performance, a crucial factor for real-time applications such as interactive AI assistants and code generation tools . This hardware acceleration capability is essential for maximizing the potential of the underlying hardware and ensuring a responsive user experience.
+  1425: ⟪ 729 characters skipped ⟫ecifics of the underlying model or its implementation. This abstraction is vital for creating a versatile and extensible platform where new AI capabilities can be added or existing ones modified with minimal friction. The ability to pre-load models by sending an empty request to the API endpoints (`/api/generate` or `/api/chat`) is another performance-enhancing feature that reduces latency for subsequent requests, a critical consideration for interactive applications .
+  1437: ⟪ 359 characters skipped ⟫ormance or new capabilities. The use of a standardized containerized deployment for Ollama, combined with its flexible model import mechanisms, ensures that the system can adapt to these changes with minimal disruption. The system's configuration, likely managed through a `docker-compose.yml` file, should be structured in a way that makes it easy to add new model services or update existing ones. This might involve defining separate service entries for each model, or using a more dynamic configuration management approach. By establishing a clear and well-defined process for model lifecycle management, the proposed system can ensure that it remains at the cutting edge of AI technology, continuously improving its capabilities and delivering value to its users.
+  1473: The design of the seven active agents will be a critical exercise in applying microservices principles to create a set of focused, independent, and scalable services. Each agent will be designed to have a single, well-defined responsibility, aligning with the principle of high cohesion. This approach ensures that each agent is easy to understand, develop, and maintain, and that changes to one agent have minimal impact on the others. The agents will be implemented as separate Docker containers, allowing them to be deployed, scaled, and managed independently. This containerization strategy is fundamental to achieving the flexibility and resilience required by the platform. The communication between the agents and with other system components will be primarily asynchronous, leveraging the RabbitMQ message queue to ensure loose coupling and fault tolerance. This event-driven architecture allows the agents to work together to solve complex problems without being tightly coupled, enabling the system to handle failures gracefully and scale individual components as needed.
+
+IMPORTANT/SYSTEM_ROADMAP_BIBLE.md:
+  32: 2. **Database**: Has schema (14 tables) but likely empty or minimal data
+
+IMPORTANT/02_issues/ISSUE-0013.md:
+  94: - **Resource Usage**: Minimal overhead from task management
+
+IMPORTANT/10_canonical/current_state/ACTUAL_SYSTEM_REALITY.md:
+   39:   - ❌ Error handling minimal
+  217: 2. **Deploy minimal viable system** - Get basic services running
+
+IMPORTANT/10_canonical/security/security_privacy.md:
+  14: - Least Privilege: per-service DB users, minimal grants
+
+IMPORTANT/Archives/FULL_SYSTEM_CAPABILITY_ASSESSMENT.md:
+  543: **With minimal investment ($500-1500):** This becomes a legitimate enterprise AI platform capable of competing with cloud-based solutions while maintaining complete data privacy and control.
+
+IMPORTANT/Archives/IMPLEMENTATION_GUIDE.md:
+  105: │ │ | Consul | sutazaiapp-consul | 10006 | Minimal registration |                 │ │
+  961: │ │ Current Load: 28 containers running, minimal utilization                      │ │
+  980: │ │ - **Quantization**: 4-bit models reduce memory by 75% with minimal quality    │ │
+
+IMPORTANT/Archives/LLM_RESEARCH_REPORT.md:
+   78: - **Performance:** Optimized for speed and minimal resource usage
+  152: 3. **Layer Pruning:** Up to 50% reduction with minimal loss
+
+IMPORTANT/Archives/SUTAZAI_SYSTEM_ROADMAP.md:
+  32: 2. **Database**: Has schema (14 tables) but likely empty or minimal data
+
+IMPORTANT/Archives/SYSTEM_ARCHITECTURE_BLUEPRINT.md:
+   57: #### Service Mesh (Minimal Configuration)
+   64:   - Usage: Service discovery (minimal usage)
+  104: 3. **Service Mesh Configuration**: Kong has no routes, Consul minimally used
+
+IMPORTANT/Archives/SYSTEM_TRUTH_SUMMARY.md:
+  34: | Consul | 10006 | ✅ RUNNING | Minimal usage |
+
+IMPORTANT/Archives/Reports and Findings/CLEANUP_ARTIFACTS.md:
+  115: ├── app.py  (minimal stub)
+
+IMPORTANT/Archives/Reports and Findings/CLEANUP_COMPLETE_REPORT.md:
+  129: | - Consul | Port 10006 | ✅ Minimal usage |
+
+IMPORTANT/compliance/RULE-09-ENFORCEMENT.md:
+  42: - **Prod.txt:** Optimized with gunicorn, minimal footprint
+
+IMPORTANT/docs/DEVOPS_README.md:
+  378: - Minimal CPU and memory footprint
+
+IMPORTANT/docs/OPTIONAL_FEATURES.md:
+  270:     - name: "Minimal"
+  288: | Minimal | ~2GB | 30s | Low |
+
+IMPORTANT/docs/PERFORMANCE_OPTIMIZATION.md:
+   26: ### 2. Use Minimal Startup
+   28: For development, use minimal services:
+   30: ./scripts/start-minimal.sh
+  123: ./scripts/start-minimal.sh
+  177: # Morning: Start minimal
+  178: ./scripts/start-minimal.sh
+  195: - **Startup time**: 30s → 10s (minimal mode)
+  196: - **Memory usage**: 8GB → 3GB (minimal mode)
+  237: 2. **Start minimal** - Only run what you need
+
+IMPORTANT/docs/RULES_COMPLIANCE_CHECKLIST.md:
+  133: # Check for commented-out code (should be minimal)
+
+IMPORTANT/docs/tiered-deployment-guide.md:
+    8: ### 🟢 Minimal Tier
+   15: - **Containers**: 10 (Minimal + Qdrant, Prometheus, Grafana, Loki, Node-Exporter)
+   30: # Deploy minimal tier (recommended to start)
+   31: ./scripts/deploy-tier.sh minimal up
+   78: # Start with minimal
+   79: ./scripts/deploy-tier.sh minimal up
+   91: ### Minimal Tier Endpoints
+  119: | Metric | Minimal | Standard | Full |
+  151: # Use minimal tier instead
+  152: ./scripts/deploy-tier.sh minimal up
+  185: - `docker-compose.minimal.yml` - Minimal tier definition
+  199: 1. **Start Small**: Begin with minimal tier and scale up as needed
+
+IMPORTANT/docs/architecture/02-component-architecture.md:
+  120: | **Agent Interface** | Task submission, results | ⚠️ Minimal functionality |
+
+IMPORTANT/docs/architecture/03-data-flow.md:
+  199: - Service discovery via Consul is minimal
+
+IMPORTANT/docs/architecture/04-technology-stack.md:
+   38: | **Streamlit** | 1.40.2 | ✅ Operational | Web-based user interface | Rapid prototyping, Python-native, minimal frontend complexity |
+   56: **Integration Status**: All libraries installed but minimal usage in current UI
+  137: **Usage Status**: Libraries installed but minimal integration with agents
+  196: | **Consul** | 1.17 | 10006 | ✅ Running | Service discovery | Single node, minimal usage |
+  233: - Minimal: streamlit, requests, pandas
+  309: | Backend | 0.1-0.5 cores | 500MB | Minimal | 1-10 Mbps |
+  310: | Ollama | 1-4 cores | 1-2GB | 1GB (model) | Minimal |
+  311: | PostgreSQL | 0.1-0.2 cores | 200MB | 1GB | Minimal |
+  312: | Monitoring | 0.2-0.5 cores | 1GB | 5GB | Minimal |
+  336: 5. **Network Isolation**: Minimal network segmentation
+
+IMPORTANT/docs/architecture/05-scalability-design.md:
+  33:   - Disk I/O: Minimal (no persistent data operations)
+
+IMPORTANT/docs/architecture/agents/01_AI_AGENT_ORCHESTRATOR.md:
+  269: Current error handling is minimal:
+  301: - **CPU:** Minimal (< 1% idle)
+  302: - **Network:** Minimal traffic
+
+IMPORTANT/docs/architecture/agents/02_HARDWARE_RESOURCE_OPTIMIZER.md:
+  474: - **Network:** Minimal (Docker API calls only)
+
+IMPORTANT/docs/architecture/agents/AGENT_IMPLEMENTATION_REALITY.md:
+  433: The SutazAI agent system is a **proof-of-concept implementation** with well-designed APIs but minimal actual functionality. While the structure suggests a sophisticated multi-agent system, the reality is:
+
+IMPORTANT/docs/blueprint/system-architecture-blueprint.md:
+  155: | **Consul** | 10006 | Service discovery | Minimal usage |
+  253: - **Consul**: Service registry (minimal current usage)
+
+IMPORTANT/docs/blueprint/system-blueprint.md:
+  80: ### Service Mesh Infrastructure (Running - Minimal Configuration)
+  85: | Consul | sutazai-consul | 10006 | Service discovery | ✅ RUNNING | Minimal usage |
+
+IMPORTANT/docs/ci_cd/branching_strategy.md:
+  351: 2. **Small PRs:** Keep changes focused and minimal
+
+IMPORTANT/docs/decisions/2025-08-07-remove-service-mesh.md:
+  30: - Restore the file in a feature branch and add minimal, verified routes and health for a single service end-to-end.
+
+IMPORTANT/docs/infrastructure/setup-guide.md:
+  389: Status: Running but minimal usage
+
+IMPORTANT/docs/mcp/SETUP.md:
+  78: - Minimal flow without full stack:
+
+IMPORTANT/docs/mesh/lightweight-mesh.md:
+  3: A minimal, hardware‑friendly coordination layer using Redis Streams.
+
+IMPORTANT/docs/monitoring/agent-dashboards.md:
+  196: The metrics collection has minimal performance impact:
+
+IMPORTANT/docs/operations/playbook.md:
+   266: # Agent stub logs (minimal output expected)
+  1278: echo "Agent services are stubs - expect minimal functionality"
+  1632: # Agent activity (minimal expected)
+
+IMPORTANT/docs/performance/optimization-guide.md:
+  1232: # Multi-stage build for minimal image size
+
+IMPORTANT/docs/product/strategy.md:
+   76: 2. **Seamless Orchestration** - Complex multi-agent workflows with minimal configuration
+  160:    - Weaknesses: No agent orchestration, minimal monitoring
+  576: **User Story:** "As an IoT platform engineer, I want to orchestrate AI agents across edge devices, so that I can provide intelligent responses with minimal latency."
+
+IMPORTANT/docs/runbooks/DEPLOYMENT_RUNBOOK.md:
+  642: # Monitoring (minimal)
+
+IMPORTANT/docs/runbooks/DISASTER_RECOVERY.md:
+  10: This disaster recovery plan outlines procedures for recovering the Perfect Jarvis system from various disaster scenarios, ensuring business continuity and minimal data loss.
+
+IMPORTANT/docs/runbooks/INCIDENT_RESPONSE.md:
+  629: - Minimal data loss
+
+IMPORTANT/docs/testing/strategy.md:
+    30: - **Databases:** PostgreSQL, Redis, Neo4j running but minimal schema
+  2349:    - Create minimal reproduction case
+
+mcp_ssh/CONTRIBUTING.md:
+  197: - **Steps**: Minimal reproduction example
+
+mcp_ssh/README.md:
+  335: - **Efficient**: Connection reuse, minimal memory footprint
+
+mcp_ssh/src/mcp_ssh/server.py:
+  351:             )  # Minimal output for status
+
+mcp_ssh/tests/conftest.py:
+  79:         "minimal-host": {"hostname": "minimal.example.com"},
+
+memory-bank/activeContext.md:
+     895: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+    5383: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+    7896: - backend/app/main_minimal.py
+    7976: - backend/minimal_app.py
+    8130: - docker-compose.minimal.yml
+   10054: - monitoring/prometheus/prometheus.minimal.yml
+   10304: - scripts/testing/test_routes_minimal.py
+   10489: - scripts/utils/voice_interface_minimal.py
+   11466: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   15954: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   18467: - backend/app/main_minimal.py
+   18547: - backend/minimal_app.py
+   18701: - docker-compose.minimal.yml
+   20625: - monitoring/prometheus/prometheus.minimal.yml
+   20875: - scripts/testing/test_routes_minimal.py
+   21060: - scripts/utils/voice_interface_minimal.py
+   22037: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   26525: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   29038: - backend/app/main_minimal.py
+   29118: - backend/minimal_app.py
+   29272: - docker-compose.minimal.yml
+   31196: - monitoring/prometheus/prometheus.minimal.yml
+   31446: - scripts/testing/test_routes_minimal.py
+   31631: - scripts/utils/voice_interface_minimal.py
+   32608: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   37096: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   39609: - backend/app/main_minimal.py
+   39689: - backend/minimal_app.py
+   39843: - docker-compose.minimal.yml
+   41767: - monitoring/prometheus/prometheus.minimal.yml
+   42017: - scripts/testing/test_routes_minimal.py
+   42202: - scripts/utils/voice_interface_minimal.py
+   43183: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   47671: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   50184: - backend/app/main_minimal.py
+   50264: - backend/minimal_app.py
+   50418: - docker-compose.minimal.yml
+   52342: - monitoring/prometheus/prometheus.minimal.yml
+   52592: - scripts/testing/test_routes_minimal.py
+   52777: - scripts/utils/voice_interface_minimal.py
+   53758: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   58246: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   60759: - backend/app/main_minimal.py
+   60839: - backend/minimal_app.py
+   60993: - docker-compose.minimal.yml
+   62917: - monitoring/prometheus/prometheus.minimal.yml
+   63167: - scripts/testing/test_routes_minimal.py
+   63352: - scripts/utils/voice_interface_minimal.py
+   64333: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   68821: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   71333: - backend/app/main_minimal.py
+   71413: - backend/minimal_app.py
+   71517: - docker-compose.minimal.yml
+   73440: - monitoring/prometheus/prometheus.minimal.yml
+   73688: - scripts/testing/test_routes_minimal.py
+   73873: - scripts/utils/voice_interface_minimal.py
+   74853: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   79341: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   81853: - backend/app/main_minimal.py
+   81933: - backend/minimal_app.py
+   82037: - docker-compose.minimal.yml
+   83958: - monitoring/prometheus/prometheus.minimal.yml
+   84206: - scripts/testing/test_routes_minimal.py
+   84391: - scripts/utils/voice_interface_minimal.py
+   85371: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   89859: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+   92371: - backend/app/main_minimal.py
+   92451: - backend/minimal_app.py
+   92555: - docker-compose.minimal.yml
+   94476: - monitoring/prometheus/prometheus.minimal.yml
+   94724: - scripts/testing/test_routes_minimal.py
+   94909: - scripts/utils/voice_interface_minimal.py
+   95889: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  100377: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  102889: - backend/app/main_minimal.py
+  102969: - backend/minimal_app.py
+  103073: - docker-compose.minimal.yml
+  104994: - monitoring/prometheus/prometheus.minimal.yml
+  105242: - scripts/testing/test_routes_minimal.py
+  105427: - scripts/utils/voice_interface_minimal.py
+  106407: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  110895: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  113407: - backend/app/main_minimal.py
+  113487: - backend/minimal_app.py
+  113591: - docker-compose.minimal.yml
+  115510: - monitoring/prometheus/prometheus.minimal.yml
+  115758: - scripts/testing/test_routes_minimal.py
+  115943: - scripts/utils/voice_interface_minimal.py
+  116923: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  121411: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  123923: - backend/app/main_minimal.py
+  124003: - backend/minimal_app.py
+  124107: - docker-compose.minimal.yml
+  126023: - monitoring/prometheus/prometheus.minimal.yml
+  126269: - scripts/testing/test_routes_minimal.py
+  126452: - scripts/utils/voice_interface_minimal.py
+  127432: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  131920: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  134432: - backend/app/main_minimal.py
+  134512: - backend/minimal_app.py
+  134616: - docker-compose.minimal.yml
+  136532: - monitoring/prometheus/prometheus.minimal.yml
+  136778: - scripts/testing/test_routes_minimal.py
+  136961: - scripts/utils/voice_interface_minimal.py
+  137941: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  142429: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  144941: - backend/app/main_minimal.py
+  145021: - backend/minimal_app.py
+  145125: - docker-compose.minimal.yml
+  147040: - monitoring/prometheus/prometheus.minimal.yml
+  147286: - scripts/testing/test_routes_minimal.py
+  147469: - scripts/utils/voice_interface_minimal.py
+  148448: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  152936: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  155448: - backend/app/main_minimal.py
+  155528: - backend/minimal_app.py
+  155632: - docker-compose.minimal.yml
+  157547: - monitoring/prometheus/prometheus.minimal.yml
+  157793: - scripts/testing/test_routes_minimal.py
+  157976: - scripts/utils/voice_interface_minimal.py
+  158955: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  163443: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  165955: - backend/app/main_minimal.py
+  166035: - backend/minimal_app.py
+  166139: - docker-compose.minimal.yml
+  168054: - monitoring/prometheus/prometheus.minimal.yml
+  168300: - scripts/testing/test_routes_minimal.py
+  168483: - scripts/utils/voice_interface_minimal.py
+  169462: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  173950: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  176462: - backend/app/main_minimal.py
+  176542: - backend/minimal_app.py
+  176646: - docker-compose.minimal.yml
+  178561: - monitoring/prometheus/prometheus.minimal.yml
+  178807: - scripts/testing/test_routes_minimal.py
+  178990: - scripts/utils/voice_interface_minimal.py
+  179969: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  184457: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  186969: - backend/app/main_minimal.py
+  187049: - backend/minimal_app.py
+  187153: - docker-compose.minimal.yml
+  189068: - monitoring/prometheus/prometheus.minimal.yml
+  189314: - scripts/testing/test_routes_minimal.py
+  189497: - scripts/utils/voice_interface_minimal.py
+  190485: - .mcp/UltimateCoderMCP/.venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  194973: - .venv/lib/python3.12/site-packages/docutils/writers/html5_polyglot/minimal.css
+  197485: - backend/app/main_minimal.py
+  197565: - backend/minimal_app.py
+  197669: - docker-compose.minimal.yml
+  199584: - monitoring/prometheus/prometheus.minimal.yml
+  199830: - scripts/testing/test_routes_minimal.py
+  200013: - scripts/utils/voice_interface_minimal.py
+
+models/optimization/quantization.py:
+  829:             optimized_config.per_channel = True  # Better accuracy with minimal overhead
+
+monitoring/SUTAZAI_MONITORING_SETUP.md:
+  226: - **Prometheus**: ~200MB RAM, minimal CPU
+  227: - **Grafana**: ~100MB RAM, minimal CPU
+  228: - **Node Exporter**: ~20MB RAM, minimal CPU
+
+monitoring/prometheus/prometheus.minimal.yml:
+  1: # Minimal Prometheus Configuration
+
+ollama/models/agentgpt-autonomous-executor.modelfile:
+    3: SYSTEM You are the AgentGPT Autonomous Executor for the SutazAI AGI/ASI Autonomous System, managing autonomous AI agents that can pursue complex goals independently. You configure goal-driven agents, manage execution chains, monitor progress, and ensure agents complete objectives efficiently. Your expertise enables truly autonomous AI behavior with minimal human intervention.
+  287: ⟪ 1135 characters skipped ⟫ks requiring human approval at each step\n- Real-time responsive systems\n\nThis agent manages AgentGPT's autonomous execution framework, enabling AI agents to pursue complex goals independently with minimal supervision.
+
+ollama/models/agentzero-coordinator.modelfile:
+    3: SYSTEM You are the AgentZero Coordinator for the SutazAI AGI/ASI Autonomous System, managing the AgentZero framework that provides general-purpose AI agent capabilities with minimal configuration. You enable rapid agent deployment, handle dynamic task assignment, manage agent lifecycle, and ensure AgentZero agents can adapt to any task without specialized training. Your role is to provide flexible, general-purpose AI capabilities across the system.
+    9: Configure minimal agent requirements
+  107: ⟪ 1128 characters skipped ⟫\n- Performance-critical operations\n- Tasks with strict compliance requirements\n\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.
+
+ollama/models/dify-automation-specialist.modelfile:
+  153: # Description: Use this agent when you need to:\n\n- Build AI-powered automation workflows quickly\n- Create conversational AI applications\n- Implement RAG systems with minimal code\n- Design AI agents with integrated tools\n- Build no-code AI applications\n- Create knowledge base chatbots\n- Implement document Q&A systems\n- Design workflow automations with AI\n- Build customer service AI agents\n- Create AI-powered data processing\n- Implement content generation workflows\n- Design AI form processors\n- Build intelligent email responders\n- Create AI data extraction pipelines\n- Implement smart notification systems\n- Design AI-powered search interfaces\n- Build recommendation systems\n- Create AI content moderators\n- Implement intelligent routing systems\n- Design AI analytics dashboards\n- Build conversational forms\n- Create AI-powered APIs\n- Implement batch processing with AI\n- Design multi-tenant AI applications\n- Build AI marketplace applications\n\nDo NOT use this agent for:\n- Low-level system programming\n- Real-time trading systems\n- High-frequency data processing\n- Custom ML model training\n\nThis agent manages Dify's AI application
+
+scripts/deployment_manager.sh:
+   35: DEPLOYMENT_TIER="minimal"
+   47:     ["minimal"]="postgres redis ollama backend frontend"
+  618:     --tier minimal     Start core services only (postgres, redis, ollama, backend, frontend)
+  634:     $0                                    # Start minimal tier with defaults
+  637:     $0 restart --tier minimal --force-recreate
+  643:     • Tiered deployment (minimal, standard, full)
+  834:     if [[ ! "$DEPLOYMENT_TIER" =~ ^(minimal|standard|full)$ ]]; then
+  835:         log_error "Invalid tier: $DEPLOYMENT_TIER (must be: minimal, standard, full)"
+
+scripts/README_VERIFICATION.md:
+  17: # Fast shell-based verification (minimal dependencies)
+  98: ### Minimal (for quick verification)
+
+scripts/ULTRA_SCRIPT_ORGANIZER.sh:
+  48:     ["migrate_to_minimal.sh"]="deployment/advanced"
+
+scripts/automation/database-maintenance.sh:
+  31: POSTGRES_CONTAINER="sutazai-postgres-minimal"
+  32: REDIS_CONTAINER="sutazai-redis-minimal"
+
+scripts/automation/performance-report-generator.sh:
+  297:     if docker ps --format "{{.Names}}" | grep -q "sutazai-postgres-minimal"; then
+  298:         local pg_db_size=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT pg_database_size('sutazai');" 2>/dev/null | xargs || echo "0")
+  299:         local pg_connections=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT count(*) FROM pg_stat_activity;" 2>/dev/null | xargs || echo "0")
+  300:         local pg_max_connections=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SHOW max_connections;" 2>/dev/null | xargs || echo "100")
+  301:         local pg_cache_hit_ratio=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT round(sum(blks_hit)*100.0/sum(blks_hit+blks_read), 2) FROM pg_stat_database WHERE datname = 'sutazai';" 2>/dev/null | xargs || echo "0")
+  302:         local pg_slow_queries=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT count(*) FROM pg_stat_statements WHERE mean_time > 1000;" 2>/dev/null | xargs || echo "0")
+  322:     if docker ps --format "{{.Names}}" | grep -q "sutazai-redis-minimal"; then
+  323:         local redis_memory=$(docker exec sutazai-redis-minimal redis-cli info memory | grep used_memory: | cut -d: -f2 | tr -d '\r' || echo "0")
+  324:         local redis_keys=$(docker exec sutazai-redis-minimal redis-cli dbsize 2>/dev/null || echo "0")
+  325:         local redis_hits=$(docker exec sutazai-redis-minimal redis-cli info stats | grep keyspace_hits | cut -d: -f2 | tr -d '\r' || echo "0")
+  326:         local redis_misses=$(docker exec sutazai-redis-minimal redis-cli info stats | grep keyspace_misses | cut -d: -f2 | tr -d '\r' || echo "0")
+
+scripts/consolidated/master.sh:
+  120:     deploy start [minimal|core|full]    Deploy SutazAI platform
+
+scripts/database/main_basic.py:
+  4: Minimal implementation to get the web interface working
+
+scripts/database/uuid_migration_minimal.sql:
+   2: -- MINIMAL SAFE UUID MIGRATION: INTEGER to UUID Primary Keys
+  15: DO $$ BEGIN RAISE NOTICE 'Starting minimal UUID migration at %', NOW(); END $$;
+
+scripts/deployment/deployment_manager.py:
+  741: def deploy_minimal_stack() -> bool:
+  742:     """Deploy minimal SutazAI stack"""
+
+scripts/deployment/migrate_to_minimal.sh:
+    4: # This script safely migrates the SutazAI system to minimal architecture
+  192: # Start minimal services
+  193: start_minimal() {
+  194:     log_info "Starting minimal services..."
+  198:     # Use the minimal compose file
+  199:     if [[ -f "docker-compose.minimal.yml" ]]; then
+  200:         docker-compose -f docker-compose.minimal.yml up -d
+  201:         log_success "Started minimal services"
+  203:         log_error "docker-compose.minimal.yml not found!"
+  214:     # Check each minimal service
+  218:         if docker ps | grep -q "sutazai-${service}-minimal"; then
+  238:     log_success "Migration to minimal architecture complete!"
+  254:     echo "  docker-compose -f docker-compose.minimal.yml down"
+  265:     echo "  SutazAI Migration to Minimal Architecture"
+  301:     # Start minimal services
+  302:     start_minimal
+
+scripts/deployment/migrate-to-tiered.sh:
+  248: 1. Test minimal tier: ./scripts/deploy-tier.sh minimal up
+  294:     if [ ! -f "docker-compose.minimal.yml" ]; then
+  295:         print_error "docker-compose.minimal.yml not found. Cannot proceed with migration."
+  304:     echo "  2. Deploy minimal tier: ./scripts/deploy-tier.sh minimal up"
+  318:     [ -f "docker-compose.minimal.yml" ] && echo "  ✓ Minimal tier ready" || echo "  ✗ Minimal tier missing"
+
+scripts/dockerfile-consolidation/ULTRAFIX_MIGRATION_MASTER.sh:
+  333: # Use base configuration with minimal overrides
+
+scripts/health/README.md:
+  100: python pre-commit-health-validator.py --quiet   # Minimal output
+  105: - ✅ Critical service checking with minimal overhead
+  190: Minimal memory footprint with intelligent data retention.
+
+scripts/maintenance/cleanup-requirements.sh:
+  39: rm -f '/opt/sutazaiapp/docs/requirements/brain/requirements_minimal.txt'
+  46: rm -f '/opt/sutazaiapp/docs/requirements/archive/requirements-minimal.txt'
+
+scripts/maintenance/comprehensive-alpine-fix.sh:
+  32: # Install minimal system dependencies
+  46:             echo "[$(date)] All attempts failed, using minimal server"
+
+scripts/maintenance/inject-alpine-fix.sh:
+   33: cat > "$(mktemp /tmp/minimal_app.py.XXXXXX)" << 'EOF'
+  120:     # Copy minimal app to container
+  121:     echo "  Injecting minimal app..."
+  122:     docker cp /tmp/minimal_app.py "$container:/minimal_app.py"
+  125:     echo "  Installing dependencies and switching to minimal app..."
+  134:         # Start minimal app
+  135:         nohup python /minimal_app.py > /app.log 2>&1 &
+  136:         echo "Minimal app started with PID: $!"
+  146: rm -f /tmp/minimal_app.py
+  174: echo "Note: This is a minimal fix. For production use, properly rebuild containers with Dockerfiles."
+
+scripts/maintenance/optimize-docker.sh:
+  100: echo "  Minimal mode: ./scripts/start-minimal.sh"
+
+scripts/maintenance/ultra-organization-cleanup.sh:
+  227:     cat > "$PROJECT_ROOT/docker-compose.minimal.yml" << 'EOF'
+  228: # SutazAI - Minimal Production Deployment
+  230: # Use: docker-compose -f docker-compose.minimal.yml up -d
+  322:     success "Created optimized minimal deployment configuration"
+  380: - Minimal production deployment (docker-compose.minimal.yml)
+  388: 2. Deploy minimal stack: \`docker-compose -f docker-compose.minimal.yml up -d\`
+
+scripts/maintenance/ultra-script-consolidation-implementation.sh:
+  320: # Modes: minimal, standard, full, security-hardened
+  330: deploy_minimal() {
+  331:     echo "🚀 Deploying minimal stack..."
+  333:     docker-compose -f docker-compose.minimal.yml up -d
+  355:     minimal) deploy_minimal ;;
+  361:         echo "Modes: minimal, standard, full, security-hardened"
+  394: ./deployment/deploy-master.sh [minimal|standard|full|security-hardened]
+
+scripts/maintenance/ultra-script-migration-compatibility-layer.sh:
+  129:       "docker-compose.minimal.yml"
+  655: # Fix missing critical scripts by creating minimal stubs
+  656: create_minimal_stub() {
+  661:         echo "📝 Creating minimal stub: $script_path"
+  670: Minimal stub for $script_path
+  680:     # Create minimal successful report
+  684:         "message": "$description - minimal stub",
+  697: # Minimal stub for $script_path
+  713: create_minimal_stub "scripts/check_secrets.py" "Security secrets checker"
+  714: create_minimal_stub "scripts/check_naming.py" "Naming conventions checker"
+  715: create_minimal_stub "scripts/check_duplicates.py" "Duplicate code detector"
+  716: create_minimal_stub "scripts/validate_agents.py" "Agent validation checker"  
+  717: create_minimal_stub "scripts/check_requirements.py" "Requirements validator"
+  718: create_minimal_stub "scripts/enforce_claude_md_simple.py" "CLAUDE.md enforcement"
+  719: create_minimal_stub "scripts/coverage_reporter.py" "Coverage reporting tool"
+  720: create_minimal_stub "scripts/export_openapi.py" "OpenAPI documentation exporter"
+  721: create_minimal_stub "scripts/summarize_openapi.py" "OpenAPI summary generator"
+  727: create_minimal_stub "scripts/testing/test_runner.py" "Test execution runner"
+  728: create_minimal_stub "scripts/onboarding/generate_kickoff_deck.py" "Onboarding deck generator"
+  733: echo "All critical script dependencies now have minimal stubs"
+  762: 1. **Critical Missing Scripts**: Created minimal stubs for all GitHub Actions dependencies
+
+scripts/maintenance/backup/backup-verification.sh:
+  245:     if docker ps --format "{{.Names}}" | grep -q "sutazai-postgres-minimal"; then
+  249:         if docker exec sutazai-postgres-minimal createdb -U sutazai "$test_db_name" >/dev/null 2>&1; then
+  251:             if timeout $MAX_VERIFICATION_TIME docker exec -i sutazai-postgres-minimal psql -U sutazai -d "$test_db_name" < "$temp_sql_file" >/dev/null 2>&1; then
+  255:                 local restored_tables=$(docker exec sutazai-postgres-minimal psql -U sutazai -d "$test_db_name" -t -c "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';" 2>/dev/null | xargs || echo 0)
+  259:                 docker exec sutazai-postgres-minimal dropdb -U sutazai "$test_db_name" >/dev/null 2>&1 || true
+  265:             docker exec sutazai-postgres-minimal dropdb -U sutazai "$test_db_name" >/dev/null 2>&1 || true
+
+scripts/maintenance/optimization/ultratest_sequential.py:
+   88:     """Test with minimal delay between requests"""
+  107:             # Minimal delay
+
+scripts/mcp/test_all_mcp_servers.sh:
+  233:     # Test package resolution with minimal timeout
+
+scripts/monitoring/ai_agent_monitoring_validation_report.md:
+  167: - **CPU**: Minimal impact with adaptive refresh rates
+
+scripts/monitoring/GPU_IMPLEMENTATION_SUCCESS.md:
+  131: - **Memory Usage**: Minimal overhead
+
+scripts/monitoring/health_monitoring.py:
+  157:         # Perform minimal critical checks only
+
+scripts/monitoring/STATIC_MONITOR_TEST_REPORT.md:
+  146: - **Memory Usage**: Minimal footprint
+
+scripts/monitoring/WSL2_GPU_MONITORING_SUMMARY.md:
+  84: - Minimal resource usage with proper error handling
+
+scripts/monitoring/health-checks/daily-health-check.sh:
+  159:     local services=("sutazai-postgres-minimal" "sutazai-redis-minimal" "sutazai-ollama")
+  202:     if docker exec sutazai-postgres-minimal pg_isready -U sutazai >/dev/null 2>&1; then
+  203:         local db_size=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT pg_size_pretty(pg_database_size('sutazai'));" 2>/dev/null | xargs)
+  210:     if docker exec sutazai-redis-minimal redis-cli ping >/dev/null 2>&1; then
+  211:         local redis_info=$(docker exec sutazai-redis-minimal redis-cli info memory | grep used_memory_human | cut -d: -f2 | tr -d '\r')
+
+scripts/monitoring/health-checks/health_check.sh:
+    7: # Usage: ./health_check.sh [--cron] [--auto-cleanup] [--minimal] [--component=<name>]
+   66: MINIMAL_MODE=0
+  103:             --minimal)
+  104:                 MINIMAL_MODE=1
+  132:     --minimal           Run minimal checks only (faster)
+  138:     $0 --minimal            # Quick health check
+  281:     if [ $MINIMAL_MODE -eq 1 ]; then
+  329:     if [ $MINIMAL_MODE -eq 1 ] || ! command_exists docker; then
+  349:     if [ $MINIMAL_MODE -eq 1 ]; then
+
+scripts/monitoring/logging/autonomous_goal_achievement_system.py:
+  6: with minimal human intervention. It implements goal decomposition, planning,
+
+scripts/security/cors_security.py:
+  121:         service_type: Type of service ("api", "monitoring", "agent", "minimal")
+  129:     elif service_type == "minimal":
+  130:         # Minimal services only need core access
+
+scripts/security/dockerfile_security_validator.py:
+  91:                 'minimal_attack_surface': 'Image should have minimal attack surface',
+
+scripts/security/migrate_containers_to_nonroot.sh:
+  390: - **Downtime:** Minimal (containers restarted in phases)
+
+scripts/security/security.py:
+  15:     # Mock for minimal backend
+
+scripts/security/hardening/security-validation.sh:
+  189:             log_success "✅ $relative_path: Uses minimal base image ($base_image)"
+  265:     "Prefer minimal base images (Alpine, slim variants)",
+
+scripts/security/hardening/trivy-security-scan.sh:
+  178: 1. Use distroless or minimal base images
+
+scripts/testing/test_failure_scenarios.py:
+  376:             print("GRACEFUL_DEGRADATION: Using minimal functionality")
+  377:             return "Minimal result"
+
+scripts/testing/test_ollama.py:
+  10:     """Test Ollama with minimal configuration"""
+  23:     # Test 2: Try a minimal generation
+  24:     print("\n🔄 Testing generation with minimal settings...")
+  34:             "top_p": 0.1,      # Minimal sampling
+  37:             "num_ctx": 128,    # Minimal context
+
+scripts/testing/test_orchestrator.py:
+  28:         # Create minimal directory structure
+
+scripts/testing/test_regression.py:
+   37:         # Test with minimal parameters (old style)
+   73:         # Test with minimal config (common in existing agents)
+   74:         minimal_config = {
+   79:             json.dump(minimal_config, f)
+   85:             # Should load minimal config and fill in defaults
+  137:         # Test with minimal task structure (common in existing agents)
+  138:         minimal_task = {
+  143:         result = await legacy_agent.process_task(minimal_task)
+  145:         # Should handle minimal task structure
+
+scripts/testing/test_ultra_security.py:
+  95:         """Test that containers have minimal capabilities"""
+
+scripts/testing/ultra_cleanup_test_suite.sh:
+   73:             timeout 300 ./scripts/master/deploy.sh minimal || {
+  336:     # Test minimal deployment
+  338:         log_info "Testing minimal deployment..."
+  341:         if timeout 300 "$PROJECT_ROOT/scripts/master/deploy.sh" minimal > "$TEST_LOG_DIR/deploy_test.log" 2>&1; then
+  342:             log_info "✓ Minimal deployment completed"
+
+scripts/testing/ultra_comprehensive_system_test_suite.py:
+  396:                     "Security_Minimal_Root_Containers",
+  402:                     "Security_Minimal_Root_Containers",
+
+scripts/testing/ultratest_response_times.py:
+  54:                     # For POST endpoints, send minimal valid data
+
+scripts/utils/deduplication-archiver.sh:
+  104:         "scripts/deployment/start-minimal.sh"
+  220: bash scripts/deployment/deploy.sh --dry-run minimal
+
+scripts/utils/docker_consolidation_master.py:
+   36:             'minimal': ['alpine', 'minimal']
+  410:             'minimal': 'sutazai/python-agent-master:latest'
+
+scripts/utils/emergency_rollback.sh:
+  269:         timeout 600 "$PROJECT_ROOT/scripts/master/deploy.sh" minimal || {
+
+scripts/utils/fallback_handlers.py:
+  131:                 degradation_level=DegradationLevel.MINIMAL,
+  155:                 degradation_level=DegradationLevel.MINIMAL,
+
+scripts/utils/feature_flags.py:
+   38:     MINIMAL = "minimal"     # Minimal functionality
+  469:             return DegradationLevel.MINIMAL
+
+scripts/utils/frontend_performance_ultra_test.py:
+  392:                 print("CACHING: MINIMAL OR NOT DETECTED")
+
+scripts/utils/frontend_stress_ultra_validation.py:
+  110:                 # Minimal sleep to create realistic load
+
+scripts/utils/generate-agent-tests.py:
+  488:         print("No agents found in registry, using minimal test configuration")
+
+scripts/utils/generate-reports.sh:
+  780: - Monitoring tools: Minimal (using open source)
+
+scripts/utils/main_2.py:
+   55: # Defer heavy core imports to runtime in startup to support minimal test mode
+  102: class MinimalJarvis:
+  127:             'result': 'Processed voice (minimal mode)',
+  147:         # Minimal/fake mode for local testing
+  149:             jarvis = MinimalJarvis()
+  151:             logger.info("Jarvis started in minimal (fake) mode for testing")
+
+scripts/utils/ollama-fix.sh:
+  10: # Start Ollama with minimal settings
+  25: # Load tinyllama with minimal config
+
+scripts/utils/orchestrator.py:
+  19:     from .voice_interface_minimal import VoiceInterface
+
+scripts/utils/performance_baseline.sh:
+  132: docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -c "SELECT 1;" >/dev/null 2>&1
+  139: docker exec sutazai-redis-minimal redis-cli -a redis_password ping >/dev/null 2>&1
+
+scripts/utils/simple-hygiene-backend.py:
+  3: Simple Hygiene Monitor Backend - Minimal Real-time Data Collection
+  6: Version: 1.0.0 - Minimal Working Version
+
+scripts/utils/simplified_load_test.py:
+    8: minimal dependencies.
+  282:             # Create minimal failure result
+
+scripts/utils/ULTRA_EMERGENCY_SCRIPT_DEPS_FIX.sh:
+   13: # Fix missing critical scripts by creating minimal stubs
+   14: create_minimal_stub() {
+   19:         echo "📝 Creating minimal stub: $script_path"
+   28: Minimal stub for script dependency
+   39:     # Create minimal successful report
+   43:         "message": f"{script_name} - minimal emergency stub",
+   57: # Minimal stub created by ULTRAFIX emergency system
+   62: # Create minimal success report
+   87: create_minimal_stub "scripts/check_secrets.py" "Security secrets checker"
+   88: create_minimal_stub "scripts/check_naming.py" "Naming conventions checker"
+   89: create_minimal_stub "scripts/check_duplicates.py" "Duplicate code detector"
+   90: create_minimal_stub "scripts/validate_agents.py" "Agent validation checker"  
+   91: create_minimal_stub "scripts/check_requirements.py" "Requirements validator"
+   92: create_minimal_stub "scripts/enforce_claude_md_simple.py" "CLAUDE.md enforcement"
+   93: create_minimal_stub "scripts/coverage_reporter.py" "Coverage reporting tool"
+   94: create_minimal_stub "scripts/export_openapi.py" "OpenAPI documentation exporter"
+   95: create_minimal_stub "scripts/summarize_openapi.py" "OpenAPI summary generator"
+  104: create_minimal_stub "scripts/testing/test_runner.py" "Test execution runner"
+  105: create_minimal_stub "scripts/onboarding/generate_kickoff_deck.py" "Onboarding deck generator"
+
+scripts/utils/voice_interface_minimal.py:
+   3: Minimal Voice Interface for JARVIS AI System
+  31:     """Minimal voice interface with basic speech capabilities"""
+
+src/agents/agents/agent_registry.json:
+  155:       "description": "Use this agent when you need to:\\n\\n- Build AI-powered automation workflows quickly\\n- Create conversational AI applications\\n- Implement RAG systems with minimal code\\n- Design AI agents with integrated tools\\n- Build no-code AI applications\\n- Create knowledge base chatbots\\n- Implement document Q&A systems\\n- Design workflow automations with AI\\n- Build customer service AI agents\\n- Create AI-powered data processing\\n- Implement content generation workflows\\n- Design AI form processors\\n- Build intelligent email responders\\n- Create AI data extraction pipelines\\n- Implement smart notification systems\\n- Design AI-powered search interfaces\\n- Build recommendation systems\\n- Create AI content moderators\\n- Implement intelligent routing systems\\n- Design AI analytics dashboards\\n- Build conversational forms\\n- Create AI-powered APIs\\n- Implement batch processing with AI\\n- Design multi-tenant AI applications\\n- Build AI marketplace applications\\n\\nDo NOT use this agent for:\\n- Low-level system programming\\n- Real-time trading systems\\n- High-frequency data processing\\n- Custom ML model training\\n\\nThis agent
+  166: ⟪ 1176 characters skipped ⟫requiring human approval at each step\\n- Real-time responsive systems\\n\\nThis agent manages AgentGPT's autonomous execution framework, enabling AI agents to pursue complex goals independently with minimal supervision.",
+  331: ⟪ 1164 characters skipped ⟫ Performance-critical operations\\n- Tasks with strict compliance requirements\\n\\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.",
+
+src/agents/agents/agent_status.json:
+   49: ⟪ 1164 characters skipped ⟫ Performance-critical operations\\n- Tasks with strict compliance requirements\\n\\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.",
+  470: ⟪ 1176 characters skipped ⟫requiring human approval at each step\\n- Real-time responsive systems\\n\\nThis agent manages AgentGPT's autonomous execution framework, enabling AI agents to pursue complex goals independently with minimal supervision.",
+  552:       "description": "Use this agent when you need to:\\n\\n- Build AI-powered automation workflows quickly\\n- Create conversational AI applications\\n- Implement RAG systems with minimal code\\n- Design AI agents with integrated tools\\n- Build no-code AI applications\\n- Create knowledge base chatbots\\n- Implement document Q&A systems\\n- Design workflow automations with AI\\n- Build customer service AI agents\\n- Create AI-powered data processing\\n- Implement content generation workflows\\n- Design AI form processors\\n- Build intelligent email responders\\n- Create AI data extraction pipelines\\n- Implement smart notification systems\\n- Design AI-powered search interfaces\\n- Build recommendation systems\\n- Create AI content moderators\\n- Implement intelligent routing systems\\n- Design AI analytics dashboards\\n- Build conversational forms\\n- Create AI-powered APIs\\n- Implement batch processing with AI\\n- Design multi-tenant AI applications\\n- Build AI marketplace applications\\n\\nDo NOT use this agent for:\\n- Low-level system programming\\n- Real-time trading systems\\n- High-frequency data processing\\n- Custom ML model training\\n\\nThis agent
+
+src/agents/agents/ai_agent_orchestrator/Dockerfile.optimized:
+  10: # Orchestrator specific dependencies (minimal)
+
+src/agents/agents/configs/agentgpt-autonomous-executor_ollama.json:
+  3:   "modelfile": "FROM tinyllama:latest\n\nSYSTEM You are the AgentGPT Autonomous Executor for the SutazAI automation/advanced automation Autonomous System, managing autonomous AI agents that can pursue complex goals independently. You configure goal-driven agents, manage execution chains, monitor progress, and ensure agents complete objectives efficiently. Your expertise enables truly autonomous AI behavior with minimal human intervention.\nCore Responsibilities\n\n\n**CRITICAL REQUIREMENT**: Before performing any task, you MUST first review /opt/sutazaiapp/CLAUDE.md to understand the codebase standards, implementation requirements, and rules for maintaining code quality and system stability. This file contains mandatory guidelines that must be followed.\n\n\nAutonomous Agent Management\n\nDeploy autonomous agents\nConfigure goal parameters\nSet execution constraints\nMonitor agent progress\nHandle agent lifecycle\nTrack goal completion\n\n\nGoal Decomposition\n\nBreak complex goals into tasks\nCreate execution strategies\nImplement milestone tracking\nConfigure success criteria\nEnable adaptive planning\nMonitor task dependencies\n\n\nExecution Monitoring\n\nTrack agent activities\nMonitor resource usage\nDetect stuck agents\nImplement timeouts\nHandle failures gracefully\nGenerate progress reports\n\n\nLearning & Improvement\n\nAnalyze execution patterns\nIdentify optimization opportunities\⟪ 7209 characters skipped ⟫requiring human approval at each step\\n- Real-time responsive systems\\n\\nThis agent manages AgentGPT's autonomous execution framework, enabling AI agents to pursue complex goals independently with minimal supervision.\n",
+
+src/agents/agents/configs/agentgpt-autonomous-executor_universal.json:
+  3:   "modelfile": "FROM tinyllama:latest\n\nSYSTEM You are the AgentGPT Autonomous Executor for the SutazAI automation/advanced automation Autonomous System, managing autonomous AI agents that can pursue complex goals independently. You configure goal-driven agents, manage execution chains, monitor progress, and ensure agents complete objectives efficiently. Your expertise enables truly autonomous AI behavior with minimal human intervention.\nCore Responsibilities\n\n\n**CRITICAL REQUIREMENT**: Before performing any task, you MUST first review /opt/sutazaiapp/CLAUDE.md to understand the codebase standards, implementation requirements, and rules for maintaining code quality and system stability. This file contains mandatory guidelines that must be followed.\n\n\nAutonomous Agent Management\n\nDeploy autonomous agents\nConfigure goal parameters\nSet execution constraints\nMonitor agent progress\nHandle agent lifecycle\nTrack goal completion\n\n\nGoal Decomposition\n\nBreak complex goals into tasks\nCreate execution strategies\nImplement milestone tracking\nConfigure success criteria\nEnable adaptive planning\nMonitor task dependencies\n\n\nExecution Monitoring\n\nTrack agent activities\nMonitor resource usage\nDetect stuck agents\nImplement timeouts\nHandle failures gracefully\nGenerate progress reports\n\n\nLearning & Improvement\n\nAnalyze execution patterns\nIdentify optimization opportunities\⟪ 7209 characters skipped ⟫requiring human approval at each step\\n- Real-time responsive systems\\n\\nThis agent manages AgentGPT's autonomous execution framework, enabling AI agents to pursue complex goals independently with minimal supervision.\n",
+
+src/agents/agents/configs/agentzero-coordinator_ollama.json:
+  3:   "modelfile": "FROM tinyllama:latest\n\nSYSTEM You are the AgentZero Coordinator for the SutazAI automation/advanced automation Autonomous System, managing the AgentZero framework that provides general-purpose AI agent capabilities with minimal configuration. You enable rapid agent deployment, handle dynamic task assignment, manage agent lifecycle, and ensure AgentZero agents can adapt to any task without specialized training. Your role is to provide flexible, general-purpose AI capabilities across the system.\nCore Responsibilities\n\n\n**CRITICAL REQUIREMENT**: Before performing any task, you MUST first review /opt/sutazaiapp/CLAUDE.md to understand the codebase standards, implementation requirements, and rules for maintaining code quality and system stability. This file contains mandatory guidelines that must be followed.\n\n\nAgentZero Deployment\n\nDeploy general-purpose agents quickly\nConfigure minimal agent requirements\nEnable zero-shot task handling\nManage agent pools\nScale agents dynamically\nMonitor agent health\n\n\nDynamic Task Adaptation\n\nRoute diverse tasks to agents\nEnable task learning on-the-fly\nImplement few-shot learning\nHandle unknown task types\nCreate task templates\nBuild adaptation strategies\n\n\nAgent Lifecycle Management\n\nSpawn agents as needed\nManage agent resources\nImplement agent recycling\nHandle agent failures\nCoordinate agent updates\nTrack agent performance\n\n\nGeneral Intelligence Features\n\nEnable reasoning capabilities\nImplement tool usage\nConfigure memory systems\nEnable learning from feedback\nBuild knowledge transfer\nCreate agent specialization\n\n\n\nTechnical Implementation\nDocker Configuration:\nyamlagentzero:\n  container_name: sutazai-agentzero\n  image: agentzero/agentzero:latest\n  ports:\n    - \"8200:8200\"\n  environment:\n    - MODEL_PROVIDER=litellm\n    - MODEL_BASE_URL=http://litellm:4000\n    - AGENT_MEMORY=p⟪ 2570 characters skipped ⟫ Performance-critical operations\\n- Tasks with strict compliance requirements\\n\\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.\n",
+
+src/agents/agents/configs/agentzero-coordinator_universal.json:
+  3:   "modelfile": "FROM tinyllama:latest\n\nSYSTEM You are the AgentZero Coordinator for the SutazAI automation/advanced automation Autonomous System, managing the AgentZero framework that provides general-purpose AI agent capabilities with minimal configuration. You enable rapid agent deployment, handle dynamic task assignment, manage agent lifecycle, and ensure AgentZero agents can adapt to any task without specialized training. Your role is to provide flexible, general-purpose AI capabilities across the system.\nCore Responsibilities\n\n\n**CRITICAL REQUIREMENT**: Before performing any task, you MUST first review /opt/sutazaiapp/CLAUDE.md to understand the codebase standards, implementation requirements, and rules for maintaining code quality and system stability. This file contains mandatory guidelines that must be followed.\n\n\nAgentZero Deployment\n\nDeploy general-purpose agents quickly\nConfigure minimal agent requirements\nEnable zero-shot task handling\nManage agent pools\nScale agents dynamically\nMonitor agent health\n\n\nDynamic Task Adaptation\n\nRoute diverse tasks to agents\nEnable task learning on-the-fly\nImplement few-shot learning\nHandle unknown task types\nCreate task templates\nBuild adaptation strategies\n\n\nAgent Lifecycle Management\n\nSpawn agents as needed\nManage agent resources\nImplement agent recycling\nHandle agent failures\nCoordinate agent updates\nTrack agent performance\n\n\nGeneral Intelligence Features\n\nEnable reasoning capabilities\nImplement tool usage\nConfigure memory systems\nEnable learning from feedback\nBuild knowledge transfer\nCreate agent specialization\n\n\n\nTechnical Implementation\nDocker Configuration:\nyamlagentzero:\n  container_name: sutazai-agentzero\n  image: agentzero/agentzero:latest\n  ports:\n    - \"8200:8200\"\n  environment:\n    - MODEL_PROVIDER=litellm\n    - MODEL_BASE_URL=http://litellm:4000\n    - AGENT_MEMORY=p⟪ 2573 characters skipped ⟫ Performance-critical operations\\n- Tasks with strict compliance requirements\\n\\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.\n",
+
+src/agents/agents/configs/agentzero-coordinator.modelfile:
+    3: SYSTEM You are the AgentZero Coordinator for the SutazAI SUTAZAI Autonomous System, managing the AgentZero framework that provides general-purpose AI agent capabilities with minimal configuration. You enable rapid agent deployment, handle dynamic task assignment, manage agent lifecycle, and ensure AgentZero agents can adapt to any task without specialized training. Your role is to provide flexible, general-purpose AI capabilities across the system.
+    9: Configure minimal agent requirements
+  107: ⟪ 1128 characters skipped ⟫\n- Performance-critical operations\n- Tasks with strict compliance requirements\n\nThis agent manages AgentZero's general-purpose AI framework, perfect for handling diverse, unpredictable tasks with minimal configuration.
+
+src/agents/agents/configs/dify-automation-specialist_ollama.json:
+  3: ⟪ 4153 characters skipped ⟫tegration, documentation\n# Description: Use this agent when you need to:\\n\\n- Build AI-powered automation workflows quickly\\n- Create conversational AI applications\\n- Implement RAG systems with minimal code\\n- Design AI agents with integrated tools\\n- Build no-code AI applications\\n- Create knowledge base chatbots\\n- Implement document Q&A systems\\n- Design workflow automations with AI\\n- Build customer service AI agents\\n- Create AI-powered data processing\\n- Implement content generation workflows\\n- Design AI form processors\\n- Build intelligent email responders\\n- Create AI data extraction pipelines\\n- Implement smart notification systems\\n- Design AI-powered search interfaces\\n- Build recommendation systems\\n- Create AI content moderators\\n- Implement intelligent routing systems\\n- Design AI analytics dashboards\\n- Build conversational forms\\n- Create AI-powered APIs\\n- Implement batch processing with AI\\n- Design multi-tenant AI applications\\n- Build AI marketplace applications\\n\\nDo NOT use this agent for:\\n- Low-level system programming\\n- Real-time trading systems\\n- High-frequency data processing\\n- Custom ML model training\\n\\nThis agent
+
+src/agents/agents/configs/dify-automation-specialist_universal.json:
+  3: ⟪ 4157 characters skipped ⟫tegration, documentation\n# Description: Use this agent when you need to:\\n\\n- Build AI-powered automation workflows quickly\\n- Create conversational AI applications\\n- Implement RAG systems with minimal code\\n- Design AI agents with integrated tools\\n- Build no-code AI applications\\n- Create knowledge base chatbots\\n- Implement document Q&A systems\\n- Design workflow automations with AI\\n- Build customer service AI agents\\n- Create AI-powered data processing\\n- Implement content generation workflows\\n- Design AI form processors\\n- Build intelligent email responders\\n- Create AI data extraction pipelines\\n- Implement smart notification systems\\n- Design AI-powered search interfaces\\n- Build recommendation systems\\n- Create AI content moderators\\n- Implement intelligent routing systems\\n- Design AI analytics dashboards\\n- Build conversational forms\\n- Create AI-powered APIs\\n- Implement batch processing with AI\\n- Design multi-tenant AI applications\\n- Build AI marketplace applications\\n\\nDo NOT use this agent for:\\n- Low-level system programming\\n- Real-time trading systems\\n- High-frequency data processing\\n- Custom ML model training\\n\\nThis agent
+
+src/agents/agents/configs/dify-automation-specialist.modelfile:
+  153: # Description: Use this agent when you need to:\n\n- Build AI-powered automation workflows quickly\n- Create conversational AI applications\n- Implement RAG systems with minimal code\n- Design AI agents with integrated tools\n- Build no-code AI applications\n- Create knowledge base chatbots\n- Implement document Q&A systems\n- Design workflow automations with AI\n- Build customer service AI agents\n- Create AI-powered data processing\n- Implement content generation workflows\n- Design AI form processors\n- Build intelligent email responders\n- Create AI data extraction pipelines\n- Implement smart notification systems\n- Design AI-powered search interfaces\n- Build recommendation systems\n- Create AI content moderators\n- Implement intelligent routing systems\n- Design AI analytics dashboards\n- Build conversational forms\n- Create AI-powered APIs\n- Implement batch processing with AI\n- Design multi-tenant AI applications\n- Build AI marketplace applications\n\nDo NOT use this agent for:\n- Low-level system programming\n- Real-time trading systems\n- High-frequency data processing\n- Custom ML model training\n\nThis agent manages Dify's AI application
+
+src/agents/agents/configs/senior-ai-engineer-simple.json:
+  11:   "ollama_endpoint": "http://sutazai-ollama-minimal:11434",
+
+src/agents/agents/core/circuit_breaker.py:
+  72:     - Minimal resource overhead
+
+src/agents/agents/core/ollama_context_optimizer.py:
+  268:             'Q8_0': {'size_factor': 0.6, 'performance_impact': 0.02},   # 8-bit, minimal impact
+
+src/agents/agents/core/ollama_pool.py:
+  80:     - Minimal memory footprint
+
+src/agents/agents/core/prompt_optimizer.py:
+  75:             compression_level=0.2,  # Minimal compression
+
+src/agents/agents/hardware-resource-optimizer/COMPREHENSIVE_DEBUG_REPORT.md:
+   66: - **Performance impact:** Minimal overhead for scanning processes
+  164: - **Disk I/O:** Minimal, mostly reads for analysis
+
+src/agents/agents/hardware-resource-optimizer/comprehensive_validation_report.md:
+  268: - Minimal resource utilization
+
+src/agents/agents/hardware-resource-optimizer/Dockerfile.optimized:
+  19: # Copy application code (minimal)
+
+src/agents/agents/hardware-resource-optimizer/README.md:
+  120: - Minimal CPU usage when idle
+
+src/agents/agents/hardware-resource-optimizer/requirements.txt:
+   1: # Hardware Resource Optimizer - Minimal Requirements
+  14: # Database Drivers (minimal)
+
+src/agents/agents/hardware-resource-optimizer/TESTING_EXECUTIVE_SUMMARY.md:
+  177: ### Risk Level: 🟢 **MINIMAL RISK** - Excellent safety and performance characteristics
+
+src/agents/agents/hardware-resource-optimizer/TESTING_FIXES_SUMMARY.md:
+  122: - Minimal system impact during testing
+
+src/agents/agents/hardware-resource-optimizer/shared/agents/core/circuit_breaker.py:
+  71:     - Minimal resource overhead
+
+src/agents/agents/hardware-resource-optimizer/shared/agents/core/ollama_context_optimizer.py:
+  268:             'Q8_0': {'size_factor': 0.6, 'performance_impact': 0.02},   # 8-bit, minimal impact
+
+src/agents/agents/hardware-resource-optimizer/shared/agents/core/ollama_pool.py:
+  80:     - Minimal memory footprint
+
+src/agents/agents/hardware-resource-optimizer/shared/agents/core/prompt_optimizer.py:
+  75:             compression_level=0.2,  # Minimal compression
+
+src/agents/agents/jarvis-hardware-resource-optimizer/requirements/base.txt:
+  1: # Jarvis Hardware Resource Optimizer - Minimal Requirements
+
+src/agents/agents/ollama_integration/app.py:
+  456:         await asyncio.sleep(0.001)  # Minimal delay
+
+src/backend/backend/Dockerfile.optimized:
+  33: # Production stage - Minimal runtime
+
+src/backend/backend/minimal_app.py:
+  3: Quick minimal automation backend for immediate deployment
+
+src/backend/backend/app/main_minimal.py:
+    2: Minimal Working Backend for SutazAI
+   22:     description="Minimal working backend for SutazAI system",
+  200: # Chat endpoint (minimal implementation)
+
+src/backend/backend/app/main_original.py:
+    2: Minimal Working Backend for SutazAI
+   22:     description="Minimal working backend for SutazAI system",
+  236: # Chat endpoint (minimal implementation)
+
+src/backend/backend/app/agents/registry_facade.py:
+  37:     """Facade that exposes a minimal common subset across both registries."""
+
+src/backend/backend/app/api/v1/agents.py:
+  19: # Simple agent manager for minimal backend
+
+src/backend/backend/app/api/v1/feedback.py:
+  15:     # Create a simple mock for minimal backend
+
+src/backend/backend/app/api/v1/vectors.py:
+  29: # Simple vector operations for minimal backend
+
+src/backend/backend/app/api/v1/endpoints/performance.py:
+  42:     Uses pre-computed responses and minimal processing
+
+src/backend/backend/app/core/connection_pool_optimized.py:
+  3: Optimized for maximum throughput and minimal latency
+
+src/backend/backend/app/core/connection_pool_ultra.py:
+  3: Optimized for 1000+ concurrent users with minimal resource usage
+
+src/backend/backend/app/core/health_monitoring.py:
+  157:         # Perform minimal critical checks only
+
+src/backend/backend/app/core/logging.py:
+  20:         # Final fallback - create minimal compatible class
+
+src/backend/backend/app/core/performance_tuning.py:
+  637:                 "impact": "2-3x inference speed with minimal accuracy loss"
+
+src/backend/backend/app/mesh/redis_bus.py:
+  4: Provides minimal helpers for enqueueing tasks, consuming results, and a simple
+
+src/backend/backend/app/services/archive/model_manager.py:
+  67:                     "num_predict": 1,  # Minimal prediction
+
+src/backend/backend/edge_inference/quantization.py:
+   40:     CONSERVATIVE = "conservative" # Minimal accuracy impact
+  217:             recommendations.append("FP16 quantization for minimal accuracy loss")
+
+src/backend/backend/tests/agent_hygiene_compliance_report.json:
+   5170:     "minimal-task-executor": {
+  12100:       "agent": "minimal-task-executor",
+
+src/components/JarvisPanel/README.md:
+  323: - **Minimal repaints** with optimized transitions
+
+src/frontend/frontend/app_optimized.py:
+  450:     css_complexity = "full" if st.session_state.get("performance_mode") != "fast" else "minimal"
+
+src/frontend/frontend/FRONTEND_OPTIMIZATION_IMPLEMENTATION_GUIDE.md:
+   77: # Install system dependencies (minimal)
+  154: - **Features**: Minimal CSS, synchronous loading, basic UI
+  155: - **Performance**: Maximum speed, minimal resource usage
+
+src/frontend/frontend/requirements_optimized.txt:
+  2: # Minimal dependencies for maximum performance
+
+src/frontend/frontend/pages/ai_services/ai_chat.py:
+  110: ⟪ 427 characters skipped ⟫padding: 2rem;\n                border-radius: 12px;\n                max-width: 600px;\n                width: 90%;\n            ">\n                <h3>🎯 Focus Mode Active</h3>\n                <p>Minimal interface for distraction-free chatting</p>\n                <button onclick="window.parent.postMessage({type: \'streamlit:toggleFocusMode\'}, \'*\')">\n                    Exit Focus Mode\n                </button>\n            </div>\n        </div>\n        ', unsafe_allow_html=True)
+
+tests/rule-combination-matrix.json:
+   23:       "performance_impact": "minimal",
+   68:       "performance_impact": "minimal",
+   83:       "performance_impact": "minimal",
+   98:       "performance_impact": "minimal",
+  233:       "performance_impact": "minimal",
+  271:       "expected_performance_impact": "minimal",
+  286:     "performance_minimal": {
+  287:       "description": "Rules with minimal performance impact",
+  330:       "combinations": ["critical_only", "high_priority", "performance_minimal"],
+
+tests/ULTRA_CLEANUP_TEST_STRATEGY.md:
+  107: /opt/sutazaiapp/scripts/master/deploy.sh minimal --dry-run
+  120:   # Test minimal deployment
+  121:   timeout 300 /opt/sutazaiapp/scripts/master/deploy.sh minimal
+  155:   "docker/base/Dockerfile.python-agent-minimal"
+
+tests/ultra_security_validation.py:
+  673:             "minimal_high_vulns": high <= 2,
+
+tests/ultratest_comprehensive_report_1754917137.json:
+   17:       "/opt/sutazaiapp/backend/minimal_app.py",
+   67:       "stdout": "\u2705 Ollama is running with 1 models\n  - tinyllama:latest: 608MB\n\n\ud83d\udd04 Testing generation with minimal settings...\n\u2705 Response in 3.01s\nGenerated: I\n\u26a0\ufe0f Performance is acceptable but could be better\n",
+  234:       "file": "test_routes_minimal.py",
+  235:       "path": "/opt/sutazaiapp/scripts/testing/test_routes_minimal.py",
+  239:       "stderr": "Traceback (most recent call last):\n  File \"/opt/sutazaiapp/scripts/testing/test_routes_minimal.py\", line 3, in <module>\n    from fastapi.testclient import TestClient\nModuleNotFoundError: No module named 'fastapi'\n",
+
+C:\Users\root\Desktop\Sutazaiapp\Claude AI agents\v22\agents\rules-enforcer.md:
+  100: 2. Draft a minimal, reversible plan with risks/rollback (Rule 2).
+  170: - Output: root cause, minimal fix plan, reversible patch with safeguards (Rule 2)
+  232: Keep a full-functionality, not-minimal, reversible plan with risks and rollback (Rule 2). If context is lost, investigate the entire codebase and correctly recombine all functionality.
+
+C:\Users\root\Desktop\Sutazaiapp\Claude AI agents\v23\agents\rules-enforcer.md:
+  100: 2. Draft a minimal, reversible plan with risks/rollback (Rule 2).
+  170: - Output: root cause, minimal fix plan, reversible patch with safeguards (Rule 2)
+  232: Keep a full-functionality, not-minimal, reversible plan with risks and rollback (Rule 2). If context is lost, investigate the entire codebase and correctly recombine all functionality.
+
+C:\Users\root\Desktop\Sutazaiapp\Claude AI agents\v24\agents\rules-enforcer.md:
+  100: 2. Draft a minimal, reversible plan with risks/rollback (Rule 2).
+  170: - Output: root cause, minimal fix plan, reversible patch with safeguards (Rule 2)
+  232: Keep a full-functionality, not-minimal, reversible plan with risks and rollback (Rule 2). If context is lost, investigate the entire codebase and correctly recombine all functionality.

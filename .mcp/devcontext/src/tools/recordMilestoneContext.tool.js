@@ -362,7 +362,7 @@ async function _assessMilestoneImpact(milestoneId, category, activeContextIds) {
       logMessage("ERROR", `Failed to fetch entity details`, {
         error: fetchErr.message,
       });
-      // Return a minimal assessment
+      // Return a   assessment
       return {
         impactScore: 0.1,
         impactLevel: "unknown",
@@ -562,7 +562,7 @@ async function _assessMilestoneImpact(milestoneId, category, activeContextIds) {
       category,
     });
 
-    // Return a minimal assessment with error info
+    // Return a   assessment with error info
     return {
       impactScore: 0.1,
       impactLevel: "unknown",

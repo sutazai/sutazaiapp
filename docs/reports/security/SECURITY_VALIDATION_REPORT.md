@@ -134,7 +134,7 @@ SECRET_KEY = os.getenv("JWT_SECRET_KEY", "")  # No hardcoded default
 | **A03: Injection** | SQLAlchemy ORM (parameterized queries), input validation, command injection protection | ✅ PROTECTED |
 | **A04: Insecure Design** | Security-by-design architecture, threat modeling, secure defaults | ✅ PROTECTED |
 | **A05: Security Misconfiguration** | Secure headers, no debug in production, proper error handling | ✅ PROTECTED |
-| **A06: Vulnerable Components** | Regular dependency updates, vulnerability scanning, minimal dependencies | ✅ PROTECTED |
+| **A06: Vulnerable Components** | Regular dependency updates, vulnerability scanning,   dependencies | ✅ PROTECTED |
 | **A07: Authentication Failures** | bcrypt hashing, secure session management, rate limiting | ✅ PROTECTED |
 | **A08: Software/Data Integrity** | Code signing ready, integrity checks, secure CI/CD | ✅ PROTECTED |
 | **A09: Security Logging** | Comprehensive logging with Loki, audit trails, monitoring | ✅ PROTECTED |

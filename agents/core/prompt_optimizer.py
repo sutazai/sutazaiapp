@@ -72,7 +72,7 @@ class PromptOptimizer:
         'tinyllama': OptimizationConfig(
             model_type='tinyllama',
             max_tokens=3000,
-            compression_level=0.2,  # Minimal compression
+            compression_level=0.2,  #   compression
             preserve_keywords=['error', 'bug', 'fix', 'security', 'critical', 'architecture', 'design'],
             abbreviations={}  # No abbreviations for complex reasoning
         )

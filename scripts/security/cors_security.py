@@ -118,7 +118,7 @@ def get_secure_cors_config(service_type: str = "api") -> dict:
     Get secure CORS configuration for different service types
     
     Args:
-        service_type: Type of service ("api", "monitoring", "agent", "minimal")
+        service_type: Type of service ("api", "monitoring", "agent", " ")
     """
     if service_type == "monitoring":
         # Monitoring services need limited access
@@ -126,8 +126,8 @@ def get_secure_cors_config(service_type: str = "api") -> dict:
     elif service_type == "agent":
         # Agent services need service mesh access
         return cors_security.get_cors_middleware_config(include_monitoring=True, include_services=True)
-    elif service_type == "minimal":
-        # Minimal services only need core access
+    elif service_type == " ":
+        #   services only need core access
         return {
             "allow_origins": cors_security.CORE_ORIGINS,
             "allow_credentials": True,

@@ -1,6 +1,6 @@
 # SutazAI - ULTRA OPTIMIZED Production Deployment
 # ENTERPRISE GRADE - Optimized for performance and security
-# 100% NON-ROOT containers, minimal resource usage, production ready
+# 100% NON-ROOT containers,  resource usage, production ready
 
 networks:
   sutazai-network:

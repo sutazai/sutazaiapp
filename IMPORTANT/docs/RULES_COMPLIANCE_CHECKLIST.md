@@ -130,7 +130,7 @@ To verify compliance:
 # Check for conceptual terms (should return 0)
 grep -r "automated\|configuration\|encapsulated\|transfer" /opt/sutazaiapp/agents --include="*.py" | wc -l
 
-# Check for commented-out code (should be minimal)
+# Check for commented-out code (should be  )
 grep -r "^#.*def\|^#.*class" /opt/sutazaiapp/agents --include="*.py" | wc -l
 
 # Verify no duplicate versions

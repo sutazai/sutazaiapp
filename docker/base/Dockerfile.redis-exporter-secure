@@ -1,0 +1,6 @@
+FROM oliver006/redis_exporter:latest
+LABEL maintainer="SutazAI Security Team"
+LABEL security.hardening="enabled"
+
+USER 59000:59000
+EXPOSE 9121

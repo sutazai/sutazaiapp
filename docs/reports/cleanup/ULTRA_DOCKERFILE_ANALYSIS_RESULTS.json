@@ -503,8 +503,8 @@
       },
       {
         "files": [
-          "docker/base/Dockerfile.python-agent-minimal",
-          "docker/base/Dockerfile.python-agent-minimal"
+          "docker/base/Dockerfile.python-agent- ",
+          "docker/base/Dockerfile.python-agent- "
         ],
         "count": 2,
         "size": 765
@@ -2392,7 +2392,7 @@
         "size": 735
       },
       {
-        "path": "docker/base/Dockerfile.python-agent-minimal",
+        "path": "docker/base/Dockerfile.python-agent- ",
         "base_image": "python:3.12.8-slim-bookworm",
         "size": 765
       },
@@ -2532,7 +2532,7 @@
         "size": 735
       },
       {
-        "path": "docker/base/Dockerfile.python-agent-minimal",
+        "path": "docker/base/Dockerfile.python-agent- ",
         "base_image": "python:3.12.8-slim-bookworm",
         "size": 765
       },

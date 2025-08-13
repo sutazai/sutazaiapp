@@ -1,4 +1,4 @@
-# SutazAI Python Agent MINIMAL Base Requirements - Python 3.12.8 Compatible
+# SutazAI Python Agent   Base Requirements - Python 3.12.8 Compatible
 # Essential packages only for initial build success
 # Date: August 10, 2025 - CRITICAL FIX for version compatibility
 

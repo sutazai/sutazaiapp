@@ -330,7 +330,7 @@ FROM sutazai-python-agent-master:v2
 # Copy application code
 COPY --chown=appuser:appuser . /app/
 
-# Use base configuration with minimal overrides
+# Use base configuration with   overrides
 USER appuser
 CMD ["python", "-u", "app.py"]
 EOF

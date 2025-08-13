@@ -565,7 +565,7 @@ curl http://localhost:11110/health
 
 ✅ **Security:**
 - No privileged access
-- Minimal volume mounts
+-   volume mounts
 - Security options enabled
 - Pass security scan
 

@@ -126,7 +126,7 @@ cat > "$DEPENDENCY_MAP" << 'EOF'
     "systemd_services": [],
     "docker_references": [
       "docker-compose.yml",
-      "docker-compose.minimal.yml"
+      "docker-compose. .yml"
     ]
   }
 }
@@ -652,13 +652,13 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo "🚨 ULTRA EMERGENCY SCRIPT DEPENDENCY FIX"
 echo "========================================"
 
-# Fix missing critical scripts by creating minimal stubs
-create_minimal_stub() {
+# Fix missing critical scripts by creating   stubs
+create_ _stub() {
     local script_path="$1"
     local description="$2"
     
     if [ ! -f "$PROJECT_ROOT/$script_path" ]; then
-        echo "📝 Creating minimal stub: $script_path"
+        echo "📝 Creating   stub: $script_path"
         
         local script_dir=$(dirname "$PROJECT_ROOT/$script_path")
         mkdir -p "$script_dir"
@@ -667,7 +667,7 @@ create_minimal_stub() {
             cat > "$PROJECT_ROOT/$script_path" << PYTHON_EOF
 #!/usr/bin/env python3
 """
-Minimal stub for $script_path
+  stub for $script_path
 $description
 """
 import sys
@@ -677,11 +677,11 @@ from datetime import datetime
 def main():
     print(f"✅ {description} - Stub executed successfully")
     
-    # Create minimal successful report
+    # Create   successful report
     report = {
         "timestamp": datetime.utcnow().isoformat(),
         "status": "success",
-        "message": "$description - minimal stub",
+        "message": "$description -   stub",
         "type": "compatibility_stub"
     }
     
@@ -694,7 +694,7 @@ PYTHON_EOF
         else
             cat > "$PROJECT_ROOT/$script_path" << BASH_EOF
 #!/bin/bash
-# Minimal stub for $script_path
+#   stub for $script_path
 # $description
 
 echo "✅ $description - Stub executed successfully"
@@ -710,27 +710,27 @@ BASH_EOF
 }
 
 # Create critical missing scripts
-create_minimal_stub "scripts/check_secrets.py" "Security secrets checker"
-create_minimal_stub "scripts/check_naming.py" "Naming conventions checker"
-create_minimal_stub "scripts/check_duplicates.py" "Duplicate code detector"
-create_minimal_stub "scripts/validate_agents.py" "Agent validation checker"  
-create_minimal_stub "scripts/check_requirements.py" "Requirements validator"
-create_minimal_stub "scripts/enforce_claude_md_simple.py" "CLAUDE.md enforcement"
-create_minimal_stub "scripts/coverage_reporter.py" "Coverage reporting tool"
-create_minimal_stub "scripts/export_openapi.py" "OpenAPI documentation exporter"
-create_minimal_stub "scripts/summarize_openapi.py" "OpenAPI summary generator"
+create_ _stub "scripts/check_secrets.py" "Security secrets checker"
+create_ _stub "scripts/check_naming.py" "Naming conventions checker"
+create_ _stub "scripts/check_duplicates.py" "Duplicate code detector"
+create_ _stub "scripts/validate_agents.py" "Agent validation checker"  
+create_ _stub "scripts/check_requirements.py" "Requirements validator"
+create_ _stub "scripts/enforce_claude_md_simple.py" "CLAUDE.md enforcement"
+create_ _stub "scripts/coverage_reporter.py" "Coverage reporting tool"
+create_ _stub "scripts/export_openapi.py" "OpenAPI documentation exporter"
+create_ _stub "scripts/summarize_openapi.py" "OpenAPI summary generator"
 
 # Create testing directory structure if missing
 mkdir -p "$PROJECT_ROOT/scripts/testing"
 mkdir -p "$PROJECT_ROOT/scripts/onboarding"
 
-create_minimal_stub "scripts/testing/test_runner.py" "Test execution runner"
-create_minimal_stub "scripts/onboarding/generate_kickoff_deck.py" "Onboarding deck generator"
+create_ _stub "scripts/testing/test_runner.py" "Test execution runner"
+create_ _stub "scripts/onboarding/generate_kickoff_deck.py" "Onboarding deck generator"
 
 echo ""
 echo "✅ EMERGENCY FIXES APPLIED"
 echo "=========================="
-echo "All critical script dependencies now have minimal stubs"
+echo "All critical script dependencies now have   stubs"
 echo "GitHub Actions workflows should now pass"
 echo "Makefile targets should now execute without errors"
 echo ""
@@ -759,7 +759,7 @@ cat > "$PROJECT_ROOT/ULTRA_SCRIPT_MIGRATION_SUMMARY.md" << 'EOF'
 ## What Was Fixed Immediately ⚡
 
 ### 🚨 Emergency Fixes Applied
-1. **Critical Missing Scripts**: Created minimal stubs for all GitHub Actions dependencies
+1. **Critical Missing Scripts**: Created   stubs for all GitHub Actions dependencies
 2. **Script Directory Structure**: Ensured proper directory hierarchy exists
 3. **Immediate Compatibility**: All workflows and Makefile targets now functional
 

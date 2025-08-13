@@ -223,9 +223,9 @@ curl "http://localhost:10200/api/v1/query?query=up"
 ## Performance Impact
 
 ### Resource Usage
-- **Prometheus**: ~200MB RAM, minimal CPU
-- **Grafana**: ~100MB RAM, minimal CPU
-- **Node Exporter**: ~20MB RAM, minimal CPU
+- **Prometheus**: ~200MB RAM,   CPU
+- **Grafana**: ~100MB RAM,   CPU
+- **Node Exporter**: ~20MB RAM,   CPU
 - **Total Overhead**: <400MB RAM, <5% CPU
 
 ### Network Impact

@@ -7,7 +7,7 @@ pkill -9 ollama || true
 # Clean up temp files
 rm -rf /tmp/ollama* /tmp/runner* 2>/dev/null || true
 
-# Start Ollama with minimal settings
+# Start Ollama with   settings
 export OLLAMA_NUM_PARALLEL=1
 export OLLAMA_KEEP_ALIVE=30s
 export OLLAMA_HOST=0.0.0.0
@@ -22,7 +22,7 @@ OLLAMA_PID=$!
 # Wait for server to be ready
 sleep 5
 
-# Load tinyllama with minimal config
+# Load tinyllama with   config
 curl -X POST http://localhost:11434/api/generate \
   -H "Content-Type: application/json" \
   -d '{

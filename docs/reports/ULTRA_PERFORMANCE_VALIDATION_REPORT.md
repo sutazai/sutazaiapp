@@ -65,7 +65,7 @@ Active Connections: 600
 
 **Critical Issues:**
 - Hit rate is 72.7% below target
-- Minimal memory utilization indicates cache underutilization
+-   memory utilization indicates cache underutilization
 - High miss rate suggests improper cache key strategy
 
 **Immediate Actions Required:**
@@ -190,7 +190,7 @@ Peak CPU Usage: 95.22% (single container spike)
 
 3. **Resource Efficiency**
    - Using only 41% of memory budget
-   - CPU usage minimal at 5%
+   - CPU usage   at 5%
 
 ## OPTIMIZATION RECOMMENDATIONS
 

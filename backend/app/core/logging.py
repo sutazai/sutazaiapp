@@ -17,7 +17,7 @@ except ImportError:
             JsonFormatter = JsonFormatter
         jsonlogger = CompatJsonLogger()
     except ImportError:
-        # Final fallback - create minimal compatible class
+        # Final fallback - create   compatible class
         class JsonFormatterCompat:
             def __init__(self, *args, **kwargs):
                 self.format_string = '%(asctime)s %(name)s %(levelname)s %(message)s'

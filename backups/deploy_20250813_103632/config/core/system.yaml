@@ -1,0 +1,33 @@
+database:
+  neo4j:
+    host: sutazai-neo4j
+    port: 10002
+  postgresql:
+    database: sutazai
+    host: sutazai-postgres
+    port: 10000
+    user: sutazai
+  redis:
+    host: sutazai-redis
+    port: 10001
+monitoring:
+  grafana:
+    host: sutazai-grafana
+    port: 10201
+  prometheus:
+    host: sutazai-prometheus
+    port: 10200
+services:
+  backend:
+    host: 0.0.0.0
+    port: 10010
+  frontend:
+    host: 0.0.0.0
+    port: 10011
+  ollama:
+    host: sutazai-ollama
+    port: 10104
+system:
+  environment: development
+  name: SutazAI
+  version: v76

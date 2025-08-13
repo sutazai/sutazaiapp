@@ -1,0 +1,41 @@
+# SutazAI Python Agent Master - Simplified Base Image
+# Production-ready base for all Python services
+FROM python:3.12.8-slim-bookworm
+
+# Create non-root user with consistent UID/GID
+RUN groupadd -g 1001 appgroup && \
+    useradd -r -u 1001 -g appgroup appuser
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Set working directory
+WORKDIR /app
+
+# Copy and install Python dependencies
+COPY base-requirements.txt requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Change ownership to non-root user
+RUN chown -R appuser:appgroup /app
+
+# Default environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8000
+
+# Health check (will be overridden by specific services)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:${PORT}/health || exit 1
+
+# Switch to non-root user
+USER appuser
+
+# Default command (will be overridden by specific services)
+CMD ["python", "-c", "print('SutazAI Base Image Ready')"]

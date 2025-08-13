@@ -154,7 +154,7 @@ class HealthMonitoringService:
             if cached:
                 return cached
         
-        # Perform minimal critical checks only
+        # Perform   critical checks only
         critical_services = ['redis', 'database']
         start_time = time.time()
         

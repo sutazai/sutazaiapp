@@ -2,7 +2,7 @@
 # Multi-stage optimized builds for production deployments
 # Author: System Reorganization Expert - ULTRA Deduplication Operation
 # Date: August 10, 2025
-# Purpose: Minimal attack surface, maximum security, production-ready base
+# Purpose:   attack surface, maximum security, production-ready base
 
 FROM python:3.12.8-slim-bookworm as builder
 
@@ -32,12 +32,12 @@ COPY base-requirements.txt /tmp/
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
     && pip install --no-cache-dir -r /tmp/base-requirements.txt
 
-# PRODUCTION STAGE - Minimal runtime image
+# PRODUCTION STAGE -   runtime image
 FROM python:3.12.8-slim-bookworm as production
 
 # Install only essential runtime dependencies
 RUN apt-get update && apt-get install -y \
-    # Minimal runtime essentials
+    #   runtime essentials
     curl \
     # SSL certificates for HTTPS
     ca-certificates \
@@ -54,7 +54,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# MAXIMUM SECURITY: Create dedicated production user with minimal privileges
+# MAXIMUM SECURITY: Create dedicated production user with   privileges
 RUN groupadd -r -g 1000 sutazai && \
     useradd -r -g sutazai -u 1000 -s /bin/false -M sutazai && \
     mkdir -p /app /app/data /app/logs && \

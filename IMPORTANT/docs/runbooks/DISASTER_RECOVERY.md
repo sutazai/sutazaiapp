@@ -7,7 +7,7 @@
 
 ## 🎯 Overview
 
-This disaster recovery plan outlines procedures for recovering the Perfect Jarvis system from various disaster scenarios, ensuring business continuity and minimal data loss.
+This disaster recovery plan outlines procedures for recovering the Perfect Jarvis system from various disaster scenarios, ensuring business continuity and   data loss.
 
 ## 📋 Table of Contents
 

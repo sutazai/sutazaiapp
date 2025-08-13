@@ -39,7 +39,7 @@
 /opt/sutazaiapp/scripts/deployment/mcp_teardown.sh
 /opt/sutazaiapp/scripts/deployment/migrate-agents-to-cluster.sh
 /opt/sutazaiapp/scripts/deployment/migrate-to-tiered.sh
-/opt/sutazaiapp/scripts/deployment/migrate_to_minimal.sh
+/opt/sutazaiapp/scripts/deployment/migrate_to_ .sh
 /opt/sutazaiapp/scripts/deployment/ollama-startup.sh
 /opt/sutazaiapp/scripts/deployment/optimize-ollama-performance.sh
 /opt/sutazaiapp/scripts/deployment/phased-system-restart.sh
@@ -54,7 +54,7 @@
 /opt/sutazaiapp/scripts/deployment/setup-jarvis.sh
 /opt/sutazaiapp/scripts/deployment/start-complete-system.sh
 /opt/sutazaiapp/scripts/deployment/start-hygiene-monitor.sh
-/opt/sutazaiapp/scripts/deployment/start-minimal.sh
+/opt/sutazaiapp/scripts/deployment/start- .sh
 /opt/sutazaiapp/scripts/deployment/start-service-mesh.sh
 /opt/sutazaiapp/scripts/deployment/start-with-features.sh
 /opt/sutazaiapp/scripts/deployment/startup_integration.sh

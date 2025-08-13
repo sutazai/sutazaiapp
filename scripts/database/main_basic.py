@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Basic Jarvis AI System - Web Interface Only
-Minimal implementation to get the web interface working
+  implementation to get the web interface working
 """
 
 import asyncio

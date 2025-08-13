@@ -126,16 +126,16 @@ services:
       - sutazai-base-network
 
   # ========================================================================== 
-  # MINIMAL AGENT BASE - Ultra-lightweight for simple services
+  # AGENT BASE - Ultra-lightweight for simple services
   # ==========================================================================
-  python-agent-minimal:
+  python-agent:
     build:
       context: .
-      dockerfile: docker/base/Dockerfile.python-agent-minimal
+      dockerfile: docker/base/Dockerfile.python-agent
       args:
         PYTHON_VERSION: 3.12.8
-    image: sutazai-python-agent-minimal:latest
-    container_name: sutazai-minimal-base-builder
+    image: sutazai-python-agent:latest
+    container_name: sutazai-base-builder
     networks:
       - sutazai-base-network
 

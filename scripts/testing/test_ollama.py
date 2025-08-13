@@ -7,7 +7,7 @@ import json
 import sys
 
 def test_ollama():
-    """Test Ollama with minimal configuration"""
+    """Test Ollama with   configuration"""
     
     # Test 1: Check if Ollama is running
     try:
@@ -20,8 +20,8 @@ def test_ollama():
         print(f"❌ Cannot connect to Ollama: {e}")
         return False
     
-    # Test 2: Try a minimal generation
-    print("\n🔄 Testing generation with minimal settings...")
+    # Test 2: Try a   generation
+    print("\n🔄 Testing generation with   settings...")
     
     payload = {
         "model": "tinyllama",
@@ -31,10 +31,10 @@ def test_ollama():
             "num_predict": 1,  # Generate only 1 token
             "temperature": 0,   # Deterministic
             "top_k": 1,        # Only top choice
-            "top_p": 0.1,      # Minimal sampling
+            "top_p": 0.1,      #   sampling
             "repeat_penalty": 1.0,
             "seed": 42,        # Fixed seed
-            "num_ctx": 128,    # Minimal context
+            "num_ctx": 128,    #   context
             "num_batch": 1,    # Single batch
             "num_thread": 1    # Single thread
         }

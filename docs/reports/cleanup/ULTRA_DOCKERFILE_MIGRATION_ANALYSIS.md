@@ -57,13 +57,13 @@
 - `docker/base/Dockerfile.monitoring-base`: FROM alpine:3.18
 - `docker/services/monitoring/prometheus/Dockerfile`: FROM alpine:3.19
 
-**Analysis**: These require Alpine/Nginx for minimal footprint monitoring services.
+**Analysis**: These require Alpine/Nginx for   footprint monitoring services.
 
 #### 4. SPECIAL PURPOSE SERVICES
 - `skyvern/Dockerfile`: FROM mcr.microsoft.com/playwright/python:v1.46.0-jammy (requires Playwright)
 - `docker/mcp_server/playwright/Dockerfile`: Playwright dependency
 - `docker/base/Dockerfile.golang-base`: FROM golang:1.21-bullseye (Go services)
-- `docker/base/Dockerfile.python-agent-minimal`: FROM python:3.12.8-slim-bookworm (minimal variant)
+- `docker/base/Dockerfile.python-agent- `: FROM python:3.12.8-slim-bookworm (  variant)
 
 ### 🏆 MASTER BASE IMAGES STATUS
 
@@ -102,7 +102,7 @@
 ### 🟡 CANNOT MIGRATE (17 services) - Specialized Requirements
 **Database Services (7)**: Require vendor-specific images (PostgreSQL, Redis, Neo4j, etc.)
 **GPU Services (4)**: Require CUDA/GPU base images  
-**Monitoring Services (5)**: Require Alpine/Nginx for minimal footprint
+**Monitoring Services (5)**: Require Alpine/Nginx for   footprint
 **Special Purpose (1)**: Playwright browser automation
 
 ### 🟢 CAN MIGRATE (7 services) - Low Priority
@@ -117,12 +117,12 @@
 - No service disruption from remaining migrations
 - System health: 95/100 (Production Ready)
 
-### ✅ SECURITY IMPACT: MINIMAL  
+### ✅ SECURITY IMPACT:    
 - Master base images are security-hardened (89% non-root containers)
 - Remaining services use official vendor images (secure by design)
 - No security vulnerabilities from unmigrated services
 
-### ✅ MAINTENANCE IMPACT: MINIMAL
+### ✅ MAINTENANCE IMPACT:  
 - 85.3% deduplication already achieved
 - Remaining 24 services are intentionally specialized
 - Master base maintenance covers 139 services efficiently
@@ -173,6 +173,6 @@ sutazai-nodejs-agent-master:latest (7 services)
 - **Frontend UI**: ✅ Using master base, 95% functionality complete  
 - **AI Services**: ✅ All using master base, full orchestration operational
 - **Databases**: ✅ Using vendor images (PostgreSQL, Redis, Neo4j, etc.)
-- **Monitoring**: ✅ Using Alpine/vendor images for minimal footprint
+- **Monitoring**: ✅ Using Alpine/vendor images for   footprint
 
 **SYSTEM STATUS: ALL OPERATIONAL ✅**

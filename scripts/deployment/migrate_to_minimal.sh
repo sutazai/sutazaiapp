@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Migration Script: From 60-service chaos to 8-service sanity
-# This script safely migrates the SutazAI system to minimal architecture
+# This script safely migrates the SutazAI system to   architecture
 
 set -e  # Exit on error
 
@@ -189,18 +189,18 @@ EOF
     log_success "Environment file exists"
 }
 
-# Start minimal services
-start_minimal() {
-    log_info "Starting minimal services..."
+# Start   services
+start_ () {
+    log_info "Starting   services..."
     
     cd "${PROJECT_ROOT}"
     
-    # Use the minimal compose file
-    if [[ -f "docker-compose.minimal.yml" ]]; then
-        docker-compose -f docker-compose.minimal.yml up -d
-        log_success "Started minimal services"
+    # Use the   compose file
+    if [[ -f "docker-compose. .yml" ]]; then
+        docker-compose -f docker-compose. .yml up -d
+        log_success "Started   services"
     else
-        log_error "docker-compose.minimal.yml not found!"
+        log_error "docker-compose. .yml not found!"
         exit 1
     fi
 }
@@ -211,11 +211,11 @@ verify_services() {
     
     sleep 10  # Give services time to start
     
-    # Check each minimal service
+    # Check each   service
     SERVICES=("postgres" "redis" "backend" "frontend" "ollama" "qdrant" "prometheus" "grafana")
     
     for service in "${SERVICES[@]}"; do
-        if docker ps | grep -q "sutazai-${service}-minimal"; then
+        if docker ps | grep -q "sutazai-${service}- "; then
             log_success "${service} is running"
         else
             log_warning "${service} is not running"
@@ -235,7 +235,7 @@ show_summary() {
     echo "=========================================="
     echo ""
     
-    log_success "Migration to minimal architecture complete!"
+    log_success "Migration to   architecture complete!"
     echo ""
     echo "Services running: 8 (down from 60)"
     echo "Expected resource usage: <10% CPU, <2GB RAM (idle)"
@@ -251,7 +251,7 @@ show_summary() {
     echo "Backup location: ${BACKUP_DIR}"
     echo ""
     echo "To revert to old setup:"
-    echo "  docker-compose -f docker-compose.minimal.yml down"
+    echo "  docker-compose -f docker-compose. .yml down"
     echo "  cp ${BACKUP_DIR}/docker-compose.yml.backup ./docker-compose.yml"
     echo "  docker-compose up -d"
     echo ""
@@ -262,7 +262,7 @@ show_summary() {
 main() {
     echo ""
     echo "=========================================="
-    echo "  SutazAI Migration to Minimal Architecture"
+    echo "  SutazAI Migration to   Architecture"
     echo "=========================================="
     echo ""
     
@@ -298,8 +298,8 @@ main() {
     # Ensure network exists
     ensure_network
     
-    # Start minimal services
-    start_minimal
+    # Start   services
+    start_ 
     
     # Verify services
     verify_services

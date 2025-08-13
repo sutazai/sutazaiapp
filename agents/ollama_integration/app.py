@@ -453,7 +453,7 @@ async def generate(request: OllamaGenerateRequest):
         # Add queue latency simulation (time waiting for resources)
         queue_start = time.time()
         # In real scenario, this would be actual queue wait time
-        await asyncio.sleep(0.001)  # Minimal delay
+        await asyncio.sleep(0.001)  #   delay
         metrics.record_queue_latency(time.time() - queue_start)
         
         result = await agent.generate(

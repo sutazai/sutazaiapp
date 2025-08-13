@@ -18,8 +18,8 @@
 
 **Files Analyzed:**
 - `/opt/sutazaiapp/backend/app/main.py` (687 lines) - **PRIMARY PRODUCTION VERSION**
-- `/opt/sutazaiapp/backend/app/main_minimal.py` (251 lines) - **MINIMAL FALLBACK**
-- `/opt/sutazaiapp/backend/app/main_original.py` (291 lines) - **ENHANCED MINIMAL**
+- `/opt/sutazaiapp/backend/app/main_ .py` (251 lines) - **  FALLBACK**
+- `/opt/sutazaiapp/backend/app/main_original.py` (291 lines) - **ENHANCED  **
 
 #### LINE-BY-LINE COMPARISON:
 
@@ -59,17 +59,17 @@ async def health_check(): ...
   - Cache management with tag invalidation (lines 546-600)
   - **AUTHENTICATION SYSTEM** - FAIL-SAFE JWT (lines 176-196)
   - Advanced error handling with performance monitoring
-  - **87% more code** than minimal versions
+  - **87% more code** than   versions
 
-#### main_minimal.py (MINIMAL - 251 lines):
+#### main_ .py (  - 251 lines):
 - **EXCLUSIVE FEATURES:**
   - Simple CORS without security validation
   - Basic health check without performance data
-  - Minimal authentication attempt (lines 41-50)
+  -   authentication attempt (lines 41-50)
   - Fallback Ollama integration with echo response (lines 202-233)
   - **CRITICAL:** Only file with basic chat fallback logic
 
-#### main_original.py (ENHANCED MINIMAL - 291 lines):
+#### main_original.py (ENHANCED   - 291 lines):
 - **EXCLUSIVE FEATURES:**
   - **REAL AGENT HEALTH CHECKS** with HTTP client (lines 126-134)
   - **AGENT SERVICE CONFIGURATION** mapping (lines 108-124)
@@ -136,7 +136,7 @@ async def health_check(): ...
   - Voice processing with audio conversion (lines 271-311)
   - Consul service discovery (lines 159-174)
   - Optional dependency management (lines 15-52)
-  - Full MinimalJarvis fallback class (lines 102-136)
+  - Full  Jarvis fallback class (lines 102-136)
   - Signal handling (lines 416-419)
   - Plugin management system (lines 384-411)
 
@@ -149,7 +149,7 @@ async def health_check(): ...
 #### main_simple.py (SIMPLE - 322 lines):
 - **UNIQUE FEATURES:**
   - Prometheus metrics integration (lines 20-33)
-  - Minimal HTML interface (lines 106-118)
+  -   HTML interface (lines 106-118)
   - Metrics observability (lines 159-162)
 
 **DUPLICATION SEVERITY:** 85% code overlap with functional divergence
@@ -202,7 +202,7 @@ async def health_check(): ...
 # PROPOSED MERGED STRUCTURE
 class BackendConfiguration:
     FULL_MODE = "full"      # Current main.py functionality  
-    MINIMAL_MODE = "minimal" # Current main_minimal.py
+     _MODE = " " # Current main_ .py
     AGENT_MODE = "agent"     # Current main_original.py
     
     @staticmethod
@@ -238,7 +238,7 @@ class JarvisService:
 ## ⚡ DEPENDENCIES AND CROSS-REFERENCES
 
 **CONFIRMED REFERENCES:**
-- `frontend/test_runtime_issues.py` → References main_minimal
+- `frontend/test_runtime_issues.py` → References main_ 
 - `frontend/deployment_strategy.py` → References both app versions
 - `frontend/test_optimizations.py` → References app_optimized
 - `frontend/test_optimization_debug.py` → References optimization features

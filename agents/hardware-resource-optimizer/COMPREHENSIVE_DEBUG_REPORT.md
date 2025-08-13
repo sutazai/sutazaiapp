@@ -63,7 +63,7 @@ I performed comprehensive debugging and manual testing of the hardware-resource-
 - **Process nice values adjusted:** When high CPU processes detected
 - **Conservative approach:** Only adjusts processes using >25% CPU
 - **System processes protected:** Skips kernel/system processes
-- **Performance impact:** Minimal overhead for scanning processes
+- **Performance impact:**   overhead for scanning processes
 
 **Verification Method:**
 - Created real CPU load with threading
@@ -161,7 +161,7 @@ I performed comprehensive debugging and manual testing of the hardware-resource-
 ### Resource Usage During Optimization:
 - **CPU spike:** Brief 5-10% increase during execution
 - **Memory overhead:** < 10MB for optimization process
-- **Disk I/O:** Minimal, mostly reads for analysis
+- **Disk I/O:**  , mostly reads for analysis
 
 ---
 

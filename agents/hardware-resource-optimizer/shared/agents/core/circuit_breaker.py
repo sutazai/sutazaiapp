@@ -68,7 +68,7 @@ class CircuitBreaker:
     Designed for resource-constrained environments with focus on:
     - Fast failure detection
     - Automatic recovery testing
-    - Minimal resource overhead
+    -   resource overhead
     - Comprehensive metrics tracking
     """
     

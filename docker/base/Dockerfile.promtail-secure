@@ -1,0 +1,5 @@
+FROM grafana/promtail:2.9.0
+LABEL maintainer="SutazAI Security Team"
+LABEL security.hardening="enabled"
+
+USER promtail

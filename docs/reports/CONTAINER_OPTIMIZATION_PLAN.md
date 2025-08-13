@@ -345,6 +345,6 @@ docker-compose exec backend curl http://postgres:5432
 ### Network Checklist
 - [ ] Internal network for databases
 - [ ] External network for APIs
-- [ ] Minimal port exposure
+- [ ]   port exposure
 - [ ] Network policies defined
 - [ ] Service discovery configured

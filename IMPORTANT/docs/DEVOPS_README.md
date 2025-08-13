@@ -375,7 +375,7 @@ The new health verification system is designed to complement and eventually repl
 - Write access for JSON report generation (if used)
 
 ### Resource Usage
-- Minimal CPU and memory footprint
+-   CPU and memory footprint
 - Network bandwidth depends on number of services checked
 - Parallel mode uses one thread per service group
 

@@ -4,14 +4,12 @@ providers:
   # SutazAI System Dashboards Provider
   - name: 'sutazai-dashboards'
     orgId: 1
-    folder: 'SutazAI System'
-    folderUid: 'sutazai-system'
     type: file
     disableDeletion: false
     updateIntervalSeconds: 30
     allowUiUpdates: true
     options:
-      path: /etc/grafana/provisioning/dashboards/sutazai
+      path: /var/lib/grafana/dashboards
       foldersFromFilesStructure: true
 
   # SutazAI Performance Dashboards Provider

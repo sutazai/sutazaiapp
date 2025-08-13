@@ -100,7 +100,7 @@ GENERIC (17 files)
     - docker/ollama-secure/Dockerfile
     - docker/services/infrastructure/ollama/Dockerfile
   Base: python:3.12.8-slim-bookworm (6 files)
-    - docker/base/Dockerfile.python-agent-minimal
+    - docker/base/Dockerfile.python-agent- 
     - docker/base/Dockerfile.python-agent-master
     - docker/templates/Dockerfile.production-multistage-base
     ... and 3 more

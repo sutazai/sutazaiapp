@@ -1073,9 +1073,9 @@
       "size": 1
     },
     {
-      "master": "/opt/sutazaiapp/scripts/deployment/migrate_to_minimal.sh",
+      "master": "/opt/sutazaiapp/scripts/deployment/migrate_to_ .sh",
       "duplicates": [
-        "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/migrate_to_minimal.sh"
+        "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/migrate_to_ .sh"
       ],
       "hash": "60afbe7559ea328b114a0ac5ad76d362",
       "size": 1
@@ -1130,9 +1130,9 @@
       "size": 1
     },
     {
-      "master": "/opt/sutazaiapp/scripts/deployment/start-minimal.sh",
+      "master": "/opt/sutazaiapp/scripts/deployment/start- .sh",
       "duplicates": [
-        "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/start-minimal.sh"
+        "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/start- .sh"
       ],
       "hash": "e58e1196feffcf76bb19ab7116996fa2",
       "size": 1
@@ -7333,7 +7333,7 @@
     {
       "files": [
         {
-          "path": "/opt/sutazaiapp/scripts/deployment/migrate_to_minimal.sh",
+          "path": "/opt/sutazaiapp/scripts/deployment/migrate_to_ .sh",
           "functionalities": [
             "deployment",
             "health_check",
@@ -7347,7 +7347,7 @@
           "size": 8008
         },
         {
-          "path": "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/migrate_to_minimal.sh",
+          "path": "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/migrate_to_ .sh",
           "functionalities": [
             "deployment",
             "health_check",
@@ -7561,7 +7561,7 @@
     {
       "files": [
         {
-          "path": "/opt/sutazaiapp/scripts/deployment/start-minimal.sh",
+          "path": "/opt/sutazaiapp/scripts/deployment/start- .sh",
           "functionalities": [
             "deployment",
             "health_check",
@@ -7573,7 +7573,7 @@
           "size": 1385
         },
         {
-          "path": "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/start-minimal.sh",
+          "path": "/opt/sutazaiapp/archive/scripts-consolidation-20250811_012422/scripts_original/deployment/start- .sh",
           "functionalities": [
             "deployment",
             "health_check",

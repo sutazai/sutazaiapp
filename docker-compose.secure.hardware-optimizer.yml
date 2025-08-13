@@ -60,7 +60,7 @@ services:
     - 11110:8080
     restart: unless-stopped
     volumes:
-      # SECURE VOLUME MOUNTS - Read-only and minimal access
+      # SECURE VOLUME MOUNTS - Read-only and  access
       - ./agents/core:/app/agents/core:ro
       - ./data:/app/data:rw,noexec          # Data access without execution
       - ./configs:/app/configs:ro           # Read-only configs

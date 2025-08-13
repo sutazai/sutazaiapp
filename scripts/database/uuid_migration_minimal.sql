@@ -1,5 +1,5 @@
 -- =====================================================================
--- MINIMAL SAFE UUID MIGRATION: INTEGER to UUID Primary Keys
+--   SAFE UUID MIGRATION: INTEGER to UUID Primary Keys
 -- =====================================================================
 -- Author: Claude Code (Ultra Database Migration Specialist) 
 -- Date: 2025-08-10
@@ -12,7 +12,7 @@ BEGIN;
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-DO $$ BEGIN RAISE NOTICE 'Starting minimal UUID migration at %', NOW(); END $$;
+DO $$ BEGIN RAISE NOTICE 'Starting   UUID migration at %', NOW(); END $$;
 
 -- =====================================================================
 -- BACKUP AND MIGRATE: USERS TABLE

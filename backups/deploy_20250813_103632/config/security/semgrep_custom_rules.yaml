@@ -1,0 +1,339 @@
+rules:
+  # Authentication & Authorization Security Rules
+  - id: sutazai-hardcoded-credentials
+    pattern-either:
+      - pattern: |
+          if $USERNAME == "admin" and $PASSWORD == "password":
+              ...
+      - pattern: |
+          username == "admin" and password == "password"
+      - pattern: |
+          $AUTH = {"username": "admin", "password": "..."}
+    message: "Hardcoded admin credentials detected in authentication logic"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: authentication
+      cwe: "CWE-798: Use of Hard-coded Credentials"
+      owasp: "A07: Identification and Authentication Failures"
+      references:
+        - "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+
+  - id: sutazai-jwt-weak-secret
+    pattern-either:
+      - pattern: |
+          $SECRET = "..."
+      - pattern: |
+          SECRET_KEY = "..."
+    pattern-where: |
+      $SECRET && len($SECRET) < 32
+    message: "JWT secret key is too weak (less than 32 characters)"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: cryptography
+      cwe: "CWE-326: Inadequate Encryption Strength"
+
+  - id: sutazai-mock-token-validation
+    pattern: |
+      if $TOKEN == "valid_token":
+          return ...
+    message: "Mock token validation allows authentication bypass"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: authentication
+      cwe: "CWE-287: Improper Authentication"
+
+  # Agent Communication Security Rules
+  - id: sutazai-unencrypted-agent-communication
+    pattern-either:
+      - pattern: |
+          redis.from_url("redis://...")
+      - pattern: |
+          self.redis_client = redis.from_url($URL)
+    pattern-where: |
+      not $URL.startswith("rediss://")
+    message: "Unencrypted Redis connection for agent communication"
+    severity: WARNING
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: cryptography
+      cwe: "CWE-319: Cleartext Transmission of Sensitive Information"
+
+  - id: sutazai-unsafe-task-execution
+    pattern: |
+      def execute_task(self, $AGENT_ID: str, $TASK: Dict[str, Any]):
+          ...
+          $RESULT = $AGENT.execute($TASK)
+    message: "Unsafe agent task execution without input validation"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: input-validation
+      cwe: "CWE-20: Improper Input Validation"
+
+  # Docker Security Rules
+  - id: sutazai-docker-socket-mount
+    pattern: |
+      /var/run/docker.sock:/var/run/docker.sock
+    message: "Docker socket mounted in container - potential privilege escalation"
+    severity: ERROR
+    languages: [yaml]
+    paths:
+      include:
+        - "docker-compose*.yml"
+        - "*.dockerfile"
+        - "Dockerfile*"
+    metadata:
+      category: security
+      subcategory: container-security
+      cwe: "CWE-250: Execution with Unnecessary Privileges"
+
+  - id: sutazai-exposed-database-ports
+    pattern-either:
+      - pattern: |
+          ports:
+            - "5432:5432"
+      - pattern: |
+          ports:
+            - "6379:6379"
+      - pattern: |
+          ports:
+            - "7687:7687"
+    message: "Database ports exposed to host network"
+    severity: WARNING
+    languages: [yaml]
+    paths:
+      include:
+        - "docker-compose*.yml"
+    metadata:
+      category: security
+      subcategory: network-security
+      cwe: "CWE-200: Information Exposure"
+
+  # Network Security Rules
+  - id: sutazai-cors-wildcard
+    pattern: |
+      allow_origins=["*"]
+    message: "CORS configured with wildcard origin - potential security risk"
+    severity: WARNING
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: network-security
+      cwe: "CWE-346: Origin Validation Error"
+
+  - id: sutazai-debug-mode-enabled
+    pattern-either:
+      - pattern: |
+          DEBUG = True
+      - pattern: |
+          debug=True
+      - pattern: |
+          app.debug = True
+    message: "Debug mode enabled in production code"
+    severity: WARNING
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: configuration
+      cwe: "CWE-489: Active Debug Code"
+
+  # Input Validation Rules
+  - id: sutazai-unsanitized-user-input
+    pattern: |
+      {"role": "user", "content": $USER_INPUT}
+    pattern-where: |
+      not sanitize in $USER_INPUT
+    message: "User input passed to AI model without sanitization"
+    severity: WARNING
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: input-validation
+      cwe: "CWE-20: Improper Input Validation"
+
+  - id: sutazai-sql-injection-risk
+    pattern-either:
+      - pattern: |
+          $QUERY = "SELECT * FROM " + $TABLE + " WHERE " + $CONDITION
+      - pattern: |
+          $QUERY = f"SELECT * FROM {$TABLE} WHERE {$CONDITION}"
+      - pattern: |
+          cursor.execute($QUERY % $VALUES)
+    message: "Potential SQL injection vulnerability"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: injection
+      cwe: "CWE-89: SQL Injection"
+
+  # Secret Management Rules
+  - id: sutazai-hardcoded-secrets
+    pattern-either:
+      - pattern: |
+          $API_KEY = "sk-..."
+      - pattern: |
+          $TOKEN = "ghp_..."
+      - pattern: |
+          $PASSWORD = "..."
+      - pattern: |
+          SECRET_KEY = "..."
+    pattern-where: |
+      len($API_KEY or $TOKEN or $PASSWORD or $SECRET_KEY) > 10
+    message: "Potential hardcoded secret or API key"
+    severity: ERROR
+    languages: [python, yaml, json]
+    metadata:
+      category: security
+      subcategory: secrets
+      cwe: "CWE-798: Use of Hard-coded Credentials"
+
+  # AI/ML Security Rules
+  - id: sutazai-model-path-traversal
+    pattern-either:
+      - pattern: |
+          open($MODEL_PATH, ...)
+      - pattern: |
+          torch.load($MODEL_PATH)
+      - pattern: |
+          pickle.load($MODEL_PATH)
+    pattern-where: |
+      ".." in $MODEL_PATH
+    message: "Potential path traversal in model loading"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: path-traversal
+      cwe: "CWE-22: Path Traversal"
+
+  - id: sutazai-unsafe-pickle-load
+    pattern: |
+      pickle.load($FILE)
+    message: "Unsafe pickle.load() can execute arbitrary code"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: deserialization
+      cwe: "CWE-502: Deserialization of Untrusted Data"
+
+  # Logging & Information Disclosure Rules
+  - id: sutazai-sensitive-info-logging
+    pattern-either:
+      - pattern: |
+          logger.info(f"Password: {$PASSWORD}")
+      - pattern: |
+          print(f"Token: {$TOKEN}")
+      - pattern: |
+          logging.debug(f"Secret: {$SECRET}")
+    message: "Sensitive information logged in plaintext"
+    severity: WARNING
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: information-disclosure
+      cwe: "CWE-532: Information Exposure Through Log Files"
+
+  # Container Security Rules (Advanced)
+  - id: sutazai-privileged-container
+    pattern: |
+      privileged: true
+    message: "Container running in privileged mode - security risk"
+    severity: ERROR
+    languages: [yaml]
+    paths:
+      include:
+        - "docker-compose*.yml"
+    metadata:
+      category: security
+      subcategory: container-security
+      cwe: "CWE-250: Execution with Unnecessary Privileges"
+
+  - id: sutazai-root-user-container
+    pattern-either:
+      - pattern: |
+          USER root
+      - pattern: |
+          user: "0"
+      - pattern: |
+          user: "root"
+    message: "Container running as root user"
+    severity: WARNING
+    languages: [dockerfile, yaml]
+    metadata:
+      category: security
+      subcategory: container-security
+      cwe: "CWE-250: Execution with Unnecessary Privileges"
+
+  # Agent-Specific Security Rules
+  - id: sutazai-agent-command-injection
+    pattern: |
+      subprocess.$METHOD($COMMAND, shell=True)
+    pattern-where: |
+      $COMMAND contains user input
+    message: "Potential command injection in agent execution"
+    severity: ERROR
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: injection
+      cwe: "CWE-78: OS Command Injection"
+
+  - id: sutazai-agent-file-permission
+    pattern-either:
+      - pattern: |
+          os.chmod($PATH, 0o777)
+      - pattern: |
+          os.chmod($PATH, 0o666)
+      - pattern: |
+          chmod 777 $PATH
+    message: "Overly permissive file permissions"
+    severity: WARNING
+    languages: [python, bash]
+    metadata:
+      category: security
+      subcategory: permissions
+      cwe: "CWE-276: Incorrect Default Permissions"
+
+  # Network Security (Advanced)
+  - id: sutazai-unencrypted-http
+    pattern-either:
+      - pattern: |
+          $URL = "http://..."
+      - pattern: |
+          requests.get("http://...")
+      - pattern: |
+          httpx.get("http://...")
+    pattern-where: |
+      not $URL.startswith("http://localhost") and not $URL.startswith("http://127.0.0.1")
+    message: "Unencrypted HTTP connection to external service"
+    severity: WARNING
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: cryptography
+      cwe: "CWE-319: Cleartext Transmission of Sensitive Information"
+
+  # Error Handling Rules
+  - id: sutazai-broad-exception-handling
+    pattern: |
+      try:
+          ...
+      except Exception:
+          pass
+    message: "Broad exception handling may hide security issues"
+    severity: INFO
+    languages: [python]
+    metadata:
+      category: security
+      subcategory: error-handling
+      cwe: "CWE-248: Uncaught Exception"

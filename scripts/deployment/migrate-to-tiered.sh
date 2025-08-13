@@ -245,7 +245,7 @@ $(docker ps -a --format '{{.Names}}' | grep -E 'jarvis|agent|ai-metrics' | sed '
 - Frontend: Memory reduced to 512MB
 
 ## Recommended Next Steps
-1. Test minimal tier: ./scripts/deploy-tier.sh minimal up
+1. Test   tier: ./scripts/deploy-tier.sh   up
 2. Validate core functionality
 3. If stable, proceed to standard tier: ./scripts/deploy-tier.sh standard up
 4. Monitor resource usage and adjust as needed
@@ -291,8 +291,8 @@ perform_migration() {
     create_migration_report
     
     # Step 7: Verify tier configuration files exist
-    if [ ! -f "docker-compose.minimal.yml" ]; then
-        print_error "docker-compose.minimal.yml not found. Cannot proceed with migration."
+    if [ ! -f "docker-compose. .yml" ]; then
+        print_error "docker-compose. .yml not found. Cannot proceed with migration."
         print_info "Please ensure all tier configuration files are present."
         exit 1
     fi
@@ -301,7 +301,7 @@ perform_migration() {
     echo ""
     print_info "Next steps:"
     echo "  1. Review the migration report"
-    echo "  2. Deploy minimal tier: ./scripts/deploy-tier.sh minimal up"
+    echo "  2. Deploy   tier: ./scripts/deploy-tier.sh   up"
     echo "  3. Test core functionality"
     echo "  4. Gradually add services with standard/full tiers as needed"
     echo ""
@@ -315,7 +315,7 @@ show_status() {
     
     # Check which tier files exist
     echo "Tier Configuration Files:"
-    [ -f "docker-compose.minimal.yml" ] && echo "  ✓ Minimal tier ready" || echo "  ✗ Minimal tier missing"
+    [ -f "docker-compose. .yml" ] && echo "  ✓   tier ready" || echo "  ✗   tier missing"
     [ -f "docker-compose.standard.yml" ] && echo "  ✓ Standard tier ready" || echo "  ✗ Standard tier missing"
     [ -f "docker-compose.full.yml" ] && echo "  ✓ Full tier ready" || echo "  ✗ Full tier missing"
     echo ""

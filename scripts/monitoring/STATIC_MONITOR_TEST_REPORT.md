@@ -143,7 +143,7 @@ The `static_monitor.py` has undergone comprehensive testing across all major fun
 - **Monitor Startup Time**: < 1 second
 - **System Stats Collection**: ~100ms
 - **Agent Health Checks**: 2-5 seconds (configurable timeout)
-- **Memory Usage**: Minimal footprint
+- **Memory Usage**:   footprint
 - **CPU Impact**: Negligible during normal operation
 
 ## Special Features Validated

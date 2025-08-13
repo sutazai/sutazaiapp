@@ -1,0 +1,28 @@
+agents:
+  ai_orchestrator: 8589
+  hardware_optimizer: 11110
+  jarvis_automation: 11102
+  jarvis_hardware: 11104
+  ollama_integration: 8090
+  resource_arbitration: 8588
+  task_assignment: 8551
+core_services:
+  backend: 10010
+  frontend: 10011
+  neo4j: 10002
+  neo4j_https: 10003
+  postgresql: 10000
+  rabbitmq: 10007
+  rabbitmq_management: 10008
+  redis: 10001
+monitoring:
+  alertmanager: 10203
+  grafana: 10201
+  loki: 10202
+  prometheus: 10200
+vector_databases:
+  chromadb: 10100
+  faiss: 10103
+  ollama: 10104
+  qdrant: 10101
+  qdrant_grpc: 10102

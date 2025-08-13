@@ -1,9 +1,9 @@
-# SutazAI Alpine Ultra-Minimal Requirements
+# SutazAI Alpine Ultra-  Requirements
 # Edge computing optimized dependencies
 # Target: Maximum size reduction
 # Date: August 10, 2025
 
-# Core web framework (minimal)
+# Core web framework ( )
 fastapi>=0.104.1,<1.0.0
 uvicorn>=0.24.0,<1.0.0
 
@@ -14,7 +14,7 @@ httpx>=0.25.0,<1.0.0
 python-dotenv>=1.0.0,<2.0.0
 pyyaml>=6.0.0,<7.0.0
 
-# Monitoring (minimal)
+# Monitoring ( )
 prometheus-client>=0.19.0,<1.0.0
 
 # Database connectivity (core only)

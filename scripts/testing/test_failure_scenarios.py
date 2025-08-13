@@ -373,8 +373,8 @@ def safe_operation():
             return result
         except Exception as e:
             print(f"FALLBACK_FAILED: {e}")
-            print("GRACEFUL_DEGRADATION: Using minimal functionality")
-            return "Minimal result"
+            print("GRACEFUL_DEGRADATION: Using   functionality")
+            return "  result"
 
 result = safe_operation()
 print(f"FINAL_RESULT: {result}")

@@ -439,7 +439,7 @@ tail -f /var/log/migration/*.log
 
 This migration will transform our Docker infrastructure from chaos to order:
 - **Before:** 174 unique Dockerfiles with 80% duplication
-- **After:** 2 master bases + minimal service-specific layers
+- **After:** 2 master bases +   service-specific layers
 - **Impact:** 70% reduction in maintenance overhead
 
 The key to success is PROGRESSIVE migration with CONTINUOUS validation.

@@ -30,7 +30,7 @@ CONTAINERS=(
 )
 
 # Create fixed app.py that doesn't require external dependencies for basic operation
-cat > "$(mktemp /tmp/minimal_app.py.XXXXXX)" << 'EOF'
+cat > "$(mktemp /tmp/ _app.py.XXXXXX)" << 'EOF'
 #!/usr/bin/env python3
 import json
 import time
@@ -117,12 +117,12 @@ for container in "${CONTAINERS[@]}"; do
     status=$(docker inspect -f '{{.State.Status}}' "$container" 2>/dev/null || echo "unknown")
     echo "  Current status: $status"
     
-    # Copy minimal app to container
-    echo "  Injecting minimal app..."
-    docker cp /tmp/minimal_app.py "$container:/minimal_app.py"
+    # Copy   app to container
+    echo "  Injecting   app..."
+    docker cp /tmp/ _app.py "$container:/ _app.py"
     
     # Execute fix inside container
-    echo "  Installing dependencies and switching to minimal app..."
+    echo "  Installing dependencies and switching to   app..."
     docker exec "$container" sh -c '
         # Try to install packages (non-critical if it fails)
         apk add --no-cache gcc musl-dev linux-headers python3-dev 2>/dev/null || true
@@ -131,9 +131,9 @@ for container in "${CONTAINERS[@]}"; do
         # Kill any existing Python process
         pkill -f "python" || true
         
-        # Start minimal app
-        nohup python /minimal_app.py > /app.log 2>&1 &
-        echo "Minimal app started with PID: $!"
+        # Start   app
+        nohup python / _app.py > /app.log 2>&1 &
+        echo "  app started with PID: $!"
     ' || {
         echo "  ⚠ Failed to execute fix, trying restart..."
         docker restart "$container"
@@ -143,7 +143,7 @@ for container in "${CONTAINERS[@]}"; do
 done
 
 # Cleanup
-rm -f /tmp/minimal_app.py
+rm -f /tmp/ _app.py
 
 echo ""
 echo "=== Waiting 10 seconds for apps to stabilize ==="
@@ -171,4 +171,4 @@ done
 
 echo ""
 echo "=== Fix Complete ==="
-echo "Note: This is a minimal fix. For production use, properly rebuild containers with Dockerfiles."
+echo "Note: This is a   fix. For production use, properly rebuild containers with Dockerfiles."

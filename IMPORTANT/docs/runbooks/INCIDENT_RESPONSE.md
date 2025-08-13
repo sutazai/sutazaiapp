@@ -626,7 +626,7 @@ Brief summary of incident impact and resolution.
 ## What Went Well
 - Quick detection and response
 - Effective communication
-- Minimal data loss
+-   data loss
 
 ## What Could Be Improved
 - Detection could be faster

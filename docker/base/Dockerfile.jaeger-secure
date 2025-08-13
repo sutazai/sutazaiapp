@@ -1,0 +1,6 @@
+FROM jaegertracing/all-in-one:latest
+LABEL maintainer="SutazAI Security Team"
+LABEL security.hardening="enabled"
+
+USER 10001:10001
+EXPOSE 16686 14268 14250 9411 4317 4318

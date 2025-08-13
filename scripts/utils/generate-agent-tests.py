@@ -485,7 +485,7 @@ def main():
     
     agents = registry_data.get("agents", {})
     if not agents:
-        print("No agents found in registry, using minimal test configuration")
+        print("No agents found in registry, using   test configuration")
         agents = {
             "ai-system-architect": {"capabilities": ["system_design"]},
             "ai-qa-team-lead": {"capabilities": ["testing", "quality_assurance"]},

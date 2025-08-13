@@ -35,7 +35,7 @@ This document provides a comprehensive analysis of the SutazAI technology stack 
 #### Primary UI Framework
 | Technology | Version | Status | Purpose | Rationale |
 |-----------|---------|---------|---------|-----------|
-| **Streamlit** | 1.40.2 | ✅ Operational | Web-based user interface | Rapid prototyping, Python-native, minimal frontend complexity |
+| **Streamlit** | 1.40.2 | ✅ Operational | Web-based user interface | Rapid prototyping, Python-native,   frontend complexity |
 
 **Configuration**: Port 10011, auto-reload enabled
 **Performance**: Single-user optimized, 2-5 second cold start
@@ -53,7 +53,7 @@ plotly==5.24.1                # Interactive visualizations
 pandas==2.2.3                 # Data manipulation for UI
 ```
 
-**Integration Status**: All libraries installed but minimal usage in current UI
+**Integration Status**: All libraries installed but   usage in current UI
 
 ### Backend/API Technologies
 
@@ -134,7 +134,7 @@ tiktoken==0.8.0              # OpenAI tokenizer
 langchain==0.3.11            # LLM orchestration framework
 ```
 
-**Usage Status**: Libraries installed but minimal integration with agents
+**Usage Status**: Libraries installed but   integration with agents
 **GPU Support**: CPU-only inference currently
 
 ### Data Persistence Layer
@@ -193,7 +193,7 @@ langchain==0.3.11            # LLM orchestration framework
 | Technology | Version | Port | Status | Purpose | Configuration Status |
 |-----------|---------|------|---------|---------|---------------------|
 | **Kong Gateway** | 3.5 | 10005/8001 | ✅ Running | API gateway | No routes configured |
-| **Consul** | 1.17 | 10006 | ✅ Running | Service discovery | Single node, minimal usage |
+| **Consul** | 1.17 | 10006 | ✅ Running | Service discovery | Single node,   usage |
 | **RabbitMQ** | 3.12 | 10007/10008 | ✅ Running | Message queue | Not actively used |
 
 **Reality**: Infrastructure is running but not integrated with application services
@@ -230,7 +230,7 @@ langchain==0.3.11            # LLM orchestration framework
 - Security: cryptography, PyJWT, passlib
 
 # Frontend Dependencies (requirements.txt)
-- Minimal: streamlit, requests, pandas
+-  : streamlit, requests, pandas
 - Visualization: plotly
 - HTTP: httpx, aiohttp
 ```
@@ -306,10 +306,10 @@ joblib==1.4.2                # Parallel processing
 ### Resource Usage
 | Service | CPU | Memory | Storage | Network |
 |---------|-----|---------|---------|---------|
-| Backend | 0.1-0.5 cores | 500MB | Minimal | 1-10 Mbps |
-| Ollama | 1-4 cores | 1-2GB | 1GB (model) | Minimal |
-| PostgreSQL | 0.1-0.2 cores | 200MB | 1GB | Minimal |
-| Monitoring | 0.2-0.5 cores | 1GB | 5GB | Minimal |
+| Backend | 0.1-0.5 cores | 500MB |   | 1-10 Mbps |
+| Ollama | 1-4 cores | 1-2GB | 1GB (model) |   |
+| PostgreSQL | 0.1-0.2 cores | 200MB | 1GB |   |
+| Monitoring | 0.2-0.5 cores | 1GB | 5GB |   |
 | **Total** | **2-6 cores** | **3-4GB** | **8GB** | **Low** |
 
 ## Known Limitations
@@ -333,7 +333,7 @@ joblib==1.4.2                # Parallel processing
 2. **Default Passwords**: Unchanged default credentials
 3. **No Secrets Management**: Plain-text configuration
 4. **Container Security**: Running as root users
-5. **Network Isolation**: Minimal network segmentation
+5. **Network Isolation**:   network segmentation
 
 ## Upgrade/Migration Considerations
 

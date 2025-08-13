@@ -26,7 +26,7 @@ class CollectionStatsResponse(BaseModel):
     collections: Dict[str, Any]
     status: str
 
-# Simple vector operations for minimal backend
+# Simple vector operations for   backend
 class SimpleVectorManager:
     def __init__(self):
         self.collections = {

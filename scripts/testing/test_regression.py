@@ -34,7 +34,7 @@ class TestBackwardCompatibility:
     
     def test_initialization_backward_compatibility(self):
         """Test that agents can be initialized with old patterns"""
-        # Test with minimal parameters (old style)
+        # Test with   parameters (old style)
         agent = BaseAgent()
         assert agent.agent_name is not None
         assert agent.agent_type is not None
@@ -70,19 +70,19 @@ class TestBackwardCompatibility:
     
     def test_config_loading_backward_compatibility(self):
         """Test that existing config file formats are supported"""
-        # Test with minimal config (common in existing agents)
-        minimal_config = {
+        # Test with   config (common in existing agents)
+         _config = {
             "capabilities": ["text-processing"]
         }
         
         with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
-            json.dump(minimal_config, f)
+            json.dump( _config, f)
             config_path = f.name
         
         try:
             agent = BaseAgent(config_path=config_path)
             
-            # Should load minimal config and fill in defaults
+            # Should load   config and fill in defaults
             assert agent.config["capabilities"] == ["text-processing"]
             assert agent.config["max_retries"] == 3  # Default value
             assert agent.config["timeout"] == 300  # Default value
@@ -134,15 +134,15 @@ class TestExistingAgentMethods:
     @pytest.mark.asyncio
     async def test_basic_task_processing_compatibility(self, legacy_agent):
         """Test that basic task processing works as before"""
-        # Test with minimal task structure (common in existing agents)
-        minimal_task = {
+        # Test with   task structure (common in existing agents)
+         _task = {
             "id": "legacy-task-001",
             "type": "test"
         }
         
-        result = await legacy_agent.process_task(minimal_task)
+        result = await legacy_agent.process_task( _task)
         
-        # Should handle minimal task structure
+        # Should handle   task structure
         assert result.task_id == "legacy-task-001"
         assert result.status == "completed"
         assert isinstance(result.result, dict)

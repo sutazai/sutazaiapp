@@ -51,7 +51,7 @@ class UltratestResponseTimeValidator:
                 if method.upper() == 'GET':
                     response = requests.get(url, timeout=timeout)
                 elif method.upper() == 'POST':
-                    # For POST endpoints, send minimal valid data
+                    # For POST endpoints, send   valid data
                     if 'chat' in url:
                         data = {"message": "test", "model": "tinyllama"}
                         response = requests.post(url, json=data, timeout=timeout)

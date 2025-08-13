@@ -265,7 +265,7 @@ class OllamaContextOptimizer:
         
         # Quantization mappings and impact estimates
         quantization_options = {
-            'Q8_0': {'size_factor': 0.6, 'performance_impact': 0.02},   # 8-bit, minimal impact
+            'Q8_0': {'size_factor': 0.6, 'performance_impact': 0.02},   # 8-bit,   impact
             'Q4_K_M': {'size_factor': 0.4, 'performance_impact': 0.05}, # 4-bit, small impact  
             'Q4_0': {'size_factor': 0.35, 'performance_impact': 0.08},  # 4-bit, moderate impact
             'Q3_K_M': {'size_factor': 0.3, 'performance_impact': 0.12}, # 3-bit, higher impact

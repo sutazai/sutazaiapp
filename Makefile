@@ -6,7 +6,7 @@
 .PHONY: docker-build docker-test docker-up docker-down services-up services-down
 .PHONY: network mesh-up monitoring-up dbs-up core-up agents-up stack-up health
 .PHONY: mcp-db-bootstrap
-.PHONY: ensure-network up-minimal down-minimal ps-minimal logs-minimal restart-minimal health-minimal
+.PHONY: ensure-network up-  down-  ps-  logs-  restart-  health- 
 .PHONY: deps-update deps-audit report-dashboard
 .PHONY: docs-api docs-api-openapi docs-api-endpoints
 .PHONY: onboarding-deck
@@ -408,34 +408,34 @@ docker-up: network ## Start Docker services
 	$(DOCKER_COMPOSE) -f docker-compose.yml ps
 	@echo "$(GREEN)✅ Docker services started$(NC)"
 
-# Minimal stack helpers (recommended)
+#   stack helpers (recommended)
 ensure-network: ## Create external docker network if missing
 	@echo "$(YELLOW)🔧 Ensuring external network 'sutazai-network' exists...$(NC)"
 	@docker network ls | grep -q "sutazai-network" || docker network create sutazai-network
 	@echo "$(GREEN)✅ Network ready$(NC)"
 
-up-minimal: ensure-network ## Start minimal 8-service stack
-	@echo "$(YELLOW)🐳 Starting minimal SutazAI stack...$(NC)"
-	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml up -d
-	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml ps
-	@echo "$(GREEN)✅ Minimal stack started$(NC)"
+up- : ensure-network ## Start   8-service stack
+	@echo "$(YELLOW)🐳 Starting   SutazAI stack...$(NC)"
+	$(DOCKER_COMPOSE) -f docker-compose. .yml up -d
+	$(DOCKER_COMPOSE) -f docker-compose. .yml ps
+	@echo "$(GREEN)✅   stack started$(NC)"
 
-down-minimal: ## Stop minimal stack
-	@echo "$(YELLOW)🐳 Stopping minimal SutazAI stack...$(NC)"
-	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml down
-	@echo "$(GREEN)✅ Minimal stack stopped$(NC)"
+down- : ## Stop   stack
+	@echo "$(YELLOW)🐳 Stopping   SutazAI stack...$(NC)"
+	$(DOCKER_COMPOSE) -f docker-compose. .yml down
+	@echo "$(GREEN)✅   stack stopped$(NC)"
 
-ps-minimal: ## Show minimal stack status
-	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml ps
+ps- : ## Show   stack status
+	$(DOCKER_COMPOSE) -f docker-compose. .yml ps
 
-logs-minimal: ## Tail minimal stack logs
-	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml logs -f --tail=200
+logs- : ## Tail   stack logs
+	$(DOCKER_COMPOSE) -f docker-compose. .yml logs -f --tail=200
 
-restart-minimal: ## Restart minimal stack
-	$(MAKE) down-minimal
-	$(MAKE) up-minimal
+restart- : ## Restart   stack
+	$(MAKE) down- 
+	$(MAKE) up- 
 
-health-minimal: ## Check minimal stack health endpoints
+health- : ## Check   stack health endpoints
 	@echo "$(YELLOW)🏥 Checking health endpoints...$(NC)"
 	@echo "- Backend:    http://localhost:10010/health" && curl -sf http://localhost:10010/health | head -c 200 && echo || echo "$(RED)Backend health failed$(NC)"
 	@echo "- Frontend:   http://localhost:10011/" && curl -sf http://localhost:10011/ | head -c 100 && echo || echo "$(RED)Frontend check failed$(NC)"

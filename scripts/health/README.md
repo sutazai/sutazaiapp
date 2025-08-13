@@ -97,12 +97,12 @@ python container-health-monitor.py --no-auto-heal    # Disable auto-healing
 ```bash
 python pre-commit-health-validator.py           # Basic validation
 python pre-commit-health-validator.py --strict  # Block commit on issues
-python pre-commit-health-validator.py --quiet   # Minimal output
+python pre-commit-health-validator.py --quiet   #   output
 ```
 
 **Features:**
 - ✅ Fast validation optimized for pre-commit hooks
-- ✅ Critical service checking with minimal overhead
+- ✅ Critical service checking with   overhead
 - ✅ Docker container status validation
 - ✅ Configurable strictness levels
 
@@ -187,7 +187,7 @@ Service discovery results are cached to reduce overhead.
 Configurable timeouts prevent hanging on unresponsive services.
 
 ### Resource Efficiency
-Minimal memory footprint with intelligent data retention.
+  memory footprint with intelligent data retention.
 
 ## Alerting and Notifications
 

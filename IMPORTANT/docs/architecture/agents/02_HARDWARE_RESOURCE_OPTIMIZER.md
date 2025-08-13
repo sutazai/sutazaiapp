@@ -471,7 +471,7 @@ def find_duplicates(self, directory: str) -> Dict[str, List[str]]:
 - **Memory:** 100-200MB during operation
 - **CPU:** Spikes during analysis (10-30%)
 - **Disk I/O:** Heavy during storage analysis
-- **Network:** Minimal (Docker API calls only)
+- **Network:**   (Docker API calls only)
 
 ### Operation Timing
 | Operation | Typical Duration | Resource Impact |

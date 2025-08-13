@@ -35,7 +35,7 @@ jobs:
     - name: Install testing dependencies
       run: |
         pip install --upgrade pip
-        pip install -r requirements-test.txt || echo "Test requirements not available, using minimal setup"
+        pip install -r requirements-test.txt || echo "Test requirements not available, using   setup"
         
     - name: Run Syntax Validation
       run: python3 scripts/test_runner.py --type unit
@@ -114,11 +114,11 @@ jobs:
       
     - name: Start core services
       run: |
-        # Try to start minimal services for testing
-        if [ -f docker-compose.minimal.yml ]; then
-          docker-compose -f docker-compose.minimal.yml up -d postgres redis
+        # Try to start   services for testing
+        if [ -f docker-compose. .yml ]; then
+          docker-compose -f docker-compose. .yml up -d postgres redis
         else
-          echo "Minimal docker-compose not available, skipping integration tests"
+          echo "  docker-compose not available, skipping integration tests"
           exit 0
         fi
         
@@ -140,7 +140,7 @@ jobs:
     - name: Cleanup
       if: always()
       run: |
-        docker-compose -f docker-compose.minimal.yml down || true
+        docker-compose -f docker-compose. .yml down || true
         
     - name: Upload Integration Results
       uses: actions/upload-artifact@v3

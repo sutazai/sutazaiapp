@@ -1,7 +1,7 @@
 """
 Lightweight Mesh: Redis Streams Bus
 
-Provides minimal helpers for enqueueing tasks, consuming results, and a simple
+Provides   helpers for enqueueing tasks, consuming results, and a simple
 agent registry using Redis. Designed to be hardware‑friendly and avoid heavy
 infrastructure (no Kong/Consul/RabbitMQ).
 """

@@ -234,7 +234,7 @@ Suitable for: Resource-constrained environments
 
 ```yaml
 Pros:
-- Minimal extra resources
+-   extra resources
 - Gradual update
 - No downtime
 

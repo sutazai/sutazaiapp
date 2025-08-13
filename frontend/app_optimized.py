@@ -447,7 +447,7 @@ def main():
                 st.rerun()
     
     # Optimized CSS with performance considerations
-    css_complexity = "full" if st.session_state.get("performance_mode") != "fast" else "minimal"
+    css_complexity = "full" if st.session_state.get("performance_mode") != "fast" else " "
     
     if css_complexity == "full":
         st.markdown("""

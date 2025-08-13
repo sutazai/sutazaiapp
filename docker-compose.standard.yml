@@ -1,7 +1,7 @@
 # SutazAI Standard Tier Configuration Overlay
-# Adds monitoring and vector database to minimal tier
-# Requirements: 4 CPU cores, 8GB RAM (in addition to minimal)
-# Services: +5 containers (10 total with minimal)
+# Adds monitoring and vector database to   tier
+# Requirements: 4 CPU cores, 8GB RAM (in addition to  )
+# Services: +5 containers (10 total with  )
 
 version: '3.8'
 

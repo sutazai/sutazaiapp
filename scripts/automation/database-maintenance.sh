@@ -28,8 +28,8 @@ TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 # Configuration
 DRY_RUN=false
 FULL_MAINTENANCE=false
-POSTGRES_CONTAINER="sutazai-postgres-minimal"
-REDIS_CONTAINER="sutazai-redis-minimal"
+POSTGRES_CONTAINER="sutazai-postgres- "
+REDIS_CONTAINER="sutazai-redis- "
 POSTGRES_USER="sutazai"
 POSTGRES_DB="sutazai"
 

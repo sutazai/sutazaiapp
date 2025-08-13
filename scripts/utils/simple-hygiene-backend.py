@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Simple Hygiene Monitor Backend - Minimal Real-time Data Collection
+Simple Hygiene Monitor Backend -   Real-time Data Collection
 Purpose: Simplified version for immediate testing
 Author: AI Observability and Monitoring Engineer
-Version: 1.0.0 - Minimal Working Version
+Version: 1.0.0 -   Working Version
 """
 
 import asyncio

@@ -19,18 +19,18 @@ Practical task automation with a local LLM (Ollama) backed by a FastAPI backend,
   - TabbyML code completion (`ENABLE_TABBY=true`)
 - Runs locally; no external API keys required for core flows
 
-## 🚀 Quick Start (Minimal Stack — Recommended)
+## 🚀 Quick Start (  Stack — Recommended)
 
 ```bash
-# 1) Start the minimal stack (8 containers)
-make up-minimal
+# 1) Start the   stack (8 containers)
+make up- 
 
 # 2) Open core endpoints
 open http://localhost:10010/docs   # Backend API (FastAPI)
 open http://localhost:10011         # Frontend (Streamlit)
 
 # Health checks
-make health-minimal
+make health- 
 ```
 
 Core published ports (external:internal)

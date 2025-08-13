@@ -1,0 +1,9 @@
+database:
+  host: localhost
+debug: true
+environment: development
+log_level: DEBUG
+security:
+  cors_origins:
+  - http://localhost:*
+  jwt_secret: ${JWT_SECRET:-dev-secret}

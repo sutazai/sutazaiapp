@@ -29,7 +29,7 @@ set -e
 
 echo "[$(date)] Starting AGENT_NAME agent..."
 
-# Install minimal system dependencies
+# Install   system dependencies
 echo "[$(date)] Installing build dependencies..."
 apk add --no-cache gcc musl-dev linux-headers python3-dev
 
@@ -43,7 +43,7 @@ for attempt in 1 2 3; do
         echo "[$(date)] Attempt $attempt failed, retrying in 5s..."
         sleep 5
         if [ $attempt -eq 3 ]; then
-            echo "[$(date)] All attempts failed, using minimal server"
+            echo "[$(date)] All attempts failed, using   server"
             exec python -m http.server 8080
         fi
     fi

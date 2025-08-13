@@ -267,7 +267,7 @@ The project includes automated testing for all feature combinations:
 # .github/workflows/feature-matrix.yml
 matrix:
   include:
-    - name: "Minimal"
+    - name: " "
       enable_fsdp: "false"
       enable_tabby: "false"
     - name: "FSDP Only"
@@ -285,7 +285,7 @@ matrix:
 
 | Configuration | Memory Usage | Startup Time | CPU Impact |
 |--------------|-------------|--------------|------------|
-| Minimal | ~2GB | 30s | Low |
+|   | ~2GB | 30s | Low |
 | +FSDP | +1GB | +10s | Medium |
 | +TabbyML | +2GB | +20s | Medium |
 | Full Features | ~5GB | 60s | High |

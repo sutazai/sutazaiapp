@@ -207,7 +207,7 @@ appuser   234728  0.7  0.2 366060 62200 ?        Ssl  Aug09   0:27 /usr/local/bi
 {
   "memory_usage": "62MB RSS (0.2% of system)",
   "cpu_usage": "0.3-0.7% baseline",
-  "disk_io": "minimal (read-only scanning)",
+  "disk_io": "  (read-only scanning)",
   "network_io": "HTTP API only"
 }
 ```
@@ -406,7 +406,7 @@ Status: "success", Dry-run: true ✅
 - **Memory Footprint**: 62MB RSS (highly efficient)
 - **CPU Usage**: 0.3-0.7% baseline (very efficient)
 - **Disk I/O**: Read-optimized scanning (efficient)
-- **Network Usage**: Minimal HTTP API overhead
+- **Network Usage**:   HTTP API overhead
 
 **Error Recovery Patterns:**
 - **Graceful Degradation**: Individual failures don't stop overall operation

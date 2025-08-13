@@ -893,7 +893,7 @@
           "lines": 405
         },
         {
-          "path": "services/jarvis/tests/test_routes_minimal.py",
+          "path": "services/jarvis/tests/test_routes_ .py",
           "lines": 60
         }
       ]
@@ -2445,7 +2445,7 @@
           "lines": 458
         },
         {
-          "path": "services/jarvis/tests/test_routes_minimal.py",
+          "path": "services/jarvis/tests/test_routes_ .py",
           "lines": 60
         }
       ]
@@ -3015,7 +3015,7 @@
           "lines": 90
         },
         {
-          "path": "services/jarvis/tests/test_routes_minimal.py",
+          "path": "services/jarvis/tests/test_routes_ .py",
           "lines": 60
         }
       ]
@@ -4453,7 +4453,7 @@
           "lines": 366
         },
         {
-          "path": "services/jarvis/core/voice_interface_minimal.py",
+          "path": "services/jarvis/core/voice_interface_ .py",
           "lines": 331
         },
         {
@@ -4473,7 +4473,7 @@
           "lines": 516
         },
         {
-          "path": "services/jarvis/tests/test_routes_minimal.py",
+          "path": "services/jarvis/tests/test_routes_ .py",
           "lines": 60
         }
       ]
@@ -7439,7 +7439,7 @@
         "/opt/sutazaiapp/services/ml/jax_service.py",
         "/opt/sutazaiapp/services/faiss-vector/main.py",
         "/opt/sutazaiapp/services/api-adapter/unified_ai_client.py",
-        "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py"
+        "/opt/sutazaiapp/services/jarvis/tests/test_routes_ .py"
       ],
       "total_scripts": 218,
       "total_lines": 102358
@@ -7838,7 +7838,7 @@
         "/opt/sutazaiapp/services/adapters/workflow_tools/langflow_adapter.py",
         "/opt/sutazaiapp/services/adapters/workflow_tools/dify_adapter.py",
         "/opt/sutazaiapp/services/jarvis/core/task_planner.py",
-        "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py"
+        "/opt/sutazaiapp/services/jarvis/tests/test_routes_ .py"
       ],
       "total_scripts": 284,
       "total_lines": 114205
@@ -7986,7 +7986,7 @@
         "/opt/sutazaiapp/tests/fixtures/hygiene/deploy_scripts/deploy_prod.py",
         "/opt/sutazaiapp/localagi/goals/autonomous_goal_achievement_system.py",
         "/opt/sutazaiapp/services/chainlit/chainlit_app.py",
-        "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py"
+        "/opt/sutazaiapp/services/jarvis/tests/test_routes_ .py"
       ],
       "total_scripts": 141,
       "total_lines": 60236
@@ -8351,12 +8351,12 @@
         "/opt/sutazaiapp/services/adapters/workflow_tools/langflow_adapter.py",
         "/opt/sutazaiapp/services/adapters/workflow_tools/__init__.py",
         "/opt/sutazaiapp/services/adapters/workflow_tools/dify_adapter.py",
-        "/opt/sutazaiapp/services/jarvis/core/voice_interface_minimal.py",
+        "/opt/sutazaiapp/services/jarvis/core/voice_interface_ .py",
         "/opt/sutazaiapp/services/jarvis/core/orchestrator.py",
         "/opt/sutazaiapp/services/jarvis/core/plugin_manager.py",
         "/opt/sutazaiapp/services/jarvis/core/voice_interface.py",
         "/opt/sutazaiapp/services/jarvis/core/memory_manager.py",
-        "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py"
+        "/opt/sutazaiapp/services/jarvis/tests/test_routes_ .py"
       ],
       "total_scripts": 363,
       "total_lines": 173072
@@ -13160,7 +13160,7 @@
         "_init_database",
         "collect_system_metrics"
       ],
-      "description": "Simple Hygiene Monitor Backend - Minimal Real-time Data Collection\nPurpose: Simplified version for immediate testing\nAuthor: AI Observability and Monitoring Engineer\nVersion: 1.0.0 - Minimal Working V",
+      "description": "Simple Hygiene Monitor Backend -   Real-time Data Collection\nPurpose: Simplified version for immediate testing\nAuthor: AI Observability and Monitoring Engineer\nVersion: 1.0.0 -   Working V",
       "shebang": true,
       "executable": false
     },
@@ -16206,7 +16206,7 @@
         "shutdown",
         "main"
       ],
-      "description": "Agent Stream Consumer (optional)\n\nRuns a minimal Redis Streams consumer loop and, for each task, invokes the\nGenericAgentWithHealth's `_execute_task` implementation to process the task.\n\nUsage:\n  pyth",
+      "description": "Agent Stream Consumer (optional)\n\nRuns a   Redis Streams consumer loop and, for each task, invokes the\nGenericAgentWithHealth's `_execute_task` implementation to process the task.\n\nUsage:\n  pyth",
       "shebang": true,
       "executable": false
     },
@@ -25472,7 +25472,7 @@
         "health",
         "class:Health"
       ],
-      "description": "Minimal placeholder metrics; replace with real Prometheus output if needed",
+      "description": "  placeholder metrics; replace with real Prometheus output if needed",
       "shebang": false,
       "executable": false
     },
@@ -29366,7 +29366,7 @@
         "_resource_constraints_changed",
         "class:GoalType"
       ],
-      "description": "SutazAI Autonomous Goal Achievement System\n\nThis system enables AI agents to pursue and achieve complex goals independently,\nwith minimal human intervention. It implements goal decomposition, planning",
+      "description": "SutazAI Autonomous Goal Achievement System\n\nThis system enables AI agents to pursue and achieve complex goals independently,\nwith   human intervention. It implements goal decomposition, planning",
       "shebang": true,
       "executable": false
     },
@@ -29768,7 +29768,7 @@
         "observe",
         "inc",
         "generate_latest",
-        "class:MinimalJarvis",
+        "class: Jarvis",
         "class:_Histogram"
       ],
       "description": "Jarvis AI System - Unified Interface for SutazAI\nCombines best features from multiple Jarvis implementations",
@@ -29802,7 +29802,7 @@
         "asyncio"
       ],
       "functions": [],
-      "description": "Basic Jarvis AI System - Web Interface Only\nMinimal implementation to get the web interface working",
+      "description": "Basic Jarvis AI System - Web Interface Only\n  implementation to get the web interface working",
       "shebang": true,
       "executable": false
     },
@@ -30509,9 +30509,9 @@
       "executable": false
     },
     {
-      "path": "/opt/sutazaiapp/services/jarvis/core/voice_interface_minimal.py",
-      "relative_path": "services/jarvis/core/voice_interface_minimal.py",
-      "name": "voice_interface_minimal.py",
+      "path": "/opt/sutazaiapp/services/jarvis/core/voice_interface_ .py",
+      "relative_path": "services/jarvis/core/voice_interface_ .py",
+      "name": "voice_interface_ .py",
       "size": 12444,
       "lines": 331,
       "hash": "1cef5738460b477bc7bece91c6c6349f",
@@ -30538,7 +30538,7 @@
         "set_wake_word_callback",
         "set_command_callback"
       ],
-      "description": "Minimal Voice Interface for JARVIS AI System\nBasic voice capabilities without heavy ML dependencies",
+      "description": "  Voice Interface for JARVIS AI System\nBasic voice capabilities without heavy ML dependencies",
       "shebang": true,
       "executable": false
     },
@@ -30562,7 +30562,7 @@
         "typing",
         "plugin_manager",
         "voice_interface",
-        "voice_interface_minimal",
+        "voice_interface_ ",
         "logging",
         "pathlib",
         "memory_manager",
@@ -30688,9 +30688,9 @@
       "executable": false
     },
     {
-      "path": "/opt/sutazaiapp/services/jarvis/tests/test_routes_minimal.py",
-      "relative_path": "services/jarvis/tests/test_routes_minimal.py",
-      "name": "test_routes_minimal.py",
+      "path": "/opt/sutazaiapp/services/jarvis/tests/test_routes_ .py",
+      "relative_path": "services/jarvis/tests/test_routes_ .py",
+      "name": "test_routes_ .py",
       "size": 1485,
       "lines": 60,
       "hash": "3cca471e1c389c59822672167220c4b9",

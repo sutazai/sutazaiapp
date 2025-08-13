@@ -1,0 +1,12 @@
+FROM postgres:16-alpine
+LABEL maintainer="SutazAI Security Team"
+LABEL security.hardening="enabled"
+
+# Security hardening
+RUN apk --no-cache add su-exec && \
+    chmod 750 /var/lib/postgresql && \
+    chown postgres:postgres /var/lib/postgresql
+
+# Non-root user setup
+USER postgres
+EXPOSE 5432

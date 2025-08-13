@@ -92,7 +92,7 @@ class TestContainerSecurity(UltraSecurityTester):
             self.log_result("Container Non-Root Check", True, "All containers running as non-root")
             
     def test_container_capabilities(self):
-        """Test that containers have minimal capabilities"""
+        """Test that containers have   capabilities"""
         print("\n=== Testing Container Capabilities ===")
         
         cmd = "docker ps -q"

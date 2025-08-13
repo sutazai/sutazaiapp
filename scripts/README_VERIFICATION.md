@@ -14,7 +14,7 @@
 
 ### Option 2: Quick Check Only
 ```bash
-# Fast shell-based verification (minimal dependencies)
+# Fast shell-based verification (  dependencies)
 ./scripts/quick_deployment_check.sh
 ```
 
@@ -95,7 +95,7 @@
 pip install aiohttp asyncpg redis psutil docker neo4j pyyaml
 ```
 
-### Minimal (for quick verification)
+###   (for quick verification)
 - `bash`, `nc` (netcat), `curl`, `jq`, `docker`
 
 ### Automatic Installation

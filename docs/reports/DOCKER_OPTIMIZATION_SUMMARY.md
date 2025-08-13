@@ -20,7 +20,7 @@
 ### 1. Optimized Base Images
 ```
 /opt/sutazaiapp/docker/base/Dockerfile.python-alpine-optimized
-/opt/sutazaiapp/docker/base/base-requirements-minimal-alpine.txt
+/opt/sutazaiapp/docker/base/base-requirements- -alpine.txt
 /opt/sutazaiapp/docker/base/Dockerfile.agent-alpine-template
 ```
 

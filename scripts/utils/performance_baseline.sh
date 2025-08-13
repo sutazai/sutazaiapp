@@ -129,14 +129,14 @@ fi
 # Database query performance
 echo -e "${YELLOW}Testing database performance...${NC}"
 db_start=$(date +%s.%N)
-docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -c "SELECT 1;" >/dev/null 2>&1
+docker exec sutazai-postgres-  psql -U sutazai -d sutazai -c "SELECT 1;" >/dev/null 2>&1
 db_end=$(date +%s.%N)
 db_time=$(echo "$db_end - $db_start" | bc)
 echo "    \"postgres_query_ms\": $(echo "$db_time * 1000" | bc)," >> "$REPORT_FILE"
 
 # Redis performance
 redis_start=$(date +%s.%N)
-docker exec sutazai-redis-minimal redis-cli -a redis_password ping >/dev/null 2>&1
+docker exec sutazai-redis-  redis-cli -a redis_password ping >/dev/null 2>&1
 redis_end=$(date +%s.%N)
 redis_time=$(echo "$redis_end - $redis_start" | bc)
 echo "    \"redis_ping_ms\": $(echo "$redis_time * 1000" | bc)" >> "$REPORT_FILE"

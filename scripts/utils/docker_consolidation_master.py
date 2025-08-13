@@ -33,7 +33,7 @@ class DockerConsolidationMaster:
             'monitoring': ['prometheus', 'grafana', 'monitor'],
             'database': ['postgres', 'redis', 'neo4j', 'chromadb'],
             'security': ['security', 'auth', 'jwt'],
-            'minimal': ['alpine', 'minimal']
+            ' ': ['alpine', ' ']
         }
     
     def analyze_dockerfile_patterns(self) -> Dict:
@@ -407,7 +407,7 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
             'monitoring': 'sutazai/monitoring-master:latest',
             'database': 'sutazai/database-master:latest',
             'security': 'sutazai/python-agent-master:latest',
-            'minimal': 'sutazai/python-agent-master:latest'
+            ' ': 'sutazai/python-agent-master:latest'
         }
         return mapping.get(category, 'sutazai/python-agent-master:latest')
     

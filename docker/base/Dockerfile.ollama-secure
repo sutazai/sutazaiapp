@@ -1,0 +1,7 @@
+FROM ollama/ollama:latest
+LABEL maintainer="SutazAI Security Team"
+LABEL security.hardening="enabled"
+
+# Note: Ollama typically runs as root for GPU access
+# In production, consider using rootless containers with proper GPU delegation
+EXPOSE 11434

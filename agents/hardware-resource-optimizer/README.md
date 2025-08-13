@@ -117,7 +117,7 @@ docker run -d \
 - Logs all actions taken
 
 ### Resource Requirements
-- Minimal CPU usage when idle
+-   CPU usage when idle
 - Low memory footprint
 - Only active during optimization requests
 

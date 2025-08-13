@@ -27,7 +27,7 @@ This document defines a comprehensive testing strategy for the SutazAI system to
 - **Frontend:** Streamlit UI with basic functionality
 - **Models:** TinyLlama 637MB loaded via Ollama
 - **Agents:** 7 Flask stub applications with only health endpoints
-- **Databases:** PostgreSQL, Redis, Neo4j running but minimal schema
+- **Databases:** PostgreSQL, Redis, Neo4j running but   schema
 - **Monitoring:** Full Prometheus/Grafana stack operational
 
 ### 1.2 Testing Philosophy and Principles
@@ -2346,7 +2346,7 @@ if __name__ == "__main__":
 
 **Bug Investigation Process:**
 1. **Reproduce Bug:**
-   - Create minimal reproduction case
+   - Create   reproduction case
    - Document steps and environment
    - Add reproduction test to test suite
 

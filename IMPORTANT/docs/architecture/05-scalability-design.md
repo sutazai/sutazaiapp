@@ -30,7 +30,7 @@ This document provides a comprehensive scalability design for SutazAI, addressin
 - **Resource Usage**: 
   - Memory: 4GB baseline, 8-12GB under load
   - CPU: 40-60% idle, 80-90% during LLM inference
-  - Disk I/O: Minimal (no persistent data operations)
+  - Disk I/O:   (no persistent data operations)
 - **Network**: All inter-service communication via Docker bridge network
 - **Storage**: Single PostgreSQL instance (empty), Redis for caching, Neo4j (unused)
 

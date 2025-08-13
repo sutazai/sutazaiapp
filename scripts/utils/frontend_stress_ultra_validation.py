@@ -107,7 +107,7 @@ class FrontendStressValidator:
                     error_key = str(type(e).__name__)
                     errors[error_key] = errors.get(error_key, 0) + 1
                     
-                # Minimal sleep to create realistic load
+                #   sleep to create realistic load
                 time.sleep(0.01)
         
         # Start aggressive concurrent threads

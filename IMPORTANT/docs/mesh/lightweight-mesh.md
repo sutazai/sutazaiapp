@@ -1,6 +1,6 @@
 # Lightweight Mesh (Redis Streams)
 
-A minimal, hardware‑friendly coordination layer using Redis Streams.
+A  , hardware‑friendly coordination layer using Redis Streams.
 
 ## Why
 - Avoids heavy/unused components (Kong/Consul/RabbitMQ)

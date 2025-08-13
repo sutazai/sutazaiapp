@@ -826,7 +826,7 @@ class QuantizationOptimizer:
             # CPU optimizations
             optimized_config.use_vnni = True  # Intel VNNI instructions
             optimized_config.use_neon = True  # ARM NEON
-            optimized_config.per_channel = True  # Better accuracy with minimal overhead
+            optimized_config.per_channel = True  # Better accuracy with   overhead
             optimized_config.block_wise = True  # Memory locality
             
         elif self.target_platform.lower() == "arm":

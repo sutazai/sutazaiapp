@@ -12,7 +12,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../../"))
 try:
     from ai_agents.self_improvement.feedback_loop import feedback_loop
 except ImportError:
-    # Create a simple mock for minimal backend
+    # Create a simple mock for   backend
     class MockFeedbackLoop:
         def __init__(self):
             self.is_running = False

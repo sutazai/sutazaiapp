@@ -430,7 +430,7 @@ curl -X POST http://127.0.0.1:8551/submit_task \
 
 ## Conclusion
 
-The SutazAI agent system is a **proof-of-concept implementation** with well-designed APIs but minimal actual functionality. While the structure suggests a sophisticated multi-agent system, the reality is:
+The SutazAI agent system is a **proof-of-concept implementation** with well-designed APIs but   actual functionality. While the structure suggests a sophisticated multi-agent system, the reality is:
 
 1. **APIs exist** but most return static responses
 2. **No actual AI processing** occurs in any agent

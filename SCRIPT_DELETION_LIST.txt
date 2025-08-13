@@ -231,8 +231,8 @@ DELETION CATEGORIES:
 5. OBSOLETE/DEPRECATED FILES (25 files)
 ====================================
 /opt/sutazaiapp/backend/app/main_original.py
-/opt/sutazaiapp/backend/app/main_minimal.py
-/opt/sutazaiapp/backend/minimal_app.py
+/opt/sutazaiapp/backend/app/main_ .py
+/opt/sutazaiapp/backend/ _app.py
 /opt/sutazaiapp/frontend/app_optimized.py
 /opt/sutazaiapp/agents/container_startup.py
 /opt/sutazaiapp/agents/standalone_main.py

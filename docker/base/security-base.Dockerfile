@@ -26,7 +26,7 @@ FROM python:3.12.8-slim-bookworm
 # Security: Create restricted user for security tools
 RUN groupadd -r security && useradd -r -g security -s /bin/false security
 
-# Install minimal runtime dependencies
+# Install   runtime dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \

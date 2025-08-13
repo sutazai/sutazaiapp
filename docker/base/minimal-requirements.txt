@@ -1,4 +1,4 @@
-# SutazAI Minimal Requirements for Testing
+# SutazAI   Requirements for Testing
 # Fast build for ultra-testing purposes only
 
 # Core web framework

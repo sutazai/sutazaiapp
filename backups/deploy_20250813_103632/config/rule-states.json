@@ -1,0 +1,21 @@
+{
+  "states": {
+    "no_fantasy_elements": true,
+    "no_breaking_changes": true,
+    "analyze_everything": false,
+    "reuse_before_creating": false,
+    "professional_project": false,
+    "centralized_documentation": false,
+    "eliminate_script_chaos": false,
+    "python_script_sanity": false,
+    "no_version_duplication": false,
+    "functionality_first_cleanup": true,
+    "clean_docker_structure": false,
+    "single_deployment_script": false,
+    "no_garbage_no_rot": false,
+    "correct_ai_agent": false,
+    "clean_documentation": false,
+    "local_llm_ollama": false
+  },
+  "timestamp": "2025-08-04T00:34:01.896215"
+}

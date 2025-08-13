@@ -75,7 +75,7 @@ Codex CLI Integration (stdio)
 
 Testing
 - Node test suite: `mcp_server/test.js` covers startup, tools, resources, and basic performance.
-- Minimal flow without full stack:
+-   flow without full stack:
   - Allows DB/Backend failures to be warned and not counted as hard failures.
 
 Troubleshooting

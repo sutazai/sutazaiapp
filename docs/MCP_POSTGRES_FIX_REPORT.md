@@ -92,7 +92,7 @@ The postgres MCP configuration was using `--env-file /dev/stdin` which expects e
 
 - **Container Startup Time:** < 2 seconds
 - **Database Connection:** Instant (< 100ms)
-- **Network Latency:** Minimal (Docker bridge network)
+- **Network Latency:**   (Docker bridge network)
 - **Resource Usage:** Optimized (removed 8 redundant containers)
 
 ## 🔒 SECURITY CONSIDERATIONS

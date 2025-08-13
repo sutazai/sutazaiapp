@@ -175,7 +175,7 @@ cat >> "${SUMMARY_FILE}" << EOF
 4. **Secrets Management**: Implement proper secrets handling
 
 ### Container Hardening Best Practices
-1. Use distroless or minimal base images
+1. Use distroless or   base images
 2. Enable read-only root filesystems where possible
 3. Drop unnecessary Linux capabilities
 4. Implement proper resource limits

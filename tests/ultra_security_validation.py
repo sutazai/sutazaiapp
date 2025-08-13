@@ -670,7 +670,7 @@ class UltraSecurityValidator:
         # Check compliance requirements
         compliance_status = {
             "zero_critical_vulns": critical == 0,
-            "minimal_high_vulns": high <= 2,
+            " _high_vulns": high <= 2,
             "container_security": any("container_nonroot" in r.test_name for r in self.test_results if r.status == "PASS"),
             "secrets_management": any("hardcoded_secrets_safe" in r.test_name for r in self.test_results if r.status == "PASS"),
             "web_security": any("xss_safe" in r.test_name for r in self.test_results if r.status == "PASS")

@@ -52,7 +52,7 @@ except Exception:
     Gauge = _Gauge
 from starlette.responses import Response, HTMLResponse
 
-# Defer heavy core imports to runtime in startup to support minimal test mode
+# Defer heavy core imports to runtime in startup to support   test mode
 
 # Configure logging
 logging.basicConfig(
@@ -99,7 +99,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class MinimalJarvis:
+class  Jarvis:
     async def initialize(self):
         return True
 
@@ -124,7 +124,7 @@ class MinimalJarvis:
     async def process_voice_command(self, file_path: str):
         return {
             'transcript': 'test voice input',
-            'result': 'Processed voice (minimal mode)',
+            'result': 'Processed voice (  mode)',
             'confidence': 0.99
         }
 
@@ -144,11 +144,11 @@ async def startup_event():
         # Load configuration
         config_path = os.getenv('JARVIS_CONFIG', '/opt/sutazaiapp/config/jarvis/config.yaml')
 
-        # Minimal/fake mode for local testing
+        #  /fake mode for local testing
         if os.getenv('JARVIS_FAKE', '0') in ('1', 'true', 'True'):
-            jarvis = MinimalJarvis()
+            jarvis =  Jarvis()
             await jarvis.initialize()
-            logger.info("Jarvis started in minimal (fake) mode for testing")
+            logger.info("Jarvis started in   (fake) mode for testing")
             return
 
         # Initialize components (import core modules lazily)

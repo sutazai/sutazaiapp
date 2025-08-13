@@ -16,7 +16,7 @@ from backend.app.schemas.agent_protocol import (
     AgentStatusSummary as AgentStatusResponse,
 )
 
-# Simple agent manager for minimal backend
+# Simple agent manager for   backend
 class SimpleAgentManager:
     def __init__(self):
         self.agents = {

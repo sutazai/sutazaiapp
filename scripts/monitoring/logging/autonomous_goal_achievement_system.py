@@ -3,7 +3,7 @@
 SutazAI Autonomous Goal Achievement System
 
 This system enables AI agents to pursue and achieve complex goals independently,
-with minimal human intervention. It implements goal decomposition, planning,
+with   human intervention. It implements goal decomposition, planning,
 execution monitoring, adaptive replanning, and autonomous learning from
 both successes and failures.
 """

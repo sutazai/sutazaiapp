@@ -1,0 +1,167 @@
+{
+  "services": [
+{
+    "name": "ai-orchestrator",
+    "id": "ai-orchestrator-172-29-0-4",
+    "address": "172.29.0.4",
+    "port": 8080,
+    "tags": [
+        "agent",
+        "orchestrator"
+    ]
+},
+{
+    "name": "backend-api",
+    "id": "backend-api-172-20-0-6",
+    "address": "172.20.0.6",
+    "port": 8000,
+    "tags": [
+        "api",
+        "backend",
+        "core"
+    ]
+},
+{
+    "name": "consul-server",
+    "id": "consul-server-172-29-0-9",
+    "address": "172.29.0.9",
+    "port": 8500,
+    "tags": [
+        "consul",
+        "discovery"
+    ]
+},
+{
+    "name": "frontend-ui",
+    "id": "frontend-ui-172-20-0-2",
+    "address": "172.20.0.2",
+    "port": 8501,
+    "tags": [
+        "ui",
+        "frontend",
+        "streamlit"
+    ]
+},
+{
+    "name": "grafana-dashboards",
+    "id": "grafana-dashboards-172-20-0-3",
+    "address": "172.20.0.3",
+    "port": 3000,
+    "tags": [
+        "monitoring",
+        "grafana"
+    ]
+},
+{
+    "name": "hardware-optimizer",
+    "id": "hardware-optimizer-172-29-0-3",
+    "address": "172.29.0.3",
+    "port": 8080,
+    "tags": [
+        "agent",
+        "hardware"
+    ]
+},
+{
+    "name": "kong-gateway",
+    "id": "kong-gateway-172-20-0-21",
+    "address": "172.20.0.21",
+    "port": 8001,
+    "tags": [
+        "gateway",
+        "kong"
+    ]
+},
+{
+    "name": "multi-coordinator",
+    "id": "multi-coordinator-172-29-0-7",
+    "address": "172.29.0.7",
+    "port": 8080,
+    "tags": [
+        "agent",
+        "multi"
+    ]
+},
+{
+    "name": "ollama-llm",
+    "id": "ollama-llm-172-20-0-7172-29-0-10",
+    "address": "172.20.0.7172.29.0.10",
+    "port": 11434,
+    "tags": [
+        "llm",
+        "ollama",
+        "tinyllama"
+    ]
+},
+{
+    "name": "postgresql-db",
+    "id": "postgresql-db-172-20-0-15",
+    "address": "172.20.0.15",
+    "port": 5432,
+    "tags": [
+        "database",
+        "postgres"
+    ]
+},
+{
+    "name": "prometheus-metrics",
+    "id": "prometheus-metrics-172-20-0-4",
+    "address": "172.20.0.4",
+    "port": 9090,
+    "tags": [
+        "monitoring",
+        "prometheus"
+    ]
+},
+{
+    "name": "qdrant-vector",
+    "id": "qdrant-vector-172-20-0-16",
+    "address": "172.20.0.16",
+    "port": 6333,
+    "tags": [
+        "vectordb",
+        "qdrant"
+    ]
+},
+{
+    "name": "rabbitmq-broker",
+    "id": "rabbitmq-broker-172-29-0-6",
+    "address": "172.29.0.6",
+    "port": 15672,
+    "tags": [
+        "messaging",
+        "rabbitmq"
+    ]
+},
+{
+    "name": "redis-cache",
+    "id": "redis-cache-172-20-0-17172-29-0-12",
+    "address": "172.20.0.17172.29.0.12",
+    "port": 6379,
+    "tags": [
+        "cache",
+        "redis"
+    ]
+},
+{
+    "name": "resource-arbitrator",
+    "id": "resource-arbitrator-172-29-0-5",
+    "address": "172.29.0.5",
+    "port": 8080,
+    "tags": [
+        "agent",
+        "arbitrator"
+    ]
+},
+{
+    "name": "task-coordinator",
+    "id": "task-coordinator-172-29-0-8",
+    "address": "172.29.0.8",
+    "port": 8080,
+    "tags": [
+        "agent",
+        "coordinator"
+    ]
+}
+  ]
+}

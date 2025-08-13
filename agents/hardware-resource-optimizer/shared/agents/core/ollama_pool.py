@@ -77,7 +77,7 @@ class OllamaConnectionPool:
     Efficient connection pool for Ollama API with resource optimization
     
     Designed for limited hardware environments with focus on:
-    - Minimal memory footprint
+    -   memory footprint
     - Connection reuse
     - Model warming and caching
     - Graceful degradation under load

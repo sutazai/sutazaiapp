@@ -164,7 +164,7 @@ UTIL - Utility services (fallback)
 
 ### Resource Usage:
 - **Memory**: Lightweight with configurable history limits (60 data points)
-- **CPU**: Minimal impact with adaptive refresh rates
+- **CPU**:   impact with adaptive refresh rates
 - **Network**: Efficient with short-timeout health checks
 - **Disk**: Optional logging only, no persistent storage required
 

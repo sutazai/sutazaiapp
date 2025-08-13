@@ -185,7 +185,7 @@ Client Request → FastAPI Router → Optimization Engine
 async def _optimize_memory_async(self):
     # ULTRA-OPTIMIZED for sub-200ms response
     # Async execution with background tasks
-    # Minimal blocking operations
+    #   blocking operations
 ```
 
 #### **Efficient Directory Scanning**

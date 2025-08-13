@@ -1,6 +1,6 @@
-# SutazAI Alpine-Optimized Minimal Requirements
+# SutazAI Alpine-Optimized   Requirements
 # Stripped down dependencies optimized for edge computing
-# Target: 50% dependency reduction from base-requirements-minimal.txt
+# Target: 50% dependency reduction from base-requirements- .txt
 # Date: August 10, 2025
 
 # Core web framework (single choice for size optimization)
@@ -22,7 +22,7 @@ prometheus-client==0.19.0
 redis==5.0.1
 asyncpg==0.29.0  # Lighter PostgreSQL driver than SQLAlchemy
 
-# AI/ML integration (minimal)
+# AI/ML integration ( )
 ollama==0.4.4
 
 # System monitoring (essential for resource optimization)

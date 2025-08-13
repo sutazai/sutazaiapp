@@ -1,0 +1,22 @@
+{
+  "hot_pool": {
+    "size": 20,
+    "agents": [
+      "agent-orchestrator",
+      "ai-system-architect",
+      "ai-system-validator"
+    ],
+    "always_running": true,
+    "priority": "high"
+  },
+  "warm_pool": {
+    "size": 30,
+    "startup_time_target": 30,
+    "priority": "medium"
+  },
+  "cold_pool": {
+    "size": 19,
+    "startup_time_target": 120,
+    "priority": "low"
+  }
+}

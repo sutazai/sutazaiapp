@@ -88,7 +88,7 @@
       "Bash(python:*)",
       "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain -t sutazaiapp-backend:latest ./backend)",
       "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1 -t sutazaiapp-backend:latest backend/)",
-      "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain -f backend/Dockerfile.minimal -t sutazaiapp-backend:latest backend/)",
+      "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain -f backend/Dockerfile.  -t sutazaiapp-backend:latest backend/)",
       "Bash(git stash:*)",
       "Bash(touch:*)",
       "Bash(apt list:*)",
@@ -239,9 +239,11 @@
       "Bash(lsof:*)",
       "Bash(top:*)",
       "Bash(journalctl:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(scripts/remediation/01_emergency_recovery.sh:*)"
     ],
-    "deny": []
+    "deny": [],
+    "defaultMode": "acceptEdits"
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [

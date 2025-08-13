@@ -128,7 +128,7 @@ The implementation is working with current Windows configuration. If issues aris
 
 - **Detection Time**: < 2 seconds on first run
 - **Query Time**: < 1 second per refresh  
-- **Memory Usage**: Minimal overhead
+- **Memory Usage**:   overhead
 - **CPU Impact**: Negligible
 - **Reliability**: 100% success rate in testing
 

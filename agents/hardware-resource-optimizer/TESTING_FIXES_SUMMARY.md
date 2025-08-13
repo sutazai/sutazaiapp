@@ -119,7 +119,7 @@ Error Handling: Functional
 ### 2. Performance Optimization
 - Realistic performance thresholds (2s for health checks, 5s for concurrent ops)
 - Efficient test data creation and cleanup
-- Minimal system impact during testing
+-   system impact during testing
 - Quick test execution without sacrificing thoroughness
 
 ### 3. Real System Effect Validation

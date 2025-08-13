@@ -5,7 +5,7 @@ services:
     environment:
       # CRITICAL PERFORMANCE FIX - Override all settings
       OLLAMA_NUM_PARALLEL: 1        # SINGLE request at a time
-      OLLAMA_NUM_THREADS: 2         # Minimal threads
+      OLLAMA_NUM_THREADS: 2         #  threads
       OLLAMA_MAX_LOADED_MODELS: 1   # Single model only
       OLLAMA_KEEP_ALIVE: 1m         # Unload quickly
       OLLAMA_FLASH_ATTENTION: 0     # Disable for stability

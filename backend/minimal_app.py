@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Quick minimal automation backend for immediate deployment
+Quick   automation backend for immediate deployment
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware

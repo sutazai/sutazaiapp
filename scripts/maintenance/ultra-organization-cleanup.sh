@@ -224,10 +224,10 @@ create_optimized_deployment() {
     log "Creating optimized deployment configuration..."
     
     # Create streamlined docker-compose for essential services only
-    cat > "$PROJECT_ROOT/docker-compose.minimal.yml" << 'EOF'
-# SutazAI - Minimal Production Deployment
+    cat > "$PROJECT_ROOT/docker-compose. .yml" << 'EOF'
+# SutazAI -   Production Deployment
 # ULTRA OPTIMIZED - Essential services only
-# Use: docker-compose -f docker-compose.minimal.yml up -d
+# Use: docker-compose -f docker-compose. .yml up -d
 
 networks:
   sutazai-network:
@@ -319,7 +319,7 @@ volumes:
   ollama_data:
 EOF
 
-    success "Created optimized minimal deployment configuration"
+    success "Created optimized   deployment configuration"
 }
 
 # Generate optimization report
@@ -377,7 +377,7 @@ generate_report() {
 ## DEPLOYMENT READY
 
 The system is now enterprise-ready with:
-- Minimal production deployment (docker-compose.minimal.yml)
+-   production deployment (docker-compose. .yml)
 - Optimized base images
 - Standardized agent architecture
 - Clean documentation structure
@@ -385,7 +385,7 @@ The system is now enterprise-ready with:
 ## NEXT STEPS
 
 1. Build base images: \`docker build -f docker/base/Dockerfile.python-agent-master-fixed -t sutazai-python-agent-master:latest .\`
-2. Deploy minimal stack: \`docker-compose -f docker-compose.minimal.yml up -d\`
+2. Deploy   stack: \`docker-compose -f docker-compose. .yml up -d\`
 3. Validate services: \`curl http://localhost:10010/health\`
 
 **Status: ULTRA ORGANIZATION COMPLETE ✅**

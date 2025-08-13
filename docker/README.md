@@ -37,13 +37,13 @@ Every service includes proper health checks for reliability.
 
 ### 4. Security Hardening
 - Regular security updates
-- Minimal attack surface
+-   attack surface
 - Proper secret management
 - Network isolation
 
 ### 5. Optimization
 - Layer caching optimization
-- Minimal base images
+-   base images
 - Efficient dependency management
 
 ## Usage

@@ -193,7 +193,7 @@ docker logs sutazai-ollama-integration --tail 50
 
 ## Performance Impact
 
-The metrics collection has minimal performance impact:
+The metrics collection has   performance impact:
 - CPU overhead: <1% per agent
 - Memory overhead: ~5MB per agent
 - Network overhead: ~2KB per scrape (every 30s)

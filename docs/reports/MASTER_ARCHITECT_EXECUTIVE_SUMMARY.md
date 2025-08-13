@@ -103,7 +103,7 @@ Total Scripts: 445 (205 Python, 240 Shell)
 **New Interface:**
 ```bash
 ./core/deploy.sh --environment=[dev|staging|prod] \
-                 --tier=[minimal|standard|full] \
+                 --tier=[ |standard|full] \
                  --services=[all|specific-list] \
                  --action=[deploy|update|rollback|validate] \
                  --config=/path/to/config.yaml \
@@ -248,7 +248,7 @@ source /opt/sutazaiapp/scripts/lib/docker_utils.sh
 
 # Default values
 ENVIRONMENT=${ENVIRONMENT:-dev}
-TIER=${TIER:-minimal}
+TIER=${TIER:- }
 ACTION=${ACTION:-deploy}
 DRY_RUN=${DRY_RUN:-false}
 
@@ -389,7 +389,7 @@ MIGRATION_MAP = {
     # Old script -> New script mapping
     "/scripts/deployment/deploy.sh": "/scripts/core/deploy.sh",
     "/scripts/deployment/deploy-ai-services.sh": "/scripts/core/deploy.sh --services=ai",
-    "/scripts/deployment/deploy-minimal.sh": "/scripts/core/deploy.sh --tier=minimal",
+    "/scripts/deployment/deploy- .sh": "/scripts/core/deploy.sh --tier= ",
     "/scripts/monitoring/agent-activation-monitor.py": "/scripts/core/monitor.py --scope=agents",
     "/scripts/monitoring/compliance-monitor-core.py": "/scripts/core/monitor.py --checks=compliance",
     # ... (complete mapping for all 445 scripts)
@@ -501,9 +501,9 @@ class ConsolidationTests(unittest.TestCase):
         """Test that consolidated scripts provide same functionality"""
         test_cases = [
             {
-                "old": "/scripts/deployment/deploy-minimal.sh",
-                "new": "/scripts/core/deploy.sh --tier=minimal --dry-run",
-                "expected_output": "Would deploy minimal tier"
+                "old": "/scripts/deployment/deploy- .sh",
+                "new": "/scripts/core/deploy.sh --tier=  --dry-run",
+                "expected_output": "Would deploy   tier"
             },
             # Add comprehensive test cases for all functionality
         ]

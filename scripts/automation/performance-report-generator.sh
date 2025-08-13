@@ -294,12 +294,12 @@ collect_database_metrics() {
     local db_metrics="{}"
     
     # PostgreSQL metrics
-    if docker ps --format "{{.Names}}" | grep -q "sutazai-postgres-minimal"; then
-        local pg_db_size=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT pg_database_size('sutazai');" 2>/dev/null | xargs || echo "0")
-        local pg_connections=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT count(*) FROM pg_stat_activity;" 2>/dev/null | xargs || echo "0")
-        local pg_max_connections=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SHOW max_connections;" 2>/dev/null | xargs || echo "100")
-        local pg_cache_hit_ratio=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT round(sum(blks_hit)*100.0/sum(blks_hit+blks_read), 2) FROM pg_stat_database WHERE datname = 'sutazai';" 2>/dev/null | xargs || echo "0")
-        local pg_slow_queries=$(docker exec sutazai-postgres-minimal psql -U sutazai -d sutazai -t -c "SELECT count(*) FROM pg_stat_statements WHERE mean_time > 1000;" 2>/dev/null | xargs || echo "0")
+    if docker ps --format "{{.Names}}" | grep -q "sutazai-postgres- "; then
+        local pg_db_size=$(docker exec sutazai-postgres-  psql -U sutazai -d sutazai -t -c "SELECT pg_database_size('sutazai');" 2>/dev/null | xargs || echo "0")
+        local pg_connections=$(docker exec sutazai-postgres-  psql -U sutazai -d sutazai -t -c "SELECT count(*) FROM pg_stat_activity;" 2>/dev/null | xargs || echo "0")
+        local pg_max_connections=$(docker exec sutazai-postgres-  psql -U sutazai -d sutazai -t -c "SHOW max_connections;" 2>/dev/null | xargs || echo "100")
+        local pg_cache_hit_ratio=$(docker exec sutazai-postgres-  psql -U sutazai -d sutazai -t -c "SELECT round(sum(blks_hit)*100.0/sum(blks_hit+blks_read), 2) FROM pg_stat_database WHERE datname = 'sutazai';" 2>/dev/null | xargs || echo "0")
+        local pg_slow_queries=$(docker exec sutazai-postgres-  psql -U sutazai -d sutazai -t -c "SELECT count(*) FROM pg_stat_statements WHERE mean_time > 1000;" 2>/dev/null | xargs || echo "0")
         
         # Add PostgreSQL metrics
         db_metrics=$(echo "$db_metrics" | jq \
@@ -319,11 +319,11 @@ collect_database_metrics() {
     fi
     
     # Redis metrics
-    if docker ps --format "{{.Names}}" | grep -q "sutazai-redis-minimal"; then
-        local redis_memory=$(docker exec sutazai-redis-minimal redis-cli info memory | grep used_memory: | cut -d: -f2 | tr -d '\r' || echo "0")
-        local redis_keys=$(docker exec sutazai-redis-minimal redis-cli dbsize 2>/dev/null || echo "0")
-        local redis_hits=$(docker exec sutazai-redis-minimal redis-cli info stats | grep keyspace_hits | cut -d: -f2 | tr -d '\r' || echo "0")
-        local redis_misses=$(docker exec sutazai-redis-minimal redis-cli info stats | grep keyspace_misses | cut -d: -f2 | tr -d '\r' || echo "0")
+    if docker ps --format "{{.Names}}" | grep -q "sutazai-redis- "; then
+        local redis_memory=$(docker exec sutazai-redis-  redis-cli info memory | grep used_memory: | cut -d: -f2 | tr -d '\r' || echo "0")
+        local redis_keys=$(docker exec sutazai-redis-  redis-cli dbsize 2>/dev/null || echo "0")
+        local redis_hits=$(docker exec sutazai-redis-  redis-cli info stats | grep keyspace_hits | cut -d: -f2 | tr -d '\r' || echo "0")
+        local redis_misses=$(docker exec sutazai-redis-  redis-cli info stats | grep keyspace_misses | cut -d: -f2 | tr -d '\r' || echo "0")
         local redis_hit_rate=0
         
         if [[ $redis_hits -gt 0 || $redis_misses -gt 0 ]]; then

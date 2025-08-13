@@ -31,7 +31,7 @@ The `initialize_conversation_context` tool is **REQUIRED** at the beginning of e
 // ✅ DO: Call EXACTLY ONCE at the BEGINNING of EVERY conversation
 mcp_devcontext_initialize_conversation_context({
   initialQuery: "user's actual message or question", // Required
-  contextDepth: "standard", // Options: "minimal", "standard", "comprehensive"
+  contextDepth: "standard", // Options: " ", "standard", "comprehensive"
   includeArchitecture: true, // Whether to include architectural context
   includeRecentConversations: true, // Whether to include recent conversations
   maxCodeContextItems: 5, // Maximum number of code items to include
@@ -75,7 +75,7 @@ mcp_devcontext_update_conversation_context({
     },
   ],
   preserveContextOnTopicShift: true, // Whether to maintain context during topic changes
-  contextIntegrationLevel: "balanced", // Options: "minimal", "balanced", "aggressive"
+  contextIntegrationLevel: "balanced", // Options: " ", "balanced", "aggressive"
   trackIntentTransitions: true, // Whether to track intent changes
   tokenBudget: 4000, // Maximum token budget
 });

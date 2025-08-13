@@ -2862,7 +2862,7 @@
 						<line number="409" hits="0"/>
 					</lines>
 				</class>
-				<class name="minimal_app.py" filename="minimal_app.py" complexity="0" line-rate="0" branch-rate="1">
+				<class name="app.py" filename="app.py" complexity="0" line-rate="0" branch-rate="1">
 					<methods/>
 					<lines>
 						<line number="5" hits="0"/>

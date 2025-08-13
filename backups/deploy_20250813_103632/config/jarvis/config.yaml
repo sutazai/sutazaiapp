@@ -1,0 +1,110 @@
+# Jarvis AI System Configuration
+# Unified interface for SutazAI with voice and multi-modal capabilities
+
+# Agent coordination settings
+agents:
+  backend_url: "http://localhost:8000"
+  max_concurrent: 5
+  timeout: 60
+  retry_attempts: 3
+  
+# Task planning configuration
+planner:
+  max_steps: 10
+  enable_reflection: true
+  planning_model: "tinyllama"
+  ollama_url: "http://localhost:10104"
+  strategies:
+    - "decomposition"     # Break complex tasks into subtasks
+    - "chain_of_thought"  # Step-by-step reasoning
+    - "tool_selection"    # Choose appropriate tools/agents
+    - "error_recovery"    # Handle failures gracefully
+    
+# Voice interface settings
+voice:
+  enable_speech_recognition: true
+  enable_text_to_speech: true
+  language: "en-US"
+  voice_engine: "pyttsx3"
+  speech_recognition:
+    engine: "google"  # google, sphinx, or whisper
+    energy_threshold: 300
+    pause_threshold: 0.8
+  text_to_speech:
+    rate: 150        # Words per minute
+    volume: 0.9      # 0.0 to 1.0
+    voice_id: 0      # Voice selection
+    
+# Plugin system configuration
+plugins:
+  plugin_dir: "/opt/sutazaiapp/services/jarvis/plugins"
+  auto_load: true
+  enabled_plugins:
+    - "web_search"
+    - "code_executor"
+    - "file_manager"
+    - "system_monitor"
+    - "reminder"
+    - "calculator"
+    
+# Memory management
+memory:
+  type: "redis"
+  redis_url: "redis://localhost:6379"
+  max_history: 1000
+  ttl: 86400  # 24 hours
+  embeddings:
+    enabled: true
+    model: "tinyllama"
+    dimension: 384
+    
+# Multi-modal capabilities
+multimodal:
+  vision:
+    enabled: false  # Enable when GPU available
+    model: "clip"
+  audio:
+    enabled: true
+    formats: ["wav", "mp3", "ogg"]
+  document:
+    enabled: true
+    formats: ["pdf", "docx", "txt", "md"]
+    
+# Integration settings
+integrations:
+  ollama:
+    url: "http://localhost:10104"
+    default_model: "tinyllama"
+  chromadb:
+    url: "http://localhost:8001"
+    collection: "jarvis_memory"
+  consul:
+    enabled: true
+    url: "http://localhost:8500"
+  kong:
+    enabled: true
+    admin_url: "http://localhost:8001"
+    
+# Security settings
+security:
+  enable_authentication: false
+  api_key_header: "X-API-Key"
+  allowed_origins: ["*"]
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 60
+    
+# Performance settings
+performance:
+  cache_responses: true
+  cache_ttl: 300  # 5 minutes
+  max_request_size: "10MB"
+  request_timeout: 300  # 5 minutes
+  
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "/opt/sutazaiapp/logs/jarvis/jarvis.log"
+  max_size: "100MB"
+  backup_count: 5

@@ -81,7 +81,7 @@ Successfully implemented comprehensive WSL2 GPU monitoring solutions in `/opt/su
 - Path caching prevents repeated filesystem checks
 - XML parsing only when supported
 - Timeout protection (3-5 seconds max per query)
-- Minimal resource usage with proper error handling
+-   resource usage with proper error handling
 
 ### Adaptive Detection
 - Detects best available method during initialization

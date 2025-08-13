@@ -152,7 +152,7 @@ graph TB
 | **Redis** | 10001 | Caching & sessions | Functional |
 | **Neo4j** | 10002-3 | Graph relationships | Not integrated |
 | **Kong** | 10005 | API gateway | No routes configured |
-| **Consul** | 10006 | Service discovery | Minimal usage |
+| **Consul** | 10006 | Service discovery |   usage |
 | **RabbitMQ** | 10007-8 | Message queue | Used by Task Coordinator |
 | **Backend** | 10010 | REST API | Partially functional |
 | **Frontend** | 10011 | Web UI | Basic implementation |
@@ -250,7 +250,7 @@ class FunctionalAgent(BaseAgent):
 ### 4.4 Infrastructure Components
 
 - **Kong Gateway**: API routing and rate limiting (needs configuration)
-- **Consul**: Service registry (minimal current usage)
+- **Consul**: Service registry (  current usage)
 - **RabbitMQ**: Message broker for agent communication
 - **Docker Network**: `sutazai-network` for container isolation
 

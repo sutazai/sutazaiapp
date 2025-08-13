@@ -209,7 +209,7 @@
 
 ### Issue 2: Ollama Generation Timeout  
 **Problem:** Direct Ollama text generation occasionally times out
-**Impact:** Minimal - backend has fallback mechanisms
+**Impact:**   - backend has fallback mechanisms
 **Workaround:** Backend uses heuristic analysis as fallback
 **Status:** 🟡 MINOR (system remains functional)
 

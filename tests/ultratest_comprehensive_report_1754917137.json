@@ -14,7 +14,7 @@
     "sample_files": [
       "/opt/sutazaiapp/backend/demo_circuit_breaker.py",
       "/opt/sutazaiapp/backend/setup.py",
-      "/opt/sutazaiapp/backend/minimal_app.py",
+      "/opt/sutazaiapp/backend/ _app.py",
       "/opt/sutazaiapp/backend/__init__.py",
       "/opt/sutazaiapp/backend/core/config.py",
       "/opt/sutazaiapp/backend/ai_agents/integration_examples_fantasy_backup.py",
@@ -64,7 +64,7 @@
       "path": "/opt/sutazaiapp/scripts/testing/test_ollama.py",
       "success": true,
       "duration": 3.280843496322632,
-      "stdout": "\u2705 Ollama is running with 1 models\n  - tinyllama:latest: 608MB\n\n\ud83d\udd04 Testing generation with minimal settings...\n\u2705 Response in 3.01s\nGenerated: I\n\u26a0\ufe0f Performance is acceptable but could be better\n",
+      "stdout": "\u2705 Ollama is running with 1 models\n  - tinyllama:latest: 608MB\n\n\ud83d\udd04 Testing generation with   settings...\n\u2705 Response in 3.01s\nGenerated: I\n\u26a0\ufe0f Performance is acceptable but could be better\n",
       "stderr": "",
       "return_code": 0
     },
@@ -231,12 +231,12 @@
       "return_code": 1
     },
     {
-      "file": "test_routes_minimal.py",
-      "path": "/opt/sutazaiapp/scripts/testing/test_routes_minimal.py",
+      "file": "test_routes_ .py",
+      "path": "/opt/sutazaiapp/scripts/testing/test_routes_ .py",
       "success": false,
       "duration": 0.40064215660095215,
       "stdout": "",
-      "stderr": "Traceback (most recent call last):\n  File \"/opt/sutazaiapp/scripts/testing/test_routes_minimal.py\", line 3, in <module>\n    from fastapi.testclient import TestClient\nModuleNotFoundError: No module named 'fastapi'\n",
+      "stderr": "Traceback (most recent call last):\n  File \"/opt/sutazaiapp/scripts/testing/test_routes_ .py\", line 3, in <module>\n    from fastapi.testclient import TestClient\nModuleNotFoundError: No module named 'fastapi'\n",
       "return_code": 1
     },
     {

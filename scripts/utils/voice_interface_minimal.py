@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Minimal Voice Interface for JARVIS AI System
+  Voice Interface for JARVIS AI System
 Basic voice capabilities without heavy ML dependencies
 """
 
@@ -28,7 +28,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 class VoiceInterface:
-    """Minimal voice interface with basic speech capabilities"""
+    """  voice interface with basic speech capabilities"""
     
     def __init__(self, config: Dict[str, Any]):
         self.config = config

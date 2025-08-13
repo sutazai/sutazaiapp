@@ -117,7 +117,7 @@ COMMON OPERATIONS:
     validate    Validate system configuration
 
 DEPLOYMENT OPERATIONS:
-    deploy start [minimal|core|full]    Deploy SutazAI platform
+    deploy start [ |core|full]    Deploy SutazAI platform
     deploy health                       Check deployment health
     deploy rollback                     Rollback deployment
     deploy cleanup                      Clean up failed deployments

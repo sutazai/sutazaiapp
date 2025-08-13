@@ -236,7 +236,7 @@ New code permitted only when:
 
 #### 5.2 Code Quality Expectations
 - Clean, readable, maintainable code
-- Self-documenting with minimal comments
+- Self-documenting with   comments
 - SOLID principles adherence
 - Design patterns appropriately applied
 
@@ -397,7 +397,7 @@ LABEL description="Service description"
 # Security scanning required
 RUN security-scan
 
-# Minimal layers
+#   layers
 RUN apt-get update && \
     apt-get install -y required-packages && \
     rm -rf /var/lib/apt/lists/*

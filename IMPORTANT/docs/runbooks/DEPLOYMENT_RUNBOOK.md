@@ -639,7 +639,7 @@ OLLAMA_HOST=sutazai-ollama
 OLLAMA_PORT=11434
 OLLAMA_KEEP_ALIVE=5m
 
-# Monitoring (minimal)
+# Monitoring ( )
 PROMETHEUS_ENABLED=false
 GRAFANA_ENABLED=false
 

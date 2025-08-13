@@ -88,7 +88,7 @@ class DockerfileSecurityValidator:
             },
             'owasp_docker_security': {
                 'secrets_management': 'Secrets should not be embedded in images',
-                'minimal_attack_surface': 'Image should have minimal attack surface',
+                ' _attack_surface': 'Image should have   attack surface',
                 'trusted_base_images': 'Should use trusted base images only',
                 'image_scanning': 'Images should be scanned for vulnerabilities',
                 'runtime_security': 'Runtime security controls should be in place',

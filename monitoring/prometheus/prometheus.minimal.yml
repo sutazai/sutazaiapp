@@ -1,4 +1,4 @@
-# Minimal Prometheus Configuration
+#   Prometheus Configuration
 # Reduced scraping frequency and targets for resource efficiency
 
 global:

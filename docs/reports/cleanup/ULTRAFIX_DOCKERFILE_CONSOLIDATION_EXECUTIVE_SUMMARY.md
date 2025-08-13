@@ -56,7 +56,7 @@ The SutazAI system currently suffers from **Docker Infrastructure Chaos** with 1
 5. sutazai-frontend-streamlit:v1     # Optimized UI base
 6. sutazai-backend-fastapi:v1        # API service base
 7. sutazai-monitoring-stack:v1       # Observability services
-8. sutazai-security-hardened:v1      # Minimal attack surface base
+8. sutazai-security-hardened:v1      #   attack surface base
 ```
 
 ### Tier 2: Application Services (30 Images)
@@ -87,7 +87,7 @@ The SutazAI system currently suffers from **Docker Infrastructure Chaos** with 1
 
 ### Security Compliance Features
 - **Non-Root Users**: All containers run as `appuser` (uid/gid 1000)
-- **Minimal Attack Surface**: Alpine/slim base images only
+- **  Attack Surface**: Alpine/slim base images only
 - **Secret Management**: Environment-based, no hardcoded credentials
 - **Network Security**: Proper service isolation and network policies
 - **Audit Ready**: Comprehensive logging and monitoring integration
@@ -101,7 +101,7 @@ The SutazAI system currently suffers from **Docker Infrastructure Chaos** with 1
 |--------|--------|-------|-------------|
 | **Total Build Time** | 6.2 hours | 1.3 hours | **79% faster** |
 | **Base Image Size** | ~2.5GB total | ~800MB total | **68% smaller** |
-| **Layer Caching** | Minimal | Optimized | **5x faster rebuilds** |
+| **Layer Caching** |   | Optimized | **5x faster rebuilds** |
 | **Security Scan Time** | 30.8 hours | 6.3 hours | **80% faster** |
 | **Deployment Speed** | 45 minutes | 12 minutes | **73% faster** |
 

@@ -30,7 +30,7 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
     && find /opt/venv -name '*.pyc' -delete \
     && find /opt/venv -name '*.pyo' -delete
 
-# Production stage - Minimal runtime
+# Production stage -   runtime
 FROM python:3.12.8-alpine3.20 as production
 
 # Runtime dependencies only

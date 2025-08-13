@@ -6,7 +6,7 @@ Author: DOCKER-MASTER-001
 ## Migration Categories
 
 ### Python Services to Migrate (2 files)
-- /opt/sutazaiapp/docker/base/Dockerfile.python-agent-minimal
+- /opt/sutazaiapp/docker/base/Dockerfile.python-agent- 
 - /opt/sutazaiapp/docker/skyvern/Dockerfile
 
 ### Node.js Services to Migrate (0 files)

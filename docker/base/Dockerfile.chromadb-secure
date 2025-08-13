@@ -1,0 +1,7 @@
+FROM chromadb/chroma:latest
+LABEL maintainer="SutazAI Security Team"
+LABEL security.hardening="enabled"
+
+# Create non-root user
+USER 1001:1001
+EXPOSE 8000

@@ -128,7 +128,7 @@ class SutazAIFallbackHandlers:
                 name="cached_vectors",
                 priority=2,
                 handler=self.cached_vector_fallback,
-                degradation_level=DegradationLevel.MINIMAL,
+                degradation_level=DegradationLevel. ,
                 cache_ttl=3600
             )
         )
@@ -152,7 +152,7 @@ class SutazAIFallbackHandlers:
                 name="cached_responses",
                 priority=1,
                 handler=self.cached_llm_fallback,
-                degradation_level=DegradationLevel.MINIMAL,
+                degradation_level=DegradationLevel. ,
                 cache_ttl=1800
             )
         )

@@ -7,7 +7,7 @@
 # Use optimized Alpine base
 FROM sutazai-python-alpine-optimized:latest as base
 
-# Orchestrator specific dependencies (minimal)
+# Orchestrator specific dependencies ( )
 COPY requirements.txt /tmp/agent-requirements.txt
 RUN if [ -f /tmp/agent-requirements.txt ]; then \
       pip install --no-cache-dir --compile -r /tmp/agent-requirements.txt \

@@ -8,7 +8,7 @@
     "model_training_optimization",
     "rag_system_building"
   ],
-  "ollama_endpoint": "http://sutazai-ollama-minimal:11434",
+  "ollama_endpoint": "http://sutazai-ollama- :11434",
   "model": "tinyllama",
   "max_tokens": 2048,
   "priority": "high",

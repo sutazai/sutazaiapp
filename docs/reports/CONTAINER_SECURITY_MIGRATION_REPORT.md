@@ -6,7 +6,7 @@
 ## Migration Summary
 - **Target:** Convert 11 root containers to non-root users
 - **Method:** Dockerfile updates + docker-compose user specifications
-- **Downtime:** Minimal (containers restarted in phases)
+- **Downtime:**   (containers restarted in phases)
 
 ## Security Improvements
 - **Before:** 11/28 containers running as root (39%)

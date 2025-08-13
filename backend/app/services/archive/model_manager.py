@@ -64,7 +64,7 @@ class ModelManager:
                 "prompt": "Hello",
                 "stream": False,
                 "options": {
-                    "num_predict": 1,  # Minimal prediction
+                    "num_predict": 1,  #   prediction
                     "temperature": 0,
                     "top_p": 1,
                     "num_ctx": 512  # Small context window for warmup

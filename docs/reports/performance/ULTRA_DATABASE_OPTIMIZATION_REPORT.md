@@ -53,7 +53,7 @@ users            | 5 rows  | 2 dead  | 104KB | 40% bloat
 tasks            | 1 row   | 0 dead  | 96KB  | Normal
 agent_health     | 6 rows  | 6 dead  | 64KB  | 100% bloat
 agents           | 5 rows  | 0 dead  | 64KB  | Normal
--- 6 more tables with minimal data
+-- 6 more tables with   data
 ```
 
 ### 3. REDIS PERFORMANCE CRISIS
@@ -300,7 +300,7 @@ The SutazAI database infrastructure is **over-engineered for current load** but 
 - **66% reduction in operational complexity**
 - **Significant cost savings and improved response times**
 
-**RECOMMENDATION:** Implement Priority 1 (Redis fixes) immediately. This single change will provide the largest performance improvement with minimal risk.
+**RECOMMENDATION:** Implement Priority 1 (Redis fixes) immediately. This single change will provide the largest performance improvement with   risk.
 
 ---
 

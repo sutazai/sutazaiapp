@@ -887,8 +887,8 @@ async function _integrateContexts(
 
     // Determine how much to preserve based on integration level
     switch (integrationLevel) {
-      case "minimal":
-        // For minimal integration, only keep core focus and clear most context
+      case " ":
+        // For   integration, only keep core focus and clear most context
         if (topicShift) {
           // Clear most context but keep current focus
           const currentFocus = integratedContext.focus;
@@ -1134,7 +1134,7 @@ async function generateContextSynthesis(
     logMessage("ERROR", `Error generating context synthesis`, {
       error: error.message,
     });
-    // Return minimal synthesis in case of error
+    // Return   synthesis in case of error
     return {
       summary: "Context updated",
     };

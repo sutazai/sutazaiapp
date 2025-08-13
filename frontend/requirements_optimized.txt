@@ -1,5 +1,5 @@
 # SutazAI Frontend - OPTIMIZED Requirements
-# Minimal dependencies for maximum performance
+#   dependencies for maximum performance
 # Version: 2025-08-10 ULTRA-OPTIMIZATION
 
 # Core Streamlit Framework (Essential)
