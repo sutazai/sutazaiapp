@@ -261,7 +261,7 @@ class AdvancedReasoningEngine:
             2. Why is this the strongest approach?
             3. What are the key insights from the multi-agent analysis?
             4. What confidence level do you assign to this solution?
-            5. What would be the next steps to implement/validate?
+            5. What are the specific next actions to take?
             
             Provide a clear, actionable final answer.
             """

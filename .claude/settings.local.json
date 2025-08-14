@@ -240,10 +240,24 @@
       "Bash(top:*)",
       "Bash(journalctl:*)",
       "Bash(git rm:*)",
-      "Bash(scripts/remediation/01_emergency_recovery.sh:*)"
+      "Bash(scripts/remediation/01_emergency_recovery.sh:*)",
+      "Bash(swapon:*)",
+      "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh:*)",
+      "Bash(do echo -n \"  $service: \")",
+      "Bash(then echo \"✅ RUNNING\")",
+      "Bash(else echo \"❌ FAILED\")",
+      "Bash(DATABASE_URI=\"postgresql://sutazai:sutazai123@sutazai-postgres:5432/sutazai\" DOCKER_NETWORK=\"sutazai-network\" POSTGRES_CONTAINER=\"sutazai-postgres\" ./scripts/mcp/wrappers/postgres.sh --selfcheck)",
+      "Bash(./scripts/mcp/selfcheck_all.sh:*)",
+      "Bash(unset:*)",
+      "Bash(./scripts/mcp/wrappers/postgres.sh:*)",
+      "Bash(./scripts/enforcement/validate_all.sh:*)",
+      "Bash(DATABASE_URI=\"postgresql://sutazai:sutazai123@sutazai-postgres:5432/sutazai\" ./scripts/mcp/wrappers/postgres.sh --selfcheck)"
     ],
     "deny": [],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "/root/.claude/todos"
+    ]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
@@ -262,5 +276,6 @@
     "web-search",
     "chroma",
     "ddg"
-  ]
+  ],
+  "autoCompact": false
 }

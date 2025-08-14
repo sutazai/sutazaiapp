@@ -17,9 +17,18 @@ class VectorDBManager:
     
     def __init__(self, 
                  chromadb_url: str = "http://chromadb:8000",
-                 qdrant_url: str = "http://qdrant:6333"):
+                 qdrant_url: str = "http://qdrant:6333",
+                 chromadb_token: str = "sk-dcebf71d6136dafc1405f3d3b6f7a9ce43723e36f93542fb"):
         self.chromadb_url = chromadb_url
         self.qdrant_url = qdrant_url
+        self.chromadb_token = chromadb_token
+        
+        # Set up authenticated client for ChromaDB
+        self.chromadb_headers = {
+            "X-Chroma-Token": self.chromadb_token,
+            "Content-Type": "application/json"
+        }
+        
         self.client = httpx.AsyncClient(timeout=30.0)
         
         # Collection configurations
@@ -75,18 +84,20 @@ class VectorDBManager:
         return results
     
     async def _create_chromadb_collection(self, name: str, dimension: int) -> Dict[str, Any]:
-        """Create a ChromaDB collection"""
+        """Create a ChromaDB collection using v2 API"""
         try:
-            # First try to get the collection
+            # First try to get the collection using v2 API  
             response = await self.client.get(
-                f"{self.chromadb_url}/api/v1/collections/{name}"
+                f"{self.chromadb_url}/api/v2/collections/{name}",
+                headers=self.chromadb_headers
             )
             if response.status_code == 200:
                 return {"status": "exists", "name": name}
             
-            # Create if doesn't exist
+            # Create if doesn't exist using v2 API
             response = await self.client.post(
-                f"{self.chromadb_url}/api/v1/collections",
+                f"{self.chromadb_url}/api/v2/collections",
+                headers=self.chromadb_headers,
                 json={
                     "name": name,
                     "metadata": {
@@ -186,7 +197,8 @@ class VectorDBManager:
         texts = [doc.get("text", "") for doc in documents]
         
         response = await self.client.post(
-            f"{self.chromadb_url}/api/v1/collections/{collection}/add",
+            f"{self.chromadb_url}/api/v2/collections/{collection}/add",
+            headers=self.chromadb_headers,
             json={
                 "ids": ids,
                 "embeddings": embeddings,
@@ -279,7 +291,8 @@ class VectorDBManager:
         """Search in ChromaDB"""
         try:
             response = await self.client.post(
-                f"{self.chromadb_url}/api/v1/collections/{collection}/query",
+                f"{self.chromadb_url}/api/v2/collections/{collection}/query",
+                headers=self.chromadb_headers,
                 json={
                     "query_embeddings": [query_embedding],
                     "n_results": limit
@@ -377,7 +390,8 @@ class VectorDBManager:
             try:
                 # Get ChromaDB stats
                 chroma_response = await self.client.get(
-                    f"{self.chromadb_url}/api/v1/collections/{config['chromadb']}"
+                    f"{self.chromadb_url}/api/v2/collections/{config['chromadb']}",
+                    headers=self.chromadb_headers
                 )
                 
                 # Get Qdrant stats

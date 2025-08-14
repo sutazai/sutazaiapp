@@ -1,5 +1,11 @@
 # 🚀 SutazAI — Local AI Automation
 
+## Mandatory Enforcement Rules Precedence (READ FIRST)
+- Mandatory reference: `/opt/sutazaiapp/IMPORTANT/Enforcement_Rules`.
+- This Enforcement Rules document MUST be read and followed BEFORE any execution, modification, or decision.
+- In any conflict, the Enforcement Rules supersede and override this README and all other documentation.
+- All agents, scripts, and contributors must validate compliance with the Enforcement Rules prior to proceeding.
+
 Practical task automation with a local LLM (Ollama) backed by a FastAPI backend, Streamlit frontend, vector stores (Qdrant/Chroma/FAISS), and a full monitoring stack. No cloud keys required by default.
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)

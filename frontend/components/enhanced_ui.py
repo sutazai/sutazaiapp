@@ -375,8 +375,8 @@ class LoadingComponents:
         </style>
         """, unsafe_allow_html=True)
 
-class NotificationSystem:\n    \"\"\"Professional notification and alert system with error boundaries\"\"\""
-    """Advanced notification and alert system"""
+class NotificationSystem:
+    """Professional notification and alert system with error boundaries."""
     
     @staticmethod
     def show_toast(message: str, type: str = "info", duration: int = 3000):

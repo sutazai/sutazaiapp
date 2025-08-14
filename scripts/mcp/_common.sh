@@ -17,3 +17,7 @@ section(){ echo; log "$1"; }
 ok_line(){ echo "[OK] $1"; }
 warn_line(){ echo "[WARN] $1"; }
 err_line(){ echo "[ERR] $1"; }
+
+# Default memory cap for Node-based MCP servers (can be overridden by env)
+: "${MCP_NODE_MAX_MB:=384}"
+export NODE_OPTIONS="--max-old-space-size=${MCP_NODE_MAX_MB} ${NODE_OPTIONS:-}"

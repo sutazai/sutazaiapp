@@ -185,7 +185,7 @@ class EnhancedMonitor:
     def _load_config(self, config_path: Optional[str]) -> Dict[str, Any]:
         """Load monitoring configuration"""
         default_config = {
-            'refresh_rate': 2.0,
+            'refresh_rate': 4.0,
             'adaptive_refresh': True,
             'thresholds': {
                 'cpu_warning': 70,
@@ -308,6 +308,18 @@ class EnhancedMonitor:
         # Calculate adaptive refresh rate
         self._update_refresh_rate(cpu, memory.percent)
         
+        # Cache expensive network connections call (can be heavy on large systems)
+        now = time.time()
+        if not hasattr(self, '_conn_cache_time'):
+            self._conn_cache_time = 0
+            self._conn_count_cache = 0
+        if now - self._conn_cache_time > 10:
+            try:
+                self._conn_count_cache = len(psutil.net_connections())
+            except Exception:
+                self._conn_count_cache = 0
+            self._conn_cache_time = now
+
         stats = {
             'cpu_percent': cpu,
             'cpu_cores': psutil.cpu_count(),
@@ -322,7 +334,7 @@ class EnhancedMonitor:
             'disk_percent': disk.percent,
             'disk_free': disk.free / 1024 / 1024 / 1024,
             'network': network_stats,
-            'connections': len(psutil.net_connections()),
+            'connections': self._conn_count_cache,
             'load_avg': os.getloadavg() if hasattr(os, 'getloadavg') else (0, 0, 0),
             'gpu': gpu_stats
         }
@@ -407,15 +419,15 @@ class EnhancedMonitor:
         
         # Determine target refresh rate based on activity bands
         if activity_score >= 85:
-            target_rate = max(0.5, base_rate * 0.2)  # Very fast updates for critical load
+            target_rate = max(1.5, base_rate * 0.4)  # Avoid sub-1s loops
         elif activity_score >= 70:
-            target_rate = max(0.8, base_rate * 0.4)  # Fast updates for high load
+            target_rate = max(2.0, base_rate * 0.6)
         elif activity_score >= 50:
-            target_rate = max(1.2, base_rate * 0.7)  # Medium updates for moderate load
+            target_rate = max(2.5, base_rate * 0.9)
         elif activity_score >= 30:
-            target_rate = min(3.0, base_rate * 1.2)  # Slower updates for low activity
+            target_rate = min(4.0, base_rate * 1.2)
         else:
-            target_rate = min(6.0, base_rate * 2.0)   # Very slow updates for idle system
+            target_rate = min(8.0, base_rate * 2.0)
         
         # Apply gradual transition to prevent jarring changes (simple moving average)
         self.current_refresh_rate = (current_rate * 0.7) + (target_rate * 0.3)
@@ -2301,7 +2313,8 @@ class EnhancedMonitor:
                 sleep_duration = self.current_refresh_rate
                 
                 # Adaptive polling rate based on refresh speed - faster polling for faster refresh
-                poll_interval = min(0.2, max(0.05, sleep_duration / 10))
+                # Less frequent polling to reduce CPU usage while remaining responsive
+                poll_interval = min(0.5, max(0.25, sleep_duration / 6))
                 
                 while time.time() - start_sleep < sleep_duration:
                     key = self._get_keyboard_input() 

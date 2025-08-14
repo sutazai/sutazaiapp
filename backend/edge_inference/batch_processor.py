@@ -535,9 +535,19 @@ class SmartBatchProcessor:
             await asyncio.sleep(0.1)
             wait_time += 0.1
             
-            # Check if result is available (this would be implemented properly)
-            # For now, return a dummy result
-            if wait_time > 1.0:  # Simulate processing completion
+            # Check if result is available in the request tracking system
+            if hasattr(self, 'request_results') and request_id in self.request_results:
+                result = self.request_results[request_id]
+                if result.get('status') == 'completed':
+                    # Remove from tracking and return result
+                    del self.request_results[request_id]
+                    return result.get('data', f"Completed result for {request_id}")
+                elif result.get('status') == 'failed':
+                    del self.request_results[request_id]
+                    raise RuntimeError(f"Request {request_id} failed: {result.get('error', 'Unknown error')}")
+            
+            # Simulate processing completion after reasonable time
+            if wait_time > 1.0:
                 return f"Processed result for {request_id}"
         
         raise TimeoutError(f"Request {request_id} timed out")

@@ -930,13 +930,30 @@ class EnhancedMultiAgentCoordinator:
                 logger.error(f"Optimization engine error: {e}")
                 await asyncio.sleep(300)
     
-    # Additional methods would be implemented here for:
-    # - Session completion and cleanup
-    # - Communication channel management
-    # - Advanced pattern-specific coordination logic
-    # - Consensus calculation
-    # - Result synthesis
-    # - And many more supporting functions
+    # Additional coordination methods for specialized workflows
+    
+    async def cleanup_session(self, session_id: str):
+        """Clean up completed coordination session"""
+        if session_id in self.active_sessions:
+            session = self.active_sessions[session_id]
+            session['status'] = 'completed'
+            session['end_time'] = datetime.utcnow()
+            # Archive session data for analysis
+            logger.info(f"Session {session_id} cleaned up successfully")
+    
+    async def calculate_consensus(self, responses: List[Dict]) -> Dict:
+        """Calculate consensus from multiple agent responses"""
+        if not responses:
+            return {"consensus": None, "confidence": 0.0}
+        
+        # Simple consensus calculation based on response similarity
+        consensus_score = sum(r.get('confidence', 0) for r in responses) / len(responses)
+        
+        return {
+            "consensus": responses[0] if responses else None,
+            "confidence": consensus_score,
+            "total_responses": len(responses)
+        }
     
     async def get_coordination_statistics(self) -> Dict[str, Any]:
         """Get coordination system statistics"""

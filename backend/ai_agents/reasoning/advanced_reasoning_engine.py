@@ -722,15 +722,47 @@ class AdvancedReasoningEngine:
             reasoning_time = (chain.end_time - chain.start_time).total_seconds()
             self.reasoning_stats["reasoning_times"].append(reasoning_time)
     
-    # Additional helper methods would be implemented here...
-    # This includes methods for:
-    # - Finding relevant facts and rules
-    # - Applying rules and generating conclusions
-    # - Building probabilistic models
-    # - Monte Carlo inference
-    # - Strategic planning helpers
-    # - Pattern extraction algorithms
-    # - And many more supporting functions
+    # Additional helper methods for reasoning operations
+    
+    def find_relevant_facts(self, query: str) -> List[Dict]:
+        """Find facts relevant to the reasoning query"""
+        # Simple keyword-based fact retrieval
+        relevant_facts = []
+        query_lower = query.lower()
+        
+        # In a real implementation, this would use semantic search
+        if hasattr(self, 'fact_base'):
+            for fact in self.fact_base:
+                if any(keyword in fact.get('text', '').lower() for keyword in query_lower.split()):
+                    relevant_facts.append(fact)
+        
+        return relevant_facts[:10]  # Return top 10 relevant facts
+    
+    def apply_reasoning_rules(self, facts: List[Dict], rules: List[Dict]) -> List[Dict]:
+        """Apply reasoning rules to derive new conclusions"""
+        conclusions = []
+        
+        for rule in rules:
+            # Simple rule application logic
+            if self._rule_conditions_met(rule, facts):
+                conclusion = self._apply_rule(rule, facts)
+                if conclusion:
+                    conclusions.append(conclusion)
+        
+        return conclusions
+    
+    def _rule_conditions_met(self, rule: Dict, facts: List[Dict]) -> bool:
+        """Check if rule conditions are satisfied by available facts"""
+        # Simplified rule condition checking
+        return len(facts) > 0 and rule.get('applicable', True)
+    
+    def _apply_rule(self, rule: Dict, facts: List[Dict]) -> Dict:
+        """Apply a reasoning rule to generate a conclusion"""
+        return {
+            'conclusion': rule.get('conclusion', 'No conclusion'),
+            'confidence': rule.get('confidence', 0.5),
+            'based_on_facts': len(facts)
+        }
     
     async def get_reasoning_statistics(self) -> Dict[str, Any]:
         """Get reasoning engine performance statistics"""

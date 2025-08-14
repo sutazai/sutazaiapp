@@ -10,6 +10,7 @@
 .PHONY: deps-update deps-audit report-dashboard
 .PHONY: docs-api docs-api-openapi docs-api-endpoints
 .PHONY: onboarding-deck
+.PHONY: enforce-rules rule-check pre-commit-setup rule-report validate-all
 
 # Default target
 .DEFAULT_GOAL := help
@@ -782,3 +783,37 @@ test-monitor: ## Run continuous monitoring tests
 		curl -sf http://localhost:10104/api/tags > /dev/null && echo "$(GREEN)✓$(NC) Ollama healthy" || echo "$(RED)✗$(NC) Ollama down"; \
 		sleep 30; \
 	done
+
+# 🔧 Rule Enforcement Targets
+enforce-rules: ## Enforce all 20 Fundamental Rules + Core Principles
+	@echo "$(PURPLE)🔧 ENFORCING ALL SUTAZAI RULES$(NC)"
+	@echo "$(YELLOW)Validating compliance with Enforcement Rules...$(NC)"
+	@python3 scripts/enforcement/rule_validator_simple.py
+	@echo "$(GREEN)✅ Rule enforcement complete$(NC)"
+
+rule-check: ## Quick rule compliance check
+	@echo "$(CYAN)📋 QUICK RULE COMPLIANCE CHECK$(NC)"
+	@python3 scripts/enforcement/rule_validator_simple.py
+
+rule-report: ## Generate detailed rule compliance report
+	@echo "$(BLUE)📄 GENERATING RULE COMPLIANCE REPORT$(NC)"
+	@python3 scripts/enforcement/rule_validator.py --output reports/rule_compliance_$(shell date +%Y%m%d_%H%M%S).json
+	@echo "$(GREEN)✅ Detailed report generated$(NC)"
+
+pre-commit-setup: ## Setup pre-commit rule enforcement hooks
+	@echo "$(YELLOW)🔧 Setting up pre-commit rule enforcement...$(NC)"
+	@cp scripts/enforcement/pre_commit_hook.py .git/hooks/pre-commit
+	@chmod +x .git/hooks/pre-commit
+	@echo "$(GREEN)✅ Pre-commit hooks installed$(NC)"
+
+rule-fix: ## Interactive rule violation fixing
+	@echo "$(CYAN)🔧 INTERACTIVE RULE VIOLATION FIXING$(NC)"
+	@echo "$(YELLOW)Analyzing violations and providing fix suggestions...$(NC)"
+	@python3 scripts/enforcement/rule_validator_simple.py
+	@echo "$(BLUE)See rule_validator.py output for remediation steps$(NC)"
+
+validate-all: ## Complete validation of all 20 rules with detailed reporting
+	@echo "$(PURPLE)🔧 COMPREHENSIVE RULE VALIDATION$(NC)"
+	@echo "$(YELLOW)Running complete validation of all 20 Fundamental Rules...$(NC)"
+	@./scripts/enforcement/validate_all.sh
+	@echo "$(GREEN)✅ Comprehensive validation complete$(NC)"

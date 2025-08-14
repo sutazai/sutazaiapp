@@ -34,6 +34,8 @@ class KnowledgeManager:
         self.neo4j_auth = (os.getenv("NEO4J_USER", "neo4j"), os.getenv("NEO4J_PASSWORD", "sutazai_neo4j_password"))
         self.neo4j_driver = None
         self.chromadb_url = os.getenv("CHROMADB_URL", "http://chromadb:8000")
+        self.chromadb_token = "sk-dcebf71d6136dafc1405f3d3b6f7a9ce43723e36f93542fb"
+        self.chromadb_headers = {"X-Chroma-Token": self.chromadb_token, "Content-Type": "application/json"}
         self.qdrant_url = os.getenv("QDRANT_URL", "http://qdrant:6333")
         self.initialized = False
         
@@ -92,7 +94,8 @@ class KnowledgeManager:
             async with httpx.AsyncClient() as client:
                 # Create collection for knowledge
                 response = await client.post(
-                    f"{self.chromadb_url}/api/v1/collections",
+                    f"{self.chromadb_url}/api/v2/collections",
+                    headers=self.chromadb_headers,
                     json={
                         "name": "sutazai_knowledge",
                         "metadata": {"description": "SutazAI knowledge base"}
@@ -237,7 +240,8 @@ class KnowledgeManager:
             async with httpx.AsyncClient() as client:
                 # Add to ChromaDB
                 response = await client.post(
-                    f"{self.chromadb_url}/api/v1/collections/sutazai_knowledge/add",
+                    f"{self.chromadb_url}/api/v2/collections/sutazai_knowledge/add",
+                    headers=self.chromadb_headers,
                     json={
                         "documents": [knowledge.content],
                         "metadatas": [{"id": knowledge.id, "type": knowledge.type}],

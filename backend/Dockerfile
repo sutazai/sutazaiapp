@@ -3,6 +3,9 @@
 # Date: August 10, 2025 - CRITICAL DOCKERFILE DEDUPLICATION
 FROM sutazai-python-agent-master:latest
 
+# Ensure we can install Python packages system-wide
+USER root
+
 # Install backend-specific requirements on top of base
 COPY requirements.txt /tmp/backend-requirements.txt
 RUN pip install --no-cache-dir -r /tmp/backend-requirements.txt && rm /tmp/backend-requirements.txt
@@ -23,7 +26,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 # Expose backend port
 EXPOSE 8000
 
-# Switch to non-root user (inherited from base)
+# Switch back to non-root user (inherited from base)
 USER appuser
 
 # Start backend service

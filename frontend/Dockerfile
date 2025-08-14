@@ -3,9 +3,13 @@
 # Date: August 10, 2025 - CRITICAL DOCKERFILE DEDUPLICATION
 FROM sutazai-python-agent-master:latest
 
+# Ensure we can install Python packages system-wide
+USER root
+
 # Install frontend-specific requirements on top of base  
 # Note: Copy from context root, not relative path
-COPY requirements/base.txt /tmp/frontend-requirements.txt
+# Use local optimized requirements within frontend context
+COPY requirements_optimized.txt /tmp/frontend-requirements.txt
 RUN pip install --no-cache-dir -r /tmp/frontend-requirements.txt && rm /tmp/frontend-requirements.txt
 
 # Copy application and components
@@ -26,7 +30,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 # Expose frontend port
 EXPOSE 8501
 
-# Switch to non-root user (inherited from base)
+# Switch back to non-root user (inherited from base)
 USER appuser
 
 # Start frontend service

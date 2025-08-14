@@ -79,7 +79,8 @@ class VectorDBService:
         # Check ChromaDB availability
         try:
             async with httpx.AsyncClient() as client:
-                response = await client.get(f"{CHROMADB_URL}/api/v1/heartbeat", timeout=3.0)
+                headers = {"X-Chroma-Token": "sk-dcebf71d6136dafc1405f3d3b6f7a9ce43723e36f93542fb"}
+                response = await client.get(f"{CHROMADB_URL}/api/v2/heartbeat", headers=headers, timeout=3.0)
                 if response.status_code == 200:
                     self.chromadb_available = True
                     logger.info("ChromaDB vector database connected")

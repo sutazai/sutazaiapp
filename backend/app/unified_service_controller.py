@@ -59,7 +59,7 @@ class UnifiedServiceController:
             "service-hub": {"port": 8114, "health": "/health", "type": "core", "description": "Service Hub Manager"},
             
             # Databases & Storage
-            "chromadb": {"port": 8001, "health": "/api/v1/heartbeat", "type": "database", "description": "Vector Database"},
+            "chromadb": {"port": 8001, "health": "/api/v2/heartbeat", "type": "database", "description": "Vector Database"},
             "faiss": {"port": 8002, "health": "/health", "type": "database", "description": "FAISS Vector Search"},
             "neo4j": {"port": 7474, "health": "/", "type": "database", "description": "Graph Database"},
             "postgres": {"port": 5432, "health": None, "type": "database", "description": "PostgreSQL Database"},
@@ -593,18 +593,115 @@ class UnifiedServiceController:
         }
     
     async def scale_service(self, service_name: str, replicas: int) -> Dict[str, Any]:
-        """Scale a service (placeholder for future implementation)"""
-        return {
-            "status": "info",
-            "message": f"Service scaling for {service_name} to {replicas} replicas is not yet implemented in this version."
-        }
+        """Scale a Docker Compose service using docker-compose command"""
+        try:
+            import subprocess
+            
+            # Validate service exists
+            services = await self.get_services_by_type("all")
+            service_names = [s['name'] for s in services['services']]
+            
+            if service_name not in service_names:
+                return {
+                    "status": "error",
+                    "message": f"Service '{service_name}' not found in running services"
+                }
+            
+            # Execute docker-compose scale command
+            result = subprocess.run(
+                ["docker-compose", "up", "-d", "--scale", f"{service_name}={replicas}"],
+                cwd="/opt/sutazaiapp",
+                capture_output=True,
+                text=True,
+                timeout=60
+            )
+            
+            if result.returncode == 0:
+                return {
+                    "status": "success",
+                    "message": f"Service '{service_name}' scaled to {replicas} replicas",
+                    "output": result.stdout
+                }
+            else:
+                return {
+                    "status": "error",
+                    "message": f"Failed to scale service '{service_name}': {result.stderr}"
+                }
+                
+        except subprocess.TimeoutExpired:
+            return {
+                "status": "error",
+                "message": f"Service scaling timeout for {service_name}"
+            }
+        except Exception as e:
+            self.logger.error(f"Error scaling service {service_name}: {str(e)}")
+            return {
+                "status": "error",
+                "message": f"Error scaling service {service_name}: {str(e)}"
+            }
     
     async def update_service(self, service_name: str) -> Dict[str, Any]:
-        """Update a service (placeholder for future implementation)"""
-        return {
-            "status": "info",
-            "message": f"Service update for {service_name} is not yet implemented. Please use docker-compose to update services."
-        }
+        """Update a Docker Compose service by pulling latest image and recreating"""
+        try:
+            import subprocess
+            
+            # Validate service exists
+            services = await self.get_services_by_type("all")
+            service_names = [s['name'] for s in services['services']]
+            
+            if service_name not in service_names:
+                return {
+                    "status": "error",
+                    "message": f"Service '{service_name}' not found in running services"
+                }
+            
+            # Pull latest image and recreate service
+            pull_result = subprocess.run(
+                ["docker-compose", "pull", service_name],
+                cwd="/opt/sutazaiapp",
+                capture_output=True,
+                text=True,
+                timeout=300
+            )
+            
+            if pull_result.returncode != 0:
+                return {
+                    "status": "error",
+                    "message": f"Failed to pull latest image for {service_name}: {pull_result.stderr}"
+                }
+            
+            # Recreate the service
+            recreate_result = subprocess.run(
+                ["docker-compose", "up", "-d", "--force-recreate", service_name],
+                cwd="/opt/sutazaiapp",
+                capture_output=True,
+                text=True,
+                timeout=120
+            )
+            
+            if recreate_result.returncode == 0:
+                return {
+                    "status": "success",
+                    "message": f"Service '{service_name}' updated successfully",
+                    "output": recreate_result.stdout
+                }
+            else:
+                return {
+                    "status": "error",
+                    "message": f"Failed to update service '{service_name}': {recreate_result.stderr}"
+                }
+                
+        except subprocess.TimeoutExpired:
+            return {
+                "status": "error",
+                "message": f"Service update timeout for {service_name}"
+            }
+        except Exception as e:
+            self.logger.error(f"Error updating service {service_name}: {str(e)}")
+            return {
+                "status": "error",
+                "message": f"Error updating service {service_name}: {str(e)}"
+            }
     
     async def backup_databases(self) -> Dict[str, Any]:
         """Backup all databases"""

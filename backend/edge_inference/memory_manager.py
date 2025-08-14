@@ -145,8 +145,22 @@ class MemoryMonitor:
         # Trigger garbage collection
         gc.collect()
         
-        # Notify memory manager (would be implemented with callbacks)
-        # This is where we'd trigger model eviction, cache clearing, etc.
+        # Notify memory manager through callback system
+        if hasattr(self, 'memory_callbacks') and self.memory_callbacks:
+            for callback in self.memory_callbacks:
+                try:
+                    callback('pressure_relief_triggered', {
+                        'pressure_level': self.get_memory_pressure_level(),
+                        'memory_used': memory_used,
+                        'memory_total': memory_total,
+                        'timestamp': time.time()
+                    })
+                except Exception as e:
+                    # Don't let callback failures break memory management
+                    logger.warning(f"Memory callback failed: {e}")
+        else:
+            # Default action: log the pressure relief event
+            logger.info(f"Memory pressure relief triggered - Used: {memory_used:.1f}MB, Total: {memory_total:.1f}MB")
     
     def get_memory_pressure_level(self) -> float:
         """Get current memory pressure level (0.0 to 1.0)"""

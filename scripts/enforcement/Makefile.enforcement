@@ -1,0 +1,100 @@
+# 🔧 RULE ENFORCEMENT MAKEFILE TARGETS
+# Integration with existing Makefile for comprehensive rule validation
+
+.PHONY: validate validate-all validate-critical validate-fix validate-report validate-monitor setup-enforcement
+
+# Default enforcement root
+ENFORCEMENT_ROOT ?= /opt/sutazaiapp
+ENFORCEMENT_SCRIPT := scripts/enforcement/comprehensive_rule_enforcer.py
+
+# Validate all rules with summary
+validate:
+	@echo "🔧 SUPREME VALIDATOR - Running Rule Enforcement"
+	@python $(ENFORCEMENT_SCRIPT) --root $(ENFORCEMENT_ROOT) --summary
+
+# Validate all rules with full report
+validate-all:
+	@echo "🔧 SUPREME VALIDATOR - Full Compliance Report"
+	@python $(ENFORCEMENT_SCRIPT) --root $(ENFORCEMENT_ROOT) \
+		--output reports/enforcement/compliance_$(shell date +%Y%m%d_%H%M%S).json
+
+# Validate and block on critical violations
+validate-critical:
+	@echo "🔧 Validating Critical Rules Only"
+	@python $(ENFORCEMENT_SCRIPT) --root $(ENFORCEMENT_ROOT) --summary || \
+		(echo "❌ CRITICAL VIOLATIONS FOUND - Build blocked" && exit 1)
+
+# Validate and auto-fix violations
+validate-fix:
+	@echo "🔧 Validating and Auto-fixing Violations"
+	@python $(ENFORCEMENT_SCRIPT) --root $(ENFORCEMENT_ROOT) --auto-fix --summary
+
+# Generate compliance report
+validate-report:
+	@echo "🔧 Generating Compliance Report"
+	@mkdir -p reports/enforcement
+	@python $(ENFORCEMENT_SCRIPT) --root $(ENFORCEMENT_ROOT) \
+		--output reports/enforcement/compliance_report.json
+	@echo "📄 Report saved to reports/enforcement/compliance_report.json"
+
+# Start continuous monitoring
+validate-monitor:
+	@echo "🔧 Starting Continuous Rule Monitoring"
+	@python scripts/enforcement/continuous_rule_monitor.py --root $(ENFORCEMENT_ROOT)
+
+# Setup enforcement infrastructure
+setup-enforcement:
+	@echo "🔧 Setting up Rule Enforcement Infrastructure"
+	@chmod +x scripts/enforcement/*.py
+	@mkdir -p reports/enforcement
+	@mkdir -p logs
+	@echo "Installing pre-commit hook..."
+	@ln -sf ../../scripts/enforcement/pre_commit_hook.py .git/hooks/pre-commit
+	@chmod +x .git/hooks/pre-commit
+	@echo "Installing requirements..."
+	@pip install watchdog
+	@echo "✅ Enforcement infrastructure ready"
+
+# Integration with existing targets
+test: validate-critical
+	@echo "✅ Rule validation passed, running tests..."
+
+build: validate-critical
+	@echo "✅ Rule validation passed, building..."
+
+deploy: validate-all
+	@echo "✅ Full compliance validated, deploying..."
+
+# Enforcement dashboard
+enforcement-dashboard:
+	@echo "🔧 RULE ENFORCEMENT DASHBOARD"
+	@echo "================================"
+	@echo "Last Report: $$(ls -t reports/enforcement/*.json 2>/dev/null | head -1)"
+	@if [ -f reports/enforcement/latest_compliance_report.json ]; then \
+		echo "Compliance Score: $$(jq -r .compliance_score reports/enforcement/latest_compliance_report.json)%"; \
+		echo "Total Violations: $$(jq -r .total_violations reports/enforcement/latest_compliance_report.json)"; \
+		echo "Critical: $$(jq -r '.violations_by_severity.CRITICAL // 0' reports/enforcement/latest_compliance_report.json)"; \
+		echo "High: $$(jq -r '.violations_by_severity.HIGH // 0' reports/enforcement/latest_compliance_report.json)"; \
+	else \
+		echo "No compliance reports found. Run 'make validate-report' first."; \
+	fi
+
+# Clean enforcement artifacts
+clean-enforcement:
+	@echo "🧹 Cleaning enforcement artifacts"
+	@rm -rf reports/enforcement/*.json
+	@rm -f logs/critical_violations.json
+
+# Help for enforcement targets
+help-enforcement:
+	@echo "🔧 RULE ENFORCEMENT TARGETS"
+	@echo "============================"
+	@echo "  validate           - Quick validation with summary"
+	@echo "  validate-all       - Full validation with detailed report"
+	@echo "  validate-critical  - Block on critical violations"
+	@echo "  validate-fix       - Auto-fix violations where possible"
+	@echo "  validate-report    - Generate compliance report"
+	@echo "  validate-monitor   - Start continuous monitoring"
+	@echo "  setup-enforcement  - Setup enforcement infrastructure"
+	@echo "  enforcement-dashboard - View compliance dashboard"
+	@echo "  clean-enforcement  - Clean enforcement artifacts"

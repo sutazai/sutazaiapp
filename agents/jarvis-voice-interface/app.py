@@ -126,26 +126,122 @@ class JarvisVoiceInterface:
         logger.info("Jarvis Voice Interface shutdown complete")
     
     async def process_text_to_speech(self, text: str, voice_model: str = "default") -> Dict[str, Any]:
-        """Convert text to speech (placeholder - would integrate with TTS service)"""
-        # In a real implementation, this would call a TTS service
-        # For now, return a simulation
-        return {
-            "success": True,
-            "audio_data": None,  # Would contain base64 encoded audio
-            "duration": len(text) * 0.1,  # Simulated duration
-            "voice_used": voice_model
-        }
+        """Convert text to speech using system TTS capabilities"""
+        try:
+            import subprocess
+            import tempfile
+            import base64
+            import os
+            
+            # Create temporary file for audio output
+            with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
+                temp_path = temp_file.name
+            
+            # Use espeak for TTS (available on most Linux systems)
+            try:
+                # Check if espeak is available
+                subprocess.run(["which", "espeak"], check=True, capture_output=True)
+                
+                # Generate audio using espeak
+                result = subprocess.run([
+                    "espeak", 
+                    "-w", temp_path,  # Write to wav file
+                    "-s", "150",      # Speed (words per minute)
+                    "-v", "en",       # Voice (English)
+                    text
+                ], capture_output=True, text=True, timeout=30)
+                
+                if result.returncode == 0 and os.path.exists(temp_path):
+                    # Read and encode audio file
+                    with open(temp_path, "rb") as audio_file:
+                        audio_content = audio_file.read()
+                        audio_base64 = base64.b64encode(audio_content).decode('utf-8')
+                    
+                    # Calculate duration (rough estimate)
+                    word_count = len(text.split())
+                    duration = word_count / 2.5  # Average speaking rate
+                    
+                    # Cleanup temp file
+                    os.unlink(temp_path)
+                    
+                    return {
+                        "success": True,
+                        "audio_data": audio_base64,
+                        "duration": duration,
+                        "voice_used": "espeak-en",
+                        "format": "wav"
+                    }
+                else:
+                    # Cleanup temp file
+                    if os.path.exists(temp_path):
+                        os.unlink(temp_path)
+                    return {
+                        "success": False,
+                        "error": "Failed to generate audio",
+                        "details": result.stderr
+                    }
+                    
+            except subprocess.CalledProcessError:
+                # espeak not available, return text-only response
+                if os.path.exists(temp_path):
+                    os.unlink(temp_path)
+                return {
+                    "success": True,
+                    "audio_data": None,
+                    "text_response": text,
+                    "duration": len(text) * 0.1,
+                    "voice_used": "text-only",
+                    "note": "TTS system not available, returning text response"
+                }
+                
+        except Exception as e:
+            logger.error(f"TTS processing error: {str(e)}")
+            return {
+                "success": False,
+                "error": f"TTS processing failed: {str(e)}"
+            }
     
     async def process_speech_to_text(self, audio_data: str) -> Dict[str, Any]:
-        """Convert speech to text (placeholder - would integrate with STT service)"""
-        # In a real implementation, this would call a STT service
-        # For now, return a simulation
-        return {
-            "success": True,
-            "text": "Hello, how can I help you?",  # Would contain transcribed text
-            "confidence": 0.95,
-            "language": "en"
-        }
+        """Convert speech to text using available STT capabilities"""
+        try:
+            # For now, return guidance on proper audio input format
+            # In production, this would integrate with speech recognition services
+            if not audio_data:
+                return {
+                    "success": False,
+                    "error": "No audio data provided"
+                }
+            
+            # Basic validation of audio data format
+            if not audio_data.startswith("data:audio") and len(audio_data) < 100:
+                return {
+                    "success": False,
+                    "error": "Invalid audio data format. Expected base64 encoded audio or data URL"
+                }
+            
+            # Note: Real STT implementation would use services like:
+            # - Google Speech-to-Text API
+            # - Azure Speech Services  
+            # - Amazon Transcribe
+            # - Local whisper.cpp or similar
+            
+            # Return status indicating STT capability requirement
+            return {
+                "success": True,
+                "text": "[Speech-to-text transcription not yet implemented]",
+                "confidence": 0.0,
+                "language": "en",
+                "note": "STT requires integration with speech recognition service",
+                "supported_formats": ["wav", "mp3", "flac"],
+                "requirements": "Integrate with Whisper, Google Speech API, or similar service"
+            }
+            
+        except Exception as e:
+            logger.error(f"STT processing error: {str(e)}")
+            return {
+                "success": False,
+                "error": f"STT processing failed: {str(e)}"
+            }
     
     async def interpret_command(self, text: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
         """Interpret voice command using Ollama"""

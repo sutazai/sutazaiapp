@@ -2,16 +2,12 @@
   "mcpServers": {
     "language-server": {
       "type": "stdio",
-      "command": "/root/go/bin/mcp-language-server",
-      "args": [
-        "--workspace",
-        "/opt/sutazaiapp",
-        "--lsp",
-        "/root/.nvm/versions/node/v22.18.0/bin/typescript-language-server",
-        "--",
-        "--stdio"
-      ],
-      "env": {}
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/language-server.sh",
+      "args": [],
+      "env": {
+        "MCP_LANGSERVER_NODE_MAX_MB": "384",
+        "MCP_LANGSERVER_MAX_INSTANCES": "4"
+      }
     },
     "github": {
       "type": "stdio",
@@ -65,7 +61,7 @@
       "env": {
         "DOCKER_NETWORK": "sutazai-network",
         "POSTGRES_CONTAINER": "sutazai-postgres",
-        "DATABASE_URI": "postgresql://sutazai:8lfYZjSlJrSCCmWyKOTtxI3ydNFVAMA4@postgres:5432/sutazai"
+        "DATABASE_URL": "postgresql://sutazai:sutazai123@sutazai-postgres:5432/sutazai"
       }
     },
     "extended-memory": {

@@ -33,9 +33,52 @@ export async function extractPatternsFromConversation(conversationId) {
       return [];
     }
 
-    // For now, return an empty array since this is a placeholder implementation
-    // In a real implementation, we would have logic to detect code patterns
-    return [];
+    // Analyze messages for common code patterns and practices
+    const patterns = [];
+    
+    for (const message of messages) {
+      const content = message.content.toLowerCase();
+      
+      // Detect common programming patterns
+      if (content.includes('async') && content.includes('await')) {
+        patterns.push({
+          type: 'async_pattern',
+          description: 'Asynchronous programming pattern detected',
+          confidence: 0.8
+        });
+      }
+      
+      if (content.includes('try') && content.includes('catch')) {
+        patterns.push({
+          type: 'error_handling',
+          description: 'Error handling pattern detected',
+          confidence: 0.9
+        });
+      }
+      
+      if (content.includes('import') || content.includes('require')) {
+        patterns.push({
+          type: 'dependency_management',
+          description: 'Dependency import pattern detected',
+          confidence: 0.7
+        });
+      }
+      
+      if (content.includes('function') || content.includes('=>')) {
+        patterns.push({
+          type: 'function_definition',
+          description: 'Function definition pattern detected',
+          confidence: 0.8
+        });
+      }
+    }
+    
+    // Remove duplicates based on type
+    const uniquePatterns = patterns.filter((pattern, index, self) =>
+      index === self.findIndex(p => p.type === pattern.type)
+    );
+    
+    return uniquePatterns;
   } catch (error) {
     console.error(
       `[LearningSystem] Error extracting patterns: ${error.message}`

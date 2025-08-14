@@ -224,8 +224,7 @@ export async function manageImplicitCheckpoints() {
 
       // Try to get actual context data if available
       try {
-        // This is a placeholder - in real implementation, we would check if
-        // ActiveContextManager is available and use it to get context data
+        // Check if ActiveContextManager is available and use it to get context data
         const ActiveContextManager = global.ActiveContextManager;
         if (
           ActiveContextManager &&

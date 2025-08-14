@@ -454,11 +454,12 @@ class HealthMonitoringService:
             return False
     
     async def _check_chromadb_health(self) -> bool:
-        """Check ChromaDB health"""
+        """Check ChromaDB health using v2 API"""
         try:
             if self._pool_manager:
+                headers = {"X-Chroma-Token": "sk-dcebf71d6136dafc1405f3d3b6f7a9ce43723e36f93542fb"}
                 async with await self._pool_manager.get_http_client('vector_db') as client:
-                    response = await client.get("http://sutazai-chromadb:8000/api/v1/heartbeat")
+                    response = await client.get("http://sutazai-chromadb:8000/api/v2/heartbeat", headers=headers)
                     return response.status_code == 200
         except Exception:
             return False
