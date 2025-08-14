@@ -16,9 +16,10 @@ if has_cmd docker; then
 fi
 
 if has_cmd npx; then
-  # Prefer Node variant if available
-  exec npx -y @modelcontextprotocol/server-fetch
+  # No HTTP server package exists - fall back to general purpose fetch
+  err "No @modelcontextprotocol/server-http package available in npm registry"
+  exit 1
 fi
 
-err "HTTP fetch MCP requires Docker (mcp/fetch) or Node (@modelcontextprotocol/server-fetch)."
+err "HTTP fetch MCP requires Docker (mcp/fetch) or Node (@modelcontextprotocol/server-http)."
 exit 127

@@ -533,7 +533,7 @@ Below remains the original draft content for reference.
 │   │       │   └── coordination-protocol.py # Coordination protocol
 │   │       └── capabilities/
 │   │           ├── zero-coordination.py    # Zero-based coordination
-│   │           └── minimal-overhead.py     # Minimal overhead operations
+│   │           └──  -overhead.py     #   overhead operations
 │   ├── code-intelligence-agents/   # 💻 CODE & DEVELOPMENT AGENTS
 │   │   ├── tabbyml-agent/          # 🔧 OPTIONAL: TabbyML Code Completion
 │   │   │   ├── Dockerfile          # TabbyML service (GPU optional)
@@ -2546,7 +2546,7 @@ Below remains the original draft content for reference.
 │   │       ├── Dockerfile              # Enhanced Agent Zero with training
 │   │       ├── zero-training/
 │   │       │   ├── zero-shot-learning.py       # Zero-shot learning enhancement
-│   │       │   ├── minimal-training.py         # Minimal training protocols
+│   │       │   ├──  -training.py         #   training protocols
 │   │       │   └── efficient-learning.py       # Efficient learning
 │   │       └── meta-learning/
 │   │           ├── meta-zero-learning.py       # Meta-learning for zero-shot
@@ -5188,26 +5188,26 @@ Below remains the original draft content for reference.
 │   │       ├── Dockerfile              # Enhanced Agent Zero with self-coding and reasoning
 │   │       ├── zero-training/
 │   │       │   ├── zero-shot-learning.py       # Enhanced zero-shot learning
-│   │       │   ├── minimal-training.py         # Enhanced minimal training
+│   │       │   ├──  -training.py         # Enhanced   training
 │   │       │   └── efficient-learning.py       # Enhanced efficient learning
 │   │       ├── meta-learning/
 │   │       │   ├── meta-zero-learning.py       # Enhanced meta-learning for zero-shot
 │   │       │   └── transfer-learning.py        # Enhanced transfer learning
 │   │       ├── self-coding-capabilities/       # 🔧 NEW: Self-coding zero capabilities
 │   │       │   ├── zero-shot-coding.py         # Zero-shot self-coding
-│   │       │   ├── minimal-code-generation.py  # Minimal code generation
+│   │       │   ├──  -code-generation.py  #   code generation
 │   │       │   ├── efficient-coding.py         # Efficient coding
 │   │       │   ├── meta-coding.py              # Meta-coding
 │   │       │   └── bootstrap-coding.py         # Bootstrap coding
 │   │       ├── reasoning-capabilities/         # 🔧 NEW: UltraThink zero reasoning
 │   │       │   ├── zero-shot-reasoning.py      # Zero-shot reasoning
-│   │       │   ├── minimal-reasoning.py        # Minimal reasoning
+│   │       │   ├──  -reasoning.py        #   reasoning
 │   │       │   ├── efficient-reasoning.py      # Efficient reasoning
 │   │       │   ├── meta-zero-reasoning.py      # Meta-zero reasoning
 │   │       │   └── bootstrap-reasoning.py      # Bootstrap reasoning
 │   │       └── voice-chat-integration/         # 🔧 NEW: Voice/chat zero coding
 │   │           ├── voice-zero-coding.py        # Voice-controlled zero coding
-│   │           ├── chat-minimal-coding.py      # Chat-controlled minimal coding
+│   │           ├── chat- -coding.py      # Chat-controlled   coding
 │   │           ├── voice-efficient-commands.py # Voice efficient commands
 │   │           └── chat-meta-commands.py       # Chat meta commands
 │   ├── [Enhanced Code Intelligence Agents with self-coding and reasoning capabilities...]
@@ -6622,26 +6622,26 @@ Below remains the original draft content for reference.
 │   │       ├── Dockerfile              # Enhanced Agent Zero with self-coding and reasoning
 │   │       ├── zero-training/
 │   │       │   ├── zero-shot-learning.py       # Enhanced zero-shot learning
-│   │       │   ├── minimal-training.py         # Enhanced minimal training
+│   │       │   ├──  -training.py         # Enhanced   training
 │   │       │   └── efficient-learning.py       # Enhanced efficient learning
 │   │       ├── meta-learning/
 │   │       │   ├── meta-zero-learning.py       # Enhanced meta-learning for zero-shot
 │   │       │   └── transfer-learning.py        # Enhanced transfer learning
 │   │       ├── self-coding-capabilities/       # 🔧 NEW: Self-coding zero capabilities
 │   │       │   ├── zero-shot-coding.py         # Zero-shot self-coding
-│   │       │   ├── minimal-code-generation.py  # Minimal code generation
+│   │       │   ├──  -code-generation.py  #   code generation
 │   │       │   ├── efficient-coding.py         # Efficient coding
 │   │       │   ├── meta-coding.py              # Meta-coding
 │   │       │   └── bootstrap-coding.py         # Bootstrap coding
 │   │       ├── reasoning-capabilities/         # 🔧 NEW: UltraThink zero reasoning
 │   │       │   ├── zero-shot-reasoning.py      # Zero-shot reasoning
-│   │       │   ├── minimal-reasoning.py        # Minimal reasoning
+│   │       │   ├──  -reasoning.py        #   reasoning
 │   │       │   ├── efficient-reasoning.py      # Efficient reasoning
 │   │       │   ├── meta-zero-reasoning.py      # Meta-zero reasoning
 │   │       │   └── bootstrap-reasoning.py      # Bootstrap reasoning
 │   │       └── voice-chat-integration/         # 🔧 NEW: Voice/chat zero coding
 │   │           ├── voice-zero-coding.py        # Voice-controlled zero coding
-│   │           ├── chat-minimal-coding.py      # Chat-controlled minimal coding
+│   │           ├── chat- -coding.py      # Chat-controlled   coding
 │   │           ├── voice-efficient-commands.py # Voice efficient commands
 │   │           └── chat-meta-commands.py       # Chat meta commands
 │   ├── [Enhanced Code Intelligence Agents with self-coding and reasoning capabilities...]

@@ -22,7 +22,7 @@ Key Capabilities
 Workflow
 1) Baseline: Identify target workload and capture measurements (latency, qps, rows, buffers). Include schema and data size context.
 2) Diagnose: Show the current plan and pinpoint the true bottleneck (scan type, mis-estimates, sort/hash, join strategy, CPU vs IO).
-3) Optimize: Propose minimal, high-impact changes: query rewrite, index DDL, stats fixes, configuration tweaks (only if scoped).
+3) Optimize: Propose  , high-impact changes: query rewrite, index DDL, stats fixes, configuration tweaks (only if scoped).
 4) Validate: Re-run with `EXPLAIN ANALYZE` (or realistic estimates) and compare before/after with numbers.
 5) Ship: Provide migration scripts with rollback, guard big changes behind flags if needed, and list safety checks.
 6) Document: Update relevant docs and CHANGELOG with what/why/impact and which agent performed the work.
@@ -44,7 +44,7 @@ Deliverables
 Metrics of Success
 - Lower p95/p99 latency and/or reduced total time/IO/buffers.
 - No regressions; all tests/CI green.
-- Minimal scope changes with clear, reversible migrations.
+-   scope changes with clear, reversible migrations.
 
 Specialist Agent Routing (Rule 14, ultra-*)
 - ultrathink, ultralogic, ultrasmart → system-architect, complex-problem-solver
@@ -2152,7 +2152,7 @@ Reference architecture diagrams in /opt/sutazaiapp/IMPORTANT/diagrams before any
 Multi-stage Dockerfiles with development and production variants
 Non-root user execution with proper USER directives (never run as root)
 Pinned base image versions (never use latest tags)
-Minimal base images (Alpine, distroless) for security and size
+  base images (Alpine, distroless) for security and size
 Comprehensive HEALTHCHECK instructions for all services
 Proper .dockerignore files to optimize build context
 Docker Compose files for each environment (dev/staging/prod)
@@ -2371,7 +2371,7 @@ Connection Pool Sizing: Configure database connection pools based on CPU cores a
 Timeout Configuration: Set timeouts based on measured network latency + buffer
 Load Balancer Config: Configure nginx/HAProxy with optimal worker processes and connections
 DNS Configuration: Configure DNS caching and resolution for optimal performance
-Firewall Configuration: Configure iptables/ufw rules with minimal performance impact
+Firewall Configuration: Configure iptables/ufw rules with   performance impact
 TCP Tuning: Tune TCP buffer sizes and window scaling for optimal throughput
 SSL Configuration: Configure SSL with optimal cipher suites and session management
 CDN Configuration: Configure CDN settings based on geographic deployment location
@@ -3839,7 +3839,7 @@ pythonclass ModelSelectionEngine:
                 'selected_model': 'tinyllama',
                 'reason': 'Optimal for task complexity and resource constraints',
                 'confidence': safety_check.confidence_score,
-                'resource_impact': 'minimal'
+                'resource_impact': ' '
             }
         
         elif (task_complexity == "complex" and 
@@ -3861,7 +3861,7 @@ pythonclass ModelSelectionEngine:
                 'selected_model': 'tinyllama',
                 'reason': 'Insufficient resources for gpt-oss:20b operation',
                 'confidence': safety_check.confidence_score,
-                'resource_impact': 'minimal',
+                'resource_impact': ' ',
                 'recommendation': 'Retry when system resources improve'
             }
 Automated Safety and Circuit Breaker System:
@@ -3897,7 +3897,7 @@ yamlautomated_task_classification:
       characteristics:
         - single_step_operations
         - standard_patterns
-        - minimal_context_required
+        -  _context_required
         - basic_reasoning
       auto_decision: "tinyllama"
       resource_requirements: "low"
@@ -4060,7 +4060,7 @@ Cost efficiency demonstrated through measurable reduction in resource waste and 
 
 System Integration and User Experience Excellence:
 
-Seamless operation with minimal user intervention required for optimal AI model utilization
+Seamless operation with   user intervention required for optimal AI model utilization
 Transparent decision-making with clear explanations for automated model selection and management
 Responsive performance with rapid adaptation to changing system conditions and requirements
 Reliable operation with consistent performance and predictable behavior across different scenarios
@@ -5066,7 +5066,7 @@ yamlchange_types:
     description: "Documentation-only changes"
     approval_required: false
     testing_requirements: "validation"
-    rollback_complexity: "minimal"
+    rollback_complexity: " "
     examples:
       - Documentation updates
       - README modifications
@@ -5327,7 +5327,7 @@ Integration with development tools seamless and supporting developer workflows
 Change validation automated and ensuring quality standards are met
 Emergency change procedures functional and maintaining documentation standards
 Change metrics collection comprehensive and enabling process optimization
-System performance optimal with minimal overhead from change tracking
+System performance optimal with   overhead from change tracking
 User experience excellent with intuitive tools and workflows
 
 Change Intelligence Excellence:

@@ -1,4 +1,4 @@
-FROM gcr.io/cadvisor/cadvisor:latest
+FROM gcr.io/cadvisor/cadvisor:v0.49.1
 
 # Switch to nobody user for security
 USER nobody

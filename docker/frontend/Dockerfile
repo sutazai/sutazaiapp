@@ -1,7 +1,7 @@
 # SutazAI Frontend Service - ULTRAFIX Dockerfile Consolidation  
 # Migrated to use sutazai-python-agent-master base image
 # Date: August 10, 2025 - CRITICAL DOCKERFILE DEDUPLICATION
-FROM sutazai-python-agent-master:latest
+FROM sutazai-python-agent-master:1.0.0
 
 # Install frontend-specific requirements on top of base  
 # Note: Copy from context root, not relative path

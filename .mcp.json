@@ -64,8 +64,7 @@
       "args": [],
       "env": {
         "DOCKER_NETWORK": "sutazai-network",
-        "POSTGRES_CONTAINER": "sutazai-postgres",
-        "DATABASE_URI": "postgresql://sutazai:8lfYZjSlJrSCCmWyKOTtxI3ydNFVAMA4@postgres:5432/sutazai"
+        "POSTGRES_CONTAINER": "sutazai-postgres"
       }
     },
     "extended-memory": {

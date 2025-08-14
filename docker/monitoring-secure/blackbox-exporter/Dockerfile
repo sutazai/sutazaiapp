@@ -1,4 +1,4 @@
-FROM prom/blackbox-exporter:latest
+FROM prom/blackbox-exporter:v0.25.0
 
 # Switch to nobody user for security
 USER nobody

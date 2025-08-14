@@ -44,8 +44,9 @@ node_modules/
 npm-debug.log
 yarn-debug.log
 yarn-error.log
-package-lock.json
-yarn.lock
+# Keep lockfiles committed for dependency pinning
+#! package-lock.json
+#! yarn.lock
 
 # Python
 __pycache__/

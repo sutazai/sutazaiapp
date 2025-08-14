@@ -867,18 +867,18 @@
 │   │   ├── localagi-agent/
 │   │   │   ├── Dockerfile              # Enhanced LocalAGI with training
 │   │   │   ├── training-capabilities/
-│   │   │   │   ├── agi-training.py             # AGI training capabilities
+│   │   │   │   ├── sutazai-training.py             # Sutazai training capabilities
 │   │   │   │   ├── intelligence-enhancement.py # Intelligence enhancement
 │   │   │   │   ├── reasoning-improvement.py    # Reasoning improvement
 │   │   │   │   └── creativity-training.py      # Creativity training
-│   │   │   └── self-supervised-agi/
-│   │   │       ├── self-supervised-agi.py      # Self-supervised AGI training
+│   │   │   └── self-supervised-sutazai/
+│   │   │       ├── self-supervised-sutazai.py      # Self-supervised sutazai training
 │   │   │       └── meta-cognitive-training.py  # Meta-cognitive training
 │   │   └── agent-zero/
 │   │       ├── Dockerfile              # Enhanced Agent Zero with training
 │   │       ├── zero-training/
 │   │       │   ├── zero-shot-learning.py       # Zero-shot learning enhancement
-│   │       │   ├── minimal-training.py         # Minimal training protocols
+│   │       │   ├──  -training.py         #   training protocols
 │   │       │   └── efficient-learning.py       # Efficient learning
 │   │       └── meta-learning/
 │   │           ├── meta-zero-learning.py       # Meta-learning for zero-shot

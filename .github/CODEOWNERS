@@ -34,6 +34,8 @@
 /docker/**        @sutazai-devops
 /.github/**       @sutazai-devops
 /deployment/**    @sutazai-devops
+/environments/**  @sutazai-devops
+/backups/**       @sutazai-devops
 
 # Shared schemas and documentation
 /schemas/**       @sutazai-backend
@@ -41,4 +43,3 @@
 
 # Default catch‑all
 *                @sutazai-maintainers
-

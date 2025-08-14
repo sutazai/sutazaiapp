@@ -1,4 +1,4 @@
-FROM qdrant/qdrant:latest
+FROM qdrant/qdrant:v1.11.0
 LABEL maintainer="SutazAI Security Team"
 LABEL security.hardening="enabled"
 

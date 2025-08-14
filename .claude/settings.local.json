@@ -240,10 +240,21 @@
       "Bash(top:*)",
       "Bash(journalctl:*)",
       "Bash(git rm:*)",
-      "Bash(scripts/remediation/01_emergency_recovery.sh:*)"
+      "Bash(scripts/remediation/01_emergency_recovery.sh:*)",
+      "mcp__ultimatecoder__tool_list_files",
+      "Bash(jq:*)",
+      "Bash(scripts/mcp/wrappers/http_fetch.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh:*)",
+      "Bash(./01_emergency_recovery.sh:*)",
+      "Bash(do if grep -q \"USER\" \"$f\")",
+      "Bash(fi)"
     ],
     "deny": [],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "/root/go/bin",
+      "/root/.nvm/versions/node/v22.18.0/lib/node_modules/typescript-language-server/lib"
+    ]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [

@@ -1117,27 +1117,27 @@
 │   │   ├── localagi-agent/
 │   │   │   ├── Dockerfile              # Enhanced LocalAGI with self-coding and reasoning
 │   │   │   ├── training-capabilities/
-│   │   │   │   ├── agi-training.py             # Enhanced AGI training
+│   │   │   │   ├── sutazai-training.py             # Enhanced Sutazai training
 │   │   │   │   ├── intelligence-enhancement.py # Enhanced intelligence enhancement
 │   │   │   │   ├── reasoning-improvement.py    # Enhanced reasoning improvement
 │   │   │   │   └── creativity-training.py      # Enhanced creativity training
-│   │   │   ├── self-supervised-agi/
-│   │   │   │   ├── self-supervised-agi.py      # Enhanced self-supervised AGI
+│   │   │   ├── self-supervised-sutazai/
+│   │   │   │   ├── self-supervised-sutazai.py      # Enhanced self-supervised sutazai
 │   │   │   │   └── meta-cognitive-training.py  # Enhanced meta-cognitive training
-│   │   │   ├── self-coding-capabilities/       # 🔧 NEW: Self-coding AGI capabilities
-│   │   │   │   ├── agi-architecture-coding.py  # AGI architecture self-coding
+│   │   │   ├── self-coding-capabilities/       # 🔧 NEW: Self-coding sutazai capabilities
+│   │   │   │   ├── sutazai-architecture-coding.py  # Sutazai architecture self-coding
 │   │   │   │   ├── intelligence-system-coding.py # Intelligence system coding
 │   │   │   │   ├── reasoning-engine-coding.py  # Reasoning engine coding
 │   │   │   │   ├── creativity-module-coding.py # Creativity module coding
 │   │   │   │   └── consciousness-simulation-coding.py # Consciousness simulation coding
 │   │   │   ├── reasoning-capabilities/         # 🔧 NEW: Advanced UltraThink reasoning
-│   │   │   │   ├── agi-level-reasoning.py      # AGI-level reasoning
+│   │   │   │   ├── sutazai-level-reasoning.py      # sutazai-level reasoning
 │   │   │   │   ├── consciousness-reasoning.py  # Consciousness reasoning
 │   │   │   │   ├── meta-cognitive-reasoning.py # Meta-cognitive reasoning
 │   │   │   │   ├── creative-reasoning.py       # Creative reasoning
 │   │   │   │   └── transcendent-reasoning.py   # Transcendent reasoning
-│   │   │   └── voice-chat-integration/         # 🔧 NEW: Voice/chat AGI coding
-│   │   │       ├── voice-agi-coding.py         # Voice-controlled AGI coding
+│   │   │   └── voice-chat-integration/         # 🔧 NEW: Voice/chat sutazai coding
+│   │   │       ├── voice-sutazai-coding.py         # Voice-controlled sutazai coding
 │   │   │       ├── chat-intelligence-coding.py # Chat-controlled intelligence coding
 │   │   │       ├── voice-reasoning-commands.py # Voice reasoning commands
 │   │   │       └── chat-creativity-commands.py # Chat creativity commands
@@ -1145,26 +1145,26 @@
 │   │       ├── Dockerfile              # Enhanced Agent Zero with self-coding and reasoning
 │   │       ├── zero-training/
 │   │       │   ├── zero-shot-learning.py       # Enhanced zero-shot learning
-│   │       │   ├── minimal-training.py         # Enhanced minimal training
+│   │       │   ├──  -training.py         # Enhanced   training
 │   │       │   └── efficient-learning.py       # Enhanced efficient learning
 │   │       ├── meta-learning/
 │   │       │   ├── meta-zero-learning.py       # Enhanced meta-learning for zero-shot
 │   │       │   └── transfer-learning.py        # Enhanced transfer learning
 │   │       ├── self-coding-capabilities/       # 🔧 NEW: Self-coding zero capabilities
 │   │       │   ├── zero-shot-coding.py         # Zero-shot self-coding
-│   │       │   ├── minimal-code-generation.py  # Minimal code generation
+│   │       │   ├──  -code-generation.py  #   code generation
 │   │       │   ├── efficient-coding.py         # Efficient coding
 │   │       │   ├── meta-coding.py              # Meta-coding
 │   │       │   └── bootstrap-coding.py         # Bootstrap coding
 │   │       ├── reasoning-capabilities/         # 🔧 NEW: UltraThink zero reasoning
 │   │       │   ├── zero-shot-reasoning.py      # Zero-shot reasoning
-│   │       │   ├── minimal-reasoning.py        # Minimal reasoning
+│   │       │   ├──  -reasoning.py        #   reasoning
 │   │       │   ├── efficient-reasoning.py      # Efficient reasoning
 │   │       │   ├── meta-zero-reasoning.py      # Meta-zero reasoning
 │   │       │   └── bootstrap-reasoning.py      # Bootstrap reasoning
 │   │       └── voice-chat-integration/         # 🔧 NEW: Voice/chat zero coding
 │   │           ├── voice-zero-coding.py        # Voice-controlled zero coding
-│   │           ├── chat-minimal-coding.py      # Chat-controlled minimal coding
+│   │           ├── chat- -coding.py      # Chat-controlled   coding
 │   │           ├── voice-efficient-commands.py # Voice efficient commands
 │   │           └── chat-meta-commands.py       # Chat meta commands
 │   ├── [Enhanced Code Intelligence Agents with self-coding and reasoning capabilities...]

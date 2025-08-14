@@ -1,0 +1,31 @@
+# SutazAI Backend Service -   Quick Deploy Dockerfile  
+# Date: August 13, 2025 - ULTRAFIX Quick Backend Deploy
+FROM python:3.12.8-slim-bookworm
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser -s /bin/bash appuser
+
+# Set working directory
+WORKDIR /app
+
+# Install   requirements
+RUN pip install --no-cache-dir fastapi==0.115.6 uvicorn[standard]==0.32.1
+
+# Copy   app
+COPY  _app.py /app/app.py
+
+# Set permissions
+RUN chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Health check using Python built-in modules
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+
+# Expose port
+EXPOSE 8000
+
+# Start backend service
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

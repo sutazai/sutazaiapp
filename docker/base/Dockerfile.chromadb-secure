@@ -1,4 +1,4 @@
-FROM chromadb/chroma:latest
+FROM chromadb/chroma:0.5.0
 LABEL maintainer="SutazAI Security Team"
 LABEL security.hardening="enabled"
 

@@ -113,6 +113,7 @@ ENABLE_FSDP=true ENABLE_TABBY=true docker-compose --profile optional up -d
 - MIGRATION_NOTES.md — Migration guide for feature flags
 - docs/backend_openapi.json — Exported OpenAPI schema (generated)
 - docs/backend_endpoints.md — Endpoints list grouped by tag (generated)
+- docs/codebase-standards.md — Non‑negotiable codebase standards and hygiene
 - Live API Docs — http://localhost:10010/docs (after `docker compose up -d`)
 
 Generate or refresh API docs

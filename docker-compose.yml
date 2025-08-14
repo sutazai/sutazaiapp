@@ -25,7 +25,7 @@ services:
       - CMD-SHELL
       - pg_isready -U ${POSTGRES_USER:-sutazai}
       timeout: 5s
-    image: sutazai-postgres-secure:latest
+    image: sutazai-postgres-secure:1.0.0
     networks:
     - sutazai-network
     ports:
@@ -52,7 +52,7 @@ services:
       - CMD-SHELL
       - redis-cli ping
       timeout: 5s
-    image: sutazai-redis-secure:latest
+    image: sutazai-redis-secure:1.0.0
     networks:
     - sutazai-network
     ports:
@@ -93,7 +93,7 @@ services:
       - CMD-SHELL
       - wget --no-verbose --tries=1 --spider http://localhost:7474/ || exit 1
       timeout: 15s
-    image: sutazai-neo4j-secure:latest
+    image: sutazai-neo4j-secure:1.0.0
     networks:
     - sutazai-network
     ports:
@@ -142,7 +142,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    image: sutazai-ollama-secure:latest
+    image: sutazai-ollama-secure:1.0.0
     networks:
     - sutazai-network
     ports:
@@ -188,9 +188,9 @@ services:
       - CMD
       - sh
       - -c
-      - curl -f http://localhost:8000/api/v1/heartbeat || exit 1
+      - curl -f http://localhost:8000/api/v2/heartbeat || exit 1
       timeout: 30s
-    image: sutazai-chromadb-secure:latest
+    image: sutazai-chromadb-secure:1.0.0
     networks:
     - sutazai-network
     ports:
@@ -223,7 +223,7 @@ services:
         Proto => q{tcp}, Timeout => 2); if ($$s) { print $$s qq{GET / HTTP/1.0\r\n\r\n};
         while (<$$s>) { if (/200 OK/) { exit 0; } } } exit 1;' | perl
       timeout: 30s
-    image: sutazai-qdrant-secure:latest
+    image: sutazai-qdrant-secure:1.0.0
     networks:
     - sutazai-network
     ports:
@@ -233,7 +233,7 @@ services:
     volumes:
     - qdrant_data:/qdrant/storage
   faiss:
-    image: sutazaiapp-faiss:latest
+    image: sutazaiapp-faiss:1.0.0
     container_name: sutazai-faiss
     deploy:
       resources:
@@ -308,7 +308,7 @@ services:
     volumes:
     - ./config/kong/kong-optimized.yml:/etc/kong/kong-optimized.yml:ro
   consul:
-    image: sutazai-consul-secure:latest
+    image: sutazai-consul-secure:1.0.0
     container_name: sutazai-consul
     # ULTRA-FIX: Remove user: root - image now runs as consul user
     environment:
@@ -350,7 +350,7 @@ services:
     - ./config/consul/consul.hcl:/consul/config/consul.hcl:ro
     - consul_data:/consul/data
   rabbitmq:
-    image: sutazai-rabbitmq-secure:latest
+    image: sutazai-rabbitmq-secure:1.0.0
     container_name: sutazai-rabbitmq
     deploy:
       resources:
@@ -381,7 +381,7 @@ services:
     volumes:
     - rabbitmq_data:/var/lib/rabbitmq
   backend:
-    image: sutazaiapp-backend:latest
+    image: sutazaiapp-backend:1.0.0
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     container_name: sutazai-backend
     depends_on:
@@ -460,7 +460,7 @@ services:
     - ./logs:/logs
     - agent_workspaces:/app/agent_workspaces
   frontend:
-    image: sutazaiapp-frontend:latest
+    image: sutazaiapp-frontend:1.0.0
     command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
     container_name: sutazai-frontend
     depends_on:
@@ -532,7 +532,7 @@ services:
       - --spider
       - http://localhost:9090/-/healthy
       timeout: 30s
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.54.0
     networks:
     - sutazai-network
     ports:
@@ -570,7 +570,7 @@ services:
       - wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit
         1
       timeout: 30s
-    image: grafana/grafana:latest
+    image: grafana/grafana:11.3.0
     networks:
     - sutazai-network
     ports:
@@ -638,7 +638,7 @@ services:
       interval: 60s
       timeout: 30s
       retries: 5
-    image: prom/alertmanager:latest
+    image: prom/alertmanager:v0.27.0
     networks:
     - sutazai-network
     ports:
@@ -669,7 +669,7 @@ services:
       - --spider
       - http://localhost:9115/
       timeout: 30s
-    image: sutazai-blackbox-exporter-secure:latest
+    image: sutazai-blackbox-exporter-secure:1.0.0
     networks:
     - sutazai-network
     ports:
@@ -692,7 +692,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 32M
-    image: prom/node-exporter:latest
+    image: prom/node-exporter:v1.8.2
     networks:
     - sutazai-network
     ports:
@@ -706,7 +706,7 @@ services:
     container_name: sutazai-cadvisor
     devices:
     - /dev/kmsg
-    image: sutazai-cadvisor-secure:latest
+    image: sutazai-cadvisor-secure:1.0.0
     # ULTRA-FIX: Changed user from 'cadvisor' to 'nobody' to match Dockerfile
     user: nobody
     networks:
@@ -765,7 +765,7 @@ services:
           memory: 32M
     environment:
       DATA_SOURCE_NAME: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}?sslmode=disable
-    image: prometheuscommunity/postgres-exporter:latest
+    image: prometheuscommunity/postgres-exporter:v0.15.0
     networks:
     - sutazai-network
     ports:
@@ -787,14 +787,14 @@ services:
     environment:
       REDIS_ADDR: redis://redis:6379
       # REDIS_PASSWORD not needed - Redis runs without authentication
-    image: sutazai-redis-exporter-secure:latest
+    image: sutazai-redis-exporter-secure:1.0.0
     networks:
     - sutazai-network
     ports:
     - 10208:9121
     restart: unless-stopped
   ollama-integration:
-    image: sutazaiapp-ollama-integration:latest
+    image: sutazaiapp-ollama-integration:1.0.0
     container_name: sutazai-ollama-integration
     depends_on:
       ollama:
@@ -841,7 +841,7 @@ services:
     volumes:
     - ./agents/core:/app/agents/core:ro
   hardware-resource-optimizer:
-    image: sutazaiapp-hardware-resource-optimizer:latest
+    image: sutazaiapp-hardware-resource-optimizer:1.0.0
     container_name: sutazai-hardware-resource-optimizer
     depends_on:
       backend:
@@ -866,7 +866,7 @@ services:
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_HOST: 0.0.0.0
-      OLLAMA_MODEL: tinyllama:latest
+      OLLAMA_MODEL: tinyllama:1.0.0
       OLLAMA_ORIGINS: '*'
       PORT: 8080
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
@@ -901,7 +901,7 @@ services:
     - ./configs:/app/configs:ro
     - ./logs:/app/logs:rw,noexec
   jarvis-hardware-resource-optimizer:
-    image: sutazaiapp-jarvis-hardware-resource-optimizer:latest
+    image: sutazaiapp-jarvis-hardware-resource-optimizer:1.0.0
     container_name: sutazai-jarvis-hardware-resource-optimizer
     depends_on:
       backend:
@@ -1055,7 +1055,7 @@ services:
     - ./agents/core:/app/agents/core:ro
     - ./logs:/app/logs
   task-assignment-coordinator:
-    image: sutazaiapp-task-assignment-coordinator:latest
+    image: sutazaiapp-task-assignment-coordinator:1.0.0
     container_name: sutazai-task-assignment-coordinator
     depends_on:
       rabbitmq:
@@ -1098,7 +1098,7 @@ services:
     - ./agents/core:/app/agents/core:ro
     - ./logs:/app/logs
   resource-arbitration-agent:
-    image: sutazaiapp-resource-arbitration-agent:latest
+    image: sutazaiapp-resource-arbitration-agent:1.0.0
     container_name: sutazai-resource-arbitration-agent
     depends_on:
       rabbitmq:
@@ -1154,7 +1154,7 @@ services:
   # Distributed Tracing
   jaeger:
     container_name: sutazai-jaeger
-    image: sutazai-jaeger-secure:latest
+    image: sutazai-jaeger-secure:1.0.0
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
       - COLLECTOR_OTLP_ENABLED=true
@@ -1192,7 +1192,7 @@ services:
   # Log Shipping (Promtail for Loki)
   promtail:
     container_name: sutazai-promtail
-    image: sutazai-promtail-secure:latest
+    image: sutazai-promtail-secure:1.0.0
     user: promtail
     volumes:
       - /var/log:/var/log:ro

@@ -499,11 +499,11 @@
 │   │   │   ├── Dockerfile          # LocalAGI agent service
 │   │   │   ├── repository/         # repo: https://github.com/mudler/LocalAGI
 │   │   │   │   ├── localagi-core.py        # LocalAGI core system
-│   │   │   │   ├── agi-orchestration.py    # AGI orchestration
+│   │   │   │   ├── sutazai-orchestration.py    # SutazAI orchestration
 │   │   │   │   ├── local-intelligence.py   # Local intelligence management
 │   │   │   │   └── system-coordination.py  # System-wide coordination
 │   │   │   ├── jarvis-integration/
-│   │   │   │   ├── jarvis-agi-bridge.py    # Jarvis-LocalAGI integration
+│   │   │   │   ├── jarvis-sutazai-bridge.py    # Jarvis-Sutazai integration
 │   │   │   │   ├── intelligence-sharing.py # Intelligence sharing
 │   │   │   │   └── coordination-protocol.py # Coordination protocol
 │   │   │   ├── capabilities/
@@ -512,7 +512,7 @@
 │   │   │   │   ├── resource-coordination.py # Resource coordination
 │   │   │   │   └── emergent-behavior.py    # Emergent behavior management
 │   │   │   └── monitoring/
-│   │   │       ├── agi-metrics.py          # AGI performance metrics
+│   │   │       ├── sutazai-metrics.py          # Sutazai performance metrics
 │   │   │       ├── intelligence-tracking.py # Intelligence tracking
 │   │   │       └── system-analytics.py     # System analytics
 │   │   └── agent-zero/             # 🔧 NEW: Agent Zero
@@ -526,7 +526,7 @@
 │   │       │   └── coordination-protocol.py # Coordination protocol
 │   │       └── capabilities/
 │   │           ├── zero-coordination.py    # Zero-based coordination
-│   │           └── minimal-overhead.py     # Minimal overhead operations
+│   │           └──  -overhead.py     #   overhead operations
 │   ├── code-intelligence-agents/   # 💻 CODE & DEVELOPMENT AGENTS
 │   │   ├── tabbyml-agent/          # 🔧 OPTIONAL: TabbyML Code Completion
 │   │   │   ├── Dockerfile          # TabbyML service (GPU optional)
