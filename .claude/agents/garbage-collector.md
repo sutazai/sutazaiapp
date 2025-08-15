@@ -676,7 +676,7 @@ cleanup_coordination_patterns:
         output: "database_cleanup_plan"
         
       - stage: "testing_strategy_validation"
-        agent: "ai-qa-team-lead.md"
+        agent: "qa-team-lead.md"
         input: "comprehensive_waste_analysis"
         output: "cleanup_testing_strategy"
         

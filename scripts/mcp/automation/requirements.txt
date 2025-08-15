@@ -1,0 +1,55 @@
+# MCP Automation System Requirements
+# Production-grade dependencies with security patches and version pinning
+# Created: 2025-08-15 11:40:00 UTC
+# Author: Claude AI Assistant (python-architect.md)
+
+# Core async HTTP client for package downloads
+# Security: Latest version with vulnerability patches
+aiohttp==3.9.3
+
+# Advanced file path handling and operations
+# Security: Built-in Python module (no CVE concerns)
+pathlib2==2.3.7.post1; python_version < '3.4'
+
+# Enhanced logging and structured data handling
+# Security: Built-in modules, no additional dependencies
+
+# JSON handling for configuration and state management
+# Security: Built-in json module (no additional dependencies)
+
+# Cryptographic functions for checksum validation
+# Security: Built-in hashlib module (no additional dependencies)
+
+# Process and subprocess management for NPM operations
+# Security: Built-in subprocess and asyncio modules
+
+# Date and time handling with timezone support
+# Security: Built-in datetime module with pytz for enhanced timezone support
+pytz==2023.4
+
+# Optional: Enhanced HTTP client features
+# Security: Provides additional security headers and certificate validation
+certifi==2023.11.17
+charset-normalizer==3.3.2
+idna==3.6
+multidict==6.0.4
+yarl==1.9.4
+
+# Optional: Development and testing dependencies (commented out for production)
+# pytest==7.4.4
+# pytest-asyncio==0.21.1
+# pytest-cov==4.1.0
+# black==23.12.1
+# flake8==6.1.0
+# mypy==1.8.0
+
+# Production monitoring and metrics (optional)
+# prometheus-client==0.19.0
+
+# Enhanced security scanning (development only)
+# bandit==1.7.5
+# safety==2.3.5
+
+# Note: All dependencies are pinned to specific versions for security and reproducibility
+# Regular security updates should be performed following organizational procedures
+# Check for CVEs before updating: https://nvd.nist.gov/

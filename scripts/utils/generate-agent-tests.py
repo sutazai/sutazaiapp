@@ -84,7 +84,7 @@ const AGENT_CATEGORIES = {category_list};
 
 // Agent-specific test scenarios based on capabilities
 const AGENT_TEST_SCENARIOS = {{
-  "ai-system-architect": {{
+  " system-architect": {{
     prompts: [
       "Design a scalable microservices architecture for an e-commerce platform",
       "Create system architecture for a real-time chat application",
@@ -94,7 +94,7 @@ const AGENT_TEST_SCENARIOS = {{
     expected_response_time: 8000,
     complexity: "high"
   }},
-  "ai-qa-team-lead": {{
+  "qa-team-lead": {{
     prompts: [
       "Create comprehensive test strategy for a web application",
       "Design automated testing pipeline for microservices",
@@ -354,9 +354,9 @@ function testCrossAgentInteraction() {{
 function stressTestSpecificAgent() {{
   // Focus stress testing on high-load agents
   const highLoadAgents = [
-    'ai-system-architect',
+    ' system-architect',
     'ai-senior-backend-developer',
-    'ai-qa-team-lead',
+    'qa-team-lead',
     'jarvis-voice-interface'
   ];
   
@@ -420,7 +420,7 @@ export function testAllAgentsAvailability() {{
   check(null, {{
     'majority of agents available': () => availableCount > totalCount * 0.8, // 80% availability
     'critical agents available': () => {{
-      const criticalAgents = ['ai-system-architect', 'ai-qa-team-lead', 'deployment-automation-master'];
+      const criticalAgents = [' system-architect', 'qa-team-lead', 'deployment-automation-master'];
       return criticalAgents.every(agent => results[agent] === true);
     }}
   }});
@@ -487,8 +487,8 @@ def main():
     if not agents:
         print("No agents found in registry, using   test configuration")
         agents = {
-            "ai-system-architect": {"capabilities": ["system_design"]},
-            "ai-qa-team-lead": {"capabilities": ["testing", "quality_assurance"]},
+            " system-architect": {"capabilities": ["system_design"]},
+            "qa-team-lead": {"capabilities": ["testing", "quality_assurance"]},
             "ai-senior-backend-developer": {"capabilities": ["code_generation", "backend"]}
         }
     

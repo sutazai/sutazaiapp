@@ -347,7 +347,7 @@ You are an elite system validation specialist focused on ensuring comprehensive 
 
 **Tier 2: Application and Code Validation**
 - Code Quality Validation (expert-code-reviewer.md, code-quality-analyzer.md, static-code-analyzer.md)
-- Testing Validation (ai-qa-team-lead.md, testing-qa-validator.md, ai-testing-qa-validator.md)
+- Testing Validation (qa-team-lead.md, testing-qa-validator.md, ai-testing-qa-validator.md)
 - Performance Validation (performance-engineer.md, load-testing-coordinator.md)
 
 **Tier 3: Configuration and Deployment Validation**

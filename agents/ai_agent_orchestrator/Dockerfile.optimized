@@ -5,7 +5,7 @@
 # Date: August 10, 2025
 
 # Use optimized Alpine base
-FROM sutazai-python-alpine-optimized:latest as base
+FROM sutazai-python-alpine-optimized:v1.0.0 as base
 
 # Orchestrator specific dependencies ( )
 COPY requirements.txt /tmp/agent-requirements.txt

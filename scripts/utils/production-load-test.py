@@ -95,9 +95,9 @@ class SutazAILoadTester:
         
         # Agent endpoints (sample of key agents for testing)
         self.agents = {
-            'ai-system-architect': f'{base_url}:11010',
-            'ai-qa-team-lead': f'{base_url}:11082',
-            'ai-senior-engineer': f'{base_url}:11081',
+            ' system-architect': f'{base_url}:11010',
+            'qa-team-lead': f'{base_url}:11082',
+            'senior-engineer': f'{base_url}:11081',
             'ai-backend-developer': f'{base_url}:11002',
             'ai-testing-validator': f'{base_url}:10322',
             'jarvis-voice-interface': f'{base_url}:11013'

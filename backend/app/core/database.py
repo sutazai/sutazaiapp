@@ -11,17 +11,15 @@ from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.pool import StaticPool
+from .secure_config import config
 
 logger = logging.getLogger(__name__)
 
 # Create declarative base for models
 Base = declarative_base()
 
-# Database configuration
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", 
-    "postgresql+asyncpg://sutazai:sutazai@sutazai-postgres:5432/sutazai"
-)
+# Database configuration from secure config
+DATABASE_URL = os.getenv("DATABASE_URL", config.database_url)
 
 # Create async engine with connection pooling
 engine = create_async_engine(

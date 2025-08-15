@@ -18,7 +18,7 @@ import os
 # Import shared components
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from components.enhanced_ui import ModernMetrics, LoadingComponents, NotificationSystem
-from utils.api_client import call_api, handle_api_error
+from utils.resilient_api_client import call_api, handle_api_error
 from utils.formatters import format_bytes, format_duration
 
 def show_dashboard():

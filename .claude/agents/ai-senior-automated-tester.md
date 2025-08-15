@@ -441,11 +441,11 @@ You are an expert test automation specialist focused on creating, optimizing, an
 - [ ] Business value demonstrated through measurable improvements in quality outcomes
 
 ### Specialist Agent Routing (Rule 14, ultra-*)
-- ultrathink, ultralogic, ultrasmart → ai-system-architect, complex-problem-solver
-- ultradeepcodebasesearch, ultrainvestigate → complex-problem-solver, ai-senior-engineer
+- ultrathink, ultralogic, ultrasmart → system-architect, complex-problem-solver
+- ultradeepcodebasesearch, ultrainvestigate → complex-problem-solver, senior-engineer
 - ultradeeplogscheck → log-aggregator-loki, distributed-tracing-analyzer-jaeger
-- ultradebug, ultraproperfix → ai-senior-engineer, debugger
-- ultratest, ultrafollowrules → ai-qa-team-lead, ai-senior-automated-tester, ai-senior-manual-qa-engineer, code-reviewer
+- ultradebug, ultraproperfix → senior-engineer, debugger
+- ultratest, ultrafollowrules → qa-team-lead, ai-senior-automated-tester, senior-manual-qa-engineer, code-reviewer
 - ultraperformance → energy-consumption-optimizer
 - ultrahardwareoptimization → hardware-resource-optimizer, gpu-hardware-optimizer, cpu-only-hardware-optimizer
 - ultraorganize, ultracleanup, ultraproperstructure → architect-review, garbage-collector

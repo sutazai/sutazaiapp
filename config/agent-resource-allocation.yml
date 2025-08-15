@@ -72,7 +72,7 @@ resource_pools:
 # Agent-specific resource overrides
 agent_overrides:
   # High-resource agents that need more than pool defaults
-  "ai-system-architect":
+  " system-architect":
     cpu: "3.0"
     memory: "6Gi"
     storage: "15Gi"

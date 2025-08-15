@@ -1,7 +1,7 @@
 # Migrated to Master Base Image
 # Original: python:3.12.8-slim AS runtime
 # Migration Date: 2025-08-10T19:58:30.709417
-FROM sutazai-python-agent-master:latest
+FROM sutazai-python-agent-master:v1.0.0
 
 COPY COPY requirements/base.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt

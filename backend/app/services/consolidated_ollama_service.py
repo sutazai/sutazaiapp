@@ -75,7 +75,7 @@ class ConsolidatedOllamaService:
         self._request_queue = asyncio.Queue(maxsize=1000)  # ULTRA: Increased queue size
         
         # Configuration from settings (ULTRA-OPTIMIZED)
-        self.ollama_host = getattr(settings, 'OLLAMA_HOST', 'http://sutazai-ollama:11434')  # ULTRA: Use correct service name
+        self.ollama_host = getattr(settings, 'OLLAMA_HOST', 'http://172.20.0.8:11434')  # Using Docker network IP
         self.default_model = 'tinyllama'  # ULTRA: Fastest model
         self.embedding_model = getattr(settings, 'EMBEDDING_MODEL', 'tinyllama')
         

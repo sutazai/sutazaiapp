@@ -312,7 +312,7 @@ Complete documentation and CHANGELOG updates with temporal tracking
 Cross-Agent Validation
 MANDATORY: Trigger validation from:
 
-ai-senior-engineer: Implementation code review and architectural validation
+senior-engineer: Implementation code review and architectural validation
 performance-engineer: Performance optimization and benchmarking verification
 testing-qa-validator: Compression algorithm testing and validation framework
 system-architect: Integration architecture and scalability verification

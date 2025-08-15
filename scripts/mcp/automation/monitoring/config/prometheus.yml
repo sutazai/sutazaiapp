@@ -1,0 +1,93 @@
+# Prometheus configuration for MCP Automation Monitoring
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'mcp-automation'
+    environment: 'production'
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - localhost:10203  # AlertManager
+
+# Rule files
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+# Scrape configurations
+scrape_configs:
+  # MCP Monitoring Server
+  - job_name: 'mcp-monitoring'
+    static_configs:
+      - targets: ['localhost:10204']
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  # Backend API
+  - job_name: 'backend-api'
+    static_configs:
+      - targets: ['localhost:10010']
+    metrics_path: /metrics
+
+  # Node Exporter
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:10220']
+
+  # Postgres Exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['localhost:10207']
+
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['localhost:10208']
+
+  # Blackbox Exporter for endpoint monitoring
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://localhost:10010/health
+          - http://localhost:10011/
+          - http://localhost:10104/api/version
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: localhost:10206
+
+  # MCP Server health checks
+  - job_name: 'mcp-servers'
+    metrics_path: /probe
+    params:
+      module: [mcp_health]
+    static_configs:
+      - targets:
+          - filesystem
+          - github
+          - postgres
+          - browser
+          - docker
+          - kubernetes
+          - extended-memory
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: mcp_server
+      - target_label: __address__
+        replacement: localhost:10204
+
+# Remote write for long-term storage (optional)
+# remote_write:
+#   - url: "http://prometheus-long-term-storage:9090/api/v1/write"

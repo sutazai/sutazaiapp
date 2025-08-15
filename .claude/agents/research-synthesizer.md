@@ -186,7 +186,7 @@ Before ANY action, you MUST:
 **Rule 14: Specialized Claude Sub-Agent Usage - Research Orchestration**
 - Coordinate with data-engineer.md for research data processing strategy and pipeline setup
 - Integrate with expert-code-reviewer.md for research code review and implementation validation
-- Collaborate with ai-qa-team-lead.md for research testing strategy and automation integration
+- Collaborate with qa-team-lead.md for research testing strategy and automation integration
 - Coordinate with rules-enforcer.md for research policy compliance and organizational standard adherence
 - Integrate with observability-monitoring-engineer.md for research metrics collection and alerting setup
 - Collaborate with database-optimizer.md for research data efficiency and performance assessment

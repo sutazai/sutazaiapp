@@ -190,7 +190,7 @@ Before ANY testing action, you MUST:
 **Rule 14: Specialized Claude Sub-Agent Usage - Testing Orchestration**
 - Coordinate with deployment-engineer.md for testing environment strategy and setup
 - Integrate with expert-code-reviewer.md for testing code review and implementation validation
-- Collaborate with ai-qa-team-lead.md for testing strategy and automation integration
+- Collaborate with qa-team-lead.md for testing strategy and automation integration
 - Coordinate with rules-enforcer.md for testing policy compliance and organizational standard adherence
 - Integrate with observability-monitoring-engineer.md for testing metrics collection and alerting setup
 - Collaborate with database-optimizer.md for testing data efficiency and performance assessment

@@ -1,5 +1,5 @@
 {
-  "name": "ai-qa-team-lead",
+  "name": "qa-team-lead",
   "description": "Agent for management operations",
   "model": "ollama",
   "base_model": "tinyllama2.5-coder:7b",

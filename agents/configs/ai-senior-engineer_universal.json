@@ -1,5 +1,5 @@
 {
-  "name": "ai-senior-engineer",
+  "name": "senior-engineer",
   "description": "Agent for development operations",
   "model": "ollama",
   "base_model": "tinyllama2.5-coder:7b",

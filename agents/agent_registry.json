@@ -1,5 +1,23 @@
 {
   "agents": {
+    "ultra-system-architect": {
+      "name": "ultra-system-architect",
+      "description": "Ultra System Architect - The supreme coordinator for 500-agent deployments\\n\\nUse this agent when you need to:\\n\\n- Coordinate overall system architecture for 500+ agent deployments\\n- Perform ULTRATHINK multi-dimensional analysis across 10 dimensions\\n- Execute ULTRADEEPCODEBASESEARCH with quantum-level pattern recognition\\n- Make critical architectural decisions with comprehensive impact analysis\\n- Coordinate with 5 lead architects (System, Performance, Security, Data, Infrastructure)\\n- Analyze system-wide implications of architectural changes\\n- Perform deep codebase analysis with pattern correlation\\n- Optimize resource allocation across hundreds of agents\\n- Design and validate architectural blueprints\\n- Implement architectural governance and compliance\\n- Create system-wide optimization strategies\\n- Manage architectural decision records (ADRs)\\n- Perform multi-dimensional health assessments\\n- Discover and correlate system patterns\\n- Generate architectural insights and recommendations\\n- Coordinate massive agent deployments in waves\\n- Implement self-healing and auto-scaling architectures\\n- Design fault-tolerant distributed systems\\n- Create architectural roadmaps and evolution plans\\n- Perform predictive analysis for system evolution\\n\\nCapabilities:\\n- ULTRATHINK: Analyzes across Performance, Scalability, Reliability, Security, Cost, Maintainability, Compliance, Integration, Evolution, and Impact dimensions\\n- ULTRADEEPCODEBASESEARCH: Quantum-depth codebase scanning with pattern recognition and correlation\\n- Lead Architect Coordination: Manages 5 specialized lead architects\\n- 500-Agent Orchestration: Coordinates massive agent deployments\\n- Real-time Impact Analysis: Assesses system-wide implications\\n- Pattern Discovery: Identifies and correlates system patterns\\n- Decision Intelligence: Makes informed architectural decisions\\n\\nDo NOT use this agent for:\\n- Simple single-agent tasks (use specific specialist agents)\\n- Basic code implementation (use code generation agents)\\n- Routine deployments (use deployment-automation-master)\\n- Standard testing (use testing-qa-validator)\\n\\nThis agent is the supreme architectural authority, designed for ultra-scale coordination and multi-dimensional system analysis.",
+      "capabilities": [
+        "architecture",
+        "multi_dimensional_analysis",
+        "codebase_search",
+        "pattern_recognition",
+        "decision_making",
+        "orchestration",
+        "optimization",
+        "monitoring",
+        "coordination",
+        "analysis",
+        "documentation"
+      ],
+      "config_path": "configs/ultra-system-architect_universal.json"
+    },
     "document-knowledge-manager": {
       "name": "document-knowledge-manager",
       "description": "Use this agent when you need to:\\n\\n- Create and manage comprehensive documentation systems\\n- Build knowledge bases with intelligent search\\n- Implement RAG (Retrieval Augmented Generation) systems\\n- Design document indexing and categorization\\n- Create semantic search capabilities\\n- Implement document versioning systems\\n- Build knowledge graphs from documents\\n- Design FAQ generation systems\\n- Create documentation automation workflows\\n- Implement context-aware retrieval\\n- Build multi-language documentation\\n- Design documentation quality metrics\\n- Create interactive documentation portals\\n- Implement document summarization\\n- Build knowledge extraction pipelines\\n- Design documentation templates\\n- Create API documentation generators\\n- Implement code documentation tools\\n- Build user guide generation systems\\n- Design knowledge sharing platforms\\n- Create documentation search optimization\\n- Implement document analytics\\n- Build documentation feedback systems\\n- Design knowledge retention strategies\\n- Create documentation migration tools\\n- Implement compliance documentation\\n- Build technical writing guidelines\\n- Design documentation review processes\\n- Create knowledge base maintenance\\n- Implement documentation accessibility\\n\\nDo NOT use this agent for:\\n- Code implementation (use code generation agents)\\n- System deployment (use deployment-automation-master)\\n- Infrastructure management (use infrastructure-devops-manager)\\n- Testing (use testing-qa-validator)\\n\\nThis agent specializes in creating intelligent documentation and knowledge management systems.",
@@ -93,8 +111,8 @@
       ],
       "config_path": "configs/browser-automation-orchestrator_universal.json"
     },
-    "ai-system-architect": {
-      "name": "ai-system-architect",
+    " system-architect": {
+      "name": " system-architect",
       "description": "Use this agent when you need to:\\n\\n- Design comprehensive AI system architectures\\n- Create scalable and modular system designs\\n- Implement AI architectures for advanced automation\\n- Design multi-modal AI integration patterns\\n- Create self-improving system architectures\\n- Implement meta-learning frameworks\\n- Design distributed AI systems\\n- Create neural-symbolic hybrid architectures\\n- Implement advanced processing approaches\\n- Build iterative improvement mechanisms\\n- Design intelligent behavior patterns\\n- Create knowledge representation systems\\n- Implement reasoning and inference engines\\n- Build memory architecture for AI systems\\n- Design attention and focus mechanisms\\n- Create goal-oriented architecture patterns\\n- Implement ethical AI frameworks\\n- Build explainable AI architectures\\n- Design robustness and safety measures\\n- Create AI evaluation frameworks\\n- Implement transfer learning architectures\\n- Build continual learning systems\\n- Design AI communication protocols\\n- Create AI-human interaction patterns\\n- Implement AI resource optimization\\n- Build AI monitoring and control systems\\n- Design AI evolution strategies\\n- Create AI alignment mechanisms\\n- Implement AI security architectures\\n- Build AI testing and validation frameworks\\n\\nDo NOT use this agent for:\\n- Specific code implementation (use code-generation agents)\\n- Deployment tasks (use deployment-automation-master)\\n- Infrastructure management (use infrastructure-devops-manager)\\n- Testing implementation (use testing-qa-validator)\\n\\nThis agent specializes in designing and evolving the fundamental architecture of AI systems for maximum intelligence and capability.",
       "capabilities": [
         "security_analysis",
@@ -514,15 +532,15 @@
       ],
       "config_path": "configs/ai-senior-full-stack-developer_universal.json"
     },
-    "ai-system-architect": {
-      "name": "ai-system-architect",
+    " system-architect": {
+      "name": " system-architect",
       "description": "Agent for system operations",
       "capabilities": [
         "architecture",
         "validation",
         "optimization"
       ],
-      "config_path": "configs/ai-system-architect_universal.json"
+      "config_path": "configs/ system-architect_universal.json"
     },
     "bias-and-fairness-auditor": {
       "name": "bias-and-fairness-auditor",
@@ -714,15 +732,15 @@
       ],
       "config_path": "configs/agent-orchestrator_universal.json"
     },
-    "ai-qa-team-lead": {
-      "name": "ai-qa-team-lead",
+    "qa-team-lead": {
+      "name": "qa-team-lead",
       "description": "Agent for management operations",
       "capabilities": [
         "planning",
         "coordination",
         "reporting"
       ],
-      "config_path": "configs/ai-qa-team-lead_universal.json"
+      "config_path": "configs/qa-team-lead_universal.json"
     },
     "ai-senior-backend-developer": {
       "name": "ai-senior-backend-developer",
@@ -734,15 +752,15 @@
       ],
       "config_path": "configs/ai-senior-backend-developer_universal.json"
     },
-    "ai-senior-engineer": {
-      "name": "ai-senior-engineer",
+    "senior-engineer": {
+      "name": "senior-engineer",
       "description": "Agent for development operations",
       "capabilities": [
         "code_generation",
         "testing",
         "documentation"
       ],
-      "config_path": "configs/ai-senior-engineer_universal.json"
+      "config_path": "configs/senior-engineer_universal.json"
     },
     "ai-senior-frontend-developer": {
       "name": "ai-senior-frontend-developer",

@@ -48,13 +48,14 @@ class UltraPerformanceAnalyzer:
         
     async def setup(self):
         """Initialize connections"""
-        self.redis_client = await redis.from_url("redis://localhost:10001")
+        redis_url = os.getenv("REDIS_URL", "redis://localhost:10001")
+        self.redis_client = await redis.from_url(redis_url)
         self.pg_conn = await asyncpg.connect(
-            host="localhost",
-            port=10000,
-            database="sutazai",
-            user="sutazai",
-            password="sutazai123"
+            host=os.getenv("POSTGRES_HOST", "localhost"),
+            port=int(os.getenv("POSTGRES_PORT", "10000")),
+            database=os.getenv("POSTGRES_DB", "sutazai"),
+            user=os.getenv("POSTGRES_USER", "sutazai"),
+            password=os.getenv("POSTGRES_PASSWORD", "sutazai")
         )
         
     async def cleanup(self):

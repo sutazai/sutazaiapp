@@ -1,5 +1,5 @@
 ---
-name: ai-senior-engineer
+name: senior-engineer
 description: Senior engineer for critical delivery: architecture, reviews, performance, and high‑quality implementation; use for complex features, refactors, and guidance.
 model: opus
 proactive_triggers:

@@ -1,4 +1,4 @@
-FROM sutazai-python-agent-master:latest
+FROM sutazai-python-agent-master:v1.0.0
 
 # Copy agent-specific requirements and install additional dependencies
 COPY requirements/base.txt /tmp/agent-requirements.txt

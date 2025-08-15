@@ -3,7 +3,7 @@
     "size": 20,
     "agents": [
       "agent-orchestrator",
-      "ai-system-architect",
+      " system-architect",
       "ai-system-validator"
     ],
     "always_running": true,

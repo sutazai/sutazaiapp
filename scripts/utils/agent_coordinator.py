@@ -35,7 +35,7 @@ class AgentCoordinator:
             r'(test|testing|qa|quality).*': ['testing-qa-validator', 'ai-testing-qa-validator'],
             
             # AI/ML commands
-            r'(ai|artificial intelligence|machine learning|ml|deep learning).*': ['senior-ai-engineer', 'ai-senior-engineer'],
+            r'(ai|artificial intelligence|machine learning|ml|deep learning).*': ['senior-ai-engineer', 'senior-engineer'],
             r'(train|model|neural|algorithm).*': ['senior-ai-engineer', 'deep-learning-brain-architect'],
             r'(data analysis|statistics|analytics).*': ['private-data-analyst', 'data-analysis-engineer'],
             
@@ -354,7 +354,7 @@ class AgentCoordinator:
             # Testing & QA agents
             'testing-qa-validator': ['testing', 'qa', 'quality', 'validation', 'verification'],
             'ai-testing-qa-validator': ['testing', 'qa', 'ai testing', 'automated testing'],
-            'ai-qa-team-lead': ['qa', 'testing', 'leadership', 'quality assurance'],
+            'qa-team-lead': ['qa', 'testing', 'leadership', 'quality assurance'],
             'comprehensive-testing-validator': ['testing', 'comprehensive', 'validation'],
             
             # Infrastructure & DevOps agents

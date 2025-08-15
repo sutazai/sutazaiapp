@@ -413,8 +413,8 @@ agents:
     priority: critical
   
   11002:
-    service: ai-system-architect
-    container: sutazai-ai-system-architect
+    service:  system-architect
+    container: sutazai- system-architect
     description: "System architecture design agent"
     internal_port: 8080
     priority: critical
@@ -448,8 +448,8 @@ agents:
     priority: critical
   
   11007:
-    service: ai-senior-engineer
-    container: sutazai-ai-senior-engineer
+    service: senior-engineer
+    container: sutazsenior-engineer
     description: "Senior engineering specialist"
     internal_port: 8080
     priority: critical
@@ -469,8 +469,8 @@ agents:
     priority: critical
   
   11010:
-    service: ai-qa-team-lead
-    container: sutazai-ai-qa-team-lead
+    service: qa-team-lead
+    container: sutazai-qa-team-lead
     description: "QA team leadership"
     internal_port: 8080
     priority: critical

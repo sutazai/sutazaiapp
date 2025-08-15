@@ -125,7 +125,7 @@ Description: System freeze risk score is 85% which is above the warning threshol
 Action: Preventive measures activated
 
 🟡 WARNING: AgentHighMemoryUsage
-Description: Agent ai-senior-engineer is using 2.5GB of memory
+Description: Agent senior-engineer is using 2.5GB of memory
 Action: Memory cleanup scheduled
 ```
 

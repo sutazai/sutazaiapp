@@ -190,7 +190,7 @@ class OllamaConfig:
         "adversarial-attack-detector": OPUS_MODEL,
         "agent-creator": OPUS_MODEL,
         "ai-senior-full-stack-developer": OPUS_MODEL,
-        "ai-system-architect": OPUS_MODEL,
+        " system-architect": OPUS_MODEL,
         "bias-and-fairness-auditor": OPUS_MODEL,
         "causal-inference-expert": OPUS_MODEL,
         "cicd-pipeline-orchestrator": OPUS_MODEL,

@@ -175,11 +175,11 @@ class PerformanceValidator:
             # Create connection pool
             pg_pool = psycopg2.pool.SimpleConnectionPool(
                 1, 20,
-                host="localhost",
-                port=10000,
-                database="sutazai",
-                user="sutazai",
-                password="sutazai_secure_password_2024"
+                host=os.getenv("POSTGRES_HOST", "localhost"),
+                port=int(os.getenv("POSTGRES_PORT", "10000")),
+                database=os.getenv("POSTGRES_DB", "sutazai"),
+                user=os.getenv("POSTGRES_USER", "sutazai"),
+                password=os.getenv("POSTGRES_PASSWORD", "sutazai")
             )
             
             query_times = []

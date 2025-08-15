@@ -7,6 +7,8 @@ Features:
 - 100% success rate for <4min tasks
 - Production-grade circuit breakers and rollback
 - Universal platform integration (OpenAI SDK, Langfuse, AgentOps, Google ADK)
+
+Rule 2 Compliance: Replaced hardcoded localhost references with environment-based configuration
 """
 
 import asyncio
@@ -14,10 +16,16 @@ import json
 import logging
 import time
 import traceback
+import sys
+import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Union
 from contextlib import asynccontextmanager
 from uuid import uuid4, UUID
+
+# Add path for service configuration
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'backend', 'app', 'core'))
+from service_config import get_service_config, get_database_url
 
 import structlog
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Depends, WebSocket
@@ -136,7 +144,7 @@ async def lifespan(app: FastAPI):
     
     # Initialize Redis connection
     try:
-        redis_client = redis.Redis.from_url("redis://localhost:10001", decode_responses=True)
+        redis_client = redis.Redis.from_url(get_database_url('redis'), decode_responses=True)
         await redis_client.ping()
         logger.info("Redis connection established")
     except Exception as e:
@@ -145,8 +153,15 @@ async def lifespan(app: FastAPI):
     
     # Initialize PostgreSQL connection pool
     try:
+        pg_user = os.getenv("POSTGRES_USER", "sutazai")
+        pg_pass = os.getenv("POSTGRES_PASSWORD", "sutazai")
+        # Use service configuration for database connection
+        service_config = get_service_config()
+        pg_host = service_config.base_host
+        pg_port = os.getenv("POSTGRES_PORT", "10000")
+        pg_db = os.getenv("POSTGRES_DB", "sutazai")
         db_pool = await asyncpg.create_pool(
-            "postgresql://sutazai:sutazai@localhost:10000/sutazai",
+            f"postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}",
             min_size=5,
             max_size=20
         )
@@ -160,7 +175,7 @@ async def lifespan(app: FastAPI):
         langfuse_client = Langfuse(
             secret_key="sk-lf-dummy-key",  # Use environment variable in production
             public_key="pk-lf-dummy-key",
-            host="http://localhost:3000"  # Self-hosted Langfuse
+            host=f"http://{service_config.base_host}:3000"  # Self-hosted Langfuse
         )
         logger.info("Langfuse client initialized")
     except Exception as e:
@@ -169,11 +184,17 @@ async def lifespan(app: FastAPI):
     
     # Initialize AgentOps
     try:
-        agentops.init(
-            api_key="dummy-key",  # Use environment variable in production
-            endpoint="http://localhost:8000"  # Self-hosted AgentOps
-        )
-        logger.info("AgentOps initialized")
+        api_key = os.getenv("AGENTOPS_API_KEY")
+        endpoint = os.getenv("AGENTOPS_ENDPOINT", f"http://{service_config.base_host}:8000")
+        
+        if api_key:
+            agentops.init(
+                api_key=api_key,
+                endpoint=endpoint
+            )
+            logger.info("AgentOps initialized")
+        else:
+            logger.warning("AGENTOPS_API_KEY not set - AgentOps disabled")
     except Exception as e:
         logger.error("Failed to initialize AgentOps", error=str(e))
     
@@ -300,7 +321,7 @@ async def create_debug_session(request: DebugSessionRequest):
                     "tags": request.tags
                 }
             )
-            trace_url = f"http://localhost:3000/trace/{trace.id}"
+            trace_url = ff"http://{service_config.base_host}:3000/trace/{trace.id}"
         
         # Start AgentOps session
         agentops_session = agentops.start_session(
@@ -318,7 +339,7 @@ async def create_debug_session(request: DebugSessionRequest):
             status="active",
             created_at=session_data["created_at"],
             trace_url=trace_url,
-            replay_url=f"http://localhost:10205/debug/sessions/{session_id}/replay"
+            replay_url=ff"http://{service_config.base_host}:10205/debug/sessions/{session_id}/replay"
         )
 
 @app.get("/debug/sessions/{session_id}")

@@ -346,7 +346,7 @@ You are an expert orchestration and coordination specialist focused on creating,
 - Full-Stack Integration (ai-senior-full-stack-developer.md, senior-backend-developer.md)
 
 **Tier 2: Quality Assurance Orchestration**
-- Testing Leadership Coordination (ai-qa-team-lead.md, testing-qa-team-lead.md, qa-team-lead.md)
+- Testing Leadership Coordination (qa-team-lead.md, testing-qa-team-lead.md, qa-team-lead.md)
 - Automation & Performance (ai-senior-automated-tester.md, performance-engineer.md, browser-automation-orchestrator.md)
 - Validation & Compliance (ai-testing-qa-validator.md, testing-qa-validator.md, system-validator.md)
 

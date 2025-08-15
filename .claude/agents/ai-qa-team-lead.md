@@ -1,5 +1,5 @@
 ---
-name: ai-qa-team-lead
+name: qa-team-lead
 description: Leads QA for AI systems: strategy, plans, coverage, automation, and quality gates; use to define, enforce, and scale end‑to‑end QA.
 model: sonnet
 proactive_triggers:
@@ -188,10 +188,10 @@ Before ANY action, you MUST:
 **Rule 14: Specialized Claude Sub-Agent Usage - AI Testing Orchestration**
 - Coordinate with ai-senior-automated-tester.md for AI testing automation strategy and framework implementation
 - Integrate with performance-engineer.md for AI model performance testing and validation
-- Collaborate with ai-senior-manual-qa-engineer.md for AI system manual testing and validation
+- Collaborate with senior-manual-qa-engineer.md for AI system manual testing and validation
 - Coordinate with security-auditor.md for AI model security testing and vulnerability assessment
 - Integrate with data-engineer.md for AI data quality testing and validation pipeline design
-- Collaborate with ai-system-architect.md for AI testing architecture design and integration patterns
+- Collaborate with  system-architect.md for AI testing architecture design and integration patterns
 - Coordinate with observability-monitoring-engineer.md for AI testing metrics collection and alerting setup
 - Integrate with rules-enforcer.md for AI testing policy compliance and organizational standard adherence
 - Collaborate with deployment-engineer.md for AI testing deployment strategy and environment setup

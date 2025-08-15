@@ -104,9 +104,14 @@ class DatabaseHealthMonitor:
         """Initialize database connections"""
         try:
             # PostgreSQL connection with optimized pooling
+            pg_user = os.getenv("POSTGRES_USER", "sutazai")
+            pg_pass = os.getenv("POSTGRES_PASSWORD", "sutazai")
+            pg_host = os.getenv("POSTGRES_HOST", "localhost")
+            pg_port = os.getenv("POSTGRES_PORT", "10000")
+            pg_db = os.getenv("POSTGRES_DB", "sutazai")
             pg_dsn = os.getenv(
                 'DATABASE_URL',
-                'postgresql://sutazai:sutazai@localhost:10000/sutazai'
+                f'postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}'
             )
             
             self.pg_pool = await asyncpg.create_pool(

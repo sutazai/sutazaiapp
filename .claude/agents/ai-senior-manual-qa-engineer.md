@@ -1,5 +1,5 @@
 ---
-name: ai-senior-manual-qa-engineer
+name: senior-manual-qa-engineer
 description: Senior manual QA: exploratory/functional/regression/UAT with thorough repro steps and coverage; use for critical feature validation and release sign‑off.
 model: sonnet
 proactive_triggers:

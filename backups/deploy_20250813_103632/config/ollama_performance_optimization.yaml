@@ -118,7 +118,7 @@ ollama_optimization:
 agent_optimizations:
   high_throughput_agents:
     - "jarvis-voice-interface"
-    - "ai-qa-team-lead"
+    - "qa-team-lead"
     - "automated-incident-responder"
     config:
       priority: "high"
@@ -127,7 +127,7 @@ agent_optimizations:
       preload_model: true
       
   complex_reasoning_agents:
-    - "ai-system-architect"
+    - " system-architect"
     - "ai-senior-full-stack-developer"
     - "complex-problem-solver"
     config:

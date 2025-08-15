@@ -18,7 +18,7 @@ from typing import Dict, List, Any, Optional
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-from utils.api_client import call_api, handle_api_error, sync_call_api
+from utils.resilient_api_client import call_api, handle_api_error, sync_call_api
 from utils.formatters import format_bytes, format_percentage, format_timestamp, format_status_badge
 from components.enhanced_ui import ModernMetrics, LoadingComponents, NotificationSystem
 

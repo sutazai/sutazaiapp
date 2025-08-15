@@ -223,7 +223,7 @@ collect_agent_metrics() {
         "sutazai-infrastructure-devops-manager:8002"
         "sutazai-testing-qa-validator:8003"
         "sutazai-agent-orchestrator:8004"
-        "sutazai-ai-system-architect:8005"
+        "sutazai- system-architect:8005"
     )
     
     for agent_config in "${expected_agents[@]}"; do

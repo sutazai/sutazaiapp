@@ -14,6 +14,7 @@ from sqlalchemy import create_engine, text, Index
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.orm import sessionmaker
 from contextlib import asynccontextmanager
+from .secure_config import config
 
 logger = logging.getLogger(__name__)
 
@@ -365,7 +366,7 @@ async def get_database_optimizer() -> DatabaseOptimizer:
     global _db_optimizer
     
     if _db_optimizer is None:
-        database_url = "postgresql://sutazai:sutazai123@sutazai-postgres:5432/sutazai"
+        database_url = config.sync_database_url
         _db_optimizer = DatabaseOptimizer(database_url)
         await _db_optimizer.initialize()
     

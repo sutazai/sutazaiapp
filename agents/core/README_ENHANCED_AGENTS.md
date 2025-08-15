@@ -137,7 +137,7 @@ Each agent is automatically assigned an appropriate model based on complexity:
 from core.ollama_integration import OllamaConfig
 
 # Get model for specific agent
-model = OllamaConfig.get_model_for_agent("ai-system-architect")
+model = OllamaConfig.get_model_for_agent(" system-architect")
 # Returns: "tinyllama" (Opus model for complex reasoning)
 
 config = OllamaConfig.get_model_config("simple-task-agent") 

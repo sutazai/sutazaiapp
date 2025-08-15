@@ -145,11 +145,19 @@ class SutazAITestSuite:
     """Main testing suite for SutazAI system"""
     
     def __init__(self):
-        self.base_url = "http://localhost:10010"
-        self.frontend_url = "http://localhost:10011"
-        self.ollama_url = "http://localhost:10104"
-        self.postgres_url = "postgresql://sutazai:sutazai123@localhost:10000/sutazai_db"
-        self.redis_url = "redis://localhost:10001/0"
+        self.base_url = os.getenv("BACKEND_URL", "http://localhost:10010")
+        self.frontend_url = os.getenv("FRONTEND_URL", "http://localhost:10011")
+        self.ollama_url = os.getenv("OLLAMA_URL", "http://localhost:10104")
+        
+        # Build PostgreSQL URL from environment variables
+        pg_user = os.getenv("POSTGRES_USER", "sutazai")
+        pg_pass = os.getenv("POSTGRES_PASSWORD", "sutazai")
+        pg_host = os.getenv("POSTGRES_HOST", "localhost")
+        pg_port = os.getenv("POSTGRES_PORT", "10000")
+        pg_db = os.getenv("POSTGRES_DB", "sutazai_db")
+        self.postgres_url = f"postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}"
+        
+        self.redis_url = os.getenv("REDIS_URL", "redis://localhost:10001/0")
         
         self.test_results = []
         self.ai_generator = AITestGenerator()

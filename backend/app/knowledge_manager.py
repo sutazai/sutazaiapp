@@ -7,8 +7,10 @@ from datetime import datetime
 import asyncio
 import os
 from dataclasses import dataclass
+from typing import List, Dict, Any
 import httpx
 from neo4j import AsyncGraphDatabase
+from app.core.secure_config import config
 
 logger = logging.getLogger(__name__)
 
@@ -30,13 +32,14 @@ class KnowledgeManager:
         self.knowledge_base = {}
         self.relationships = {}
         self.semantic_index = {}
-        self.neo4j_uri = os.getenv("NEO4J_URI", "bolt://neo4j:7687")
-        self.neo4j_auth = (os.getenv("NEO4J_USER", "neo4j"), os.getenv("NEO4J_PASSWORD", "sutazai_neo4j_password"))
+        self.neo4j_uri = config.neo4j_uri
+        self.neo4j_auth = (config.neo4j_user, config.neo4j_password)
         self.neo4j_driver = None
-        self.chromadb_url = os.getenv("CHROMADB_URL", "http://chromadb:8000")
-        self.chromadb_token = "sk-dcebf71d6136dafc1405f3d3b6f7a9ce43723e36f93542fb"
-        self.chromadb_headers = {"X-Chroma-Token": self.chromadb_token, "Content-Type": "application/json"}
-        self.qdrant_url = os.getenv("QDRANT_URL", "http://qdrant:6333")
+        self.chromadb_url = config.chromadb_url
+        self.chromadb_headers = {"Content-Type": "application/json"}
+        if config.chromadb_api_key:
+            self.chromadb_headers["X-Chroma-Token"] = config.chromadb_api_key
+        self.qdrant_url = config.qdrant_url
         self.initialized = False
         
     async def initialize(self):

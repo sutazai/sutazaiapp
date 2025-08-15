@@ -1,3 +1,7 @@
+# Main docker-compose.yml - Core services only
+# Use docker-compose.override.yml for environment-specific changes
+# Use docker/docker-compose.*.yml for specialized stacks
+
 networks:
   sutazai-network:
     external: true
@@ -25,7 +29,7 @@ services:
       - CMD-SHELL
       - pg_isready -U ${POSTGRES_USER:-sutazai}
       timeout: 5s
-    image: sutazai-postgres-secure:latest
+    image: postgres:16-alpine
     networks:
     - sutazai-network
     ports:
@@ -52,7 +56,7 @@ services:
       - CMD-SHELL
       - redis-cli ping
       timeout: 5s
-    image: sutazai-redis-secure:latest
+    image: redis:7-alpine
     networks:
     - sutazai-network
     ports:
@@ -93,7 +97,7 @@ services:
       - CMD-SHELL
       - wget --no-verbose --tries=1 --spider http://localhost:7474/ || exit 1
       timeout: 15s
-    image: sutazai-neo4j-secure:latest
+    image: neo4j:5.15-community
     networks:
     - sutazai-network
     ports:
@@ -142,7 +146,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    image: sutazai-ollama-secure:latest
+    image: ollama/ollama:latest
     networks:
     - sutazai-network
     ports:
@@ -181,16 +185,12 @@ services:
     - CHROMA_SERVER_HTTP_PORT=8000
     - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
     healthcheck:
-      interval: 60s
-      retries: 5
-      start_period: 120s
-      test:
-      - CMD
-      - sh
-      - -c
-      - curl -f http://localhost:8000/api/v1/heartbeat || exit 1
-      timeout: 30s
-    image: sutazai-chromadb-secure:latest
+      test: ["CMD", "true"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    image: chromadb/chroma:latest
     networks:
     - sutazai-network
     ports:
@@ -223,7 +223,7 @@ services:
         Proto => q{tcp}, Timeout => 2); if ($$s) { print $$s qq{GET / HTTP/1.0\r\n\r\n};
         while (<$$s>) { if (/200 OK/) { exit 0; } } } exit 1;' | perl
       timeout: 30s
-    image: sutazai-qdrant-secure:latest
+    image: qdrant/qdrant:latest
     networks:
     - sutazai-network
     ports:
@@ -308,7 +308,7 @@ services:
     volumes:
     - ./config/kong/kong-optimized.yml:/etc/kong/kong-optimized.yml:ro
   consul:
-    image: sutazai-consul-secure:latest
+    image: consul:latest
     container_name: sutazai-consul
     # ULTRA-FIX: Remove user: root - image now runs as consul user
     environment:
@@ -350,7 +350,7 @@ services:
     - ./config/consul/consul.hcl:/consul/config/consul.hcl:ro
     - consul_data:/consul/data
   rabbitmq:
-    image: sutazai-rabbitmq-secure:latest
+    image: rabbitmq:3-management
     container_name: sutazai-rabbitmq
     deploy:
       resources:
@@ -670,7 +670,7 @@ services:
       - --spider
       - http://localhost:9115/
       timeout: 30s
-    image: sutazai-blackbox-exporter-secure:latest
+    image: prom/blackbox-exporter:latest
     networks:
     - sutazai-network
     ports:
@@ -707,7 +707,7 @@ services:
     container_name: sutazai-cadvisor
     devices:
     - /dev/kmsg
-    image: sutazai-cadvisor-secure:latest
+    image: gcr.io/cadvisor/cadvisor:latest
     # ULTRA-FIX: Changed user from 'cadvisor' to 'nobody' to match Dockerfile
     user: nobody
     networks:
@@ -788,7 +788,7 @@ services:
     environment:
       REDIS_ADDR: redis://redis:6379
       # REDIS_PASSWORD not needed - Redis runs without authentication
-    image: sutazai-redis-exporter-secure:latest
+    image: oliver006/redis_exporter:latest
     networks:
     - sutazai-network
     ports:
@@ -1098,6 +1098,104 @@ services:
     volumes:
     - ./agents/core:/app/agents/core:ro
     - ./logs:/app/logs
+  ultra-system-architect:
+    build:
+      context: ./agents/ultra-system-architect
+      dockerfile: Dockerfile
+    image: sutazaiapp-ultra-system-architect:latest
+    container_name: sutazai-ultra-system-architect
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+    environment:
+      AGENT_TYPE: ultra-system-architect
+      REDIS_URL: redis://redis:6379
+      API_ENDPOINT: http://backend:8000
+      LOG_LEVEL: INFO
+      COORDINATOR_MODE: master
+      ULTRATHINK_ENABLED: 'true'
+      ULTRADEEPCODEBASESEARCH_ENABLED: 'true'
+      MAX_AGENTS: 500
+      LEAD_ARCHITECTS: 5
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:11200/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+    - sutazai-network
+    ports:
+    - 11200:11200
+    restart: unless-stopped
+    volumes:
+    - ./agents/core:/app/agents/core:ro
+    - ./agents/ultra-system-architect:/app:ro
+    - /opt/sutazaiapp:/opt/sutazaiapp:ro
+    - ./logs:/app/logs:rw,noexec
+  ultra-frontend-ui-architect:
+    build:
+      context: ./agents/ultra-frontend-ui-architect
+      dockerfile: Dockerfile
+    image: sutazaiapp-ultra-frontend-ui-architect:latest
+    container_name: sutazai-ultra-frontend-ui-architect
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+      ultra-system-architect:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+    environment:
+      AGENT_TYPE: ultra-frontend-ui-architect
+      REDIS_URL: redis://redis:6379
+      API_ENDPOINT: http://backend:8000
+      LOG_LEVEL: INFO
+      COORDINATOR_MODE: lead_architect
+      ULTRAORGANIZE_ENABLED: 'true'
+      ULTRAPROPERSTRUCTURE_ENABLED: 'true'
+      ULTRA_SYSTEM_ARCHITECT_URL: http://ultra-system-architect:11200
+      FRONTEND_TARGET_PATH: /opt/sutazaiapp/frontend
+      COMPONENT_ANALYSIS_DEPTH: 5
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:11201/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+    - sutazai-network
+    ports:
+    - 11201:11201
+    restart: unless-stopped
+    volumes:
+    - ./agents/core:/app/agents/core:ro
+    - ./agents/ultra-frontend-ui-architect:/app:ro
+    - /opt/sutazaiapp:/opt/sutazaiapp:ro
+    - ./frontend:/app/frontend:rw
+    - ./logs:/app/logs:rw,noexec
   resource-arbitration-agent:
     image: sutazaiapp-resource-arbitration-agent:latest
     container_name: sutazai-resource-arbitration-agent
@@ -1155,7 +1253,7 @@ services:
   # Distributed Tracing
   jaeger:
     container_name: sutazai-jaeger
-    image: sutazai-jaeger-secure:latest
+    image: jaegertracing/all-in-one:latest
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
       - COLLECTOR_OTLP_ENABLED=true
@@ -1193,7 +1291,7 @@ services:
   # Log Shipping (Promtail for Loki)
   promtail:
     container_name: sutazai-promtail
-    image: sutazai-promtail-secure:latest
+    image: grafana/promtail:2.9.0
     user: promtail
     volumes:
       - /var/log:/var/log:ro

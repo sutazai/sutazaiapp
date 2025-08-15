@@ -1,0 +1,197 @@
+{
+  "name": "ultra-system-architect",
+  "type": "ultra_coordinator",
+  "model": "tinyllama",
+  "version": "1.0.0",
+  "description": "Ultra System Architect with ULTRATHINK + ULTRADEEPCODEBASESEARCH capabilities for 500-agent coordination",
+  "capabilities": {
+    "ultrathink": {
+      "enabled": true,
+      "dimensions": [
+        "performance",
+        "scalability",
+        "reliability",
+        "security",
+        "cost",
+        "maintainability",
+        "compliance",
+        "integration",
+        "evolution",
+        "impact"
+      ],
+      "depth_levels": ["surface", "standard", "deep", "ultra", "quantum"],
+      "cache_ttl": 300
+    },
+    "ultradeepcodebasesearch": {
+      "enabled": true,
+      "search_depths": ["surface", "standard", "deep", "ultra", "quantum"],
+      "pattern_correlation": true,
+      "max_patterns": 100,
+      "index_directories": [
+        "/opt/sutazaiapp/agents",
+        "/opt/sutazaiapp/backend",
+        "/opt/sutazaiapp/frontend",
+        "/opt/sutazaiapp/scripts",
+        "/opt/sutazaiapp/config"
+      ]
+    },
+    "lead_architect_coordination": {
+      "enabled": true,
+      "lead_architects": [
+        "ultra-system-architect",
+        "ultra-performance-architect",
+        "ultra-security-architect",
+        "ultra-data-architect",
+        "ultra-infrastructure-architect"
+      ],
+      "coordination_protocol": "redis_pubsub",
+      "heartbeat_interval": 30
+    },
+    "agent_orchestration": {
+      "max_agents": 500,
+      "deployment_waves": 5,
+      "agents_per_wave": 100,
+      "coordination_patterns": [
+        "parallel",
+        "sequential",
+        "hierarchical",
+        "collaborative",
+        "pipeline",
+        "swarm",
+        "democratic"
+      ]
+    },
+    "decision_making": {
+      "enabled": true,
+      "criteria": [
+        "performance_impact",
+        "scalability",
+        "maintainability",
+        "cost",
+        "implementation_complexity",
+        "risk_level"
+      ],
+      "approval_threshold": 0.75,
+      "rollback_enabled": true
+    }
+  },
+  "infrastructure": {
+    "port": 11200,
+    "host": "0.0.0.0",
+    "redis": {
+      "host": "redis",
+      "port": 6379,
+      "db": 0
+    },
+    "prometheus": {
+      "enabled": true,
+      "port": 11201
+    },
+    "health_check": {
+      "enabled": true,
+      "interval": 30,
+      "timeout": 10,
+      "retries": 3
+    }
+  },
+  "performance": {
+    "max_concurrent_analyses": 10,
+    "max_concurrent_searches": 20,
+    "cache_size_mb": 500,
+    "worker_threads": 4,
+    "async_operations": true
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "trace_enabled": true,
+    "metrics_export_interval": 60,
+    "insights_retention_days": 30,
+    "patterns_retention_days": 90
+  },
+  "security": {
+    "authentication_required": false,
+    "api_key_enabled": false,
+    "rate_limiting": {
+      "enabled": true,
+      "requests_per_minute": 100
+    },
+    "allowed_origins": ["*"]
+  },
+  "integration": {
+    "existing_agents": {
+      " system-architect": {
+        "integration_level": "full",
+        "delegation_enabled": true
+      },
+      "system-architect": {
+        "integration_level": "full",
+        "delegation_enabled": true
+      },
+      "ai-agent-orchestrator": {
+        "integration_level": "full",
+        "coordination_enabled": true
+      },
+      "task-assignment-coordinator": {
+        "integration_level": "partial",
+        "task_routing_enabled": true
+      },
+      "hardware-resource-optimizer": {
+        "integration_level": "monitoring",
+        "resource_tracking_enabled": true
+      }
+    },
+    "monitoring_stack": {
+      "prometheus": true,
+      "grafana": true,
+      "loki": true
+    },
+    "message_bus": {
+      "redis": true,
+      "rabbitmq": false
+    }
+  },
+  "deployment": {
+    "container": {
+      "image": "sutazai/ultra-system-architect:latest",
+      "memory_limit": "2Gi",
+      "cpu_limit": "2.0",
+      "replicas": 1,
+      "restart_policy": "unless-stopped"
+    },
+    "environment": {
+      "PYTHONUNBUFFERED": "1",
+      "LOG_LEVEL": "INFO",
+      "REDIS_URL": "redis://redis:6379"
+    },
+    "volumes": [
+      {
+        "source": "/opt/sutazaiapp",
+        "target": "/opt/sutazaiapp",
+        "read_only": true
+      }
+    ],
+    "networks": ["sutazai-network"],
+    "depends_on": ["redis", "postgres"]
+  },
+  "endpoints": {
+    "health": "/health",
+    "analyze": "/analyze",
+    "search": "/search",
+    "decide": "/decide",
+    "insights": "/insights",
+    "patterns": "/patterns",
+    "decisions": "/decisions",
+    "metrics": "/metrics"
+  },
+  "tags": [
+    "ultra",
+    "coordinator",
+    "architecture",
+    "multi-dimensional",
+    "500-agents",
+    "lead-architect",
+    "ultrathink",
+    "ultradeepcodebasesearch"
+  ]
+}

@@ -188,9 +188,9 @@ Before ANY cognitive architecture work, you MUST:
 - Optimize cognitive workflows to eliminate unnecessary manual intervention and maintenance overhead
 
 **Rule 14: Specialized Claude Sub-Agent Usage - Cognitive Orchestration**
-- Coordinate with ai-system-architect.md for cognitive system design strategy and integration patterns
+- Coordinate with  system-architect.md for cognitive system design strategy and integration patterns
 - Integrate with performance-engineer.md for cognitive performance optimization and resource assessment
-- Collaborate with ai-senior-engineer.md for cognitive implementation and technical integration
+- Collaborate with senior-engineer.md for cognitive implementation and technical integration
 - Coordinate with rules-enforcer.md for cognitive policy compliance and organizational standard adherence
 - Integrate with observability-monitoring-engineer.md for cognitive metrics collection and alerting setup
 - Collaborate with security-auditor.md for cognitive security review and vulnerability assessment
@@ -466,9 +466,9 @@ You are an expert cognitive architecture specialist focused on designing, optimi
 
 ### Cross-Agent Validation
 **MANDATORY**: Trigger validation from:
-- **ai-system-architect**: Cognitive architecture integration and system design verification
+- ** system-architect**: Cognitive architecture integration and system design verification
 - **performance-engineer**: Cognitive performance optimization and resource efficiency validation
-- **ai-senior-engineer**: Cognitive implementation feasibility and technical integration verification
+- **senior-engineer**: Cognitive implementation feasibility and technical integration verification
 - **rules-enforcer**: Organizational policy and rule compliance validation
 - **testing-qa-team-lead**: Cognitive testing strategy and validation framework integration
 

@@ -7,8 +7,7 @@ from datetime import datetime
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-from utils.optimized_api_client import sync_call_api
-from utils.api_client import handle_api_error
+from utils.resilient_api_client import sync_call_api, handle_api_error
 from utils.formatters import format_timestamp
 
 def show_ai_chat():

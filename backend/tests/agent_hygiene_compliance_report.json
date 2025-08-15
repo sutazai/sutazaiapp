@@ -573,7 +573,7 @@
       },
       "yaml_frontmatter_valid": false
     },
-    "ai-qa-team-lead": {
+    "qa-team-lead": {
       "passed": false,
       "compliance_score": 0.0,
       "issues_count": 20,
@@ -678,7 +678,7 @@
       },
       "yaml_frontmatter_valid": false
     },
-    "ai-senior-engineer": {
+    "senior-engineer": {
       "passed": false,
       "compliance_score": 0.0,
       "issues_count": 22,
@@ -785,7 +785,7 @@
       },
       "yaml_frontmatter_valid": true
     },
-    "ai-senior-manual-qa-engineer": {
+    "senior-manual-qa-engineer": {
       "passed": false,
       "compliance_score": 0.0,
       "issues_count": 22,
@@ -822,7 +822,7 @@
       },
       "yaml_frontmatter_valid": false
     },
-    "ai-system-architect": {
+    " system-architect": {
       "passed": false,
       "compliance_score": 0.0,
       "issues_count": 19,
@@ -8637,7 +8637,7 @@
       ]
     },
     {
-      "agent": "ai-qa-team-lead",
+      "agent": "qa-team-lead",
       "severity": "HIGH",
       "issues": [
         "Invalid YAML syntax: mapping values are not allowed here\n  in \"<unicode string>\", line 2, column 444:\n     ... ntinuous AI deployment. Examples: <example>Context: The user nee ... \n                                         ^",
@@ -8715,7 +8715,7 @@
       ]
     },
     {
-      "agent": "ai-senior-engineer",
+      "agent": "senior-engineer",
       "severity": "HIGH",
       "issues": [
         "Invalid YAML syntax: mapping values are not allowed here\n  in \"<unicode string>\", line 2, column 307:\n     ... adership tasks. <example>Context: The user needs help designing  ... \n                                         ^",
@@ -8795,7 +8795,7 @@
       ]
     },
     {
-      "agent": "ai-senior-manual-qa-engineer",
+      "agent": "senior-manual-qa-engineer",
       "severity": "HIGH",
       "issues": [
         "Invalid YAML syntax: mapping values are not allowed here\n  in \"<unicode string>\", line 2, column 444:\n     ... rom a user perspective. Examples: <example>Context: The user nee ... \n                                         ^",
@@ -8823,7 +8823,7 @@
       ]
     },
     {
-      "agent": "ai-system-architect",
+      "agent": " system-architect",
       "severity": "HIGH",
       "issues": [
         "Invalid YAML syntax: mapping values are not allowed here\n  in \"<unicode string>\", line 2, column 600:\n     ... n\\nExamples:\\n<example>\\nContext: The user needs to design an AI ... \n                                         ^",

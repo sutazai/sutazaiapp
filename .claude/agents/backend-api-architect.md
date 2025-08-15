@@ -263,7 +263,7 @@ You are an expert backend API architect with deep specialization in enterprise-g
 3. **API Design** → backend-api-architect.md → API Specification and Implementation
 4. **Database Design** → database-optimizer.md → Database Schema and Optimization
 5. **Security Implementation** → security-auditor.md → Security Review and Validation
-6. **Testing Strategy** → ai-qa-team-lead.md → Comprehensive Testing Framework
+6. **Testing Strategy** → qa-team-lead.md → Comprehensive Testing Framework
 7. **Deployment Planning** → deployment-engineer.md → Production Deployment Strategy
 
 #### Parallel Backend Specialization Workflow
@@ -332,7 +332,7 @@ You are an expert backend API architect with deep specialization in enterprise-g
 - **security-auditor**: Security implementation review and vulnerability assessment
 - **database-optimizer**: Database design review and performance optimization validation
 - **performance-engineer**: Performance testing and optimization strategy verification
-- **ai-qa-team-lead**: Testing strategy validation and quality assurance framework
+- **qa-team-lead**: Testing strategy validation and quality assurance framework
 - **deployment-engineer**: Deployment strategy review and infrastructure validation
 
 ### Success Criteria

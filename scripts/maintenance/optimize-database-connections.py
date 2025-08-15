@@ -70,9 +70,14 @@ class DatabaseConnectionOptimizer:
         """Initialize database connections for testing"""
         try:
             # PostgreSQL connection with current settings
+            pg_user = os.getenv("POSTGRES_USER", "sutazai")
+            pg_pass = os.getenv("POSTGRES_PASSWORD", "sutazai")
+            pg_host = os.getenv("POSTGRES_HOST", "localhost")
+            pg_port = os.getenv("POSTGRES_PORT", "10000")
+            pg_db = os.getenv("POSTGRES_DB", "sutazai")
             pg_dsn = os.getenv(
                 'DATABASE_URL',
-                'postgresql://sutazai:sutazai@localhost:10000/sutazai'
+                f'postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}'
             )
             
             self.pg_pool = await asyncpg.create_pool(
@@ -104,9 +109,14 @@ class DatabaseConnectionOptimizer:
         logger.info(f"Benchmarking pool_size={pool_size}, concurrent={concurrent_requests}")
         
         # Create test pool
+        pg_user = os.getenv("POSTGRES_USER", "sutazai")
+        pg_pass = os.getenv("POSTGRES_PASSWORD", "sutazai")
+        pg_host = os.getenv("POSTGRES_HOST", "localhost")
+        pg_port = os.getenv("POSTGRES_PORT", "10000")
+        pg_db = os.getenv("POSTGRES_DB", "sutazai")
         pg_dsn = os.getenv(
             'DATABASE_URL',
-            'postgresql://sutazai:sutazai@localhost:10000/sutazai'
+            f'postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}'
         )
         
         test_pool = await asyncpg.create_pool(
@@ -412,8 +422,13 @@ async def monitor_pools():
     """Monitor connection pools continuously"""
     
     # Initialize connections
+    pg_user = os.getenv("POSTGRES_USER", "sutazai")
+    pg_pass = os.getenv("POSTGRES_PASSWORD", "sutazai")
+    pg_host = os.getenv("POSTGRES_HOST", "localhost")
+    pg_port = os.getenv("POSTGRES_PORT", "10000")
+    pg_db = os.getenv("POSTGRES_DB", "sutazai")
     pg_pool = await asyncpg.create_pool(
-        'postgresql://sutazai:sutazai@localhost:10000/sutazai',
+        f'postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}',
         min_size=5, max_size=20
     )
     

@@ -2858,7 +2858,7 @@ Tier 1: Core Architecture & Development Claude Specialists
 ├── Enterprise Architecture
 │   ├── system-architect.md (Claude specialized in enterprise system design, integration patterns)
 │   ├── senior-software-architect.md (Claude with senior-level architecture expertise)
-│   ├── ai-system-architect.md (Claude specialized in AI system architecture, ML infrastructure)
+│   ├──  system-architect.md (Claude specialized in AI system architecture, ML infrastructure)
 │   └── cognitive-architecture-designer.md (Claude expert in cognitive systems design)
 ├── Backend Architecture
 │   ├── backend-architect.md (Claude specialized in backend system design, microservices)
@@ -2892,14 +2892,14 @@ Tier 1: Core Architecture & Development Claude Specialists
 │   ├── ios-developer.md (Claude expert in iOS development, Swift optimization)
 │   └── mobile-developer.md (Claude specialized in cross-platform mobile development)
 └── Backend Specialists
-    ├── ai-senior-engineer.md (Claude with senior-level engineering expertise)
+    ├── senior-engineer.md (Claude with senior-level engineering expertise)
     ├── senior-backend-developer.md (Claude specialized in backend development leadership)
     ├── senior-full-stack-developer.md (Claude expert in full-stack development)
     └── ai-senior-full-stack-developer.md (Claude with AI-powered full-stack expertise)
 Tier 2: Quality Assurance Claude Specialists
 🧪 QA CLAUDE SPECIALISTS:
 ├── Testing Leadership
-│   ├── ai-qa-team-lead.md (Claude specialized in QA strategy, team coordination)
+│   ├── qa-team-lead.md (Claude specialized in QA strategy, team coordination)
 │   ├── qa-team-lead.md (Claude expert in QA processes, quality metrics)
 │   ├── testing-qa-team-lead.md (Claude specialized in testing strategy, automation)
 │   └── codebase-team-lead.md (Claude expert in code quality leadership)
@@ -2907,7 +2907,7 @@ Tier 2: Quality Assurance Claude Specialists
 │   ├── ai-manual-tester.md (Claude specialized in intelligent manual testing)
 │   ├── manual-tester.md (Claude expert in manual testing, usability testing)
 │   ├── senior-qa-manual-tester.md (Claude specialized in advanced manual testing)
-│   └── ai-senior-manual-qa-engineer.md (Claude expert in senior manual QA)
+│   └── senior-manual-qa-engineer.md (Claude expert in senior manual QA)
 ├── Automation & Performance
 │   ├── ai-senior-automated-tester.md (Claude specialized in advanced test automation)
 │   ├── senior-automated-tester.md (Claude expert in test automation leadership)
@@ -3011,7 +3011,7 @@ yamlclaude_agent_selection_matrix:
       
   testing_quality:
     test_strategy:
-      team_lead: "ai-qa-team-lead.md"
+      team_lead: "qa-team-lead.md"
       automation_lead: "testing-qa-team-lead.md"
       manual_lead: "qa-team-lead.md"
       
@@ -3100,7 +3100,7 @@ yamlclaude_coordination_patterns:
         coordination_artifact: "data_model"
         
       testing_track:
-        claude_agent: "ai-qa-team-lead.md"
+        claude_agent: "qa-team-lead.md"
         responsibility: "test_strategy_framework"
         coordination_artifact: "test_plan"
         

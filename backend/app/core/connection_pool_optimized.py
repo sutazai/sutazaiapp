@@ -11,6 +11,7 @@ import asyncpg
 import redis.asyncio as redis
 from contextlib import asynccontextmanager
 from functools import lru_cache
+from .secure_config import config
 
 logger = logging.getLogger(__name__)
 
@@ -49,11 +50,11 @@ class UltraPerformanceConnectionPool:
         try:
             # PostgreSQL connection pool with optimized settings
             self.pg_pool = await asyncpg.create_pool(
-                host='localhost',
-                port=10000,
-                database='sutazai',
-                user='sutazai',
-                password='sutazai123',
+                host=config.postgres_host,
+                port=config.postgres_port,
+                database=config.postgres_db,
+                user=config.postgres_user,
+                password=config.postgres_password,
                 
                 # ULTRAPERFORMANCE pool settings
                 min_size=10,              # Minimum connections (warm pool)
@@ -79,9 +80,10 @@ class UltraPerformanceConnectionPool:
             
             # Redis connection pool with optimized settings
             self.redis_pool = redis.ConnectionPool(
-                host='localhost',
-                port=10001,
+                host=config.redis_host,
+                port=config.redis_port,
                 db=0,
+                password=config.redis_password if config.redis_password else None,
                 
                 # ULTRAPERFORMANCE pool settings
                 max_connections=100,           # High connection limit

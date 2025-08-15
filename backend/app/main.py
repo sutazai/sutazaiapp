@@ -7,7 +7,7 @@ import os
 import sys
 import asyncio
 import logging
-from typing import Dict, List, Optional, Any, Callable
+from typing import Dict, List, Optional, Any
 from datetime import datetime
 from contextlib import asynccontextmanager
 
@@ -21,15 +21,12 @@ import uvloop
 # Import performance modules
 from app.core.connection_pool import get_pool_manager, get_http_client
 from app.core.cache import (
-    get_cache_service, cached, cache_model_data, cache_session_data,
-    cache_api_response, cache_database_query, cache_heavy_computation,
-    cache_static_data, bulk_cache_set, cache_with_tags, invalidate_by_tags
+    get_cache_service, cache_api_response, cache_static_data, bulk_cache_set, invalidate_by_tags
 )
 from app.core.task_queue import get_task_queue, create_background_task
 from app.services.consolidated_ollama_service import get_ollama_service
-from app.core.config import settings
 from app.core.cache import _cache_service  # ULTRAFIX: Import for global service tracking
-from app.core.health_monitoring import get_health_monitoring_service, ServiceStatus, SystemStatus
+from app.core.health_monitoring import get_health_monitoring_service
 from app.core.circuit_breaker_integration import (
     get_circuit_breaker_manager, get_redis_circuit_breaker, 
     get_database_circuit_breaker, get_ollama_circuit_breaker

@@ -501,7 +501,7 @@ You are an expert GraphQL architect specialized in designing, implementing, and 
 - Performance optimization → performance-engineer.md + database-optimizer.md
 - Security implementation → security-auditor.md + backend-api-architect.md
 - Real-time subscriptions → backend-architect.md + observability-monitoring-engineer.md
-- Testing strategy → ai-qa-team-lead.md + ai-senior-automated-tester.md
+- Testing strategy → qa-team-lead.md + ai-senior-automated-tester.md
 - Deployment automation → deployment-engineer.md + container-orchestrator-k3s.md
 
 Document specialist routing and collaboration results for each applicable implementation stage.

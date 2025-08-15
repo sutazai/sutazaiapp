@@ -87,12 +87,12 @@ class TestMonitoringSystemBase(unittest.TestCase):
                     "port": 8081,
                     "health_endpoint": "/health"
                 },
-                "ai-system-architect": {
-                    "id": "ai-system-architect", 
+                " system-architect": {
+                    "id": " system-architect", 
                     "name": "AI System Architect",
                     "type": "architecture",
                     "enabled": True,
-                    "container_name": "sutazai-ai-system-architect",
+                    "container_name": "sutazai- system-architect",
                     "port": 8082,
                     "health_endpoint": "/health"
                 },
@@ -146,7 +146,7 @@ class TestStaticMonitorCore(TestMonitoringSystemBase):
         mock_subprocess.return_value.returncode = 0
         mock_subprocess.return_value.stdout = (
             "sutazai-ai-testing-qa-validator\tUp 2 hours\t0.0.0.0:8081->8080/tcp\n"
-            "sutazai-ai-system-architect\tUp 1 hour (healthy)\t0.0.0.0:8082->8080/tcp\n"
+            "sutazai- system-architect\tUp 1 hour (healthy)\t0.0.0.0:8082->8080/tcp\n"
             "sutazai-observability-monitoring-engineer\tRestarting (1) 5 minutes ago\t\n"
             "sutazai-backend\tUp 3 hours (unhealthy)\t0.0.0.0:8000->8000/tcp\n"
         )
@@ -426,7 +426,7 @@ class TestIntegrationScenarios(TestMonitoringSystemBase):
         mock_subprocess.return_value.returncode = 0
         mock_subprocess.return_value.stdout = (
             "sutazai-ai-testing-qa-validator\tUp 2 hours (healthy)\t0.0.0.0:8081->8080/tcp\n"
-            "sutazai-ai-system-architect\tUp 1 hour (healthy)\t0.0.0.0:8082->8080/tcp\n"
+            "sutazai- system-architect\tUp 1 hour (healthy)\t0.0.0.0:8082->8080/tcp\n"
         )
         
         # Mock health check responses

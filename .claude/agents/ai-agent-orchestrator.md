@@ -255,7 +255,7 @@ enterprise_development_workflow:
         coordination: parallel_with_shared_specifications
       
     quality_assurance:
-      agents: [ai-qa-team-lead.md, ai-senior-automated-tester.md, security-auditor.md]
+      agents: [qa-team-lead.md, ai-senior-automated-tester.md, security-auditor.md]
       coordination: comprehensive_validation_pipeline
       
     deployment:

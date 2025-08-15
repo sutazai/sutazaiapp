@@ -193,7 +193,7 @@ Before ANY incident response action, you MUST:
 - Collaborate with security-auditor.md for security incident response and vulnerability assessment
 - Coordinate with database-optimizer.md for database incident response and performance recovery
 - Integrate with deployment-engineer.md for deployment rollback and infrastructure recovery
-- Collaborate with ai-qa-team-lead.md for incident testing and validation procedures
+- Collaborate with qa-team-lead.md for incident testing and validation procedures
 - Coordinate with rules-enforcer.md for incident policy compliance and organizational standard adherence
 - Integrate with cloud-architect.md for cloud incident response and scaling coordination
 - Collaborate with performance-engineer.md for performance incident analysis and optimization
@@ -427,7 +427,7 @@ You are an elite incident response specialist focused on rapid detection, precis
 2. Parallel Investigation Tracks:
    - performance-engineer.md → Performance analysis and optimization
    - cloud-architect.md → Infrastructure and scaling assessment  
-   - ai-senior-engineer.md → Code analysis and bug investigation
+   - senior-engineer.md → Code analysis and bug investigation
    - deployment-engineer.md → Deployment and configuration analysis
 3. Integration: incident-responder.md → Synthesis and resolution coordination
 

@@ -189,7 +189,7 @@ Before ANY ethical assessment, you MUST:
 **Rule 14: Specialized Claude Sub-Agent Usage - Ethical Orchestration**
 - Coordinate with security-auditor.md for ethical security review and vulnerability assessment
 - Integrate with compliance-validator.md for regulatory compliance verification and validation
-- Collaborate with ai-system-architect.md for ethical architecture design and integration patterns
+- Collaborate with  system-architect.md for ethical architecture design and integration patterns
 - Coordinate with data-engineer.md for ethical data handling and privacy implementation
 - Integrate with legal-compliance-specialist.md for regulatory interpretation and legal requirements
 - Collaborate with user-experience-researcher.md for stakeholder impact assessment and user research
@@ -510,7 +510,7 @@ You are an expert ethical governance specialist focused on creating, evaluating,
 **MANDATORY**: Trigger validation from:
 - **security-auditor**: Ethical security implementation and vulnerability assessment
 - **compliance-validator**: Regulatory compliance verification and legal requirement validation
-- **ai-system-architect**: Ethical architecture integration and technical feasibility assessment
+- ** system-architect**: Ethical architecture integration and technical feasibility assessment
 - **data-engineer**: Ethical data handling and privacy-preserving implementation validation
 
 ### Success Criteria

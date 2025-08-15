@@ -107,6 +107,25 @@ def sync_health_check(use_cache: bool = True) -> Optional[Dict[str, Any]]:
             "timestamp": time.time()
         }
 
+async def call_api(endpoint: str, method: str = "GET", data: Optional[Dict] = None,
+                  timeout: float = 5.0) -> Optional[Dict[str, Any]]:
+    """
+    Asynchronous API call with circuit breaker protection
+    """
+    return sync_call_api(endpoint, method, data, timeout)
+
+def handle_api_error(error: Exception, context: str = "") -> Dict[str, Any]:
+    """
+    Handle API errors with context and logging
+    """
+    error_msg = f"API Error{f' in {context}' if context else ''}: {str(error)}"
+    logger.error(error_msg)
+    return {
+        "error": True,
+        "message": error_msg,
+        "timestamp": time.time()
+    }
+
 def sync_call_api(endpoint: str, method: str = "GET", data: Optional[Dict] = None, 
                  timeout: float = 5.0) -> Optional[Dict[str, Any]]:
     """

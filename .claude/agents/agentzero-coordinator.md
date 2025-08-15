@@ -438,7 +438,7 @@ agent_specialization_registry:
       
   quality_assurance:
     testing_leaders:
-      - "ai-qa-team-lead.md"
+      - "qa-team-lead.md"
       - "testing-qa-team-lead.md"
     automation_specialists:
       - "ai-senior-automated-tester.md"

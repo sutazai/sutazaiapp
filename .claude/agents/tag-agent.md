@@ -345,7 +345,7 @@ You are an expert tag management specialist focused on creating, optimizing, and
 - Search and Discovery Integration (ai-senior-full-stack-developer.md, senior-backend-developer.md)
 
 **Tier 2: Data Quality Assurance Specialists**
-- Tag Validation Leadership (ai-qa-team-lead.md, testing-qa-team-lead.md, qa-team-lead.md)
+- Tag Validation Leadership (qa-team-lead.md, testing-qa-team-lead.md, qa-team-lead.md)
 - Automation & Performance (ai-senior-automated-tester.md, performance-engineer.md, browser-automation-orchestrator.md)
 - Validation & Compliance (ai-testing-qa-validator.md, testing-qa-validator.md, system-validator.md)
 

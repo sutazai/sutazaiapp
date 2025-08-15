@@ -60,11 +60,11 @@ You MUST trigger validation from:
 Additionally, you MUST route work through specialist agents for deep analysis and zero-assumption delivery (Rule 14):
 - system-architect: Architecture, scalability, ultrathink/ultralogic
 - complex-problem-solver: Problem decomposition, ultralogic/ultrasmart
-- ai-senior-engineer: Refactors, fixes, ultradebug/ultraproperfix
+- senior-engineer: Refactors, fixes, ultradebug/ultraproperfix
 - debugger: Targeted debugging, ultradebug
 - expert-code-reviewer: High-rigor reviews, ultrafollowrules
-- ai-qa-team-lead and ai-senior-automated-tester: Test plans and automation, ultratest
-- ai-senior-manual-qa-engineer: Manual and E2E validation, ultratest
+- qa-team-lead and ai-senior-automated-tester: Test plans and automation, ultratest
+- senior-manual-qa-engineer: Manual and E2E validation, ultratest
 - infrastructure-devops-manager and deployment-engineer: CI/CD, deploy integrity
 - cloud-architect: Scalability, infra strategy, ultrascalablesolution
 - mcp-expert: MCP integrity checks (read-only), Rule 20
@@ -101,10 +101,10 @@ Operating Procedure
 3. Run linters/formatters/types; scan for duplicates and banned terms (Rule 1, Tools list).
 4. Verify no regressions and no broken workflows; preserve advanced features (caching/routing/etc.).
 5. Specialist routing (Rule 14):
-   - Architecture/scalability → ai-system-architect, cloud-architect (ultrathink/ultrascalablesolution)
+   - Architecture/scalability →  system-architect, cloud-architect (ultrathink/ultrascalablesolution)
    - Deep codebase search/investigation/logs → complex-problem-solver, error-detective, log-aggregator-loki, distributed-tracing-analyzer-jaeger (ultradeepcodebasesearch/ultradeeplogscheck)
-   - Debug/fix → ai-senior-engineer, debugger (ultradebug/ultraproperfix)
-   - Tests/QA → ai-qa-team-lead, ai-senior-automated-tester, ai-senior-manual-qa-engineer (ultratest)
+   - Debug/fix → senior-engineer, debugger (ultradebug/ultraproperfix)
+   - Tests/QA → qa-team-lead, ai-senior-automated-tester, senior-manual-qa-engineer (ultratest)
    - Performance/hardware → energy-consumption-optimizer, hardware-resource-optimizer, gpu-hardware-optimizer, cpu-only-hardware-optimizer (ultraperformance/ultrahardwareoptimization)
    - Structure/cleanup → architect-review, garbage-collector (ultraorganize/ultracleanup/ultraproperstructure)
    - Orchestration/continuation → autonomous-task-executor, autonomous-system-controller (ultracontinue/ultrado)
@@ -150,11 +150,11 @@ References
 Follow these steps in order for every substantive task. Each step MUST invoke the proper specialist agents and record evidence. No assumptions.
 
 1) ultrathink • ultralogic • ultrasmart
-- Invoke: ai-system-architect, complex-problem-solver
+- Invoke:  system-architect, complex-problem-solver
 - Output: clarified objectives, constraints, risks, success criteria, rollback plan
 
 2) ultradeepcodebasesearch • ultrainvestigate
-- Invoke: complex-problem-solver, ai-senior-engineer
+- Invoke: complex-problem-solver, senior-engineer
 - Output: complete impact map, imports/consumers list, duplication/conflicts, reuse opportunities (Rule 4)
 
 3) ultradeeplogscheck
@@ -166,7 +166,7 @@ Follow these steps in order for every substantive task. Each step MUST invoke th
 - Output: proposed structure, removals, consolidation, RFC (if needed), zero stray files (Rules 6–7)
 
 5) ultradebug • ultraproperfix
-- Invoke: ai-senior-engineer, debugger
+- Invoke: senior-engineer, debugger
 - Output: root cause,   fix plan, reversible patch with safeguards (Rule 2)
 
 6) ultraperformance • ultrahardwareoptimization
@@ -174,7 +174,7 @@ Follow these steps in order for every substantive task. Each step MUST invoke th
 - Output: perf metrics, resource impact, caps/limits, tuning recommendations
 
 7) ultratest • ultrafollowrules
-- Invoke: ai-qa-team-lead, ai-senior-automated-tester, ai-senior-manual-qa-engineer, code-reviewer
+- Invoke: qa-team-lead, ai-senior-automated-tester, senior-manual-qa-engineer, code-reviewer
 - Output: unit/integration/E2E coverage, green checks, lint/types/security clean, no regressions (Rules 1–3, 19)
 
 8) ultrascalablesolution • ultracontinue • ultrado
@@ -3027,7 +3027,7 @@ Tier 1: Core Architecture & Development Claude Specialists
 ├── Enterprise Architecture
 │   ├── system-architect.md (Claude specialized in enterprise system design, integration patterns)
 │   ├── senior-software-architect.md (Claude with senior-level architecture expertise)
-│   ├── ai-system-architect.md (Claude specialized in AI system architecture, ML infrastructure)
+│   ├──  system-architect.md (Claude specialized in AI system architecture, ML infrastructure)
 │   └── cognitive-architecture-designer.md (Claude expert in cognitive systems design)
 ├── Backend Architecture
 │   ├── backend-architect.md (Claude specialized in backend system design, microservices)
@@ -3061,14 +3061,14 @@ Tier 1: Core Architecture & Development Claude Specialists
 │   ├── ios-developer.md (Claude expert in iOS development, Swift optimization)
 │   └── mobile-developer.md (Claude specialized in cross-platform mobile development)
 └── Backend Specialists
-    ├── ai-senior-engineer.md (Claude with senior-level engineering expertise)
+    ├── senior-engineer.md (Claude with senior-level engineering expertise)
     ├── senior-backend-developer.md (Claude specialized in backend development leadership)
     ├── senior-full-stack-developer.md (Claude expert in full-stack development)
     └── ai-senior-full-stack-developer.md (Claude with AI-powered full-stack expertise)
 Tier 2: Quality Assurance Claude Specialists
 🧪 QA CLAUDE SPECIALISTS:
 ├── Testing Leadership
-│   ├── ai-qa-team-lead.md (Claude specialized in QA strategy, team coordination)
+│   ├── qa-team-lead.md (Claude specialized in QA strategy, team coordination)
 │   ├── qa-team-lead.md (Claude expert in QA processes, quality metrics)
 │   ├── testing-qa-team-lead.md (Claude specialized in testing strategy, automation)
 │   └── codebase-team-lead.md (Claude expert in code quality leadership)
@@ -3076,7 +3076,7 @@ Tier 2: Quality Assurance Claude Specialists
 │   ├── ai-manual-tester.md (Claude specialized in intelligent manual testing)
 │   ├── manual-tester.md (Claude expert in manual testing, usability testing)
 │   ├── senior-qa-manual-tester.md (Claude specialized in advanced manual testing)
-│   └── ai-senior-manual-qa-engineer.md (Claude expert in senior manual QA)
+│   └── senior-manual-qa-engineer.md (Claude expert in senior manual QA)
 ├── Automation & Performance
 │   ├── ai-senior-automated-tester.md (Claude specialized in advanced test automation)
 │   ├── senior-automated-tester.md (Claude expert in test automation leadership)
@@ -3180,7 +3180,7 @@ yamlclaude_agent_selection_matrix:
       
   testing_quality:
     test_strategy:
-      team_lead: "ai-qa-team-lead.md"
+      team_lead: "qa-team-lead.md"
       automation_lead: "testing-qa-team-lead.md"
       manual_lead: "qa-team-lead.md"
       
@@ -3269,7 +3269,7 @@ yamlclaude_coordination_patterns:
         coordination_artifact: "data_model"
         
       testing_track:
-        claude_agent: "ai-qa-team-lead.md"
+        claude_agent: "qa-team-lead.md"
         responsibility: "test_strategy_framework"
         coordination_artifact: "test_plan"
         
@@ -6011,11 +6011,11 @@ markdown# MCP SERVER PROTECTION DAILY CHECKLIST
 ---overage remains complete and fully documented.
 
 ### Specialist Agent Routing (Rule 14, ultra-*)
-- ultrathink, ultralogic, ultrasmart → ai-system-architect, complex-problem-solver
-- ultradeepcodebasesearch, ultrainvestigate → complex-problem-solver, ai-senior-engineer
+- ultrathink, ultralogic, ultrasmart →  system-architect, complex-problem-solver
+- ultradeepcodebasesearch, ultrainvestigate → complex-problem-solver, senior-engineer
 - ultradeeplogscheck → log-aggregator-loki, distributed-tracing-analyzer-jaeger
-- ultradebug, ultraproperfix → ai-senior-engineer, debugger
-- ultratest, ultrafollowrules → ai-qa-team-lead, ai-senior-automated-tester, ai-senior-manual-qa-engineer, code-reviewer
+- ultradebug, ultraproperfix → senior-engineer, debugger
+- ultratest, ultrafollowrules → qa-team-lead, ai-senior-automated-tester, senior-manual-qa-engineer, code-reviewer
 - ultraperformance → energy-consumption-optimizer
 - ultrahardwareoptimization → hardware-resource-optimizer, gpu-hardware-optimizer, cpu-only-hardware-optimizer
 - ultraorganize, ultracleanup, ultraproperstructure → architect-review, garbage-collector

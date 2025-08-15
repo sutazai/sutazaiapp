@@ -279,8 +279,8 @@
           "refId": "F"
         },
         {
-          "expr": "up{job=\"ai-qa-team-lead\"}",
-          "legendFormat": "ai-qa-team-lead",
+          "expr": "up{job=\"qa-team-lead\"}",
+          "legendFormat": "qa-team-lead",
           "refId": "G"
         },
         {
@@ -294,8 +294,8 @@
           "refId": "I"
         },
         {
-          "expr": "up{job=\"ai-senior-engineer\"}",
-          "legendFormat": "ai-senior-engineer",
+          "expr": "up{job=\"senior-engineer\"}",
+          "legendFormat": "senior-engineer",
           "refId": "J"
         },
         {
@@ -309,8 +309,8 @@
           "refId": "L"
         },
         {
-          "expr": "up{job=\"ai-system-architect\"}",
-          "legendFormat": "ai-system-architect",
+          "expr": "up{job=\" system-architect\"}",
+          "legendFormat": " system-architect",
           "refId": "M"
         },
         {

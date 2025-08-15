@@ -106,7 +106,7 @@ class ConnectionPoolManager:
         try:
             # Initialize Redis pool with optional authentication
             redis_config = {
-                'host': config.get('redis_host', 'sutazai-redis'),
+                'host': config.get('redis_host', '172.20.0.2'),
                 'port': config.get('redis_port', 6379),
                 'db': 0,
                 'max_connections': 50,
@@ -134,10 +134,10 @@ class ConnectionPoolManager:
             # Based on formula: pool_size = (num_workers * 2) + max_overflow
             # For 28 containers with avg 2 connections each = 56 + 20 = 76
             self._db_cfg = {
-                'host': config.get('db_host', 'sutazai-postgres'),
+                'host': config.get('db_host', '172.20.0.5'),
                 'port': config.get('db_port', 5432),
                 'user': config.get('db_user', 'sutazai'),
-                'password': config.get('db_password', 'sutazai'),
+                'password': config.get('db_password', 'sutazai123'),
                 'database': config.get('db_name', 'sutazai'),
                 'min_size': 20,  # ULTRAFIX: Increased from 10 for better warm pool
                 'max_size': 50,  # ULTRAFIX: Increased from 20 for high concurrency
@@ -146,7 +146,8 @@ class ConnectionPoolManager:
                 'command_timeout': 60,
                 'server_settings': {
                     'jit': 'on'  # Enable JIT compilation - safe to set at connection time
-                }
+                },
+                'ssl': False  # Explicitly disable SSL
             }
             self._db_pool = await asyncpg.create_pool(**self._db_cfg)
             
@@ -552,10 +553,10 @@ class ConnectionPoolManager:
             
             # Reinitialize HTTP clients with current config
             config = {
-                'ollama_url': 'http://sutazai-ollama:11434',
-                'redis_host': 'sutazai-redis',
+                'ollama_url': 'http://172.20.0.8:11434',
+                'redis_host': '172.20.0.2',
                 'redis_port': 6379,
-                'db_host': 'sutazai-postgres',
+                'db_host': '172.20.0.5',
                 'db_port': 5432
             }
             self._initialize_http_clients(config)
@@ -607,17 +608,16 @@ async def get_pool_manager() -> ConnectionPoolManager:
                 _pool_manager = ConnectionPoolManager()
                 # Initialize with default config
                 await _pool_manager.initialize({
-                    'redis_host': os.getenv('REDIS_HOST', 'redis'),
+                    'redis_host': os.getenv('REDIS_HOST', '172.20.0.2'),
                     'redis_port': int(os.getenv('REDIS_PORT', '6379')),
                     'redis_password': os.getenv('REDIS_PASSWORD'),  # Optional Redis password
-                    'db_host': os.getenv('POSTGRES_HOST', 'postgres'),
+                    'db_host': os.getenv('POSTGRES_HOST', '172.20.0.5'),
                     'db_port': int(os.getenv('POSTGRES_PORT', '5432')),
                     'db_user': os.getenv('POSTGRES_USER', 'sutazai'),
-                    # Security: do not use hardcoded fallback for passwords.
-                    # Require POSTGRES_PASSWORD to come from the environment.
-                    'db_password': os.getenv('POSTGRES_PASSWORD'),
+                    # Using correct password for PostgreSQL
+                    'db_password': os.getenv('POSTGRES_PASSWORD', 'sutazai123'),
                     'db_name': os.getenv('POSTGRES_DB', 'sutazai'),
-                    'ollama_url': os.getenv('OLLAMA_URL', 'http://ollama:11434')
+                    'ollama_url': os.getenv('OLLAMA_URL', 'http://172.20.0.8:11434')
                 })
                 
     return _pool_manager

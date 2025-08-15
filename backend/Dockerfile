@@ -1,7 +1,7 @@
 # SutazAI Backend Service - ULTRAFIX Dockerfile Consolidation
 # Migrated to use sutazai-python-agent-master base image
 # Date: August 10, 2025 - CRITICAL DOCKERFILE DEDUPLICATION
-FROM sutazai-python-agent-master:latest
+FROM sutazai-python-agent-master:v1.0.0
 
 # Ensure we can install Python packages system-wide
 USER root

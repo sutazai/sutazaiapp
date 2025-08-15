@@ -159,7 +159,7 @@
       "restart_count": 10
     },
     {
-      "name": "ai-system-architect",
+      "name": " system-architect",
       "status": "restarting",
       "health": "unknown",
       "cpu_usage": 0.0,

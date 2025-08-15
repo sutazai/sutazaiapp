@@ -8,7 +8,7 @@ import json
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-from utils.api_client import call_api, handle_api_error
+from utils.resilient_api_client import call_api, handle_api_error
 from utils.formatters import format_timestamp, format_status_badge, format_bytes
 
 def show_agent_control():

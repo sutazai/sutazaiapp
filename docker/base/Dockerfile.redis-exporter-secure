@@ -1,4 +1,4 @@
-FROM oliver006/redis_exporter:latest
+FROM oliver006/redis_exporter:v1.74.0
 LABEL maintainer="SutazAI Security Team"
 LABEL security.hardening="enabled"
 

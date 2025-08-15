@@ -78,7 +78,7 @@ class OptimizationOrchestrator:
                 'ai-senior-full-stack-developer',
                 'neural-architecture-search',
                 'deep-learning-brain-architect',
-                'ai-system-architect',
+                ' system-architect',
                 'infrastructure-devops-manager',
                 'deployment-automation-master',
                 'container-orchestrator-k3s',

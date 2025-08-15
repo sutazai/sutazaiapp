@@ -815,7 +815,7 @@ class EnhancedMonitor:
             fuzzy_mappings = {
                 'ollama-integration-specialist': 'sutazai-ollama',
                 'semgrep-security-analyzer': 'sutazai-security-pentesting-specialist',
-                'senior-ai-engineer': 'sutazai-senior-engineer'
+                'senior-ai-engineer': 'sutazsenior-engineer'
             }
             
             if agent_id in fuzzy_mappings:

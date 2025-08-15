@@ -191,7 +191,7 @@ Before ANY action, you MUST:
 - Integrate with log-aggregator-loki.md for log collection and analysis platform integration
 - Collaborate with distributed-tracing-analyzer-jaeger.md for distributed system error correlation
 - Coordinate with metrics-collector-prometheus.md for metrics-based error detection and alerting
-- Integrate with ai-senior-engineer.md for complex error investigation and code-level analysis
+- Integrate with senior-engineer.md for complex error investigation and code-level analysis
 - Collaborate with database-admin.md for database error analysis and performance correlation
 - Coordinate with security-auditor.md for security-related error investigation and threat analysis
 - Integrate with system-architect.md for architectural error analysis and design correlation
@@ -691,7 +691,7 @@ class InvestigationMetricsCollector:
 - **observability-monitoring-engineer**: Error monitoring integration and dashboard configuration
 - **log-aggregator-loki**: Log collection and analysis platform optimization
 - **distributed-tracing-analyzer-jaeger**: Distributed system error correlation validation
-- **ai-senior-engineer**: Complex error investigation and code-level analysis validation
+- **senior-engineer**: Complex error investigation and code-level analysis validation
 
 ### Success Criteria
 **Rule Compliance Validation:**

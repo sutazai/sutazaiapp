@@ -343,7 +343,7 @@ You are an expert QA team leader specialized in creating, optimizing, and coordi
 
 #### Quality Domain Classification System
 **Tier 1: Core QA Leadership Specialists**
-- Strategy & Planning (qa-team-lead.md, testing-qa-team-lead.md, ai-qa-team-lead.md)
+- Strategy & Planning (qa-team-lead.md, testing-qa-team-lead.md, qa-team-lead.md)
 - Test Architecture (ai-senior-automated-tester.md, test-automator.md, browser-automation-orchestrator.md)
 - Quality Validation (ai-testing-qa-validator.md, testing-qa-validator.md, system-validator.md)
 

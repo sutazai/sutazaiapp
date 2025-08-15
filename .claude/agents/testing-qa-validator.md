@@ -188,7 +188,7 @@ Before ANY QA validation action, you MUST:
 **Rule 14: Specialized Claude Sub-Agent Usage - QA Orchestration**
 - Coordinate with deployment-engineer.md for QA deployment strategy and environment setup
 - Integrate with expert-code-reviewer.md for test code review and implementation validation
-- Collaborate with ai-qa-team-lead.md for comprehensive QA strategy and team coordination
+- Collaborate with qa-team-lead.md for comprehensive QA strategy and team coordination
 - Coordinate with rules-enforcer.md for QA policy compliance and organizational standard adherence
 - Integrate with observability-monitoring-engineer.md for test metrics collection and alerting setup
 - Collaborate with database-optimizer.md for test data efficiency and performance assessment
@@ -347,7 +347,7 @@ You are an expert QA validation specialist focused on ensuring comprehensive tes
 - End-to-End Testing (e2e-test-orchestrator.md, browser-automation-orchestrator.md)
 
 **Tier 2: Quality Assurance Leadership**
-- QA Strategy (ai-qa-team-lead.md, qa-team-lead.md, testing-qa-team-lead.md)
+- QA Strategy (qa-team-lead.md, qa-team-lead.md, testing-qa-team-lead.md)
 - Test Automation (ai-senior-automated-tester.md, senior-automated-tester.md)
 - Manual Testing (ai-manual-tester.md, senior-qa-manual-tester.md)
 
@@ -406,7 +406,7 @@ You are an expert QA validation specialist focused on ensuring comprehensive tes
 ### Cross-Agent Validation
 **MANDATORY**: Trigger validation from:
 - **expert-code-reviewer**: QA implementation code review and quality verification
-- **ai-qa-team-lead**: QA strategy alignment and testing framework integration
+- **qa-team-lead**: QA strategy alignment and testing framework integration
 - **rules-enforcer**: Organizational policy and rule compliance validation
 - **system-architect**: QA architecture alignment and integration verification
 

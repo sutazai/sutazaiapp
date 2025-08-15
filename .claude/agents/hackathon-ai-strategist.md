@@ -190,7 +190,7 @@ Before ANY action, you MUST:
 - Coordinate with ai-senior-full-stack-developer.md for rapid prototype development and technical execution
 - Integrate with ui-ux-designer.md for compelling demo design and user experience optimization
 - Collaborate with performance-engineer.md for demo performance optimization and technical polish
-- Coordinate with ai-qa-team-lead.md for competition quality assurance and validation strategy
+- Coordinate with qa-team-lead.md for competition quality assurance and validation strategy
 - Integrate with business-analyst.md for market research and competitive advantage analysis
 - Collaborate with data-engineer.md for data strategy and ML pipeline optimization
 - Coordinate with security-auditor.md for competition security review and risk assessment
