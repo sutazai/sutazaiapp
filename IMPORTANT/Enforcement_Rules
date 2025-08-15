@@ -4380,7 +4380,7 @@ emergency_contact: "devops.team@company.com"
 ---
 
 📌 Rule 18: Mandatory Documentation Review - Comprehensive Knowledge Acquisition
-Requirement: Execute systematic, line-by-line documentation review of all canonical sources before any work begins, ensuring complete contextual understanding, identifying conflicts or gaps, maintaining perfect alignment with organizational standards, architectural decisions, and established procedures, with mandatory CHANGELOG.md creation and maintenance in every directory.
+Requirement: Execute systematic, line-by-line documentation review of all canonical sources before any work begins, ensuring complete contextual understanding, identifying conflicts or gaps, maintaining perfect alignment with organizational standards, architectural decisions, and established procedures, with mandatory CHANGELOG.md creation (project directories only) and maintenance in every directory.
 MISSION-CRITICAL: Perfect Knowledge Foundation - Zero Assumptions, Complete Understanding:
 
 Complete Contextual Mastery: Achieve comprehensive understanding of all relevant documentation before making any changes
@@ -4393,8 +4393,8 @@ Continuous Synchronization: Maintain ongoing awareness of documentation changes 
 Team Knowledge Consistency: Ensure all team members have consistent understanding of organizational standards
 
 ✅ Required Practices:
-Mandatory CHANGELOG.md Requirements:
-Universal CHANGELOG.md Creation and Maintenance:
+Mandatory CHANGELOG.md creation (project directories only) Requirements:
+Universal CHANGELOG.md creation (project directories only) and Maintenance:
 
 Every Directory Must Have CHANGELOG.md: If a CHANGELOG.md doesn't exist in any directory, create one immediately
 Comprehensive Change Documentation: Document every change, addition, modification, and deletion with complete context
@@ -4461,20 +4461,20 @@ markdown# CHANGELOG - [Directory Name/Purpose]
 Comprehensive Pre-Work Documentation Review:
 Mandatory Review Sequence (Must be completed in order):
 
-CHANGELOG.md Audit and Creation (FIRST PRIORITY)
+CHANGELOG.md creation (project directories only) Audit and Creation (FIRST PRIORITY)
 
-Scan all directories in work scope for CHANGELOG.md files
-Create missing CHANGELOG.md files using standardized template
-Review existing CHANGELOG.md files for currency and completeness
+Scan all directories in work scope for CHANGELOG.md creation (project directories only) files
+Create missing CHANGELOG.md creation (project directories only) files using standardized template
+Review existing CHANGELOG.md creation (project directories only) files for currency and completeness
 Identify any gaps in change documentation and flag for investigation
-Validate CHANGELOG.md format consistency across all directories
-Update any outdated or incomplete CHANGELOG.md files immediately
+Validate CHANGELOG.md creation (project directories only) format consistency across all directories
+Update any outdated or incomplete CHANGELOG.md creation (project directories only) files immediately
 
 
 Primary Authority Sources (/opt/sutazaiapp/CLAUDE.md)
 
 Line-by-line review of complete document including recent updates
-Cross-reference with CHANGELOG.md to understand rule evolution
+Cross-reference with CHANGELOG.md creation (project directories only) to understand rule evolution
 Note any updates since last review with timestamps
 Document understanding of all 20 fundamental rules
 Identify any rule changes or additions since last work
@@ -4484,7 +4484,7 @@ Validate understanding of specialized Claude agent requirements
 Canonical Authority Documentation (/opt/sutazaiapp/IMPORTANT/*)
 
 Complete review of all documents in authority hierarchy
-Review corresponding CHANGELOG.md files for change context
+Review corresponding CHANGELOG.md creation (project directories only) files for change context
 Reference architecture diagrams and validate understanding
 Review PortRegistry.md for any port allocation changes
 Validate Docker architecture requirements and constraints
