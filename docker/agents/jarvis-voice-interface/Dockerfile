@@ -19,4 +19,7 @@ ENV AGENT_NAME="Jarvis Voice Interface"
 # Expose port
 EXPOSE 8090
 
+
+# Run as non-root user
+USER appuser
 CMD ["python", "app.py"]

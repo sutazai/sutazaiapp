@@ -20,4 +20,7 @@ ENV AGENT_NAME="Task Assignment Coordinator"
 # Expose port
 EXPOSE 8551
 
+
+# Run as non-root user
+USER appuser
 CMD ["python", "app.py"]

@@ -1,9 +1,4 @@
 version: '3.8'
-
-# ULTRA-PERFORMANCE OPTIMIZATION OVERLAY
-# Created by: PERF-MASTER-001
-# Purpose: Optimized resource allocation and performance tuning
-
 services:
   postgres:
     deploy:
@@ -15,19 +10,23 @@ services:
           cpus: '1.0'
           memory: 1G
     environment:
-      POSTGRES_SHARED_BUFFERS: "256MB"
-      POSTGRES_EFFECTIVE_CACHE_SIZE: "1GB"
-      POSTGRES_WORK_MEM: "4MB"
-      POSTGRES_MAINTENANCE_WORK_MEM: "64MB"
-      POSTGRES_MAX_CONNECTIONS: "200"
-    command: >
-      postgres
-      -c shared_preload_libraries='pg_stat_statements'
-      -c pg_stat_statements.track=all
-      -c log_statement='ddl'
-      -c log_duration=off
-      -c log_min_duration_statement=100
-      
+      POSTGRES_SHARED_BUFFERS: 256MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 1GB
+      POSTGRES_WORK_MEM: 4MB
+      POSTGRES_MAINTENANCE_WORK_MEM: 64MB
+      POSTGRES_MAX_CONNECTIONS: '200'
+    command: 'postgres -c shared_preload_libraries=''pg_stat_statements'' -c pg_stat_statements.track=all
+      -c log_statement=''ddl'' -c log_duration=off -c log_min_duration_statement=100
+
+      '
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U ${POSTGRES_USER:-postgres}
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
   redis:
     deploy:
       resources:
@@ -39,8 +38,14 @@ services:
           memory: 512M
     command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
-      - ./config/redis-optimized.conf:/usr/local/etc/redis/redis.conf:ro
-      
+    - ./config/redis-optimized.conf:/usr/local/etc/redis/redis.conf:ro
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - redis-cli ping
+      interval: 30s
+      timeout: 5s
+      retries: 5
   backend:
     deploy:
       resources:
@@ -52,22 +57,30 @@ services:
           memory: 1G
     environment:
       WORKERS: 4
-      WORKER_CLASS: "uvicorn.workers.UvicornWorker"
+      WORKER_CLASS: uvicorn.workers.UvicornWorker
       WORKER_CONNECTIONS: 1000
       WORKER_KEEPALIVE: 5
       GRACEFUL_TIMEOUT: 120
       TIMEOUT: 120
-      ACCESS_LOG: "-"
-      ERROR_LOG: "-"
-      LOG_LEVEL: "info"
-      # Performance flags
-      ENABLE_CACHE_WARMING: "true"
-      CACHE_TTL_DEFAULT: "300"
-      CACHE_TTL_STATIC: "3600"
-      DB_POOL_SIZE: "20"
-      DB_POOL_MAX_OVERFLOW: "10"
-      REDIS_MAX_CONNECTIONS: "50"
-      
+      ACCESS_LOG: '-'
+      ERROR_LOG: '-'
+      LOG_LEVEL: info
+      ENABLE_CACHE_WARMING: 'true'
+      CACHE_TTL_DEFAULT: '300'
+      CACHE_TTL_STATIC: '3600'
+      DB_POOL_SIZE: '20'
+      DB_POOL_MAX_OVERFLOW: '10'
+      REDIS_MAX_CONNECTIONS: '50'
+    healthcheck:
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8000/health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
   frontend:
     deploy:
       resources:
@@ -79,10 +92,9 @@ services:
           memory: 512M
     environment:
       STREAMLIT_SERVER_MAX_UPLOAD_SIZE: 200
-      STREAMLIT_SERVER_ENABLE_CORS: "false"
-      STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION: "true"
-      STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
-      
+      STREAMLIT_SERVER_ENABLE_CORS: 'false'
+      STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION: 'true'
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: 'false'
   ollama:
     deploy:
       resources:
@@ -95,10 +107,8 @@ services:
     environment:
       OLLAMA_NUM_PARALLEL: 2
       OLLAMA_MAX_LOADED_MODELS: 1
-      OLLAMA_KEEP_ALIVE: "5m"
-      OLLAMA_DEBUG: "false"
-      
-  # Agent services optimization
+      OLLAMA_KEEP_ALIVE: 5m
+      OLLAMA_DEBUG: 'false'
   hardware-resource-optimizer:
     deploy:
       resources:
@@ -108,7 +118,6 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-          
   ai-agent-orchestrator:
     deploy:
       resources:
@@ -121,7 +130,6 @@ services:
     environment:
       RABBITMQ_CONNECTION_ATTEMPTS: 5
       RABBITMQ_RETRY_DELAY: 2
-      
   ollama-integration:
     deploy:
       resources:
@@ -131,7 +139,6 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-          
   resource-arbitration-agent:
     deploy:
       resources:
@@ -141,7 +148,6 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-          
   task-assignment-coordinator:
     deploy:
       resources:
@@ -151,8 +157,6 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-          
-  # Monitoring services optimization
   prometheus:
     deploy:
       resources:
@@ -163,14 +167,13 @@ services:
           cpus: '0.5'
           memory: 512M
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=15d'
-      - '--storage.tsdb.retention.size=2GB'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-      - '--web.enable-lifecycle'
-      
+    - --config.file=/etc/prometheus/prometheus.yml
+    - --storage.tsdb.path=/prometheus
+    - --storage.tsdb.retention.time=15d
+    - --storage.tsdb.retention.size=2GB
+    - --web.console.libraries=/usr/share/prometheus/console_libraries
+    - --web.console.templates=/usr/share/prometheus/consoles
+    - --web.enable-lifecycle
   grafana:
     deploy:
       resources:
@@ -181,10 +184,9 @@ services:
           cpus: '0.25'
           memory: 256M
     environment:
-      GF_PERFORMANCE_ENABLED: "true"
-      GF_DATABASE_WAL: "true"
-      GF_DATABASE_CACHE_MODE: "shared"
-      
+      GF_PERFORMANCE_ENABLED: 'true'
+      GF_DATABASE_WAL: 'true'
+      GF_DATABASE_CACHE_MODE: shared
   loki:
     deploy:
       resources:
@@ -194,8 +196,6 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-          
-  # Vector databases optimization
   qdrant:
     deploy:
       resources:
@@ -210,9 +210,8 @@ services:
       QDRANT__SERVICE__HTTP_PORT: 6333
       QDRANT__STORAGE__STORAGE_PATH: /qdrant/storage
       QDRANT__STORAGE__SNAPSHOTS_PATH: /qdrant/snapshots
-      QDRANT__STORAGE__ON_DISK_PAYLOAD: "true"
+      QDRANT__STORAGE__ON_DISK_PAYLOAD: 'true'
       QDRANT__STORAGE__PERFORMANCE__OPTIMIZERS__MEMMAP_THRESHOLD: 20000
-      
   chromadb:
     deploy:
       resources:
@@ -223,10 +222,9 @@ services:
           cpus: '0.5'
           memory: 512M
     environment:
-      CHROMA_SERVER_AUTH_PROVIDER: "token"
-      CHROMA_SERVER_AUTH_CREDENTIALS: "${CHROMA_AUTH_TOKEN:-test-token}"
-      ANONYMIZED_TELEMETRY: "false"
-      
+      CHROMA_SERVER_AUTH_PROVIDER: token
+      CHROMA_SERVER_AUTH_CREDENTIALS: ${CHROMA_AUTH_TOKEN:-test-token}
+      ANONYMIZED_TELEMETRY: 'false'
   faiss-vector:
     deploy:
       resources:
@@ -236,8 +234,6 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-          
-  # Service mesh optimization
   rabbitmq:
     deploy:
       resources:
@@ -248,9 +244,8 @@ services:
           cpus: '0.5'
           memory: 512M
     environment:
-      RABBITMQ_VM_MEMORY_HIGH_WATERMARK: "0.6"
-      RABBITMQ_DISK_FREE_LIMIT: "1GB"
-      
+      RABBITMQ_VM_MEMORY_HIGH_WATERMARK: '0.6'
+      RABBITMQ_DISK_FREE_LIMIT: 1GB
   kong:
     deploy:
       resources:
@@ -261,12 +256,11 @@ services:
           cpus: '0.25'
           memory: 256M
     environment:
-      KONG_DATABASE: "off"
-      KONG_PROXY_LISTEN: "0.0.0.0:8000"
-      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
-      KONG_STATUS_LISTEN: "0.0.0.0:8100"
-      KONG_NGINX_WORKER_PROCESSES: "2"
-      
+      KONG_DATABASE: 'off'
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_STATUS_LISTEN: 0.0.0.0:8100
+      KONG_NGINX_WORKER_PROCESSES: '2'
   consul:
     deploy:
       resources:
@@ -276,10 +270,8 @@ services:
         reservations:
           cpus: '0.25'
           memory: 128M
-
-# Network configuration for optimal performance
 networks:
   sutazai-network:
     driver: bridge
     driver_opts:
-      com.docker.network.driver.mtu: 1450  # Optimize for container networking
+      com.docker.network.driver.mtu: 1450

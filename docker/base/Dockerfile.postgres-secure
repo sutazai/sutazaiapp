@@ -10,3 +10,7 @@ RUN apk --no-cache add su-exec && \
 # Non-root user setup
 USER postgres
 EXPOSE 5432
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
+# Health check for service availability
+

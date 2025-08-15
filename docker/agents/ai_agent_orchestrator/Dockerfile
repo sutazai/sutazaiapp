@@ -25,4 +25,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
 EXPOSE 8589
 
 # Run the application
+
+# Run as non-root user
+USER appuser
 CMD ["python", "app.py"]

@@ -24,4 +24,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\
 # Expose port
 EXPOSE 8090
 
+
+# Run as non-root user
+USER appuser
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8090"]

@@ -2,7 +2,6 @@ networks:
   sutazai-network:
     external: true
     name: sutazai-network
-
 services:
   kong:
     image: kong:3.5
@@ -34,3 +33,11 @@ services:
     restart: unless-stopped
     volumes:
     - ./config/kong/kong.yml:/etc/kong/kong.yml:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M

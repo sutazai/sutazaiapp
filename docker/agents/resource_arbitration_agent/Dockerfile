@@ -20,4 +20,7 @@ ENV AGENT_NAME="Resource Arbitration Agent"
 # Expose port
 EXPOSE 8588
 
+
+# Run as non-root user
+USER appuser
 CMD ["python", "app.py"]

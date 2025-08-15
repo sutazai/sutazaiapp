@@ -21,4 +21,7 @@ ENV AGENT_NAME="Jarvis Hardware Resource Optimizer"
 # Expose port
 EXPOSE 8080
 
+
+# Run as non-root user
+USER appuser
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]

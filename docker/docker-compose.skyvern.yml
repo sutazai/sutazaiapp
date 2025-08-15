@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   skyvern-test:
     build:
@@ -8,15 +7,22 @@ services:
     container_name: sutazai-skyvern-test
     image: sutazai-skyvern:test
     environment:
-      - PYTHONUNBUFFERED=1
-      - AGENT_NAME=skyvern
+    - PYTHONUNBUFFERED=1
+    - AGENT_NAME=skyvern
     networks:
-      - sutazai-network
+    - sutazai-network
     volumes:
-      - ./skyvern-data:/app/data
-      - ./skyvern-logs:/app/logs
+    - ./skyvern-data:/app/data
+    - ./skyvern-logs:/app/logs
     restart: unless-stopped
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
 networks:
   sutazai-network:
     external: true

@@ -1,9 +1,4 @@
-# Docker Compose Override for Public Images
-# This file replaces custom sutazai-*-secure images with public alternatives
-# Use with: docker-compose -f docker-compose.yml -f docker-compose.public-images.override.yml up -d
-
 version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -13,30 +8,66 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-sutazai}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./IMPORTANT/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
-
+    - postgres_data:/var/lib/postgresql/data
+    - ./IMPORTANT/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U ${POSTGRES_USER:-postgres}
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
   redis:
     image: redis:7-alpine
     user: redis
     command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
-      - redis_data:/data
-      - ./config/redis-optimized.conf:/usr/local/etc/redis/redis.conf:ro
-
+    - redis_data:/data
+    - ./config/redis-optimized.conf:/usr/local/etc/redis/redis.conf:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - redis-cli ping
+      interval: 30s
+      timeout: 5s
+      retries: 5
   neo4j:
     image: neo4j:5.15-community
-    user: "7474:7474"  # neo4j user
+    user: 7474:7474
     environment:
       NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
       NEO4J_server_memory_heap_max__size: 512m
       NEO4J_server_memory_heap_initial__size: 256m
       NEO4J_server_memory_pagecache_size: 256m
-      NEO4J_server_jvm_additional: -XX:+UseG1GC -XX:G1HeapRegionSize=4m -XX:+DisableExplicitGC -XX:+ExitOnOutOfMemoryError
-
+      NEO4J_server_jvm_additional: -XX:+UseG1GC -XX:G1HeapRegionSize=4m -XX:+DisableExplicitGC
+        -XX:+ExitOnOutOfMemoryError
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   ollama:
-    image: ollama/ollama:latest
-    # Note: ollama container typically runs as root for GPU access
+    image: ollama/ollama:0.3.13
     environment:
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_KEEP_ALIVE: 5m
@@ -44,61 +75,139 @@ services:
       OLLAMA_NUM_PARALLEL: '1'
       OLLAMA_NUM_THREADS: '8'
       OLLAMA_ORIGINS: '*'
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   chromadb:
-    image: chromadb/chroma:latest
-    user: "1001:1001"  # non-root user
+    image: chromadb/chroma:0.5.0
+    user: 1001:1001
     environment:
-      - CHROMA_SERVER_HOST=0.0.0.0
-      - CHROMA_SERVER_HTTP_PORT=8000
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:10011", "http://backend:8000"]
-
+    - CHROMA_SERVER_HOST=0.0.0.0
+    - CHROMA_SERVER_HTTP_PORT=8000
+    - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:10011", "http://backend:8000"]
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   qdrant:
-    image: qdrant/qdrant:latest
-    user: "1001:1001"  # non-root user
+    image: qdrant/qdrant:v1.9.7
+    user: 1001:1001
     environment:
       QDRANT__LOG_LEVEL: INFO
       QDRANT__SERVICE__GRPC_PORT: 6334
       QDRANT__SERVICE__HTTP_PORT: 6333
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   consul:
     image: hashicorp/consul:1.17
-    user: "100:1000"  # consul user
+    user: 100:1000
     environment:
       CONSUL_ALLOW_PRIVILEGED_PORTS: 'true'
       CONSUL_DISABLE_PERM: 'true'
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   rabbitmq:
     image: rabbitmq:3.12-management-alpine
     user: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-sutazai}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   blackbox-exporter:
-    image: prom/blackbox-exporter:latest
+    image: prom/blackbox-exporter:v0.24.0
     user: nobody
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.2
     user: nobody
     privileged: false
     cap_add:
-      - SYS_ADMIN
+    - SYS_ADMIN
     security_opt:
-      - no-new-privileges:true
+    - no-new-privileges:true
     read_only: true
     tmpfs:
-      - /tmp:size=100M,mode=1777
-
+    - /tmp:size=100M,mode=1777
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   redis-exporter:
-    image: oliver006/redis_exporter:latest
-    user: "59000:59000"  # redis_exporter user
-
+    image: oliver006/redis_exporter:v1.56.0
+    user: 59000:59000
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - redis-cli ping
+      interval: 30s
+      timeout: 5s
+      retries: 5
   jaeger:
-    image: jaegertracing/all-in-one:latest
-    user: "10001:10001"  # jaeger user
-
+    image: jaegertracing/all-in-one:1.53
+    user: 10001:10001
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   promtail:
     image: grafana/promtail:2.9.0
     user: promtail
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M

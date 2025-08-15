@@ -19,4 +19,7 @@ ENV AGENT_NAME="Jarvis Automation Agent"
 # Expose port
 EXPOSE 8080
 
+
+# Run as non-root user
+USER appuser
 CMD ["python", "app.py"]

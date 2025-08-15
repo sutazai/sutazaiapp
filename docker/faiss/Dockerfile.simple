@@ -14,4 +14,15 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 EXPOSE 8000
 
+
+# Security: Create non-root user
+RUN addgroup -g 1001 appgroup && \
+    adduser -D -u 1001 -G appgroup -s /bin/sh appuser
+
+# Change ownership of application files
+RUN chown -R appuser:appgroup /app || true
+
+# Switch to non-root user
+USER appuser
+
 CMD ["python", "app.py"]

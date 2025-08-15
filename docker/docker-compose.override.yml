@@ -1,9 +1,4 @@
-# Auto-generated hardware optimization overrides
-# Generated: 2025-08-15 12:48:33 UTC
-# Profile: standard (20 cores, 23GB RAM, 1006GB storage)
-
 version: '3.8'
-
 services:
   postgres:
     deploy:
@@ -14,7 +9,14 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U ${POSTGRES_USER:-postgres}
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
   redis:
     deploy:
       resources:
@@ -24,7 +26,13 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - redis-cli ping
+      interval: 30s
+      timeout: 5s
+      retries: 5
   ollama:
     deploy:
       resources:

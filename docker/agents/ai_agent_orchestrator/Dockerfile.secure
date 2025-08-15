@@ -20,4 +20,7 @@ ENV AGENT_NAME="Ai Agent Orchestrator"
 # Expose port
 EXPOSE 8589
 
+
+# Run as non-root user
+USER appuser
 CMD ["python", "app.py"]

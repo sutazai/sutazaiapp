@@ -1,22 +1,15 @@
-# Secure Docker Compose Configuration with Non-Root Users
-# This file demonstrates security-hardened service configurations
-
 version: '3.8'
-
 networks:
   sutazai-network:
     external: true
     name: sutazai-network
-
 services:
-  # --------------------------------------------------------
-  # PostgreSQL with non-root user
   postgres:
     build:
       context: ./docker/postgres-secure
       dockerfile: Dockerfile
     container_name: sutazai-postgres
-    user: "70:70"  # postgres user
+    user: 70:70
     deploy:
       resources:
         limits:
@@ -34,30 +27,28 @@ services:
       retries: 5
       start_period: 60s
       test:
-        - CMD-SHELL
-        - pg_isready -U ${POSTGRES_USER:-sutazai}
+      - CMD-SHELL
+      - pg_isready -U ${POSTGRES_USER:-sutazai}
       timeout: 5s
     networks:
-      - sutazai-network
+    - sutazai-network
     ports:
-      - 10000:5432
+    - 10000:5432
     restart: unless-stopped
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./IMPORTANT/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    - postgres_data:/var/lib/postgresql/data
+    - ./IMPORTANT/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
     security_opt:
-      - no-new-privileges:true
-    read_only: false  # PostgreSQL needs write access to data directory
-
-  # --------------------------------------------------------
-  # Redis with non-root user
+    - no-new-privileges:true
+    read_only: false
   redis:
     build:
       context: ./docker/redis-secure
       dockerfile: Dockerfile
     container_name: sutazai-redis
-    user: "999:999"  # redis user
-    command: redis-server --save "" --appendonly no --maxmemory 512mb --maxmemory-policy allkeys-lru
+    user: 999:999
+    command: redis-server --save "" --appendonly no --maxmemory 512mb --maxmemory-policy
+      allkeys-lru
     deploy:
       resources:
         limits:
@@ -70,26 +61,23 @@ services:
       interval: 10s
       retries: 5
       test:
-        - CMD-SHELL
-        - redis-cli ping
+      - CMD-SHELL
+      - redis-cli ping
       timeout: 5s
     networks:
-      - sutazai-network
+    - sutazai-network
     ports:
-      - 10001:6379
+    - 10001:6379
     restart: unless-stopped
     volumes:
-      - redis_data:/data
+    - redis_data:/data
     security_opt:
-      - no-new-privileges:true
-    read_only: false  # Redis needs write access to data directory
-
-  # --------------------------------------------------------
-  # Neo4j with non-root user (uses built-in neo4j user)
+    - no-new-privileges:true
+    read_only: false
   neo4j:
     image: neo4j:5.18
     container_name: sutazai-neo4j
-    user: "7474:7474"  # neo4j user
+    user: 7474:7474
     deploy:
       resources:
         limits:
@@ -103,11 +91,12 @@ services:
       NEO4J_server_memory_heap_max__size: 512m
       NEO4J_server_memory_heap_initial__size: 256m
       NEO4J_server_memory_pagecache_size: 256m
-      NEO4J_server_jvm_additional: -XX:+UseG1GC -XX:G1HeapRegionSize=4m -XX:+DisableExplicitGC -XX:+ExitOnOutOfMemoryError
+      NEO4J_server_jvm_additional: -XX:+UseG1GC -XX:G1HeapRegionSize=4m -XX:+DisableExplicitGC
+        -XX:+ExitOnOutOfMemoryError
       NEO4J_initial_dbms_default__database: sutazai
       NEO4J_db_checkpoint_interval_time: 30s
       NEO4J_db_transaction_timeout: 30s
-      NEO4J_db_logs_query_enabled: OFF
+      NEO4J_db_logs_query_enabled: false
       NEO4J_server_config_strict__validation_enabled: false
       NEO4J_db_transaction_bookmark_ready_timeout: 5s
       NEO4J_dbms_cluster_discovery_type: SINGLE
@@ -116,34 +105,31 @@ services:
       retries: 5
       start_period: 120s
       test:
-        - CMD
-        - cypher-shell
-        - -u
-        - neo4j
-        - -p
-        - ${NEO4J_PASSWORD}
-        - RETURN 1
+      - CMD
+      - cypher-shell
+      - -u
+      - neo4j
+      - -p
+      - ${NEO4J_PASSWORD}
+      - RETURN 1
       timeout: 30s
     networks:
-      - sutazai-network
+    - sutazai-network
     ports:
-      - 10002:7474
-      - 10003:7687
+    - 10002:7474
+    - 10003:7687
     restart: unless-stopped
     volumes:
-      - neo4j_data:/data
-      - neo4j_logs:/logs
+    - neo4j_data:/data
+    - neo4j_logs:/logs
     security_opt:
-      - no-new-privileges:true
-
-  # --------------------------------------------------------
-  # Ollama with non-root user
+    - no-new-privileges:true
   ollama:
     build:
       context: ./docker/ollama-secure
       dockerfile: Dockerfile
     container_name: sutazai-ollama
-    user: "1002:1002"  # ollama user
+    user: 1002:1002
     deploy:
       resources:
         limits:
@@ -169,29 +155,26 @@ services:
       retries: 5
       start_period: 60s
       test:
-        - CMD
-        - curl
-        - -f
-        - http://localhost:11434/api/tags
+      - CMD
+      - curl
+      - -f
+      - http://localhost:11434/api/tags
       timeout: 30s
     networks:
-      - sutazai-network
+    - sutazai-network
     ports:
-      - 10104:11434
+    - 10104:11434
     restart: unless-stopped
     volumes:
-      - ollama_models:/home/ollama/.ollama/models
+    - ollama_models:/home/ollama/.ollama/models
     security_opt:
-      - no-new-privileges:true
-
-  # --------------------------------------------------------
-  # ChromaDB with non-root user
+    - no-new-privileges:true
   chromadb:
     build:
       context: ./docker/chromadb-secure
       dockerfile: Dockerfile
     container_name: sutazai-chromadb
-    user: "1003:1003"  # chroma user
+    user: 1003:1003
     deploy:
       resources:
         limits:
@@ -201,41 +184,38 @@ services:
           cpus: '0.25'
           memory: 256M
     environment:
-      - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthenticationServerProvider
-      - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMADB_API_KEY:-test-token}
-      - CHROMA_SERVER_HOST=0.0.0.0
-      - CHROMA_SERVER_HTTP_PORT=8000
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
-      - HOME=/home/chroma
-      - PERSIST_DIRECTORY=/chroma/data
+    - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthenticationServerProvider
+    - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMADB_API_KEY:-test-token}
+    - CHROMA_SERVER_HOST=0.0.0.0
+    - CHROMA_SERVER_HTTP_PORT=8000
+    - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
+    - HOME=/home/chroma
+    - PERSIST_DIRECTORY=/chroma/data
     healthcheck:
       interval: 60s
       retries: 5
       start_period: 120s
       test:
-        - CMD
-        - sh
-        - -c
-        - 'curl -f http://localhost:8000/api/v1/heartbeat || exit 1'
+      - CMD
+      - sh
+      - -c
+      - curl -f http://localhost:8000/api/v1/heartbeat || exit 1
       timeout: 30s
     networks:
-      - sutazai-network
+    - sutazai-network
     ports:
-      - 10100:8000
+    - 10100:8000
     restart: unless-stopped
     volumes:
-      - chromadb_data:/chroma/data
+    - chromadb_data:/chroma/data
     security_opt:
-      - no-new-privileges:true
-
-  # --------------------------------------------------------
-  # Qdrant with non-root user
+    - no-new-privileges:true
   qdrant:
     build:
       context: ./docker/qdrant-secure
       dockerfile: Dockerfile
     container_name: sutazai-qdrant
-    user: "1004:1004"  # qdrant user
+    user: 1004:1004
     deploy:
       resources:
         limits:
@@ -253,56 +233,61 @@ services:
       interval: 60s
       retries: 5
       test:
-        - CMD
-        - sh
-        - -c
-        - 'curl -f http://localhost:6333 || exit 1'
+      - CMD
+      - sh
+      - -c
+      - curl -f http://localhost:6333 || exit 1
       timeout: 30s
     networks:
-      - sutazai-network
+    - sutazai-network
     ports:
-      - 10101:6333
-      - 10102:6334
+    - 10101:6333
+    - 10102:6334
     restart: unless-stopped
     volumes:
-      - qdrant_storage:/qdrant/storage
+    - qdrant_storage:/qdrant/storage
     security_opt:
-      - no-new-privileges:true
-
-  # --------------------------------------------------------
-  # RabbitMQ with non-root user (uses built-in rabbitmq user)
+    - no-new-privileges:true
   rabbitmq:
     image: rabbitmq:3.12-management-alpine
     container_name: sutazai-rabbitmq
-    user: "999:999"  # rabbitmq user in Alpine
+    user: 999:999
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-sutazai}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      test:
+      - CMD
+      - rabbitmq-diagnostics
+      - check_running
       interval: 30s
       timeout: 5s
       retries: 10
       start_period: 20s
     networks:
-      - sutazai-network
+    - sutazai-network
     ports:
-      - 10007:5672
-      - 10008:15672
+    - 10007:5672
+    - 10008:15672
     restart: unless-stopped
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+    - rabbitmq_data:/var/lib/rabbitmq
     security_opt:
-      - no-new-privileges:true
-
-  # --------------------------------------------------------
-  # AI Agent Orchestrator with non-root user
+    - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   ai-agent-orchestrator:
     build:
       context: ./agents/ai_agent_orchestrator
       dockerfile: Dockerfile.secure
     container_name: sutazai-ai-agent-orchestrator
-    user: "1001:1001"  # appuser
+    user: 1001:1001
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -316,25 +301,35 @@ services:
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8589/health"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8589/health
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 120s
     networks:
-      - sutazai-network
+    - sutazai-network
     ports:
-      - 8589:8589
+    - 8589:8589
     restart: unless-stopped
     volumes:
-      - ./logs:/app/logs
+    - ./logs:/app/logs
     security_opt:
-      - no-new-privileges:true
-    read_only: true  # Application can be read-only
+    - no-new-privileges:true
+    read_only: true
     tmpfs:
-      - /tmp
-
-# Define volumes with proper permissions
+    - /tmp
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
 volumes:
   postgres_data:
     driver: local

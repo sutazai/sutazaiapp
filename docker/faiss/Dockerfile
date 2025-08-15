@@ -19,4 +19,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 # Expose port
 EXPOSE 8000
 
+
+# Run as non-root user
+USER appuser
 CMD ["python", "faiss_service.py"]

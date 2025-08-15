@@ -4,3 +4,7 @@ LABEL security.hardening="enabled"
 
 USER 10001:10001
 EXPOSE 16686 14268 14250 9411 4317 4318
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
+# Health check for service availability
+

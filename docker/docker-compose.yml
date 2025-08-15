@@ -1,7 +1,3 @@
-# Main docker-compose.yml - Core services only
-# Use docker-compose.override.yml for environment-specific changes
-# Use docker/docker-compose.*.yml for specialized stacks
-
 networks:
   sutazai-network:
     external: true
@@ -85,8 +81,8 @@ services:
       NEO4J_initial_dbms_default__database: sutazai
       NEO4J_db_checkpoint_interval_time: 30s
       NEO4J_db_transaction_timeout: 30s
-      NEO4J_db_logs_query_enabled: "OFF"
-      NEO4J_server_config_strict__validation_enabled: "false"
+      NEO4J_db_logs_query_enabled: 'OFF'
+      NEO4J_server_config_strict__validation_enabled: 'false'
       NEO4J_db_transaction_bookmark_ready_timeout: 5s
       NEO4J_dbms_cluster_discovery_type: SINGLE
     healthcheck:
@@ -121,7 +117,7 @@ services:
       ENFORCE_CLAUDE_RULES: 'true'
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_DEBUG: "false"
+      OLLAMA_DEBUG: 'false'
       OLLAMA_FLASH_ATTENTION: '0'
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_KEEP_ALIVE: 5m
@@ -146,7 +142,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.3.13
     networks:
     - sutazai-network
     ports:
@@ -185,12 +181,14 @@ services:
     - CHROMA_SERVER_HTTP_PORT=8000
     - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
     healthcheck:
-      test: ["CMD", "true"]
+      test:
+      - CMD
+      - 'true'
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
-    image: chromadb/chroma:latest
+    image: chromadb/chroma:0.5.0
     networks:
     - sutazai-network
     ports:
@@ -223,7 +221,7 @@ services:
         Proto => q{tcp}, Timeout => 2); if ($$s) { print $$s qq{GET / HTTP/1.0\r\n\r\n};
         while (<$$s>) { if (/200 OK/) { exit 0; } } } exit 1;' | perl
       timeout: 30s
-    image: qdrant/qdrant:latest
+    image: qdrant/qdrant:v1.9.7
     networks:
     - sutazai-network
     ports:
@@ -233,7 +231,7 @@ services:
     volumes:
     - qdrant_data:/qdrant/storage
   faiss:
-    image: sutazaiapp-faiss:latest
+    image: sutazaiapp-faiss:v1.0.0
     container_name: sutazai-faiss
     deploy:
       resources:
@@ -281,16 +279,16 @@ services:
       KONG_LOG_LEVEL: error
       KONG_NGINX_WORKER_PROCESSES: '1'
       KONG_NGINX_WORKER_CONNECTIONS: '512'
-      KONG_MEM_CACHE_SIZE: '64m'
-      KONG_SSL_CIPHER_SUITE: 'intermediate'
+      KONG_MEM_CACHE_SIZE: 64m
+      KONG_SSL_CIPHER_SUITE: intermediate
       KONG_PROXY_ACCESS_LOG: 'off'
       KONG_ADMIN_ACCESS_LOG: 'off'
-      KONG_PROXY_ERROR_LOG: '/dev/stderr'
-      KONG_ADMIN_ERROR_LOG: '/dev/stderr'
-      KONG_CLIENT_BODY_BUFFER_SIZE: '8k'
-      KONG_CLIENT_MAX_BODY_SIZE: '8m'
-      KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE: '8k'
-      KONG_NGINX_HTTP_CLIENT_MAX_BODY_SIZE: '8m'
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_CLIENT_BODY_BUFFER_SIZE: 8k
+      KONG_CLIENT_MAX_BODY_SIZE: 8m
+      KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE: 8k
+      KONG_NGINX_HTTP_CLIENT_MAX_BODY_SIZE: 8m
     healthcheck:
       test:
       - CMD-SHELL
@@ -308,9 +306,8 @@ services:
     volumes:
     - ./config/kong/kong-optimized.yml:/etc/kong/kong-optimized.yml:ro
   consul:
-    image: consul:latest
+    image: hashicorp/consul:1.17.1
     container_name: sutazai-consul
-    # ULTRA-FIX: Remove user: root - image now runs as consul user
     environment:
       CONSUL_ALLOW_PRIVILEGED_PORTS: 'true'
       CONSUL_DISABLE_PERM: 'true'
@@ -350,7 +347,7 @@ services:
     - ./config/consul/consul.hcl:/consul/config/consul.hcl:ro
     - consul_data:/consul/data
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.12-management-alpine
     container_name: sutazai-rabbitmq
     deploy:
       resources:
@@ -381,7 +378,7 @@ services:
     volumes:
     - rabbitmq_data:/var/lib/rabbitmq
   backend:
-    image: sutazaiapp-backend:latest
+    image: sutazaiapp-backend:v1.0.0
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     container_name: sutazai-backend
     depends_on:
@@ -433,7 +430,6 @@ services:
       QDRANT_PORT: 6333
       QDRANT_URL: http://qdrant:6333
       REDIS_HOST: sutazai-redis
-      # REDIS_PASSWORD not needed - Redis runs without authentication
       REDIS_PORT: 6379
       REDIS_URL: redis://sutazai-redis:6379/0
       SECRET_KEY: ${SECRET_KEY}
@@ -461,7 +457,7 @@ services:
     - ./logs:/logs
     - agent_workspaces:/app/agent_workspaces
   frontend:
-    image: sutazaiapp-frontend:latest
+    image: sutazaiapp-frontend:v1.0.0
     command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
     container_name: sutazai-frontend
     depends_on:
@@ -533,7 +529,7 @@ services:
       - --spider
       - http://localhost:9090/-/healthy
       timeout: 30s
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.48.1
     networks:
     - sutazai-network
     ports:
@@ -571,7 +567,7 @@ services:
       - wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit
         1
       timeout: 30s
-    image: grafana/grafana:latest
+    image: grafana/grafana:10.2.3
     networks:
     - sutazai-network
     ports:
@@ -639,7 +635,7 @@ services:
       interval: 60s
       timeout: 30s
       retries: 5
-    image: prom/alertmanager:latest
+    image: prom/alertmanager:v0.27.0
     networks:
     - sutazai-network
     ports:
@@ -670,7 +666,7 @@ services:
       - --spider
       - http://localhost:9115/
       timeout: 30s
-    image: prom/blackbox-exporter:latest
+    image: prom/blackbox-exporter:v0.24.0
     networks:
     - sutazai-network
     ports:
@@ -683,7 +679,7 @@ services:
     - --path.procfs=/host/proc
     - --path.sysfs=/host/sys
     - --path.rootfs=/rootfs
-    - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$$$|/)'
+    - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$$$|/)
     container_name: sutazai-node-exporter
     deploy:
       resources:
@@ -693,7 +689,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 32M
-    image: prom/node-exporter:latest
+    image: prom/node-exporter:v1.7.0
     networks:
     - sutazai-network
     ports:
@@ -707,8 +703,7 @@ services:
     container_name: sutazai-cadvisor
     devices:
     - /dev/kmsg
-    image: gcr.io/cadvisor/cadvisor:latest
-    # ULTRA-FIX: Changed user from 'cadvisor' to 'nobody' to match Dockerfile
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
     user: nobody
     networks:
     - sutazai-network
@@ -722,7 +717,6 @@ services:
     - DAC_READ_SEARCH
     security_opt:
     - no-new-privileges:true
-    # ULTRA-FIX: Set read_only to true with tmpfs for writable areas
     read_only: true
     restart: unless-stopped
     command:
@@ -747,7 +741,6 @@ services:
     - /sys:/sys:ro
     - /var/lib/docker/:/var/lib/docker:ro
     - /dev/disk/:/dev/disk:ro
-    # ULTRA-FIX: Add tmpfs volumes for writable areas needed by cAdvisor
     tmpfs:
     - /tmp:size=100M,mode=1777
     - /var/cache:size=50M,mode=1777
@@ -766,12 +759,20 @@ services:
           memory: 32M
     environment:
       DATA_SOURCE_NAME: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@sutazai-postgres:5432/${POSTGRES_DB:-sutazai}?sslmode=disable
-    image: prometheuscommunity/postgres-exporter:latest
+    image: prometheuscommunity/postgres-exporter:v0.15.0
     networks:
     - sutazai-network
     ports:
     - 10207:9187
     restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U ${POSTGRES_USER:-postgres}
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
   redis-exporter:
     container_name: sutazai-redis-exporter
     depends_on:
@@ -787,15 +788,21 @@ services:
           memory: 32M
     environment:
       REDIS_ADDR: redis://redis:6379
-      # REDIS_PASSWORD not needed - Redis runs without authentication
-    image: oliver006/redis_exporter:latest
+    image: oliver006/redis_exporter:v1.56.0
     networks:
     - sutazai-network
     ports:
     - 10208:9121
     restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - redis-cli ping
+      interval: 30s
+      timeout: 5s
+      retries: 5
   ollama-integration:
-    image: sutazaiapp-ollama-integration:latest
+    image: sutazaiapp-ollama-integration:v1.0.0
     container_name: sutazai-ollama-integration
     depends_on:
       ollama:
@@ -842,7 +849,7 @@ services:
     volumes:
     - ./agents/core:/app/agents/core:ro
   hardware-resource-optimizer:
-    image: sutazaiapp-hardware-resource-optimizer:latest
+    image: sutazaiapp-hardware-resource-optimizer:v1.0.0
     container_name: sutazai-hardware-resource-optimizer
     depends_on:
       backend:
@@ -902,7 +909,7 @@ services:
     - ./configs:/app/configs:ro
     - ./logs:/app/logs:rw,noexec
   jarvis-hardware-resource-optimizer:
-    image: sutazaiapp-jarvis-hardware-resource-optimizer:latest
+    image: sutazaiapp-jarvis-hardware-resource-optimizer:v1.0.0
     container_name: sutazai-jarvis-hardware-resource-optimizer
     depends_on:
       backend:
@@ -1056,7 +1063,7 @@ services:
     - ./agents/core:/app/agents/core:ro
     - ./logs:/app/logs
   task-assignment-coordinator:
-    image: sutazaiapp-task-assignment-coordinator:latest
+    image: sutazaiapp-task-assignment-coordinator:v1.0.0
     container_name: sutazai-task-assignment-coordinator
     depends_on:
       rabbitmq:
@@ -1102,7 +1109,7 @@ services:
     build:
       context: ./agents/ultra-system-architect
       dockerfile: Dockerfile
-    image: sutazaiapp-ultra-system-architect:latest
+    image: sutazaiapp-ultra-system-architect:v1.0.0
     container_name: sutazai-ultra-system-architect
     depends_on:
       redis:
@@ -1130,7 +1137,11 @@ services:
       MAX_AGENTS: 500
       LEAD_ARCHITECTS: 5
     healthcheck:
-      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:11200/health').raise_for_status()"]
+      test:
+      - CMD
+      - python
+      - -c
+      - import httpx; httpx.get('http://localhost:11200/health').raise_for_status()
       interval: 30s
       timeout: 10s
       retries: 3
@@ -1149,7 +1160,7 @@ services:
     build:
       context: ./agents/ultra-frontend-ui-architect
       dockerfile: Dockerfile
-    image: sutazaiapp-ultra-frontend-ui-architect:latest
+    image: sutazaiapp-ultra-frontend-ui-architect:v1.0.0
     container_name: sutazai-ultra-frontend-ui-architect
     depends_on:
       redis:
@@ -1180,7 +1191,11 @@ services:
       FRONTEND_TARGET_PATH: /opt/sutazaiapp/frontend
       COMPONENT_ANALYSIS_DEPTH: 5
     healthcheck:
-      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:11201/health').raise_for_status()"]
+      test:
+      - CMD
+      - python
+      - -c
+      - import httpx; httpx.get('http://localhost:11201/health').raise_for_status()
       interval: 30s
       timeout: 10s
       retries: 3
@@ -1197,7 +1212,7 @@ services:
     - ./frontend:/app/frontend:rw
     - ./logs:/app/logs:rw,noexec
   resource-arbitration-agent:
-    image: sutazaiapp-resource-arbitration-agent:latest
+    image: sutazaiapp-resource-arbitration-agent:v1.0.0
     container_name: sutazai-resource-arbitration-agent
     depends_on:
       rabbitmq:
@@ -1249,29 +1264,27 @@ services:
     - ./agents/core:/app/agents/core:ro
     - ./data:/app/data:rw,noexec
     - ./logs:/app/logs:rw,noexec
-
-  # Distributed Tracing
   jaeger:
     container_name: sutazai-jaeger
-    image: jaegertracing/all-in-one:latest
+    image: jaegertracing/all-in-one:1.53
     environment:
-      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
-      - COLLECTOR_OTLP_ENABLED=true
-      - JAEGER_DISABLED=false
-      - METRICS_STORAGE_TYPE=prometheus
-      - PROMETHEUS_SERVER_URL=http://sutazai-prometheus:9090
-      - PROMETHEUS_QUERY_SUPPORT_SPANMETRICS_CONNECTOR=true
-      - SPAN_STORAGE_TYPE=memory
-      - MEMORY_MAX_TRACES=100000
+    - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+    - COLLECTOR_OTLP_ENABLED=true
+    - JAEGER_DISABLED=false
+    - METRICS_STORAGE_TYPE=prometheus
+    - PROMETHEUS_SERVER_URL=http://sutazai-prometheus:9090
+    - PROMETHEUS_QUERY_SUPPORT_SPANMETRICS_CONNECTOR=true
+    - SPAN_STORAGE_TYPE=memory
+    - MEMORY_MAX_TRACES=100000
     ports:
-      - "10210:16686"  # Jaeger UI
-      - "10211:14268"  # Jaeger Collector HTTP
-      - "10212:14250"  # Jaeger Collector gRPC
-      - "10213:9411"   # Zipkin Collector
-      - "10214:4317"   # OTLP gRPC
-      - "10215:4318"   # OTLP HTTP
+    - 10210:16686
+    - 10211:14268
+    - 10212:14250
+    - 10213:9411
+    - 10214:4317
+    - 10215:4318
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
     deploy:
       resources:
@@ -1282,24 +1295,28 @@ services:
           cpus: '0.25'
           memory: 256M
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:16686/"]
+      test:
+      - CMD
+      - wget
+      - --no-verbose
+      - --tries=1
+      - --spider
+      - http://localhost:16686/
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  # Log Shipping (Promtail for Loki)
   promtail:
     container_name: sutazai-promtail
     image: grafana/promtail:2.9.0
     user: promtail
     volumes:
-      - /var/log:/var/log:ro
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./monitoring/promtail/config.yml:/etc/promtail/config.yml:ro
+    - /var/log:/var/log:ro
+    - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - ./monitoring/promtail/config.yml:/etc/promtail/config.yml:ro
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
     deploy:
       resources:
@@ -1311,7 +1328,7 @@ services:
           memory: 64M
     privileged: true
     depends_on:
-      - loki
+    - loki
     healthcheck:
       test:
       - CMD-SHELL
@@ -1320,7 +1337,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-
 volumes:
   agent_outputs: null
   agent_workspaces: null

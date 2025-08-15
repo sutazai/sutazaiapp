@@ -7,27 +7,56 @@ services:
       POSTGRES_USER: sutazai
       POSTGRES_PASSWORD: sutazai
     volumes:
-      - mcp_pgdata:/var/lib/postgresql/data
+    - mcp_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test:
+      - CMD-SHELL
+      - pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 5s
       timeout: 3s
       retries: 30
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
   mcp-redis:
     image: redis:7-alpine
     container_name: sutazai-mcp-redis
-    command: ["redis-server","--appendonly","yes"]
+    command:
+    - redis-server
+    - --appendonly
+    - 'yes'
     healthcheck:
-      test: ["CMD","redis-cli","ping"]
+      test:
+      - CMD
+      - redis-cli
+      - ping
       interval: 5s
       timeout: 3s
       retries: 30
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
   mcp-server:
     environment:
       DATABASE_URL: postgresql://sutazai:sutazai@mcp-db:5432/sutazai
       REDIS_URL: redis://sutazai-mcp-redis:6379/0
-
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
 volumes:
-  mcp_pgdata:
+  mcp_pgdata: null
