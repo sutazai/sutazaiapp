@@ -30,9 +30,9 @@ class DifyWorkflowDeployer:
     
     def __init__(self, config_path: str = "/opt/sutazaiapp/workflows"):
         self.config_path = Path(config_path)
-        self.dify_api_base = "http://localhost:8107"
-        self.backend_api_base = "http://localhost:8000"
-        self.agent_registry_base = "http://localhost:8300"
+        self.dify_api_base = os.getenv("DIFY_API_BASE", "http://localhost:8107")
+        self.backend_api_base = os.getenv("BACKEND_API_BASE", "http://localhost:8000")
+        self.agent_registry_base = os.getenv("AGENT_REGISTRY_BASE", "http://localhost:8300")
         
         # Load configurations
         self.load_configurations()
@@ -80,8 +80,8 @@ class DifyWorkflowDeployer:
             "Dify API": self.dify_api_base,
             "Backend API": self.backend_api_base,
             "Agent Registry": self.agent_registry_base,
-            "PostgreSQL": "http://localhost:5432",
-            "Redis": "http://localhost:6379"
+            "PostgreSQL": os.getenv("POSTGRES_URL", "http://localhost:5432"),
+            "Redis": os.getenv("REDIS_URL", "http://localhost:6379")
         }
         
         all_healthy = True

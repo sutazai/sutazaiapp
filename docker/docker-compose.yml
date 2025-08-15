@@ -25,7 +25,7 @@ services:
       - CMD-SHELL
       - pg_isready -U ${POSTGRES_USER:-sutazai}
       timeout: 5s
-    image: postgres:16-alpine
+    image: postgres:16.3-alpine3.20
     networks:
     - sutazai-network
     ports:
@@ -52,7 +52,7 @@ services:
       - CMD-SHELL
       - redis-cli ping
       timeout: 5s
-    image: redis:7-alpine
+    image: redis:7.2.5-alpine3.20
     networks:
     - sutazai-network
     ports:
@@ -93,7 +93,7 @@ services:
       - CMD-SHELL
       - wget --no-verbose --tries=1 --spider http://localhost:7474/ || exit 1
       timeout: 15s
-    image: neo4j:5.15-community
+    image: neo4j:5.15.0-community
     networks:
     - sutazai-network
     ports:
@@ -261,7 +261,7 @@ services:
     volumes:
     - faiss_data:/data
   kong:
-    image: kong:3.5
+    image: kong:3.5.0-alpine
     container_name: sutazai-kong
     deploy:
       resources:
@@ -347,7 +347,7 @@ services:
     - ./config/consul/consul.hcl:/consul/config/consul.hcl:ro
     - consul_data:/consul/data
   rabbitmq:
-    image: rabbitmq:3.12-management-alpine
+    image: rabbitmq:3.12.14-management-alpine
     container_name: sutazai-rabbitmq
     deploy:
       resources:
@@ -384,6 +384,10 @@ services:
     depends_on:
       chromadb:
         condition: service_healthy
+      consul:
+        condition: service_healthy
+      kong:
+        condition: service_started
       neo4j:
         condition: service_started
       ollama:
@@ -874,7 +878,7 @@ services:
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_HOST: 0.0.0.0
-      OLLAMA_MODEL: tinyllama:latest
+      OLLAMA_MODEL: tinyllama:1.1b-q4_0
       OLLAMA_ORIGINS: '*'
       PORT: 8080
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
@@ -908,43 +912,9 @@ services:
     - ./data:/app/data:rw,noexec
     - ./configs:/app/configs:ro
     - ./logs:/app/logs:rw,noexec
-  jarvis-hardware-resource-optimizer:
-    image: sutazaiapp-jarvis-hardware-resource-optimizer:v1.0.0
-    container_name: sutazai-jarvis-hardware-resource-optimizer
-    depends_on:
-      backend:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 256M
-        reservations:
-          cpus: '0.25'
-          memory: 64M
-    environment:
-      AGENT_TYPE: jarvis-hardware-resource-optimizer
-      API_ENDPOINT: http://backend:8000
-      LOG_LEVEL: INFO
-      PORT: 8080
-      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
-      REDIS_URL: redis://sutazai-redis:6379/0
-      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
-      TZ: ${TZ:-UTC}
-    healthcheck:
-      test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:8080/health
-      interval: 60s
-      timeout: 30s
-      retries: 5
-      start_period: 60s
+  # jarvis-hardware-resource-optimizer: CONSOLIDATED with hardware-resource-optimizer
+  # Use hardware-resource-optimizer service which provides comprehensive optimization
+  # Original jarvis functionality maintained through unified interface
     networks:
     - sutazai-network
     ports:

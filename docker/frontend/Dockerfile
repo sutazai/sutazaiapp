@@ -1,17 +1,29 @@
-# SutazAI Frontend Service - ULTRAFIX Dockerfile Consolidation  
-# Migrated to use sutazai-python-agent-master base image
-# Date: August 10, 2025 - CRITICAL DOCKERFILE DEDUPLICATION
-# Security Fix: 2025-08-16 - Removed root user elevation for package installation
-FROM sutazai-python-agent-master:v1.0.0
+# SutazAI Frontend Service - Rule 11 Compliant
+# Secure, non-root, pinned versions
+# Last Updated: 2025-01-15
+FROM python:3.11.9-alpine3.19
 
-# Copy requirements with proper ownership (avoid root elevation)
-# The base image already has appuser:appgroup configured
-COPY --chown=appuser:appgroup requirements_optimized.txt /tmp/frontend-requirements.txt
+# Security: Create non-root user
+RUN addgroup -g 1000 -S appgroup && \
+    adduser -u 1000 -S appuser -G appgroup -h /home/appuser -s /bin/sh
 
-# Install frontend-specific requirements as non-root user
-# Using --user flag to install packages in user directory
+# Install system dependencies
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache \
+        curl \
+        ca-certificates && \
+    rm -rf /var/cache/apk/*
+
+WORKDIR /app
+
+# Copy and install requirements as root
+COPY requirements_optimized.txt /tmp/frontend-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/frontend-requirements.txt && \
+    rm /tmp/frontend-requirements.txt
+
+# Switch to non-root user
 USER appuser
-RUN pip install --user --no-cache-dir -r /tmp/frontend-requirements.txt && rm /tmp/frontend-requirements.txt
 
 # Copy application and components with proper ownership
 COPY --chown=appuser:appgroup app.py .

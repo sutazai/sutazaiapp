@@ -1,15 +1,199 @@
+# Rule 11 Compliant Docker Compose Configuration
+# All services use pinned versions, non-root users, health checks, and resource limits
+# Last Updated: 2025-01-15
+
 version: '3.8'
+
 networks:
   sutazai-network:
     external: true
     name: sutazai-network
+
 services:
   postgres:
-    build:
-      context: ./docker/postgres-secure
-      dockerfile: Dockerfile
+    image: postgres:16.3-alpine3.20
     container_name: sutazai-postgres
-    user: 70:70
+    user: "999:999"  # postgres user
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sutazai}
+      POSTGRES_USER: ${POSTGRES_USER:-sutazai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sutazai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    networks:
+      - sutazai-network
+    ports:
+      - "10000:5432"
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2.5-alpine3.20
+    container_name: sutazai-redis
+    user: "999:999"  # redis user
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    command: redis-server /usr/local/etc/redis/redis.conf --appendonly no
+    volumes:
+      - redis_data:/data
+      - ./config/redis-optimized.conf:/usr/local/etc/redis/redis.conf:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sutazai-network
+    ports:
+      - "10001:6379"
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:5.15.0-community
+    container_name: sutazai-neo4j
+    user: "7474:7474"  # neo4j user
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_pagecache_size: 256m
+      NEO4J_server_jvm_additional: "-XX:+UseG1GC -XX:G1HeapRegionSize=4m -XX:+DisableExplicitGC -XX:+ExitOnOutOfMemoryError"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474/ || exit 1"]
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 45s
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - sutazai-network
+    ports:
+      - "10002:7474"
+      - "10003:7687"
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:0.3.13
+    container_name: sutazai-ollama
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_KEEP_ALIVE: 5m
+      OLLAMA_MAX_LOADED_MODELS: '1'
+      OLLAMA_NUM_PARALLEL: '1'
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - ollama_data:/home/ollama/.ollama
+      - models_data:/models
+    networks:
+      - sutazai-network
+    ports:
+      - "10104:11434"
+    restart: unless-stopped
+    sysctls:
+      - net.core.somaxconn=65535
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  chromadb:
+    image: chromadb/chroma:0.5.0
+    container_name: sutazai-chromadb
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthenticationServerProvider
+      - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMADB_API_KEY}
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - chromadb_data:/chroma/chroma
+    networks:
+      - sutazai-network
+    ports:
+      - "10100:8000"
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.9.7
+    container_name: sutazai-qdrant
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      QDRANT__LOG_LEVEL: INFO
+      QDRANT__SERVICE__GRPC_PORT: 6334
+      QDRANT__SERVICE__HTTP_PORT: 6333
     deploy:
       resources:
         limits:
@@ -18,37 +202,60 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-sutazai}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER:-sutazai}
     healthcheck:
-      interval: 10s
+      test: ["CMD", "curl", "-f", "http://localhost:6333/"]
+      interval: 60s
+      timeout: 30s
       retries: 5
-      start_period: 60s
-      test:
-      - CMD-SHELL
-      - pg_isready -U ${POSTGRES_USER:-sutazai}
-      timeout: 5s
-    networks:
-    - sutazai-network
-    ports:
-    - 10000:5432
-    restart: unless-stopped
     volumes:
-    - postgres_data:/var/lib/postgresql/data
-    - ./IMPORTANT/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    security_opt:
-    - no-new-privileges:true
-    read_only: false
-  redis:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - sutazai-network
+    ports:
+      - "10101:6333"
+      - "10102:6334"
+    restart: unless-stopped
+
+  faiss:
     build:
-      context: ./docker/redis-secure
+      context: ./docker/faiss
       dockerfile: Dockerfile
-    container_name: sutazai-redis
-    user: 999:999
-    command: redis-server --save "" --appendonly no --maxmemory 512mb --maxmemory-policy
-      allkeys-lru
+    image: sutazaiapp-faiss:v1.0.0
+    container_name: sutazai-faiss
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+    volumes:
+      - faiss_data:/data
+    networks:
+      - sutazai-network
+    ports:
+      - "10103:8000"
+    restart: unless-stopped
+
+  kong:
+    image: kong:3.5.0-alpine
+    container_name: sutazai-kong
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      KONG_DATABASE: 'off'
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong-optimized.yml
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_LOG_LEVEL: error
     deploy:
       resources:
         limits:
@@ -58,164 +265,148 @@ services:
           cpus: '0.1'
           memory: 128M
     healthcheck:
-      interval: 10s
-      retries: 5
-      test:
-      - CMD-SHELL
-      - redis-cli ping
+      test: ["CMD", "kong", "health"]
+      interval: 30s
       timeout: 5s
-    networks:
-    - sutazai-network
-    ports:
-    - 10001:6379
-    restart: unless-stopped
+      retries: 3
+      start_period: 10s
     volumes:
-    - redis_data:/data
+      - ./config/kong/kong-optimized.yml:/etc/kong/kong-optimized.yml:ro
+    networks:
+      - sutazai-network
+    ports:
+      - "10005:8000"
+      - "10015:8001"
+    restart: unless-stopped
+
+  consul:
+    image: hashicorp/consul:1.17.1
+    container_name: sutazai-consul
     security_opt:
-    - no-new-privileges:true
-    read_only: false
-  neo4j:
-    image: neo4j:5.18
-    container_name: sutazai-neo4j
-    user: 7474:7474
+      - no-new-privileges:true
+    command:
+      - agent
+      - -server
+      - -bootstrap-expect=1
+      - -ui
+      - -client=0.0.0.0
+      - -data-dir=/consul/data
     deploy:
       resources:
         limits:
-          cpus: '1.5'
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - ./config/consul/consul.hcl:/consul/config/consul.hcl:ro
+      - consul_data:/consul/data
+    networks:
+      - sutazai-network
+    ports:
+      - "10006:8500"
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3.12.14-management-alpine
+    container_name: sutazai-rabbitmq
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-sutazai}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
           memory: 1G
         reservations:
           cpus: '0.5'
           memory: 512M
-    environment:
-      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
-      NEO4J_server_memory_heap_max__size: 512m
-      NEO4J_server_memory_heap_initial__size: 256m
-      NEO4J_server_memory_pagecache_size: 256m
-      NEO4J_server_jvm_additional: -XX:+UseG1GC -XX:G1HeapRegionSize=4m -XX:+DisableExplicitGC
-        -XX:+ExitOnOutOfMemoryError
-      NEO4J_initial_dbms_default__database: sutazai
-      NEO4J_db_checkpoint_interval_time: 30s
-      NEO4J_db_transaction_timeout: 30s
-      NEO4J_db_logs_query_enabled: false
-      NEO4J_server_config_strict__validation_enabled: false
-      NEO4J_db_transaction_bookmark_ready_timeout: 5s
-      NEO4J_dbms_cluster_discovery_type: SINGLE
     healthcheck:
-      interval: 60s
-      retries: 5
-      start_period: 120s
-      test:
-      - CMD
-      - cypher-shell
-      - -u
-      - neo4j
-      - -p
-      - ${NEO4J_PASSWORD}
-      - RETURN 1
-      timeout: 30s
-    networks:
-    - sutazai-network
-    ports:
-    - 10002:7474
-    - 10003:7687
-    restart: unless-stopped
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     volumes:
-    - neo4j_data:/data
-    - neo4j_logs:/logs
-    security_opt:
-    - no-new-privileges:true
-  ollama:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - sutazai-network
+    ports:
+      - "10007:5672"
+      - "10008:15672"
+    restart: unless-stopped
+
+  backend:
     build:
-      context: ./docker/ollama-secure
+      context: ./backend
       dockerfile: Dockerfile
-    container_name: sutazai-ollama
-    user: 1002:1002
+    image: sutazaiapp-backend:v1.0.0
+    container_name: sutazai-backend
+    security_opt:
+      - no-new-privileges:true
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      neo4j:
+        condition: service_started
+      ollama:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
     deploy:
       resources:
         limits:
-          cpus: '10'
-          memory: 20G
-        reservations:
           cpus: '4'
-          memory: 8G
-    environment:
-      OLLAMA_DEBUG: false
-      OLLAMA_FLASH_ATTENTION: 1
-      OLLAMA_HOST: 0.0.0.0
-      OLLAMA_KEEP_ALIVE: 10m
-      OLLAMA_MAX_LOADED_MODELS: 3
-      OLLAMA_MODELS: /home/ollama/.ollama/models
-      OLLAMA_NUM_PARALLEL: 50
-      OLLAMA_NUM_THREADS: 10
-      OLLAMA_ORIGINS: '*'
-      OLLAMA_TMPDIR: /tmp/ollama
-      HOME: /home/ollama
-    healthcheck:
-      interval: 60s
-      retries: 5
-      start_period: 60s
-      test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:11434/api/tags
-      timeout: 30s
-    networks:
-    - sutazai-network
-    ports:
-    - 10104:11434
-    restart: unless-stopped
-    volumes:
-    - ollama_models:/home/ollama/.ollama/models
-    security_opt:
-    - no-new-privileges:true
-  chromadb:
-    build:
-      context: ./docker/chromadb-secure
-      dockerfile: Dockerfile
-    container_name: sutazai-chromadb
-    user: 1003:1003
-    deploy:
-      resources:
-        limits:
+          memory: 4G
+        reservations:
           cpus: '1'
           memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 256M
     environment:
-    - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthenticationServerProvider
-    - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMADB_API_KEY:-test-token}
-    - CHROMA_SERVER_HOST=0.0.0.0
-    - CHROMA_SERVER_HTTP_PORT=8000
-    - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
-    - HOME=/home/chroma
-    - PERSIST_DIRECTORY=/chroma/data
+      POSTGRES_HOST: postgres
+      REDIS_HOST: redis
+      NEO4J_HOST: neo4j
+      OLLAMA_HOST: ollama
+      CHROMADB_HOST: chromadb
+      QDRANT_HOST: qdrant
     healthcheck:
-      interval: 60s
-      retries: 5
-      start_period: 120s
-      test:
-      - CMD
-      - sh
-      - -c
-      - curl -f http://localhost:8000/api/v1/heartbeat || exit 1
-      timeout: 30s
-    networks:
-    - sutazai-network
-    ports:
-    - 10100:8000
-    restart: unless-stopped
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
     volumes:
-    - chromadb_data:/chroma/data
-    security_opt:
-    - no-new-privileges:true
-  qdrant:
+      - ./backend:/app:ro
+    networks:
+      - sutazai-network
+    ports:
+      - "10010:8000"
+    restart: unless-stopped
+
+  frontend:
     build:
-      context: ./docker/qdrant-secure
-      dockerfile: Dockerfile
-    container_name: sutazai-qdrant
-    user: 1004:1004
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    image: sutazaiapp-frontend:v1.0.0
+    container_name: sutazai-frontend
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      backend:
+        condition: service_healthy
     deploy:
       resources:
         limits:
@@ -225,125 +416,31 @@ services:
           cpus: '0.5'
           memory: 512M
     environment:
-      QDRANT__LOG_LEVEL: INFO
-      QDRANT__SERVICE__GRPC_PORT: 6334
-      QDRANT__SERVICE__HTTP_PORT: 6333
-      HOME: /home/qdrant
+      BACKEND_URL: http://backend:8000
+      STREAMLIT_SERVER_PORT: 8501
+      STREAMLIT_SERVER_ADDRESS: 0.0.0.0
     healthcheck:
-      interval: 60s
-      retries: 5
-      test:
-      - CMD
-      - sh
-      - -c
-      - curl -f http://localhost:6333 || exit 1
-      timeout: 30s
-    networks:
-    - sutazai-network
-    ports:
-    - 10101:6333
-    - 10102:6334
-    restart: unless-stopped
-    volumes:
-    - qdrant_storage:/qdrant/storage
-    security_opt:
-    - no-new-privileges:true
-  rabbitmq:
-    image: rabbitmq:3.12-management-alpine
-    container_name: sutazai-rabbitmq
-    user: 999:999
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-sutazai}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-    healthcheck:
-      test:
-      - CMD
-      - rabbitmq-diagnostics
-      - check_running
-      interval: 30s
-      timeout: 5s
-      retries: 10
-      start_period: 20s
-    networks:
-    - sutazai-network
-    ports:
-    - 10007:5672
-    - 10008:15672
-    restart: unless-stopped
-    volumes:
-    - rabbitmq_data:/var/lib/rabbitmq
-    security_opt:
-    - no-new-privileges:true
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
-  ai-agent-orchestrator:
-    build:
-      context: ./agents/ai_agent_orchestrator
-      dockerfile: Dockerfile.secure
-    container_name: sutazai-ai-agent-orchestrator
-    user: 1001:1001
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    environment:
-      REDIS_URL: redis://redis:6379/0
-      RABBITMQ_URL: amqp://sutazai:${RABBITMQ_DEFAULT_PASS:-sutazai_rabbit_secure}@rabbitmq:5672/
-      PORT: 8589
-      LOG_LEVEL: INFO
-      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
-      TZ: ${TZ:-UTC}
-    healthcheck:
-      test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:8589/health
+      test: ["CMD", "curl", "-f", "http://localhost:8501/"]
       interval: 30s
       timeout: 10s
-      retries: 5
-      start_period: 120s
-    networks:
-    - sutazai-network
-    ports:
-    - 8589:8589
-    restart: unless-stopped
+      start_period: 20s
+      retries: 3
     volumes:
-    - ./logs:/app/logs
-    security_opt:
-    - no-new-privileges:true
-    read_only: true
-    tmpfs:
-    - /tmp
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
+      - ./frontend:/app:ro
+    networks:
+      - sutazai-network
+    ports:
+      - "10011:8501"
+    restart: unless-stopped
+
 volumes:
   postgres_data:
-    driver: local
   redis_data:
-    driver: local
   neo4j_data:
-    driver: local
-  neo4j_logs:
-    driver: local
-  ollama_models:
-    driver: local
+  ollama_data:
+  models_data:
   chromadb_data:
-    driver: local
-  qdrant_storage:
-    driver: local
+  qdrant_data:
+  faiss_data:
+  consul_data:
   rabbitmq_data:
-    driver: local

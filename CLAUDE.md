@@ -33,7 +33,8 @@ SutazAI is a comprehensive local AI automation platform designed for enterprise 
 - **Agent System**: 7+ operational AI agents for various automation tasks
 - **Vector Intelligence**: Multiple vector databases for semantic search and AI workflows
 - **Monitoring Stack**: Prometheus, Grafana, Loki for comprehensive observability
-- **MCP Integration**: 17+ Model Context Protocol servers for extended AI capabilities
+- **MCP Integration**: 17 Model Context Protocol servers for extended AI capabilities
+- **Service Mesh**: Kong API Gateway with Consul service discovery and circuit breaking
 
 ## Quick Start Commands
 
@@ -72,6 +73,10 @@ make lint               # Run linting (black, flake8, mypy)
 make format            # Auto-format code
 make coverage          # Generate test coverage report
 
+# Quality gates (comprehensive validation)
+make quality-gates      # Full enterprise-grade quality validation
+make quality-gates-quick # Quick quality validation (5-10 minutes)
+
 # Run single test file
 pytest backend/tests/test_specific.py -v
 
@@ -99,13 +104,16 @@ open http://localhost:10202             # Loki logs
 ### Port Allocation (Complete Registry)
 The system uses structured port allocation in the 10000+ range:
 
-**Infrastructure Services (10000-10199)**
+**Infrastructure Services (10000-10099)**
 - 10000: PostgreSQL database
 - 10001: Redis cache  
 - 10002-10003: Neo4j graph database (bolt/http)
+- 10005: Kong API Gateway (proxy)
+- 10006: Consul service discovery
 - 10007-10008: RabbitMQ (amqp/mgmt)
 - 10010: FastAPI backend
 - 10011: Streamlit frontend
+- 10015: Kong Admin API
 
 **Vector & AI Services (10100-10199)**  
 - 10100: ChromaDB vector database
@@ -121,7 +129,7 @@ The system uses structured port allocation in the 10000+ range:
 - 10220-10221: Node exporters and cAdvisor
 
 **AI Agents (11000+)**
-- 11000+: Various AI automation agents (see PortRegistry.md for complete list)
+- 11000+: Various AI automation agents (dynamic port allocation)
 
 ### Service Dependencies
 Understanding the service startup order and dependencies:
@@ -187,14 +195,26 @@ curl -X POST http://localhost:10010/api/v1/chat/ \
 
 ## MCP Server Management
 
-The system includes 17+ Model Context Protocol servers for extended AI capabilities:
+The system includes 17 Model Context Protocol servers for extended AI capabilities:
 
-### Critical MCP Servers
-- **file operations**: Local file system access
-- **postgres**: Database operations and queries  
+### Configured MCP Servers
+- **language-server**: Code language support and definitions
 - **github**: GitHub repository management
-- **browser automation**: Playwright/Puppeteer web automation
+- **ultimatecoder**: Advanced code generation and analysis
+- **sequentialthinking**: Advanced reasoning and problem-solving
+- **context7**: Library documentation and code examples
+- **files**: Local file system access
+- **http**: HTTP requests and web content fetching
+- **ddg**: DuckDuckGo search integration
+- **postgres**: Database operations and queries
 - **extended-memory**: Persistent memory across sessions
+- **mcp_ssh**: Remote command execution and file operations
+- **nx-mcp**: Nx workspace and monorepo management
+- **puppeteer-mcp**: Browser automation with Puppeteer
+- **memory-bank-mcp**: Memory management and persistence
+- **playwright-mcp**: Browser automation with Playwright
+- **knowledge-graph-mcp**: Knowledge graph management
+- **compass-mcp**: MCP server discovery and recommendations
 
 ### MCP Commands
 ```bash
@@ -324,8 +344,18 @@ The system runs 25 operational containers organized in tiers:
 **Primary API Endpoints:**
 - `POST /api/v1/chat/` - Chat with AI models
 - `GET /api/v1/models/` - List available models
-- `POST /api/v1/mesh/enqueue` - Task queue operations
-- `GET /api/v1/mesh/results` - Task results
+- `GET /api/v1/agents/` - Agent management and status
+- `GET /api/v1/documents/` - Document management operations
+- `GET /api/v1/system/` - System status and information
+- `GET /api/v1/hardware/` - Hardware resource monitoring
+- `GET /api/v1/cache/` - Cache management operations
+- `GET /api/v1/cache-optimized/` - Optimized cache operations
+- `GET /api/v1/circuit-breaker/` - Circuit breaker status
+- `POST /api/v1/mesh/enqueue` - Legacy task queue operations
+- `GET /api/v1/mesh/results` - Legacy task results
+- `POST /api/v1/mesh/v2/register` - Service mesh registration
+- `GET /api/v1/mesh/v2/services` - Service discovery
+- `GET /api/v1/features/` - Feature flags and configuration
 - `GET /health` - System health status
 - `GET /metrics` - Prometheus metrics
 

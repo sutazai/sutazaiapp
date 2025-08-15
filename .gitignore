@@ -165,3 +165,38 @@ data/repos/
 /blob-report/
 /playwright/.cache/
 test_env/
+
+# Test artifacts and results (Rule 13 cleanup)
+*test_results*.json
+*test_report*.json
+*_report_*.json
+coverage.xml
+test-results.xml
+htmlcov/
+.coverage
+*.cover
+.hypothesis/
+nosetests.xml
+coverage/
+*.cover
+.coverage.*
+
+# MCP and system test logs
+mcp_selfcheck_*.log
+ultra_*_*.log
+security_*.log
+deployment_*.log
+build_*.log
+
+# Temporary and backup files
+*.backup
+*.bak
+*.tmp
+*.temp
+*.old
+*.orig
+*~
+
+# Archive directories (should not be in git)
+archive/
+backups/

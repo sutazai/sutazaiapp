@@ -11,7 +11,7 @@ services:
   # === CORE DATABASE LAYER - SECURED & OPTIMIZED ===
   postgres:
     container_name: sutazai-postgres
-    image: sutazai-postgres-secure:latest
+    image: sutazai-postgres-secure:v1.0.0
     user: postgres  # NON-ROOT
     mem_limit: 1G
     cpus: 1.5
@@ -32,7 +32,7 @@ services:
 
   redis:
     container_name: sutazai-redis  
-    image: sutazai-redis-secure:latest
+    image: sutazai-redis-secure:v1.0.0
     user: redis  # NON-ROOT
     mem_limit: 512M
     cpus: 0.5
@@ -49,7 +49,7 @@ services:
   # === AI/ML LAYER - OPTIMIZED FOR PERFORMANCE ===
   ollama:
     container_name: sutazai-ollama
-    image: sutazai-ollama-secure:latest
+    image: sutazai-ollama-secure:v1.0.0
     user: ollama  # NON-ROOT (FIXED\!)
     mem_limit: 2G
     cpus: 2
@@ -67,7 +67,7 @@ services:
   # === MESSAGE QUEUE - SECURED ===
   rabbitmq:
     container_name: sutazai-rabbitmq
-    image: sutazai-rabbitmq-secure:latest
+    image: sutazai-rabbitmq-secure:v1.0.0
     user: rabbitmq  # NON-ROOT (FIXED\!)
     mem_limit: 512M
     cpus: 0.5
@@ -83,7 +83,7 @@ services:
   # === GRAPH DATABASE - SECURED ===
   neo4j:
     container_name: sutazai-neo4j
-    image: sutazai-neo4j-secure:latest
+    image: sutazai-neo4j-secure:v1.0.0
     user: neo4j  # NON-ROOT (FIXED\!)
     mem_limit: 1G
     cpus: 1

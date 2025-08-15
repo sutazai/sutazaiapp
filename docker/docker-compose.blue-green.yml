@@ -599,7 +599,7 @@ services:
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
-      OLLAMA_MODEL: tinyllama:latest
+      OLLAMA_MODEL: tinyllama:1.1b-q4_0
       OLLAMA_ORIGINS: '*'
       PORT: 8080
       PORCUPINE_ACCESS_KEY: ${PORCUPINE_ACCESS_KEY:-demo}
@@ -803,7 +803,7 @@ services:
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
-      OLLAMA_MODEL: tinyllama:latest
+      OLLAMA_MODEL: tinyllama:1.1b-q4_0
       OLLAMA_ORIGINS: '*'
       PORT: 8080
       PORCUPINE_ACCESS_KEY: ${PORCUPINE_ACCESS_KEY:-demo}

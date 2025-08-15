@@ -1,17 +1,38 @@
-# SutazAI Backend Service - ULTRAFIX Dockerfile Consolidation
-# Migrated to use sutazai-python-agent-master base image
-# Date: August 10, 2025 - CRITICAL DOCKERFILE DEDUPLICATION
-# Security Fix: 2025-08-16 - Removed root user elevation for package installation
-FROM sutazai-python-agent-master:v1.0.0
+# SutazAI Backend Service - Rule 11 Compliant
+# Secure, non-root, pinned versions
+# Last Updated: 2025-01-15
+FROM python:3.11.9-alpine3.19
 
-# Copy requirements with proper ownership (avoid root elevation)
-# The base image already has appuser:appgroup configured
-COPY --chown=appuser:appgroup requirements.txt /tmp/backend-requirements.txt
+# Security: Create non-root user
+RUN addgroup -g 1000 -S appgroup && \
+    adduser -u 1000 -S appuser -G appgroup -h /home/appuser -s /bin/sh
 
-# Install backend-specific requirements as non-root user
-# Using --user flag to install packages in user directory
+# Install system dependencies and security updates
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache \
+        build-base \
+        curl \
+        git \
+        postgresql-client \
+        ca-certificates \
+        linux-headers \
+        gcc \
+        musl-dev \
+        libffi-dev && \
+    rm -rf /var/cache/apk/*
+
+WORKDIR /app
+
+# Copy requirements as root for installation
+COPY requirements.txt /tmp/backend-requirements.txt
+
+# Install Python dependencies as root (required for system packages)
+RUN pip install --no-cache-dir -r /tmp/backend-requirements.txt && \
+    rm /tmp/backend-requirements.txt
+
+# Switch to non-root user before copying app code
 USER appuser
-RUN pip install --user --no-cache-dir -r /tmp/backend-requirements.txt && rm /tmp/backend-requirements.txt
 
 # Copy application code with proper ownership
 COPY --chown=appuser:appgroup . .

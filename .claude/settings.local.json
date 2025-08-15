@@ -297,7 +297,12 @@
       "Bash(then)",
       "Bash(do [ -f \"$file\" ])",
       "Bash(then echo \"=== $file ===\")",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(openssl rand:*)",
+      "Bash(env)",
+      "Bash(sutazaiapp-backend:v1.0.0 )",
+      "Bash(uvicorn:*)",
+      "Bash(BACKUP_DIR=\"/opt/sutazaiapp/backup_waste_elimination_20250816_002410\")"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

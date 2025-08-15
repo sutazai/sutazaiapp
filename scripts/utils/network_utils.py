@@ -6,6 +6,7 @@ Network Utilities for SutazAI
 Consolidated network validation and connectivity utilities.
 """
 
+import os
 import socket
 import requests
 import subprocess
@@ -224,18 +225,18 @@ def get_local_ip_addresses() -> List[str]:
 def validate_sutazai_services() -> Dict[str, Dict]:
     """Validate all SutazAI service endpoints"""
     services = {
-        'backend': 'http://localhost:10010/health',
-        'frontend': 'http://localhost:10011/',
-        'ollama': 'http://localhost:10104/api/tags',
-        'postgres': 'localhost:10000',
-        'redis': 'localhost:10001',
-        'neo4j_http': 'http://localhost:10002',
-        'neo4j_bolt': 'localhost:10003',
-        'rabbitmq_management': 'http://localhost:10008',
-        'grafana': 'http://localhost:10201',
-        'prometheus': 'http://localhost:10200',
-        'hardware_optimizer': 'http://localhost:11110/health',
-        'ai_orchestrator': 'http://localhost:8589/health'
+        'backend': os.getenv('BACKEND_URL', 'http://localhost:10010') + '/health',
+        'frontend': os.getenv('FRONTEND_URL', 'http://localhost:10011') + '/',
+        'ollama': os.getenv('OLLAMA_URL', 'http://localhost:10104') + '/api/tags',
+        'postgres': os.getenv('POSTGRES_HOST', 'localhost') + ':' + os.getenv('POSTGRES_PORT', '10000'),
+        'redis': os.getenv('REDIS_HOST', 'localhost') + ':' + os.getenv('REDIS_PORT', '10001'),
+        'neo4j_http': 'http://' + os.getenv('NEO4J_HOST', 'localhost') + ':' + os.getenv('NEO4J_HTTP_PORT', '10002'),
+        'neo4j_bolt': os.getenv('NEO4J_HOST', 'localhost') + ':' + os.getenv('NEO4J_BOLT_PORT', '10003'),
+        'rabbitmq_management': 'http://' + os.getenv('RABBITMQ_HOST', 'localhost') + ':' + os.getenv('RABBITMQ_MGMT_PORT', '10008'),
+        'grafana': 'http://' + os.getenv('GRAFANA_HOST', 'localhost') + ':' + os.getenv('GRAFANA_PORT', '10201'),
+        'prometheus': 'http://' + os.getenv('PROMETHEUS_HOST', 'localhost') + ':' + os.getenv('PROMETHEUS_PORT', '10200'),
+        'hardware_optimizer': 'http://' + os.getenv('HW_OPTIMIZER_HOST', 'localhost') + ':' + os.getenv('HW_OPTIMIZER_PORT', '11110') + '/health',
+        'ai_orchestrator': 'http://' + os.getenv('AI_ORCHESTRATOR_HOST', 'localhost') + ':' + os.getenv('AI_ORCHESTRATOR_PORT', '8589') + '/health'
     }
     
     validator = NetworkValidator()

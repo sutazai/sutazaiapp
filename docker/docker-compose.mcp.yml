@@ -33,7 +33,7 @@ services:
           cpus: '0.25'
           memory: 128M
   mcp-inspector:
-    image: ghcr.io/modelcontextprotocol/inspector:latest
+    image: ghcr.io/modelcontextprotocol/inspector:v0.4.0
     container_name: mcp-inspector
     ports:
     - 6274:6274

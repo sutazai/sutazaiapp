@@ -31,6 +31,8 @@ from app.core.circuit_breaker_integration import (
     get_circuit_breaker_manager, get_redis_circuit_breaker, 
     get_database_circuit_breaker, get_ollama_circuit_breaker
 )
+from app.core.unified_agent_registry import UnifiedAgentRegistry
+from app.mesh.service_mesh import ServiceMesh, LoadBalancerStrategy
 
 # Use uvloop for better async performance
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -131,6 +133,14 @@ async def lifespan(app: FastAPI):
     health_monitor.register_circuit_breaker('ollama', ollama_breaker)
     logger.info("Health monitoring service initialized with circuit breaker integration")
     
+    # Initialize Unified Agent Registry
+    await agent_registry.initialize()
+    logger.info(f"Agent Registry initialized with {len(agent_registry.agents)} agents")
+    
+    # Initialize Service Mesh for distributed coordination
+    await service_mesh.initialize()
+    logger.info("Service Mesh initialized for distributed task coordination")
+    
     # Register task handlers
     async def process_automation_task(payload: Dict[str, Any]) -> Dict[str, Any]:
         """Process automation tasks"""
@@ -187,6 +197,10 @@ async def lifespan(app: FastAPI):
     # Shutdown
     logger.info("Shutting down high-performance backend...")
     
+    # Shutdown service mesh and agent registry
+    await service_mesh.shutdown()
+    await agent_registry.shutdown()
+    
     # Close all connections
     await ollama_service.shutdown()
     await task_queue.stop()
@@ -198,10 +212,19 @@ async def lifespan(app: FastAPI):
 async def _warm_api_caches():
     """Warm up API endpoint caches"""
     try:
+        # Get agents from registry for cache warming
+        agents_data = []
+        for agent_id, agent in agent_registry.agents.items():
+            agents_data.append({
+                "id": agent_id,
+                "name": agent.name,
+                "status": "healthy",
+                "capabilities": agent.capabilities
+            })
+        
         # Warm up agents list cache
         await bulk_cache_set({
-            "api:agents:list": [{"id": aid, "name": cfg["name"], "status": "healthy"}
-                                 for aid, cfg in AGENT_SERVICES.items()],
+            "api:agents:list": agents_data,
             "api:system:info": {"version": "2.0.0", "status": "optimized"},
             "api:performance:baseline": {"response_time_ms": 50, "throughput": 1000}
         }, ttl=300)
@@ -305,34 +328,16 @@ except Exception as e:
     logger.warning("Hardware Resource Optimizer integration not available")
     HARDWARE_OPTIMIZATION_ENABLED = False
 
-# Agent service configurations with health monitoring
-AGENT_SERVICES = {
-    "jarvis-automation": {
-        "name": "Jarvis Automation Agent", 
-        "url": "http://sutazai-jarvis-automation-agent:8080",
-        "capabilities": ["automation", "task_execution"],
-        "health_cache_ttl": 30
-    },
-    "ollama-integration": {
-        "name": "Ollama Integration",
-        "url": "http://sutazai-ollama-integration:8090", 
-        "capabilities": ["text_generation", "chat"],
-        "health_cache_ttl": 30
-    },
-    "hardware-optimizer": {
-        "name": "Hardware Resource Optimizer",
-        "url": "http://sutazai-hardware-resource-optimizer:8080",
-        "capabilities": ["resource_monitoring", "optimization"],
-        "health_cache_ttl": 30
-    },
-    "text-analysis": {
-        "name": "Text Analysis Agent",
-        "url": "internal",  # Running inside backend process
-        "capabilities": ["sentiment_analysis", "entity_extraction", "summarization", "keyword_extraction", "language_detection"],
-        "health_cache_ttl": 30,
-        "description": "Real AI agent with comprehensive text analysis capabilities using Ollama with tinyllama"
-    }
-}
+# Initialize Unified Agent Registry for centralized agent management
+agent_registry = UnifiedAgentRegistry()
+
+# Initialize Service Mesh for distributed coordination
+service_mesh = ServiceMesh(
+    consul_host=os.getenv("CONSUL_HOST", "sutazai-consul"),
+    consul_port=int(os.getenv("CONSUL_PORT", "8500")),
+    kong_admin_url=os.getenv("KONG_ADMIN_URL", "http://sutazai-kong:8001"),
+    load_balancer_strategy=LoadBalancerStrategy.ROUND_ROBIN
+)
 
 # ULTRAFIX: Global service status tracking for ultra-fast health checks
 _pool_manager = None  # Tracks ConnectionPoolManager initialization status
@@ -589,24 +594,19 @@ async def check_agent_health(agent_id: str, agent_config: Dict[str, Any]) -> str
 # Agent endpoints with parallel health checks
 @app.get("/api/v1/agents", response_model=List[AgentResponse])
 async def list_agents():
-    """List agents with parallel health checks"""
+    """List agents using Unified Agent Registry with parallel health checks"""
     
-    # Create tasks for parallel health checks
-    health_tasks = []
-    for agent_id, config in AGENT_SERVICES.items():
-        health_tasks.append(check_agent_health(agent_id, config))
-        
-    # Execute all health checks in parallel
-    health_statuses = await asyncio.gather(*health_tasks)
+    # Get all agents from the registry
+    agents_list = await agent_registry.list_agents()
     
-    # Build response
+    # Build response with proper AgentResponse format
     agents = []
-    for (agent_id, config), status in zip(AGENT_SERVICES.items(), health_statuses):
+    for agent_data in agents_list:
         agents.append(AgentResponse(
-            id=agent_id,
-            name=config["name"],
-            status=status,
-            capabilities=config["capabilities"]
+            id=agent_data["id"],
+            name=agent_data["name"],
+            status=agent_data["status"],
+            capabilities=agent_data["capabilities"]
         ))
         
     return agents
@@ -615,7 +615,7 @@ async def list_agents():
 @app.get("/api/v1/agents/{agent_id}", response_model=AgentResponse)
 @cache_api_response(ttl=30)
 async def get_agent(agent_id: str):
-    """Get specific agent details with caching and input validation"""
+    """Get specific agent details using Unified Agent Registry with caching and validation"""
     
     # CRITICAL SECURITY: Validate agent ID to prevent injection
     try:
@@ -626,17 +626,19 @@ async def get_agent(agent_id: str):
         logger.warning(f"🚨 Agent ID security: BLOCKED malicious agent ID {repr(agent_id)}: {e}")
         raise HTTPException(status_code=400, detail=f"Invalid agent ID: {str(e)}")
     
-    if validated_agent_id not in AGENT_SERVICES:
+    # Get agent from registry
+    agent = agent_registry.get_agent(validated_agent_id)
+    if not agent:
         raise HTTPException(status_code=404, detail=f"Agent {validated_agent_id} not found")
     
-    config = AGENT_SERVICES[validated_agent_id]
-    health_status = await check_agent_health(validated_agent_id, config)
+    # Check agent health
+    health_status = await agent_registry.check_agent_health(validated_agent_id)
     
     return AgentResponse(
         id=validated_agent_id,
-        name=config["name"],
+        name=agent.name,
         status=health_status,
-        capabilities=config["capabilities"]
+        capabilities=agent.capabilities
     )
 
 
@@ -683,6 +685,96 @@ async def get_task(task_id: str):
         status=task_status['status'],
         result=task_status.get('result')
     )
+
+
+# Service Mesh V2 Endpoints - Production-Ready Distributed Coordination
+@app.post("/api/v1/mesh/v2/register")
+async def register_service(service_info: Dict[str, Any]):
+    """Register a service with the mesh"""
+    try:
+        result = await service_mesh.register_service_v2(
+            service_id=service_info["service_id"],
+            service_info=service_info
+        )
+        return {"status": "registered", "service": result}
+    except Exception as e:
+        logger.error(f"Service registration failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/mesh/v2/services")
+async def discover_services():
+    """Discover all registered services"""
+    try:
+        services = await service_mesh.discover_services()
+        return {"services": services, "count": len(services)}
+    except Exception as e:
+        logger.error(f"Service discovery failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/v1/mesh/v2/enqueue")
+async def enqueue_task_v2(task: TaskRequest):
+    """Enhanced task enqueueing with service mesh coordination"""
+    try:
+        task_id = await service_mesh.enqueue_task(
+            task_type=task.task_type,
+            payload=task.payload,
+            priority=task.priority
+        )
+        return TaskResponse(
+            task_id=task_id,
+            status="queued",
+            result={"message": f"Task {task_id} queued via service mesh"}
+        )
+    except Exception as e:
+        logger.error(f"Task enqueue failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/mesh/v2/task/{task_id}")
+async def get_task_status_v2(task_id: str):
+    """Get task status from service mesh"""
+    try:
+        # Validate task ID
+        from app.utils.validation import validate_task_id
+        validated_task_id = validate_task_id(task_id)
+        
+        status = await service_mesh.get_task_status(validated_task_id)
+        if not status:
+            raise HTTPException(status_code=404, detail=f"Task {validated_task_id} not found")
+        
+        return TaskResponse(
+            task_id=validated_task_id,
+            status=status.get("status", "unknown"),
+            result=status.get("result")
+        )
+    except ValueError as e:
+        logger.warning(f"Invalid task ID: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Failed to get task status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/mesh/v2/health")
+async def mesh_health():
+    """Get service mesh health status"""
+    try:
+        health = await service_mesh.health_check()
+        return {
+            "status": health.get("status", "unknown"),
+            "services": health.get("services", {}),
+            "queue_stats": health.get("queue_stats", {}),
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Mesh health check failed: {e}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }
 
 
 # Optimized chat endpoint with async Ollama

@@ -1,4 +1,20 @@
-FROM sutazai-python-agent-master:v1.0.0
+# FAISS Service - Rule 11 Compliant
+# Secure, non-root, pinned versions
+FROM python:3.11.9-slim-bookworm
+
+# Security: Create non-root user
+RUN groupadd -g 1000 appgroup && \
+    useradd -u 1000 -g appgroup -m -s /bin/bash appuser
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
 
 # Copy agent-specific requirements and install additional dependencies
 COPY requirements.txt /tmp/agent-requirements.txt

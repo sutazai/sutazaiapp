@@ -62,7 +62,7 @@ Any discrepancies must be reported immediately for reconciliation.
 
 ## System Architecture Overview
 
-SutazAI operates a **500-agent deployment architecture** with enterprise-grade AI automation capabilities, organized in three distinct tiers with specialized Claude sub-agents for maximum domain expertise and intelligent orchestration.
+SutazAI operates a **comprehensive multi-agent architecture** with enterprise-grade AI automation capabilities, featuring 50+ specialized agents organized in three distinct tiers with specialized Claude sub-agents for maximum domain expertise and intelligent orchestration.
 
 ### Agent Hierarchy
 
@@ -71,14 +71,14 @@ Tier 1: Ultra Lead Architects (2 agents)
 ├── ultra-system-architect (Port 11200)
 └── ultra-frontend-ui-architect (Port 11201)
 
-Tier 2: Domain Specialists (25+ agents)
+Tier 2: Domain Specialists (15+ agents)
 ├── Backend Architecture Specialists
 ├── Frontend Development Specialists  
 ├── Quality Assurance Specialists
 ├── DevOps & Infrastructure Specialists
 └── Security & Compliance Specialists
 
-Tier 3: Operational Agents (50+ agents)
+Tier 3: Operational Agents (35+ agents)
 ├── Specialized Task Executors
 ├── Monitoring & Alerting Agents
 ├── Automation & Workflow Agents
@@ -88,20 +88,22 @@ Tier 3: Operational Agents (50+ agents)
 ## Tier 1: Ultra Lead Architects
 
 ### Ultra System Architect (Port 11200)
-- **Role**: Supreme coordinator for 500-agent deployments
-- **Status**: Operational (v91.1)
+- **Role**: Supreme coordinator for multi-agent deployments
+- **Status**: Operational (v96)
 - **Real Implementation**: `/opt/sutazaiapp/agents/ultra-system-architect/`
+- **Registry Entry**: `/opt/sutazaiapp/agents/agent_registry.json`
 - **Capabilities**:
   - ULTRATHINK: Multi-dimensional analysis across 10 dimensions
   - ULTRADEEPCODEBASESEARCH: Quantum-depth pattern recognition
-  - Coordinates 5 specialized lead architects
+  - Coordinates specialized lead architects
   - Real-time impact analysis and architectural decision intelligence
   - Self-healing and auto-scaling architecture design
 
 ### Ultra Frontend UI Architect (Port 11201)
 - **Role**: Advanced frontend architecture specialist  
-- **Status**: Operational (v91.1)
+- **Status**: Operational (v96)
 - **Real Implementation**: `/opt/sutazaiapp/agents/ultra-frontend-ui-architect/`
+- **Registry Entry**: `/opt/sutazaiapp/agents/agent_registry.json`
 - **Capabilities**:
   - ULTRAORGANIZE: Complete UI/UX restructuring
   - ULTRAPROPERSTRUCTURE: Professional enterprise-grade frontend architecture

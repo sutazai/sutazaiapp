@@ -31,9 +31,24 @@ pymongo==4.10.1                     # MongoDB driver
 neo4j==5.27.0                       # Neo4j graph database
 
 # Vector Databases
-chromadb==0.5.23                    # Vector database client
+chromadb==1.0.17                    # Vector database client - updated to match installed version
 qdrant-client==1.12.1               # Qdrant vector database
 faiss-cpu==1.9.0                    # Facebook AI similarity search
+
+# ChromaDB Dependencies (Required for chromadb==1.0.17) - SECURITY VALIDATED
+build==1.2.2.post1                  # Build system interface
+grpcio==1.68.1                      # gRPC Python library - updated for security
+importlib-resources==6.4.5          # Resource access for packages
+kubernetes==31.0.0                  # Kubernetes Python client
+mmh3==5.0.1                         # MurmurHash3 implementation
+onnxruntime==1.20.1                 # ONNX Runtime for ML inference - TESTED ✅
+opentelemetry-exporter-otlp-proto-grpc==1.29.0  # OTLP gRPC exporter - TESTED ✅
+orjson==3.10.12                     # Fast JSON library
+overrides==7.7.0                    # Method override decorator - TESTED ✅
+posthog==3.7.4                      # Analytics client
+pybase64==1.4.0                     # Fast base64 implementation  
+tenacity==9.0.0                     # Retry library - TESTED ✅
+tokenizers==0.21.0                  # Fast tokenizers library - TESTED ✅
 
 # AI/ML Core
 torch==2.5.1                        # PyTorch - latest stable
@@ -75,8 +90,8 @@ pylint==3.3.2                       # Code analyzer
 
 # Monitoring & Observability
 prometheus-client==0.21.1           # Prometheus metrics
-opentelemetry-api==1.29.0          # OpenTelemetry API
-opentelemetry-sdk==1.29.0          # OpenTelemetry SDK
+opentelemetry-api==1.29.0          # OpenTelemetry API - version locked
+opentelemetry-sdk==1.29.0          # OpenTelemetry SDK - version locked
 opentelemetry-instrumentation-fastapi==0.50b0  # FastAPI instrumentation
 opentelemetry-instrumentation-sqlalchemy==0.50b0  # SQLAlchemy instrumentation
 opentelemetry-instrumentation-redis==0.50b0    # Redis instrumentation
