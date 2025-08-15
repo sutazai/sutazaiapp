@@ -1,28 +1,9 @@
-# Hardware Resource Optimizer -   Requirements
-# Optimized for container resource efficiency
+# Hardware Resource Optimizer - Production Requirements
+# Inherits from base requirements
 
-# Core Web Framework
-fastapi==0.115.6
-uvicorn[standard]==0.32.1
-pydantic==2.10.4
-requests==2.32.3
+# Include base requirements
+-r ../../requirements-base.txt
 
-# System Monitoring
-psutil==6.1.0
-docker==7.1.0
-
-# Database Drivers ( )
-sqlalchemy==2.0.36
-psycopg2-binary==2.9.10
-redis==5.2.1
-
-# Utilities
-python-dotenv==1.0.1
-structlog==24.4.0
-click==8.1.8
-
-# Security
-cryptography==43.0.1
-
-# Monitoring & Metrics
-prometheus-client==0.21.1
+# Hardware Resource Optimizer specific additions
+structlog==24.4.0                  # Structured logging for resource monitoring
+cryptography==43.0.1                # Cryptographic operations for secure resource access

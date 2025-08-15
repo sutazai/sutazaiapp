@@ -1,7 +1,0 @@
-{
-  "timestamp": "2025-08-10T17:00:00Z",
-  "updated_workflows": 3,
-  "total_workflows": 23,
-  "backup_files_created": true,
-  "compatibility_layer": "scripts/script-discovery-bootstrap.sh"
-}

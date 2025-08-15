@@ -2,27 +2,37 @@
 
 This directory contains the Docker configuration for the SutazAI automation system according to Docker Excellence standards.
 
-## Directory Structure
+## Consolidated Structure (Updated 2025-08-15)
 
-```
-/docker
-├── README.md                    # This file - Docker architecture overview
-├── base/                        # Base images for reuse
-│   ├── python-base.Dockerfile   # Common Python base with optimizations
-│   ├── agent-base.Dockerfile    # Base for all AI agents
-│   └── security-base.Dockerfile # Hardened base for security tools
-├── services/                    # Service-specific Dockerfiles
-│   ├── frontend/                # Frontend service Docker files
-│   ├── backend/                 # Backend service Docker files
-│   ├── agents/                  # Individual agent Dockerfiles
-│   ├── monitoring/              # Monitoring stack Dockerfiles
-│   └── infrastructure/          # Core infrastructure Dockerfiles
-└── compose/                     # Docker Compose configurations
-    ├── docker-compose.yml       # Production configuration
-    ├── docker-compose.dev.yml   # Development overrides
-    ├── docker-compose.test.yml  # Testing environment
-    └── docker-compose.agents.yml # Agent-specific services
-```
+Docker Compose files have been reorganized from 19 files into a logical hierarchy:
+
+### Core Files
+- `docker-compose.yml` - Main production configuration (36KB)
+- `docker-compose.base.yml` - Base service definitions (5.5KB)
+- `docker-compose.override.yml` - Local development overrides
+
+### Environment-Specific
+- `docker-compose.minimal.yml` - Minimal setup for testing
+- `docker-compose.standard.yml` - Standard deployment
+- `docker-compose.optimized.yml` - Optimized production deployment
+
+### Feature-Specific
+- `docker-compose.mcp.yml` - MCP server configuration
+- `docker-compose.mcp-monitoring.yml` - MCP monitoring stack
+- `docker-compose.security-monitoring.yml` - Security monitoring stack
+
+### Performance & Security
+- `docker-compose.performance.yml` - Performance optimizations
+- `docker-compose.ultra-performance.yml` - Maximum performance settings
+- `docker-compose.secure.yml` - Security-hardened configuration
+- `docker-compose.secure.hardware-optimizer.yml` - Secure hardware optimizer
+
+### Deployment Strategies
+- `docker-compose.blue-green.yml` - Blue-green deployment setup
+
+### External Integrations
+- `docker-compose.skyvern.yml` - Skyvern integration
+- `docker-compose.documind.override.yml` - Documind override
 
 ## Docker Excellence Standards
 

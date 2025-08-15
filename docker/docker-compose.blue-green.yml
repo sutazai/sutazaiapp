@@ -443,8 +443,8 @@ services:
   
   blue-backend:
     build:
-      context: ../../backend
-      dockerfile: Dockerfile
+      context: ../backend
+      dockerfile: ../docker/backend/Dockerfile
     container_name: sutazai-blue-backend
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     environment:
@@ -529,8 +529,8 @@ services:
 
   blue-frontend:
     build:
-      context: ../../frontend
-      dockerfile: Dockerfile
+      context: ../frontend
+      dockerfile: ../docker/frontend/Dockerfile
     container_name: sutazai-blue-frontend
     command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
     environment:
@@ -634,8 +634,8 @@ services:
   
   green-backend:
     build:
-      context: ../../backend
-      dockerfile: Dockerfile
+      context: ../backend
+      dockerfile: ../docker/backend/Dockerfile
     container_name: sutazai-green-backend
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     environment:
@@ -689,8 +689,8 @@ services:
 
   green-frontend:
     build:
-      context: ../../frontend
-      dockerfile: Dockerfile
+      context: ../frontend
+      dockerfile: ../docker/frontend/Dockerfile
     container_name: sutazai-green-frontend
     command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
     environment:

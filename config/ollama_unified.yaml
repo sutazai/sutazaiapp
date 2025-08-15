@@ -1,0 +1,34 @@
+# Unified Ollama Configuration
+# Consolidated from: ollama.yaml, ollama-optimized.yaml, ollama_models.yaml
+# Generated: 2025-08-15 UTC
+
+# Base Configuration
+host: ollama
+port: 11434
+base_url: http://ollama:11434
+
+# Models Configuration
+models:
+  default: tinyllama
+  available:
+    - tinyllama
+    - llama2
+    - codellama
+    
+# Performance Optimization
+performance:
+  max_concurrent: 5
+  timeout: 30
+  retry_attempts: 3
+  connection_pool_size: 10
+  
+# Resource Limits
+resources:
+  memory_limit: 4096
+  cpu_limit: 2.0
+  
+# Health Check
+health_check:
+  endpoint: /api/version
+  interval: 30
+  timeout: 5

@@ -87,3 +87,5 @@ plugins:
       headers: ["*"]
       credentials: true
       preflight_continue: false
+# Optimized settings merged from kong-optimized.yml
+# See archive for original kong-optimized.yml

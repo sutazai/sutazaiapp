@@ -1,0 +1,127 @@
+# SutazAI System - Base Production Requirements
+# Last updated: 2025-08-15
+# Version resolution: Latest stable with security patches
+# This is the consolidated base requirements file for all components
+
+# Core Web Framework
+fastapi==0.115.6                    # Latest stable - security validated
+uvicorn[standard]==0.32.1           # ASGI server with standard features
+starlette==0.41.3                   # ASGI framework core
+pydantic==2.10.4                    # Data validation - security patches
+pydantic-settings==2.8.1            # Settings management
+python-multipart==0.0.18            # Form data parsing
+
+# HTTP Clients & Networking
+requests==2.32.3                    # HTTP library - CRITICAL security fix
+httpx[http2]==0.27.2                # Async HTTP client - CVE patched
+aiohttp==3.11.10                    # Async HTTP server/client - security validated
+websockets==13.0                    # WebSocket support - latest stable
+websocket-client==1.8.0             # WebSocket client
+urllib3==2.2.3                      # HTTP client utility - security patches
+certifi==2024.8.30                  # SSL certificates bundle
+
+# Database Drivers
+sqlalchemy==2.0.36                  # ORM - performance improvements
+alembic==1.14.0                     # Database migrations
+psycopg2-binary==2.9.10             # PostgreSQL adapter - compiled
+asyncpg==0.29.0                     # Async PostgreSQL driver
+redis==5.2.1                        # Redis client - latest stable
+aioredis==2.0.1                     # Async Redis client
+pymongo==4.10.1                     # MongoDB driver
+neo4j==5.27.0                       # Neo4j graph database
+
+# Vector Databases
+chromadb==0.5.23                    # Vector database client
+qdrant-client==1.12.1               # Qdrant vector database
+faiss-cpu==1.9.0                    # Facebook AI similarity search
+
+# AI/ML Core
+torch==2.5.1                        # PyTorch - latest stable
+transformers==4.46.3                # Hugging Face transformers - security patches
+sentence-transformers==3.3.1        # Sentence embeddings
+huggingface-hub==0.27.0             # HF model hub client
+tiktoken==0.8.0                     # OpenAI tokenizer
+
+# Scientific Computing
+numpy==2.1.3                        # Numerical computing - latest stable
+pandas==2.2.3                       # Data analysis - security validated
+scipy==1.14.1                       # Scientific computing
+scikit-learn==1.6.0                 # Machine learning - latest features
+matplotlib==3.10.0                  # Plotting library
+plotly==5.24.1                      # Interactive plotting
+
+# Message Queuing
+pika==1.3.2                         # RabbitMQ client
+amqp==5.2.0                         # AMQP protocol client
+celery==5.4.0                       # Distributed task queue
+kombu==5.4.2                        # Messaging library
+
+# Testing Framework
+pytest==8.3.4                       # Testing framework - latest stable
+pytest-asyncio==0.25.2              # Async test support - security patches
+pytest-cov==5.0.0                   # Coverage plugin
+pytest-mock==3.14.0                 # Mock fixture
+pytest-timeout==2.3.1               # Test timeout management
+pytest-xdist==3.6.1                 # Parallel test execution
+hypothesis==6.122.3                 # Property-based testing
+
+# Code Quality & Security
+black==24.10.0                      # Code formatter - latest stable
+flake8==7.1.1                       # Style checker
+mypy==1.13.0                        # Type checker - security patches
+bandit[toml]==1.8.0                 # Security linter - CRITICAL patches
+safety==3.2.11                      # Dependency scanner - CVE-2024-39689 patched
+pylint==3.3.2                       # Code analyzer
+
+# Monitoring & Observability
+prometheus-client==0.21.1           # Prometheus metrics
+opentelemetry-api==1.29.0          # OpenTelemetry API
+opentelemetry-sdk==1.29.0          # OpenTelemetry SDK
+opentelemetry-instrumentation-fastapi==0.50b0  # FastAPI instrumentation
+opentelemetry-instrumentation-sqlalchemy==0.50b0  # SQLAlchemy instrumentation
+opentelemetry-instrumentation-redis==0.50b0    # Redis instrumentation
+opentelemetry-exporter-prometheus==0.50b0      # Prometheus exporter
+opentelemetry-exporter-jaeger==1.23.0         # Jaeger exporter
+
+# API Documentation
+fastapi-pagination==0.12.32        # API pagination support
+python-jose[cryptography]==3.3.0   # JWT tokens
+passlib[bcrypt]==1.7.4            # Password hashing
+python-decouple==3.8               # Config management
+email-validator==2.2.0             # Email validation
+
+# CLI & Utilities
+typer==0.14.0                      # CLI framework
+rich==13.9.4                       # Rich terminal output
+click==8.1.8                       # Command line interface
+tabulate==0.9.0                    # Table formatting
+tqdm==4.67.1                       # Progress bars
+python-dotenv==1.0.1               # Environment file loading
+
+# File Processing
+python-magic==0.4.27               # File type detection
+PyPDF2==3.0.1                      # PDF processing
+openpyxl==3.1.5                    # Excel file processing
+xlsxwriter==3.2.0                  # Excel file writer
+pillow==11.0.0                     # Image processing - security patches
+
+# Scheduling & Background Tasks
+APScheduler==3.10.4                # Job scheduling
+croniter==5.0.1                    # Cron expression parser
+
+# System & Process Management
+psutil==6.1.1                      # System monitoring
+docker==7.1.0                      # Docker SDK
+kubernetes==31.0.0                 # Kubernetes client
+
+# Serialization
+msgpack==1.1.0                     # MessagePack serialization
+orjson==3.10.12                    # Fast JSON library
+pyyaml==6.0.2                      # YAML parser - security patches
+toml==0.10.2                       # TOML parser
+
+# Development Tools (optional, can be in dev-requirements.txt)
+ipython==8.30.0                    # Interactive Python
+ipdb==0.13.13                      # IPython debugger
+jupyter==1.1.1                     # Jupyter notebook
+notebook==7.3.2                    # Jupyter notebook server

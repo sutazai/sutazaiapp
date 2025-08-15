@@ -1,0 +1,140 @@
+{
+  "timestamp": "2025-08-15T19:26:00.827973",
+  "rule_20_compliance": false,
+  "mcp_servers": {
+    "language-server": {
+      "status": "operational",
+      "wrapper": "language-server.sh"
+    },
+    "github": {
+      "status": "missing_wrapper"
+    },
+    "ultimatecoder": {
+      "status": "failed",
+      "wrapper": "ultimatecoder.sh"
+    },
+    "sequentialthinking": {
+      "status": "operational",
+      "wrapper": "sequentialthinking.sh"
+    },
+    "context7": {
+      "status": "operational",
+      "wrapper": "context7.sh"
+    },
+    "files": {
+      "status": "operational",
+      "wrapper": "files.sh"
+    },
+    "http": {
+      "status": "missing_wrapper"
+    },
+    "ddg": {
+      "status": "operational",
+      "wrapper": "ddg.sh"
+    },
+    "postgres": {
+      "status": "operational",
+      "wrapper": "postgres.sh"
+    },
+    "extended-memory": {
+      "status": "operational",
+      "wrapper": "extended-memory.sh"
+    },
+    "mcp_ssh": {
+      "status": "operational",
+      "wrapper": "mcp_ssh.sh"
+    },
+    "nx-mcp": {
+      "status": "operational",
+      "wrapper": "nx-mcp.sh"
+    },
+    "puppeteer-mcp": {
+      "status": "operational",
+      "wrapper": "puppeteer-mcp.sh"
+    },
+    "memory-bank-mcp": {
+      "status": "operational",
+      "wrapper": "memory-bank-mcp.sh"
+    },
+    "playwright-mcp": {
+      "status": "operational",
+      "wrapper": "playwright-mcp.sh"
+    },
+    "knowledge-graph-mcp": {
+      "status": "operational",
+      "wrapper": "knowledge-graph-mcp.sh"
+    },
+    "compass-mcp": {
+      "status": "operational",
+      "wrapper": "compass-mcp.sh"
+    }
+  },
+  "infrastructure": {
+    "config_servers_count": 17,
+    "config_servers": [
+      "language-server",
+      "github",
+      "ultimatecoder",
+      "sequentialthinking",
+      "context7",
+      "files",
+      "http",
+      "ddg",
+      "postgres",
+      "extended-memory",
+      "mcp_ssh",
+      "nx-mcp",
+      "puppeteer-mcp",
+      "memory-bank-mcp",
+      "playwright-mcp",
+      "knowledge-graph-mcp",
+      "compass-mcp"
+    ],
+    "wrapper_count": 16,
+    "wrappers": [
+      "context7.sh",
+      "playwright-mcp.sh",
+      "language-server.sh",
+      "compass-mcp.sh",
+      "memory-bank-mcp.sh",
+      "ddg.sh",
+      "files.sh",
+      "ultimatecoder.sh",
+      "puppeteer-mcp.sh",
+      "mcp_ssh.sh",
+      "http_fetch.sh",
+      "nx-mcp.sh",
+      "sequentialthinking.sh",
+      "postgres.sh",
+      "knowledge-graph-mcp.sh",
+      "extended-memory.sh"
+    ],
+    "containers": {
+      "sutazai-postgres": "running",
+      "sutazai-redis": "running",
+      "sutazai-backend": "running",
+      "sutazai-frontend": "running",
+      "sutazai-ollama": "running"
+    },
+    "network": "present",
+    "cleanup_service": "active"
+  },
+  "security": {
+    "config_permissions": true,
+    "wrapper_permissions": true,
+    "no_hardcoded_secrets": true,
+    "postgres_auth": true
+  },
+  "issues": [],
+  "recommendations": [
+    "Fix ultimatecoder MCP: Install fastmcp in venv",
+    "Some MCP servers may be missing wrapper scripts"
+  ],
+  "summary": {
+    "total_servers": 17,
+    "operational_servers": 14,
+    "compliance_percentage": 82.35294117647058,
+    "critical_issues": 0,
+    "total_issues": 0
+  }
+}

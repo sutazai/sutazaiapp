@@ -1,0 +1,193 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-08-15 UTC",
+  "description": "Unified agent configuration registry - consolidates 140+ individual config files",
+  
+  "agents": {
+    "ai-agent-orchestrator": {
+      "base_config": {
+        "name": "AI Agent Orchestrator",
+        "description": "Orchestrates multiple AI agents",
+        "port": 11000,
+        "enabled": true,
+        "container_name": "ai-agent-orchestrator",
+        "health_check_endpoint": "/health",
+        "timeout": 30
+      },
+      "model_configs": {
+        "ollama": {
+          "model": "tinyllama",
+          "temperature": 0.7,
+          "max_tokens": 2048
+        },
+        "universal": {
+          "supports": ["ollama", "openai", "anthropic"],
+          "fallback_model": "tinyllama"
+        }
+      }
+    },
+    
+    "hardware-resource-optimizer": {
+      "base_config": {
+        "name": "Hardware Resource Optimizer",
+        "description": "Optimizes hardware resource allocation",
+        "port": 11001,
+        "enabled": true,
+        "container_name": "hardware-resource-optimizer",
+        "health_check_endpoint": "/health",
+        "timeout": 30
+      },
+      "model_configs": {
+        "ollama": {
+          "model": "tinyllama",
+          "temperature": 0.5,
+          "max_tokens": 1024
+        },
+        "universal": {
+          "supports": ["ollama"],
+          "fallback_model": "tinyllama"
+        }
+      }
+    },
+    
+    "task-assignment-coordinator": {
+      "base_config": {
+        "name": "Task Assignment Coordinator",
+        "description": "Coordinates task assignments across agents",
+        "port": 11002,
+        "enabled": true,
+        "container_name": "task-assignment-coordinator",
+        "health_check_endpoint": "/health",
+        "timeout": 30
+      },
+      "model_configs": {
+        "ollama": {
+          "model": "tinyllama",
+          "temperature": 0.6,
+          "max_tokens": 1024
+        },
+        "universal": {
+          "supports": ["ollama"],
+          "fallback_model": "tinyllama"
+        }
+      }
+    },
+    
+    "resource-arbitration-agent": {
+      "base_config": {
+        "name": "Resource Arbitration Agent",
+        "description": "Arbitrates resource conflicts",
+        "port": 11003,
+        "enabled": true,
+        "container_name": "resource-arbitration-agent",
+        "health_check_endpoint": "/health",
+        "timeout": 30
+      },
+      "model_configs": {
+        "ollama": {
+          "model": "tinyllama",
+          "temperature": 0.5,
+          "max_tokens": 1024
+        },
+        "universal": {
+          "supports": ["ollama"],
+          "fallback_model": "tinyllama"
+        }
+      }
+    },
+    
+    "ollama-integration-specialist": {
+      "base_config": {
+        "name": "Ollama Integration Specialist",
+        "description": "Manages Ollama model integration",
+        "port": 11004,
+        "enabled": true,
+        "container_name": "ollama-integration-agent",
+        "health_check_endpoint": "/health",
+        "timeout": 30
+      },
+      "model_configs": {
+        "ollama": {
+          "model": "tinyllama",
+          "temperature": 0.7,
+          "max_tokens": 2048
+        },
+        "universal": {
+          "supports": ["ollama"],
+          "fallback_model": "tinyllama"
+        }
+      }
+    },
+    
+    "jarvis-automation-agent": {
+      "base_config": {
+        "name": "Jarvis Automation Agent",
+        "description": "Main automation agent",
+        "port": 11005,
+        "enabled": true,
+        "container_name": "jarvis-automation-agent",
+        "health_check_endpoint": "/health",
+        "timeout": 30
+      },
+      "model_configs": {
+        "ollama": {
+          "model": "tinyllama",
+          "temperature": 0.7,
+          "max_tokens": 2048
+        },
+        "universal": {
+          "supports": ["ollama"],
+          "fallback_model": "tinyllama"
+        }
+      }
+    },
+    
+    "jarvis-hardware-optimizer": {
+      "base_config": {
+        "name": "Jarvis Hardware Optimizer",
+        "description": "Hardware optimization for Jarvis",
+        "port": 11006,
+        "enabled": true,
+        "container_name": "jarvis-hardware-optimizer",
+        "health_check_endpoint": "/health",
+        "timeout": 30
+      },
+      "model_configs": {
+        "ollama": {
+          "model": "tinyllama",
+          "temperature": 0.5,
+          "max_tokens": 1024
+        },
+        "universal": {
+          "supports": ["ollama"],
+          "fallback_model": "tinyllama"
+        }
+      }
+    }
+  },
+  
+  "global_defaults": {
+    "model": "tinyllama",
+    "temperature": 0.7,
+    "max_tokens": 2048,
+    "timeout": 30,
+    "retry_attempts": 3,
+    "health_check_interval": 30,
+    "log_level": "INFO"
+  },
+  
+  "model_profiles": {
+    "conservative": {
+      "temperature": 0.3,
+      "top_p": 0.9
+    },
+    "balanced": {
+      "temperature": 0.7,
+      "top_p": 0.95
+    },
+    "creative": {
+      "temperature": 0.9,
+      "top_p": 0.98
+    }
+  }
+}

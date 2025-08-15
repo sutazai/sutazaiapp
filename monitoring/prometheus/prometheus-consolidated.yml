@@ -1,0 +1,286 @@
+# ============================================================================
+# SutazAI Prometheus Configuration - Consolidated
+# Generated: 2025-08-15
+# ============================================================================
+# This is the consolidated Prometheus configuration combining all variants
+# Use environment variables to control which features are enabled
+# ============================================================================
+
+global:
+  scrape_interval: ${PROMETHEUS_SCRAPE_INTERVAL:-15s}
+  evaluation_interval: ${PROMETHEUS_EVAL_INTERVAL:-15s}
+  scrape_timeout: ${PROMETHEUS_SCRAPE_TIMEOUT:-10s}
+  
+  external_labels:
+    environment: ${SUTAZAI_ENV:-production}
+    cluster: 'sutazai-cluster'
+    region: ${REGION:-us-east-1}
+
+# ============================================================================
+# Alerting Configuration
+# ============================================================================
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:10203
+      path_prefix: /
+      timeout: 10s
+      api_version: v2
+
+# ============================================================================
+# Rule Files
+# ============================================================================
+rule_files:
+  - '/etc/prometheus/rules/*.yml'
+  - '/etc/prometheus/alerts/*.yml'
+
+# ============================================================================
+# Scrape Configurations
+# ============================================================================
+scrape_configs:
+  # ========================================
+  # Core Infrastructure
+  # ========================================
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+          tier: 'monitoring'
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'node-exporter'
+          tier: 'infrastructure'
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          service: 'cadvisor'
+          tier: 'infrastructure'
+
+  # ========================================
+  # Databases
+  # ========================================
+  - job_name: 'postgresql'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          service: 'postgresql'
+          tier: 'database'
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        labels:
+          service: 'redis'
+          tier: 'cache'
+
+  - job_name: 'neo4j'
+    static_configs:
+      - targets: ['neo4j:2004']
+        labels:
+          service: 'neo4j'
+          tier: 'database'
+    metrics_path: '/metrics'
+
+  # ========================================
+  # Vector Databases
+  # ========================================
+  - job_name: 'chromadb'
+    static_configs:
+      - targets: ['chromadb:10100']
+        labels:
+          service: 'chromadb'
+          tier: 'vector-db'
+    metrics_path: '/metrics'
+
+  - job_name: 'qdrant'
+    static_configs:
+      - targets: ['qdrant:10101']
+        labels:
+          service: 'qdrant'
+          tier: 'vector-db'
+    metrics_path: '/metrics'
+
+  - job_name: 'faiss'
+    static_configs:
+      - targets: ['faiss:10103']
+        labels:
+          service: 'faiss'
+          tier: 'vector-db'
+    metrics_path: '/metrics'
+
+  # ========================================
+  # Application Services
+  # ========================================
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['backend:10010']
+        labels:
+          service: 'backend-api'
+          tier: 'application'
+    metrics_path: '/metrics'
+
+  - job_name: 'frontend'
+    static_configs:
+      - targets: ['frontend:10011']
+        labels:
+          service: 'frontend'
+          tier: 'application'
+    metrics_path: '/metrics'
+
+  # ========================================
+  # AI/ML Services
+  # ========================================
+  - job_name: 'ollama'
+    static_configs:
+      - targets: ['ollama:10104']
+        labels:
+          service: 'ollama'
+          tier: 'ai-ml'
+    metrics_path: '/api/metrics'
+    scrape_interval: 30s
+
+  # ========================================
+  # Agent Services
+  # ========================================
+  - job_name: 'ai-agent-orchestrator'
+    static_configs:
+      - targets: ['ai-agent-orchestrator:11000']
+        labels:
+          service: 'ai-agent-orchestrator'
+          tier: 'agents'
+    metrics_path: '/metrics'
+
+  - job_name: 'hardware-resource-optimizer'
+    static_configs:
+      - targets: ['hardware-resource-optimizer:11001']
+        labels:
+          service: 'hardware-resource-optimizer'
+          tier: 'agents'
+    metrics_path: '/metrics'
+
+  - job_name: 'task-assignment-coordinator'
+    static_configs:
+      - targets: ['task-assignment-coordinator:11002']
+        labels:
+          service: 'task-assignment-coordinator'
+          tier: 'agents'
+    metrics_path: '/metrics'
+
+  - job_name: 'resource-arbitration-agent'
+    static_configs:
+      - targets: ['resource-arbitration-agent:11003']
+        labels:
+          service: 'resource-arbitration-agent'
+          tier: 'agents'
+    metrics_path: '/metrics'
+
+  # ========================================
+  # Message Queue
+  # ========================================
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['rabbitmq:15692']
+        labels:
+          service: 'rabbitmq'
+          tier: 'messaging'
+    metrics_path: '/metrics'
+
+  # ========================================
+  # Monitoring Stack
+  # ========================================
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:10201']
+        labels:
+          service: 'grafana'
+          tier: 'monitoring'
+    metrics_path: '/metrics'
+
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['loki:10202']
+        labels:
+          service: 'loki'
+          tier: 'monitoring'
+    metrics_path: '/metrics'
+
+  - job_name: 'alertmanager'
+    static_configs:
+      - targets: ['alertmanager:10203']
+        labels:
+          service: 'alertmanager'
+          tier: 'monitoring'
+    metrics_path: '/metrics'
+
+  # ========================================
+  # Blackbox Monitoring (HTTP endpoints)
+  # ========================================
+  - job_name: 'blackbox-http'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://backend:10010/health
+          - http://frontend:10011/
+          - http://ollama:10104/api/version
+          - http://grafana:10201/api/health
+        labels:
+          probe_type: 'http'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # ========================================
+  # Service Discovery (File-based)
+  # ========================================
+  - job_name: 'file-sd'
+    file_sd_configs:
+      - files:
+          - '/etc/prometheus/file_sd/*.yml'
+        refresh_interval: 30s
+
+# ============================================================================
+# Storage Configuration
+# ============================================================================
+storage:
+  tsdb:
+    path: /prometheus
+    retention:
+      time: ${PROMETHEUS_RETENTION:-30d}
+      size: ${PROMETHEUS_RETENTION_SIZE:-10GB}
+    wal_compression: true
+
+# ============================================================================
+# Remote Write (Optional)
+# ============================================================================
+# Uncomment to enable remote write to external storage
+# remote_write:
+#   - url: "${REMOTE_WRITE_URL}"
+#     queue_config:
+#       capacity: 10000
+#       max_shards: 5
+#       min_shards: 1
+#       max_samples_per_send: 5000
+#       batch_send_deadline: 5s
+#       min_backoff: 30ms
+#       max_backoff: 100ms
+
+# ============================================================================
+# Remote Read (Optional)
+# ============================================================================
+# Uncomment to enable remote read from external storage
+# remote_read:
+#   - url: "${REMOTE_READ_URL}"
+#     read_recent: true

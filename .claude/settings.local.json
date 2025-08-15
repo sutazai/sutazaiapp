@@ -294,7 +294,9 @@
       "Bash(else echo \"✗ $dir/CHANGELOG.md missing\")",
       "Bash(if [ -d \"$dir\" ])",
       "Bash([ ! -f \"$dir/CHANGELOG.md\" ])",
-      "Bash(then)"
+      "Bash(then)",
+      "Bash(do [ -f \"$file\" ])",
+      "Bash(then echo \"=== $file ===\")"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

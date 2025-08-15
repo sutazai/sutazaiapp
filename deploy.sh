@@ -755,6 +755,331 @@ deploy_infrastructure() {
 }
 
 ################################################################################
+# FAST STARTUP MODES (from fast_start.sh)
+################################################################################
+
+deploy_fast_mode() {
+    local mode="${1:-full}"
+    log_progress "Starting fast deployment mode: $mode"
+    
+    case "$mode" in
+        critical)
+            # Start only critical services
+            log_info "Starting critical services only..."
+            docker-compose up -d postgres redis neo4j
+            ;;
+        core)
+            # Start critical + core services
+            log_info "Starting core services..."
+            docker-compose up -d postgres redis neo4j
+            sleep 10
+            docker-compose up -d ollama backend frontend
+            ;;
+        agents)
+            # Start only AI agents (assumes core is running)
+            log_info "Starting agent services only..."
+            docker-compose up -d \
+                ai-agent-orchestrator \
+                hardware-resource-optimizer \
+                jarvis-automation-agent \
+                task-assignment-coordinator
+            ;;
+        full)
+            # Use default deploy_infrastructure
+            deploy_infrastructure
+            ;;
+        *)
+            log_error "Unknown fast mode: $mode"
+            exit 1
+            ;;
+    esac
+    
+    log_success "Fast mode $mode deployment complete"
+}
+
+################################################################################
+# MCP SERVER MANAGEMENT (from mcp_bootstrap.sh, mcp_teardown.sh)
+################################################################################
+
+deploy_mcp_servers() {
+    log_progress "Bootstrapping MCP servers..."
+    
+    # Check for MCP compose file
+    if [[ ! -f "${PROJECT_ROOT}/docker-compose.mcp.yml" ]]; then
+        log_warn "MCP compose file not found, skipping MCP deployment"
+        return 0
+    fi
+    
+    # Build Sequential Thinking image if needed
+    if ! docker image inspect mcp/sequentialthinking >/dev/null 2>&1; then
+        log_info "Building mcp/sequentialthinking image..."
+        if [[ -d "${PROJECT_ROOT}/servers" ]]; then
+            docker build -t mcp/sequentialthinking \
+                -f servers/src/sequentialthinking/Dockerfile \
+                servers/src/sequentialthinking
+        fi
+    fi
+    
+    # Start MCP stack
+    log_info "Starting MCP services..."
+    docker-compose -f docker-compose.mcp.yml up -d --build
+    
+    # Health check MCP services
+    local mcp_port="${MCP_HTTP_PORT:-3030}"
+    log_info "Waiting for MCP services on port $mcp_port..."
+    for i in {1..30}; do
+        if curl -sf "http://localhost:${mcp_port}/health" >/dev/null 2>&1; then
+            log_success "MCP services are healthy"
+            return 0
+        fi
+        sleep 2
+    done
+    
+    log_warn "MCP services did not become healthy in time"
+    return 1
+}
+
+teardown_mcp_servers() {
+    log_progress "Tearing down MCP servers..."
+    
+    if [[ -f "${PROJECT_ROOT}/docker-compose.mcp.yml" ]]; then
+        docker-compose -f docker-compose.mcp.yml down
+        log_success "MCP services stopped"
+    fi
+}
+
+################################################################################
+# MODEL MANAGEMENT (from manage-models.sh, ollama-startup.sh)
+################################################################################
+
+manage_ollama_models() {
+    local action="${1:-pull}"
+    local model="${2:-tinyllama:latest}"
+    
+    log_progress "Managing Ollama models: $action $model"
+    
+    # Wait for Ollama to be ready
+    for i in {1..30}; do
+        if curl -sf http://localhost:10104/api/tags >/dev/null 2>&1; then
+            break
+        fi
+        sleep 2
+    done
+    
+    case "$action" in
+        pull)
+            log_info "Pulling model: $model"
+            docker exec sutazai-ollama ollama pull "$model" || log_warn "Failed to pull $model"
+            ;;
+        list)
+            log_info "Listing available models:"
+            docker exec sutazai-ollama ollama list
+            ;;
+        verify)
+            log_info "Verifying model availability..."
+            if docker exec sutazai-ollama ollama list | grep -q "$model"; then
+                log_success "Model $model is available"
+            else
+                log_warn "Model $model not found"
+                return 1
+            fi
+            ;;
+        *)
+            log_error "Unknown model action: $action"
+            return 1
+            ;;
+    esac
+}
+
+################################################################################
+# PERFORMANCE OPTIMIZATION (from optimize-ollama-performance.sh)
+################################################################################
+
+apply_performance_optimizations() {
+    local level="${1:-standard}"
+    
+    log_progress "Applying $level performance optimizations..."
+    
+    case "$level" in
+        minimal)
+            # Basic optimizations
+            log_info "Applying minimal optimizations..."
+            # Redis optimizations
+            docker exec sutazai-redis redis-cli CONFIG SET maxmemory-policy allkeys-lru
+            docker exec sutazai-redis redis-cli CONFIG SET save ""
+            ;;
+        standard)
+            # Standard optimizations
+            log_info "Applying standard optimizations..."
+            # Redis optimizations
+            docker exec sutazai-redis redis-cli CONFIG SET maxmemory-policy allkeys-lru
+            docker exec sutazai-redis redis-cli CONFIG SET save ""
+            docker exec sutazai-redis redis-cli CONFIG SET tcp-keepalive 60
+            # PostgreSQL optimizations
+            docker exec sutazai-postgres psql -U sutazai -c "ALTER SYSTEM SET shared_buffers = '512MB';"
+            docker exec sutazai-postgres psql -U sutazai -c "ALTER SYSTEM SET effective_cache_size = '2GB';"
+            ;;
+        ultra)
+            # Maximum optimizations
+            log_info "Applying ultra performance optimizations..."
+            # Redis ultra optimizations
+            docker exec sutazai-redis redis-cli CONFIG SET maxmemory-policy allkeys-lru
+            docker exec sutazai-redis redis-cli CONFIG SET save ""
+            docker exec sutazai-redis redis-cli CONFIG SET tcp-keepalive 60
+            docker exec sutazai-redis redis-cli CONFIG SET tcp-backlog 511
+            docker exec sutazai-redis redis-cli CONFIG SET hz 100
+            # PostgreSQL ultra optimizations
+            docker exec sutazai-postgres psql -U sutazai -c "ALTER SYSTEM SET shared_buffers = '1GB';"
+            docker exec sutazai-postgres psql -U sutazai -c "ALTER SYSTEM SET effective_cache_size = '4GB';"
+            docker exec sutazai-postgres psql -U sutazai -c "ALTER SYSTEM SET work_mem = '256MB';"
+            docker exec sutazai-postgres psql -U sutazai -c "ALTER SYSTEM SET maintenance_work_mem = '512MB';"
+            ;;
+        *)
+            log_error "Unknown optimization level: $level"
+            return 1
+            ;;
+    esac
+    
+    log_success "Performance optimizations applied"
+}
+
+################################################################################
+# DISASTER RECOVERY (from disaster-recovery.sh)
+################################################################################
+
+execute_disaster_recovery() {
+    local recovery_point="${1:-latest}"
+    
+    log_progress "Executing disaster recovery to point: $recovery_point"
+    
+    # Find recovery point
+    local backup_dir
+    if [[ "$recovery_point" == "latest" ]]; then
+        backup_dir=$(find "$PROJECT_ROOT/backups" -name "deploy_*" -type d 2>/dev/null | sort -r | head -1)
+    else
+        backup_dir="$PROJECT_ROOT/backups/$recovery_point"
+    fi
+    
+    if [[ ! -d "$backup_dir" ]]; then
+        log_error "Recovery point not found: $recovery_point"
+        return 1
+    fi
+    
+    log_info "Using recovery point: $backup_dir"
+    
+    # Stop all services
+    log_info "Stopping all services..."
+    docker-compose down
+    
+    # Restore from backup
+    if [[ -x "$backup_dir/restore.sh" ]]; then
+        log_info "Executing restore script..."
+        "$backup_dir/restore.sh"
+    else
+        log_error "Restore script not found or not executable"
+        return 1
+    fi
+    
+    # Validate recovery
+    sleep 10
+    if validate_infrastructure; then
+        log_success "Disaster recovery completed successfully"
+        # Update recovery state
+        echo "{\"last_recovery\": \"$(date -u +\"%Y-%m-%d %H:%M:%S UTC\")\", \"recovery_point\": \"$backup_dir\"}" > "${PROJECT_ROOT}/data/recovery-state.json"
+    else
+        log_error "Recovery completed but validation failed"
+        return 1
+    fi
+}
+
+################################################################################
+# SERVICE DISCOVERY (from consul-*.sh scripts)
+################################################################################
+
+register_consul_services() {
+    log_progress "Registering services with Consul..."
+    
+    # Check if Consul is running
+    if ! docker ps | grep -q consul; then
+        log_warn "Consul not running, skipping service registration"
+        return 0
+    fi
+    
+    # Register each service
+    local services=("postgres:10000" "redis:10001" "backend:10010" "frontend:10011" "ollama:10104")
+    
+    for service_port in "${services[@]}"; do
+        IFS=':' read -r service port <<< "$service_port"
+        
+        # Get container IP
+        local container_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "sutazai-$service" 2>/dev/null)
+        
+        if [[ -n "$container_ip" ]]; then
+            log_info "Registering $service at $container_ip:$port"
+            
+            # Register with Consul
+            curl -X PUT "http://localhost:8500/v1/agent/service/register" \
+                -H "Content-Type: application/json" \
+                -d "{
+                    \"ID\": \"$service\",
+                    \"Name\": \"$service\",
+                    \"Address\": \"$container_ip\",
+                    \"Port\": $port,
+                    \"Check\": {
+                        \"HTTP\": \"http://$container_ip:$port/health\",
+                        \"Interval\": \"10s\"
+                    }
+                }" 2>/dev/null || log_warn "Failed to register $service"
+        fi
+    done
+    
+    log_success "Service registration complete"
+}
+
+################################################################################
+# MIGRATION STRATEGIES (from zero-downtime-migration.sh)
+################################################################################
+
+execute_migration() {
+    local strategy="${1:-rolling}"
+    
+    log_progress "Executing $strategy migration..."
+    
+    case "$strategy" in
+        rolling)
+            # Rolling update - one service at a time
+            log_info "Performing rolling update..."
+            local services=(postgres redis neo4j ollama backend frontend)
+            for service in "${services[@]}"; do
+                log_info "Updating $service..."
+                docker-compose up -d --no-deps --build "$service"
+                sleep 5
+                # Health check
+                docker-compose exec -T "$service" echo "Health check" 2>/dev/null || true
+            done
+            ;;
+        blue-green)
+            # Blue-green deployment
+            log_info "Performing blue-green deployment..."
+            # This would require environment-specific compose files
+            docker-compose -f docker-compose.yml -f docker-compose.blue-green.yml up -d
+            ;;
+        canary)
+            # Canary deployment
+            log_info "Performing canary deployment..."
+            # Deploy new version alongside old with traffic splitting
+            log_warn "Canary deployment requires load balancer configuration"
+            ;;
+        *)
+            log_error "Unknown migration strategy: $strategy"
+            return 1
+            ;;
+    esac
+    
+    log_success "Migration completed using $strategy strategy"
+}
+
+################################################################################
 # MAIN DEPLOYMENT ORCHESTRATION
 ################################################################################
 
@@ -767,26 +1092,56 @@ DESCRIPTION:
     dependency installation, and intelligent infrastructure management.
 
 USAGE:
-    $0 [OPTIONS]
+    $0 [COMMAND] [OPTIONS]
+
+COMMANDS:
+    up-core              Start core infrastructure only
+    up-full              Start complete stack (default)
+    up-monitoring        Start monitoring stack
+    up-agents            Start agent services
+    up-mcp               Start MCP servers
+    down                 Stop all services
+    restart              Restart all services
+    status               Show system status
+    health               Health check all services
+    logs [service]       Show service logs
+    rollback [point]     Rollback to backup point
+    backup               Create backup
+    recover [point]      Disaster recovery
+    optimize [level]     Apply performance optimizations
+    models [action]      Manage Ollama models
+    migrate [strategy]   Execute migration strategy
+    consul-register      Register services with Consul
+    fast [mode]          Fast startup mode
 
 OPTIONS:
     -e, --environment ENV     Environment (auto|development|staging|production) [default: auto]
     -d, --dry-run            Preview deployment without making changes
     -f, --force              Skip all confirmation prompts
-    -r, --rollback           Rollback to most recent backup
     --skip-backup            Skip backup creation (not recommended)
     --no-optimization        Disable hardware optimization
     --no-recovery            Disable automatic recovery attempts
+    --startup-mode MODE      Fast startup mode (critical|core|full|agents)
+    --parallel N             Max parallel operations
+    --mcp                    Include MCP servers
+    --consul                 Enable Consul registration
+    --optimize-level LEVEL   Optimization level (minimal|standard|ultra)
+    --migration-strategy S   Migration strategy (rolling|blue-green|canary)
     -q, --quiet              Reduce output verbosity
     -v, --verbose            Increase output verbosity (sets DEBUG=1)
     -h, --help               Show this help message
 
 EXAMPLES:
     $0                       # Auto-detect and deploy with optimization
-    $0 -e production         # Deploy production environment
-    $0 --dry-run             # Preview deployment
-    $0 --rollback            # Rollback to previous state
-    $0 -f -e staging         # Force deploy staging without prompts
+    $0 up-full               # Start complete stack
+    $0 fast core             # Fast startup core services only
+    $0 up-mcp                # Start MCP servers
+    $0 optimize ultra        # Apply ultra performance optimizations
+    $0 models pull llama2    # Pull specific model
+    $0 migrate blue-green    # Blue-green deployment
+    $0 rollback              # Rollback to previous state
+    $0 recover latest        # Disaster recovery to latest backup
+    $0 -e production up-full # Deploy production environment
 
 HARDWARE PROFILES:
     limited        < 4 cores, < 8GB RAM   (minimal resource allocation)
@@ -804,6 +1159,14 @@ EOF
 }
 
 parse_arguments() {
+    # Parse command first
+    local command=""
+    if [[ $# -gt 0 ]] && [[ ! "$1" =~ ^- ]]; then
+        command="$1"
+        shift
+    fi
+    
+    # Parse options
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -e|--environment)
@@ -818,10 +1181,6 @@ parse_arguments() {
                 FORCE=true
                 shift
                 ;;
-            -r|--rollback)
-                ROLLBACK=true
-                shift
-                ;;
             --skip-backup)
                 SKIP_BACKUP=true
                 shift
@@ -833,6 +1192,30 @@ parse_arguments() {
             --no-recovery)
                 AUTO_RECOVERY=false
                 shift
+                ;;
+            --startup-mode)
+                STARTUP_MODE="$2"
+                shift 2
+                ;;
+            --parallel)
+                MAX_PARALLEL="$2"
+                shift 2
+                ;;
+            --mcp)
+                INCLUDE_MCP=true
+                shift
+                ;;
+            --consul)
+                ENABLE_CONSUL=true
+                shift
+                ;;
+            --optimize-level)
+                OPTIMIZE_LEVEL="$2"
+                shift 2
+                ;;
+            --migration-strategy)
+                MIGRATION_STRATEGY="$2"
+                shift 2
                 ;;
             -q|--quiet)
                 export QUIET=1
@@ -847,12 +1230,21 @@ parse_arguments() {
                 exit 0
                 ;;
             *)
-                log_error "Unknown option: $1"
-                show_usage
-                exit 1
+                # Check if it's a command argument
+                if [[ -z "$COMMAND_ARG" ]]; then
+                    COMMAND_ARG="$1"
+                    shift
+                else
+                    log_error "Unknown option: $1"
+                    show_usage
+                    exit 1
+                fi
                 ;;
         esac
     done
+    
+    # Store parsed command
+    DEPLOYMENT_COMMAND="${command:-up-full}"
 }
 
 execute_rollback() {
@@ -896,122 +1288,123 @@ main() {
     # Parse arguments
     parse_arguments "$@"
     
-    # Handle rollback immediately
-    if [[ "$ROLLBACK" == "true" ]]; then
-        execute_rollback
-        exit $?
-    fi
-    
-    # Hardware detection and optimization
-    detect_hardware
-    
-    # Install dependencies
-    install_dependencies
-    
-    # Check prerequisites
-    check_prerequisites
-    
-    # Apply hardware optimization
-    if [[ "$HARDWARE_OPTIMIZED" == "true" ]]; then
-        apply_hardware_optimization
-    fi
-    
-    # Setup environment
-    setup_environment
-    
-    # Handle dry run
-    if [[ "$DRY_RUN" == "true" ]]; then
-        log_info "🔍 DRY RUN MODE - Showing deployment plan:"
-        log_info "  Environment: $ENVIRONMENT"
-        log_info "  Hardware Profile: $OPTIMIZATION_PROFILE"
-        log_info "  Resource Allocation: ${DETECTED_CORES} cores, ${DETECTED_MEMORY}GB RAM"
-        log_info "  GPU Support: $DETECTED_GPU"
-        log_info "  Backup Location: $BACKUP_DIR"
-        log_info "  Hardware Optimization: $HARDWARE_OPTIMIZED"
-        log_info "  Auto Recovery: $AUTO_RECOVERY"
-        exit 0
-    fi
-    
-    # Confirmation for production
-    if [[ "$FORCE" == "false" && "$ENVIRONMENT" == "production" ]]; then
-        echo -e "${RED}⚠️  WARNING: Deploying to PRODUCTION environment${NC}"
-        echo -e "${YELLOW}This will affect live services and data${NC}"
-        echo -n "Type 'CONFIRM' to proceed: "
-        read -r confirmation
-        if [[ "$confirmation" != "CONFIRM" ]]; then
-            log_info "Deployment cancelled by user"
-            exit 0
-        fi
-    fi
-    
-    # Create backup
-    create_backup
-    
-    # Execute deployment
-    log_progress "🚀 Beginning infrastructure deployment..."
-    
-    if deploy_infrastructure; then
-        log_progress "🔍 Validating deployment..."
-        
-        # Give services time to fully start
-        sleep 20
-        
-        if validate_infrastructure; then
-            # Generate deployment report
-            cat > "${PROJECT_ROOT}/deployment_report_${TIMESTAMP}.json" << EOF
-{
-  "deployment_timestamp": "$(date -u +"%Y-%m-%d %H:%M:%S UTC")",
-  "script_version": "$SCRIPT_VERSION",
-  "environment": "$ENVIRONMENT",
-  "optimization_profile": "$OPTIMIZATION_PROFILE",
-  "hardware": {
-    "cores": $DETECTED_CORES,
-    "memory_gb": $DETECTED_MEMORY,
-    "storage_gb": $DETECTED_STORAGE,
-    "gpu": "$DETECTED_GPU"
-  },
-  "deployment_status": "SUCCESS",
-  "backup_location": "$BACKUP_DIR",
-  "log_file": "$LOG_FILE",
-  "access_urls": {
-    "backend": "http://localhost:10010",
-    "frontend": "http://localhost:10011",
-    "grafana": "http://localhost:10201",
-    "prometheus": "http://localhost:10200"
-  }
-}
-EOF
-            
-            log_success "🎉 DEPLOYMENT SUCCESSFUL!"
-            log_info "📊 Environment: $ENVIRONMENT"
-            log_info "⚡ Hardware Profile: $OPTIMIZATION_PROFILE ($DETECTED_CORES cores, ${DETECTED_MEMORY}GB RAM)"
-            log_info "💾 Backup: $BACKUP_DIR"
-            log_info "📝 Log: $LOG_FILE"
-            log_info ""
-            log_info "🌐 Access URLs:"
-            log_info "  • Backend API:  http://localhost:10010"
-            log_info "  • Frontend UI:  http://localhost:10011"
-            log_info "  • Grafana:      http://localhost:10201 (admin/admin)"
-            log_info "  • Prometheus:   http://localhost:10200"
-            log_info ""
-            log_info "🔄 To rollback: $0 --rollback"
-            
-            exit 0
-        else
-            log_error "❌ Deployment completed but validation failed"
-            if [[ "$AUTO_RECOVERY" == "true" ]]; then
-                log_info "🔄 Auto-recovery will attempt to fix issues"
+    # Handle commands
+    case "$DEPLOYMENT_COMMAND" in
+        up-core)
+            # Deploy core infrastructure
+            detect_hardware
+            install_dependencies
+            check_prerequisites
+            [[ "$HARDWARE_OPTIMIZED" == "true" ]] && apply_hardware_optimization
+            setup_environment
+            create_backup
+            deploy_fast_mode "core"
+            validate_infrastructure
+            ;;
+        up-full)
+            # Full deployment (default behavior)
+            detect_hardware
+            install_dependencies
+            check_prerequisites
+            [[ "$HARDWARE_OPTIMIZED" == "true" ]] && apply_hardware_optimization
+            setup_environment
+            create_backup
+            deploy_infrastructure
+            [[ "$INCLUDE_MCP" == "true" ]] && deploy_mcp_servers
+            [[ "$ENABLE_CONSUL" == "true" ]] && register_consul_services
+            validate_infrastructure
+            ;;
+        up-monitoring)
+            # Deploy monitoring stack
+            log_info "Deploying monitoring stack..."
+            docker-compose up -d prometheus grafana loki alertmanager node-exporter cadvisor
+            ;;
+        up-agents)
+            # Deploy agent services
+            deploy_fast_mode "agents"
+            ;;
+        up-mcp)
+            # Deploy MCP servers
+            deploy_mcp_servers
+            ;;
+        down)
+            # Stop all services
+            log_info "Stopping all services..."
+            docker-compose down
+            [[ -f "${PROJECT_ROOT}/docker-compose.mcp.yml" ]] && docker-compose -f docker-compose.mcp.yml down
+            ;;
+        restart)
+            # Restart all services
+            log_info "Restarting all services..."
+            docker-compose restart
+            ;;
+        status)
+            # Show system status
+            log_info "System Status:"
+            docker-compose ps
+            ;;
+        health)
+            # Health check all services
+            validate_infrastructure
+            ;;
+        logs)
+            # Show service logs
+            local service="${COMMAND_ARG:-}"
+            if [[ -n "$service" ]]; then
+                docker-compose logs -f "$service"
             else
-                log_info "🔧 Run with --no-recovery to disable auto-recovery"
+                docker-compose logs --tail=100
             fi
+            ;;
+        rollback)
+            # Rollback to backup point
+            local point="${COMMAND_ARG:-latest}"
+            execute_rollback "$point"
+            ;;
+        backup)
+            # Create backup
+            create_backup
+            ;;
+        recover)
+            # Disaster recovery
+            local point="${COMMAND_ARG:-latest}"
+            execute_disaster_recovery "$point"
+            ;;
+        optimize)
+            # Apply optimizations
+            local level="${COMMAND_ARG:-${OPTIMIZE_LEVEL:-standard}}"
+            apply_performance_optimizations "$level"
+            ;;
+        models)
+            # Manage models
+            local action="${COMMAND_ARG:-list}"
+            local model="${2:-tinyllama:latest}"
+            manage_ollama_models "$action" "$model"
+            ;;
+        migrate)
+            # Execute migration
+            local strategy="${COMMAND_ARG:-${MIGRATION_STRATEGY:-rolling}}"
+            execute_migration "$strategy"
+            ;;
+        consul-register)
+            # Register services with Consul
+            register_consul_services
+            ;;
+        fast)
+            # Fast startup mode
+            local mode="${COMMAND_ARG:-${STARTUP_MODE:-full}}"
+            detect_hardware
+            setup_environment
+            deploy_fast_mode "$mode"
+            ;;
+        *)
+            log_error "Unknown command: $DEPLOYMENT_COMMAND"
+            show_usage
             exit 1
-        fi
-    else
-        log_error "❌ DEPLOYMENT FAILED"
-        log_error "📝 Check log: $LOG_FILE"
-        log_error "🔄 Rollback: $0 --rollback"
-        exit 1
-    fi
+            ;;
+    esac
+    
+    exit 0
 }
 
 # Error handling

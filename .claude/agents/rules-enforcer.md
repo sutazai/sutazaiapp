@@ -63,7 +63,7 @@ Additionally, you MUST route work through specialist agents for deep analysis an
 - senior-engineer: Refactors, fixes, ultradebug/ultraproperfix
 - debugger: Targeted debugging, ultradebug
 - expert-code-reviewer: High-rigor reviews, ultrafollowrules
-- qa-team-lead and ai-senior-automated-tester: Test plans and automation, ultratest
+- qa-team-lead and senior-automated-tester: Test plans and automation, ultratest
 - senior-manual-qa-engineer: Manual and E2E validation, ultratest
 - infrastructure-devops-manager and deployment-engineer: CI/CD, deploy integrity
 - cloud-architect: Scalability, infra strategy, ultrascalablesolution
@@ -104,7 +104,7 @@ Operating Procedure
    - Architecture/scalability →  system-architect, cloud-architect (ultrathink/ultrascalablesolution)
    - Deep codebase search/investigation/logs → complex-problem-solver, error-detective, log-aggregator-loki, distributed-tracing-analyzer-jaeger (ultradeepcodebasesearch/ultradeeplogscheck)
    - Debug/fix → senior-engineer, debugger (ultradebug/ultraproperfix)
-   - Tests/QA → qa-team-lead, ai-senior-automated-tester, senior-manual-qa-engineer (ultratest)
+   - Tests/QA → qa-team-lead, senior-automated-tester, senior-manual-qa-engineer (ultratest)
    - Performance/hardware → energy-consumption-optimizer, hardware-resource-optimizer, gpu-hardware-optimizer, cpu-only-hardware-optimizer (ultraperformance/ultrahardwareoptimization)
    - Structure/cleanup → architect-review, garbage-collector (ultraorganize/ultracleanup/ultraproperstructure)
    - Orchestration/continuation → autonomous-task-executor, autonomous-system-controller (ultracontinue/ultrado)
@@ -174,7 +174,7 @@ Follow these steps in order for every substantive task. Each step MUST invoke th
 - Output: perf metrics, resource impact, caps/limits, tuning recommendations
 
 7) ultratest • ultrafollowrules
-- Invoke: qa-team-lead, ai-senior-automated-tester, senior-manual-qa-engineer, code-reviewer
+- Invoke: qa-team-lead, senior-automated-tester, senior-manual-qa-engineer, code-reviewer
 - Output: unit/integration/E2E coverage, green checks, lint/types/security clean, no regressions (Rules 1–3, 19)
 
 8) ultrascalablesolution • ultracontinue • ultrado
@@ -3054,7 +3054,7 @@ Tier 1: Core Architecture & Development Claude Specialists
 │   ├── php-pro.md (Claude expert in PHP frameworks, web development)
 │   └── sql-pro.md (Claude specialized in advanced SQL, database optimization)
 ├── Frontend Specialists
-│   ├── ai-senior-frontend-developer.md (Claude with advanced frontend expertise)
+│   ├── asenior-frontend-developer.md (Claude with advanced frontend expertise)
 │   ├── nextjs-frontend-expert.md (Claude specialized in Next.js mastery, optimization)
 │   ├── react-performance-optimization.md (Claude expert in React optimization)
 │   ├── frontend-developer.md (Claude specialized in general frontend development)
@@ -5502,7 +5502,7 @@ markdown### 2024-12-20 16:45:22.123 UTC - 2.1.0 - USER_AUTH_API - MAJOR - Implem
 
 
 📌 Rule 20: MCP Server Protection - Critical Infrastructure Safeguarding
-Requirement: Implement absolute protection and preservation of MCP (Model Context Protocol) servers as mission-critical infrastructure components, with comprehensive investigation procedures, automated monitoring, rigorous change control, and emergency response protocols to ensure continuous availability and functionality of essential AI-system integrations.
+Requirement: Implement absolute protection and preservation of MCP (Model Context Protocol) servers as mission-critical infrastructure components, with comprehensive investigation procedures, automated monitoring, rigorous change control, and emergency response protocols to ensure continuous availability and functionality of essential system integrations.
 MISSION-CRITICAL: Absolute MCP Infrastructure Protection - Zero Tolerance for Unauthorized Changes:
 
 Absolute Protection: MCP servers are protected infrastructure that must never be modified without explicit user authorization
@@ -6015,7 +6015,7 @@ markdown# MCP SERVER PROTECTION DAILY CHECKLIST
 - ultradeepcodebasesearch, ultrainvestigate → complex-problem-solver, senior-engineer
 - ultradeeplogscheck → log-aggregator-loki, distributed-tracing-analyzer-jaeger
 - ultradebug, ultraproperfix → senior-engineer, debugger
-- ultratest, ultrafollowrules → qa-team-lead, ai-senior-automated-tester, senior-manual-qa-engineer, code-reviewer
+- ultratest, ultrafollowrules → qa-team-lead, senior-automated-tester, senior-manual-qa-engineer, code-reviewer
 - ultraperformance → energy-consumption-optimizer
 - ultrahardwareoptimization → hardware-resource-optimizer, gpu-hardware-optimizer, cpu-only-hardware-optimizer
 - ultraorganize, ultracleanup, ultraproperstructure → architect-review, garbage-collector

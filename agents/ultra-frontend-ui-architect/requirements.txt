@@ -1,61 +1,31 @@
 # Ultra Frontend UI Architect Requirements
-# Core Dependencies
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-pydantic==2.5.0
-redis==5.0.1
-httpx==0.25.2
+# Inherits from base requirements plus frontend-specific dependencies
 
-# Frontend Analysis and Optimization
-streamlit==1.28.1
-beautifulsoup4==4.12.2
-cssutils==2.7.1
-jsbeautifier==1.14.9
+# Include base requirements
+-r ../../requirements-base.txt
+
+# Frontend-specific dependencies
+streamlit==1.28.1                  # Streamlit framework for UI
+beautifulsoup4==4.12.2             # HTML/XML parsing
+cssutils==2.7.1                    # CSS parsing and manipulation
+jsbeautifier==1.14.9               # JavaScript beautification
 
 # File System and Organization
-watchdog==3.0.0
-pathlib2==2.3.7
-gitpython==3.1.40
+watchdog==3.0.0                    # File system monitoring
+pathlib2==2.3.7                    # Path utilities
+gitpython==3.1.40                  # Git operations
 
 # Code Analysis and AST Processing
-ast-decompiler==0.7.0
-pylint==3.0.3
-mypy==1.7.1
-black==23.11.0
-
-# Performance Monitoring
-psutil==5.9.6
-prometheus-client==0.19.0
-py-spy==0.3.14
+ast-decompiler==0.7.0              # AST decompilation
+py-spy==0.3.14                     # Python profiling
 
 # Type Safety and Validation
-typing-extensions==4.8.0
-pydantic-settings==2.1.0
+typing-extensions==4.8.0           # Type hints extensions
 
 # Async Support
-asyncio-mqtt==0.16.0
-aiofiles==23.2.1
-aioredis==2.0.1
+asyncio-mqtt==0.16.0               # MQTT async client
+aiofiles==23.2.1                   # Async file operations
 
-# Testing and Quality
-pytest==7.4.3
-pytest-asyncio==0.21.1
-coverage==7.3.2
-
-# Security
-cryptography==43.0.1
-bcrypt==4.2.1
-
-# Logging and Monitoring
-structlog==23.2.0
-python-json-logger==2.0.7
-
-# Development Tools
-pre-commit==3.6.0
-isort==5.12.0
-flake8==6.1.0
-
-# Ultra-Specific Dependencies
-dataclasses-json==0.6.3
-python-multipart==0.0.6
-jinja2==3.1.2
+# Testing for UI Components
+pytest-playwright==0.3.3           # Playwright testing
+selenium==4.15.2                   # Selenium for browser automation
