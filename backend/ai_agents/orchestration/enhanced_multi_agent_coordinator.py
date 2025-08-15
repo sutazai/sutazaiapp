@@ -1025,11 +1025,11 @@ async def example_coordination():
         preferred_pattern=CoordinationPattern.HIERARCHICAL
     )
     
-    print(f"Coordination Result: {result}")
+    logger.info(f"Coordination Result: {result}")
     
     # Get statistics
     stats = await coordinator.get_coordination_statistics()
-    print(f"Coordination Statistics: {stats}")
+    logger.info(f"Coordination Statistics: {stats}")
     
     # Shutdown
     await coordinator.shutdown()

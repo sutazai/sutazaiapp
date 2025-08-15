@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Manual Refactoring of _setup_routes Function
 Critical function refactoring for unified_orchestration_api.py
 
@@ -407,12 +410,12 @@ def refactor_setup_routes():
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to cancel task: {str(e)}")'''
     
-    print(f"Refactored _setup_routes function:")
-    print("=" * 60)
-    print(refactored_setup_routes)
-    print("=" * 60)
-    print("Helper methods:")
-    print(helper_methods)
+    logger.info(f"Refactored _setup_routes function:")
+    logger.info("=" * 60)
+    logger.info(refactored_setup_routes)
+    logger.info("=" * 60)
+    logger.info("Helper methods:")
+    logger.info(helper_methods)
     
     return refactored_setup_routes, helper_methods
 

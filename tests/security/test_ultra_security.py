@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA Security Validation Test Suite
 Comprehensive security testing for all components
 Author: ULTRA Security Engineer
@@ -52,11 +55,11 @@ class UltraSecurityTester:
         
         if passed:
             self.passed_tests += 1
-            print(f"✅ {test_name}: PASSED")
+            logger.info(f"✅ {test_name}: PASSED")
         else:
             self.failed_tests += 1
             self.vulnerabilities.append(result)
-            print(f"❌ {test_name}: FAILED - {details}")
+            logger.error(f"❌ {test_name}: FAILED - {details}")
 
 
 class TestContainerSecurity(UltraSecurityTester):
@@ -64,7 +67,7 @@ class TestContainerSecurity(UltraSecurityTester):
     
     def test_all_containers_non_root(self):
         """Verify all containers run as non-root users"""
-        print("\n=== Testing Container Security ===")
+        logger.info("\n=== Testing Container Security ===")
         
         # Get all running containers
         cmd = "docker ps --format '{{.Names}}'"
@@ -93,7 +96,7 @@ class TestContainerSecurity(UltraSecurityTester):
             
     def test_container_capabilities(self):
         """Test that containers have   capabilities"""
-        print("\n=== Testing Container Capabilities ===")
+        logger.info("\n=== Testing Container Capabilities ===")
         
         cmd = "docker ps -q"
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -128,7 +131,7 @@ class TestContainerSecurity(UltraSecurityTester):
                     
     def test_container_read_only_root(self):
         """Test that containers have read-only root filesystem where possible"""
-        print("\n=== Testing Read-Only Root Filesystem ===")
+        logger.info("\n=== Testing Read-Only Root Filesystem ===")
         
         cmd = "docker ps --format '{{.Names}}'"
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -158,7 +161,7 @@ class TestAuthenticationSecurity(UltraSecurityTester):
     
     def test_jwt_algorithm(self):
         """Verify JWT uses secure algorithm (RS256 or HS256 with strong key)"""
-        print("\n=== Testing JWT Security ===")
+        logger.info("\n=== Testing JWT Security ===")
         
         handler = JWTHandler()
         
@@ -175,7 +178,7 @@ class TestAuthenticationSecurity(UltraSecurityTester):
             
     def test_jwt_expiration(self):
         """Test JWT token expiration"""
-        print("\n=== Testing JWT Expiration ===")
+        logger.info("\n=== Testing JWT Expiration ===")
         
         handler = JWTHandler()
         
@@ -202,7 +205,7 @@ class TestAuthenticationSecurity(UltraSecurityTester):
                 
     def test_password_hashing(self):
         """Test password hashing strength"""
-        print("\n=== Testing Password Hashing ===")
+        logger.info("\n=== Testing Password Hashing ===")
         
         # Check if bcrypt is being used
         try:
@@ -226,7 +229,7 @@ class TestRateLimiting(UltraSecurityTester):
     @pytest.mark.asyncio
     async def test_rate_limiter_basic(self):
         """Test basic rate limiting"""
-        print("\n=== Testing Rate Limiting ===")
+        logger.info("\n=== Testing Rate Limiting ===")
         
         limiter = UltraRateLimiter(default_limit=5, default_window=10)
         
@@ -247,7 +250,7 @@ class TestRateLimiting(UltraSecurityTester):
     @pytest.mark.asyncio
     async def test_auth_rate_limiter(self):
         """Test authentication-specific rate limiting"""
-        print("\n=== Testing Auth Rate Limiting ===")
+        logger.info("\n=== Testing Auth Rate Limiting ===")
         
         auth_limiter = AuthRateLimiter()
         
@@ -272,7 +275,7 @@ class TestSecretManagement(UltraSecurityTester):
     
     def test_secrets_encryption(self):
         """Test that secrets are encrypted at rest"""
-        print("\n=== Testing Secrets Encryption ===")
+        logger.info("\n=== Testing Secrets Encryption ===")
         
         # Import secrets manager
         # Path handled by pytest configuration
@@ -310,7 +313,7 @@ class TestSecretManagement(UltraSecurityTester):
             
     def test_secret_strength_validation(self):
         """Test secret strength validation"""
-        print("\n=== Testing Secret Strength Validation ===")
+        logger.info("\n=== Testing Secret Strength Validation ===")
         
         # Path handled by pytest configuration
         from secrets_manager import UltraSecretsManager
@@ -339,7 +342,7 @@ class TestSSLTLS(UltraSecurityTester):
     
     def test_ssl_configuration(self):
         """Test SSL/TLS configuration files"""
-        print("\n=== Testing SSL/TLS Configuration ===")
+        logger.info("\n=== Testing SSL/TLS Configuration ===")
         
         nginx_conf = Path("/opt/sutazaiapp/config/ssl/nginx-ssl.conf")
         if nginx_conf.exists():
@@ -380,7 +383,7 @@ class TestAPISecrity(UltraSecurityTester):
     
     def test_api_authentication_required(self):
         """Test that protected endpoints require authentication"""
-        print("\n=== Testing API Authentication ===")
+        logger.info("\n=== Testing API Authentication ===")
         
         protected_endpoints = [
             "/api/v1/chat",
@@ -400,7 +403,7 @@ class TestAPISecrity(UltraSecurityTester):
                 
     def test_api_input_validation(self):
         """Test API input validation against injection attacks"""
-        print("\n=== Testing Input Validation ===")
+        logger.info("\n=== Testing Input Validation ===")
         
         # SQL injection attempts
         sql_payloads = [
@@ -452,9 +455,9 @@ class TestAPISecrity(UltraSecurityTester):
 
 def run_all_security_tests():
     """Run all security tests and generate report"""
-    print("=" * 60)
-    print("ULTRA SECURITY VALIDATION TEST SUITE")
-    print("=" * 60)
+    logger.info("=" * 60)
+    logger.info("ULTRA SECURITY VALIDATION TEST SUITE")
+    logger.info("=" * 60)
     
     # Initialize test classes
     container_tests = TestContainerSecurity()
@@ -502,19 +505,19 @@ def run_all_security_tests():
         all_vulnerabilities.extend(t.vulnerabilities)
     
     # Generate report
-    print("\n" + "=" * 60)
-    print("SECURITY TEST RESULTS")
-    print("=" * 60)
-    print(f"✅ Passed: {total_passed}")
-    print(f"❌ Failed: {total_failed}")
-    print(f"📊 Success Rate: {(total_passed/(total_passed+total_failed)*100):.1f}%")
+    logger.info("\n" + "=" * 60)
+    logger.info("SECURITY TEST RESULTS")
+    logger.info("=" * 60)
+    logger.info(f"✅ Passed: {total_passed}")
+    logger.error(f"❌ Failed: {total_failed}")
+    logger.error(f"📊 Success Rate: {(total_passed/(total_passed+total_failed)*100):.1f}%")
     
     if all_vulnerabilities:
-        print("\n⚠️ VULNERABILITIES FOUND:")
+        logger.info("\n⚠️ VULNERABILITIES FOUND:")
         for vuln in all_vulnerabilities:
-            print(f"  - {vuln['test']}: {vuln['details']}")
+            logger.info(f"  - {vuln['test']}: {vuln['details']}")
     else:
-        print("\n✨ No vulnerabilities found!")
+        logger.info("\n✨ No vulnerabilities found!")
     
     # Save report
     report = {
@@ -531,7 +534,7 @@ def run_all_security_tests():
     with open(report_file, 'w') as f:
         json.dump(report, f, indent=2)
     
-    print(f"\n📄 Report saved to: {report_file}")
+    logger.info(f"\n📄 Report saved to: {report_file}")
     
     return total_failed == 0
 

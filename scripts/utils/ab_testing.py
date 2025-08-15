@@ -923,10 +923,10 @@ async def example_ab_testing():
     # Generate report
     report = manager.generate_experiment_report(experiment_id)
     
-    print("A/B Test Analysis:")
-    print(json.dumps(analysis, indent=2, default=str))
-    print("\nA/B Test Report:")
-    print(report)
+    logger.info("A/B Test Analysis:")
+    logger.info(json.dumps(analysis, indent=2, default=str))
+    logger.info("\nA/B Test Report:")
+    logger.info(report)
     
     return analysis
 

@@ -656,48 +656,48 @@ class SimplifiedLoadTester:
     
     def print_summary(self, analysis: Dict[str, Any], total_time: float):
         """Print comprehensive test summary"""
-        print("\n" + "=" * 80)
-        print("🎯 HARDWARE OPTIMIZER ULTRA-COMPREHENSIVE TEST RESULTS")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("🎯 HARDWARE OPTIMIZER ULTRA-COMPREHENSIVE TEST RESULTS")
+        logger.info("=" * 80)
         
         # Overall assessment
         assessment_emoji = "✅" if analysis["overall_assessment"] == "PASS" else "❌"
-        print(f"{assessment_emoji} Overall Assessment: {analysis['overall_assessment']}")
-        print(f"⏱️  Total Execution Time: {total_time:.1f} seconds")
+        logger.info(f"{assessment_emoji} Overall Assessment: {analysis['overall_assessment']}")
+        logger.info(f"⏱️  Total Execution Time: {total_time:.1f} seconds")
         
         # Load test summary
         load_summary = analysis["load_test_summary"]
-        print(f"\n📈 LOAD TESTING RESULTS:")
-        print(f"  📊 Total Scenarios: {load_summary['total_tests']}")
-        print(f"  ✅ SLA Compliant: {load_summary['sla_compliant_tests']} ({load_summary['sla_compliance_rate']:.1f}%)")
-        print(f"  📊 Avg Response Time: {load_summary['avg_response_time_ms']:.1f}ms")
-        print(f"  📊 Avg Success Rate: {load_summary['avg_success_rate']:.1f}%")
-        print(f"  📊 Avg Throughput: {load_summary['avg_throughput_rps']:.1f} RPS")
+        logger.info(f"\n📈 LOAD TESTING RESULTS:")
+        logger.info(f"  📊 Total Scenarios: {load_summary['total_tests']}")
+        logger.info(f"  ✅ SLA Compliant: {load_summary['sla_compliant_tests']} ({load_summary['sla_compliance_rate']:.1f}%)")
+        logger.info(f"  📊 Avg Response Time: {load_summary['avg_response_time_ms']:.1f}ms")
+        logger.info(f"  📊 Avg Success Rate: {load_summary['avg_success_rate']:.1f}%")
+        logger.info(f"  📊 Avg Throughput: {load_summary['avg_throughput_rps']:.1f} RPS")
         
         # Security summary
         security_summary = analysis["security_summary"]
-        print(f"\n🔒 SECURITY TESTING RESULTS:")
-        print(f"  📊 Total Tests: {security_summary['total_tests']}")
-        print(f"  🚨 Vulnerabilities: {security_summary['vulnerabilities_detected']}")
-        print(f"  ⚠️  High Severity: {security_summary['high_severity_vulnerabilities']}")
+        logger.info(f"\n🔒 SECURITY TESTING RESULTS:")
+        logger.info(f"  📊 Total Tests: {security_summary['total_tests']}")
+        logger.info(f"  🚨 Vulnerabilities: {security_summary['vulnerabilities_detected']}")
+        logger.info(f"  ⚠️  High Severity: {security_summary['high_severity_vulnerabilities']}")
         
         # Critical issues
         if analysis["critical_issues"]:
-            print(f"\n🚨 CRITICAL ISSUES ({len(analysis['critical_issues'])}):")
+            logger.error(f"\n🚨 CRITICAL ISSUES ({len(analysis['critical_issues'])}):")
             for i, issue in enumerate(analysis["critical_issues"], 1):
-                print(f"  {i}. {issue}")
+                logger.info(f"  {i}. {issue}")
         else:
-            print(f"\n✅ NO CRITICAL ISSUES DETECTED")
+            logger.error(f"\n✅ NO CRITICAL ISSUES DETECTED")
         
         # Top recommendations
         if analysis["recommendations"]:
-            print(f"\n💡 KEY RECOMMENDATIONS:")
+            logger.info(f"\n💡 KEY RECOMMENDATIONS:")
             for i, rec in enumerate(analysis["recommendations"][:5], 1):
-                print(f"  {i}. {rec}")
+                logger.info(f"  {i}. {rec}")
             if len(analysis["recommendations"]) > 5:
-                print(f"  ... and {len(analysis['recommendations']) - 5} more in the full report")
+                logger.info(f"  ... and {len(analysis['recommendations']) - 5} more in the full report")
         
-        print("=" * 80)
+        logger.info("=" * 80)
     
     def cleanup(self):
         """Cleanup test environment"""

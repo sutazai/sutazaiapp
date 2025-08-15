@@ -648,17 +648,17 @@ async def main():
         policy_manager = RetentionPolicyManager(config)
         
         # Example: List all policies
-        print("Available Policies:")
+        logger.info("Available Policies:")
         for policy in policy_manager.list_policies():
-            print(f"- {policy.policy_id}: {policy.policy_name} ({policy.policy_type.value})")
+            logger.info(f"- {policy.policy_id}: {policy.policy_name} ({policy.policy_type.value})")
         
         # Example: Get applicable policies for a server
-        print(f"\nPolicies for 'postgres' server:")
+        logger.info(f"\nPolicies for 'postgres' server:")
         applicable = policy_manager.get_applicable_policies(
             'postgres', PolicyType.VERSION_RETENTION, environment='production'
         )
         for policy in applicable:
-            print(f"- {policy.policy_name} (scope: {policy.policy_scope.value})")
+            logger.info(f"- {policy.policy_name} (scope: {policy.policy_scope.value})")
         
         # Example: Create a custom policy
         custom_policy = policy_manager.create_policy_from_template(
@@ -672,7 +672,7 @@ async def main():
                 'description': 'Custom policy for PostgreSQL MCP server'
             }
         )
-        print(f"\nCreated custom policy: {custom_policy.policy_name}")
+        logger.info(f"\nCreated custom policy: {custom_policy.policy_name}")
         
     except Exception as e:
         logging.error(f"Error in retention policies: {e}", exc_info=True)

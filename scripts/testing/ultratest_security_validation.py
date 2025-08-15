@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Security Validation Suite
 Tests ALL container security improvements with 100% coverage.
 """
@@ -29,10 +32,10 @@ class UltratestSecurityValidator:
         self.total_tests += 1
         if passed:
             self.passed_tests += 1
-            print(f"✅ PASS: {test_name}")
+            logger.info(f"✅ PASS: {test_name}")
         else:
             self.failed_tests += 1
-            print(f"❌ FAIL: {test_name} - {details}")
+            logger.info(f"❌ FAIL: {test_name} - {details}")
             
     def get_running_containers(self) -> List[str]:
         """Get list of all running container names"""
@@ -77,15 +80,15 @@ class UltratestSecurityValidator:
     
     def test_all_container_security(self):
         """Test security configuration of all running containers"""
-        print("\n🔒 ULTRATEST: Container Security Validation")
-        print("=" * 60)
+        logger.info("\n🔒 ULTRATEST: Container Security Validation")
+        logger.info("=" * 60)
         
         containers = self.get_running_containers()
         if not containers:
             self.log_test_result("container_discovery", False, "No containers found")
             return
             
-        print(f"Found {len(containers)} running containers")
+        logger.info(f"Found {len(containers)} running containers")
         
         non_root_count = 0
         root_count = 0
@@ -115,15 +118,15 @@ class UltratestSecurityValidator:
             self.log_test_result("overall_security_100_percent", False, 
                                f"Only {non_root_count}/{len(containers)} containers non-root ({security_percentage:.1f}%)")
         
-        print(f"\n📊 Security Summary:")
-        print(f"   Non-root containers: {non_root_count}")
-        print(f"   Root containers: {root_count}")
-        print(f"   Security percentage: {security_percentage:.1f}%")
+        logger.info(f"\n📊 Security Summary:")
+        logger.info(f"   Non-root containers: {non_root_count}")
+        logger.info(f"   Root containers: {root_count}")
+        logger.info(f"   Security percentage: {security_percentage:.1f}%")
         
     def test_service_health_endpoints(self):
         """Test all service health endpoints"""
-        print("\n🏥 ULTRATEST: Service Health Validation")
-        print("=" * 60)
+        logger.info("\n🏥 ULTRATEST: Service Health Validation")
+        logger.info("=" * 60)
         
         health_endpoints = [
             ('Backend API', 'http://localhost:10010/health'),
@@ -162,8 +165,8 @@ class UltratestSecurityValidator:
     
     def test_docker_compose_security_configuration(self):
         """Validate docker-compose.yml security settings"""
-        print("\n🐳 ULTRATEST: Docker Compose Security Configuration")
-        print("=" * 60)
+        logger.info("\n🐳 ULTRATEST: Docker Compose Security Configuration")
+        logger.info("=" * 60)
         
         try:
             with open('/opt/sutazaiapp/docker-compose.yml', 'r') as f:
@@ -189,26 +192,26 @@ class UltratestSecurityValidator:
     
     def generate_ultratest_report(self):
         """Generate comprehensive test report"""
-        print("\n" + "=" * 80)
-        print("🎯 ULTRATEST SECURITY VALIDATION REPORT")
-        print("=" * 80)
-        print(f"Test Execution Time: {datetime.now().isoformat()}")
-        print(f"Total Tests: {self.total_tests}")
-        print(f"Passed: {self.passed_tests}")
-        print(f"Failed: {self.failed_tests}")
-        print(f"Success Rate: {(self.passed_tests/self.total_tests)*100:.1f}%")
+        logger.info("\n" + "=" * 80)
+        logger.info("🎯 ULTRATEST SECURITY VALIDATION REPORT")
+        logger.info("=" * 80)
+        logger.info(f"Test Execution Time: {datetime.now().isoformat()}")
+        logger.info(f"Total Tests: {self.total_tests}")
+        logger.info(f"Passed: {self.passed_tests}")
+        logger.error(f"Failed: {self.failed_tests}")
+        logger.info(f"Success Rate: {(self.passed_tests/self.total_tests)*100:.1f}%")
         
-        print("\n🔒 CONTAINER SECURITY STATUS:")
-        print("-" * 50)
+        logger.info("\n🔒 CONTAINER SECURITY STATUS:")
+        logger.info("-" * 50)
         for container, status in self.container_security_status.items():
             icon = "✅" if status['non_root'] else "❌"
-            print(f"{icon} {container}: {status['details']}")
+            logger.info(f"{icon} {container}: {status['details']}")
         
-        print("\n📋 DETAILED TEST RESULTS:")
-        print("-" * 50)
+        logger.info("\n📋 DETAILED TEST RESULTS:")
+        logger.info("-" * 50)
         for test_name, result in self.test_results.items():
             icon = "✅" if result['passed'] else "❌"
-            print(f"{icon} {test_name}: {result['details']}")
+            logger.info(f"{icon} {test_name}: {result['details']}")
         
         # Calculate container security percentage
         if self.container_security_status:
@@ -216,15 +219,15 @@ class UltratestSecurityValidator:
             total_containers = len(self.container_security_status)
             security_percentage = (non_root_containers / total_containers) * 100
             
-            print(f"\n🎯 SECURITY ACHIEVEMENT:")
-            print(f"   Non-root containers: {non_root_containers}/{total_containers}")
-            print(f"   Security percentage: {security_percentage:.1f}%")
-            print(f"   Target: 100% (29/29 containers)")
+            logger.info(f"\n🎯 SECURITY ACHIEVEMENT:")
+            logger.info(f"   Non-root containers: {non_root_containers}/{total_containers}")
+            logger.info(f"   Security percentage: {security_percentage:.1f}%")
+            logger.info(f"   Target: 100% (29/29 containers)")
             
             if security_percentage == 100:
-                print("   🏆 SECURITY TARGET ACHIEVED!")
+                logger.info("   🏆 SECURITY TARGET ACHIEVED!")
             else:
-                print(f"   ⚠️  Security gap: {100-security_percentage:.1f}%")
+                logger.info(f"   ⚠️  Security gap: {100-security_percentage:.1f}%")
         
         return {
             'total_tests': self.total_tests,
@@ -237,8 +240,8 @@ class UltratestSecurityValidator:
 
 def main():
     """Run comprehensive security validation"""
-    print("🚀 Starting ULTRATEST Security Validation Suite")
-    print("Testing ALL security improvements with 100% coverage")
+    logger.info("🚀 Starting ULTRATEST Security Validation Suite")
+    logger.info("Testing ALL security improvements with 100% coverage")
     
     validator = UltratestSecurityValidator()
     
@@ -254,14 +257,14 @@ def main():
     with open('/opt/sutazaiapp/tests/ultratest_security_report.json', 'w') as f:
         json.dump(report, f, indent=2)
     
-    print(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_security_report.json")
+    logger.info(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_security_report.json")
     
     # Return exit code based on results
     if validator.failed_tests == 0:
-        print("\n🎉 ALL TESTS PASSED - ULTRATEST SECURITY VALIDATION SUCCESSFUL")
+        logger.info("\n🎉 ALL TESTS PASSED - ULTRATEST SECURITY VALIDATION SUCCESSFUL")
         return 0
     else:
-        print(f"\n⚠️  {validator.failed_tests} TEST(S) FAILED - REVIEW REQUIRED")
+        logger.error(f"\n⚠️  {validator.failed_tests} TEST(S) FAILED - REVIEW REQUIRED")
         return 1
 
 if __name__ == "__main__":

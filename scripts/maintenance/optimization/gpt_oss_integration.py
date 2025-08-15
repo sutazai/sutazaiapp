@@ -285,7 +285,7 @@ Optimized code:
 
 # Usage example
 if __name__ == "__main__":
-    print(generated_function())'''
+    logger.info(generated_function())'''
         
         elif language.lower() == "javascript":
             return f'''function generatedFunction() {{

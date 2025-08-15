@@ -796,9 +796,9 @@ async def main():
             await manager.run()
     
     except KeyboardInterrupt:
-        print("\\nShutdown requested by user")
+        logger.info("\\nShutdown requested by user")
     except Exception as e:
-        print(f"Error: {e}")
+        logger.error(f"Error: {e}")
         sys.exit(1)
 
 

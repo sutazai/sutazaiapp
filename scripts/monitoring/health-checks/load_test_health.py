@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRADEEP Load Test for Backend Health Endpoint
 Tests health endpoint under extreme load to identify timeout issues
 """
@@ -31,11 +34,11 @@ async def test_health_endpoint(session: aiohttp.ClientSession, test_id: int) -> 
 
 async def run_load_test(concurrent_requests: int, total_requests: int):
     """Run load test with specified parameters"""
-    print(f"🔥 ULTRADEEP Load Test Starting:")
-    print(f"   Concurrent requests: {concurrent_requests}")
-    print(f"   Total requests: {total_requests}")
-    print(f"   Target: <50ms response time with 100% success rate")
-    print("-" * 60)
+    logger.info(f"🔥 ULTRADEEP Load Test Starting:")
+    logger.info(f"   Concurrent requests: {concurrent_requests}")
+    logger.info(f"   Total requests: {total_requests}")
+    logger.info(f"   Target: <50ms response time with 100% success rate")
+    logger.info("-" * 60)
     
     # Create connection pool with proper limits
     connector = aiohttp.TCPConnector(
@@ -58,7 +61,7 @@ async def run_load_test(concurrent_requests: int, total_requests: int):
             batch_end = min(batch_start + batch_size, total_requests)
             batch_tasks = []
             
-            print(f"🚀 Running batch {batch_start//batch_size + 1} ({batch_end - batch_start} requests)...")
+            logger.info(f"🚀 Running batch {batch_start//batch_size + 1} ({batch_end - batch_start} requests)...")
             
             # Create tasks for this batch
             for i in range(batch_start, batch_end):
@@ -77,7 +80,7 @@ async def run_load_test(concurrent_requests: int, total_requests: int):
             for result in batch_results:
                 if isinstance(result, Exception):
                     error_count += 1
-                    print(f"❌ Exception: {result}")
+                    logger.error(f"❌ Exception: {result}")
                 else:
                     status_code, response_time, status = result
                     response_times.append(response_time)
@@ -86,10 +89,10 @@ async def run_load_test(concurrent_requests: int, total_requests: int):
                         success_count += 1
                     elif status == "TIMEOUT":
                         timeout_count += 1
-                        print(f"⏰ TIMEOUT after {response_time:.2f}ms")
+                        logger.info(f"⏰ TIMEOUT after {response_time:.2f}ms")
                     else:
                         error_count += 1
-                        print(f"❌ ERROR: {status} (status: {status_code}, time: {response_time:.2f}ms)")
+                        logger.error(f"❌ ERROR: {status} (status: {status_code}, time: {response_time:.2f}ms)")
             
             results.extend(batch_results)
             
@@ -98,8 +101,8 @@ async def run_load_test(concurrent_requests: int, total_requests: int):
                 avg_time = statistics.mean(response_times)
                 max_time = max(response_times)
                 min_time = min(response_times)
-                print(f"   ✅ Success: {success_count}, ⏰ Timeouts: {timeout_count}, ❌ Errors: {error_count}")
-                print(f"   📊 Times: avg={avg_time:.2f}ms, min={min_time:.2f}ms, max={max_time:.2f}ms")
+                logger.error(f"   ✅ Success: {success_count}, ⏰ Timeouts: {timeout_count}, ❌ Errors: {error_count}")
+                logger.info(f"   📊 Times: avg={avg_time:.2f}ms, min={min_time:.2f}ms, max={max_time:.2f}ms")
             
             # Brief pause between batches
             if batch_end < total_requests:
@@ -129,15 +132,15 @@ async def run_load_test(concurrent_requests: int, total_requests: int):
                 error_count += 1
     
     # Final report
-    print("=" * 60)
-    print("🎯 ULTRADEEP LOAD TEST RESULTS")
-    print("=" * 60)
-    print(f"Total Requests: {total_requests}")
-    print(f"✅ Successful: {success_count} ({success_count/total_requests*100:.1f}%)")
-    print(f"⏰ Timeouts: {timeout_count} ({timeout_count/total_requests*100:.1f}%)")
-    print(f"❌ Errors: {error_count} ({error_count/total_requests*100:.1f}%)")
-    print(f"🕒 Total Test Time: {total_test_time:.2f} seconds")
-    print(f"🚀 Requests/Second: {total_requests/total_test_time:.2f}")
+    logger.info("=" * 60)
+    logger.info("🎯 ULTRADEEP LOAD TEST RESULTS")
+    logger.info("=" * 60)
+    logger.info(f"Total Requests: {total_requests}")
+    logger.info(f"✅ Successful: {success_count} ({success_count/total_requests*100:.1f}%)")
+    logger.info(f"⏰ Timeouts: {timeout_count} ({timeout_count/total_requests*100:.1f}%)")
+    logger.error(f"❌ Errors: {error_count} ({error_count/total_requests*100:.1f}%)")
+    logger.info(f"🕒 Total Test Time: {total_test_time:.2f} seconds")
+    logger.info(f"🚀 Requests/Second: {total_requests/total_test_time:.2f}")
     
     if response_times:
         avg_time = statistics.mean(response_times)
@@ -147,59 +150,59 @@ async def run_load_test(concurrent_requests: int, total_requests: int):
         max_time = max(response_times)
         min_time = min(response_times)
         
-        print("-" * 40)
-        print("📈 RESPONSE TIME ANALYSIS")
-        print(f"Average: {avg_time:.2f}ms")
-        print(f"Median:  {median_time:.2f}ms")
-        print(f"P95:     {p95_time:.2f}ms")
-        print(f"P99:     {p99_time:.2f}ms")
-        print(f"Max:     {max_time:.2f}ms")
-        print(f"Min:     {min_time:.2f}ms")
+        logger.info("-" * 40)
+        logger.info("📈 RESPONSE TIME ANALYSIS")
+        logger.info(f"Average: {avg_time:.2f}ms")
+        logger.info(f"Median:  {median_time:.2f}ms")
+        logger.info(f"P95:     {p95_time:.2f}ms")
+        logger.info(f"P99:     {p99_time:.2f}ms")
+        logger.info(f"Max:     {max_time:.2f}ms")
+        logger.info(f"Min:     {min_time:.2f}ms")
         
         # Performance assessment
-        print("-" * 40)
-        print("🎯 PERFORMANCE ASSESSMENT")
+        logger.info("-" * 40)
+        logger.info("🎯 PERFORMANCE ASSESSMENT")
         if success_count == total_requests and avg_time < 50:
-            print("🟢 PERFECT: 100% success rate with <50ms average response")
+            logger.info("🟢 PERFECT: 100% success rate with <50ms average response")
         elif success_count == total_requests and avg_time < 100:
-            print("🟡 GOOD: 100% success rate with <100ms average response")
+            logger.info("🟡 GOOD: 100% success rate with <100ms average response")
         elif success_count >= total_requests * 0.99 and avg_time < 200:
-            print("🟡 ACCEPTABLE: >99% success rate with <200ms average response")
+            logger.info("🟡 ACCEPTABLE: >99% success rate with <200ms average response")
         else:
-            print("🔴 NEEDS IMPROVEMENT: Below target performance")
+            logger.info("🔴 NEEDS IMPROVEMENT: Below target performance")
             
         # Identify timeout pattern
         if timeout_count > 0:
-            print(f"⚠️  TIMEOUT PATTERN DETECTED: {timeout_count} requests timed out")
-            print("🔧 RECOMMENDATION: Optimize health endpoint for better concurrency")
+            logger.info(f"⚠️  TIMEOUT PATTERN DETECTED: {timeout_count} requests timed out")
+            logger.info("🔧 RECOMMENDATION: Optimize health endpoint for better concurrency")
         
         if error_count > 0:
-            print(f"⚠️  ERROR PATTERN DETECTED: {error_count} requests failed")
-            print("🔧 RECOMMENDATION: Add better error handling and resilience")
+            logger.error(f"⚠️  ERROR PATTERN DETECTED: {error_count} requests failed")
+            logger.error("🔧 RECOMMENDATION: Add better error handling and resilience")
 
 async def main():
     """Main load test execution"""
     
     # Test 1: Light load
-    print("🧪 Test 1: Light Load (10 concurrent, 50 total)")
+    logger.info("🧪 Test 1: Light Load (10 concurrent, 50 total)")
     await run_load_test(concurrent_requests=10, total_requests=50)
     await asyncio.sleep(2)
     
     # Test 2: Medium load  
-    print("\n🧪 Test 2: Medium Load (25 concurrent, 100 total)")
+    logger.info("\n🧪 Test 2: Medium Load (25 concurrent, 100 total)")
     await run_load_test(concurrent_requests=25, total_requests=100)
     await asyncio.sleep(2)
     
     # Test 3: Heavy load
-    print("\n🧪 Test 3: Heavy Load (50 concurrent, 200 total)")
+    logger.info("\n🧪 Test 3: Heavy Load (50 concurrent, 200 total)")
     await run_load_test(concurrent_requests=50, total_requests=200)
     await asyncio.sleep(2)
     
     # Test 4: Extreme load
-    print("\n🧪 Test 4: Extreme Load (100 concurrent, 500 total)")
+    logger.info("\n🧪 Test 4: Extreme Load (100 concurrent, 500 total)")
     await run_load_test(concurrent_requests=100, total_requests=500)
 
 if __name__ == "__main__":
-    print("🚀 ULTRADEEP Backend Health Endpoint Load Test")
-    print("=" * 60)
+    logger.info("🚀 ULTRADEEP Backend Health Endpoint Load Test")
+    logger.info("=" * 60)
     asyncio.run(main())

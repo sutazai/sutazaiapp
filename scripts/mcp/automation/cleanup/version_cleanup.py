@@ -659,16 +659,16 @@ async def main():
         version_cleanup = VersionCleanupService(config, audit_logger)
         
         # Example: Analyze cleanup candidates
-        print("Analyzing version cleanup candidates...")
+        logger.info("Analyzing version cleanup candidates...")
         servers = ['postgres', 'files']  # Example servers
         
         for server in servers:
             try:
                 analysis = await version_cleanup.analyze_cleanup_candidates(server)
-                print(f"\nAnalysis for {server}:")
-                print(json.dumps(analysis, indent=2, default=str))
+                logger.info(f"\nAnalysis for {server}:")
+                logger.info(json.dumps(analysis, indent=2, default=str))
             except Exception as e:
-                print(f"Error analyzing {server}: {e}")
+                logger.error(f"Error analyzing {server}: {e}")
         
     except Exception as e:
         logging.error(f"Error in version cleanup: {e}", exc_info=True)

@@ -547,7 +547,7 @@ async def example_usage():
     
     # Check if feature is enabled
     if feature_manager.is_enabled("ai_agents_enabled"):
-        print("AI agents are enabled")
+        logger.info("AI agents are enabled")
     
     # Use with fallback
     async def primary_ai_function():
@@ -573,16 +573,16 @@ async def example_usage():
             "ai_agents_enabled",
             primary_ai_function
         )
-        print(f"Result: {result}")
+        logger.info(f"Result: {result}")
     except Exception as e:
-        print(f"All fallbacks failed: {e}")
+        logger.error(f"All fallbacks failed: {e}")
     
     # Get system status
     degradation_level = feature_manager.get_degradation_level()
-    print(f"System degradation level: {degradation_level.value}")
+    logger.info(f"System degradation level: {degradation_level.value}")
     
     feature_status = feature_manager.get_feature_status()
-    print(f"Feature status: {json.dumps(feature_status, indent=2)}")
+    logger.info(f"Feature status: {json.dumps(feature_status, indent=2)}")
 
 if __name__ == "__main__":
     asyncio.run(example_usage())

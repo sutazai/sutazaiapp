@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 MCP Automation System Usage Examples
 
 Demonstrates how to use the MCP automation system for common tasks.
@@ -29,7 +32,7 @@ from mcp.automation import (
 
 async def example_basic_update():
     """Example: Basic MCP server update."""
-    print("=== Basic MCP Server Update Example ===")
+    logger.info("=== Basic MCP Server Update Example ===")
     
     try:
         # Initialize configuration
@@ -43,30 +46,30 @@ async def example_basic_update():
                 priority=UpdatePriority.HIGH
             )
             
-            print(f"Scheduled update job: {job_id}")
+            logger.info(f"Scheduled update job: {job_id}")
             
             # Monitor progress
             while True:
                 status = await manager.get_update_status(job_id)
                 if status:
-                    print(f"Status: {status.status.value} - Progress: {status.progress_percentage:.1f}%")
+                    logger.info(f"Status: {status.status.value} - Progress: {status.progress_percentage:.1f}%")
                     
                     if status.status.value in ['completed', 'failed', 'cancelled']:
                         break
                 
                 await asyncio.sleep(2)
             
-            print(f"Update completed with status: {status.status.value}")
+            logger.info(f"Update completed with status: {status.status.value}")
             if status.error_message:
-                print(f"Error: {status.error_message}")
+                logger.error(f"Error: {status.error_message}")
     
     except Exception as e:
-        print(f"Error during update: {e}")
+        logger.error(f"Error during update: {e}")
 
 
 async def example_bulk_updates():
     """Example: Bulk update multiple servers."""
-    print("\\n=== Bulk MCP Server Updates Example ===")
+    logger.info("\\n=== Bulk MCP Server Updates Example ===")
     
     try:
         config = get_config()
@@ -82,23 +85,23 @@ async def example_bulk_updates():
                     priority=UpdatePriority.NORMAL
                 )
                 job_ids.append(job_id)
-                print(f"Scheduled update for {server_name}: {job_id}")
+                logger.info(f"Scheduled update for {server_name}: {job_id}")
             
             # Get summary
             summary = await manager.get_update_summary()
-            print(f"\\nUpdate Summary:")
-            print(f"  Total servers: {summary.total_servers}")
-            print(f"  Pending updates: {summary.pending_updates}")
-            print(f"  Successful updates: {summary.successful_updates}")
-            print(f"  Failed updates: {summary.failed_updates}")
+            logger.info(f"\\nUpdate Summary:")
+            logger.info(f"  Total servers: {summary.total_servers}")
+            logger.info(f"  Pending updates: {summary.pending_updates}")
+            logger.info(f"  Successful updates: {summary.successful_updates}")
+            logger.error(f"  Failed updates: {summary.failed_updates}")
     
     except Exception as e:
-        print(f"Error during bulk updates: {e}")
+        logger.error(f"Error during bulk updates: {e}")
 
 
 async def example_version_management():
     """Example: Version management operations."""
-    print("\\n=== Version Management Example ===")
+    logger.info("\\n=== Version Management Example ===")
     
     try:
         config = get_config()
@@ -111,40 +114,40 @@ async def example_version_management():
             current = await version_manager.get_current_version(server_name)
             available = await version_manager.get_available_version(server_name)
             
-            print(f"{server_name}:")
-            print(f"  Current: {current or 'Not installed'}")
-            print(f"  Available: {available or 'Unknown'}")
+            logger.info(f"{server_name}:")
+            logger.info(f"  Current: {current or 'Not installed'}")
+            logger.info(f"  Available: {available or 'Unknown'}")
             
             # Check version history
             history = version_manager.get_version_history(server_name)
-            print(f"  History: {len(history)} versions tracked")
+            logger.info(f"  History: {len(history)} versions tracked")
         
         # Show recent operations
         operations = version_manager.get_operation_history(limit=5)
-        print(f"\\nRecent operations ({len(operations)}):")
+        logger.info(f"\\nRecent operations ({len(operations)}):")
         for op in operations:
-            print(f"  {op.timestamp.strftime('%Y-%m-%d %H:%M:%S')} - "
+            logger.info(f"  {op.timestamp.strftime('%Y-%m-%d %H:%M:%S')} - "
                   f"{op.operation_type.value} {op.server_name} -> {op.to_version} "
                   f"({'✓' if op.success else '✗'})")
     
     except Exception as e:
-        print(f"Error during version management: {e}")
+        logger.error(f"Error during version management: {e}")
 
 
 async def example_download_with_progress():
     """Example: Download with progress monitoring."""
-    print("\\n=== Download with Progress Example ===")
+    logger.info("\\n=== Download with Progress Example ===")
     
     try:
         config = get_config()
         
         def progress_callback(progress):
-            print(f"\\r  Progress: {progress.percentage:.1f}% "
+            logger.info(f"\\r  Progress: {progress.percentage:.1f}% "
                   f"({progress.speed_mbps:.2f} MB/s, "
                   f"ETA: {progress.eta_seconds:.0f}s)", end="")
         
         async with DownloadManager(config) as dm:
-            print("Downloading @modelcontextprotocol/server-filesystem...")
+            logger.info("Downloading @modelcontextprotocol/server-filesystem...")
             
             result = await dm.download_package(
                 server_name="files",
@@ -152,62 +155,62 @@ async def example_download_with_progress():
                 progress_callback=progress_callback
             )
             
-            print("\\n")  # New line after progress
+            logger.info("\\n")  # New line after progress
             
             if result.success:
-                print(f"✓ Download successful:")
-                print(f"  File: {result.file_path}")
-                print(f"  Size: {result.size_bytes:,} bytes")
-                print(f"  Time: {result.download_time_seconds:.2f}s")
-                print(f"  Checksum: {result.checksum}")
+                logger.info(f"✓ Download successful:")
+                logger.info(f"  File: {result.file_path}")
+                logger.info(f"  Size: {result.size_bytes:,} bytes")
+                logger.info(f"  Time: {result.download_time_seconds:.2f}s")
+                logger.info(f"  Checksum: {result.checksum}")
             else:
-                print(f"✗ Download failed: {result.error_message}")
+                logger.error(f"✗ Download failed: {result.error_message}")
     
     except Exception as e:
-        print(f"Error during download: {e}")
+        logger.error(f"Error during download: {e}")
 
 
 async def example_configuration_management():
     """Example: Configuration management."""
-    print("\\n=== Configuration Management Example ===")
+    logger.info("\\n=== Configuration Management Example ===")
     
     try:
         # Load configuration
         config = get_config()
         
-        print("Current configuration:")
-        print(f"  Update mode: {config.update_mode.value}")
-        print(f"  Log level: {config.log_level.value}")
-        print(f"  Dry run: {config.dry_run}")
-        print(f"  Max concurrent downloads: {config.performance.max_concurrent_downloads}")
-        print(f"  Download timeout: {config.performance.download_timeout_seconds}s")
-        print(f"  Verify checksums: {config.security.verify_checksums}")
-        print(f"  Max download size: {config.security.max_download_size_mb}MB")
+        logger.info("Current configuration:")
+        logger.info(f"  Update mode: {config.update_mode.value}")
+        logger.info(f"  Log level: {config.log_level.value}")
+        logger.info(f"  Dry run: {config.dry_run}")
+        logger.info(f"  Max concurrent downloads: {config.performance.max_concurrent_downloads}")
+        logger.info(f"  Download timeout: {config.performance.download_timeout_seconds}s")
+        logger.info(f"  Verify checksums: {config.security.verify_checksums}")
+        logger.info(f"  Max download size: {config.security.max_download_size_mb}MB")
         
         # Show paths
-        print(f"\\nPaths:")
-        print(f"  MCP root: {config.paths.mcp_root}")
-        print(f"  Staging: {config.paths.staging_root}")
-        print(f"  Backups: {config.paths.backup_root}")
-        print(f"  Logs: {config.paths.logs_root}")
+        logger.info(f"\\nPaths:")
+        logger.info(f"  MCP root: {config.paths.mcp_root}")
+        logger.info(f"  Staging: {config.paths.staging_root}")
+        logger.info(f"  Backups: {config.paths.backup_root}")
+        logger.info(f"  Logs: {config.paths.logs_root}")
         
         # Show configured servers
-        print(f"\\nConfigured servers ({len(config.mcp_servers)}):")
+        logger.info(f"\\nConfigured servers ({len(config.mcp_servers)}):")
         for server_name, server_config in config.mcp_servers.items():
-            print(f"  {server_name}: {server_config['package']}")
+            logger.info(f"  {server_name}: {server_config['package']}")
         
         # Save configuration example
         config_file = config.paths.automation_root / "example_config.json"
         config.save_config(config_file)
-        print(f"\\nConfiguration saved to: {config_file}")
+        logger.info(f"\\nConfiguration saved to: {config_file}")
     
     except Exception as e:
-        print(f"Error with configuration: {e}")
+        logger.error(f"Error with configuration: {e}")
 
 
 async def example_error_handling():
     """Example: Error handling and recovery."""
-    print("\\n=== Error Handling Example ===")
+    logger.error("\\n=== Error Handling Example ===")
     
     try:
         from mcp.automation.error_handling import get_error_tracker, with_error_handling
@@ -224,30 +227,30 @@ async def example_error_handling():
                 component="example",
                 function_name="example_error_handling"
             )
-            print(f"Recorded error: {error_id}")
+            logger.error(f"Recorded error: {error_id}")
         
         # Get error statistics
         stats = error_tracker.get_error_statistics()
-        print(f"\\nError Statistics:")
-        print(f"  Total errors: {stats.get('total_errors', 0)}")
-        print(f"  Recent errors (24h): {stats.get('recent_errors_24h', 0)}")
-        print(f"  Resolution rate: {stats.get('resolution_rate_percent', 0)}%")
+        logger.error(f"\\nError Statistics:")
+        logger.error(f"  Total errors: {stats.get('total_errors', 0)}")
+        logger.error(f"  Recent errors (24h): {stats.get('recent_errors_24h', 0)}")
+        logger.info(f"  Resolution rate: {stats.get('resolution_rate_percent', 0)}%")
         
         # Show error patterns
         patterns = stats.get('error_patterns', {})
         if patterns:
-            print(f"\\nTop error patterns:")
+            logger.error(f"\\nTop error patterns:")
             for pattern, count in list(patterns.items())[:3]:
-                print(f"  {pattern}: {count} occurrences")
+                logger.info(f"  {pattern}: {count} occurrences")
     
     except Exception as e:
-        print(f"Error during error handling example: {e}")
+        logger.error(f"Error during error handling example: {e}")
 
 
 async def main():
     """Run all examples."""
-    print("MCP Automation System Usage Examples")
-    print("=" * 50)
+    logger.info("MCP Automation System Usage Examples")
+    logger.info("=" * 50)
     
     examples = [
         example_configuration_management,
@@ -263,13 +266,13 @@ async def main():
         try:
             await example_func()
         except Exception as e:
-            print(f"\\nError in {example_func.__name__}: {e}")
+            logger.error(f"\\nError in {example_func.__name__}: {e}")
         
         # Small delay between examples
         await asyncio.sleep(1)
     
-    print("\\n" + "=" * 50)
-    print("Examples completed!")
+    logger.info("\\n" + "=" * 50)
+    logger.info("Examples completed!")
 
 
 if __name__ == "__main__":

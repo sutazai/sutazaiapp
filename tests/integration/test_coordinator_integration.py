@@ -420,16 +420,16 @@ class CoordinatorIntegrationTest:
     
     async def run_all_tests(self):
         """Run all integration tests"""
-        print("\n" + "="*60)
-        print("Task Assignment Coordinator Integration Tests")
-        print("="*60 + "\n")
+        logger.info("\n" + "="*60)
+        logger.info("Task Assignment Coordinator Integration Tests")
+        logger.info("="*60 + "\n")
         
         # Setup test agents
-        print("Setting up test agents...")
+        logger.info("Setting up test agents...")
         await self.setup_test_agents()
         
         # Run tests
-        print("\nRunning tests...")
+        logger.info("\nRunning tests...")
         await self.test_single_assignment()
         await self.test_concurrent_assignments()
         await self.test_no_eligible_agent()
@@ -440,27 +440,27 @@ class CoordinatorIntegrationTest:
         await self.cleanup()
         
         # Print results
-        print("\n" + "-"*60)
-        print("Test Results:")
-        print("-"*60)
+        logger.info("\n" + "-"*60)
+        logger.info("Test Results:")
+        logger.info("-"*60)
         
         passed = 0
         failed = 0
         
         for result in self.test_results:
             status = "✅ PASSED" if result["passed"] else "❌ FAILED"
-            print(f"{status}: {result['test']}")
+            logger.info(f"{status}: {result['test']}")
             if result["details"]:
-                print(f"   Details: {result['details']}")
+                logger.info(f"   Details: {result['details']}")
             
             if result["passed"]:
                 passed += 1
             else:
                 failed += 1
         
-        print("-"*60)
-        print(f"\nSummary: {passed} passed, {failed} failed")
-        print("="*60 + "\n")
+        logger.info("-"*60)
+        logger.error(f"\nSummary: {passed} passed, {failed} failed")
+        logger.info("="*60 + "\n")
         
         return failed == 0
 

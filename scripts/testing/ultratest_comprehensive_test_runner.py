@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Comprehensive Test Suite Runner
 Executes all available tests and generates coverage report
 """
@@ -47,7 +50,7 @@ class ComprehensiveTestRunner:
     
     def run_single_test(self, test_file: str) -> Dict:
         """Run a single test file"""
-        print(f"🔄 Running: {os.path.basename(test_file)}")
+        logger.info(f"🔄 Running: {os.path.basename(test_file)}")
         
         start_time = time.time()
         try:
@@ -132,12 +135,12 @@ class ComprehensiveTestRunner:
     
     async def run_comprehensive_test_suite(self) -> Dict:
         """Run all discovered tests"""
-        print("🚀 ULTRATEST: Comprehensive Test Suite Execution")
-        print("=" * 60)
+        logger.info("🚀 ULTRATEST: Comprehensive Test Suite Execution")
+        logger.info("=" * 60)
         
         # Discover test files
         self.test_files = self.discover_test_files()
-        print(f"📋 Discovered {len(self.test_files)} test files")
+        logger.info(f"📋 Discovered {len(self.test_files)} test files")
         
         if len(self.test_files) == 0:
             return {
@@ -147,13 +150,13 @@ class ComprehensiveTestRunner:
             }
         
         # Show sample of test files
-        print("📄 Sample test files:")
+        logger.info("📄 Sample test files:")
         for i, test_file in enumerate(self.test_files[:10]):
-            print(f"   {i+1}. {os.path.basename(test_file)}")
+            logger.info(f"   {i+1}. {os.path.basename(test_file)}")
         if len(self.test_files) > 10:
-            print(f"   ... and {len(self.test_files) - 10} more")
+            logger.info(f"   ... and {len(self.test_files) - 10} more")
         
-        print("\n🔄 Executing tests...")
+        logger.info("\n🔄 Executing tests...")
         
         # Run tests (limit to prevent overwhelming system)
         test_results = []
@@ -161,7 +164,7 @@ class ComprehensiveTestRunner:
         
         for i, test_file in enumerate(self.test_files[:max_tests]):
             if i > 0 and i % 10 == 0:
-                print(f"   📊 Progress: {i}/{min(len(self.test_files), max_tests)} tests completed")
+                logger.info(f"   📊 Progress: {i}/{min(len(self.test_files), max_tests)} tests completed")
             
             result = self.run_single_test(test_file)
             test_results.append(result)
@@ -221,12 +224,12 @@ class ComprehensiveTestRunner:
     
     def print_comprehensive_report(self, results: Dict):
         """Print detailed test execution report"""
-        print("\n" + "=" * 80)
-        print("🏆 ULTRATEST COMPREHENSIVE TEST EXECUTION REPORT")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("🏆 ULTRATEST COMPREHENSIVE TEST EXECUTION REPORT")
+        logger.info("=" * 80)
         
         if "error" in results:
-            print(f"❌ Error: {results['error']}")
+            logger.error(f"❌ Error: {results['error']}")
             return
         
         summary = results["test_summary"]
@@ -234,61 +237,61 @@ class ComprehensiveTestRunner:
         coverage = results["coverage_estimate"]
         
         # Overall metrics
-        print(f"⏱️  Total Duration: {summary['total_duration']:.2f}s")
-        print(f"📊 Tests Discovered: {summary['total_tests_discovered']}")
-        print(f"🔄 Tests Executed: {summary['total_tests_executed']}")
-        print(f"✅ Passed: {summary['passed_tests']}")
-        print(f"❌ Failed: {summary['failed_tests']}")
-        print(f"📈 Pass Rate: {summary['pass_rate']:.1f}%")
-        print(f"⚡ Avg Test Duration: {summary['avg_test_duration']:.3f}s")
-        print(f"🏆 Grade: {results['grade']}")
+        logger.info(f"⏱️  Total Duration: {summary['total_duration']:.2f}s")
+        logger.info(f"📊 Tests Discovered: {summary['total_tests_discovered']}")
+        logger.info(f"🔄 Tests Executed: {summary['total_tests_executed']}")
+        logger.info(f"✅ Passed: {summary['passed_tests']}")
+        logger.error(f"❌ Failed: {summary['failed_tests']}")
+        logger.info(f"📈 Pass Rate: {summary['pass_rate']:.1f}%")
+        logger.info(f"⚡ Avg Test Duration: {summary['avg_test_duration']:.3f}s")
+        logger.info(f"🏆 Grade: {results['grade']}")
         
         # Code analysis
-        print(f"\n📋 CODE ANALYSIS:")
-        print(f"   📄 Source Files: {code_analysis['total_source_files']}")
-        print(f"   📏 Source Lines: {code_analysis['total_source_lines']:,}")
-        print(f"   🧪 Test Files: {coverage['test_files']}")
-        print(f"   📊 Test-to-Source Ratio: {coverage['test_to_source_ratio']:.1f}%")
-        print(f"   🎯 Estimated Coverage: {coverage['estimated_coverage']:.1f}%")
+        logger.info(f"\n📋 CODE ANALYSIS:")
+        logger.info(f"   📄 Source Files: {code_analysis['total_source_files']}")
+        logger.info(f"   📏 Source Lines: {code_analysis['total_source_lines']:,}")
+        logger.info(f"   🧪 Test Files: {coverage['test_files']}")
+        logger.info(f"   📊 Test-to-Source Ratio: {coverage['test_to_source_ratio']:.1f}%")
+        logger.info(f"   🎯 Estimated Coverage: {coverage['estimated_coverage']:.1f}%")
         
         # Show failed tests
         failed_tests = [r for r in results["test_results"] if not r["success"]]
         if failed_tests:
-            print(f"\n❌ FAILED TESTS ({len(failed_tests)}):")
+            logger.error(f"\n❌ FAILED TESTS ({len(failed_tests)}):")
             for test in failed_tests[:10]:  # Show up to 10 failures
-                print(f"   • {test['file']}: {test['stderr'][:100]}...")
+                logger.info(f"   • {test['file']}: {test['stderr'][:100]}...")
             if len(failed_tests) > 10:
-                print(f"   ... and {len(failed_tests) - 10} more failures")
+                logger.error(f"   ... and {len(failed_tests) - 10} more failures")
         
         # Show sample successful tests
         passed_tests = [r for r in results["test_results"] if r["success"]][:10]
         if passed_tests:
-            print(f"\n✅ SAMPLE SUCCESSFUL TESTS:")
+            logger.info(f"\n✅ SAMPLE SUCCESSFUL TESTS:")
             for test in passed_tests:
-                print(f"   • {test['file']} ({test['duration']:.2f}s)")
+                logger.info(f"   • {test['file']} ({test['duration']:.2f}s)")
         
         # Performance analysis
         slow_tests = [r for r in results["test_results"] if r["duration"] > 5.0]
         if slow_tests:
-            print(f"\n⚠️  SLOW TESTS (>5s):")
+            logger.info(f"\n⚠️  SLOW TESTS (>5s):")
             for test in slow_tests:
-                print(f"   • {test['file']}: {test['duration']:.2f}s")
+                logger.info(f"   • {test['file']}: {test['duration']:.2f}s")
         
         # Final assessment
-        print("\n" + "=" * 80)
+        logger.info("\n" + "=" * 80)
         if summary['pass_rate'] >= 95:
-            print("🏆 COMPREHENSIVE TEST RESULT: EXCELLENT - PRODUCTION READY")
-            print("   ✅ High test coverage and reliability")
+            logger.info("🏆 COMPREHENSIVE TEST RESULT: EXCELLENT - PRODUCTION READY")
+            logger.info("   ✅ High test coverage and reliability")
         elif summary['pass_rate'] >= 85:
-            print("✅ COMPREHENSIVE TEST RESULT: GOOD - MINOR IMPROVEMENTS NEEDED")
-            print("   ⚠️  Some test failures to investigate")
+            logger.info("✅ COMPREHENSIVE TEST RESULT: GOOD - MINOR IMPROVEMENTS NEEDED")
+            logger.info("   ⚠️  Some test failures to investigate")
         elif summary['pass_rate'] >= 70:
-            print("⚠️  COMPREHENSIVE TEST RESULT: MODERATE - TEST IMPROVEMENTS NEEDED")
-            print("   🔧 Significant test failures require attention")
+            logger.info("⚠️  COMPREHENSIVE TEST RESULT: MODERATE - TEST IMPROVEMENTS NEEDED")
+            logger.info("   🔧 Significant test failures require attention")
         else:
-            print("🚨 COMPREHENSIVE TEST RESULT: CRITICAL - MAJOR TEST ISSUES")
-            print("   🚨 High failure rate indicates system instability")
-        print("=" * 80)
+            logger.error("🚨 COMPREHENSIVE TEST RESULT: CRITICAL - MAJOR TEST ISSUES")
+            logger.info("   🚨 High failure rate indicates system instability")
+        logger.info("=" * 80)
 
 async def main():
     """Main execution function"""
@@ -304,7 +307,7 @@ async def main():
             json.dump(results, f, indent=2)
         
         runner.print_comprehensive_report(results)
-        print(f"\n📄 Detailed report saved: {report_file}")
+        logger.info(f"\n📄 Detailed report saved: {report_file}")
         
         # Exit with appropriate code
         if results.get("test_summary", {}).get("pass_rate", 0) >= 85:
@@ -313,7 +316,7 @@ async def main():
             sys.exit(1)  # Needs improvement
             
     except Exception as e:
-        print(f"🚨 COMPREHENSIVE TEST CRITICAL ERROR: {e}")
+        logger.error(f"🚨 COMPREHENSIVE TEST CRITICAL ERROR: {e}")
         traceback.print_exc()
         sys.exit(2)
 

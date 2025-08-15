@@ -256,49 +256,49 @@ class SimplePerformanceTester:
         single = report['single_request_performance']
         concurrent = report['concurrent_load_performance']
         
-        print("\n" + "="*80)
-        print("HARDWARE RESOURCE OPTIMIZER - PERFORMANCE TEST SUMMARY")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("HARDWARE RESOURCE OPTIMIZER - PERFORMANCE TEST SUMMARY")
+        logger.info("="*80)
         
-        print(f"Agent URL: {self.base_url}")
-        print(f"Test Timestamp: {summary['timestamp']}")
-        print(f"Total Tests: {summary['total_tests']}")
+        logger.info(f"Agent URL: {self.base_url}")
+        logger.info(f"Test Timestamp: {summary['timestamp']}")
+        logger.info(f"Total Tests: {summary['total_tests']}")
         
-        print(f"\nSingle Request Performance:")
-        print(f"  Tests Run: {summary['single_request_tests']}")
-        print(f"  Average Response Time: {single['avg_response_time']:.3f}s")
-        print(f"  Max Response Time: {single['max_response_time']:.3f}s")
-        print(f"  Min Response Time: {single['min_response_time']:.3f}s")
-        print(f"  Average Success Rate: {single['avg_success_rate']:.1f}%")
+        logger.info(f"\nSingle Request Performance:")
+        logger.info(f"  Tests Run: {summary['single_request_tests']}")
+        logger.info(f"  Average Response Time: {single['avg_response_time']:.3f}s")
+        logger.info(f"  Max Response Time: {single['max_response_time']:.3f}s")
+        logger.info(f"  Min Response Time: {single['min_response_time']:.3f}s")
+        logger.info(f"  Average Success Rate: {single['avg_success_rate']:.1f}%")
         
-        print(f"\nConcurrent Load Performance:")
-        print(f"  Tests Run: {summary['concurrent_load_tests']}")
-        print(f"  Average Response Time: {concurrent['avg_response_time']:.3f}s")
-        print(f"  Max Response Time: {concurrent['max_response_time']:.3f}s")
-        print(f"  Average Success Rate: {concurrent['avg_success_rate']:.1f}%")
-        print(f"  Total Requests/Second: {concurrent['total_requests_per_second']:.1f}")
-        print(f"  Average Requests/Second: {concurrent['avg_requests_per_second']:.1f}")
+        logger.info(f"\nConcurrent Load Performance:")
+        logger.info(f"  Tests Run: {summary['concurrent_load_tests']}")
+        logger.info(f"  Average Response Time: {concurrent['avg_response_time']:.3f}s")
+        logger.info(f"  Max Response Time: {concurrent['max_response_time']:.3f}s")
+        logger.info(f"  Average Success Rate: {concurrent['avg_success_rate']:.1f}%")
+        logger.info(f"  Total Requests/Second: {concurrent['total_requests_per_second']:.1f}")
+        logger.info(f"  Average Requests/Second: {concurrent['avg_requests_per_second']:.1f}")
         
         # Performance assessment
         if (single['avg_response_time'] < 1.0 and 
             concurrent['avg_response_time'] < 2.0 and 
             single['avg_success_rate'] > 95 and 
             concurrent['avg_success_rate'] > 95):
-            print(f"\n🚀 PERFORMANCE ASSESSMENT: EXCELLENT")
+            logger.info(f"\n🚀 PERFORMANCE ASSESSMENT: EXCELLENT")
         elif (single['avg_response_time'] < 2.0 and 
               concurrent['avg_response_time'] < 5.0 and 
               single['avg_success_rate'] > 90 and 
               concurrent['avg_success_rate'] > 90):
-            print(f"\n👍 PERFORMANCE ASSESSMENT: GOOD")
+            logger.info(f"\n👍 PERFORMANCE ASSESSMENT: GOOD")
         elif (single['avg_response_time'] < 5.0 and 
               concurrent['avg_response_time'] < 10.0 and 
               single['avg_success_rate'] > 75 and 
               concurrent['avg_success_rate'] > 75):
-            print(f"\n⚠️ PERFORMANCE ASSESSMENT: ACCEPTABLE")
+            logger.info(f"\n⚠️ PERFORMANCE ASSESSMENT: ACCEPTABLE")
         else:
-            print(f"\n❌ PERFORMANCE ASSESSMENT: NEEDS IMPROVEMENT")
+            logger.info(f"\n❌ PERFORMANCE ASSESSMENT: NEEDS IMPROVEMENT")
         
-        print("="*80)
+        logger.info("="*80)
     
     def save_report(self, report, filename=None):
         """Save report to file"""
@@ -309,7 +309,7 @@ class SimplePerformanceTester:
         with open(filename, 'w') as f:
             json.dump(report, f, indent=2)
         
-        print(f"\nDetailed report saved to: {filename}")
+        logger.info(f"\nDetailed report saved to: {filename}")
         return filename
 
 def main():
@@ -330,11 +330,11 @@ def main():
     try:
         response = requests.get(f"{args.url}/health", timeout=10)
         if response.status_code != 200:
-            print(f"❌ Agent not available at {args.url}")
+            logger.info(f"❌ Agent not available at {args.url}")
             return 1
-        print(f"✅ Agent is available at {args.url}")
+        logger.info(f"✅ Agent is available at {args.url}")
     except Exception as e:
-        print(f"❌ Cannot connect to agent at {args.url}: {e}")
+        logger.info(f"❌ Cannot connect to agent at {args.url}: {e}")
         return 1
     
     # Run tests

@@ -45,7 +45,7 @@ class FrontendStressValidator:
             "memory_samples": []
         }
         
-        print(f"Starting extreme load test: {concurrent_users} concurrent users for {duration_seconds} seconds")
+        logger.info(f"Starting extreme load test: {concurrent_users} concurrent users for {duration_seconds} seconds")
         
         start_time = time.time()
         end_time = start_time + duration_seconds
@@ -141,7 +141,7 @@ class FrontendStressValidator:
     
     def memory_pressure_test(self, iterations: int = 100) -> Dict[str, Any]:
         """Test frontend under memory pressure scenarios"""
-        print(f"Testing memory pressure with {iterations} rapid requests...")
+        logger.info(f"Testing memory pressure with {iterations} rapid requests...")
         
         memory_snapshots = []
         response_times = []
@@ -170,7 +170,7 @@ class FrontendStressValidator:
                         })
                 
             except Exception as e:
-                print(f"  Request {i+1} failed: {e}")
+                logger.error(f"  Request {i+1} failed: {e}")
             
             # Brief pause
             time.sleep(0.05)
@@ -245,7 +245,7 @@ class FrontendStressValidator:
                     "raw_stats": stats
                 }
         except Exception as e:
-            print(f"Error getting container stats: {e}")
+            logger.error(f"Error getting container stats: {e}")
             
         return {"error": "Failed to get stats"}
     
@@ -266,40 +266,40 @@ class FrontendStressValidator:
     
     def run_stress_validation(self) -> Dict[str, Any]:
         """Run comprehensive stress testing"""
-        print("=" * 80)
-        print("ULTRA QA TEAM LEAD - Frontend Stress Testing Validation")
-        print("=" * 80)
+        logger.info("=" * 80)
+        logger.info("ULTRA QA TEAM LEAD - Frontend Stress Testing Validation")
+        logger.info("=" * 80)
         
         # Test 1: Extreme Load Testing
-        print("\n1. Extreme Load Testing (20 concurrent users, 60 seconds)...")
+        logger.info("\n1. Extreme Load Testing (20 concurrent users, 60 seconds)...")
         extreme_load_results = self.extreme_load_test(concurrent_users=20, duration_seconds=60)
         self.results["stress_tests"]["extreme_load"] = extreme_load_results
         
         if extreme_load_results.get("total_requests", 0) > 0:
-            print(f"   Total requests: {extreme_load_results['total_requests']}")
-            print(f"   Success rate: {extreme_load_results['success_rate_percent']:.1f}%")
-            print(f"   Requests per second: {extreme_load_results['requests_per_second']:.2f}")
-            print(f"   Average response time: {extreme_load_results['average_response_time']:.3f}s")
-            print(f"   P95 response time: {extreme_load_results['p95_response_time']:.3f}s")
-            print(f"   P99 response time: {extreme_load_results['p99_response_time']:.3f}s")
+            logger.info(f"   Total requests: {extreme_load_results['total_requests']}")
+            logger.info(f"   Success rate: {extreme_load_results['success_rate_percent']:.1f}%")
+            logger.info(f"   Requests per second: {extreme_load_results['requests_per_second']:.2f}")
+            logger.info(f"   Average response time: {extreme_load_results['average_response_time']:.3f}s")
+            logger.info(f"   P95 response time: {extreme_load_results['p95_response_time']:.3f}s")
+            logger.info(f"   P99 response time: {extreme_load_results['p99_response_time']:.3f}s")
             
             if extreme_load_results["error_rates"]:
-                print(f"   Errors: {extreme_load_results['error_rates']}")
+                logger.error(f"   Errors: {extreme_load_results['error_rates']}")
         
         # Test 2: Memory Pressure Testing
-        print("\n2. Memory Pressure Testing (100 rapid requests)...")
+        logger.info("\n2. Memory Pressure Testing (100 rapid requests)...")
         memory_pressure_results = self.memory_pressure_test(iterations=100)
         self.results["stress_tests"]["memory_pressure"] = memory_pressure_results
         
-        print(f"   Initial memory: {memory_pressure_results['initial_memory_mb']:.1f} MB")
-        print(f"   Final memory: {memory_pressure_results['final_memory_mb']:.1f} MB")
-        print(f"   Memory change: {memory_pressure_results['memory_change_mb']:+.1f} MB")
-        print(f"   Average response time: {memory_pressure_results['average_response_time']:.3f}s")
+        logger.info(f"   Initial memory: {memory_pressure_results['initial_memory_mb']:.1f} MB")
+        logger.info(f"   Final memory: {memory_pressure_results['final_memory_mb']:.1f} MB")
+        logger.info(f"   Memory change: {memory_pressure_results['memory_change_mb']:+.1f} MB")
+        logger.info(f"   Average response time: {memory_pressure_results['average_response_time']:.3f}s")
         
         degradation = memory_pressure_results["response_time_degradation"]
         if "error" not in degradation:
-            print(f"   Performance degradation: {degradation['degradation_percent']:+.1f}%")
-            print(f"   Performance stable: {degradation['performance_stable']}")
+            logger.info(f"   Performance degradation: {degradation['degradation_percent']:+.1f}%")
+            logger.info(f"   Performance stable: {degradation['performance_stable']}")
         
         # Analysis
         self._generate_stress_analysis()
@@ -308,9 +308,9 @@ class FrontendStressValidator:
     
     def _generate_stress_analysis(self):
         """Generate comprehensive stress test analysis"""
-        print("\n" + "=" * 80)
-        print("STRESS TESTING ANALYSIS")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("STRESS TESTING ANALYSIS")
+        logger.info("=" * 80)
         
         extreme_load = self.results["stress_tests"].get("extreme_load", {})
         memory_pressure = self.results["stress_tests"].get("memory_pressure", {})
@@ -321,66 +321,66 @@ class FrontendStressValidator:
             rps = extreme_load["requests_per_second"]
             p95_time = extreme_load["p95_response_time"]
             
-            print("EXTREME LOAD TEST RESULTS:")
+            logger.info("EXTREME LOAD TEST RESULTS:")
             
             # Success rate evaluation
             if success_rate >= 99:
-                print("  Success Rate: EXCELLENT (≥99%)")
+                logger.info("  Success Rate: EXCELLENT (≥99%)")
             elif success_rate >= 95:
-                print("  Success Rate: GOOD (≥95%)")
+                logger.info("  Success Rate: GOOD (≥95%)")
             elif success_rate >= 90:
-                print("  Success Rate: ACCEPTABLE (≥90%)")
+                logger.info("  Success Rate: ACCEPTABLE (≥90%)")
             else:
-                print("  Success Rate: POOR (<90%)")
-            print(f"    Actual: {success_rate:.1f}%")
+                logger.info("  Success Rate: POOR (<90%)")
+            logger.info(f"    Actual: {success_rate:.1f}%")
             
             # Throughput evaluation
             if rps >= 100:
-                print("  Throughput: EXCELLENT (≥100 RPS)")
+                logger.info("  Throughput: EXCELLENT (≥100 RPS)")
             elif rps >= 50:
-                print("  Throughput: GOOD (≥50 RPS)")
+                logger.info("  Throughput: GOOD (≥50 RPS)")
             elif rps >= 25:
-                print("  Throughput: ACCEPTABLE (≥25 RPS)")
+                logger.info("  Throughput: ACCEPTABLE (≥25 RPS)")
             else:
-                print("  Throughput: POOR (<25 RPS)")
-            print(f"    Actual: {rps:.1f} RPS")
+                logger.info("  Throughput: POOR (<25 RPS)")
+            logger.info(f"    Actual: {rps:.1f} RPS")
             
             # Response time evaluation
             if p95_time <= 0.1:
-                print("  P95 Response Time: EXCELLENT (≤100ms)")
+                logger.info("  P95 Response Time: EXCELLENT (≤100ms)")
             elif p95_time <= 0.5:
-                print("  P95 Response Time: GOOD (≤500ms)")
+                logger.info("  P95 Response Time: GOOD (≤500ms)")
             elif p95_time <= 1.0:
-                print("  P95 Response Time: ACCEPTABLE (≤1s)")
+                logger.info("  P95 Response Time: ACCEPTABLE (≤1s)")
             else:
-                print("  P95 Response Time: POOR (>1s)")
-            print(f"    Actual: {p95_time:.3f}s")
+                logger.info("  P95 Response Time: POOR (>1s)")
+            logger.info(f"    Actual: {p95_time:.3f}s")
         
         # Memory Pressure Analysis
         if memory_pressure.get("iterations", 0) > 0:
             memory_change = memory_pressure["memory_change_mb"]
             degradation = memory_pressure["response_time_degradation"]
             
-            print("\nMEMORY PRESSURE TEST RESULTS:")
+            logger.info("\nMEMORY PRESSURE TEST RESULTS:")
             
             # Memory stability
             if abs(memory_change) <= 5:
-                print("  Memory Stability: EXCELLENT (≤5MB change)")
+                logger.info("  Memory Stability: EXCELLENT (≤5MB change)")
             elif abs(memory_change) <= 10:
-                print("  Memory Stability: GOOD (≤10MB change)")
+                logger.info("  Memory Stability: GOOD (≤10MB change)")
             elif abs(memory_change) <= 20:
-                print("  Memory Stability: ACCEPTABLE (≤20MB change)")
+                logger.info("  Memory Stability: ACCEPTABLE (≤20MB change)")
             else:
-                print("  Memory Stability: POOR (>20MB change)")
-            print(f"    Memory change: {memory_change:+.1f} MB")
+                logger.info("  Memory Stability: POOR (>20MB change)")
+            logger.info(f"    Memory change: {memory_change:+.1f} MB")
             
             # Performance stability
             if "error" not in degradation:
                 if degradation["performance_stable"]:
-                    print("  Performance Stability: STABLE")
+                    logger.info("  Performance Stability: STABLE")
                 else:
-                    print("  Performance Stability: UNSTABLE")
-                print(f"    Degradation: {degradation['degradation_percent']:+.1f}%")
+                    logger.info("  Performance Stability: UNSTABLE")
+                logger.info(f"    Degradation: {degradation['degradation_percent']:+.1f}%")
         
         # Overall Assessment
         issues = []
@@ -394,20 +394,20 @@ class FrontendStressValidator:
         if not memory_pressure.get("response_time_degradation", {}).get("performance_stable", True):
             issues.append("Performance degradation under load")
         
-        print("\nOVERALL STRESS TEST ASSESSMENT:")
+        logger.info("\nOVERALL STRESS TEST ASSESSMENT:")
         if not issues:
             self.results["validation_status"] = "EXCELLENT"
-            print("  Status: EXCELLENT ✅")
-            print("  The frontend handles extreme load conditions very well")
+            logger.info("  Status: EXCELLENT ✅")
+            logger.info("  The frontend handles extreme load conditions very well")
         elif len(issues) <= 1:
             self.results["validation_status"] = "GOOD"
-            print("  Status: GOOD ✅")
-            print("  Minor issues under extreme conditions")
+            logger.info("  Status: GOOD ✅")
+            logger.info("  Minor issues under extreme conditions")
         else:
             self.results["validation_status"] = "NEEDS_IMPROVEMENT"
-            print("  Status: NEEDS IMPROVEMENT ⚠️")
+            logger.info("  Status: NEEDS IMPROVEMENT ⚠️")
             for issue in issues:
-                print(f"    - {issue}")
+                logger.info(f"    - {issue}")
     
     def save_results(self, filename: str = None):
         """Save stress test results to file"""
@@ -418,7 +418,7 @@ class FrontendStressValidator:
         with open(filename, 'w') as f:
             json.dump(self.results, f, indent=2, default=str)
         
-        print(f"\nStress test results saved to: {filename}")
+        logger.info(f"\nStress test results saved to: {filename}")
         return filename
 
 def main():
@@ -428,7 +428,7 @@ def main():
         results = validator.run_stress_validation()
         filename = validator.save_results()
         
-        print(f"\nStress testing completed. Results saved to: {filename}")
+        logger.info(f"\nStress testing completed. Results saved to: {filename}")
         
         # Exit with appropriate code
         if results["validation_status"] in ["EXCELLENT", "GOOD"]:
@@ -437,10 +437,10 @@ def main():
             sys.exit(1)
             
     except KeyboardInterrupt:
-        print("\nStress test interrupted by user")
+        logger.info("\nStress test interrupted by user")
         sys.exit(1)
     except Exception as e:
-        print(f"\nStress test failed with error: {e}")
+        logger.error(f"\nStress test failed with error: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

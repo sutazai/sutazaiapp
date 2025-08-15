@@ -1141,16 +1141,16 @@ class SecurityAuditor:
         logger.info(f"Security audit complete. Report saved to {report_file}")
         
         # Print summary
-        print("\n" + "="*80)
-        print("SECURITY AUDIT SUMMARY")
-        print("="*80)
-        print(f"Risk Level: {report['executive_summary']['risk_level']}")
-        print(f"Total Findings: {report['executive_summary']['total_findings']}")
-        print(f"  - Critical: {report['executive_summary']['critical_findings']}")
-        print(f"  - High: {report['executive_summary']['high_findings']}")
-        print(f"Tests Passed: {report['executive_summary']['tests_passed']}/{len(self.test_results)}")
-        print(f"Compliance: {report['executive_summary']['compliance_status']}")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("SECURITY AUDIT SUMMARY")
+        logger.info("="*80)
+        logger.info(f"Risk Level: {report['executive_summary']['risk_level']}")
+        logger.info(f"Total Findings: {report['executive_summary']['total_findings']}")
+        logger.error(f"  - Critical: {report['executive_summary']['critical_findings']}")
+        logger.info(f"  - High: {report['executive_summary']['high_findings']}")
+        logger.info(f"Tests Passed: {report['executive_summary']['tests_passed']}/{len(self.test_results)}")
+        logger.info(f"Compliance: {report['executive_summary']['compliance_status']}")
+        logger.info("="*80)
         
         return report
 

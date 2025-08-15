@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Quick Response Time Validation
 Fast test of key endpoints for <50ms response times.
 """
@@ -39,8 +42,8 @@ def test_endpoint(name: str, url: str, timeout: int = 5) -> Dict[str, Any]:
 
 def main():
     """Run quick response time validation"""
-    print("🚀 ULTRATEST: Quick Response Time Validation")
-    print("=" * 60)
+    logger.info("🚀 ULTRATEST: Quick Response Time Validation")
+    logger.info("=" * 60)
     
     # Key endpoints to test
     endpoints = [
@@ -62,43 +65,43 @@ def main():
     slow_count = 0
     failed_count = 0
     
-    print(f"Testing {len(endpoints)} endpoints...")
+    logger.info(f"Testing {len(endpoints)} endpoints...")
     
     for name, url in endpoints:
-        print(f"Testing {name}...", end=" ")
+        logger.info(f"Testing {name}...", end=" ")
         result = test_endpoint(name, url)
         results.append(result)
         
         if result['success']:
             if result['meets_target']:
                 fast_count += 1
-                print(f"✅ {result['response_time_ms']:.2f}ms")
+                logger.info(f"✅ {result['response_time_ms']:.2f}ms")
             else:
                 slow_count += 1
-                print(f"⚠️ {result['response_time_ms']:.2f}ms (SLOW)")
+                logger.info(f"⚠️ {result['response_time_ms']:.2f}ms (SLOW)")
         else:
             failed_count += 1
-            print(f"❌ {result.get('error', 'Failed')}")
+            logger.error(f"❌ {result.get('error', 'Failed')}")
     
     # Generate summary
     total_endpoints = len(endpoints)
     operational_endpoints = fast_count + slow_count
     performance_score = (fast_count / total_endpoints * 100) if total_endpoints > 0 else 0
     
-    print("\n" + "=" * 60)
-    print("📊 RESPONSE TIME SUMMARY")
-    print("=" * 60)
-    print(f"Total Endpoints: {total_endpoints}")
-    print(f"Fast (<50ms): {fast_count}")
-    print(f"Slow (>50ms): {slow_count}")
-    print(f"Failed: {failed_count}")
-    print(f"Performance Score: {performance_score:.1f}%")
+    logger.info("\n" + "=" * 60)
+    logger.info("📊 RESPONSE TIME SUMMARY")
+    logger.info("=" * 60)
+    logger.info(f"Total Endpoints: {total_endpoints}")
+    logger.info(f"Fast (<50ms): {fast_count}")
+    logger.info(f"Slow (>50ms): {slow_count}")
+    logger.error(f"Failed: {failed_count}")
+    logger.info(f"Performance Score: {performance_score:.1f}%")
     
     if performance_score >= 70:
-        print("✅ PERFORMANCE TARGET ACHIEVED!")
+        logger.info("✅ PERFORMANCE TARGET ACHIEVED!")
         success = True
     else:
-        print("❌ Performance below 70% target")
+        logger.info("❌ Performance below 70% target")
         success = False
     
     # Save detailed results
@@ -118,7 +121,7 @@ def main():
     with open('/opt/sutazaiapp/tests/ultratest_quick_response_times_report.json', 'w') as f:
         json.dump(report, f, indent=2, default=str)
     
-    print(f"\n📄 Report saved: tests/ultratest_quick_response_times_report.json")
+    logger.info(f"\n📄 Report saved: tests/ultratest_quick_response_times_report.json")
     
     return 0 if success else 1
 

@@ -19,9 +19,9 @@ from universal_client import (
 )
 from discovery_service import DiscoveryService, AgentMatch
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Configure structured logging (Rule 8 compliance)
+from backend.app.core.logging_config import get_logger
+logger = get_logger(__name__)
 
 
 class WorkflowStatus(Enum):
@@ -923,7 +923,7 @@ if __name__ == "__main__":
                     parameters={"repo_url": "https://github.com/example/repo"}
                 )
                 
-                print(f"Started workflow execution: {execution_id}")
+                logger.info(f"WORKFLOW_DEMO - Started workflow execution: {execution_id}")
                 
                 # Monitor execution
                 while True:
@@ -931,8 +931,8 @@ if __name__ == "__main__":
                     if not status:
                         break
                     
-                    print(f"Status: {status['status']}")
-                    print(f"Completed tasks: {status['completed_tasks']}/{status['total_tasks']}")
+                    logger.info(f"WORKFLOW_DEMO - Status: {status['status']}")
+                    logger.info(f"WORKFLOW_DEMO - Completed tasks: {status['completed_tasks']}/{status['total_tasks']}")
                     
                     if status['status'] in ['completed', 'failed', 'cancelled']:
                         break
@@ -941,11 +941,11 @@ if __name__ == "__main__":
                 
                 # Show final results
                 final_status = engine.get_execution_status(execution_id)
-                print(f"Final status: {final_status}")
+                logger.info(f"WORKFLOW_DEMO - Final status: {final_status}")
                 
                 # Show metrics
                 metrics = engine.get_metrics()
-                print(f"Engine metrics: {metrics}")
+                logger.info(f"WORKFLOW_DEMO - Engine metrics: {metrics}")
                 
             finally:
                 await discovery.stop()

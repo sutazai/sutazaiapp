@@ -588,7 +588,7 @@ async def main():
         json.dump(report, f, indent=2)
     
     logger.info(f"Optimization complete! Report saved to {report_path}")
-    print(json.dumps(report['summary'], indent=2))
+    logger.info(json.dumps(report['summary'], indent=2))
 
 
 if __name__ == "__main__":

@@ -62,7 +62,7 @@ class FrontendPerformanceValidator:
                     "raw_stats": stats
                 }
         except Exception as e:
-            print(f"Error getting container stats: {e}")
+            logger.error(f"Error getting container stats: {e}")
             
         return {"error": "Failed to get stats"}
     
@@ -85,7 +85,7 @@ class FrontendPerformanceValidator:
         """Measure frontend load times with statistical analysis"""
         load_times = []
         
-        print(f"Measuring load times for {url} ({num_tests} iterations)...")
+        logger.info(f"Measuring load times for {url} ({num_tests} iterations)...")
         
         for i in range(num_tests):
             try:
@@ -96,13 +96,13 @@ class FrontendPerformanceValidator:
                 load_time = end_time - start_time
                 load_times.append(load_time)
                 
-                print(f"  Test {i+1}/{num_tests}: {load_time:.3f}s (Status: {response.status_code})")
+                logger.info(f"  Test {i+1}/{num_tests}: {load_time:.3f}s (Status: {response.status_code})")
                 
                 # Wait between tests
                 time.sleep(0.5)
                 
             except Exception as e:
-                print(f"  Test {i+1}/{num_tests}: FAILED - {e}")
+                logger.error(f"  Test {i+1}/{num_tests}: FAILED - {e}")
                 
         if not load_times:
             return {"error": "All load time tests failed"}
@@ -130,7 +130,7 @@ class FrontendPerformanceValidator:
             "errors": []
         }
         
-        print(f"Starting load test: {concurrent_users} concurrent users for {duration_seconds} seconds")
+        logger.info(f"Starting load test: {concurrent_users} concurrent users for {duration_seconds} seconds")
         
         start_time = time.time()
         end_time = start_time + duration_seconds
@@ -184,7 +184,7 @@ class FrontendPerformanceValidator:
     
     def test_caching_mechanisms(self) -> Dict[str, Any]:
         """Test if caching is working by measuring repeated requests"""
-        print("Testing caching mechanisms...")
+        logger.info("Testing caching mechanisms...")
         
         # First request (should be slower - cache miss)
         first_request = self.measure_load_time(self.frontend_url, num_tests=1)
@@ -209,7 +209,7 @@ class FrontendPerformanceValidator:
     
     def validate_functionality(self) -> Dict[str, Any]:
         """Validate that all core functionality still works"""
-        print("Validating frontend functionality...")
+        logger.info("Validating frontend functionality...")
         
         tests = {
             "homepage_accessible": False,
@@ -256,72 +256,72 @@ class FrontendPerformanceValidator:
     
     def run_comprehensive_test(self) -> Dict[str, Any]:
         """Run all performance tests"""
-        print("=" * 80)
-        print("ULTRA QA TEAM LEAD - Frontend Performance Validation")
-        print("=" * 80)
+        logger.info("=" * 80)
+        logger.info("ULTRA QA TEAM LEAD - Frontend Performance Validation")
+        logger.info("=" * 80)
         
         # Get baseline container stats
-        print("\n1. Getting baseline container statistics...")
+        logger.info("\n1. Getting baseline container statistics...")
         baseline_stats = self.get_container_stats("sutazai-frontend")
         self.results["baseline_measurements"]["container_stats"] = baseline_stats
         
         if "error" not in baseline_stats:
-            print(f"   Memory Usage: {baseline_stats['memory_used_mb']:.1f} MB ({baseline_stats['memory_percent']:.1f}%)")
-            print(f"   CPU Usage: {baseline_stats['cpu_percent']:.1f}%")
+            logger.info(f"   Memory Usage: {baseline_stats['memory_used_mb']:.1f} MB ({baseline_stats['memory_percent']:.1f}%)")
+            logger.info(f"   CPU Usage: {baseline_stats['cpu_percent']:.1f}%")
         
         # Test load times
-        print("\n2. Testing load times...")
+        logger.info("\n2. Testing load times...")
         load_time_results = self.measure_load_time(self.frontend_url, num_tests=15)
         self.results["test_results"]["load_times"] = load_time_results
         
         if "error" not in load_time_results:
-            print(f"   Average load time: {load_time_results['mean']:.3f}s")
-            print(f"   Median load time: {load_time_results['median']:.3f}s")
-            print(f"   Min/Max: {load_time_results['min']:.3f}s / {load_time_results['max']:.3f}s")
+            logger.info(f"   Average load time: {load_time_results['mean']:.3f}s")
+            logger.info(f"   Median load time: {load_time_results['median']:.3f}s")
+            logger.info(f"   Min/Max: {load_time_results['min']:.3f}s / {load_time_results['max']:.3f}s")
         
         # Test caching
-        print("\n3. Testing caching mechanisms...")
+        logger.info("\n3. Testing caching mechanisms...")
         caching_results = self.test_caching_mechanisms()
         self.results["test_results"]["caching"] = caching_results
         
         if "error" not in caching_results:
-            print(f"   First request: {caching_results['first_request_time']:.3f}s")
-            print(f"   Second request: {caching_results['second_request_time']:.3f}s")
-            print(f"   Improvement: {caching_results['improvement_percent']:.1f}%")
-            print(f"   Caching effective: {caching_results['caching_effective']}")
+            logger.info(f"   First request: {caching_results['first_request_time']:.3f}s")
+            logger.info(f"   Second request: {caching_results['second_request_time']:.3f}s")
+            logger.info(f"   Improvement: {caching_results['improvement_percent']:.1f}%")
+            logger.info(f"   Caching effective: {caching_results['caching_effective']}")
         
         # Perform load testing
-        print("\n4. Performing load testing...")
+        logger.info("\n4. Performing load testing...")
         load_test_results = self.perform_load_testing(concurrent_users=5, duration_seconds=20)
         self.results["test_results"]["load_testing"] = load_test_results
         
-        print(f"   Total requests: {load_test_results['total_requests']}")
-        print(f"   Success rate: {load_test_results['successful_requests']/load_test_results['total_requests']*100:.1f}%")
-        print(f"   Requests per second: {load_test_results['requests_per_second']:.2f}")
-        print(f"   Average response time: {load_test_results['average_response_time']:.3f}s")
+        logger.info(f"   Total requests: {load_test_results['total_requests']}")
+        logger.info(f"   Success rate: {load_test_results['successful_requests']/load_test_results['total_requests']*100:.1f}%")
+        logger.info(f"   Requests per second: {load_test_results['requests_per_second']:.2f}")
+        logger.info(f"   Average response time: {load_test_results['average_response_time']:.3f}s")
         
         # Validate functionality
-        print("\n5. Validating functionality...")
+        logger.info("\n5. Validating functionality...")
         functionality_results = self.validate_functionality()
         self.results["test_results"]["functionality"] = functionality_results
         
-        print(f"   Homepage accessible: {functionality_results['tests']['homepage_accessible']}")
-        print(f"   Streamlit app loads: {functionality_results['tests']['streamlit_app_loads']}")
-        print(f"   Overall functional: {functionality_results['overall_functional']}")
+        logger.info(f"   Homepage accessible: {functionality_results['tests']['homepage_accessible']}")
+        logger.info(f"   Streamlit app loads: {functionality_results['tests']['streamlit_app_loads']}")
+        logger.info(f"   Overall functional: {functionality_results['overall_functional']}")
         
         # Final container stats
-        print("\n6. Getting final container statistics...")
+        logger.info("\n6. Getting final container statistics...")
         final_stats = self.get_container_stats("sutazai-frontend")
         self.results["test_results"]["final_container_stats"] = final_stats
         
         if "error" not in final_stats:
-            print(f"   Memory Usage: {final_stats['memory_used_mb']:.1f} MB ({final_stats['memory_percent']:.1f}%)")
-            print(f"   CPU Usage: {final_stats['cpu_percent']:.1f}%")
+            logger.info(f"   Memory Usage: {final_stats['memory_used_mb']:.1f} MB ({final_stats['memory_percent']:.1f}%)")
+            logger.info(f"   CPU Usage: {final_stats['cpu_percent']:.1f}%")
             
             # Compare memory usage
             if "error" not in baseline_stats:
                 memory_change = final_stats['memory_used_mb'] - baseline_stats['memory_used_mb']
-                print(f"   Memory change: {memory_change:+.1f} MB")
+                logger.info(f"   Memory change: {memory_change:+.1f} MB")
         
         # Generate validation summary
         self._generate_validation_summary()
@@ -330,9 +330,9 @@ class FrontendPerformanceValidator:
     
     def _generate_validation_summary(self):
         """Generate validation summary for claimed improvements"""
-        print("\n" + "=" * 80)
-        print("PERFORMANCE VALIDATION SUMMARY")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("PERFORMANCE VALIDATION SUMMARY")
+        logger.info("=" * 80)
         
         # Load time validation
         load_time_results = self.results["test_results"].get("load_times", {})
@@ -349,9 +349,9 @@ class FrontendPerformanceValidator:
             else:
                 load_time_status = "POOR"
                 
-            print(f"LOAD TIME PERFORMANCE: {load_time_status}")
-            print(f"  Average: {avg_load_time:.3f}s")
-            print(f"  Claimed improvement: 70% (cannot verify without baseline)")
+            logger.info(f"LOAD TIME PERFORMANCE: {load_time_status}")
+            logger.info(f"  Average: {avg_load_time:.3f}s")
+            logger.info(f"  Claimed improvement: 70% (cannot verify without baseline)")
         
         # Memory usage validation
         baseline_stats = self.results["baseline_measurements"].get("container_stats", {})
@@ -371,38 +371,38 @@ class FrontendPerformanceValidator:
             else:
                 memory_status = "HIGH"
                 
-            print(f"MEMORY USAGE: {memory_status}")
-            print(f"  Current usage: {memory_used:.1f} MB ({memory_percent:.1f}%)")
-            print(f"  Claimed reduction: 60% (cannot verify without baseline)")
+            logger.info(f"MEMORY USAGE: {memory_status}")
+            logger.info(f"  Current usage: {memory_used:.1f} MB ({memory_percent:.1f}%)")
+            logger.info(f"  Claimed reduction: 60% (cannot verify without baseline)")
         
         # Functionality validation
         functionality = self.results["test_results"].get("functionality", {})
         if functionality.get("overall_functional", False):
-            print("FUNCTIONALITY: PASS")
+            logger.info("FUNCTIONALITY: PASS")
         else:
-            print("FUNCTIONALITY: FAIL")
-            print("  Some core functionality is broken")
+            logger.info("FUNCTIONALITY: FAIL")
+            logger.info("  Some core functionality is broken")
         
         # Caching validation
         caching = self.results["test_results"].get("caching", {})
         if "error" not in caching:
             if caching.get("caching_effective", False):
-                print("CACHING: EFFECTIVE")
+                logger.info("CACHING: EFFECTIVE")
             else:
-                print("CACHING:   OR NOT DETECTED")
+                logger.info("CACHING:   OR NOT DETECTED")
         
         # Load testing validation
         load_test = self.results["test_results"].get("load_testing", {})
         if load_test.get("successful_requests", 0) > 0:
             success_rate = load_test["successful_requests"] / load_test["total_requests"] * 100
             if success_rate >= 95:
-                print("LOAD TESTING: PASS")
+                logger.info("LOAD TESTING: PASS")
             elif success_rate >= 90:
-                print("LOAD TESTING: ACCEPTABLE")
+                logger.info("LOAD TESTING: ACCEPTABLE")
             else:
-                print("LOAD TESTING: FAIL")
-            print(f"  Success rate: {success_rate:.1f}%")
-            print(f"  Requests per second: {load_test['requests_per_second']:.2f}")
+                logger.info("LOAD TESTING: FAIL")
+            logger.info(f"  Success rate: {success_rate:.1f}%")
+            logger.info(f"  Requests per second: {load_test['requests_per_second']:.2f}")
         
         # Overall validation
         issues = []
@@ -415,12 +415,12 @@ class FrontendPerformanceValidator:
         
         if not issues:
             self.results["validation_status"] = "PASS"
-            print("\nOVERALL VALIDATION: PASS ✅")
+            logger.info("\nOVERALL VALIDATION: PASS ✅")
         else:
             self.results["validation_status"] = "FAIL"
-            print("\nOVERALL VALIDATION: FAIL ❌")
+            logger.info("\nOVERALL VALIDATION: FAIL ❌")
             for issue in issues:
-                print(f"  - {issue}")
+                logger.info(f"  - {issue}")
     
     def save_results(self, filename: str = None):
         """Save test results to file"""
@@ -431,7 +431,7 @@ class FrontendPerformanceValidator:
         with open(filename, 'w') as f:
             json.dump(self.results, f, indent=2, default=str)
         
-        print(f"\nResults saved to: {filename}")
+        logger.info(f"\nResults saved to: {filename}")
         return filename
 
 def main():
@@ -441,7 +441,7 @@ def main():
         results = validator.run_comprehensive_test()
         filename = validator.save_results()
         
-        print(f"\nTest completed. Results saved to: {filename}")
+        logger.info(f"\nTest completed. Results saved to: {filename}")
         
         # Exit with appropriate code
         if results["validation_status"] == "PASS":
@@ -450,10 +450,10 @@ def main():
             sys.exit(1)
             
     except KeyboardInterrupt:
-        print("\nTest interrupted by user")
+        logger.info("\nTest interrupted by user")
         sys.exit(1)
     except Exception as e:
-        print(f"\nTest failed with error: {e}")
+        logger.error(f"\nTest failed with error: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

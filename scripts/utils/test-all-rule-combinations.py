@@ -996,24 +996,24 @@ def main():
         # Generate report
         report_path = tester.generate_test_report(test_suite)
         
-        print(f"✅ Testing completed successfully!")
-        print(f"📊 Report generated: {report_path}")
-        print(f"🎯 Success rate: {(test_suite.successful_tests / test_suite.completed_tests * 100):.1f}%")
-        print(f"⏱️  Duration: {(test_suite.end_time - test_suite.start_time).total_seconds():.2f} seconds")
+        logger.info(f"✅ Testing completed successfully!")
+        logger.info(f"📊 Report generated: {report_path}")
+        logger.info(f"🎯 Success rate: {(test_suite.successful_tests / test_suite.completed_tests * 100):.1f}%")
+        logger.info(f"⏱️  Duration: {(test_suite.end_time - test_suite.start_time).total_seconds():.2f} seconds")
         
         # Exit with appropriate code
         if test_suite.failed_tests == 0:
             sys.exit(0)
         else:
-            print(f"⚠️  {test_suite.failed_tests} tests failed")
+            logger.error(f"⚠️  {test_suite.failed_tests} tests failed")
             sys.exit(1)
             
     except KeyboardInterrupt:
-        print("\n🛑 Testing interrupted by user")
+        logger.info("\n🛑 Testing interrupted by user")
         sys.exit(130)
     except Exception as e:
         logger.error(f"Testing failed: {e}")
-        print(f"❌ Testing failed: {e}")
+        logger.error(f"❌ Testing failed: {e}")
         sys.exit(1)
     finally:
         if tester:

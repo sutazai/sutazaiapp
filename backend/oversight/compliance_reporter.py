@@ -1193,9 +1193,9 @@ async def main():
     for framework in ComplianceFramework:
         try:
             report = await reporter.generate_compliance_report(framework, ReportType.MONTHLY)
-            print(f"Generated {framework.value} compliance report: {report.id}")
+            logger.info(f"Generated {framework.value} compliance report: {report.id}")
         except Exception as e:
-            print(f"Error generating {framework.value} report: {e}")
+            logger.error(f"Error generating {framework.value} report: {e}")
     
     # Start scheduler
     await reporter.schedule_reports()

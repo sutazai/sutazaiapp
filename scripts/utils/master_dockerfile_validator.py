@@ -32,8 +32,8 @@ try:
     from tests.dockerfile_performance_validator import DockerfilePerformanceValidator
     from tests.dockerfile_security_validator import DockerfileSecurityValidator
 except ImportError as e:
-    print(f"Error importing validation modules: {e}")
-    print("Make sure all validation modules are present in the tests directory")
+    logger.error(f"Error importing validation modules: {e}")
+    logger.info("Make sure all validation modules are present in the tests directory")
     sys.exit(1)
 
 # Configure logging
@@ -429,52 +429,52 @@ class MasterDockerfileValidator:
         """Print executive summary of validation results."""
         assessment = self.validation_results.get('final_assessment', {})
         
-        print("\n" + "="*80)
-        print("  DOCKERFILE CONSOLIDATION VALIDATION - EXECUTIVE SUMMARY")
-        print("="*80)
-        print(f"Validation Timestamp:   {assessment.get('timestamp', 'Unknown')}")
-        print(f"Overall Score:          {assessment.get('overall_score', 0)}/100")
-        print(f"Overall Grade:          {assessment.get('overall_grade', 'F')}")
-        print(f"Passed Validations:     {assessment.get('passed_validations', 0)}/{assessment.get('total_validations', 0)}")
-        print(f"Deployment Readiness:   {assessment.get('deployment_readiness', 'NOT_READY')}")
-        print()
+        logger.info("\n" + "="*80)
+        logger.info("  DOCKERFILE CONSOLIDATION VALIDATION - EXECUTIVE SUMMARY")
+        logger.info("="*80)
+        logger.info(f"Validation Timestamp:   {assessment.get('timestamp', 'Unknown')}")
+        logger.info(f"Overall Score:          {assessment.get('overall_score', 0)}/100")
+        logger.info(f"Overall Grade:          {assessment.get('overall_grade', 'F')}")
+        logger.info(f"Passed Validations:     {assessment.get('passed_validations', 0)}/{assessment.get('total_validations', 0)}")
+        logger.info(f"Deployment Readiness:   {assessment.get('deployment_readiness', 'NOT_READY')}")
+        logger.info()
         
         # Validation scores breakdown
         scores = assessment.get('validation_scores', {})
         if scores:
-            print("VALIDATION SCORES:")
+            logger.info("VALIDATION SCORES:")
             for validation_type, score in scores.items():
-                print(f"  • {validation_type.replace('_', ' ').title()}: {score}/100")
-            print()
+                logger.info(f"  • {validation_type.replace('_', ' ').title()}: {score}/100")
+            logger.info()
         
         # Critical issues
         critical_issues = assessment.get('critical_issues', [])
         if critical_issues:
-            print("🚨 CRITICAL ISSUES:")
+            logger.error("🚨 CRITICAL ISSUES:")
             for issue in critical_issues:
-                print(f"  • {issue}")
-            print()
+                logger.info(f"  • {issue}")
+            logger.info()
         
         # Recommendations
         recommendations = assessment.get('recommendations', [])
         if recommendations:
-            print("RECOMMENDATIONS:")
+            logger.info("RECOMMENDATIONS:")
             for rec in recommendations:
-                print(f"  • {rec}")
-            print()
+                logger.info(f"  • {rec}")
+            logger.info()
         
         # Final status
         deployment_status = assessment.get('deployment_readiness', 'NOT_READY')
         if deployment_status == 'READY':
-            print("✅ VALIDATION PASSED - System ready for production deployment")
+            logger.info("✅ VALIDATION PASSED - System ready for production deployment")
         elif deployment_status == 'READY_WITH_MONITORING':
-            print("⚠️  VALIDATION CONDITIONALLY PASSED - Deploy with enhanced monitoring")
+            logger.info("⚠️  VALIDATION CONDITIONALLY PASSED - Deploy with enhanced monitoring")
         elif deployment_status == 'NEEDS_IMPROVEMENT':
-            print("⚠️  VALIDATION NEEDS IMPROVEMENT - Address issues before deployment")
+            logger.info("⚠️  VALIDATION NEEDS IMPROVEMENT - Address issues before deployment")
         else:
-            print("❌ VALIDATION FAILED - System not ready for production deployment")
+            logger.error("❌ VALIDATION FAILED - System not ready for production deployment")
         
-        print("="*80)
+        logger.info("="*80)
 
 async def main():
     """Main execution function."""
@@ -491,7 +491,7 @@ async def main():
         # Print executive summary
         master_validator.print_executive_summary()
         
-        print(f"\nDetailed master report: {report_file}")
+        logger.info(f"\nDetailed master report: {report_file}")
         
         # Return appropriate exit code
         final_assessment = results.get('final_assessment', {})

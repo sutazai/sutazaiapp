@@ -933,29 +933,29 @@ if __name__ == "__main__":
                 
                 # Show system health overview
                 overview = monitor.get_system_health_overview()
-                print(f"System Health Overview:")
-                print(f"- Total agents: {overview['total_agents']}")
-                print(f"- Healthy agents: {overview['healthy_agents']}")
-                print(f"- System health: {overview['system_health_percentage']:.1f}%")
-                print(f"- Average response time: {overview['average_response_time']:.1f}ms")
-                print(f"- Active alerts: {overview['active_alerts']}")
+                logger.info(f"System Health Overview:")
+                logger.info(f"- Total agents: {overview['total_agents']}")
+                logger.info(f"- Healthy agents: {overview['healthy_agents']}")
+                logger.info(f"- System health: {overview['system_health_percentage']:.1f}%")
+                logger.info(f"- Average response time: {overview['average_response_time']:.1f}ms")
+                logger.info(f"- Active alerts: {overview['active_alerts']}")
                 
                 # Show individual agent health
                 for agent_id in list(monitor.agent_profiles.keys())[:3]:  # Show first 3
                     summary = monitor.get_agent_health_summary(agent_id)
                     if summary:
-                        print(f"\nAgent {agent_id}:")
-                        print(f"- Status: {summary['current_status']}")
-                        print(f"- Uptime: {summary['uptime_percentage']:.1f}%")
-                        print(f"- Success rate: {summary['success_rate']:.1f}%")
-                        print(f"- Response time: {summary['average_response_time']:.1f}ms")
+                        logger.info(f"\nAgent {agent_id}:")
+                        logger.info(f"- Status: {summary['current_status']}")
+                        logger.info(f"- Uptime: {summary['uptime_percentage']:.1f}%")
+                        logger.info(f"- Success rate: {summary['success_rate']:.1f}%")
+                        logger.info(f"- Response time: {summary['average_response_time']:.1f}ms")
                 
                 # Show alert statistics
                 alert_stats = monitor.alert_manager.get_alert_statistics()
-                print(f"\nAlert Statistics:")
-                print(f"- Total alerts: {alert_stats['total_alerts']}")
-                print(f"- Active alerts: {alert_stats['active_alerts']}")
-                print(f"- Resolution rate: {alert_stats['resolution_rate']:.1f}%")
+                logger.info(f"\nAlert Statistics:")
+                logger.info(f"- Total alerts: {alert_stats['total_alerts']}")
+                logger.info(f"- Active alerts: {alert_stats['active_alerts']}")
+                logger.info(f"- Resolution rate: {alert_stats['resolution_rate']:.1f}%")
                 
             finally:
                 await monitor.stop()

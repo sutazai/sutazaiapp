@@ -531,11 +531,11 @@ if __name__ == "__main__":
     # Get optimized context
     optimized = manager.get_optimized_context()
     
-    print(f"Original messages: {len(manager.messages)}")
-    print(f"Optimized messages: {len(optimized)}")
-    print(f"Token usage: {manager.get_token_usage()}")
+    logger.info(f"Original messages: {len(manager.messages)}")
+    logger.info(f"Optimized messages: {len(optimized)}")
+    logger.info(f"Token usage: {manager.get_token_usage()}")
     
     # Show optimized context
-    print("\nOptimized context:")
+    logger.info("\nOptimized context:")
     for msg in optimized[:5]:  # Show first 5
-        print(f"{msg['role']}: {msg['content'][:100]}...")
+        logger.info(f"{msg['role']}: {msg['content'][:100]}...")

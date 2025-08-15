@@ -127,7 +127,7 @@ class EnhancedMonitor:
         psutil.cpu_percent()  # Initialize CPU measurement
         
         # Initialize display
-        print(self.CLEAR + self.HIDE_CURSOR, end='')
+        logger.info(self.CLEAR + self.HIDE_CURSOR, end='')
         
     def _setup_keyboard_input(self):
         """Setup non-blocking keyboard input"""
@@ -220,7 +220,7 @@ class EnhancedMonitor:
                     user_config = json.load(f)
                     default_config.update(user_config)
             except Exception as e:
-                print(f"Warning: Failed to load config from {config_path}: {e}")
+                logger.error(f"Warning: Failed to load config from {config_path}: {e}")
         
         return default_config
     
@@ -2154,7 +2154,7 @@ class EnhancedMonitor:
         """Main enhanced monitor loop with adaptive features"""
         try:
             # Initial display
-            print(self.HOME + "Initializing Enhanced Monitor...", end='', flush=True)
+            logger.info(self.HOME + "Initializing Enhanced Monitor...", end='', flush=True)
             
             while True:
                 # Get comprehensive data
@@ -2183,10 +2183,10 @@ class EnhancedMonitor:
                 disk_percent_str = f"{stats['disk_percent']:5.1f}%"
                 
                 # Line 1: Enhanced header with refresh rate
-                print(f"{self.move_to(1)}{self.BOLD}🚀 SutazAI Enhanced Monitor{self.RESET} - {timestamp} [{refresh_indicator}]{self.clear_line()}", end='')
+                logger.info(f"{self.move_to(1)}{self.BOLD}🚀 SutazAI Enhanced Monitor{self.RESET} - {timestamp} [{refresh_indicator}]{self.clear_line()}", end='')
                 
                 # Line 2: Separator
-                print(f"{self.move_to(2)}{'=' * 70}{self.clear_line()}", end='')
+                logger.info(f"{self.move_to(2)}{'=' * 70}{self.clear_line()}", end='')
                 
                 # Lines 3-7: Enhanced system stats with trends and network - using cached config values
                 cpu_color = self.get_color(stats['cpu_percent'], 
@@ -2202,9 +2202,9 @@ class EnhancedMonitor:
                 trend_cpu = stats['cpu_trend'] if self._config_cache['show_trends'] else ""
                 trend_mem = stats['mem_trend'] if self._config_cache['show_trends'] else ""
                 
-                print(f"{self.move_to(3)}CPU:    {self.create_bar(stats['cpu_percent'])} {cpu_color}{cpu_percent_str}{self.RESET} {trend_cpu} ({stats['cpu_cores']}c) Load:{stats['load_avg'][0]:.2f}{self.clear_line()}", end='')
-                print(f"{self.move_to(4)}Memory: {self.create_bar(stats['mem_percent'])} {mem_color}{mem_percent_str}{self.RESET} {trend_mem} ({stats['mem_used']:.1f}GB/{stats['mem_total']:.1f}GB){self.clear_line()}", end='')
-                print(f"{self.move_to(5)}Disk:   {self.create_bar(stats['disk_percent'])} {disk_color}{disk_percent_str}{self.RESET} ({stats['disk_free']:.1f}GB free){self.clear_line()}", end='')
+                logger.info(f"{self.move_to(3)}CPU:    {self.create_bar(stats['cpu_percent'])} {cpu_color}{cpu_percent_str}{self.RESET} {trend_cpu} ({stats['cpu_cores']}c) Load:{stats['load_avg'][0]:.2f}{self.clear_line()}", end='')
+                logger.info(f"{self.move_to(4)}Memory: {self.create_bar(stats['mem_percent'])} {mem_color}{mem_percent_str}{self.RESET} {trend_mem} ({stats['mem_used']:.1f}GB/{stats['mem_total']:.1f}GB){self.clear_line()}", end='')
+                logger.info(f"{self.move_to(5)}Disk:   {self.create_bar(stats['disk_percent'])} {disk_color}{disk_percent_str}{self.RESET} ({stats['disk_free']:.1f}GB free){self.clear_line()}", end='')
                 
                 # Line 6: GPU statistics (if available)
                 gpu_line = 6
@@ -2221,16 +2221,16 @@ class EnhancedMonitor:
                         # WSL2 or limited capability GPU - detected but no usage stats
                         status_msg = stats['gpu']['status']
                         bar_display = '─' * 10 + '▓' * 10  # Half-filled bar to indicate detection but no stats
-                        print(f"{self.move_to(gpu_line)}GPU:    {bar_display} {self.YELLOW}  DETECTED{self.RESET} ({stats['gpu']['name']}) - {status_msg}{self.clear_line()}", end='')
+                        logger.info(f"{self.move_to(gpu_line)}GPU:    {bar_display} {self.YELLOW}  DETECTED{self.RESET} ({stats['gpu']['name']}) - {status_msg}{self.clear_line()}", end='')
                     elif 'method' in stats['gpu']:
                         # GPU with stats from alternative method
                         method_str = f" [{stats['gpu']['method']}]"
                         power_str = f" {stats['gpu']['power']:.0f}W" if stats['gpu'].get('power', 0) > 0 else ""
-                        print(f"{self.move_to(gpu_line)}GPU:    {self.create_bar(gpu_usage)} {gpu_color}{gpu_usage:5.1f}%{self.RESET} {gpu_trend}{gpu_temp_str}{gpu_mem_str}{power_str} ({stats['gpu']['name']}){method_str}{self.clear_line()}", end='')
+                        logger.info(f"{self.move_to(gpu_line)}GPU:    {self.create_bar(gpu_usage)} {gpu_color}{gpu_usage:5.1f}%{self.RESET} {gpu_trend}{gpu_temp_str}{gpu_mem_str}{power_str} ({stats['gpu']['name']}){method_str}{self.clear_line()}", end='')
                     else:
                         # Normal GPU with full stats
                         power_str = f" {stats['gpu']['power']:.0f}W" if stats['gpu'].get('power', 0) > 0 else ""
-                        print(f"{self.move_to(gpu_line)}GPU:    {self.create_bar(gpu_usage)} {gpu_color}{gpu_usage:5.1f}%{self.RESET} {gpu_trend}{gpu_temp_str}{gpu_mem_str}{power_str} ({stats['gpu']['name']}){self.clear_line()}", end='')
+                        logger.info(f"{self.move_to(gpu_line)}GPU:    {self.create_bar(gpu_usage)} {gpu_color}{gpu_usage:5.1f}%{self.RESET} {gpu_trend}{gpu_temp_str}{gpu_mem_str}{power_str} ({stats['gpu']['name']}){self.clear_line()}", end='')
                     network_line = 7
                 else:
                     # Check if we're in WSL2 to show appropriate message
@@ -2245,53 +2245,53 @@ class EnhancedMonitor:
                     else:
                         wsl_msg = "No GPU detected or drivers missing"
                     
-                    print(f"{self.move_to(gpu_line)}GPU:    {'─' * 20} {self.RESET} N/A - {wsl_msg}{self.clear_line()}", end='')
+                    logger.info(f"{self.move_to(gpu_line)}GPU:    {'─' * 20} {self.RESET} N/A - {wsl_msg}{self.clear_line()}", end='')
                     network_line = 7
                 
                 # Network statistics (line determined by GPU presence) - using cached config
                 if self._config_cache['show_network']:
                     net = stats['network']
                     net_trend = self._get_trend(self.history['network']) if self._config_cache['show_trends'] else ""
-                    print(f"{self.move_to(network_line)}Network: {self.CYAN}{net['bandwidth_mbps']:6.1f} Mbps{self.RESET} {net_trend} ↑{net['upload_mbps']:.1f} ↓{net['download_mbps']:.1f} Conn:{stats['connections']}{self.clear_line()}", end='')
+                    logger.info(f"{self.move_to(network_line)}Network: {self.CYAN}{net['bandwidth_mbps']:6.1f} Mbps{self.RESET} {net_trend} ↑{net['upload_mbps']:.1f} ↓{net['download_mbps']:.1f} Conn:{stats['connections']}{self.clear_line()}", end='')
                     agent_start_line = network_line + 2
                 else:
-                    print(f"{self.move_to(network_line)}{self.clear_line()}", end='')
+                    logger.info(f"{self.move_to(network_line)}{self.clear_line()}", end='')
                     agent_start_line = network_line + 1
                 
                 # Blank line before agents
-                print(f"{self.move_to(agent_start_line - 1)}{self.clear_line()}", end='')
+                logger.info(f"{self.move_to(agent_start_line - 1)}{self.clear_line()}", end='')
                 
                 # Agent/Container section header with health summary
                 health_color = self.GREEN if healthy == total else (self.YELLOW if healthy > total * 0.5 else self.RED)
-                print(f"{self.move_to(agent_start_line)}{icon} {display_type} ({health_color}{healthy}{self.RESET}/{total}) {'Name':<20} Status    RT{self.clear_line()}", end='')
+                logger.info(f"{self.move_to(agent_start_line)}{icon} {display_type} ({health_color}{healthy}{self.RESET}/{total}) {'Name':<20} Status    RT{self.clear_line()}", end='')
                 
                 # Lines for agents/containers (6 items)
                 for i in range(6):
                     line_num = agent_start_line + 1 + i
                     if i < len(agents):
-                        print(f"{self.move_to(line_num)}{agents[i]}{self.clear_line()}", end='')
+                        logger.info(f"{self.move_to(line_num)}{agents[i]}{self.clear_line()}", end='')
                     else:
-                        print(f"{self.move_to(line_num)}{self.clear_line()}", end='')
+                        logger.info(f"{self.move_to(line_num)}{self.clear_line()}", end='')
                 
                 # Models section (if available)
                 models_start = agent_start_line + 7
                 if models and models[0] != "  Unable to retrieve models":
-                    print(f"{self.move_to(models_start)}🤖 Ollama Models:{self.clear_line()}", end='')
+                    logger.info(f"{self.move_to(models_start)}🤖 Ollama Models:{self.clear_line()}", end='')
                     for i in range(min(3, len(models))):
-                        print(f"{self.move_to(models_start + 1 + i)}{models[i]}{self.clear_line()}", end='')
+                        logger.info(f"{self.move_to(models_start + 1 + i)}{models[i]}{self.clear_line()}", end='')
                     alert_line = models_start + 4
                 else:
-                    print(f"{self.move_to(models_start)}{self.clear_line()}", end='')
+                    logger.info(f"{self.move_to(models_start)}{self.clear_line()}", end='')
                     alert_line = models_start + 1
                 
                 # Clear remaining model lines
                 for i in range(3):
                     if models_start + 1 + i < alert_line:
-                        print(f"{self.move_to(models_start + 1 + i)}{self.clear_line()}", end='')
+                        logger.info(f"{self.move_to(models_start + 1 + i)}{self.clear_line()}", end='')
                 
                 # Enhanced alerts with multiple conditions
                 alert_msg = self._generate_alert_message(stats, healthy, total)
-                print(f"{self.move_to(alert_line)}🎯 Status: {alert_msg}{self.clear_line()}", end='')
+                logger.info(f"{self.move_to(alert_line)}🎯 Status: {alert_msg}{self.clear_line()}", end='')
                 
                 # Footer with timer controls and enhanced information
                 footer_line = alert_line + 2
@@ -2299,11 +2299,11 @@ class EnhancedMonitor:
                 log_info = "LOG" if self.logger else "---"
                 mode_str = "ADAPTIVE" if self.adaptive_mode else "MANUAL"
                 rate_str = f"{self.manual_refresh_rate:.1f}s"
-                print(f"{self.move_to(footer_line)}Controls: +/- (speed), A (adaptive), R (reset), Q (quit) | {mode_str} {rate_str} | {config_info} {log_info}{self.clear_line()}", end='')
+                logger.info(f"{self.move_to(footer_line)}Controls: +/- (speed), A (adaptive), R (reset), Q (quit) | {mode_str} {rate_str} | {config_info} {log_info}{self.clear_line()}", end='')
                 
                 # Clear any remaining lines
                 for i in range(footer_line + 1, 25):
-                    print(f"{self.move_to(i)}{self.clear_line()}", end='')
+                    logger.info(f"{self.move_to(i)}{self.clear_line()}", end='')
                 
                 # Flush output
                 sys.stdout.flush()
@@ -2386,16 +2386,16 @@ class EnhancedMonitor:
             logger.debug(f"Suppressed exception: {e}")
             pass
         
-        print(self.SHOW_CURSOR)
-        print(f"{self.move_to(25)}\n{self.GREEN}Enhanced Monitor stopped gracefully.{self.RESET}{self.clear_line()}")
+        logger.info(self.SHOW_CURSOR)
+        logger.info(f"{self.move_to(25)}\n{self.GREEN}Enhanced Monitor stopped gracefully.{self.RESET}{self.clear_line()}")
 
 
 def main():
     """Enhanced monitor entry point"""
     # Check if terminal supports ANSI
     if not sys.stdout.isatty() and '--force' not in sys.argv:
-        print("Error: This monitor requires an interactive terminal.")
-        print("For testing purposes, use --force flag.")
+        logger.error("Error: This monitor requires an interactive terminal.")
+        logger.info("For testing purposes, use --force flag.")
         return 1
     
     # Parse command line arguments
@@ -2414,7 +2414,7 @@ def main():
         return 0
     except Exception as e:
         monitor.cleanup()
-        print(f"Monitor error: {e}")
+        logger.error(f"Monitor error: {e}")
         return 1
 
 

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Comprehensive Security Audit Script for SutazAI System
 Validates JWT, CORS, Authentication, and Security Headers implementation
 Author: Security Architect Team
@@ -42,22 +45,22 @@ class SecurityAuditor:
         
     def print_header(self, title: str):
         """Print formatted section header"""
-        print(f"\n{Colors.BOLD}{Colors.BLUE}{'=' * 80}{Colors.ENDC}")
-        print(f"{Colors.BOLD}{Colors.CYAN}{title:^80}{Colors.ENDC}")
-        print(f"{Colors.BOLD}{Colors.BLUE}{'=' * 80}{Colors.ENDC}\n")
+        logger.info(f"\n{Colors.BOLD}{Colors.BLUE}{'=' * 80}{Colors.ENDC}")
+        logger.info(f"{Colors.BOLD}{Colors.CYAN}{title:^80}{Colors.ENDC}")
+        logger.info(f"{Colors.BOLD}{Colors.BLUE}{'=' * 80}{Colors.ENDC}\n")
         
     def print_success(self, message: str):
         """Print success message"""
-        print(f"{Colors.GREEN}✅ {message}{Colors.ENDC}")
+        logger.info(f"{Colors.GREEN}✅ {message}{Colors.ENDC}")
         
     def print_warning(self, message: str):
         """Print warning message"""
-        print(f"{Colors.YELLOW}⚠️  {message}{Colors.ENDC}")
+        logger.info(f"{Colors.YELLOW}⚠️  {message}{Colors.ENDC}")
         self.warnings.append(message)
         
     def print_error(self, message: str, severity: str = "HIGH"):
         """Print error message"""
-        print(f"{Colors.RED}❌ {severity}: {message}{Colors.ENDC}")
+        logger.info(f"{Colors.RED}❌ {severity}: {message}{Colors.ENDC}")
         self.vulnerabilities.append({"message": message, "severity": severity})
         self.severity_levels[severity].append(message)
         
@@ -441,12 +444,12 @@ class SecurityAuditor:
     
     def run_full_audit(self):
         """Run complete security audit"""
-        print(f"{Colors.BOLD}{Colors.CYAN}")
-        print("╔════════════════════════════════════════════════════════════════════════╗")
-        print("║          SUTAZAI COMPREHENSIVE SECURITY AUDIT v2.0                    ║")
-        print("║                 Enterprise Security Assessment                         ║")
-        print("╚════════════════════════════════════════════════════════════════════════╝")
-        print(f"{Colors.ENDC}")
+        logger.info(f"{Colors.BOLD}{Colors.CYAN}")
+        logger.info("╔════════════════════════════════════════════════════════════════════════╗")
+        logger.info("║          SUTAZAI COMPREHENSIVE SECURITY AUDIT v2.0                    ║")
+        logger.info("║                 Enterprise Security Assessment                         ║")
+        logger.info("╚════════════════════════════════════════════════════════════════════════╝")
+        logger.info(f"{Colors.ENDC}")
         
         # Run all audits
         jwt_results = self.audit_jwt_implementation()
@@ -468,15 +471,15 @@ class SecurityAuditor:
         with open(report_path, 'w') as f:
             f.write(report)
             
-        print(f"\n{Colors.BOLD}{Colors.GREEN}Report saved to: {report_path}{Colors.ENDC}")
+        logger.info(f"\n{Colors.BOLD}{Colors.GREEN}Report saved to: {report_path}{Colors.ENDC}")
         
         # Print summary
-        print(f"\n{Colors.BOLD}AUDIT COMPLETE{Colors.ENDC}")
+        logger.info(f"\n{Colors.BOLD}AUDIT COMPLETE{Colors.ENDC}")
         if len(self.vulnerabilities) == 0:
-            print(f"{Colors.GREEN}✅ EXCELLENT: No critical vulnerabilities detected!{Colors.ENDC}")
+            logger.error(f"{Colors.GREEN}✅ EXCELLENT: No critical vulnerabilities detected!{Colors.ENDC}")
             return 0
         else:
-            print(f"{Colors.YELLOW}⚠️  {len(self.vulnerabilities)} issues require attention{Colors.ENDC}")
+            logger.info(f"{Colors.YELLOW}⚠️  {len(self.vulnerabilities)} issues require attention{Colors.ENDC}")
             return 1
 
 if __name__ == "__main__":

@@ -299,9 +299,10 @@ class LoadGenerator:
 class ModelBenchmarker:
     """Benchmarks individual models"""
     
-    def __init__(self, model_name: str, ollama_host: str = "http://localhost:10104"):
+    def __init__(self, model_name: str, ollama_host: str = None):
         self.model_name = model_name
-        self.ollama_host = ollama_host
+        # Use environment variable or Docker service name
+        self.ollama_host = ollama_host if ollama_host else os.getenv("OLLAMA_HOST", "http://ollama:10104")
         self.session = None
         self.request_count = 0
         self.error_count = 0
@@ -1345,10 +1346,10 @@ async def example_benchmarking():
     # Generate report
     report = benchmark_suite.generate_report("demo_benchmark")
     
-    print("Benchmark Results:")
-    print(json.dumps(results['analysis'], indent=2, default=str))
-    print("\nBenchmark Report:")
-    print(report)
+    logger.info("Benchmark Results:")
+    logger.info(json.dumps(results['analysis'], indent=2, default=str))
+    logger.info("\nBenchmark Report:")
+    logger.info(report)
     
     # Cleanup
     await benchmark_suite.cleanup()

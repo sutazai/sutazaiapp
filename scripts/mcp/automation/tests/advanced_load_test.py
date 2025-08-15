@@ -309,42 +309,42 @@ class AdvancedLoadTester:
     
     def print_result(self, result: LoadTestResult):
         """Print formatted test result"""
-        print(f"\n{'='*60}")
-        print(f"Scenario: {result.scenario_name}")
-        print(f"{'='*60}")
-        print(f"Endpoint: {result.endpoint}")
-        print(f"Concurrent Users: {result.concurrent_users}")
-        print(f"Duration: {result.duration_seconds:.1f}s")
-        print(f"\nRequests:")
-        print(f"  Total: {result.total_requests}")
-        print(f"  Successful: {result.successful_requests}")
-        print(f"  Failed: {result.failed_requests}")
-        print(f"  Error Rate: {result.error_rate:.2f}%")
+        logger.info(f"\n{'='*60}")
+        logger.info(f"Scenario: {result.scenario_name}")
+        logger.info(f"{'='*60}")
+        logger.info(f"Endpoint: {result.endpoint}")
+        logger.info(f"Concurrent Users: {result.concurrent_users}")
+        logger.info(f"Duration: {result.duration_seconds:.1f}s")
+        logger.info(f"\nRequests:")
+        logger.info(f"  Total: {result.total_requests}")
+        logger.info(f"  Successful: {result.successful_requests}")
+        logger.error(f"  Failed: {result.failed_requests}")
+        logger.error(f"  Error Rate: {result.error_rate:.2f}%")
         
         if result.successful_requests > 0:
-            print(f"\nResponse Times (ms):")
-            print(f"  Min: {result.min_response_time:.2f}")
-            print(f"  Mean: {result.mean_response_time:.2f}")
-            print(f"  Median: {result.median_response_time:.2f}")
-            print(f"  P75: {result.p75_response_time:.2f}")
-            print(f"  P90: {result.p90_response_time:.2f}")
-            print(f"  P95: {result.p95_response_time:.2f}")
-            print(f"  P99: {result.p99_response_time:.2f}")
-            print(f"  Max: {result.max_response_time:.2f}")
+            logger.info(f"\nResponse Times (ms):")
+            logger.info(f"  Min: {result.min_response_time:.2f}")
+            logger.info(f"  Mean: {result.mean_response_time:.2f}")
+            logger.info(f"  Median: {result.median_response_time:.2f}")
+            logger.info(f"  P75: {result.p75_response_time:.2f}")
+            logger.info(f"  P90: {result.p90_response_time:.2f}")
+            logger.info(f"  P95: {result.p95_response_time:.2f}")
+            logger.info(f"  P99: {result.p99_response_time:.2f}")
+            logger.info(f"  Max: {result.max_response_time:.2f}")
         
-        print(f"\nThroughput:")
-        print(f"  Requests/sec: {result.requests_per_second:.2f}")
+        logger.info(f"\nThroughput:")
+        logger.info(f"  Requests/sec: {result.requests_per_second:.2f}")
         
         if result.avg_cpu_percent > 0:
-            print(f"\nSystem Resources:")
-            print(f"  Avg CPU: {result.avg_cpu_percent:.1f}%")
-            print(f"  Peak CPU: {result.peak_cpu_percent:.1f}%")
-            print(f"  Avg Memory: {result.avg_memory_mb:.1f} MB")
-            print(f"  Peak Memory: {result.peak_memory_mb:.1f} MB")
+            logger.info(f"\nSystem Resources:")
+            logger.info(f"  Avg CPU: {result.avg_cpu_percent:.1f}%")
+            logger.info(f"  Peak CPU: {result.peak_cpu_percent:.1f}%")
+            logger.info(f"  Avg Memory: {result.avg_memory_mb:.1f} MB")
+            logger.info(f"  Peak Memory: {result.peak_memory_mb:.1f} MB")
         
-        print(f"\nStatus Codes:")
+        logger.info(f"\nStatus Codes:")
         for code, count in sorted(result.status_codes.items()):
-            print(f"  {code}: {count}")
+            logger.info(f"  {code}: {count}")
     
     def generate_report(self) -> Dict[str, Any]:
         """Generate comprehensive performance report"""
@@ -423,9 +423,9 @@ async def main():
     """Main test execution"""
     tester = AdvancedLoadTester()
     
-    print("\n" + "="*80)
-    print("ADVANCED LOAD TESTING - MCP MONITORING SYSTEM")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("ADVANCED LOAD TESTING - MCP MONITORING SYSTEM")
+    logger.info("="*80)
     
     # Test scenarios
     scenarios = [
@@ -461,27 +461,27 @@ async def main():
     report_file = tester.save_report()
     
     # Print summary
-    print("\n" + "="*80)
-    print("PERFORMANCE TEST SUMMARY")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("PERFORMANCE TEST SUMMARY")
+    logger.info("="*80)
     
-    print(f"\nPerformance Highlights:")
-    print(f"  Best Throughput: {report['performance_summary']['best_throughput_rps']:.2f} req/s")
-    print(f"  Average Error Rate: {report['performance_summary']['average_error_rate']:.2f}%")
-    print(f"  Total Requests: {report['performance_summary']['total_requests']}")
+    logger.info(f"\nPerformance Highlights:")
+    logger.info(f"  Best Throughput: {report['performance_summary']['best_throughput_rps']:.2f} req/s")
+    logger.error(f"  Average Error Rate: {report['performance_summary']['average_error_rate']:.2f}%")
+    logger.info(f"  Total Requests: {report['performance_summary']['total_requests']}")
     
-    print(f"\nRequirements Validation:")
+    logger.info(f"\nRequirements Validation:")
     for req, passed in report['requirements_validation'].items():
         status = "✅ PASS" if passed else "❌ FAIL"
-        print(f"  {req}: {status}")
+        logger.info(f"  {req}: {status}")
     
     if report['recommendations']:
-        print(f"\nRecommendations:")
+        logger.info(f"\nRecommendations:")
         for rec in report['recommendations']:
-            print(f"  • {rec}")
+            logger.info(f"  • {rec}")
     
-    print(f"\n📊 Detailed report saved to: {report_file}")
-    print("="*80)
+    logger.info(f"\n📊 Detailed report saved to: {report_file}")
+    logger.info("="*80)
     
     # Return success if all critical requirements pass
     critical_requirements = [

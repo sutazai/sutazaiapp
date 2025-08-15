@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Health check script for FAISS service"""
 
+import logging
+
+logger = logging.getLogger(__name__)
 import sys
 import urllib.request
 import urllib.error
@@ -21,7 +24,7 @@ def check_health():
                     return True
         return False
     except (urllib.error.URLError, OSError, Exception) as e:
-        print(f"Health check failed: {e}", file=sys.stderr)
+        logger.error(f"Health check failed: {e}", file=sys.stderr)
         return False
 
 if __name__ == "__main__":

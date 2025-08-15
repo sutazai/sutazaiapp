@@ -357,23 +357,23 @@ def main():
     report_path = analyzer.save_report(args.output)
     
     # Print summary
-    print("\n" + "="*60)
-    print("CYCLOMATIC COMPLEXITY ANALYSIS SUMMARY")
-    print("="*60)
-    print(f"Total functions analyzed: {results['total_functions']}")
-    print(f"High complexity functions (>{args.threshold}): {results['high_complexity_functions']}")
-    print(f"Average complexity: {results['average_complexity']:.2f}")
-    print(f"Detailed report saved to: {report_path}")
+    logger.info("\n" + "="*60)
+    logger.info("CYCLOMATIC COMPLEXITY ANALYSIS SUMMARY")
+    logger.info("="*60)
+    logger.info(f"Total functions analyzed: {results['total_functions']}")
+    logger.info(f"High complexity functions (>{args.threshold}): {results['high_complexity_functions']}")
+    logger.info(f"Average complexity: {results['average_complexity']:.2f}")
+    logger.info(f"Detailed report saved to: {report_path}")
     
     if results['top_violators']:
-        print("\nTOP VIOLATOR FILES:")
+        logger.info("\nTOP VIOLATOR FILES:")
         for i, violator in enumerate(results['top_violators'][:10], 1):
-            print(f"{i:2d}. {violator['file']} ({violator['violation_count']} violations)")
+            logger.info(f"{i:2d}. {violator['file']} ({violator['violation_count']} violations)")
             
-    print("\nNext steps:")
-    print("1. Review the detailed JSON report")
-    print("2. Run refactoring tools on high-complexity functions")
-    print("3. Update tests to ensure functionality preservation")
+    logger.info("\nNext steps:")
+    logger.info("1. Review the detailed JSON report")
+    logger.info("2. Run refactoring tools on high-complexity functions")
+    logger.info("3. Update tests to ensure functionality preservation")
     
     return 0 if results['high_complexity_functions'] == 0 else 1
 

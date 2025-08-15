@@ -956,15 +956,15 @@ def main():
             analysis_days=args.days
         )
         
-        print("Report Generation Completed!")
-        print("Generated files:")
+        logger.info("Report Generation Completed!")
+        logger.info("Generated files:")
         for report_type, file_path in output_files.items():
             if isinstance(file_path, list):
-                print(f"  {report_type.upper()}: {len(file_path)} files")
+                logger.info(f"  {report_type.upper()}: {len(file_path)} files")
                 for path in file_path:
-                    print(f"    - {path}")
+                    logger.info(f"    - {path}")
             else:
-                print(f"  {report_type.upper()}: {file_path}")
+                logger.info(f"  {report_type.upper()}: {file_path}")
         
     except Exception as e:
         logger.error(f"Report generation failed: {e}")

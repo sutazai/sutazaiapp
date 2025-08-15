@@ -418,7 +418,7 @@ async def main():
         
         # Generate and display report
         report = tester.generate_report(results)
-        print(report)
+        logger.info(report)
         
         # Save report
         report_file = "/opt/sutazaiapp/logs/ollama_integration_report.txt"

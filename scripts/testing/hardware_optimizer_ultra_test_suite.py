@@ -1739,20 +1739,20 @@ def run_standalone_testing():
         try:
             final_report = await tester.run_all_tests()
             
-            print("\n" + "=" * 80)
-            print("ULTRA-COMPREHENSIVE TESTING COMPLETED")
-            print("=" * 80)
-            print(f"Overall Assessment: {final_report['test_execution_summary']['overall_assessment']}")
-            print(f"Load Tests: {final_report['load_testing_summary']['sla_compliant_tests']}/{final_report['load_testing_summary']['total_load_tests']} SLA compliant")
-            print(f"Security Tests: {final_report['security_testing_summary']['vulnerabilities_detected']} vulnerabilities detected")
-            print(f"Stress Tests: {final_report['stress_testing_summary']['stress_tests_passed']}/{final_report['stress_testing_summary']['total_stress_tests']} passed")
-            print("=" * 80)
+            logger.info("\n" + "=" * 80)
+            logger.info("ULTRA-COMPREHENSIVE TESTING COMPLETED")
+            logger.info("=" * 80)
+            logger.info(f"Overall Assessment: {final_report['test_execution_summary']['overall_assessment']}")
+            logger.info(f"Load Tests: {final_report['load_testing_summary']['sla_compliant_tests']}/{final_report['load_testing_summary']['total_load_tests']} SLA compliant")
+            logger.info(f"Security Tests: {final_report['security_testing_summary']['vulnerabilities_detected']} vulnerabilities detected")
+            logger.info(f"Stress Tests: {final_report['stress_testing_summary']['stress_tests_passed']}/{final_report['stress_testing_summary']['total_stress_tests']} passed")
+            logger.info("=" * 80)
             
             if final_report['test_execution_summary']['critical_issues']:
-                print("CRITICAL ISSUES:")
+                logger.error("CRITICAL ISSUES:")
                 for issue in final_report['test_execution_summary']['critical_issues']:
-                    print(f"  - {issue}")
-                print("=" * 80)
+                    logger.info(f"  - {issue}")
+                logger.info("=" * 80)
             
             return final_report
             

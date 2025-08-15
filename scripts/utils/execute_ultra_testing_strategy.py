@@ -940,38 +940,38 @@ class UltraTestOrchestrator:
     
     def print_summary(self, report: Dict):
         """Print test execution summary"""
-        print("\n" + "=" * 80)
-        print("TEST EXECUTION SUMMARY")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("TEST EXECUTION SUMMARY")
+        logger.info("=" * 80)
         
         summary = report["execution_summary"]
-        print(f"Duration: {summary['duration']}")
-        print(f"Total Tests: {summary['total_tests']}")
-        print(f"Passed: {summary['passed']} ({summary['pass_rate']})")
-        print(f"Failed: {summary['failed']}")
-        print(f"Errors: {summary['errors']}")
+        logger.info(f"Duration: {summary['duration']}")
+        logger.info(f"Total Tests: {summary['total_tests']}")
+        logger.info(f"Passed: {summary['passed']} ({summary['pass_rate']})")
+        logger.error(f"Failed: {summary['failed']}")
+        logger.error(f"Errors: {summary['errors']}")
         
         if report["critical_issues"]:
-            print("\n" + "!" * 80)
-            print("CRITICAL ISSUES REQUIRING IMMEDIATE ATTENTION")
-            print("!" * 80)
+            logger.info("\n" + "!" * 80)
+            logger.error("CRITICAL ISSUES REQUIRING IMMEDIATE ATTENTION")
+            logger.info("!" * 80)
             for issue in report["critical_issues"]:
-                print(f"- {issue['name']}: {issue['message']}")
+                logger.info(f"- {issue['name']}: {issue['message']}")
         
-        print("\n" + "=" * 80)
-        print("CATEGORY BREAKDOWN")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("CATEGORY BREAKDOWN")
+        logger.info("=" * 80)
         for cat, stats in report["by_category"].items():
-            print(f"{cat}: {stats['passed']}/{stats['total']} passed")
+            logger.info(f"{cat}: {stats['passed']}/{stats['total']} passed")
         
-        print("\n" + "=" * 80)
+        logger.info("\n" + "=" * 80)
         if float(summary["pass_rate"][:-1]) >= 95:
-            print("✅ SYSTEM READY FOR PRODUCTION")
+            logger.info("✅ SYSTEM READY FOR PRODUCTION")
         elif float(summary["pass_rate"][:-1]) >= 80:
-            print("⚠️ SYSTEM NEEDS MINOR FIXES")
+            logger.info("⚠️ SYSTEM NEEDS MINOR FIXES")
         else:
-            print("❌ SYSTEM NOT READY - CRITICAL ISSUES FOUND")
-        print("=" * 80)
+            logger.error("❌ SYSTEM NOT READY - CRITICAL ISSUES FOUND")
+        logger.info("=" * 80)
 
 
 async def main():

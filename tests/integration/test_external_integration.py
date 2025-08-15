@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Purpose: Test external service integration functionality
 Usage: python test_external_integration.py
 Requirements: pytest, requests, docker
@@ -141,5 +144,5 @@ def run_integration_tests():
     pytest.main([__file__, '-v', '--tb=short'])
 
 if __name__ == '__main__':
-    print("Running SutazAI External Integration Tests...")
+    logger.info("Running SutazAI External Integration Tests...")
     run_integration_tests()

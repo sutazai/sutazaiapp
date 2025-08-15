@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Ollama Performance Optimization Script
 Achieves <2s response time through configuration and system tuning
 """
@@ -24,15 +27,15 @@ class OllamaOptimizer:
         
     def run_command(self, command: str, check: bool = True) -> subprocess.CompletedProcess:
         """Run a shell command"""
-        print(f"Running: {command}")
+        logger.info(f"Running: {command}")
         result = subprocess.run(command, shell=True, capture_output=True, text=True, check=False)
         if check and result.returncode != 0:
-            print(f"Error: {result.stderr}")
+            logger.error(f"Error: {result.stderr}")
         return result
     
     def apply_system_optimizations(self):
         """Apply system-level optimizations"""
-        print("\n📊 Applying system optimizations...")
+        logger.info("\n📊 Applying system optimizations...")
         
         # Increase system limits (if running as root or with sudo)
         optimizations = [
@@ -55,17 +58,17 @@ class OllamaOptimizer:
             if result.returncode == 0:
                 self.optimizations_applied.append(opt)
         
-        print(f"✅ Applied {len(self.optimizations_applied)} system optimizations")
+        logger.info(f"✅ Applied {len(self.optimizations_applied)} system optimizations")
     
     def stop_ollama(self):
         """Stop current Ollama container"""
-        print("\n🛑 Stopping current Ollama container...")
+        logger.info("\n🛑 Stopping current Ollama container...")
         self.run_command("docker-compose stop ollama", check=False)
         time.sleep(2)
     
     def start_optimized_ollama(self):
         """Start Ollama with optimized configuration"""
-        print("\n🚀 Starting optimized Ollama container...")
+        logger.info("\n🚀 Starting optimized Ollama container...")
         
         # Use the optimized docker-compose override
         result = self.run_command(
@@ -73,20 +76,20 @@ class OllamaOptimizer:
         )
         
         if result.returncode != 0:
-            print("⚠️  Failed to start with override file, trying regular start...")
+            logger.error("⚠️  Failed to start with override file, trying regular start...")
             self.run_command("docker-compose up -d ollama")
         
-        print("⏳ Waiting for Ollama to be ready...")
+        logger.info("⏳ Waiting for Ollama to be ready...")
         time.sleep(10)
     
     async def preload_model(self):
         """Preload and warm up the model"""
-        print(f"\n📦 Preloading {self.model} model...")
+        logger.info(f"\n📦 Preloading {self.model} model...")
         
         async with httpx.AsyncClient(timeout=60.0) as client:
             try:
                 # First, ensure model is pulled
-                print(f"Pulling {self.model} if needed...")
+                logger.info(f"Pulling {self.model} if needed...")
                 response = await client.post(
                     f"{self.ollama_url}/api/pull",
                     json={"name": self.model}
@@ -100,12 +103,12 @@ class OllamaOptimizer:
                                 data = json.loads(line)
                                 status = data.get("status", "")
                                 if status:
-                                    print(f"  {status}")
+                                    logger.info(f"  {status}")
                             except:
                                 pass
                 
                 # Load the model into memory
-                print(f"Loading {self.model} into memory...")
+                logger.info(f"Loading {self.model} into memory...")
                 response = await client.post(
                     f"{self.ollama_url}/api/generate",
                     json={
@@ -119,16 +122,16 @@ class OllamaOptimizer:
                 )
                 
                 if response.status_code == 200:
-                    print(f"✅ Model {self.model} loaded successfully")
+                    logger.info(f"✅ Model {self.model} loaded successfully")
                 else:
-                    print(f"⚠️  Failed to load model: {response.status_code}")
+                    logger.error(f"⚠️  Failed to load model: {response.status_code}")
                     
             except Exception as e:
-                print(f"⚠️  Error loading model: {e}")
+                logger.error(f"⚠️  Error loading model: {e}")
     
     async def warmup_model(self):
         """Warm up the model with test prompts"""
-        print("\n🔥 Warming up model with test prompts...")
+        logger.info("\n🔥 Warming up model with test prompts...")
         
         warmup_prompts = [
             "Hello, how are you?",
@@ -160,15 +163,15 @@ class OllamaOptimizer:
                 )
                 tasks.append(task)
             
-            print("Sending warmup requests...")
+            logger.info("Sending warmup requests...")
             responses = await asyncio.gather(*tasks, return_exceptions=True)
             
             successful = sum(1 for r in responses if not isinstance(r, Exception) and r.status_code == 200)
-            print(f"✅ Warmup completed: {successful}/{len(warmup_prompts)} successful")
+            logger.info(f"✅ Warmup completed: {successful}/{len(warmup_prompts)} successful")
     
     async def test_response_time(self):
         """Test actual response times"""
-        print("\n⏱️  Testing response times...")
+        logger.info("\n⏱️  Testing response times...")
         
         test_prompts = [
             ("Simple", "What is 2+2?"),
@@ -178,7 +181,7 @@ class OllamaOptimizer:
         
         async with httpx.AsyncClient(timeout=30.0) as client:
             for name, prompt in test_prompts:
-                print(f"\nTesting {name} prompt: '{prompt[:50]}...'")
+                logger.info(f"\nTesting {name} prompt: '{prompt[:50]}...'")
                 
                 # Test without streaming
                 start_time = time.time()
@@ -205,24 +208,24 @@ class OllamaOptimizer:
                         result = response.json()
                         tokens = len(result.get("response", "").split())
                         
-                        print(f"  ✅ Response time: {elapsed:.2f}s")
-                        print(f"  📝 Tokens generated: ~{tokens}")
-                        print(f"  ⚡ Tokens/second: ~{tokens/elapsed:.1f}")
+                        logger.info(f"  ✅ Response time: {elapsed:.2f}s")
+                        logger.info(f"  📝 Tokens generated: ~{tokens}")
+                        logger.info(f"  ⚡ Tokens/second: ~{tokens/elapsed:.1f}")
                         
                         if elapsed < 2.0:
-                            print(f"  🎯 TARGET ACHIEVED: <2s response!")
+                            logger.info(f"  🎯 TARGET ACHIEVED: <2s response!")
                         elif elapsed < 3.0:
-                            print(f"  ⚠️  Close to target: {elapsed:.2f}s")
+                            logger.info(f"  ⚠️  Close to target: {elapsed:.2f}s")
                         else:
-                            print(f"  ❌ Above target: {elapsed:.2f}s")
+                            logger.info(f"  ❌ Above target: {elapsed:.2f}s")
                     else:
-                        print(f"  ❌ Request failed: {response.status_code}")
+                        logger.error(f"  ❌ Request failed: {response.status_code}")
                         
                 except Exception as e:
-                    print(f"  ❌ Error: {e}")
+                    logger.error(f"  ❌ Error: {e}")
                 
                 # Test with streaming (first token time)
-                print(f"  Testing streaming (first token)...")
+                logger.info(f"  Testing streaming (first token)...")
                 start_time = time.time()
                 first_token_time = None
                 
@@ -244,22 +247,22 @@ class OllamaOptimizer:
                         async for line in response.aiter_lines():
                             if line and first_token_time is None:
                                 first_token_time = time.time() - start_time
-                                print(f"  ⚡ First token: {first_token_time*1000:.0f}ms")
+                                logger.info(f"  ⚡ First token: {first_token_time*1000:.0f}ms")
                                 
                                 if first_token_time < 0.5:
-                                    print(f"  🎯 EXCELLENT: First token <500ms!")
+                                    logger.info(f"  🎯 EXCELLENT: First token <500ms!")
                                 elif first_token_time < 1.0:
-                                    print(f"  ✅ Good: First token <1s")
+                                    logger.info(f"  ✅ Good: First token <1s")
                                 break
                                 
                 except Exception as e:
-                    print(f"  ❌ Streaming error: {e}")
+                    logger.error(f"  ❌ Streaming error: {e}")
     
     def print_recommendations(self):
         """Print optimization recommendations"""
-        print("\n" + "="*60)
-        print("📋 OPTIMIZATION RECOMMENDATIONS")
-        print("="*60)
+        logger.info("\n" + "="*60)
+        logger.info("📋 OPTIMIZATION RECOMMENDATIONS")
+        logger.info("="*60)
         
         recommendations = [
             "1. Use the optimized configuration:",
@@ -296,18 +299,18 @@ class OllamaOptimizer:
         ]
         
         for line in recommendations:
-            print(line)
+            logger.info(line)
         
-        print("\n" + "="*60)
-        print("✨ Optimization complete!")
-        print("="*60)
+        logger.info("\n" + "="*60)
+        logger.info("✨ Optimization complete!")
+        logger.info("="*60)
     
     async def run(self):
         """Run the optimization process"""
-        print("="*60)
-        print("🚀 OLLAMA PERFORMANCE OPTIMIZER")
-        print("Target: <2 second response time")
-        print("="*60)
+        logger.info("="*60)
+        logger.info("🚀 OLLAMA PERFORMANCE OPTIMIZER")
+        logger.info("Target: <2 second response time")
+        logger.info("="*60)
         
         # Apply system optimizations
         self.apply_system_optimizations()

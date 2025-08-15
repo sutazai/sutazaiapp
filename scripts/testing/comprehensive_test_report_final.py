@@ -509,35 +509,35 @@ async def main():
     generator = ComprehensiveTestReportGenerator()
     final_report = await generator.generate_final_report()
     
-    print("\n" + "="*100)
-    print("SUTAZAI TASK AUTOMATION SYSTEM - FINAL COMPREHENSIVE TEST REPORT")
-    print("="*100)
+    logger.info("\n" + "="*100)
+    logger.info("SUTAZAI TASK AUTOMATION SYSTEM - FINAL COMPREHENSIVE TEST REPORT")
+    logger.info("="*100)
     
     overall = final_report["overall_assessment"]
-    print(f"🎯 OVERALL GRADE: {overall['overall_grade']}")
-    print(f"📊 OVERALL SCORE: {overall['overall_score']:.1f}/100")
-    print(f"🚀 SYSTEM STATUS: {overall['system_status']}")
+    logger.info(f"🎯 OVERALL GRADE: {overall['overall_grade']}")
+    logger.info(f"📊 OVERALL SCORE: {overall['overall_score']:.1f}/100")
+    logger.info(f"🚀 SYSTEM STATUS: {overall['system_status']}")
     
-    print(f"\n📋 CATEGORY BREAKDOWN:")
+    logger.info(f"\n📋 CATEGORY BREAKDOWN:")
     for category, score in overall["category_scores"].items():
         status_icon = "✅" if score >= 80 else "⚠️" if score >= 60 else "❌"
-        print(f"  {status_icon} {category.title()}: {score:.1f}%")
+        logger.info(f"  {status_icon} {category.title()}: {score:.1f}%")
     
-    print(f"\n🔍 TOP RECOMMENDATIONS:")
+    logger.info(f"\n🔍 TOP RECOMMENDATIONS:")
     for i, rec in enumerate(final_report["recommendations"][:5], 1):
-        print(f"  {i}. {rec}")
+        logger.info(f"  {i}. {rec}")
     
-    print(f"\n📈 SYSTEM READINESS:")
+    logger.info(f"\n📈 SYSTEM READINESS:")
     if overall['system_status'] == 'PRODUCTION_READY':
-        print("  ✅ System is READY for production deployment")
+        logger.info("  ✅ System is READY for production deployment")
     elif overall['system_status'] == 'NEEDS_IMPROVEMENT':
-        print("  ⚠️ System needs improvement before production deployment")
+        logger.info("  ⚠️ System needs improvement before production deployment")
     else:
-        print("  ❌ System is NOT ready for production deployment")
+        logger.info("  ❌ System is NOT ready for production deployment")
     
-    print("="*100)
-    print(f"📄 Full reports saved in: {generator.reports_dir}")
-    print("="*100)
+    logger.info("="*100)
+    logger.info(f"📄 Full reports saved in: {generator.reports_dir}")
+    logger.info("="*100)
     
     return final_report
 

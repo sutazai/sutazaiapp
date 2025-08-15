@@ -13,11 +13,12 @@ Run this after starting the backend to confirm everything works.
 """
 
 import logging
-
-# Configure logger for exception handling
-logger = logging.getLogger(__name__)
-
 import asyncio
+from backend.app.core.logging_config import get_logger
+from typing import Dict, Any
+
+# Configure logger for structured logging (Rule 8 compliance)
+logger = get_logger(__name__)
 import aiohttp
 import time
 from datetime import datetime
@@ -45,26 +46,27 @@ class Colors:
     BOLD = '\033[1m'
 
 
-def print_header(text: str):
-    """Print a formatted header"""
-    print(f"\n{Colors.BOLD}{Colors.BLUE}{'='*60}{Colors.RESET}")
-    print(f"{Colors.BOLD}{Colors.BLUE}{text}{Colors.RESET}")
-    print(f"{Colors.BOLD}{Colors.BLUE}{'='*60}{Colors.RESET}")
+def log_header(text: str):
+    """Log a formatted header with structured logging"""
+    logger.info(f"VALIDATION_HEADER: {text}")
+    logger.info(f"{'='*60}")
+    logger.info(f"{text}")
+    logger.info(f"{'='*60}")
 
 
-def print_success(text: str):
-    """Print success message"""
-    print(f"{Colors.GREEN}✅ {text}{Colors.RESET}")
+def log_success(text: str):
+    """Log success message with structured logging"""
+    logger.info(f"VALIDATION_SUCCESS: ✅ {text}")
 
 
-def print_error(text: str):
-    """Print error message"""
-    print(f"{Colors.RED}❌ {text}{Colors.RESET}")
+def log_error(text: str):
+    """Log error message with structured logging"""
+    logger.error(f"VALIDATION_ERROR: ❌ {text}")
 
 
-def print_info(text: str):
-    """Print info message"""
-    print(f"{Colors.YELLOW}ℹ️  {text}{Colors.RESET}")
+def log_info(text: str):
+    """Log info message with structured logging"""
+    logger.info(f"VALIDATION_INFO: ℹ️ {text}")
 
 
 async def check_ollama_connection() -> bool:
@@ -76,13 +78,13 @@ async def check_ollama_connection() -> bool:
                     data = await response.json()
                     models = [m['name'] for m in data.get('models', [])]
                     if 'tinyllama' in models or 'tinyllama:latest' in models:
-                        print_success(f"Ollama connected with tinyllama model")
+                        log_success(f"Ollama connected with tinyllama model")
                         return True
                     else:
-                        print_error(f"Ollama connected but tinyllama not found. Models: {models}")
+                        log_error(f"Ollama connected but tinyllama not found. Models: {models}")
                         return False
     except Exception as e:
-        print_error(f"Ollama connection failed: {e}")
+        log_error(f"Ollama connection failed: {e}")
         return False
 
 
@@ -92,10 +94,10 @@ async def check_backend_connection() -> bool:
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{BACKEND_URL}/health") as response:
                 if response.status == 200:
-                    print_success("Backend API is accessible")
+                    log_success("Backend API is accessible")
                     return True
     except Exception as e:
-        print_error(f"Backend connection failed: {e}")
+        log_error(f"Backend connection failed: {e}")
         return False
 
 
@@ -107,19 +109,19 @@ async def check_text_analysis_endpoint() -> bool:
                 if response.status == 200:
                     data = await response.json()
                     if data.get('healthy'):
-                        print_success("Text Analysis Agent is healthy")
+                        log_success("Text Analysis Agent is healthy")
                         return True
                     else:
-                        print_error(f"Text Analysis Agent unhealthy: {data}")
+                        log_error(f"Text Analysis Agent unhealthy: {data}")
                         return False
     except Exception as e:
-        print_error(f"Text Analysis endpoint check failed: {e}")
+        log_error(f"Text Analysis endpoint check failed: {e}")
         return False
 
 
 async def test_sentiment_analysis() -> bool:
     """Test sentiment analysis functionality"""
-    print_info("Testing sentiment analysis...")
+    log_info("Testing sentiment analysis...")
     
     try:
         async with aiohttp.ClientSession() as session:
@@ -130,7 +132,7 @@ async def test_sentiment_analysis() -> bool:
                 params=params
             ) as response:
                 if response.status != 200:
-                    print_error(f"Sentiment API returned {response.status}")
+                    log_error(f"Sentiment API returned {response.status}")
                     return False
                 
                 data = await response.json()
@@ -139,14 +141,14 @@ async def test_sentiment_analysis() -> bool:
                 required_fields = ["sentiment", "confidence", "model_used"]
                 for field in required_fields:
                     if field not in data:
-                        print_error(f"Missing field in response: {field}")
+                        log_error(f"Missing field in response: {field}")
                         return False
                 
                 # Check if it's not a stub (would always return same result)
                 if data['sentiment'] == 'positive' and data['confidence'] > 0.5:
-                    print_success(f"Positive sentiment detected correctly: {data['sentiment']} ({data['confidence']:.2%})")
+                    log_success(f"Positive sentiment detected correctly: {data['sentiment']} ({data['confidence']:.2%})")
                 else:
-                    print_error(f"Unexpected sentiment result: {data}")
+                    log_error(f"Unexpected sentiment result: {data}")
                     return False
             
             # Test negative sentiment
@@ -157,20 +159,20 @@ async def test_sentiment_analysis() -> bool:
             ) as response:
                 data = await response.json()
                 if data['sentiment'] == 'negative' and data['confidence'] > 0.5:
-                    print_success(f"Negative sentiment detected correctly: {data['sentiment']} ({data['confidence']:.2%})")
+                    log_success(f"Negative sentiment detected correctly: {data['sentiment']} ({data['confidence']:.2%})")
                     return True
                 else:
-                    print_error(f"Unexpected sentiment result: {data}")
+                    log_error(f"Unexpected sentiment result: {data}")
                     return False
                     
     except Exception as e:
-        print_error(f"Sentiment analysis test failed: {e}")
+        log_error(f"Sentiment analysis test failed: {e}")
         return False
 
 
 async def test_entity_extraction() -> bool:
     """Test entity extraction functionality"""
-    print_info("Testing entity extraction...")
+    log_info("Testing entity extraction...")
     
     try:
         async with aiohttp.ClientSession() as session:
@@ -180,7 +182,7 @@ async def test_entity_extraction() -> bool:
                 params=params
             ) as response:
                 if response.status != 200:
-                    print_error(f"Entity API returned {response.status}")
+                    log_error(f"Entity API returned {response.status}")
                     return False
                 
                 data = await response.json()
@@ -192,18 +194,18 @@ async def test_entity_extraction() -> bool:
                 for entity_type in ['people', 'locations', 'dates']:
                     if entities.get(entity_type):
                         found_entities = True
-                        print_success(f"Found {entity_type}: {entities[entity_type][:3]}")
+                        log_success(f"Found {entity_type}: {entities[entity_type][:3]}")
                 
                 return found_entities
                 
     except Exception as e:
-        print_error(f"Entity extraction test failed: {e}")
+        log_error(f"Entity extraction test failed: {e}")
         return False
 
 
 async def test_summarization() -> bool:
     """Test text summarization functionality"""
-    print_info("Testing text summarization...")
+    log_info("Testing text summarization...")
     
     long_text = VALIDATION_TEXTS["technical"] * 10  # Make it longer
     
@@ -215,7 +217,7 @@ async def test_summarization() -> bool:
                 params=params
             ) as response:
                 if response.status != 200:
-                    print_error(f"Summary API returned {response.status}")
+                    log_error(f"Summary API returned {response.status}")
                     return False
                 
                 data = await response.json()
@@ -223,21 +225,21 @@ async def test_summarization() -> bool:
                 summary = data.get('summary', '')
                 if summary and len(summary) < len(long_text):
                     compression = data.get('compression_ratio', 1.0)
-                    print_success(f"Summary generated with {compression:.2%} compression ratio")
-                    print_info(f"Summary: {summary[:100]}...")
+                    log_success(f"Summary generated with {compression:.2%} compression ratio")
+                    log_info(f"Summary: {summary[:100]}...")
                     return True
                 else:
-                    print_error("Summary not properly generated")
+                    log_error("Summary not properly generated")
                     return False
                     
     except Exception as e:
-        print_error(f"Summarization test failed: {e}")
+        log_error(f"Summarization test failed: {e}")
         return False
 
 
 async def test_keyword_extraction() -> bool:
     """Test keyword extraction functionality"""
-    print_info("Testing keyword extraction...")
+    log_info("Testing keyword extraction...")
     
     try:
         async with aiohttp.ClientSession() as session:
@@ -247,27 +249,27 @@ async def test_keyword_extraction() -> bool:
                 params=params
             ) as response:
                 if response.status != 200:
-                    print_error(f"Keywords API returned {response.status}")
+                    log_error(f"Keywords API returned {response.status}")
                     return False
                 
                 data = await response.json()
                 
                 keywords = data.get('keywords', [])
                 if keywords and len(keywords) > 0:
-                    print_success(f"Keywords extracted: {', '.join(keywords)}")
+                    log_success(f"Keywords extracted: {', '.join(keywords)}")
                     return True
                 else:
-                    print_error("No keywords extracted")
+                    log_error("No keywords extracted")
                     return False
                     
     except Exception as e:
-        print_error(f"Keyword extraction test failed: {e}")
+        log_error(f"Keyword extraction test failed: {e}")
         return False
 
 
 async def test_language_detection() -> bool:
     """Test language detection functionality"""
-    print_info("Testing language detection...")
+    log_info("Testing language detection...")
     
     try:
         async with aiohttp.ClientSession() as session:
@@ -277,7 +279,7 @@ async def test_language_detection() -> bool:
                 params=params
             ) as response:
                 if response.status != 200:
-                    print_error(f"Language API returned {response.status}")
+                    log_error(f"Language API returned {response.status}")
                     return False
                 
                 data = await response.json()
@@ -285,20 +287,20 @@ async def test_language_detection() -> bool:
                 language = data.get('language', '')
                 confidence = data.get('confidence', 0)
                 if language and confidence > 0:
-                    print_success(f"Language detected: {language} ({confidence:.2%} confidence)")
+                    log_success(f"Language detected: {language} ({confidence:.2%} confidence)")
                     return True
                 else:
-                    print_error("Language detection failed")
+                    log_error("Language detection failed")
                     return False
                     
     except Exception as e:
-        print_error(f"Language detection test failed: {e}")
+        log_error(f"Language detection test failed: {e}")
         return False
 
 
 async def test_caching_performance() -> bool:
     """Test that caching improves performance"""
-    print_info("Testing caching performance...")
+    log_info("Testing caching performance...")
     
     test_text = "This is a test for caching performance."
     
@@ -325,27 +327,27 @@ async def test_caching_performance() -> bool:
             
             # Results should be identical
             if data1['sentiment'] != data2['sentiment']:
-                print_error("Inconsistent results between calls")
+                log_error("Inconsistent results between calls")
                 return False
             
             # Second call should be faster (cache hit)
             if time2 < time1:
                 speedup = time1 / time2
-                print_success(f"Caching working: Second call {speedup:.1f}x faster")
-                print_info(f"First call: {time1:.3f}s, Second call: {time2:.3f}s")
+                log_success(f"Caching working: Second call {speedup:.1f}x faster")
+                log_info(f"First call: {time1:.3f}s, Second call: {time2:.3f}s")
                 return True
             else:
-                print_info("Cache might not be working (Redis unavailable?)")
+                log_info("Cache might not be working (Redis unavailable?)")
                 return True  # Not a failure, just informational
                 
     except Exception as e:
-        print_error(f"Caching test failed: {e}")
+        log_error(f"Caching test failed: {e}")
         return False
 
 
 async def test_batch_processing() -> bool:
     """Test batch processing capability"""
-    print_info("Testing batch processing...")
+    log_info("Testing batch processing...")
     
     texts = [
         "This is positive text.",
@@ -364,20 +366,20 @@ async def test_batch_processing() -> bool:
                 params=params
             ) as response:
                 if response.status != 200:
-                    print_error(f"Batch API returned {response.status}")
+                    log_error(f"Batch API returned {response.status}")
                     return False
                 
                 data = await response.json()
                 
                 if data.get('successful', 0) > 0:
-                    print_success(f"Batch processing successful: {data['successful']}/{data['total']} processed")
+                    log_success(f"Batch processing successful: {data['successful']}/{data['total']} processed")
                     return True
                 else:
-                    print_error("Batch processing failed")
+                    log_error("Batch processing failed")
                     return False
                     
     except Exception as e:
-        print_error(f"Batch processing test failed: {e}")
+        log_error(f"Batch processing test failed: {e}")
         return False
 
 
@@ -397,30 +399,30 @@ async def get_agent_statistics() -> Dict[str, Any]:
 
 async def main():
     """Main validation routine"""
-    print_header("TEXT ANALYSIS AGENT VALIDATION")
-    print(f"Timestamp: {datetime.now().isoformat()}")
-    print(f"Backend URL: {BACKEND_URL}")
-    print(f"Ollama URL: {OLLAMA_URL}")
+    log_header("TEXT ANALYSIS AGENT VALIDATION")
+    logger.info(f"Timestamp: {datetime.now().isoformat()}")
+    logger.info(f"Backend URL: {BACKEND_URL}")
+    logger.info(f"Ollama URL: {OLLAMA_URL}")
     
     # Track test results
     results = {}
     
     # Prerequisites
-    print_header("CHECKING PREREQUISITES")
+    log_header("CHECKING PREREQUISITES")
     
     results['ollama'] = await check_ollama_connection()
     results['backend'] = await check_backend_connection()
     results['endpoint'] = await check_text_analysis_endpoint()
     
     if not all([results['ollama'], results['backend'], results['endpoint']]):
-        print_error("\nPrerequisites not met. Please ensure:")
-        print_info("1. Ollama is running with tinyllama model")
-        print_info("2. Backend is running on port 10010")
-        print_info("3. Text Analysis Agent is properly integrated")
+        log_error("\nPrerequisites not met. Please ensure:")
+        log_info("1. Ollama is running with tinyllama model")
+        log_info("2. Backend is running on port 10010")
+        log_info("3. Text Analysis Agent is properly integrated")
         return False
     
     # Functional tests
-    print_header("FUNCTIONAL VALIDATION")
+    log_header("FUNCTIONAL VALIDATION")
     
     results['sentiment'] = await test_sentiment_analysis()
     results['entities'] = await test_entity_extraction()
@@ -429,52 +431,52 @@ async def main():
     results['language'] = await test_language_detection()
     
     # Performance tests
-    print_header("PERFORMANCE VALIDATION")
+    log_header("PERFORMANCE VALIDATION")
     
     results['caching'] = await test_caching_performance()
     results['batch'] = await test_batch_processing()
     
     # Get statistics
-    print_header("AGENT STATISTICS")
+    log_header("AGENT STATISTICS")
     
     stats = await get_agent_statistics()
     if stats:
-        print_info(f"Agent ID: {stats.get('agent_id', 'N/A')}")
-        print_info(f"Status: {stats.get('status', 'N/A')}")
-        print_info(f"Total analyses: {stats.get('total_analyses', 0)}")
-        print_info(f"Cache hit rate: {stats.get('cache_hit_rate', 0):.2%}")
-        print_info(f"Model: {stats.get('model_name', 'N/A')}")
+        log_info(f"Agent ID: {stats.get('agent_id', 'N/A')}")
+        log_info(f"Status: {stats.get('status', 'N/A')}")
+        log_info(f"Total analyses: {stats.get('total_analyses', 0)}")
+        log_info(f"Cache hit rate: {stats.get('cache_hit_rate', 0):.2%}")
+        log_info(f"Model: {stats.get('model_name', 'N/A')}")
         
         metrics = stats.get('analysis_metrics', {})
         if metrics:
-            print_info(f"Sentiment analyses: {metrics.get('sentiment_analyses', 0)}")
-            print_info(f"Entity extractions: {metrics.get('entity_extractions', 0)}")
-            print_info(f"Summaries generated: {metrics.get('summaries_generated', 0)}")
+            log_info(f"Sentiment analyses: {metrics.get('sentiment_analyses', 0)}")
+            log_info(f"Entity extractions: {metrics.get('entity_extractions', 0)}")
+            log_info(f"Summaries generated: {metrics.get('summaries_generated', 0)}")
     
     # Summary
-    print_header("VALIDATION SUMMARY")
+    log_header("VALIDATION SUMMARY")
     
     passed = sum(1 for v in results.values() if v)
     total = len(results)
     success_rate = (passed / total) * 100
     
-    print(f"\nTests passed: {passed}/{total} ({success_rate:.0f}%)")
+    logger.info(f"Tests passed: {passed}/{total} ({success_rate:.0f}%)")
     
     for test_name, passed in results.items():
-        status = f"{Colors.GREEN}PASS{Colors.RESET}" if passed else f"{Colors.RED}FAIL{Colors.RESET}"
-        print(f"  {test_name:15} : {status}")
+        status = "PASS" if passed else "FAIL"
+        logger.info(f"  {test_name:15} : {status}")
     
     if success_rate >= 80:
-        print_success(f"\n🎉 Text Analysis Agent is fully functional!")
-        print_success("This is a REAL AI agent with genuine intelligence!")
+        log_success(f"\n🎉 Text Analysis Agent is fully functional!")
+        log_success("This is a REAL AI agent with genuine intelligence!")
         return True
     elif success_rate >= 60:
-        print_info(f"\n⚠️ Text Analysis Agent is partially functional")
-        print_info("Some features may not be working correctly")
+        log_info(f"\n⚠️ Text Analysis Agent is partially functional")
+        log_info("Some features may not be working correctly")
         return True
     else:
-        print_error(f"\n❌ Text Analysis Agent validation failed")
-        print_error("Please check the logs and configuration")
+        log_error(f"\n❌ Text Analysis Agent validation failed")
+        log_error("Please check the logs and configuration")
         return False
 
 

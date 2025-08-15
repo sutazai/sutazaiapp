@@ -33,6 +33,8 @@ Usage:
     })
 """
 
+import logging
+
 from agents.core.base_agent import (
     BaseAgent, 
     AgentMessage, 
@@ -139,6 +141,9 @@ __all__ = [
     "UniversalAgentSystem"
 ]
 
+# Configure logger
+logger = logging.getLogger(__name__)
+
 
 class UniversalAgentSystem:
     """
@@ -198,7 +203,7 @@ class UniversalAgentSystem:
             return True
             
         except Exception as e:
-            print(f"Failed to initialize Universal Agent System: {e}")
+            logger.error(f"Failed to initialize Universal Agent System: {e}")
             return False
     
     async def create_agent(self, agent_id: str, agent_type: str, 
@@ -261,7 +266,7 @@ class UniversalAgentSystem:
             self.initialized = False
             
         except Exception as e:
-            print(f"Error during system shutdown: {e}")
+            logger.error(f"Error during system shutdown: {e}")
 
 
 # Global system instance

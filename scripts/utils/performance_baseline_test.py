@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRAPERFORMANCE Baseline Testing Suite
 Measures ALL performance metrics for complete system optimization
 """
@@ -77,7 +80,7 @@ class UltraPerformanceAnalyzer:
         cpu_baseline = process.cpu_percent(interval=0.1)
         mem_baseline = process.memory_info().rss / 1024 / 1024  # MB
         
-        print(f"Testing {method} {endpoint} with {iterations} iterations...")
+        logger.info(f"Testing {method} {endpoint} with {iterations} iterations...")
         
         async with aiohttp.ClientSession() as session:
             start_time = time.time()
@@ -103,7 +106,7 @@ class UltraPerformanceAnalyzer:
                         
                 except Exception as e:
                     errors += 1
-                    print(f"Error on iteration {i}: {e}")
+                    logger.error(f"Error on iteration {i}: {e}")
                     
             total_time = time.time() - start_time
             
@@ -154,7 +157,7 @@ class UltraPerformanceAnalyzer:
     async def load_test_concurrent(self, endpoint: str, concurrent_users: int = 50,
                                   duration_seconds: int = 30) -> Dict:
         """Concurrent load testing"""
-        print(f"\nLoad testing {endpoint} with {concurrent_users} concurrent users for {duration_seconds}s...")
+        logger.info(f"\nLoad testing {endpoint} with {concurrent_users} concurrent users for {duration_seconds}s...")
         
         results = {
             "total_requests": 0,
@@ -214,7 +217,7 @@ class UltraPerformanceAnalyzer:
         
     async def analyze_database_performance(self) -> Dict:
         """Analyze database query performance"""
-        print("\nAnalyzing database performance...")
+        logger.info("\nAnalyzing database performance...")
         
         analysis = {
             "slow_queries": [],
@@ -272,7 +275,7 @@ class UltraPerformanceAnalyzer:
         
     async def generate_optimization_report(self) -> Dict:
         """Generate comprehensive optimization recommendations"""
-        print("\nGenerating optimization report...")
+        logger.info("\nGenerating optimization report...")
         
         report = {
             "timestamp": datetime.now().isoformat(),
@@ -349,9 +352,9 @@ class UltraPerformanceAnalyzer:
         
     async def run_complete_analysis(self):
         """Run complete ULTRAPERFORMANCE analysis"""
-        print("=" * 80)
-        print("ULTRAPERFORMANCE Analysis Starting...")
-        print("=" * 80)
+        logger.info("=" * 80)
+        logger.info("ULTRAPERFORMANCE Analysis Starting...")
+        logger.info("=" * 80)
         
         await self.setup()
         
@@ -368,18 +371,18 @@ class UltraPerformanceAnalyzer:
             for endpoint, method in critical_endpoints:
                 payload = {"message": "test", "model": "tinyllama"} if method == "POST" else None
                 metrics = await self.measure_endpoint(endpoint, method, payload)
-                print(f"\n{endpoint}:")
-                print(f"  Avg Response: {metrics.avg_response_time:.2f}ms")
-                print(f"  P95 Response: {metrics.p95_response_time:.2f}ms")
-                print(f"  RPS: {metrics.requests_per_second:.2f}")
-                print(f"  Error Rate: {metrics.error_rate:.2f}%")
+                logger.info(f"\n{endpoint}:")
+                logger.info(f"  Avg Response: {metrics.avg_response_time:.2f}ms")
+                logger.info(f"  P95 Response: {metrics.p95_response_time:.2f}ms")
+                logger.info(f"  RPS: {metrics.requests_per_second:.2f}")
+                logger.error(f"  Error Rate: {metrics.error_rate:.2f}%")
                 
             # Load testing
             load_results = await self.load_test_concurrent("/health", 50, 10)
-            print(f"\nLoad Test Results:")
-            print(f"  Total Requests: {load_results['total_requests']}")
-            print(f"  Throughput: {load_results['throughput']:.2f} req/s")
-            print(f"  Avg Response: {load_results.get('avg_response_time', 0):.2f}ms")
+            logger.info(f"\nLoad Test Results:")
+            logger.info(f"  Total Requests: {load_results['total_requests']}")
+            logger.info(f"  Throughput: {load_results['throughput']:.2f} req/s")
+            logger.info(f"  Avg Response: {load_results.get('avg_response_time', 0):.2f}ms")
             
             # Database analysis
             db_analysis = await self.analyze_database_performance()
@@ -394,10 +397,10 @@ class UltraPerformanceAnalyzer:
             with open(report_file, "w") as f:
                 json.dump(report, f, indent=2, default=str)
                 
-            print(f"\n{'=' * 80}")
-            print(f"PERFORMANCE SCORE: {report['performance_score']}/100")
-            print(f"Report saved to: {report_file}")
-            print(f"{'=' * 80}")
+            logger.info(f"\n{'=' * 80}")
+            logger.info(f"PERFORMANCE SCORE: {report['performance_score']}/100")
+            logger.info(f"Report saved to: {report_file}")
+            logger.info(f"{'=' * 80}")
             
             return report
             
@@ -409,14 +412,14 @@ async def main():
     report = await analyzer.run_complete_analysis()
     
     # Print key findings
-    print("\nKEY FINDINGS:")
+    logger.info("\nKEY FINDINGS:")
     for bottleneck in report.get("bottlenecks", []):
-        print(f"  ⚠️  {bottleneck['issue']}: {bottleneck['current']} (target: {bottleneck['target']})")
+        logger.info(f"  ⚠️  {bottleneck['issue']}: {bottleneck['current']} (target: {bottleneck['target']})")
         
-    print("\nRECOMMENDED OPTIMIZATIONS:")
+    logger.info("\nRECOMMENDED OPTIMIZATIONS:")
     for opt in report.get("optimizations", []):
-        print(f"  ✅ {opt['area']}: {opt['recommendation']}")
-        print(f"     Expected: {opt['expected_improvement']}")
+        logger.info(f"  ✅ {opt['area']}: {opt['recommendation']}")
+        logger.info(f"     Expected: {opt['expected_improvement']}")
 
 if __name__ == "__main__":
     asyncio.run(main())

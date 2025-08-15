@@ -543,34 +543,34 @@ def main():
             # Disaster recovery validation
             dr_report = manager.validate_disaster_recovery_readiness()
             
-            print("Disaster Recovery Readiness Report")
-            print("=" * 40)
-            print(f"RTO Compliance: {'✓' if dr_report['rto_compliance'] else '✗'}")
-            print(f"RPO Compliance: {'✓' if dr_report['rpo_compliance'] else '✗'}")
+            logger.info("Disaster Recovery Readiness Report")
+            logger.info("=" * 40)
+            logger.info(f"RTO Compliance: {'✓' if dr_report['rto_compliance'] else '✗'}")
+            logger.info(f"RPO Compliance: {'✓' if dr_report['rpo_compliance'] else '✗'}")
             
             if dr_report['issues']:
-                print("\nIssues Found:")
+                logger.info("\nIssues Found:")
                 for issue in dr_report['issues']:
-                    print(f"  🚨 {issue}")
+                    logger.info(f"  🚨 {issue}")
             
             if dr_report['recommendations']:
-                print("\nRecommendations:")
+                logger.info("\nRecommendations:")
                 for rec in dr_report['recommendations']:
-                    print(f"  💡 {rec}")
+                    logger.info(f"  💡 {rec}")
         
         else:
             # Execute retention policy
             report = manager.execute_retention_policy(dry_run=args.dry_run)
             
             # Print report
-            print(manager.generate_retention_report(report))
+            logger.info(manager.generate_retention_report(report))
             
             # Save report
             report_file = Path(args.backup_root) / f"retention_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
             with open(report_file, 'w') as f:
                 json.dump(asdict(report), f, indent=2)
             
-            print(f"\nDetailed report saved to: {report_file}")
+            logger.info(f"\nDetailed report saved to: {report_file}")
             
             # Return error code if there were errors
             if report.errors:

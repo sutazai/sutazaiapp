@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Test script for Circuit Breaker implementation
 Tests failure detection, circuit opening, recovery, and proper state transitions
 """
@@ -26,7 +29,7 @@ class CircuitBreakerTester:
     
     def log(self, message: str, level: str = "INFO"):
         timestamp = datetime.now().strftime("%H:%M:%S")
-        print(f"[{timestamp}] [{level}] {message}")
+        logger.info(f"[{timestamp}] [{level}] {message}")
         self.test_results.append({
             "time": timestamp,
             "level": level,
@@ -228,7 +231,7 @@ async def main():
                 "results": tester.test_results
             }, f, indent=2)
         
-        print("\nTest results saved to circuit_breaker_test_results.json")
+        logger.info("\nTest results saved to circuit_breaker_test_results.json")
         
         return 0 if success else 1
     finally:

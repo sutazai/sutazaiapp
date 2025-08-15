@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+
+logger = logging.getLogger(__name__)
 Self-Healing Codebase Hygiene Orchestrator
 
 Automatically detects and fixes codebase hygiene violations while maintaining safety.
@@ -1239,7 +1241,7 @@ def main():
     if args.scan_only:
         # Run single scan
         result = orchestrator.manual_scan()
-        print(json.dumps(result, indent=2))
+        logger.info(json.dumps(result, indent=2))
         return
     
     # Run orchestrator

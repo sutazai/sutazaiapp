@@ -1373,13 +1373,13 @@ if __name__ == "__main__":
             indicators=["outbound_connection", "192.168.1.100", "suspicious_process"]
         )
         
-        print(f"Created incident: {incident_id}")
+        logger.info(f"Created incident: {incident_id}")
         
         # Start monitoring
         # await ir_engine.start_incident_monitoring()
         
         # Get statistics
         stats = ir_engine.get_incident_statistics()
-        print(f"Incident Response Statistics: {stats}")
+        logger.info(f"Incident Response Statistics: {stats}")
     
     asyncio.run(main())

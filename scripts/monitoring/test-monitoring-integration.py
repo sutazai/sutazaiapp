@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Test Monitoring Integration
 Purpose: Comprehensive testing of the real-time monitoring system
 Author: AI Observability and Monitoring Engineer
@@ -28,7 +31,7 @@ class MonitoringIntegrationTester:
     def log(self, message, level="INFO"):
         """Log test messages"""
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-        print(f"[{timestamp}] [{level}] {message}")
+        logger.info(f"[{timestamp}] [{level}] {message}")
         
     def test_result(self, test_name, success, details=""):
         """Record test result"""
@@ -377,24 +380,24 @@ def check_monitoring_system_running():
         if result.returncode == 0:
             return True
         else:
-            print("❌ Monitoring system is not running.")
-            print("Please start it first with: ./scripts/start-hygiene-monitoring.sh start")
+            logger.info("❌ Monitoring system is not running.")
+            logger.info("Please start it first with: ./scripts/start-hygiene-monitoring.sh start")
             return False
     except Exception as e:
-        print(f"Error checking system status: {e}")
+        logger.error(f"Error checking system status: {e}")
         return False
 
 async def main():
     """Main test execution"""
-    print("🔍 Hygiene Monitoring System Integration Test")
-    print("=" * 60)
+    logger.info("🔍 Hygiene Monitoring System Integration Test")
+    logger.info("=" * 60)
     
     # Check if monitoring system is running
     if not check_monitoring_system_running():
         sys.exit(1)
     
     # Wait a moment for system to be fully ready
-    print("⏳ Waiting for system to be ready...")
+    logger.info("⏳ Waiting for system to be ready...")
     time.sleep(5)
     
     # Run integration tests

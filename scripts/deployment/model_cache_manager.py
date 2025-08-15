@@ -616,7 +616,7 @@ async def main():
     
     # Get stats
     stats = cache.get_cache_stats()
-    print(json.dumps(stats, indent=2))
+    logger.info(json.dumps(stats, indent=2))
     
     await cache.cleanup()
 

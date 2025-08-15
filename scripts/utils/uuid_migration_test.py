@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA UUID Migration Validation Test Suite
 Comprehensive testing for UUID/INTEGER migration fix
 """
@@ -30,7 +33,7 @@ class UUIDMigrationTester:
             "details": details
         }
         self.test_results.append(result)
-        print(f"[{'PASS' if passed else 'FAIL'}] {test_name}: {details.get('message', 'No message')}")
+        logger.info(f"[{'PASS' if passed else 'FAIL'}] {test_name}: {details.get('message', 'No message')}")
         
     def log_error(self, test_name: str, error: str):
         """Log test error"""
@@ -39,7 +42,7 @@ class UUIDMigrationTester:
             "error": error,
             "timestamp": datetime.now().isoformat()
         })
-        print(f"[ERROR] {test_name}: {error}")
+        logger.error(f"[ERROR] {test_name}: {error}")
     
     def generate_test_user_data(self) -> Dict[str, str]:
         """Generate test user registration data"""
@@ -293,9 +296,9 @@ class UUIDMigrationTester:
     
     def run_comprehensive_test_suite(self) -> Dict[str, Any]:
         """Run the complete UUID migration validation test suite"""
-        print("=" * 80)
-        print("ULTRA UUID Migration Validation Test Suite")
-        print("=" * 80)
+        logger.info("=" * 80)
+        logger.info("ULTRA UUID Migration Validation Test Suite")
+        logger.info("=" * 80)
         
         start_time = time.time()
         
@@ -349,21 +352,21 @@ class UUIDMigrationTester:
             "errors": self.errors
         }
         
-        print("\n" + "=" * 80)
-        print("TEST SUITE SUMMARY")
-        print("=" * 80)
-        print(f"Duration: {duration:.2f} seconds")
-        print(f"Total Tests: {total_tests}")
-        print(f"Passed: {passed_tests}")
-        print(f"Failed: {failed_tests}")
-        print(f"Success Rate: {success_rate:.1f}%")
-        print(f"Overall Status: {summary['overall_status']}")
-        print(f"Errors: {len(self.errors)}")
+        logger.info("\n" + "=" * 80)
+        logger.info("TEST SUITE SUMMARY")
+        logger.info("=" * 80)
+        logger.info(f"Duration: {duration:.2f} seconds")
+        logger.info(f"Total Tests: {total_tests}")
+        logger.info(f"Passed: {passed_tests}")
+        logger.error(f"Failed: {failed_tests}")
+        logger.info(f"Success Rate: {success_rate:.1f}%")
+        logger.info(f"Overall Status: {summary['overall_status']}")
+        logger.error(f"Errors: {len(self.errors)}")
         
         if self.errors:
-            print("\nERRORS:")
+            logger.error("\nERRORS:")
             for error in self.errors:
-                print(f"  - {error['test_name']}: {error['error']}")
+                logger.error(f"  - {error['test_name']}: {error['error']}")
         
         return summary
 
@@ -379,7 +382,7 @@ def main():
     with open(results_file, 'w') as f:
         json.dump(results, f, indent=2, default=str)
     
-    print(f"\nDetailed results saved to: {results_file}")
+    logger.info(f"\nDetailed results saved to: {results_file}")
     
     # Exit with appropriate code
     exit_code = 0 if results["overall_status"] == "PASS" else 1

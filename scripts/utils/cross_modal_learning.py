@@ -882,19 +882,19 @@ async def main():
     # Add training samples
     learning_system.add_training_samples(samples)
     
-    print(f"Added {len(samples)} training samples")
+    logger.info(f"Added {len(samples)} training samples")
     
     # Train cross-modal alignment
-    print("Starting cross-modal training...")
+    logger.info("Starting cross-modal training...")
     training_results = await learning_system.train_cross_modal_alignment(num_epochs=20)
     
-    print("Training Results:")
-    print(f"  Contrastive Losses: {training_results.get('contrastive_losses', [])[-5:]}")
-    print(f"  Attention Losses: {training_results.get('attention_losses', [])[-5:]}")
+    logger.info("Training Results:")
+    logger.info(f"  Contrastive Losses: {training_results.get('contrastive_losses', [])[-5:]}")
+    logger.info(f"  Attention Losses: {training_results.get('attention_losses', [])[-5:]}")
     
     # Get learning statistics
     stats = learning_system.get_learning_statistics()
-    print(f"Learning Statistics: {json.dumps(stats, indent=2)}")
+    logger.info(f"Learning Statistics: {json.dumps(stats, indent=2)}")
     
     # Shutdown
     await learning_system.shutdown()

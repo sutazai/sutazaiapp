@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA-COMPREHENSIVE Hardware Resource Optimizer API Validation Test Suite
 Performs exhaustive testing of all endpoints with detailed reporting
 """
@@ -38,8 +41,8 @@ class HardwareAPIValidator:
         
     async def run_comprehensive_validation(self) -> Dict[str, Any]:
         """Run all validation tests and return comprehensive report"""
-        print("🚀 Starting ULTRA-COMPREHENSIVE Hardware API Validation")
-        print("=" * 80)
+        logger.info("🚀 Starting ULTRA-COMPREHENSIVE Hardware API Validation")
+        logger.info("=" * 80)
         
         start_time = time.time()
         
@@ -56,12 +59,12 @@ class HardwareAPIValidator:
         ]
         
         for category_name, test_func in test_categories:
-            print(f"\n📋 {category_name}")
-            print("-" * 50)
+            logger.info(f"\n📋 {category_name}")
+            logger.info("-" * 50)
             try:
                 await test_func()
             except Exception as e:
-                print(f"❌ Category {category_name} failed with error: {e}")
+                logger.error(f"❌ Category {category_name} failed with error: {e}")
                 traceback.print_exc()
         
         # Generate final report
@@ -139,7 +142,7 @@ class HardwareAPIValidator:
     
     async def _test_performance_load(self):
         """Test performance under moderate load"""
-        print("⚡ Testing performance under concurrent load...")
+        logger.info("⚡ Testing performance under concurrent load...")
         
         # Test concurrent health checks
         tasks = []
@@ -173,7 +176,7 @@ class HardwareAPIValidator:
     
     async def _test_concurrent_requests(self):
         """Test system behavior under high concurrent load"""
-        print("🔥 Testing high concurrent request handling...")
+        logger.info("🔥 Testing high concurrent request handling...")
         
         # Create 20 concurrent requests of mixed types
         concurrent_tasks = []
@@ -246,9 +249,9 @@ class HardwareAPIValidator:
                 
                 # Print result
                 status_icon = "✅" if success else "❌"
-                print(f"{status_icon} {description}: {status_code} ({response_time_ms:.1f}ms)")
+                logger.info(f"{status_icon} {description}: {status_code} ({response_time_ms:.1f}ms)")
                 if not success and error_message:
-                    print(f"   Error: {error_message}")
+                    logger.error(f"   Error: {error_message}")
                 
                 return result
                 
@@ -268,8 +271,8 @@ class HardwareAPIValidator:
             self.results.append(result)
             
             status_icon = "✅" if expect_error else "❌"
-            print(f"{status_icon} {description}: Exception ({response_time_ms:.1f}ms)")
-            print(f"   Error: {error_message}")
+            logger.error(f"{status_icon} {description}: Exception ({response_time_ms:.1f}ms)")
+            logger.error(f"   Error: {error_message}")
             
             return result
     
@@ -362,33 +365,33 @@ async def main():
         report = await validator.run_comprehensive_validation()
         
         # Print final summary
-        print("\n" + "=" * 80)
-        print("🎯 FINAL VALIDATION REPORT")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("🎯 FINAL VALIDATION REPORT")
+        logger.info("=" * 80)
         
         exec_summary = report["test_execution"]
         perf_summary = report["performance_metrics"]
         validation_summary = report["validation_summary"]
         
-        print(f"Total Tests: {exec_summary['total_tests']}")
-        print(f"Success Rate: {exec_summary['success_rate']}%")
-        print(f"Total Duration: {exec_summary['total_duration_seconds']}s")
-        print(f"Average Response Time: {perf_summary['avg_response_time_ms']}ms")
-        print(f"Max Response Time: {perf_summary['max_response_time_ms']}ms")
+        logger.info(f"Total Tests: {exec_summary['total_tests']}")
+        logger.info(f"Success Rate: {exec_summary['success_rate']}%")
+        logger.info(f"Total Duration: {exec_summary['total_duration_seconds']}s")
+        logger.info(f"Average Response Time: {perf_summary['avg_response_time_ms']}ms")
+        logger.info(f"Max Response Time: {perf_summary['max_response_time_ms']}ms")
         
-        print(f"\nValidation Categories:")
+        logger.info(f"\nValidation Categories:")
         for category, status in validation_summary.items():
             status_icon = "✅" if status == "PASS" else "❌" if status == "FAIL" else "⚠️"
-            print(f"  {status_icon} {category.replace('_', ' ').title()}: {status}")
+            logger.info(f"  {status_icon} {category.replace('_', ' ').title()}: {status}")
         
-        print(f"\nStatus Code Distribution:")
+        logger.info(f"\nStatus Code Distribution:")
         for code, count in report["status_code_distribution"].items():
-            print(f"  {code}: {count} requests")
+            logger.info(f"  {code}: {count} requests")
         
         if report["error_analysis"]:
-            print(f"\nError Summary:")
+            logger.error(f"\nError Summary:")
             for error_type, count in report["error_analysis"].items():
-                print(f"  {error_type}: {count} occurrences")
+                logger.error(f"  {error_type}: {count} occurrences")
         
         # Save detailed report
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -397,7 +400,7 @@ async def main():
         with open(report_file, 'w') as f:
             json.dump(report, f, indent=2, default=str)
         
-        print(f"\n📄 Detailed report saved to: {report_file}")
+        logger.info(f"\n📄 Detailed report saved to: {report_file}")
         
         # Determine overall result
         overall_success = exec_summary['success_rate'] >= 80
@@ -405,14 +408,14 @@ async def main():
         critical_pass = all(validation_summary[cat] == "PASS" for cat in critical_categories)
         
         if overall_success and critical_pass:
-            print("\n🏆 OVERALL VALIDATION: PASSED")
+            logger.info("\n🏆 OVERALL VALIDATION: PASSED")
             return 0
         else:
-            print("\n💥 OVERALL VALIDATION: FAILED")
+            logger.error("\n💥 OVERALL VALIDATION: FAILED")
             return 1
             
     except Exception as e:
-        print(f"\n💥 VALIDATION FAILED WITH CRITICAL ERROR: {e}")
+        logger.error(f"\n💥 VALIDATION FAILED WITH CRITICAL ERROR: {e}")
         traceback.print_exc()
         return 1
 

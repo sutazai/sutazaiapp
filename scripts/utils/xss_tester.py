@@ -1,4 +1,7 @@
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Simple XSS Protection Tester
 Tests the core XSS protection functionality without external dependencies
 """
@@ -136,36 +139,36 @@ def test_xss_protection():
         "Can you explain RESTful APIs?",
     ]
     
-    print("=== XSS Protection Test Results ===\n")
+    logger.info("=== XSS Protection Test Results ===\n")
     
     # Test XSS payload blocking
-    print("1. Testing XSS Payload Detection:")
+    logger.info("1. Testing XSS Payload Detection:")
     xss_blocked = 0
     for i, payload in enumerate(xss_payloads, 1):
         try:
             result = validator.validate_input(payload, "chat_message")
-            print(f"   {i:2d}. FAIL: Payload was not blocked: {payload[:40]}...")
+            logger.info(f"   {i:2d}. FAIL: Payload was not blocked: {payload[:40]}...")
         except ValueError as e:
-            print(f"   {i:2d}. PASS: Payload blocked - {str(e)[:60]}...")
+            logger.info(f"   {i:2d}. PASS: Payload blocked - {str(e)[:60]}...")
             xss_blocked += 1
     
-    print(f"\n   Result: {xss_blocked}/{len(xss_payloads)} XSS payloads blocked")
+    logger.info(f"\n   Result: {xss_blocked}/{len(xss_payloads)} XSS payloads blocked")
     
     # Test safe message processing
-    print("\n2. Testing Safe Message Processing:")
+    logger.info("\n2. Testing Safe Message Processing:")
     safe_passed = 0
     for i, message in enumerate(safe_messages, 1):
         try:
             result = validator.validate_input(message, "chat_message")
-            print(f"   {i:2d}. PASS: Safe message processed: {message[:40]}...")
+            logger.info(f"   {i:2d}. PASS: Safe message processed: {message[:40]}...")
             safe_passed += 1
         except ValueError as e:
-            print(f"   {i:2d}. FAIL: Safe message blocked: {message[:40]}... - {e}")
+            logger.info(f"   {i:2d}. FAIL: Safe message blocked: {message[:40]}... - {e}")
     
-    print(f"\n   Result: {safe_passed}/{len(safe_messages)} safe messages processed")
+    logger.info(f"\n   Result: {safe_passed}/{len(safe_messages)} safe messages processed")
     
     # Test HTML escaping
-    print("\n3. Testing HTML Escaping:")
+    logger.info("\n3. Testing HTML Escaping:")
     test_cases = [
         ("Hello <world>", "Hello &lt;world&gt;"),
         ("Test & example", "Test &amp; example"),
@@ -179,17 +182,17 @@ def test_xss_protection():
         try:
             result = validator.validate_input(input_text, "text")
             if "&lt;" in result or "&amp;" in result or "&quot;" in result:
-                print(f"   {i}. PASS: '{input_text}' -> '{result}'")
+                logger.info(f"   {i}. PASS: '{input_text}' -> '{result}'")
                 escaping_passed += 1
             else:
-                print(f"   {i}. FAIL: '{input_text}' -> '{result}' (not properly escaped)")
+                logger.info(f"   {i}. FAIL: '{input_text}' -> '{result}' (not properly escaped)")
         except ValueError as e:
-            print(f"   {i}. FAIL: '{input_text}' was blocked: {e}")
+            logger.info(f"   {i}. FAIL: '{input_text}' was blocked: {e}")
     
-    print(f"\n   Result: {escaping_passed}/{len(test_cases)} escaping tests passed")
+    logger.info(f"\n   Result: {escaping_passed}/{len(test_cases)} escaping tests passed")
     
     # Test JSON sanitization
-    print("\n4. Testing JSON Response Sanitization:")
+    logger.info("\n4. Testing JSON Response Sanitization:")
     test_data = {
         "message": "<script>alert('XSS')</script>",
         "user": {
@@ -212,30 +215,30 @@ def test_xss_protection():
         ])
         
         if not dangerous_found:
-            print("   PASS: JSON sanitization removed all dangerous content")
-            print(f"   Sanitized JSON: {json_str}")
+            logger.info("   PASS: JSON sanitization removed all dangerous content")
+            logger.info(f"   Sanitized JSON: {json_str}")
         else:
-            print("   FAIL: JSON sanitization did not remove all dangerous content")
-            print(f"   Result: {json_str}")
+            logger.info("   FAIL: JSON sanitization did not remove all dangerous content")
+            logger.info(f"   Result: {json_str}")
             
     except Exception as e:
-        print(f"   FAIL: JSON sanitization failed: {e}")
+        logger.error(f"   FAIL: JSON sanitization failed: {e}")
     
     # Overall results
-    print("\n=== Summary ===")
+    logger.info("\n=== Summary ===")
     total_tests = len(xss_payloads) + len(safe_messages) + len(test_cases) + 1
     passed_tests = xss_blocked + safe_passed + escaping_passed + (1 if not dangerous_found else 0)
     
-    print(f"Total tests: {total_tests}")
-    print(f"Passed tests: {passed_tests}")
-    print(f"Success rate: {(passed_tests/total_tests)*100:.1f}%")
+    logger.info(f"Total tests: {total_tests}")
+    logger.info(f"Passed tests: {passed_tests}")
+    logger.info(f"Success rate: {(passed_tests/total_tests)*100:.1f}%")
     
     if passed_tests == total_tests:
-        print("\n🛡️  XSS PROTECTION IS WORKING CORRECTLY!")
+        logger.info("\n🛡️  XSS PROTECTION IS WORKING CORRECTLY!")
     elif passed_tests >= total_tests * 0.8:
-        print("\n⚠️  XSS PROTECTION IS MOSTLY WORKING (some issues detected)")
+        logger.info("\n⚠️  XSS PROTECTION IS MOSTLY WORKING (some issues detected)")
     else:
-        print("\n❌ XSS PROTECTION HAS SIGNIFICANT ISSUES")
+        logger.info("\n❌ XSS PROTECTION HAS SIGNIFICANT ISSUES")
     
     return passed_tests == total_tests
 

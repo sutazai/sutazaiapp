@@ -19,12 +19,13 @@ import inspect
 from typing import Dict, Any, Optional, List, Type, Union
 from pathlib import Path
 
-# Import the canonical base class
+# Import the canonical base class and logging
 sys.path.append('/opt/sutazaiapp')
 from agents.core.base_agent import BaseAgent
+from backend.app.core.logging_config import get_logger
 
-
-logger = logging.getLogger(__name__)
+# Configure structured logging (Rule 8 compliance)
+logger = get_logger(__name__)
 
 
 class AgentMigrationError(Exception):
@@ -441,23 +442,23 @@ def run_migration_report():
     validator = AgentMigrationValidator()
     report = validator.validate_all_agents()
     
-    print("\n=== SutazAI Agent Migration Report ===")
-    print(f"Total Agents: {report['total_agents']}")
-    print(f"Already V2: {report['v2_agents']}")
-    print(f"Legacy V1: {report['v1_agents']}")
-    print(f"Migration Ready: {report['migration_ready']}")
-    print(f"Need Attention: {report['needs_attention']}")
-    print(f"Errors: {report['error_agents']}")
+    logger.info("\n=== SutazAI Agent Migration Report ===")
+    logger.info(f"Total Agents: {report['total_agents']}")
+    logger.info(f"Already V2: {report['v2_agents']}")
+    logger.info(f"Legacy V1: {report['v1_agents']}")
+    logger.info(f"Migration Ready: {report['migration_ready']}")
+    logger.info(f"Need Attention: {report['needs_attention']}")
+    logger.info(f"Errors: {report['error_agents']}")
     
     # Generate migration plan
     plan = validator.generate_migration_plan(report)
     
-    print("\n=== Migration Plan ===")
+    logger.info("\n=== Migration Plan ===")
     for step in plan:
-        print(f"\nPhase {step['phase']}: {step['title']}")
-        print(f"Priority: {step['priority']}, Effort: {step['effort']}")
-        print(f"Agents: {len(step['agents'])}")
-        print(f"Description: {step['description']}")
+        logger.info(f"\nPhase {step['phase']}: {step['title']}")
+        logger.info(f"Priority: {step['priority']}, Effort: {step['effort']}")
+        logger.info(f"Agents: {len(step['agents'])}")
+        logger.info(f"Description: {step['description']}")
     
     return report, plan
 

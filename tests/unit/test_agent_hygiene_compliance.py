@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Comprehensive QA Validation for AI Agent Hygiene Compliance
 Testing QA Validator Implementation
 
@@ -59,30 +62,30 @@ class AgentHygieneValidator:
     def validate_all_agents(self) -> Dict[str, AgentValidationResult]:
         """Validate all AI agents for hygiene compliance"""
         
-        print("🔍 Starting Comprehensive AI Agent Hygiene Validation...")
-        print("=" * 70)
+        logger.info("🔍 Starting Comprehensive AI Agent Hygiene Validation...")
+        logger.info("=" * 70)
         
         # Find all main agent files (not detailed versions)
         agent_files = self._get_main_agent_files()
         self.total_agents = len(agent_files)
         
-        print(f"📊 Found {self.total_agents} main agent definition files")
-        print("-" * 50)
+        logger.info(f"📊 Found {self.total_agents} main agent definition files")
+        logger.info("-" * 50)
         
         for agent_file in agent_files:
             agent_name = agent_file.stem
-            print(f"🔍 Validating: {agent_name}")
+            logger.info(f"🔍 Validating: {agent_name}")
             
             result = self._validate_single_agent(agent_file)
             self.results[agent_name] = result
             
             if result.passed:
                 self.passed_agents += 1
-                print(f"✅ {agent_name}: PASSED ({result.compliance_score:.1%})")
+                logger.info(f"✅ {agent_name}: PASSED ({result.compliance_score:.1%})")
             else:
-                print(f"❌ {agent_name}: FAILED ({result.compliance_score:.1%})")
+                logger.error(f"❌ {agent_name}: FAILED ({result.compliance_score:.1%})")
                 for issue in result.issues:
-                    print(f"   - {issue}")
+                    logger.info(f"   - {issue}")
                     
         return self.results
     
@@ -528,45 +531,45 @@ class TestAgentHygieneCompliance:
 def main():
     """Main function to run comprehensive validation"""
     
-    print("🧪 Testing QA Validator - Comprehensive Agent Hygiene Compliance Test")
-    print("=" * 80)
+    logger.info("🧪 Testing QA Validator - Comprehensive Agent Hygiene Compliance Test")
+    logger.info("=" * 80)
     
     validator = AgentHygieneValidator()
     results = validator.validate_all_agents()
     
-    print("\n" + "=" * 80)
-    print("📊 COMPREHENSIVE TEST REPORT")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info("📊 COMPREHENSIVE TEST REPORT")
+    logger.info("=" * 80)
     
     report = validator.generate_comprehensive_report()
     
     # Print summary
     summary = report["test_summary"]
-    print(f"📈 Total Agents Tested: {summary['total_agents_tested']}")
-    print(f"✅ Agents Passed: {summary['agents_passed']}")
-    print(f"❌ Agents Failed: {summary['agents_failed']}")
-    print(f"📊 Overall Pass Rate: {summary['overall_pass_rate']:.1%}")
-    print(f"⭐ Average Compliance Score: {summary['average_compliance_score']:.1%}")
+    logger.info(f"📈 Total Agents Tested: {summary['total_agents_tested']}")
+    logger.info(f"✅ Agents Passed: {summary['agents_passed']}")
+    logger.error(f"❌ Agents Failed: {summary['agents_failed']}")
+    logger.info(f"📊 Overall Pass Rate: {summary['overall_pass_rate']:.1%}")
+    logger.info(f"⭐ Average Compliance Score: {summary['average_compliance_score']:.1%}")
     
     # Print category results
-    print("\n🔍 Test Category Results:")
-    print("-" * 50)
+    logger.info("\n🔍 Test Category Results:")
+    logger.info("-" * 50)
     for category, data in report["test_categories"].items():
         status_icon = "✅" if data["status"] == "PASS" else "⚠️" if data["status"] == "PARTIAL" else "❌"
-        print(f"{status_icon} {category.replace('_', ' ').title()}: {data['passed']}/{data['total_tested']} ({data['status']})")
+        logger.info(f"{status_icon} {category.replace('_', ' ').title()}: {data['passed']}/{data['total_tested']} ({data['status']})")
     
     # Print violations
     if report["violations_found"]:
-        print("\n⚠️ Violations Found:")
-        print("-" * 50)
+        logger.info("\n⚠️ Violations Found:")
+        logger.info("-" * 50)
         for violation in report["violations_found"][:10]:  # Show top 10
-            print(f"🔴 {violation['agent']} ({violation['severity']}): {len(violation['issues'])} issues")
+            logger.info(f"🔴 {violation['agent']} ({violation['severity']}): {len(violation['issues'])} issues")
     
     # Print recommendations
-    print("\n💡 Recommendations:")
-    print("-" * 50)
+    logger.info("\n💡 Recommendations:")
+    logger.info("-" * 50)
     for i, rec in enumerate(report["recommendations"][:5], 1):
-        print(f"{i}. {rec}")
+        logger.info(f"{i}. {rec}")
     
     # Save detailed report
     report_file = "/opt/sutazaiapp/backend/tests/agent_hygiene_compliance_report.json"
@@ -575,14 +578,14 @@ def main():
     with open(report_file, 'w') as f:
         json.dump(report, f, indent=2)
     
-    print(f"\n📄 Detailed report saved to: {report_file}")
+    logger.info(f"\n📄 Detailed report saved to: {report_file}")
     
     # Return exit code based on compliance
     if summary['overall_pass_rate'] >= 0.95:
-        print("\n🎉 All tests PASSED! Agents are compliant with hygiene standards.")
+        logger.info("\n🎉 All tests PASSED! Agents are compliant with hygiene standards.")
         return 0
     else:
-        print(f"\n⚠️ Tests FAILED! Compliance rate {summary['overall_pass_rate']:.1%} is below required 95%.")
+        logger.error(f"\n⚠️ Tests FAILED! Compliance rate {summary['overall_pass_rate']:.1%} is below required 95%.")
         return 1
 
 if __name__ == "__main__":

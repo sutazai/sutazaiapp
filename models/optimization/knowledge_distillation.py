@@ -44,7 +44,7 @@ class DistillationConfig:
     # Ollama-specific configuration
     teacher_model: str = "tinyllama2.5-coder:7b"  # Teacher model name
     student_model: str = "tinyllama"  # Student model name
-    ollama_host: str = "http://localhost:10104"
+    ollama_host: str = field(default_factory=lambda: os.getenv("OLLAMA_HOST", "http://ollama:10104"))  # Use environment variable or Docker service name
     max_context_length: int = 2048
     
     # Training data configuration
@@ -55,7 +55,9 @@ class DistillationConfig:
 class TeacherModel:
     """Wrapper for teacher model (typically larger, more capable)"""
     
-    def __init__(self, model_name: str, ollama_host: str = "http://localhost:10104"):
+    def __init__(self, model_name: str, ollama_host: str = None):
+        if ollama_host is None:
+            ollama_host = os.getenv("OLLAMA_HOST", "http://ollama:10104")  # Use environment variable or Docker service name
         self.model_name = model_name
         self.ollama_host = ollama_host
         self.session = None
@@ -145,7 +147,9 @@ class TeacherModel:
 class StudentModel:
     """Wrapper for student model (typically smaller, faster)"""
     
-    def __init__(self, model_name: str, ollama_host: str = "http://localhost:10104"):
+    def __init__(self, model_name: str, ollama_host: str = None):
+        if ollama_host is None:
+            ollama_host = os.getenv("OLLAMA_HOST", "http://ollama:10104")  # Use environment variable or Docker service name
         self.model_name = model_name
         self.ollama_host = ollama_host
         self.session = None

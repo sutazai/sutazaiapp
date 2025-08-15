@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Requirements Compatibility Test for SutazAI Frontend
 Tests that all required packages can be imported and are compatible
 """
@@ -34,35 +37,35 @@ def test_package_imports():
     
     results = []
     
-    print("🧪 TESTING PACKAGE IMPORTS")
-    print("="*50)
+    logger.info("🧪 TESTING PACKAGE IMPORTS")
+    logger.info("="*50)
     
     for package_name, description in critical_packages:
         try:
             module = importlib.import_module(package_name)
             version = getattr(module, '__version__', 'Unknown')
             results.append((package_name, True, version, description, None))
-            print(f"✅ {package_name:15} v{version:10} - {description}")
+            logger.info(f"✅ {package_name:15} v{version:10} - {description}")
             
         except ImportError as e:
             results.append((package_name, False, 'N/A', description, str(e)))
-            print(f"❌ {package_name:15} {'FAILED':10} - {description}")
-            print(f"   Error: {e}")
+            logger.error(f"❌ {package_name:15} {'FAILED':10} - {description}")
+            logger.error(f"   Error: {e}")
         except Exception as e:
             results.append((package_name, False, 'N/A', description, str(e)))
-            print(f"⚠️  {package_name:15} {'ERROR':10} - {description}")
-            print(f"   Error: {e}")
+            logger.error(f"⚠️  {package_name:15} {'ERROR':10} - {description}")
+            logger.error(f"   Error: {e}")
     
     return results
 
 def test_streamlit_compatibility():
     """Test Streamlit-specific compatibility"""
-    print("\n\n🎯 TESTING STREAMLIT COMPATIBILITY")
-    print("="*50)
+    logger.info("\n\n🎯 TESTING STREAMLIT COMPATIBILITY")
+    logger.info("="*50)
     
     try:
         import streamlit as st
-        print(f"✅ Streamlit imported successfully: v{st.__version__}")
+        logger.info(f"✅ Streamlit imported successfully: v{st.__version__}")
         
         # Test key Streamlit dependencies
         streamlit_deps = [
@@ -77,20 +80,20 @@ def test_streamlit_compatibility():
         for dep in streamlit_deps:
             try:
                 importlib.import_module(dep)
-                print(f"✅ {dep:15} - Compatible with Streamlit")
+                logger.info(f"✅ {dep:15} - Compatible with Streamlit")
             except ImportError:
-                print(f"❌ {dep:15} - Import failed")
+                logger.error(f"❌ {dep:15} - Import failed")
                 
         return True
         
     except Exception as e:
-        print(f"❌ Streamlit compatibility test failed: {e}")
+        logger.error(f"❌ Streamlit compatibility test failed: {e}")
         return False
 
 def test_security_packages():
     """Test security-critical packages"""
-    print("\n\n🔒 TESTING SECURITY PACKAGES")
-    print("="*50)
+    logger.info("\n\n🔒 TESTING SECURITY PACKAGES")
+    logger.info("="*50)
     
     security_tests = [
         ('cryptography', lambda: importlib.import_module('cryptography.fernet')),
@@ -104,19 +107,19 @@ def test_security_packages():
     for pkg_name, test_func in security_tests:
         try:
             result = test_func()
-            print(f"✅ {pkg_name:15} - Security features accessible")
+            logger.info(f"✅ {pkg_name:15} - Security features accessible")
         except Exception as e:
-            print(f"❌ {pkg_name:15} - Security test failed: {e}")
+            logger.error(f"❌ {pkg_name:15} - Security test failed: {e}")
             all_passed = False
             
     return all_passed
 
 def main():
     """Run all compatibility tests"""
-    print("🧪 REQUIREMENTS COMPATIBILITY TEST SUITE")
-    print("="*60)
-    print("Testing SutazAI Frontend requirements.txt compatibility")
-    print("="*60)
+    logger.info("🧪 REQUIREMENTS COMPATIBILITY TEST SUITE")
+    logger.info("="*60)
+    logger.info("Testing SutazAI Frontend requirements.txt compatibility")
+    logger.info("="*60)
     
     # Test package imports
     import_results = test_package_imports()
@@ -132,11 +135,11 @@ def main():
     security_ok = test_security_packages()
     
     # Final summary
-    print("\n\n📊 FINAL COMPATIBILITY REPORT")
-    print("="*60)
-    print(f"Package imports:     {successful_imports}/{total_packages} successful")
-    print(f"Streamlit compatibility: {'✅ PASSED' if streamlit_ok else '❌ FAILED'}")
-    print(f"Security tests:      {'✅ PASSED' if security_ok else '❌ FAILED'}")
+    logger.info("\n\n📊 FINAL COMPATIBILITY REPORT")
+    logger.info("="*60)
+    logger.info(f"Package imports:     {successful_imports}/{total_packages} successful")
+    logger.error(f"Streamlit compatibility: {'✅ PASSED' if streamlit_ok else '❌ FAILED'}")
+    logger.error(f"Security tests:      {'✅ PASSED' if security_ok else '❌ FAILED'}")
     
     overall_success = (
         successful_imports == total_packages and 
@@ -145,12 +148,12 @@ def main():
     )
     
     if overall_success:
-        print("\n🎉 ALL COMPATIBILITY TESTS PASSED!")
-        print("✅ Requirements are ready for production use")
+        logger.info("\n🎉 ALL COMPATIBILITY TESTS PASSED!")
+        logger.info("✅ Requirements are ready for production use")
         return True
     else:
-        print("\n⚠️ SOME COMPATIBILITY ISSUES DETECTED")
-        print("❌ Please review and fix issues before deployment")
+        logger.info("\n⚠️ SOME COMPATIBILITY ISSUES DETECTED")
+        logger.info("❌ Please review and fix issues before deployment")
         return False
 
 if __name__ == "__main__":

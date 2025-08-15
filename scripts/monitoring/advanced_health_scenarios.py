@@ -589,10 +589,10 @@ def main():
     with open(output_file, 'w') as f:
         json.dump(results, f, indent=2)
     
-    print(f"\n📋 ADVANCED HEALTH VALIDATION RESULTS")
-    print(f"Results saved to: {output_file}")
-    print(f"Overall Success Rate: {results['advanced_validation_summary']['success_rate']:.1f}%")
-    print(f"Tests Passed: {results['advanced_validation_summary']['passed_tests']}/{results['advanced_validation_summary']['total_advanced_tests']}")
+    logger.info(f"\n📋 ADVANCED HEALTH VALIDATION RESULTS")
+    logger.info(f"Results saved to: {output_file}")
+    logger.info(f"Overall Success Rate: {results['advanced_validation_summary']['success_rate']:.1f}%")
+    logger.info(f"Tests Passed: {results['advanced_validation_summary']['passed_tests']}/{results['advanced_validation_summary']['total_advanced_tests']}")
     
     return results
 

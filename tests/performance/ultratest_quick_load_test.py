@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Quick Load Testing
 Fast test to verify system can handle concurrent users.
 """
@@ -32,7 +35,7 @@ def make_request(user_id, endpoint_url):
 
 def run_concurrent_test(num_users, endpoint_url):
     """Run concurrent test with specified number of users"""
-    print(f"🔥 Testing {num_users} concurrent users against {endpoint_url}")
+    logger.info(f"🔥 Testing {num_users} concurrent users against {endpoint_url}")
     
     # Use ThreadPoolExecutor for true concurrency
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_users) as executor:
@@ -49,8 +52,8 @@ def run_concurrent_test(num_users, endpoint_url):
 
 def main():
     """Run quick load testing"""
-    print("🚀 ULTRATEST: Quick Load Testing")
-    print("=" * 50)
+    logger.info("🚀 ULTRATEST: Quick Load Testing")
+    logger.info("=" * 50)
     
     # Test endpoints (using fastest ones)
     endpoints = [
@@ -65,13 +68,13 @@ def main():
     user_loads = [25, 50, 100]
     
     for users in user_loads:
-        print(f"\n📊 Testing with {users} concurrent users:")
-        print("-" * 40)
+        logger.info(f"\n📊 Testing with {users} concurrent users:")
+        logger.info("-" * 40)
         
         load_results = {}
         
         for name, url in endpoints:
-            print(f"Testing {name}...", end=" ")
+            logger.info(f"Testing {name}...", end=" ")
             
             try:
                 results = run_concurrent_test(users, url)
@@ -85,7 +88,7 @@ def main():
                     avg_response = sum(response_times) / len(response_times) if response_times else 0
                     success_rate = len(successful) / len(results) * 100
                     
-                    print(f"✅ {success_rate:.1f}% success, {avg_response:.2f}ms avg")
+                    logger.info(f"✅ {success_rate:.1f}% success, {avg_response:.2f}ms avg")
                     
                     load_results[name] = {
                         'total_requests': len(results),
@@ -97,7 +100,7 @@ def main():
                         'max_response_time_ms': max(response_times) if response_times else 0
                     }
                 else:
-                    print(f"❌ All requests failed")
+                    logger.error(f"❌ All requests failed")
                     load_results[name] = {
                         'total_requests': len(results),
                         'successful_requests': 0,
@@ -106,15 +109,15 @@ def main():
                     }
                     
             except Exception as e:
-                print(f"❌ Error: {e}")
+                logger.error(f"❌ Error: {e}")
                 load_results[name] = {'error': str(e)}
         
         all_results[f"{users}_users"] = load_results
     
     # Generate summary report
-    print("\n" + "=" * 60)
-    print("📋 LOAD TESTING SUMMARY")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("📋 LOAD TESTING SUMMARY")
+    logger.info("=" * 60)
     
     # Check if system handles 100+ users
     if "100_users" in all_results:
@@ -134,28 +137,28 @@ def main():
             overall_success_rate = sum(total_success_rates) / len(total_success_rates)
             overall_avg_response = sum(total_avg_response_times) / len(total_avg_response_times) if total_avg_response_times else 0
             
-            print(f"100 Concurrent Users Test Results:")
-            print(f"  Overall Success Rate: {overall_success_rate:.1f}%")
-            print(f"  Overall Avg Response Time: {overall_avg_response:.2f}ms")
+            logger.info(f"100 Concurrent Users Test Results:")
+            logger.info(f"  Overall Success Rate: {overall_success_rate:.1f}%")
+            logger.info(f"  Overall Avg Response Time: {overall_avg_response:.2f}ms")
             
             # Determine if targets are met
             handles_100_users = overall_success_rate >= 80  # 80% success rate under load
             reasonable_performance = overall_avg_response <= 100  # 100ms under load is reasonable
             
             if handles_100_users:
-                print("  ✅ SUCCESSFULLY HANDLES 100+ CONCURRENT USERS")
+                logger.info("  ✅ SUCCESSFULLY HANDLES 100+ CONCURRENT USERS")
             else:
-                print("  ❌ Struggles with 100 concurrent users")
+                logger.info("  ❌ Struggles with 100 concurrent users")
             
             if reasonable_performance:
-                print("  ✅ REASONABLE PERFORMANCE UNDER LOAD")
+                logger.info("  ✅ REASONABLE PERFORMANCE UNDER LOAD")
             else:
-                print("  ⚠️  Performance degrades under load")
+                logger.info("  ⚠️  Performance degrades under load")
         
         # Show progression across user loads
-        print(f"\nLoad Testing Progression:")
-        print(f"{'Users':<8} {'Avg Success Rate':<18} {'Avg Response Time':<20}")
-        print("-" * 50)
+        logger.info(f"\nLoad Testing Progression:")
+        logger.info(f"{'Users':<8} {'Avg Success Rate':<18} {'Avg Response Time':<20}")
+        logger.info("-" * 50)
         
         for load_key in ['25_users', '50_users', '100_users']:
             if load_key in all_results:
@@ -168,7 +171,7 @@ def main():
                     avg_response = sum(response_times) / len(response_times) if response_times else 0
                     
                     users_num = load_key.split('_')[0]
-                    print(f"{users_num:<8} {avg_success:<18.1f} {avg_response:<20.2f}")
+                    logger.info(f"{users_num:<8} {avg_success:<18.1f} {avg_response:<20.2f}")
     
     # Save results
     report = {
@@ -184,7 +187,7 @@ def main():
     with open('/opt/sutazaiapp/tests/ultratest_quick_load_report.json', 'w') as f:
         json.dump(report, f, indent=2, default=str)
     
-    print(f"\n📄 Report saved: tests/ultratest_quick_load_report.json")
+    logger.info(f"\n📄 Report saved: tests/ultratest_quick_load_report.json")
     
     # Determine overall success
     if "100_users" in all_results:
@@ -194,10 +197,10 @@ def main():
         if success_rates:
             overall_success = sum(success_rates) / len(success_rates)
             if overall_success >= 80:
-                print("\n🎉 LOAD TESTING SUCCESSFUL - System handles 100+ users!")
+                logger.info("\n🎉 LOAD TESTING SUCCESSFUL - System handles 100+ users!")
                 return 0
     
-    print("\n⚠️  LOAD TESTING NEEDS IMPROVEMENT")
+    logger.info("\n⚠️  LOAD TESTING NEEDS IMPROVEMENT")
     return 1
 
 if __name__ == "__main__":

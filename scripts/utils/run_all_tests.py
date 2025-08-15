@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Master Test Runner for SutazAI System
 Executes all test suites with proper organization per Rules 1-19
 """
@@ -29,7 +32,7 @@ class TestSuiteRunner:
     
     def run_unit_tests(self) -> Dict[str, Any]:
         """Run unit tests"""
-        print("\n=== Running Unit Tests ===")
+        logger.info("\n=== Running Unit Tests ===")
         
         unit_args = [
             '-v',
@@ -51,7 +54,7 @@ class TestSuiteRunner:
     
     def run_integration_tests(self) -> Dict[str, Any]:
         """Run integration tests"""
-        print("\n=== Running Integration Tests ===")
+        logger.info("\n=== Running Integration Tests ===")
         
         integration_args = [
             '-v',
@@ -70,7 +73,7 @@ class TestSuiteRunner:
     
     def run_e2e_tests(self) -> Dict[str, Any]:
         """Run E2E tests"""
-        print("\n=== Running E2E Tests ===")
+        logger.info("\n=== Running E2E Tests ===")
         
         e2e_args = [
             '-v',
@@ -89,7 +92,7 @@ class TestSuiteRunner:
     
     def run_performance_tests(self) -> Dict[str, Any]:
         """Run performance tests"""
-        print("\n=== Running Performance Tests ===")
+        logger.info("\n=== Running Performance Tests ===")
         
         perf_args = [
             '-v',
@@ -108,7 +111,7 @@ class TestSuiteRunner:
     
     def run_security_tests(self) -> Dict[str, Any]:
         """Run security tests"""
-        print("\n=== Running Security Tests ===")
+        logger.info("\n=== Running Security Tests ===")
         
         security_args = [
             '-v',
@@ -127,7 +130,7 @@ class TestSuiteRunner:
     
     def run_slow_tests(self) -> Dict[str, Any]:
         """Run slow tests (performance + load tests)"""
-        print("\n=== Running Slow Tests ===")
+        logger.info("\n=== Running Slow Tests ===")
         
         slow_args = [
             '-v',
@@ -146,7 +149,7 @@ class TestSuiteRunner:
     
     def setup_test_environment(self) -> bool:
         """Setup test environment and check dependencies"""
-        print("=== Setting up Test Environment ===")
+        logger.info("=== Setting up Test Environment ===")
         
         # Create reports directory
         reports_dir = os.path.join(self.base_dir, 'reports')
@@ -169,14 +172,14 @@ class TestSuiteRunner:
             system_running = asyncio.run(check_system())
             
             if system_running:
-                print("✓ SutazAI system is running")
+                logger.info("✓ SutazAI system is running")
                 return True
             else:
-                print("⚠ SutazAI system is not responding")
+                logger.info("⚠ SutazAI system is not responding")
                 return False
                 
         except Exception as e:
-            print(f"⚠ Could not check system status: {e}")
+            logger.info(f"⚠ Could not check system status: {e}")
             return False
     
     def generate_report(self) -> Dict[str, Any]:
@@ -208,7 +211,7 @@ class TestSuiteRunner:
         with open(report_file, 'w') as f:
             json.dump(report, f, indent=2)
         
-        print(f"\n📊 Test report saved: {report_file}")
+        logger.info(f"\n📊 Test report saved: {report_file}")
         return report
     
     def _get_recommendations(self) -> List[str]:
@@ -239,28 +242,28 @@ class TestSuiteRunner:
     
     def print_summary(self, report: Dict[str, Any]):
         """Print test summary"""
-        print("\n" + "=" * 60)
-        print("📋 TEST EXECUTION SUMMARY")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.info("📋 TEST EXECUTION SUMMARY")
+        logger.info("=" * 60)
         
         summary = report['summary']
-        print(f"⏱  Duration: {report['duration_seconds']:.1f} seconds")
-        print(f"📊 Success Rate: {summary['success_rate']:.1f}%")
-        print(f"✅ Passed Suites: {summary['passed_suites']}/{summary['total_suites']}")
+        logger.info(f"⏱  Duration: {report['duration_seconds']:.1f} seconds")
+        logger.info(f"📊 Success Rate: {summary['success_rate']:.1f}%")
+        logger.info(f"✅ Passed Suites: {summary['passed_suites']}/{summary['total_suites']}")
         
         if summary['failed_suites'] > 0:
-            print(f"❌ Failed Suites: {summary['failed_suites']}")
+            logger.error(f"❌ Failed Suites: {summary['failed_suites']}")
         
-        print("\n📋 Test Suite Results:")
+        logger.info("\n📋 Test Suite Results:")
         for name, result in self.results.items():
             status = "✅ PASS" if result['passed'] else "❌ FAIL"
-            print(f"  {name.upper():12} {status}")
+            logger.info(f"  {name.upper():12} {status}")
         
-        print("\n💡 Recommendations:")
+        logger.info("\n💡 Recommendations:")
         for i, rec in enumerate(report['recommendations'], 1):
-            print(f"  {i}. {rec}")
+            logger.info(f"  {i}. {rec}")
         
-        print("\n" + "=" * 60)
+        logger.info("\n" + "=" * 60)
     
     def run_all(self, suites: List[str] = None) -> Dict[str, Any]:
         """Run all test suites"""
@@ -289,7 +292,7 @@ class TestSuiteRunner:
                     result = suite_runners[suite_name]()
                     self.results[suite_name] = result
                 except Exception as e:
-                    print(f"Error running {suite_name} tests: {e}")
+                    logger.error(f"Error running {suite_name} tests: {e}")
                     self.results[suite_name] = {
                         'name': suite_name,
                         'exit_code': -1,
@@ -345,10 +348,10 @@ def main():
     if args.ci:
         failed_suites = report['summary']['failed_suites']
         if failed_suites > 0:
-            print(f"\n❌ CI Mode: {failed_suites} test suite(s) failed")
+            logger.error(f"\n❌ CI Mode: {failed_suites} test suite(s) failed")
             sys.exit(1)
         else:
-            print("\n✅ CI Mode: All test suites passed")
+            logger.info("\n✅ CI Mode: All test suites passed")
             sys.exit(0)
 
 

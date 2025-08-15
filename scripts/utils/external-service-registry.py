@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Purpose: Central registry for all external services integrated with SutazAI
 Usage: python external-service-registry.py [--list] [--add SERVICE] [--remove SERVICE]
 Requirements: redis, consul-py
@@ -51,7 +54,7 @@ class ServiceRegistry:
             return True
             
         except Exception as e:
-            print(f"Failed to register service: {e}")
+            logger.error(f"Failed to register service: {e}")
             return False
     
     def get_service(self, service_id: str) -> Optional[Dict[str, Any]]:
@@ -71,7 +74,7 @@ class ServiceRegistry:
                 return self.client.get(service_id)
                 
         except Exception as e:
-            print(f"Failed to get service: {e}")
+            logger.error(f"Failed to get service: {e}")
             
         return None
     
@@ -100,7 +103,7 @@ class ServiceRegistry:
                     services.append(data)
                     
         except Exception as e:
-            print(f"Failed to list services: {e}")
+            logger.error(f"Failed to list services: {e}")
             
         return services
     
@@ -126,7 +129,7 @@ class ServiceRegistry:
             return True
             
         except Exception as e:
-            print(f"Failed to remove service: {e}")
+            logger.error(f"Failed to remove service: {e}")
             return False
     
     def get_services_by_type(self, service_type: str) -> List[Dict[str, Any]]:
@@ -250,13 +253,13 @@ def main():
         if args.type:
             services = [s for s in services if s.get('type') == args.type]
             
-        print(f"Registered Services ({len(services)}):")
+        logger.info(f"Registered Services ({len(services)}):")
         for service in services:
-            print(f"\n- {service.get('id', 'Unknown')}")
-            print(f"  Type: {service.get('type', 'Unknown')}")
-            print(f"  Status: {service.get('status', 'Unknown')}")
-            print(f"  Adapter Port: {service.get('adapter_port', 'N/A')}")
-            print(f"  Original Port: {service.get('original_port', 'N/A')}")
+            logger.info(f"\n- {service.get('id', 'Unknown')}")
+            logger.info(f"  Type: {service.get('type', 'Unknown')}")
+            logger.info(f"  Status: {service.get('status', 'Unknown')}")
+            logger.info(f"  Adapter Port: {service.get('adapter_port', 'N/A')}")
+            logger.info(f"  Original Port: {service.get('original_port', 'N/A')}")
             
     elif args.add:
         if args.add in SERVICE_TEMPLATES:
@@ -264,32 +267,32 @@ def main():
             template['name'] = args.add
             
             if registry.register_service(args.add, template):
-                print(f"Service '{args.add}' registered successfully")
-                print(f"Adapter will be available at port {template['adapter_port']}")
+                logger.info(f"Service '{args.add}' registered successfully")
+                logger.info(f"Adapter will be available at port {template['adapter_port']}")
             else:
-                print(f"Failed to register service '{args.add}'")
+                logger.error(f"Failed to register service '{args.add}'")
         else:
-            print(f"Unknown service template: {args.add}")
-            print(f"Available templates: {', '.join(SERVICE_TEMPLATES.keys())}")
+            logger.info(f"Unknown service template: {args.add}")
+            logger.info(f"Available templates: {', '.join(SERVICE_TEMPLATES.keys())}")
             
     elif args.remove:
         if registry.remove_service(args.remove):
-            print(f"Service '{args.remove}' removed successfully")
+            logger.info(f"Service '{args.remove}' removed successfully")
         else:
-            print(f"Failed to remove service '{args.remove}'")
+            logger.error(f"Failed to remove service '{args.remove}'")
             
     elif args.status:
         service = registry.get_service(args.status)
         if service:
-            print(f"Service: {args.status}")
-            print(json.dumps(service, indent=2))
+            logger.info(f"Service: {args.status}")
+            logger.info(json.dumps(service, indent=2))
         else:
-            print(f"Service '{args.status}' not found")
+            logger.info(f"Service '{args.status}' not found")
             
     elif args.health:
         health = registry.get_service_health(args.health)
-        print(f"Health status for '{args.health}':")
-        print(json.dumps(health, indent=2))
+        logger.info(f"Health status for '{args.health}':")
+        logger.info(json.dumps(health, indent=2))
         
     else:
         parser.print_help()

@@ -371,7 +371,7 @@ def main():
         
         # Generate and display report
         report = validator.generate_report()
-        print(report)
+        logger.info(report)
         
         # Save results
         import os

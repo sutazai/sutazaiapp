@@ -679,7 +679,7 @@ if __name__ == '__main__':
     orchestrator = AgentOrchestrator()
     orchestrator.start()
     
-    print("Agent Orchestrator started")
+    logger.info("Agent Orchestrator started")
     
     try:
         # Submit some test tasks
@@ -690,30 +690,30 @@ if __name__ == '__main__':
         
         # Monitor agents
         while True:
-            print("\n" + "="*50)
-            print("AGENT STATUS")
-            print("="*50)
+            logger.info("\n" + "="*50)
+            logger.info("AGENT STATUS")
+            logger.info("="*50)
             
             status = orchestrator.get_agent_status()
             for agent_id, info in status.items():
-                print(f"Agent: {info['name']} ({agent_id})")
-                print(f"  Status: {info['status']}")
-                print(f"  Tasks: {info['metrics']['tasks_completed']}/{info['metrics']['tasks_total']}")
-                print(f"  Queue: {info['queue_size']}")
+                logger.info(f"Agent: {info['name']} ({agent_id})")
+                logger.info(f"  Status: {info['status']}")
+                logger.info(f"  Tasks: {info['metrics']['tasks_completed']}/{info['metrics']['tasks_total']}")
+                logger.info(f"  Queue: {info['queue_size']}")
                 if info['current_task']:
-                    print(f"  Current: {info['current_task']['task_type']}")
-                print()
+                    logger.info(f"  Current: {info['current_task']['task_type']}")
+                logger.info()
             
             stats = orchestrator.get_task_statistics()
-            print(f"Task Statistics:")
-            print(f"  Total: {stats['total_tasks']}")
-            print(f"  Completed: {stats['completed_tasks']}")
-            print(f"  Failed: {stats['failed_tasks']}")
-            print(f"  Success Rate: {stats['success_rate']:.1f}%")
-            print(f"  Pending: {stats['pending_tasks']}")
+            logger.info(f"Task Statistics:")
+            logger.info(f"  Total: {stats['total_tasks']}")
+            logger.info(f"  Completed: {stats['completed_tasks']}")
+            logger.error(f"  Failed: {stats['failed_tasks']}")
+            logger.info(f"  Success Rate: {stats['success_rate']:.1f}%")
+            logger.info(f"  Pending: {stats['pending_tasks']}")
             
             time.sleep(10)
             
     except KeyboardInterrupt:
-        print("\nShutting down...")
+        logger.info("\nShutting down...")
         orchestrator.stop()

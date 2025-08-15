@@ -711,9 +711,9 @@ def main():
         if args.output:
             with open(args.output, 'w') as f:
                 json.dump(results, f, indent=2)
-            print(f"Results saved to: {args.output}")
+            logger.info(f"Results saved to: {args.output}")
         else:
-            print(json.dumps(results, indent=2))
+            logger.info(json.dumps(results, indent=2))
         
         # Exit with appropriate code
         if results['overall_status'] == 'FAILED':

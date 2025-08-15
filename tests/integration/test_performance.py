@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Purpose: Performance and resource usage validation tests for hygiene system
 Usage: python -m pytest tests/hygiene/test_performance.py
 Requirements: pytest, psutil, time
@@ -57,7 +60,7 @@ class TestPerformanceBenchmarks(unittest.TestCase):
             
         # Create many test files
         file_types = [
-            ('.py', 'print("test python file")'),
+            ('.py', 'logger.info("test python file")'),
             ('.sh', '#!/bin/bash\necho "test shell script"'),
             ('.txt', 'test text content'),
             ('.backup', 'backup file content'),
@@ -78,7 +81,7 @@ class TestPerformanceBenchmarks(unittest.TestCase):
             
             for j in range(50):
                 nested_file = nested_dir / f"nested_{j}.py"
-                nested_file.write_text(f"# Nested file {i}/{j}\nprint('nested')")
+                nested_file.write_text(f"# Nested file {i}/{j}\nlogger.info('nested')")
                 
     def measure_execution_time(self, func, *args, **kwargs):
         """Measure execution time of a function"""
@@ -156,7 +159,7 @@ class TestPerformanceBenchmarks(unittest.TestCase):
         
         self.assertGreater(len(violations), 0, "Should detect violations in test dataset")
         
-        print(f"Directory scanning performance: {execution_time:.2f}s for {len(violations)} violations")
+        logger.info(f"Directory scanning performance: {execution_time:.2f}s for {len(violations)} violations")
         
     def test_file_processing_performance(self):
         """Test performance of processing many files"""
@@ -188,7 +191,7 @@ class TestPerformanceBenchmarks(unittest.TestCase):
         self.assertLess(metrics['max_memory_mb'], self.performance_thresholds['max_memory_mb'],
                        f"Memory usage too high: {metrics['max_memory_mb']:.1f}MB")
         
-        print(f"File processing performance: {metrics['execution_time']:.2f}s, "
+        logger.info(f"File processing performance: {metrics['execution_time']:.2f}s, "
               f"Memory: {metrics['max_memory_mb']:.1f}MB, "
               f"Files processed: {len(processed_files)}")
               
@@ -224,7 +227,7 @@ class TestPerformanceBenchmarks(unittest.TestCase):
         
         self.assertGreater(len(results), 0, "Should process files concurrently")
         
-        print(f"Concurrent processing performance: {metrics['execution_time']:.2f}s, "
+        logger.info(f"Concurrent processing performance: {metrics['execution_time']:.2f}s, "
               f"Processed: {len(results)} files")
 
 class TestMemoryUsagePatterns(unittest.TestCase):
@@ -293,7 +296,7 @@ class TestMemoryUsagePatterns(unittest.TestCase):
             self.assertLess(memory_increase, 10.0,  # 10MB increase threshold
                            f"Potential memory leak detected: {memory_increase:.1f}MB increase")
             
-        print(f"Memory usage pattern: {memory_usage}")
+        logger.info(f"Memory usage pattern: {memory_usage}")
         
     def test_large_dataset_memory_efficiency(self):
         """Test memory efficiency with large datasets"""
@@ -345,7 +348,7 @@ class TestMemoryUsagePatterns(unittest.TestCase):
         # Both should process same amount of data
         self.assertEqual(streaming_result, batch_result)
         
-        print(f"Streaming: {streaming_metrics['max_memory_mb']:.1f}MB, "
+        logger.info(f"Streaming: {streaming_metrics['max_memory_mb']:.1f}MB, "
               f"Batch: {batch_metrics['max_memory_mb']:.1f}MB")
 
 class TestScalabilityLimits(unittest.TestCase):
@@ -372,7 +375,7 @@ class TestScalabilityLimits(unittest.TestCase):
             
             for i in range(file_count):
                 test_file = test_dir / f"test_{i:06d}.py"
-                test_file.write_text(f"# Test file {i}\nprint('test {i}')")
+                test_file.write_text(f"# Test file {i}\nlogger.info('test {i}')")
                 
             # Measure processing time
             def process_files():
@@ -406,7 +409,7 @@ class TestScalabilityLimits(unittest.TestCase):
             self.assertLess(scaling_efficiency, 2.0,
                            f"Poor scaling detected: {scaling_efficiency:.2f}x time for {file_ratio}x files")
             
-        print(f"Scalability test - File counts: {file_counts}, Times: {processing_times}")
+        logger.info(f"Scalability test - File counts: {file_counts}, Times: {processing_times}")
         
     def test_directory_depth_scalability(self):
         """Test handling of deep directory structures"""
@@ -423,7 +426,7 @@ class TestScalabilityLimits(unittest.TestCase):
             # Add files at each level
             for i in range(5):
                 test_file = current_dir / f"file_{i}.py"
-                test_file.write_text(f"# File at depth {depth}\nprint('depth {depth}')")
+                test_file.write_text(f"# File at depth {depth}\nlogger.info('depth {depth}')")
                 
         # Test recursive operations
         def recursive_file_scan():
@@ -439,7 +442,7 @@ class TestScalabilityLimits(unittest.TestCase):
         self.assertEqual(file_count, max_depth * 5,
                         f"Should find all files in deep structure")
         
-        print(f"Deep directory test: {file_count} files at {max_depth} levels in {execution_time:.2f}s")
+        logger.info(f"Deep directory test: {file_count} files at {max_depth} levels in {execution_time:.2f}s")
 
 class TestRealWorldPerformance(unittest.TestCase):
     """Test performance with real-world scenarios"""
@@ -468,7 +471,7 @@ class TestRealWorldPerformance(unittest.TestCase):
         self.assertLess(execution_time, 60.0,
                        f"Orchestrator execution too slow: {execution_time:.2f}s")
         
-        print(f"Orchestrator performance: {execution_time:.2f}s")
+        logger.info(f"Orchestrator performance: {execution_time:.2f}s")
         
     def test_test_suite_performance(self):
         """Test the test suite's own performance"""
@@ -490,7 +493,7 @@ class TestRealWorldPerformance(unittest.TestCase):
         self.assertLess(execution_time, 30.0,
                        f"Test suite setup too slow: {execution_time:.2f}s")
         
-        print(f"Test suite performance: {execution_time:.2f}s")
+        logger.info(f"Test suite performance: {execution_time:.2f}s")
 
 class TestPerformanceReporting(unittest.TestCase):
     """Test performance reporting and metrics collection"""
@@ -525,7 +528,7 @@ class TestPerformanceReporting(unittest.TestCase):
             self.assertIn(field, metrics, f"Missing metric: {field}")
             self.assertIsInstance(metrics[field], (int, float))
             
-        print(f"System metrics: {metrics}")
+        logger.info(f"System metrics: {metrics}")
         
     def test_performance_report_generation(self):
         """Test generation of performance reports"""
@@ -573,7 +576,7 @@ class TestPerformanceReporting(unittest.TestCase):
         self.assertEqual(loaded_report['test_summary']['total_tests'], 
                         report['test_summary']['total_tests'])
         
-        print(f"Performance report generated: {len(report_json)} characters")
+        logger.info(f"Performance report generated: {len(report_json)} characters")
 
 if __name__ == "__main__":
     unittest.main()

@@ -467,11 +467,11 @@ async def monitor_pools():
             }
             
             # Log metrics
-            print(json.dumps(metrics, indent=2))
+            logger.info(json.dumps(metrics, indent=2))
             
             # Check for alerts
             if metrics['postgresql']['pool_utilization'] > 0.8:
-                print(f"ALERT: High PostgreSQL pool utilization: {metrics['postgresql']['pool_utilization']:.1%}")
+                logger.info(f"ALERT: High PostgreSQL pool utilization: {metrics['postgresql']['pool_utilization']:.1%}")
             
             await asyncio.sleep(30)  # Check every 30 seconds
             
@@ -505,41 +505,41 @@ async def main():
     try:
         await optimizer.initialize_connections()
         
-        print("Database Connection Pool Optimization Analysis")
-        print("=" * 50)
-        print(f"System Resources: {optimizer.cpu_count} CPU cores, {optimizer.memory_gb:.1f}GB RAM")
+        logger.info("Database Connection Pool Optimization Analysis")
+        logger.info("=" * 50)
+        logger.info(f"System Resources: {optimizer.cpu_count} CPU cores, {optimizer.memory_gb:.1f}GB RAM")
         
         # Get current metrics
         current_metrics = await optimizer.get_current_pool_metrics()
-        print(f"Current Pool Size: {current_metrics.pool_size}")
-        print(f"Current Utilization: {current_metrics.utilization_percent:.1f}%")
+        logger.info(f"Current Pool Size: {current_metrics.pool_size}")
+        logger.info(f"Current Utilization: {current_metrics.utilization_percent:.1f}%")
         
         # Calculate optimal settings
         optimal_pg_size, optimal_redis_size = optimizer.calculate_optimal_pool_size()
-        print(f"Recommended PostgreSQL Pool Size: {optimal_pg_size}")
-        print(f"Recommended Redis Pool Size: {optimal_redis_size}")
+        logger.info(f"Recommended PostgreSQL Pool Size: {optimal_pg_size}")
+        logger.info(f"Recommended Redis Pool Size: {optimal_redis_size}")
         
         # Run full analysis
-        print("\nRunning optimization analysis...")
+        logger.info("\nRunning optimization analysis...")
         recommendations = await optimizer.run_optimization_analysis()
         
         # Display recommendations
-        print(f"\nOptimization Recommendations ({len(recommendations)} found):")
-        print("-" * 50)
+        logger.info(f"\nOptimization Recommendations ({len(recommendations)} found):")
+        logger.info("-" * 50)
         
         for i, rec in enumerate(recommendations, 1):
-            print(f"{i}. {rec.database.upper()} - {rec.impact_level.upper()} IMPACT")
-            print(f"   Current: {rec.current_setting}")
-            print(f"   Recommended: {rec.recommended_setting}")
-            print(f"   Reason: {rec.reason}")
-            print()
+            logger.info(f"{i}. {rec.database.upper()} - {rec.impact_level.upper()} IMPACT")
+            logger.info(f"   Current: {rec.current_setting}")
+            logger.info(f"   Recommended: {rec.recommended_setting}")
+            logger.info(f"   Reason: {rec.reason}")
+            logger.info()
         
         # Generate configuration files
-        print("Generating optimized configuration files...")
+        logger.info("Generating optimized configuration files...")
         optimizer.generate_configuration_files(recommendations)
         
         # Create monitoring script
-        print("Creating connection pool monitoring script...")
+        logger.info("Creating connection pool monitoring script...")
         await optimizer.create_monitoring_script()
         
         # Save full report
@@ -563,13 +563,13 @@ async def main():
         with open(report_file, 'w') as f:
             json.dump(report, f, indent=2)
         
-        print(f"\nFull optimization report saved to: {report_file}")
-        print("\nNext Steps:")
-        print("1. Review generated configuration files in /opt/sutazaiapp/configs/optimized/")
-        print("2. Apply PostgreSQL configuration and restart container")
-        print("3. Update connection pool settings in application code")
-        print("4. Monitor performance using the generated monitoring script")
-        print("5. Run this analysis periodically to maintain optimal performance")
+        logger.info(f"\nFull optimization report saved to: {report_file}")
+        logger.info("\nNext Steps:")
+        logger.info("1. Review generated configuration files in /opt/sutazaiapp/configs/optimized/")
+        logger.info("2. Apply PostgreSQL configuration and restart container")
+        logger.info("3. Update connection pool settings in application code")
+        logger.info("4. Monitor performance using the generated monitoring script")
+        logger.info("5. Run this analysis periodically to maintain optimal performance")
         
     except Exception as e:
         logger.error(f"Optimization analysis failed: {e}")

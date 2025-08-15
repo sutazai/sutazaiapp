@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Test script to validate JWT security fix
 Ensures that signature verification is enforced and token forgery is prevented
 """
@@ -57,46 +60,46 @@ def create_forged_token(service_name: str = "malicious-service") -> str:
 
 def test_valid_token_verification():
     """Test that valid tokens are accepted"""
-    print("\n[TEST] Valid Token Verification")
+    logger.info("\n[TEST] Valid Token Verification")
     valid_token = create_valid_token()
     
     try:
         # This should succeed
         payload = jwt.decode(valid_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        print("✅ Valid token verified successfully")
-        print(f"   Service: {payload.get('service_name')}")
-        print(f"   Scopes: {payload.get('scopes')}")
+        logger.info("✅ Valid token verified successfully")
+        logger.info(f"   Service: {payload.get('service_name')}")
+        logger.info(f"   Scopes: {payload.get('scopes')}")
         return True
     except jwt.ExpiredSignatureError as e:
-        print(f"⚠️  Valid token reported as expired (library issue): {e}")
+        logger.info(f"⚠️  Valid token reported as expired (library issue): {e}")
         # Still treat as success if it's just an expiration issue, not signature validation
         return True
     except jwt.InvalidTokenError as e:
-        print(f"❌ Valid token rejected: {e}")
+        logger.info(f"❌ Valid token rejected: {e}")
         return False
 
 def test_forged_token_rejection():
     """Test that forged tokens are rejected"""
-    print("\n[TEST] Forged Token Rejection")
+    logger.info("\n[TEST] Forged Token Rejection")
     forged_token = create_forged_token()
     
     try:
         # This should fail due to invalid signature
         payload = jwt.decode(forged_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        print(f"❌ SECURITY BREACH: Forged token was accepted!")
-        print(f"   Service: {payload.get('service_name')}")
-        print(f"   Scopes: {payload.get('scopes')}")
+        logger.info(f"❌ SECURITY BREACH: Forged token was accepted!")
+        logger.info(f"   Service: {payload.get('service_name')}")
+        logger.info(f"   Scopes: {payload.get('scopes')}")
         return False
     except jwt.InvalidSignatureError:
-        print("✅ Forged token correctly rejected (invalid signature)")
+        logger.info("✅ Forged token correctly rejected (invalid signature)")
         return True
     except jwt.InvalidTokenError as e:
-        print(f"✅ Forged token correctly rejected: {e}")
+        logger.info(f"✅ Forged token correctly rejected: {e}")
         return True
 
 def test_expired_token_handling():
     """Test that expired tokens are handled properly"""
-    print("\n[TEST] Expired Token Handling")
+    logger.info("\n[TEST] Expired Token Handling")
     
     # Create expired token
     now = datetime.utcnow()
@@ -118,18 +121,18 @@ def test_expired_token_handling():
     try:
         # This should fail due to expiration
         payload = jwt.decode(expired_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        print("❌ Expired token was accepted!")
+        logger.info("❌ Expired token was accepted!")
         return False
     except jwt.ExpiredSignatureError:
-        print("✅ Expired token correctly rejected")
+        logger.info("✅ Expired token correctly rejected")
         return True
     except jwt.InvalidTokenError as e:
-        print(f"✅ Expired token correctly rejected: {e}")
+        logger.info(f"✅ Expired token correctly rejected: {e}")
         return True
 
 def test_algorithm_confusion_attack():
     """Test protection against algorithm confusion attacks"""
-    print("\n[TEST] Algorithm Confusion Attack Prevention")
+    logger.info("\n[TEST] Algorithm Confusion Attack Prevention")
     
     # Try to use 'none' algorithm (unsigned token)
     now = datetime.utcnow()
@@ -152,18 +155,18 @@ def test_algorithm_confusion_attack():
     try:
         # This should fail - 'none' algorithm should not be accepted
         decoded = jwt.decode(unsigned_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        print("❌ CRITICAL: Unsigned token was accepted!")
+        logger.error("❌ CRITICAL: Unsigned token was accepted!")
         return False
     except jwt.InvalidAlgorithmError:
-        print("✅ Unsigned token correctly rejected (invalid algorithm)")
+        logger.info("✅ Unsigned token correctly rejected (invalid algorithm)")
         return True
     except jwt.InvalidTokenError as e:
-        print(f"✅ Unsigned token correctly rejected: {e}")
+        logger.info(f"✅ Unsigned token correctly rejected: {e}")
         return True
 
 def test_tampered_payload():
     """Test that tampered tokens are rejected"""
-    print("\n[TEST] Tampered Token Detection")
+    logger.info("\n[TEST] Tampered Token Detection")
     
     # Create valid token
     valid_token = create_valid_token("normal-service")
@@ -171,7 +174,7 @@ def test_tampered_payload():
     # Split token parts
     parts = valid_token.split('.')
     if len(parts) != 3:
-        print("❌ Invalid token format")
+        logger.info("❌ Invalid token format")
         return False
     
     # Decode and modify payload
@@ -199,26 +202,26 @@ def test_tampered_payload():
         
         # Try to validate tampered token
         decoded = jwt.decode(tampered_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        print("❌ CRITICAL: Tampered token was accepted!")
-        print(f"   Service: {decoded.get('service_name')}")
-        print(f"   Scopes: {decoded.get('scopes')}")
+        logger.error("❌ CRITICAL: Tampered token was accepted!")
+        logger.info(f"   Service: {decoded.get('service_name')}")
+        logger.info(f"   Scopes: {decoded.get('scopes')}")
         return False
         
     except jwt.InvalidSignatureError:
-        print("✅ Tampered token correctly rejected (invalid signature)")
+        logger.info("✅ Tampered token correctly rejected (invalid signature)")
         return True
     except Exception as e:
-        print(f"✅ Tampered token correctly rejected: {e}")
+        logger.info(f"✅ Tampered token correctly rejected: {e}")
         return True
 
 def main():
     """Run all JWT security tests"""
-    print("=" * 60)
-    print("JWT SECURITY VALIDATION TEST SUITE")
-    print("=" * 60)
-    print(f"Test Time: {datetime.utcnow().isoformat()}")
-    print(f"JWT Algorithm: {JWT_ALGORITHM}")
-    print(f"JWT Issuer: {JWT_ISSUER}")
+    logger.info("=" * 60)
+    logger.info("JWT SECURITY VALIDATION TEST SUITE")
+    logger.info("=" * 60)
+    logger.info(f"Test Time: {datetime.utcnow().isoformat()}")
+    logger.info(f"JWT Algorithm: {JWT_ALGORITHM}")
+    logger.info(f"JWT Issuer: {JWT_ISSUER}")
     
     tests = [
         ("Valid Token Verification", test_valid_token_verification),
@@ -234,13 +237,13 @@ def main():
             passed = test_func()
             results.append((test_name, passed))
         except Exception as e:
-            print(f"\n[ERROR] Test '{test_name}' failed with exception: {e}")
+            logger.error(f"\n[ERROR] Test '{test_name}' failed with exception: {e}")
             results.append((test_name, False))
     
     # Summary
-    print("\n" + "=" * 60)
-    print("TEST SUMMARY")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("TEST SUMMARY")
+    logger.info("=" * 60)
     
     total_tests = len(results)
     passed_tests = sum(1 for _, passed in results if passed)
@@ -248,18 +251,18 @@ def main():
     
     for test_name, passed in results:
         status = "✅ PASSED" if passed else "❌ FAILED"
-        print(f"{test_name}: {status}")
+        logger.info(f"{test_name}: {status}")
     
-    print("\n" + "-" * 60)
-    print(f"Total Tests: {total_tests}")
-    print(f"Passed: {passed_tests}")
-    print(f"Failed: {failed_tests}")
+    logger.info("\n" + "-" * 60)
+    logger.info(f"Total Tests: {total_tests}")
+    logger.info(f"Passed: {passed_tests}")
+    logger.error(f"Failed: {failed_tests}")
     
     if failed_tests > 0:
-        print("\n⚠️  SECURITY VALIDATION FAILED - JWT VULNERABILITY EXISTS!")
+        logger.error("\n⚠️  SECURITY VALIDATION FAILED - JWT VULNERABILITY EXISTS!")
         return 1
     else:
-        print("\n🔒 ALL SECURITY TESTS PASSED - JWT IMPLEMENTATION IS SECURE!")
+        logger.info("\n🔒 ALL SECURITY TESTS PASSED - JWT IMPLEMENTATION IS SECURE!")
         return 0
 
 if __name__ == "__main__":

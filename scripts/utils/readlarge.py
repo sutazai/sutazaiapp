@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Command-line tool for reading large files.
 
 Usage:
@@ -56,32 +59,32 @@ Examples:
     # Validate file path
     file_path = Path(args.file_path)
     if not file_path.exists():
-        print(f"Error: File not found: {file_path}", file=sys.stderr)
+        logger.error(f"Error: File not found: {file_path}", file=sys.stderr)
         sys.exit(1)
     
     try:
         # Show file info
         if args.info or (not args.search and not args.lines and not args.offset):
             info = read_file_info(str(file_path))
-            print(f"File: {info['path']}")
-            print(f"Size: {info['size_mb']:.2f} MB ({info['size_bytes']:,} bytes)")
-            print(f"Exceeds 256KB limit: {info['exceeds_256kb_limit']}")
-            print(f"Estimated lines: {info['estimated_lines']:,}")
-            print(f"Recommended chunk size: {info['recommended_chunk_size']}")
+            logger.info(f"File: {info['path']}")
+            logger.info(f"Size: {info['size_mb']:.2f} MB ({info['size_bytes']:,} bytes)")
+            logger.info(f"Exceeds 256KB limit: {info['exceeds_256kb_limit']}")
+            logger.info(f"Estimated lines: {info['estimated_lines']:,}")
+            logger.info(f"Recommended chunk size: {info['recommended_chunk_size']}")
             
             if args.info:
                 return
             
             if info['exceeds_256kb_limit']:
-                print("Use --lines to read a portion, or --search to find specific content.")
+                logger.info("Use --lines to read a portion, or --search to find specific content.")
                 if not args.lines and not args.offset and not args.search:
-                    print("\nReading first 100 lines as preview...")
+                    logger.info("\nReading first 100 lines as preview...")
                     args.lines = 100
                     args.offset = 1
         
         # Search in file
         if args.search:
-            print(f"Searching for '{args.search}' in {file_path}...")
+            logger.info(f"Searching for '{args.search}' in {file_path}...")
             results = search_in_file(
                 str(file_path), 
                 args.search,
@@ -90,9 +93,9 @@ Examples:
             )
             
             if not results:
-                print(f"No matches found for '{args.search}'")
+                logger.info(f"No matches found for '{args.search}'")
             else:
-                print(f"\nFound {len(results)} matches:\n")
+                logger.info(f"\nFound {len(results)} matches:\n")
                 
                 prev_line = -999
                 for result in results[:50]:  # Limit to first 50 results
@@ -101,7 +104,7 @@ Examples:
                     
                     # Add separator for non-consecutive lines
                     if line_num > prev_line + 1:
-                        print("...")
+                        logger.info("...")
                     
                     # Highlight the search term
                     if not args.case_sensitive:
@@ -116,38 +119,38 @@ Examples:
                     else:
                         highlighted = content.replace(args.search, f'>>>{args.search}<<<')
                     
-                    print(f"{line_num:6d}\t{highlighted}")
+                    logger.info(f"{line_num:6d}\t{highlighted}")
                     prev_line = line_num
                 
                 if len(results) > 50:
-                    print(f"\n... and {len(results) - 50} more matches")
+                    logger.info(f"\n... and {len(results) - 50} more matches")
         
         # Read file content
         elif args.lines or args.offset:
             offset = args.offset or 1
             limit = args.lines
             
-            print(f"Reading from line {offset}" + 
+            logger.info(f"Reading from line {offset}" + 
                   (f" ({limit} lines)" if limit else ""))
             
             content = read_file(str(file_path), offset=offset, limit=limit)
-            print(content)
+            logger.info(content)
         
         else:
             # Read entire file (if not too large)
             info = read_file_info(str(file_path))
             if info['size_mb'] > 5:
-                print(f"Warning: File is {info['size_mb']:.1f}MB. Reading entire file...")
+                logger.warning(f"Warning: File is {info['size_mb']:.1f}MB. Reading entire file...")
                 response = input("Continue? (y/N): ")
                 if response.lower() != 'y':
-                    print("Aborted.")
+                    logger.info("Aborted.")
                     return
             
             content = read_file(str(file_path))
-            print(content)
+            logger.info(content)
             
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        logger.error(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
 

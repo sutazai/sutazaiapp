@@ -958,43 +958,43 @@ def main():
                 args.description or "Manual checkpoint"
             )
             if recovery_point_id:
-                print(f"Recovery point created: {recovery_point_id}")
+                logger.info(f"Recovery point created: {recovery_point_id}")
             else:
-                print("Failed to create recovery point")
+                logger.error("Failed to create recovery point")
                 sys.exit(1)
                 
         elif args.command == "recover":
             if not args.recovery_point:
-                print("Error: --recovery-point required")
+                logger.error("Error: --recovery-point required")
                 sys.exit(1)
             
             success = recovery.recover_to_point(args.recovery_point, args.target_path)
             if success:
-                print("Recovery completed successfully")
+                logger.info("Recovery completed successfully")
             else:
-                print("Recovery failed")
+                logger.error("Recovery failed")
                 sys.exit(1)
                 
         elif args.command == "recover-time":
             if not args.target_time:
-                print("Error: --target-time required")
+                logger.error("Error: --target-time required")
                 sys.exit(1)
             
             target_time = datetime.fromisoformat(args.target_time)
             success = recovery.recover_to_time(target_time, args.recovery_point)
             if success:
-                print("Point-in-time recovery completed successfully")
+                logger.info("Point-in-time recovery completed successfully")
             else:
-                print("Point-in-time recovery failed")
+                logger.error("Point-in-time recovery failed")
                 sys.exit(1)
                 
         elif args.command == "list":
             recovery_points = recovery.list_recovery_points()
-            print(json.dumps(recovery_points, indent=2))
+            logger.info(json.dumps(recovery_points, indent=2))
             
         elif args.command == "status":
             status = recovery.get_recovery_status()
-            print(json.dumps(status, indent=2, default=str))
+            logger.info(json.dumps(status, indent=2, default=str))
             
         elif args.command == "verify":
             # Verify all recovery points
@@ -1028,12 +1028,12 @@ def main():
                     
                     if recovery._verify_recovery_point(rp):
                         verified += 1
-                        print(f"✓ {rp_id}")
+                        logger.info(f"✓ {rp_id}")
                     else:
                         failed += 1
-                        print(f"✗ {rp_id}")
+                        logger.info(f"✗ {rp_id}")
             
-            print(f"\nVerification complete: {verified} verified, {failed} failed")
+            logger.error(f"\nVerification complete: {verified} verified, {failed} failed")
             if failed > 0:
                 sys.exit(1)
                 

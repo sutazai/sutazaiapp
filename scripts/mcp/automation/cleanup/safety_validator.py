@@ -1008,7 +1008,7 @@ async def main():
         safety_validator = SafetyValidator(config)
         
         # Example: Validate cleanup safety
-        print("Testing safety validation...")
+        logger.info("Testing safety validation...")
         
         # Mock cleanup analysis
         cleanup_analysis = {
@@ -1025,18 +1025,18 @@ async def main():
             'postgres', cleanup_analysis, SafetyLevel.HIGH
         )
         
-        print(f"\nSafety Validation Results:")
-        print(f"Safety Level: {result.safety_level.value}")
-        print(f"Violations: {len(result.violations)}")
-        print(f"Warnings: {len(result.warnings)}")
-        print(f"Checks Performed: {len(result.checks_performed)}")
+        logger.info(f"\nSafety Validation Results:")
+        logger.info(f"Safety Level: {result.safety_level.value}")
+        logger.info(f"Violations: {len(result.violations)}")
+        logger.warning(f"Warnings: {len(result.warnings)}")
+        logger.info(f"Checks Performed: {len(result.checks_performed)}")
         
         if result.violations:
-            print("\nViolations:")
+            logger.info("\nViolations:")
             for violation in result.violations[:3]:  # Show first 3
-                print(f"- {violation.violation_type.value}: {violation.message}")
+                logger.info(f"- {violation.violation_type.value}: {violation.message}")
         
-        print(json.dumps(result.to_dict(), indent=2, default=str))
+        logger.info(json.dumps(result.to_dict(), indent=2, default=str))
         
     except Exception as e:
         logging.error(f"Error in safety validator: {e}", exc_info=True)

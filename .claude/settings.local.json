@@ -284,7 +284,17 @@
       "Bash(if [ -d /opt/sutazaiapp/scripts/devops ])",
       "Bash(then mv /opt/sutazaiapp/scripts/devops/* /opt/sutazaiapp/scripts/automation/deployment/)",
       "Bash(if [ -d /opt/sutazaiapp/scripts/sync ])",
-      "Bash(then mv /opt/sutazaiapp/scripts/sync/* /opt/sutazaiapp/scripts/automation/sync/)"
+      "Bash(then mv /opt/sutazaiapp/scripts/sync/* /opt/sutazaiapp/scripts/automation/sync/)",
+      "Bash(/opt/sutazaiapp/scripts/mcp/debug_cleanup.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/mcp/cleanup_containers.sh:*)",
+      "Bash(do [ -f \"/opt/sutazaiapp/$dir/CHANGELOG.md\" ])",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(/tmp/find_dirs.sh:*)",
+      "Bash(then echo \"✓ $dir/CHANGELOG.md exists\")",
+      "Bash(else echo \"✗ $dir/CHANGELOG.md missing\")",
+      "Bash(if [ -d \"$dir\" ])",
+      "Bash([ ! -f \"$dir/CHANGELOG.md\" ])",
+      "Bash(then)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

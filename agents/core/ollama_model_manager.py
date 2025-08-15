@@ -23,8 +23,9 @@ from concurrent.futures import ThreadPoolExecutor
 import statistics
 from prometheus_client import CollectorRegistry, Counter, Histogram, Gauge, push_to_gateway
 
-# Configure logging
-logger = logging.getLogger('ollama-model-manager')
+# Configure structured logging (Rule 8 compliance)
+from backend.app.core.logging_config import get_logger
+logger = get_logger('ollama-model-manager')
 
 @dataclass
 class ModelVersion:
@@ -789,27 +790,27 @@ async def main():
     try:
         if args.discover:
             models = await manager.discover_models()
-            print(f"Discovered {len(models)} models:")
+            logger.info(f"MODEL_CLI - Discovered {len(models)} models")
             for name, model in models.items():
-                print(f"  {name}: {model.parameter_count} parameters, {model.size_bytes/(1024*1024):.0f}MB")
+                logger.info(f"MODEL_CLI - {name}: {model.parameter_count} parameters, {model.size_bytes/(1024*1024):.0f}MB")
         
         elif args.benchmark:
             if args.benchmark == 'all':
                 results = await manager.run_all_model_benchmarks(args.benchmark_type)
-                print(f"Completed benchmarks for {len(results)} models")
+                logger.info(f"MODEL_CLI - Completed benchmarks for {len(results)} models")
             else:
                 result = await manager.run_comprehensive_benchmark(args.benchmark, args.benchmark_type)
-                print(f"Benchmark completed with performance score: {result.performance_score:.2f}")
+                logger.info(f"MODEL_CLI - Benchmark completed with performance score: {result.performance_score:.2f}")
         
         elif args.report:
             report = manager.generate_performance_report()
-            print(json.dumps(report, indent=2))
+            logger.info(f"MODEL_CLI - Performance report: {json.dumps(report, indent=2)}")
         
         elif args.history:
             history = manager.get_model_performance_history(args.history, args.days)
-            print(f"Performance history for {args.history} (last {args.days} days):")
+            logger.info(f"MODEL_CLI - Performance history for {args.history} (last {args.days} days):")
             for result in history[:10]:  # Show last 10 benchmarks
-                print(f"  {result.timestamp}: Score {result.performance_score:.2f}, "
+                logger.info(f"MODEL_CLI - {result.timestamp}: Score {result.performance_score:.2f}, "
                       f"Throughput {result.throughput_rps:.1f} req/s")
         
         else:

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Directory Perfection Master
 
 Implements perfect directory naming conventions and structure.
@@ -30,7 +33,7 @@ class DirectoryPerfectionMaster:
     
     def analyze_directory_structure(self) -> Dict:
         """Analyze current directory structure for perfection opportunities."""
-        print("🔍 Analyzing directory structure for perfection...")
+        logger.info("🔍 Analyzing directory structure for perfection...")
         
         analysis = {
             'naming_violations': [],
@@ -53,10 +56,10 @@ class DirectoryPerfectionMaster:
             len(analysis['organizational_debt'])
         )
         
-        print(f"✅ Analysis complete:")
-        print(f"  - {len(analysis['naming_violations'])} naming violations")
-        print(f"  - {len(analysis['structural_issues'])} structural issues")
-        print(f"  - {len(analysis['organizational_debt'])} organizational debt items")
+        logger.info(f"✅ Analysis complete:")
+        logger.info(f"  - {len(analysis['naming_violations'])} naming violations")
+        logger.info(f"  - {len(analysis['structural_issues'])} structural issues")
+        logger.info(f"  - {len(analysis['organizational_debt'])} organizational debt items")
         
         return analysis
     
@@ -127,7 +130,7 @@ class DirectoryPerfectionMaster:
     
     def implement_perfect_naming(self) -> None:
         """Implement perfect naming conventions."""
-        print("🏷️  Implementing perfect naming conventions...")
+        logger.info("🏷️  Implementing perfect naming conventions...")
         
         analysis = self.analyze_directory_structure()
         
@@ -135,7 +138,7 @@ class DirectoryPerfectionMaster:
         for violation in analysis['naming_violations'][:5]:  # Limit for safety
             self._fix_naming_violation(violation)
         
-        print(f"✅ Fixed naming violations")
+        logger.info(f"✅ Fixed naming violations")
     
     def _fix_naming_violation(self, violation: Dict):
         """Fix a single naming violation."""
@@ -154,15 +157,15 @@ class DirectoryPerfectionMaster:
         try:
             # Only rename if target doesn't exist
             if not new_path.exists():
-                print(f"  🔄 Rename: {current_name} → {perfect_name}")
+                logger.info(f"  🔄 Rename: {current_name} → {perfect_name}")
                 # For safety, we'll just log the intended rename
                 self.perfection_report['naming_violations_fixed'] += 1
         except Exception as e:
-            print(f"  ⚠️  Error fixing {current_name}: {e}")
+            logger.error(f"  ⚠️  Error fixing {current_name}: {e}")
     
     def implement_perfect_structure(self) -> None:
         """Implement perfect directory structure."""
-        print("🏢 Implementing perfect directory structure...")
+        logger.info("🏢 Implementing perfect directory structure...")
         
         # Ensure all required directories exist with perfect structure
         perfect_structure = {
@@ -215,11 +218,11 @@ class DirectoryPerfectionMaster:
                 subdir_path.mkdir(exist_ok=True)
                 self.perfection_report['directories_perfected'] += 1
         
-        print("✅ Perfect directory structure implemented")
+        logger.info("✅ Perfect directory structure implemented")
     
     def eliminate_organizational_debt(self) -> None:
         """Eliminate all organizational debt."""
-        print("🗑️  Eliminating organizational debt...")
+        logger.info("🗑️  Eliminating organizational debt...")
         
         # Create docs archive for excessive markdown files
         docs_archive = self.root_path / 'docs' / 'archive'
@@ -241,11 +244,11 @@ class DirectoryPerfectionMaster:
                     archived_count += 1
         
         self.perfection_report['organizational_debt_eliminated'] = archived_count
-        print(f"✅ Organizational debt elimination planned: {archived_count} files")
+        logger.info(f"✅ Organizational debt elimination planned: {archived_count} files")
     
     def validate_perfection(self) -> Dict:
         """Validate that perfection has been achieved."""
-        print("✅ Validating organizational perfection...")
+        logger.info("✅ Validating organizational perfection...")
         
         validation = {
             'perfect_naming': True,
@@ -278,8 +281,8 @@ class DirectoryPerfectionMaster:
     
     def execute_directory_perfection(self) -> Dict:
         """Execute complete directory perfection."""
-        print("🚀 DIRECTORY PERFECTION MASTER - STARTING")
-        print("=" * 50)
+        logger.info("🚀 DIRECTORY PERFECTION MASTER - STARTING")
+        logger.info("=" * 50)
         
         # Analyze current structure
         analysis = self.analyze_directory_structure()
@@ -303,8 +306,8 @@ class DirectoryPerfectionMaster:
             'perfection_achieved': True
         }
         
-        print("=" * 50)
-        print("✅ DIRECTORY PERFECTION MASTER - COMPLETE")
+        logger.info("=" * 50)
+        logger.info("✅ DIRECTORY PERFECTION MASTER - COMPLETE")
         
         return result
 
@@ -317,5 +320,5 @@ if __name__ == '__main__':
     with open(report_path, 'w') as f:
         json.dump(result, f, indent=2)
     
-    print(f"📁 Perfection report saved to: {report_path}")
-    print(f"🎆 PERFECT ORGANIZATION ACHIEVED!")
+    logger.info(f"📁 Perfection report saved to: {report_path}")
+    logger.info(f"🎆 PERFECT ORGANIZATION ACHIEVED!")

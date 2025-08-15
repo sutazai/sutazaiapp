@@ -379,40 +379,40 @@ class MonitoringPerformanceTest:
         """Print performance test summary"""
         report = self.generate_performance_report()
         
-        print("\n" + "="*80)
-        print("PERFORMANCE TEST SUMMARY")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("PERFORMANCE TEST SUMMARY")
+        logger.info("="*80)
         
-        print(f"\nTest completed at: {report['timestamp']}")
-        print(f"Total tests run: {report['summary']['total_tests']}")
+        logger.info(f"\nTest completed at: {report['timestamp']}")
+        logger.info(f"Total tests run: {report['summary']['total_tests']}")
         
-        print("\n" + "-"*40)
-        print("ENDPOINT PERFORMANCE METRICS")
-        print("-"*40)
+        logger.info("\n" + "-"*40)
+        logger.info("ENDPOINT PERFORMANCE METRICS")
+        logger.info("-"*40)
         
         for result in report['load_test_results']:
-            print(f"\nEndpoint: {result['endpoint']}")
-            print(f"  Response Time (avg): {result['avg_response_time']['mean']:.2f}ms")
-            print(f"  Response Time (P95): {result['p95_response_time']['mean']:.2f}ms")
-            print(f"  Throughput: {result['throughput']['mean']:.2f} req/s")
-            print(f"  Error Rate: {result['error_rate']['mean']:.2f}%")
+            logger.info(f"\nEndpoint: {result['endpoint']}")
+            logger.info(f"  Response Time (avg): {result['avg_response_time']['mean']:.2f}ms")
+            logger.info(f"  Response Time (P95): {result['p95_response_time']['mean']:.2f}ms")
+            logger.info(f"  Throughput: {result['throughput']['mean']:.2f} req/s")
+            logger.error(f"  Error Rate: {result['error_rate']['mean']:.2f}%")
         
-        print("\n" + "-"*40)
-        print("REQUIREMENTS VALIDATION")
-        print("-"*40)
+        logger.info("\n" + "-"*40)
+        logger.info("REQUIREMENTS VALIDATION")
+        logger.info("-"*40)
         
         for requirement, passed in report['requirements_validation'].items():
             status = "PASS" if passed else "FAIL"
-            print(f"  {requirement}: {status}")
+            logger.info(f"  {requirement}: {status}")
         
         if report['recommendations']:
-            print("\n" + "-"*40)
-            print("RECOMMENDATIONS")
-            print("-"*40)
+            logger.info("\n" + "-"*40)
+            logger.info("RECOMMENDATIONS")
+            logger.info("-"*40)
             for rec in report['recommendations']:
-                print(f"  - {rec}")
+                logger.info(f"  - {rec}")
         
-        print("\n" + "="*80)
+        logger.info("\n" + "="*80)
 
 
 async def main():
@@ -421,43 +421,43 @@ async def main():
     
     try:
         # 1. Baseline Performance Test
-        print("\n[1/5] Running baseline performance tests...")
+        logger.info("\n[1/5] Running baseline performance tests...")
         baseline = await tester.baseline_performance_test()
         
         # 2. Load Testing with different concurrent levels
-        print("\n[2/5] Running load tests with increasing concurrency...")
+        logger.info("\n[2/5] Running load tests with increasing concurrency...")
         load_levels = [10, 50, 100, 500]
         for level in load_levels:
-            print(f"  Testing with {level} concurrent requests...")
+            logger.info(f"  Testing with {level} concurrent requests...")
             for endpoint_name, endpoint_path in tester.endpoints.items():
                 await tester.load_test_endpoint(endpoint_path, level, duration_seconds=10)
         
         # 3. Stress Testing to find breaking point
-        print("\n[3/5] Running stress test to find system limits...")
+        logger.info("\n[3/5] Running stress test to find system limits...")
         stress_results = await tester.stress_test(max_concurrent=500, step=50)
         
         # 4. Sustained Load Test (reduced duration for demo)
-        print("\n[4/5] Running sustained load test...")
+        logger.info("\n[4/5] Running sustained load test...")
         sustained_results = await tester.sustained_load_test(concurrent=100, duration_minutes=1)
         
         # 5. Generate and save report
-        print("\n[5/5] Generating performance report...")
+        logger.info("\n[5/5] Generating performance report...")
         report_file = tester.save_results()
         
         # Print summary
         tester.print_summary()
         
-        print(f"\nDetailed report saved to: {report_file}")
+        logger.info(f"\nDetailed report saved to: {report_file}")
         
         # Return exit code based on requirements validation
         report = tester.generate_performance_report()
         all_passed = all(report['requirements_validation'].values())
         
         if all_passed:
-            print("\n✅ All performance requirements met!")
+            logger.info("\n✅ All performance requirements met!")
             return 0
         else:
-            print("\n⚠️ Some performance requirements not met. See recommendations above.")
+            logger.info("\n⚠️ Some performance requirements not met. See recommendations above.")
             return 1
         
     except Exception as e:

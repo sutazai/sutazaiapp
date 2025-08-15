@@ -244,7 +244,7 @@ def generated_function():
     return result
 
 if __name__ == "__main__":
-    print(generated_function())
+    logger.info(generated_function())
 '''
         else:
             generated_code = f'// Generated {language} code for: {prompt[:50]}...\n// Implementation would go here'

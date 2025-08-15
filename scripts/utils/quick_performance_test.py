@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Quick Performance Test - Measure current system performance
 """
 
@@ -32,7 +35,7 @@ def test_endpoint(url, method="GET", payload=None, iterations=50):
                 errors += 1
         except Exception as e:
             errors += 1
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}")
             
     if response_times:
         return {
@@ -94,7 +97,7 @@ def check_database_performance():
 
 def concurrent_load_test(url, users=20, duration=10):
     """Run concurrent load test"""
-    print(f"\nLoad testing {url} with {users} concurrent users for {duration}s...")
+    logger.info(f"\nLoad testing {url} with {users} concurrent users for {duration}s...")
     
     def worker():
         results = []
@@ -135,9 +138,9 @@ def concurrent_load_test(url, users=20, duration=10):
     }
 
 def main():
-    print("=" * 80)
-    print("ULTRAPERFORMANCE QUICK ANALYSIS")
-    print("=" * 80)
+    logger.info("=" * 80)
+    logger.info("ULTRAPERFORMANCE QUICK ANALYSIS")
+    logger.info("=" * 80)
     
     results = {
         "timestamp": datetime.now().isoformat(),
@@ -158,18 +161,18 @@ def main():
         ("http://localhost:8090/health", "GET"),   # Ollama Integration
     ]
     
-    print("\n1. ENDPOINT PERFORMANCE TESTS")
-    print("-" * 40)
+    logger.info("\n1. ENDPOINT PERFORMANCE TESTS")
+    logger.info("-" * 40)
     
     for url, method in endpoints:
-        print(f"Testing {url}...")
+        logger.info(f"Testing {url}...")
         result = test_endpoint(url, method)
         results["endpoints"].append(result)
         
         if "avg_response_ms" in result:
-            print(f"  Avg: {result['avg_response_ms']:.2f}ms")
-            print(f"  P95: {result['p95_response_ms']:.2f}ms")
-            print(f"  Errors: {result['error_rate']:.2f}%")
+            logger.info(f"  Avg: {result['avg_response_ms']:.2f}ms")
+            logger.info(f"  P95: {result['p95_response_ms']:.2f}ms")
+            logger.error(f"  Errors: {result['error_rate']:.2f}%")
             
             # Identify bottlenecks
             if result['avg_response_ms'] > 100:
@@ -180,11 +183,11 @@ def main():
                     "target": "< 100ms"
                 })
     
-    print("\n2. REDIS CACHE PERFORMANCE")
-    print("-" * 40)
+    logger.info("\n2. REDIS CACHE PERFORMANCE")
+    logger.info("-" * 40)
     redis_stats = check_redis_performance()
     results["redis"] = redis_stats
-    print(f"Cache Hit Rate: {redis_stats.get('cache_hit_rate', 'N/A')}%")
+    logger.info(f"Cache Hit Rate: {redis_stats.get('cache_hit_rate', 'N/A')}%")
     
     if redis_stats.get('cache_hit_rate', 0) < 80:
         results["bottlenecks"].append({
@@ -198,20 +201,20 @@ def main():
             "expected_improvement": "80%+ cache hit rate"
         })
     
-    print("\n3. DATABASE PERFORMANCE")
-    print("-" * 40)
+    logger.info("\n3. DATABASE PERFORMANCE")
+    logger.info("-" * 40)
     db_stats = check_database_performance()
     results["database"] = db_stats
-    print(f"Query Time: {db_stats.get('query_time_ms', 'N/A')}ms")
+    logger.info(f"Query Time: {db_stats.get('query_time_ms', 'N/A')}ms")
     
-    print("\n4. LOAD TEST (Backend API)")
-    print("-" * 40)
+    logger.info("\n4. LOAD TEST (Backend API)")
+    logger.info("-" * 40)
     load_results = concurrent_load_test("http://localhost:10010/health", users=30, duration=10)
     results["load_test"] = load_results
-    print(f"Total Requests: {load_results['total_requests']}")
-    print(f"Requests/Second: {load_results['requests_per_second']:.2f}")
-    print(f"Avg Response: {load_results['avg_response_ms']:.2f}ms")
-    print(f"Success Rate: {load_results['success_rate']:.2f}%")
+    logger.info(f"Total Requests: {load_results['total_requests']}")
+    logger.info(f"Requests/Second: {load_results['requests_per_second']:.2f}")
+    logger.info(f"Avg Response: {load_results['avg_response_ms']:.2f}ms")
+    logger.info(f"Success Rate: {load_results['success_rate']:.2f}%")
     
     # Calculate performance score
     score = 100
@@ -246,20 +249,20 @@ def main():
     with open(report_file, "w") as f:
         json.dump(results, f, indent=2)
         
-    print("\n" + "=" * 80)
-    print(f"PERFORMANCE SCORE: {results['performance_score']}/100")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info(f"PERFORMANCE SCORE: {results['performance_score']}/100")
+    logger.info("=" * 80)
     
-    print("\nBOTTLENECKS IDENTIFIED:")
+    logger.info("\nBOTTLENECKS IDENTIFIED:")
     for bottleneck in results["bottlenecks"]:
-        print(f"  ⚠️  {bottleneck['type']}: {bottleneck.get('current', 'N/A')} (target: {bottleneck.get('target', 'N/A')})")
+        logger.info(f"  ⚠️  {bottleneck['type']}: {bottleneck.get('current', 'N/A')} (target: {bottleneck.get('target', 'N/A')})")
         
-    print("\nRECOMMENDED OPTIMIZATIONS:")
+    logger.info("\nRECOMMENDED OPTIMIZATIONS:")
     for opt in results["optimizations"]:
-        print(f"  ✅ {opt['area']}: {opt['action']}")
-        print(f"     Expected: {opt['expected_improvement']}")
+        logger.info(f"  ✅ {opt['area']}: {opt['action']}")
+        logger.info(f"     Expected: {opt['expected_improvement']}")
         
-    print(f"\nFull report saved to: {report_file}")
+    logger.info(f"\nFull report saved to: {report_file}")
     
     return results
 

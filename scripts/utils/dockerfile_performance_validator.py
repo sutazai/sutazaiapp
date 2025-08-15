@@ -459,17 +459,17 @@ async def main():
     validator.save_performance_results(results, results_file)
     
     # Print summary
-    print("\n" + "="*70)
-    print("  DOCKERFILE CONSOLIDATION PERFORMANCE VALIDATION RESULTS")
-    print("="*70)
-    print(f"Services Tested:        {results['services_tested']}")
-    print(f"Excellent (A):          {results['performance_summary']['excellent']}")
-    print(f"Good (B):               {results['performance_summary']['good']}")
-    print(f"Acceptable (C):         {results['performance_summary']['acceptable']}")
-    print(f"Poor (D):               {results['performance_summary']['poor']}")
-    print(f"Failing (F):            {results['performance_summary']['failing']}")
-    print(f"Overall Grade:          {results['overall_performance_grade']}")
-    print("="*70)
+    logger.info("\n" + "="*70)
+    logger.info("  DOCKERFILE CONSOLIDATION PERFORMANCE VALIDATION RESULTS")
+    logger.info("="*70)
+    logger.info(f"Services Tested:        {results['services_tested']}")
+    logger.info(f"Excellent (A):          {results['performance_summary']['excellent']}")
+    logger.info(f"Good (B):               {results['performance_summary']['good']}")
+    logger.info(f"Acceptable (C):         {results['performance_summary']['acceptable']}")
+    logger.info(f"Poor (D):               {results['performance_summary']['poor']}")
+    logger.info(f"Failing (F):            {results['performance_summary']['failing']}")
+    logger.info(f"Overall Grade:          {results['overall_performance_grade']}")
+    logger.info("="*70)
     
     # Return appropriate exit code
     return 0 if results['overall_performance_grade'] in ['A', 'B', 'C'] else 1

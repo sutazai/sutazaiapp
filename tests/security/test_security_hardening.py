@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Security Hardening Test Suite
 Comprehensive tests to validate security fixes and enterprise-grade hardening
 """
@@ -69,7 +72,7 @@ class TestSecurityHardening:
                             violations.append(f"Pattern '{pattern}' found: {line}")
                             
             except Exception as e:
-                print(f"Error searching for pattern {pattern}: {e}")
+                logger.error(f"Error searching for pattern {pattern}: {e}")
         
         assert len(violations) == 0, f"Hardcoded secrets found:\n" + "\n".join(violations)
     

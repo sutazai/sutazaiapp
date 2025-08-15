@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Script to fix docker-compose.yml by removing all deploy: sections
 that conflict with mem_limit/cpus directives
 """
@@ -22,18 +25,18 @@ def main():
     with open('/opt/sutazaiapp/docker-compose.yml', 'r') as f:
         content = f.read()
     
-    print("Original file size:", len(content), "characters")
+    logger.info("Original file size:", len(content), "characters")
     
     # Remove deploy sections
     cleaned_content = remove_deploy_sections(content)
     
-    print("Cleaned file size:", len(cleaned_content), "characters")
+    logger.info("Cleaned file size:", len(cleaned_content), "characters")
     
     # Write the cleaned content back
     with open('/opt/sutazaiapp/docker-compose.yml', 'w') as f:
         f.write(cleaned_content)
     
-    print("✅ Removed all conflicting deploy: sections from docker-compose.yml")
+    logger.info("✅ Removed all conflicting deploy: sections from docker-compose.yml")
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA Performance Profiler - System-wide performance analysis
 Measures response times, memory usage, and identifies bottlenecks
 """
@@ -62,7 +65,7 @@ class UltraPerformanceProfiler:
                         elapsed = (time.perf_counter() - start) * 1000  # ms
                         times.append(elapsed)
                     except Exception as e:
-                        print(f"Error profiling {endpoint}: {e}")
+                        logger.error(f"Error profiling {endpoint}: {e}")
                         times.append(999999)  # Flag as error
                 
                 if times:
@@ -308,26 +311,26 @@ class UltraPerformanceProfiler:
     
     async def run_full_profile(self):
         """Run complete performance profile"""
-        print("🚀 ULTRA Performance Profiler Starting...")
-        print("=" * 60)
+        logger.info("🚀 ULTRA Performance Profiler Starting...")
+        logger.info("=" * 60)
         
         # Profile all components
-        print("\n📊 Profiling API Endpoints...")
+        logger.info("\n📊 Profiling API Endpoints...")
         await self.profile_api_endpoints()
         
-        print("💾 Profiling Memory Usage...")
+        logger.info("💾 Profiling Memory Usage...")
         self.profile_memory_usage()
         
-        print("🗄️ Profiling Database...")
+        logger.info("🗄️ Profiling Database...")
         await self.profile_database()
         
-        print("⚡ Profiling Redis Cache...")
+        logger.info("⚡ Profiling Redis Cache...")
         self.profile_redis_cache()
         
-        print("🔍 Identifying Bottlenecks...")
+        logger.info("🔍 Identifying Bottlenecks...")
         self.identify_bottlenecks()
         
-        print("💡 Generating Recommendations...")
+        logger.info("💡 Generating Recommendations...")
         self.generate_recommendations()
         
         # Save results
@@ -341,33 +344,33 @@ class UltraPerformanceProfiler:
     
     def print_summary(self):
         """Print performance summary"""
-        print("\n" + "=" * 60)
-        print("📈 PERFORMANCE PROFILE SUMMARY")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.info("📈 PERFORMANCE PROFILE SUMMARY")
+        logger.info("=" * 60)
         
         # API Performance
-        print("\n🌐 API Response Times (P95):")
+        logger.info("\n🌐 API Response Times (P95):")
         for endpoint, metrics in self.results["api_response_times"].items():
             status = "✅" if metrics["p95"] < 50 else "⚠️" if metrics["p95"] < 100 else "❌"
-            print(f"  {status} {endpoint}: {metrics['p95']:.1f}ms")
+            logger.info(f"  {status} {endpoint}: {metrics['p95']:.1f}ms")
         
         # Memory Usage
         mem = self.results["memory_usage"]["system"]
-        print(f"\n💾 Memory Usage: {mem['used_gb']:.2f}GB / {mem['total_gb']:.2f}GB ({mem['percent']:.1f}%)")
+        logger.info(f"\n💾 Memory Usage: {mem['used_gb']:.2f}GB / {mem['total_gb']:.2f}GB ({mem['percent']:.1f}%)")
         
         # Bottlenecks
         if self.results["bottlenecks"]:
-            print(f"\n⚠️ Bottlenecks Found: {len(self.results['bottlenecks'])}")
+            logger.info(f"\n⚠️ Bottlenecks Found: {len(self.results['bottlenecks'])}")
             for b in self.results["bottlenecks"]:
-                print(f"  - {b['type']}: Severity {b['severity'].upper()}")
+                logger.info(f"  - {b['type']}: Severity {b['severity'].upper()}")
         
         # Recommendations
         if self.results["recommendations"]:
-            print(f"\n💡 Top Recommendations:")
+            logger.info(f"\n💡 Top Recommendations:")
             for r in self.results["recommendations"][:3]:
-                print(f"  - {r['area']}: {r['action']}")
+                logger.info(f"  - {r['area']}: {r['action']}")
         
-        print("\n✅ Full report saved to: /opt/sutazaiapp/reports/performance_profile.json")
+        logger.info("\n✅ Full report saved to: /opt/sutazaiapp/reports/performance_profile.json")
 
 async def main():
     profiler = UltraPerformanceProfiler()

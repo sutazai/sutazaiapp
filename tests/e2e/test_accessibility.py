@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA-COMPREHENSIVE ACCESSIBILITY AND RESPONSIVE DESIGN VALIDATION
 WCAG 2.1 AA Compliance Testing for SutazAI Frontend
 """
@@ -32,9 +35,9 @@ class AccessibilityTester:
         self.test_results.append(result)
         
         status = "✅ PASS" if success else "❌ FAIL" if severity == "critical" else "⚠️ WARN"
-        print(f"{status} {category}: {test_name}")
+        logger.info(f"{status} {category}: {test_name}")
         if details:
-            print(f"    {details}")
+            logger.info(f"    {details}")
     
     def test_semantic_html(self) -> None:
         """Test semantic HTML structure"""
@@ -473,70 +476,70 @@ class AccessibilityTester:
     def run_comprehensive_accessibility_tests(self) -> Dict[str, Any]:
         """Run all accessibility and responsive design tests"""
         
-        print("♿ ULTRA-COMPREHENSIVE ACCESSIBILITY & RESPONSIVE DESIGN VALIDATION")
-        print("=" * 80)
-        print("Testing WCAG 2.1 AA Compliance for SutazAI Frontend")
-        print()
+        logger.info("♿ ULTRA-COMPREHENSIVE ACCESSIBILITY & RESPONSIVE DESIGN VALIDATION")
+        logger.info("=" * 80)
+        logger.info("Testing WCAG 2.1 AA Compliance for SutazAI Frontend")
+        logger.info()
         
-        print("🏗️ 1. SEMANTIC HTML STRUCTURE")
-        print("-" * 40)
+        logger.info("🏗️ 1. SEMANTIC HTML STRUCTURE")
+        logger.info("-" * 40)
         self.test_semantic_html()
-        print()
+        logger.info()
         
-        print("🏷️ 2. ARIA LABELS & ATTRIBUTES")
-        print("-" * 40)
+        logger.info("🏷️ 2. ARIA LABELS & ATTRIBUTES")
+        logger.info("-" * 40)
         self.test_aria_labels()
-        print()
+        logger.info()
         
-        print("📱 3. RESPONSIVE DESIGN")
-        print("-" * 40)
+        logger.info("📱 3. RESPONSIVE DESIGN")
+        logger.info("-" * 40)
         self.test_responsive_design()
-        print()
+        logger.info()
         
-        print("🎨 4. COLOR CONTRAST & VISUAL")
-        print("-" * 40)
+        logger.info("🎨 4. COLOR CONTRAST & VISUAL")
+        logger.info("-" * 40)
         self.test_color_contrast()
-        print()
+        logger.info()
         
-        print("⌨️ 5. KEYBOARD NAVIGATION")
-        print("-" * 40)
+        logger.info("⌨️ 5. KEYBOARD NAVIGATION")
+        logger.info("-" * 40)
         self.test_keyboard_navigation()
-        print()
+        logger.info()
         
-        print("🎬 6. REDUCED MOTION")
-        print("-" * 40)
+        logger.info("🎬 6. REDUCED MOTION")
+        logger.info("-" * 40)
         self.test_reduced_motion()
-        print()
+        logger.info()
         
-        print("📝 7. FORM ACCESSIBILITY")
-        print("-" * 40)
+        logger.info("📝 7. FORM ACCESSIBILITY")
+        logger.info("-" * 40)
         self.test_form_accessibility()
-        print()
+        logger.info()
         
         # Generate final report
         report = self.generate_accessibility_report()
         
-        print("=" * 80)
-        print("♿ ACCESSIBILITY COMPLIANCE SUMMARY")
-        print("=" * 80)
-        print(f"Total Tests: {report['accessibility_summary']['total_tests']}")
-        print(f"✅ Passed: {report['accessibility_summary']['passed']}")
-        print(f"⚠️ Warnings: {report['accessibility_summary']['warnings']}")
-        print(f"❌ Critical: {report['accessibility_summary']['critical_failures']}")
-        print(f"📊 Compliance Score: {report['accessibility_summary']['compliance_score']}%")
-        print(f"🏆 WCAG Level: {report['accessibility_summary']['wcag_level']}")
-        print()
+        logger.info("=" * 80)
+        logger.info("♿ ACCESSIBILITY COMPLIANCE SUMMARY")
+        logger.info("=" * 80)
+        logger.info(f"Total Tests: {report['accessibility_summary']['total_tests']}")
+        logger.info(f"✅ Passed: {report['accessibility_summary']['passed']}")
+        logger.warning(f"⚠️ Warnings: {report['accessibility_summary']['warnings']}")
+        logger.error(f"❌ Critical: {report['accessibility_summary']['critical_failures']}")
+        logger.info(f"📊 Compliance Score: {report['accessibility_summary']['compliance_score']}%")
+        logger.info(f"🏆 WCAG Level: {report['accessibility_summary']['wcag_level']}")
+        logger.info()
         
-        print("📊 CATEGORY BREAKDOWN:")
+        logger.info("📊 CATEGORY BREAKDOWN:")
         for category, results in report['category_results'].items():
-            print(f"  {category}: {results['passed']}/{results['total']} ({results['success_rate']}%)")
+            logger.info(f"  {category}: {results['passed']}/{results['total']} ({results['success_rate']}%)")
         
         if report['recommendations']:
-            print("\n💡 RECOMMENDATIONS:")
+            logger.info("\n💡 RECOMMENDATIONS:")
             for i, rec in enumerate(report['recommendations'], 1):
-                print(f"  {i}. {rec}")
+                logger.info(f"  {i}. {rec}")
         
-        print("\n♿ ACCESSIBILITY VALIDATION COMPLETE")
+        logger.info("\n♿ ACCESSIBILITY VALIDATION COMPLETE")
         
         return report
 
@@ -549,14 +552,14 @@ def main():
     with open('/tmp/accessibility_test_results.json', 'w') as f:
         json.dump(results, f, indent=2)
     
-    print(f"\n📄 Detailed results saved to: /tmp/accessibility_test_results.json")
+    logger.info(f"\n📄 Detailed results saved to: /tmp/accessibility_test_results.json")
     
     # Return based on compliance score
     if results['accessibility_summary']['compliance_score'] >= 70:
-        print("🎉 ACCESSIBILITY VALIDATION: PASSED")
+        logger.info("🎉 ACCESSIBILITY VALIDATION: PASSED")
         return 0
     else:
-        print("⚠️ ACCESSIBILITY VALIDATION: NEEDS IMPROVEMENT")
+        logger.info("⚠️ ACCESSIBILITY VALIDATION: NEEDS IMPROVEMENT")
         return 1
 
 if __name__ == "__main__":

@@ -77,9 +77,10 @@ class EnsembleConfig:
 class ModelProxy:
     """Proxy for individual models in the ensemble"""
     
-    def __init__(self, model_name: str, ollama_host: str = "http://localhost:10104"):
+    def __init__(self, model_name: str, ollama_host: str = None):
         self.model_name = model_name
-        self.ollama_host = ollama_host
+        # Use environment variable or Docker service name
+        self.ollama_host = ollama_host if ollama_host else os.getenv("OLLAMA_HOST", "http://ollama:10104")
         self.session = None
         
         # Performance tracking
@@ -953,13 +954,13 @@ async def example_ensemble_usage():
         temperature=0.7
     )
     
-    print(f"Response: {result['response']}")
-    print(f"Confidence: {result['confidence']}")
-    print(f"Models used: {result['models_used']}")
+    logger.info(f"Response: {result['response']}")
+    logger.info(f"Confidence: {result['confidence']}")
+    logger.info(f"Models used: {result['models_used']}")
     
     # Get statistics
     stats = ensemble.get_ensemble_statistics()
-    print("Ensemble Statistics:", json.dumps(stats, indent=2))
+    logger.info("Ensemble Statistics:", json.dumps(stats, indent=2))
     
     # Cleanup
     await ensemble.cleanup()

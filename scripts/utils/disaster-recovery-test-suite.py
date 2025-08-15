@@ -1318,22 +1318,22 @@ def main():
                     test_case = suite.test_cases[args.test]
                     result = suite._execute_test(test_case)
                     suite._save_test_result(result)
-                    print(json.dumps(asdict(result), indent=2, default=str))
+                    logger.info(json.dumps(asdict(result), indent=2, default=str))
                 else:
-                    print(f"Test '{args.test}' not found")
+                    logger.info(f"Test '{args.test}' not found")
                     sys.exit(1)
             else:
                 # Run all tests
                 results = suite.run_all_tests()
-                print(json.dumps(results, indent=2))
+                logger.info(json.dumps(results, indent=2))
                 
         elif args.command == "report":
             report = suite.generate_report()
-            print(json.dumps(report, indent=2))
+            logger.info(json.dumps(report, indent=2))
             
         elif args.command == "cleanup":
             suite.cleanup_test_environment()
-            print("Test environment cleaned up")
+            logger.info("Test environment cleaned up")
     
     except KeyboardInterrupt:
         logger.info("Test execution interrupted")

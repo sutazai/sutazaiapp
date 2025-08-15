@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 SutazAI Monitoring System Validation Runner
 ==========================================
 
@@ -17,8 +20,8 @@ from pathlib import Path
 
 def run_test_suite(test_file, description):
     """Run a test suite and return results"""
-    print(f"\n🧪 Running {description}...")
-    print("-" * 50)
+    logger.info(f"\n🧪 Running {description}...")
+    logger.info("-" * 50)
     
     try:
         result = subprocess.run(
@@ -59,9 +62,9 @@ def run_test_suite(test_file, description):
 
 def run_validation():
     """Run complete validation suite"""
-    print("🔍 SutazAI Monitoring System - Complete Validation Suite")
-    print("=" * 60)
-    print(f"Started: {datetime.now().isoformat()}")
+    logger.info("🔍 SutazAI Monitoring System - Complete Validation Suite")
+    logger.info("=" * 60)
+    logger.info(f"Started: {datetime.now().isoformat()}")
     
     # Define test suites
     test_suites = [
@@ -79,13 +82,13 @@ def run_validation():
             
             # Print immediate results
             if result["success"]:
-                print("✅ PASSED")
+                logger.info("✅ PASSED")
             else:
-                print("❌ FAILED")
+                logger.error("❌ FAILED")
                 if "error" in result:
-                    print(f"Error: {result['error']}")
+                    logger.error(f"Error: {result['error']}")
         else:
-            print(f"⚠️  Test file not found: {test_file}")
+            logger.info(f"⚠️  Test file not found: {test_file}")
             results.append({
                 "test_file": test_file,
                 "description": description,
@@ -98,37 +101,37 @@ def run_validation():
     passed_tests = len([r for r in results if r["success"]])
     success_rate = (passed_tests / total_tests * 100) if total_tests > 0 else 0
     
-    print("\n" + "=" * 60)
-    print("📊 VALIDATION SUMMARY")
-    print("=" * 60)
-    print(f"Test Suites Run: {total_tests}")
-    print(f"Passed: {passed_tests}")
-    print(f"Failed: {total_tests - passed_tests}")
-    print(f"Success Rate: {success_rate:.1f}%")
+    logger.info("\n" + "=" * 60)
+    logger.info("📊 VALIDATION SUMMARY")
+    logger.info("=" * 60)
+    logger.info(f"Test Suites Run: {total_tests}")
+    logger.info(f"Passed: {passed_tests}")
+    logger.error(f"Failed: {total_tests - passed_tests}")
+    logger.info(f"Success Rate: {success_rate:.1f}%")
     
     # Show individual results
     for result in results:
         status_icon = "✅" if result["success"] else "❌"
-        print(f"\n{status_icon} {result['description']}")
+        logger.info(f"\n{status_icon} {result['description']}")
         if not result["success"]:
             if "error" in result:
-                print(f"  Error: {result['error']}")
+                logger.error(f"  Error: {result['error']}")
             elif result.get("stderr"):
-                print(f"  Error: {result['stderr'][:200]}...")
+                logger.error(f"  Error: {result['stderr'][:200]}...")
     
     # Overall assessment
-    print(f"\n🎯 OVERALL ASSESSMENT")
+    logger.info(f"\n🎯 OVERALL ASSESSMENT")
     if success_rate == 100:
-        print("🟢 PERFECT - All validation tests passed!")
+        logger.info("🟢 PERFECT - All validation tests passed!")
         assessment = "EXCELLENT"
     elif success_rate >= 80:
-        print("🟡 GOOD - Most tests passed with minor issues")
+        logger.info("🟡 GOOD - Most tests passed with minor issues")
         assessment = "GOOD"
     elif success_rate >= 60:
-        print("🟠 FAIR - Some significant issues need attention")
+        logger.info("🟠 FAIR - Some significant issues need attention")
         assessment = "FAIR"
     else:
-        print("🔴 POOR - Major issues require immediate attention")
+        logger.info("🔴 POOR - Major issues require immediate attention")
         assessment = "POOR"
     
     # Save detailed results
@@ -148,11 +151,11 @@ def run_validation():
     with open(report_file, 'w') as f:
         json.dump(report, f, indent=2)
     
-    print(f"\n📄 Detailed validation report saved to: {report_file}")
+    logger.info(f"\n📄 Detailed validation report saved to: {report_file}")
     
     # Check if monitoring files exist and are accessible
-    print(f"\n🔍 MONITORING SYSTEM FILES CHECK")
-    print("-" * 40)
+    logger.info(f"\n🔍 MONITORING SYSTEM FILES CHECK")
+    logger.info("-" * 40)
     
     monitoring_files = [
         "/opt/sutazaiapp/scripts/monitoring/static_monitor.py",
@@ -163,13 +166,13 @@ def run_validation():
     for file_path in monitoring_files:
         if os.path.exists(file_path):
             size = os.path.getsize(file_path)
-            print(f"✅ {file_path} ({size:,} bytes)")
+            logger.info(f"✅ {file_path} ({size:,} bytes)")
         else:
-            print(f"❌ {file_path} (missing)")
+            logger.info(f"❌ {file_path} (missing)")
     
     # Quick system status
-    print(f"\n🐳 QUICK SYSTEM STATUS")
-    print("-" * 40)
+    logger.info(f"\n🐳 QUICK SYSTEM STATUS")
+    logger.info("-" * 40)
     
     try:
         docker_result = subprocess.run(
@@ -180,7 +183,7 @@ def run_validation():
         if docker_result.returncode == 0:
             lines = docker_result.stdout.strip().split('\n')
             container_count = len(lines) - 1  # Subtract header
-            print(f"SutazAI Containers: {container_count}")
+            logger.info(f"SutazAI Containers: {container_count}")
             
             # Count by status
             statuses = {"running": 0, "restarting": 0, "exited": 0, "other": 0}
@@ -196,12 +199,12 @@ def run_validation():
             
             for status, count in statuses.items():
                 if count > 0:
-                    print(f"  {status.title()}: {count}")
+                    logger.info(f"  {status.title()}: {count}")
         else:
-            print("⚠️  Could not get Docker container status")
+            logger.info("⚠️  Could not get Docker container status")
             
     except Exception as e:
-        print(f"⚠️  Error checking Docker status: {e}")
+        logger.error(f"⚠️  Error checking Docker status: {e}")
     
     return success_rate >= 80
 
@@ -211,20 +214,20 @@ def main():
     try:
         success = run_validation()
         
-        print(f"\n{'='*60}")
+        logger.info(f"\n{'='*60}")
         if success:
-            print("🎉 MONITORING SYSTEM VALIDATION COMPLETED SUCCESSFULLY!")
+            logger.info("🎉 MONITORING SYSTEM VALIDATION COMPLETED SUCCESSFULLY!")
         else:
-            print("⚠️  MONITORING SYSTEM VALIDATION COMPLETED WITH ISSUES")
-        print(f"{'='*60}")
+            logger.info("⚠️  MONITORING SYSTEM VALIDATION COMPLETED WITH ISSUES")
+        logger.info(f"{'='*60}")
         
         return 0 if success else 1
         
     except KeyboardInterrupt:
-        print("\n\n⚠️  Validation interrupted by user")
+        logger.info("\n\n⚠️  Validation interrupted by user")
         return 2
     except Exception as e:
-        print(f"\n\n❌ Validation failed with error: {e}")
+        logger.error(f"\n\n❌ Validation failed with error: {e}")
         return 3
 
 

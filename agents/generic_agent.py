@@ -57,7 +57,7 @@ class GenericAgent:
             else:
                 return self._get_default_config()
         except Exception as e:
-            print(f"Error loading config from {self.config_path}: {e}")
+            self.logger.error(f"Error loading config from {self.config_path}: {e}")
             return self._get_default_config()
     
     def _get_default_config(self) -> Dict[str, Any]:

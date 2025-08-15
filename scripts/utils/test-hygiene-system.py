@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Purpose: Master test runner for comprehensive hygiene enforcement system validation
 Usage: python test-hygiene-system.py [--component=<component>] [--verbose] [--report]
 Requirements: Python 3.8+, unittest, git, all hygiene enforcement components
@@ -44,7 +47,7 @@ class HygieneSystemTestRunner:
         
     def setup_test_environment(self):
         """Setup isolated test environment"""
-        print("Setting up test environment...")
+        logger.info("Setting up test environment...")
         
         # Create temp directory for testing
         self.temp_test_dir = Path(tempfile.mkdtemp(prefix="hygiene_test_"))
@@ -56,7 +59,7 @@ class HygieneSystemTestRunner:
         # Ensure logs directory exists
         (self.project_root / "logs").mkdir(exist_ok=True)
         
-        print(f"Test environment created at: {self.temp_test_dir}")
+        logger.info(f"Test environment created at: {self.temp_test_dir}")
         
     def _create_test_fixtures(self):
         """Create test fixtures for violation testing"""
@@ -101,7 +104,7 @@ class HygieneSystemTestRunner:
                 
                 if filename.endswith('.py'):
                     # Create Python file without proper header
-                    content = "import os\nprint('test')\n"
+                    content = "import os\nlogger.info('test')\n"
                 elif filename.endswith('.sh'):
                     # Create shell script
                     content = "#!/bin/bash\necho 'test deploy script'\n"
@@ -118,7 +121,7 @@ class HygieneSystemTestRunner:
         """Cleanup test environment"""
         if self.temp_test_dir and self.temp_test_dir.exists():
             shutil.rmtree(self.temp_test_dir)
-            print(f"Cleaned up test directory: {self.temp_test_dir}")
+            logger.info(f"Cleaned up test directory: {self.temp_test_dir}")
 
 class TestHygieneOrchestrator(unittest.TestCase):
     """Test the hygiene agent orchestrator"""
@@ -288,7 +291,7 @@ sys.path.insert(0, "/nonexistent/path")
 try:
     import nonexistent_module
 except ImportError as e:
-    print(f"Handled missing dependency: {e}")
+    logger.info(f"Handled missing dependency: {e}")
     sys.exit(0)
 sys.exit(1)
 '''
@@ -410,7 +413,7 @@ def run_component_tests(component: str = None, verbose: bool = False) -> Dict:
     else:
         # Run all tests
         for comp_name, test_class in test_suites.items():
-            print(f"\n=== Testing {comp_name.upper()} ===")
+            logger.info(f"\n=== Testing {comp_name.upper()} ===")
             
             suite = unittest.TestLoader().loadTestsFromTestCase(test_class)
             runner = unittest.TextTestRunner(verbosity=2 if verbose else 1)
@@ -471,7 +474,7 @@ def generate_test_report(results: Dict, output_file: Optional[str] = None) -> st
         with open(output_path, 'w') as f:
             json.dump(report, f, indent=2)
             
-        print(f"\nTest report saved to: {output_path}")
+        logger.info(f"\nTest report saved to: {output_path}")
     
     return json.dumps(report, indent=2)
 
@@ -497,11 +500,11 @@ def main():
         test_runner.setup_test_environment()
         
         if args.setup_only:
-            print("Test environment setup completed")
+            logger.info("Test environment setup completed")
             return 0
             
         # Run tests
-        print("=== HYGIENE SYSTEM VALIDATION TESTS ===")
+        logger.info("=== HYGIENE SYSTEM VALIDATION TESTS ===")
         test_runner.start_time = datetime.datetime.now()
         
         results = run_component_tests(args.component, args.verbose)
@@ -513,8 +516,8 @@ def main():
         report_json = generate_test_report(results, args.report)
         
         # Print summary
-        print("\n=== TEST SUMMARY ===")
-        print(report_json)
+        logger.info("\n=== TEST SUMMARY ===")
+        logger.info(report_json)
         
         # Return appropriate exit code
         overall_success = all(r["success"] for r in results.values())

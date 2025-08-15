@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Simple ChromaDB test using HTTP API directly
 """
 
@@ -22,19 +25,19 @@ def test_chromadb():
     if not _is_port_open("localhost", 8001):
         pytest.skip("ChromaDB not running on localhost:8001; skipping external integration test")
     
-    print("Testing ChromaDB HTTP API...")
+    logger.info("Testing ChromaDB HTTP API...")
     
     # Test 1: Heartbeat
     response = requests.get(f"{base_url}/heartbeat")
-    print(f"Heartbeat: {response.status_code}")
+    logger.info(f"Heartbeat: {response.status_code}")
     
     # Test 2: Version
     response = requests.get(f"{base_url}/version")
-    print(f"Version: {response.json()}")
+    logger.info(f"Version: {response.json()}")
     
     # Test 3: List collections
     response = requests.get(f"{base_url}/collections")
-    print(f"Collections: {response.json()}")
+    logger.info(f"Collections: {response.json()}")
     
     # Test 4: Create collection
     collection_name = f"test_collection_{int(time.time())}"
@@ -44,9 +47,9 @@ def test_chromadb():
     }
     
     response = requests.post(f"{base_url}/collections", json=collection_data)
-    print(f"Create collection: {response.status_code}")
+    logger.info(f"Create collection: {response.status_code}")
     if response.status_code == 200:
-        print(f"Collection created: {response.json()}")
+        logger.info(f"Collection created: {response.json()}")
     
     # Test 5: Add documents
     documents_data = {
@@ -56,7 +59,7 @@ def test_chromadb():
     }
     
     response = requests.post(f"{base_url}/collections/{collection_name}/add", json=documents_data)
-    print(f"Add documents: {response.status_code}")
+    logger.info(f"Add documents: {response.status_code}")
     
     # Test 6: Query documents
     query_data = {
@@ -65,15 +68,15 @@ def test_chromadb():
     }
     
     response = requests.post(f"{base_url}/collections/{collection_name}/query", json=query_data)
-    print(f"Query documents: {response.status_code}")
+    logger.info(f"Query documents: {response.status_code}")
     if response.status_code == 200:
-        print(f"Query results: {len(response.json().get('documents', [[]])[0])} documents found")
+        logger.info(f"Query results: {len(response.json().get('documents', [[]])[0])} documents found")
     
     # Cleanup: Delete collection
     response = requests.delete(f"{base_url}/collections/{collection_name}")
-    print(f"Delete collection: {response.status_code}")
+    logger.info(f"Delete collection: {response.status_code}")
     
-    print("ChromaDB test completed!")
+    logger.info("ChromaDB test completed!")
 
 if __name__ == "__main__":
     test_chromadb()

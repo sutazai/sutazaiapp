@@ -507,27 +507,27 @@ root hard nofile 65536
             logger.info(f"Optimization report saved: {report_path}")
             
             # Print summary
-            print("\n" + "="*60)
-            print("ULTRA SYSTEM OPTIMIZATION COMPLETE")
-            print("="*60)
+            logger.info("\n" + "="*60)
+            logger.info("ULTRA SYSTEM OPTIMIZATION COMPLETE")
+            logger.info("="*60)
             
             if self.results['mcp_containers_preserved']:
-                print(f"✅ MCP Containers Preserved: {len(self.results['mcp_containers_preserved'])}")
+                logger.info(f"✅ MCP Containers Preserved: {len(self.results['mcp_containers_preserved'])}")
             
             if self.results['file_descriptor_fixes']:
-                print(f"✅ File Descriptor Fixes: {len(self.results['file_descriptor_fixes'])}")
+                logger.info(f"✅ File Descriptor Fixes: {len(self.results['file_descriptor_fixes'])}")
                 
             if self.results['memory_cleanup']:
-                print(f"✅ Memory Optimizations: {len(self.results['memory_cleanup'])}")
+                logger.info(f"✅ Memory Optimizations: {len(self.results['memory_cleanup'])}")
                 
             if self.results['performance_improvements']:
-                print("\n📈 Performance Improvements:")
+                logger.info("\n📈 Performance Improvements:")
                 for metric, improvement in self.results['performance_improvements'].items():
                     if improvement > 0:
-                        print(f"   {metric}: +{improvement:.2f}")
+                        logger.info(f"   {metric}: +{improvement:.2f}")
                         
-            print(f"\n📄 Full report: {report_path}")
-            print("="*60)
+            logger.info(f"\n📄 Full report: {report_path}")
+            logger.info("="*60)
             
         except Exception as e:
             logger.error(f"Error generating report: {e}")
@@ -586,25 +586,25 @@ root hard nofile 65536
 
 def main():
     """Main execution"""
-    print("🔧 Ultra System Optimizer - Preserving MCP Infrastructure")
-    print("=" * 60)
+    logger.info("🔧 Ultra System Optimizer - Preserving MCP Infrastructure")
+    logger.info("=" * 60)
     
     try:
         optimizer = UltraSystemOptimizer()
         success = optimizer.run_optimization()
         
         if success:
-            print("✅ System optimization completed successfully!")
+            logger.info("✅ System optimization completed successfully!")
             return 0
         else:
-            print("❌ System optimization failed. Check logs for details.")
+            logger.error("❌ System optimization failed. Check logs for details.")
             return 1
             
     except KeyboardInterrupt:
-        print("\n⚠️  Optimization interrupted by user")
+        logger.info("\n⚠️  Optimization interrupted by user")
         return 130
     except Exception as e:
-        print(f"❌ Fatal error: {e}")
+        logger.error(f"❌ Fatal error: {e}")
         return 1
 
 if __name__ == "__main__":

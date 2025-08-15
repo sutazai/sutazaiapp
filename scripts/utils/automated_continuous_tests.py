@@ -575,11 +575,11 @@ def main():
         elif args.test_type == "performance":
             result = orchestrator.run_performance_tests()
         
-        print(json.dumps(result, indent=2))
+        logger.info(json.dumps(result, indent=2))
     
     elif args.mode == "dashboard":
         dashboard = orchestrator.generate_status_dashboard()
-        print(json.dumps(dashboard, indent=2))
+        logger.info(json.dumps(dashboard, indent=2))
 
 if __name__ == "__main__":
     main()

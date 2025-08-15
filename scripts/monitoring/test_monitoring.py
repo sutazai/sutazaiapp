@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Purpose: Unit tests for hygiene monitoring system
 Usage: python -m pytest tests/hygiene/test_monitoring.py
 Requirements: pytest, unittest.mock
@@ -231,13 +234,13 @@ class TestRealTimeMonitoring(unittest.TestCase):
         """Test detection of file changes"""
         # Create initial file
         test_file = self.test_project / "test.py"
-        test_file.write_text("print('initial')")
+        test_file.write_text("logger.info('initial')")
         
         initial_mtime = test_file.stat().st_mtime
         
         # Wait briefly and modify file
         time.sleep(0.1)
-        test_file.write_text("print('modified')")
+        test_file.write_text("logger.info('modified')")
         
         modified_mtime = test_file.stat().st_mtime
         
@@ -277,7 +280,7 @@ class TestMonitoringPerformance(unittest.TestCase):
         # Create many test files
         for i in range(100):
             test_file = self.large_project / f"file_{i:03d}.py"
-            test_file.write_text(f"# File {i}\nprint('test')\n")
+            test_file.write_text(f"# File {i}\nlogger.info('test')\n")
             
     def tearDown(self):
         """Cleanup performance test environment"""

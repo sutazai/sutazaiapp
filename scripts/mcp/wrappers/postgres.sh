@@ -7,6 +7,9 @@ DB_URI="${DATABASE_URL:-${DATABASE_URI:-}}"
 NET="${DOCKER_NETWORK:-sutazai-network}"
 CONT_NAME="${POSTGRES_CONTAINER:-sutazai-postgres}"
 
+# Generate unique container name for this MCP call
+CONTAINER_NAME="postgres-mcp-$$-$(date +%s)"
+
 if ! has_cmd docker; then
   err "Docker is required for postgres MCP (crystaldba/postgres-mcp)."
   exit 127
@@ -73,6 +76,26 @@ if [ "${1:-}" = "--selfcheck" ]; then
   if docker exec "$CONT_NAME" pg_isready -U "${POSTGRES_USER_VAL:-${POSTGRES_USER:-sutazai}}" -d "${POSTGRES_DB_VAL:-${POSTGRES_DB:-sutazai}}" >/dev/null 2>&1; then ok_line "pg_isready OK"; else warn_line "pg_isready not ready"; fi
   if docker exec -e PGPASSWORD="${POSTGRES_PASSWORD_VAL:-${POSTGRES_PASSWORD:-}}" "$CONT_NAME" psql -U "${POSTGRES_USER_VAL:-${POSTGRES_USER:-sutazai}}" -d "${POSTGRES_DB_VAL:-${POSTGRES_DB:-sutazai}}" -c 'SELECT 1;' >/dev/null 2>&1; then ok_line "psql SELECT 1 OK"; else warn_line "psql SELECT 1 failed"; fi
   if [ -n "$DB_URI" ]; then ok_line "DATABASE_URL/URI resolved"; else err_line "DATABASE_URL/URI empty"; exit 127; fi
+  
+  # Check MCP container status
+  mcp_containers=$(docker ps -a --filter label=mcp-service=postgres --format "{{.Names}}" | wc -l)
+  running_mcp=$(docker ps --filter label=mcp-service=postgres --format "{{.Names}}" | wc -l)
+  if [ $mcp_containers -gt 0 ]; then
+    ok_line "MCP containers: $mcp_containers total, $running_mcp running"
+    if [ $mcp_containers -gt 5 ]; then
+      warn_line "High container count detected, consider running cleanup"
+    fi
+  else
+    ok_line "No MCP containers present"
+  fi
+  
+  # Check cleanup daemon status
+  if systemctl is-active --quiet mcp-cleanup 2>/dev/null; then
+    ok_line "MCP cleanup daemon running"
+  else
+    warn_line "MCP cleanup daemon not running"
+  fi
+  
   exit 0
 fi
 
@@ -95,4 +118,34 @@ else
   warn "Postgres not ready yet; MCP will still start (may retry internally)"
 fi
 
-exec docker run --network "$NET" --rm -i -e DATABASE_URI="$DB_URI" crystaldba/postgres-mcp --access-mode=restricted
+# Cleanup function
+cleanup_container() {
+  local exit_code=$?
+  # More robust cleanup - check for both running and stopped containers
+  if docker ps -a --format '{{.Names}}' | grep -qx "$CONTAINER_NAME" 2>/dev/null; then
+    log_container_event "CLEANUP" "$CONTAINER_NAME" "Script exiting, cleaning up container"
+    docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || true
+    docker rm "$CONTAINER_NAME" >/dev/null 2>&1 || true
+  fi
+  exit $exit_code
+}
+
+# Setup cleanup trap
+trap cleanup_container EXIT INT TERM
+
+# Log container start
+log_container_event "START" "$CONTAINER_NAME" "Starting postgres-mcp container for PID $$"
+
+# Start container with proper labeling and NO --rm flag
+# Keep it simple - use foreground mode with improved cleanup
+docker run \
+  --name="$CONTAINER_NAME" \
+  --network="$NET" \
+  --label="mcp-service=postgres" \
+  --label="mcp-pid=$$" \
+  --label="mcp-started=$(date +%s)" \
+  -i \
+  -e DATABASE_URI="$DB_URI" \
+  crystaldba/postgres-mcp --access-mode=restricted
+
+# Trap will handle cleanup when this script exits

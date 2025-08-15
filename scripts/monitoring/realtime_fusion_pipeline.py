@@ -857,7 +857,7 @@ async def main():
         # Start pipeline
         await pipeline.start_pipeline()
         
-        print("Pipeline started. Processing sample requests...")
+        logger.info("Pipeline started. Processing sample requests...")
         
         # Process sample requests
         for i in range(10):
@@ -890,22 +890,22 @@ async def main():
             # Process request
             response = await pipeline.process_request(request)
             
-            print(f"Request {i}: "
+            logger.error(f"Request {i}: "
                   f"Latency: {response.processing_latency:.3f}s, "
                   f"Success: {response.error is None}")
         
         # Get pipeline status
         status = pipeline.get_pipeline_status()
-        print(f"\nPipeline Status:")
-        print(f"  Running: {status['is_running']}")
-        print(f"  Workers: {status['active_workers']}/{status['worker_count']}")
-        print(f"  Throughput: {status['metrics']['throughput_per_second']:.1f} req/s")
-        print(f"  Avg Latency: {status['metrics']['average_latency']:.3f}s")
-        print(f"  Memory Usage: {status['metrics']['memory_usage_mb']:.1f} MB")
+        logger.info(f"\nPipeline Status:")
+        logger.info(f"  Running: {status['is_running']}")
+        logger.info(f"  Workers: {status['active_workers']}/{status['worker_count']}")
+        logger.info(f"  Throughput: {status['metrics']['throughput_per_second']:.1f} req/s")
+        logger.info(f"  Avg Latency: {status['metrics']['average_latency']:.3f}s")
+        logger.info(f"  Memory Usage: {status['metrics']['memory_usage_mb']:.1f} MB")
         
         # Health check
         health = await pipeline.health_check()
-        print(f"\nHealth Status: {health['status']}")
+        logger.info(f"\nHealth Status: {health['status']}")
         
         # Let pipeline run for a few seconds
         await asyncio.sleep(5)
@@ -913,7 +913,7 @@ async def main():
     finally:
         # Stop pipeline
         await pipeline.stop_pipeline()
-        print("Pipeline stopped")
+        logger.info("Pipeline stopped")
 
 if __name__ == "__main__":
     asyncio.run(main())

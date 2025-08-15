@@ -49,8 +49,8 @@ def test_endpoint(endpoint: str, method: str = "GET", expected_status: int = 200
 
 def main():
     """Test all endpoints"""
-    print("Testing Hardware Resource Optimizer endpoints...")
-    print("=" * 60)
+    logger.info("Testing Hardware Resource Optimizer endpoints...")
+    logger.info("=" * 60)
     
     # Test endpoints
     endpoints = [
@@ -66,41 +66,41 @@ def main():
     all_passed = True
     
     for endpoint, method in endpoints:
-        print(f"\nTesting {method} {endpoint}...")
+        logger.info(f"\nTesting {method} {endpoint}...")
         result = test_endpoint(endpoint, method)
         results[endpoint] = result
         
         if result["success"]:
-            print(f"✅ PASS - Status: {result['status_code']}, Time: {result.get('response_time', 0):.2f}s")
+            logger.info(f"✅ PASS - Status: {result['status_code']}, Time: {result.get('response_time', 0):.2f}s")
             
             # Print first few lines of response for verification
             if isinstance(result["data"], dict):
                 status = result["data"].get("status", "unknown")
-                print(f"   Response status: {status}")
+                logger.info(f"   Response status: {status}")
                 
                 if "actions_taken" in result["data"]:
                     actions = result["data"]["actions_taken"]
-                    print(f"   Actions taken: {len(actions) if isinstance(actions, list) else 'N/A'}")
+                    logger.info(f"   Actions taken: {len(actions) if isinstance(actions, list) else 'N/A'}")
             else:
-                print(f"   Response: {str(result['data'])[:100]}...")
+                logger.info(f"   Response: {str(result['data'])[:100]}...")
         else:
-            print(f"❌ FAIL - {result.get('error', 'Unknown error')}")
+            logger.error(f"❌ FAIL - {result.get('error', 'Unknown error')}")
             if "status_code" in result:
-                print(f"   Status: {result['status_code']}")
+                logger.info(f"   Status: {result['status_code']}")
             all_passed = False
     
-    print("\n" + "=" * 60)
-    print("SUMMARY:")
+    logger.info("\n" + "=" * 60)
+    logger.info("SUMMARY:")
     
     for endpoint in results:
         status = "✅ PASS" if results[endpoint]["success"] else "❌ FAIL"
-        print(f"  {endpoint}: {status}")
+        logger.info(f"  {endpoint}: {status}")
     
     if all_passed:
-        print("\n🎉 All endpoints working correctly!")
+        logger.info("\n🎉 All endpoints working correctly!")
         return 0
     else:
-        print("\n💥 Some endpoints failed!")
+        logger.error("\n💥 Some endpoints failed!")
         return 1
 
 if __name__ == "__main__":

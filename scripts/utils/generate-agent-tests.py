@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Dynamic Agent Load Test Generator for SutazAI
 Generates load tests for all 69+ agents dynamically from the agent registry.
 """
@@ -14,10 +17,10 @@ def load_agent_registry(registry_path: str) -> Dict[str, Any]:
         with open(registry_path, 'r') as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f"Agent registry not found at {registry_path}")
+        logger.info(f"Agent registry not found at {registry_path}")
         return {"agents": {}}
     except json.JSONDecodeError as e:
-        print(f"Error parsing agent registry: {e}")
+        logger.error(f"Error parsing agent registry: {e}")
         return {"agents": {}}
 
 def get_agent_port_mapping(agents: Dict[str, Any], start_port: int = 8080) -> Dict[str, int]:
@@ -480,27 +483,27 @@ def main():
     registry_path = script_dir.parent / "agents" / "agent_registry.json"
     output_path = script_dir / "tests" / "all-agents-load.js"
     
-    print(f"Loading agent registry from: {registry_path}")
+    logger.info(f"Loading agent registry from: {registry_path}")
     registry_data = load_agent_registry(str(registry_path))
     
     agents = registry_data.get("agents", {})
     if not agents:
-        print("No agents found in registry, using   test configuration")
+        logger.info("No agents found in registry, using   test configuration")
         agents = {
             " system-architect": {"capabilities": ["system_design"]},
             "qa-team-lead": {"capabilities": ["testing", "quality_assurance"]},
             "ai-senior-backend-developer": {"capabilities": ["code_generation", "backend"]}
         }
     
-    print(f"Found {len(agents)} agents in registry")
+    logger.info(f"Found {len(agents)} agents in registry")
     
     # Generate port mappings and categories
     port_mapping = get_agent_port_mapping(agents)
     categories = generate_agent_categories(agents)
     
-    print("Agent categories:")
+    logger.info("Agent categories:")
     for category, agent_list in categories.items():
-        print(f"  {category}: {len(agent_list)} agents")
+        logger.info(f"  {category}: {len(agent_list)} agents")
     
     # Generate K6 test script
     test_script = generate_k6_test_script(agents, port_mapping, categories)
@@ -512,15 +515,15 @@ def main():
     with open(output_path, 'w') as f:
         f.write(test_script)
     
-    print(f"Generated comprehensive agent load test: {output_path}")
-    print(f"Test covers {len(agents)} agents across {len(categories)} categories")
+    logger.info(f"Generated comprehensive agent load test: {output_path}")
+    logger.info(f"Test covers {len(agents)} agents across {len(categories)} categories")
     
     # Generate agent configuration file for reference
     config_path = script_dir / "agent-ports.json"
     with open(config_path, 'w') as f:
         json.dump(port_mapping, f, indent=2)
     
-    print(f"Agent port configuration saved: {config_path}")
+    logger.info(f"Agent port configuration saved: {config_path}")
 
 if __name__ == "__main__":
     main()

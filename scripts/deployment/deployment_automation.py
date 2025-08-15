@@ -29,7 +29,7 @@ class DeploymentWorkflow:
     
     async def pre_deployment_checks(self) -> Dict[str, Any]:
         """Run pre-deployment validation checks"""
-        print("🔍 Running pre-deployment checks...")
+        logger.info("🔍 Running pre-deployment checks...")
         
         checks = {
             "timestamp": datetime.now().isoformat(),
@@ -191,7 +191,7 @@ class DeploymentWorkflow:
     
     async def create_deployment_plan(self, environment: str = "production") -> Dict[str, Any]:
         """Create a deployment plan"""
-        print(f"📋 Creating deployment plan for {environment}...")
+        logger.info(f"📋 Creating deployment plan for {environment}...")
         
         try:
             response = await self.client.post(
@@ -216,7 +216,7 @@ class DeploymentWorkflow:
     
     async def execute_deployment(self, plan: Dict[str, Any]) -> Dict[str, Any]:
         """Execute the deployment plan"""
-        print("🚀 Executing deployment...")
+        logger.info("🚀 Executing deployment...")
         
         results = {
             "started_at": datetime.now().isoformat(),
@@ -233,7 +233,7 @@ class DeploymentWorkflow:
         ]
         
         for step in steps:
-            print(f"  ▶️  {step['name']}...")
+            logger.info(f"  ▶️  {step['name']}...")
             
             try:
                 # In production, you'd execute actual commands
@@ -260,7 +260,7 @@ class DeploymentWorkflow:
     
     async def post_deployment_validation(self) -> Dict[str, Any]:
         """Validate deployment success"""
-        print("✅ Running post-deployment validation...")
+        logger.info("✅ Running post-deployment validation...")
         
         validations = []
         
@@ -312,51 +312,51 @@ async def main():
     
     try:
         # Step 1: Pre-deployment checks
-        print("🚀 Starting deployment workflow...")
+        logger.info("🚀 Starting deployment workflow...")
         checks = await workflow.pre_deployment_checks()
         
-        print("\n📊 Pre-deployment check results:")
+        logger.info("\n📊 Pre-deployment check results:")
         for check in checks["checks"]:
             status = "✅" if check["passed"] else "❌"
-            print(f"  {status} {check['name']}: {check['message']}")
+            logger.info(f"  {status} {check['name']}: {check['message']}")
         
         if not checks["ready_to_deploy"]:
-            print("\n❌ Pre-deployment checks failed. Aborting deployment.")
+            logger.error("\n❌ Pre-deployment checks failed. Aborting deployment.")
             return
         
         # Step 2: Create deployment plan
         plan = await workflow.create_deployment_plan("production")
         
         if "error" in plan:
-            print(f"\n❌ Failed to create deployment plan: {plan['error']}")
+            logger.error(f"\n❌ Failed to create deployment plan: {plan['error']}")
             return
         
-        print("\n📋 Deployment plan created successfully")
+        logger.info("\n📋 Deployment plan created successfully")
         
         # Step 3: Execute deployment
         deployment_result = await workflow.execute_deployment(plan)
         
-        print("\n📊 Deployment results:")
+        logger.info("\n📊 Deployment results:")
         for step in deployment_result["steps"]:
             status = "✅" if step["status"] == "success" else "❌"
-            print(f"  {status} {step['name']}: {step['message']}")
+            logger.info(f"  {status} {step['name']}: {step['message']}")
         
         if not deployment_result["success"]:
-            print("\n❌ Deployment failed!")
+            logger.error("\n❌ Deployment failed!")
             return
         
         # Step 4: Post-deployment validation
         validation = await workflow.post_deployment_validation()
         
-        print("\n📊 Post-deployment validation:")
+        logger.info("\n📊 Post-deployment validation:")
         for val in validation["validations"]:
             status = "✅" if val["passed"] else "❌"
-            print(f"  {status} {val['check']}: {val['details']}")
+            logger.info(f"  {status} {val['check']}: {val['details']}")
         
         if validation["deployment_successful"]:
-            print("\n✅ Deployment completed successfully!")
+            logger.info("\n✅ Deployment completed successfully!")
         else:
-            print("\n⚠️  Deployment completed with warnings. Please check the validation results.")
+            logger.warning("\n⚠️  Deployment completed with warnings. Please check the validation results.")
         
         # Save deployment report
         report = {
@@ -371,10 +371,10 @@ async def main():
         with open(report_path, 'w') as f:
             json.dump(report, f, indent=2)
         
-        print(f"\n📄 Deployment report saved to: {report_path}")
+        logger.info(f"\n📄 Deployment report saved to: {report_path}")
         
     except Exception as e:
-        print(f"\n❌ Deployment workflow error: {e}")
+        logger.error(f"\n❌ Deployment workflow error: {e}")
     
     finally:
         await workflow.close()

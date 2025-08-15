@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import logging
+
+logger = logging.getLogger(__name__)
 import sys
 from pathlib import Path
 import hashlib
@@ -43,7 +46,7 @@ def unique_blocks(blocks):
 def main():
     src_path = Path(sys.argv[1]) if len(sys.argv) > 1 else SRC
     if not src_path.exists():
-        print(f"Source not found: {src_path}")
+        logger.info(f"Source not found: {src_path}")
         sys.exit(1)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -51,7 +54,7 @@ def main():
     content = src_path.read_text(encoding="utf-8", errors="ignore")
     blocks = split_blocks(content)
     if not blocks:
-        print("No blocks detected with marker '/docker/'.")
+        logger.info("No blocks detected with marker '/docker/'.")
         sys.exit(2)
 
     uniq = unique_blocks(blocks)
@@ -88,11 +91,11 @@ def main():
             final_parts.append(path.read_text(encoding="utf-8"))
         FINAL.write_text("\n".join(toc) + "\n" + "".join(final_parts), encoding="utf-8")
 
-    print("Created:")
+    logger.info("Created:")
     for title, path in written:
-        print(f"- {title}: {path}")
+        logger.info(f"- {title}: {path}")
     if written:
-        print(f"- Consolidated: {FINAL}")
+        logger.info(f"- Consolidated: {FINAL}")
 
 if __name__ == "__main__":
     main()

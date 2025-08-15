@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 🔧 Professional Codebase Rule Enforcement Validator
 Comprehensive validation system for all 20 Fundamental Rules + Core Principles
 
@@ -41,7 +44,7 @@ class RuleEnforcer:
         
     def validate_all_rules(self) -> Dict[str, Any]:
         """Execute all rule validations and return comprehensive report"""
-        print("🔧 Starting Professional Codebase Rule Validation...")
+        logger.info("🔧 Starting Professional Codebase Rule Validation...")
         
         # Rule 1: Real Implementation Only - No Fantasy Code
         self._validate_rule_01_real_implementation()
@@ -107,7 +110,7 @@ class RuleEnforcer:
     
     def _validate_rule_01_real_implementation(self):
         """Rule 1: Real Implementation Only - No Fantasy Code"""
-        print("📌 Validating Rule 1: Real Implementation Only...")
+        logger.info("📌 Validating Rule 1: Real Implementation Only...")
         
         # Check for fantasy/placeholder code
         fantasy_patterns = [
@@ -129,7 +132,7 @@ class RuleEnforcer:
     
     def _validate_rule_02_no_breaking_changes(self):
         """Rule 2: Never Break Existing Functionality"""
-        print("📌 Validating Rule 2: Never Break Existing Functionality...")
+        logger.info("📌 Validating Rule 2: Never Break Existing Functionality...")
         
         # Check for potential breaking changes
         breaking_patterns = [
@@ -149,7 +152,7 @@ class RuleEnforcer:
     
     def _validate_rule_05_professional_standards(self):
         """Rule 5: Professional Project Standards"""
-        print("📌 Validating Rule 5: Professional Project Standards...")
+        logger.info("📌 Validating Rule 5: Professional Project Standards...")
         
         # Count test files
         test_files = list(self.root.rglob("test_*.py")) + list(self.root.rglob("*_test.py"))
@@ -167,7 +170,7 @@ class RuleEnforcer:
     
     def _validate_rule_07_script_organization(self):
         """Rule 7: Script Organization & Control"""
-        print("📌 Validating Rule 7: Script Organization...")
+        logger.info("📌 Validating Rule 7: Script Organization...")
         
         # Check for scattered scripts
         scripts_dir = self.root / "scripts"
@@ -181,7 +184,7 @@ class RuleEnforcer:
     
     def _validate_rule_11_docker_excellence(self):
         """Rule 11: Docker Excellence"""
-        print("📌 Validating Rule 11: Docker Excellence...")
+        logger.info("📌 Validating Rule 11: Docker Excellence...")
         
         # Check for non-root users in Dockerfiles
         dockerfiles = list(self.root.rglob("Dockerfile*"))
@@ -200,7 +203,7 @@ class RuleEnforcer:
     
     def _validate_rule_13_no_waste(self):
         """Rule 13: Zero Tolerance for Waste"""
-        print("📌 Validating Rule 13: Zero Tolerance for Waste...")
+        logger.info("📌 Validating Rule 13: Zero Tolerance for Waste...")
         
         # Check for TODO/FIXME markers
         waste_patterns = [
@@ -217,7 +220,7 @@ class RuleEnforcer:
     
     def _validate_rule_20_mcp_protection(self):
         """Rule 20: MCP Server Protection"""
-        print("📌 Validating Rule 20: MCP Server Protection...")
+        logger.info("📌 Validating Rule 20: MCP Server Protection...")
         
         mcp_json = self.root / ".mcp.json"
         if mcp_json.exists():
@@ -256,7 +259,7 @@ class RuleEnforcer:
                                 severity, remediation
                             ))
         except Exception as e:
-            print(f"Warning: Could not scan for pattern {pattern}: {e}")
+            logger.warning(f"Warning: Could not scan for pattern {pattern}: {e}")
     
     def _generate_compliance_report(self) -> Dict[str, Any]:
         """Generate comprehensive compliance report"""
@@ -321,23 +324,23 @@ def main():
     report = enforcer.validate_all_rules()
     
     if args.summary:
-        print(f"\n🔧 RULE ENFORCEMENT SUMMARY")
-        print(f"{'='*50}")
-        print(f"Total Violations: {report['total_violations']}")
-        print(f"Compliance Score: {report['compliance_score']:.1f}%")
-        print(f"Status: {report['summary']}")
+        logger.info(f"\n🔧 RULE ENFORCEMENT SUMMARY")
+        logger.info(f"{'='*50}")
+        logger.info(f"Total Violations: {report['total_violations']}")
+        logger.info(f"Compliance Score: {report['compliance_score']:.1f}%")
+        logger.info(f"Status: {report['summary']}")
         
         if report['violations_by_severity']:
-            print(f"\nViolations by Severity:")
+            logger.info(f"\nViolations by Severity:")
             for severity, count in sorted(report['violations_by_severity'].items()):
-                print(f"  {severity}: {count}")
+                logger.info(f"  {severity}: {count}")
     else:
-        print(json.dumps(report, indent=2))
+        logger.info(json.dumps(report, indent=2))
     
     if args.output:
         with open(args.output, 'w') as f:
             json.dump(report, f, indent=2)
-        print(f"📄 Report saved to {args.output}")
+        logger.info(f"📄 Report saved to {args.output}")
     
     # Exit with appropriate code
     critical = report["violations_by_severity"].get("CRITICAL", 0)

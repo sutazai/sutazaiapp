@@ -41,13 +41,13 @@ def test_path_traversal_protection():
     
     results = {}
     
-    print("🔍 CORRECTED Security Test - Path Traversal Protection")
-    print("=" * 60)
+    logger.info("🔍 CORRECTED Security Test - Path Traversal Protection")
+    logger.info("=" * 60)
     
     for endpoint in endpoints:
         results[endpoint] = {"blocked": 0, "allowed": 0, "total": len(payloads)}
         
-        print(f"\nTesting {endpoint}:")
+        logger.info(f"\nTesting {endpoint}:")
         
         for payload in payloads:
             try:
@@ -95,15 +95,15 @@ def test_path_traversal_protection():
                     results[endpoint]["allowed"] += 1
                     status = "❌ ALLOWED"
                 
-                print(f"  {payload:<40} {status:<12} {reason}")
+                logger.info(f"  {payload:<40} {status:<12} {reason}")
                 
             except Exception as e:
-                print(f"  {payload:<40} {'⚠️  ERROR':<12} {str(e)}")
+                logger.error(f"  {payload:<40} {'⚠️  ERROR':<12} {str(e)}")
     
     # Summary
-    print("\n" + "=" * 60)
-    print("🎯 SECURITY TEST SUMMARY")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("🎯 SECURITY TEST SUMMARY")
+    logger.info("=" * 60)
     
     overall_blocked = 0
     overall_total = 0
@@ -119,21 +119,21 @@ def test_path_traversal_protection():
         
         status_icon = "✅" if block_rate == 100 else "❌" if block_rate == 0 else "⚠️"
         
-        print(f"{status_icon} {endpoint:<35} {blocked:>2}/{total:<2} blocked ({block_rate:>5.1f}%)")
+        logger.info(f"{status_icon} {endpoint:<35} {blocked:>2}/{total:<2} blocked ({block_rate:>5.1f}%)")
     
     overall_rate = (overall_blocked / overall_total * 100) if overall_total > 0 else 0
     
-    print("-" * 60)
-    print(f"📊 OVERALL SECURITY: {overall_blocked}/{overall_total} blocked ({overall_rate:.1f}%)")
+    logger.info("-" * 60)
+    logger.info(f"📊 OVERALL SECURITY: {overall_blocked}/{overall_total} blocked ({overall_rate:.1f}%)")
     
     if overall_rate == 100:
-        print("🟢 SECURITY STATUS: EXCELLENT - All attacks blocked")
+        logger.info("🟢 SECURITY STATUS: EXCELLENT - All attacks blocked")
         return True
     elif overall_rate >= 80:
-        print("🟡 SECURITY STATUS: GOOD - Most attacks blocked") 
+        logger.info("🟡 SECURITY STATUS: GOOD - Most attacks blocked") 
         return False
     else:
-        print("🔴 SECURITY STATUS: CRITICAL - Many attacks succeed")
+        logger.error("🔴 SECURITY STATUS: CRITICAL - Many attacks succeed")
         return False
 
 def main():

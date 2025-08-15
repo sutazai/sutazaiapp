@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Comprehensive Test Suite for Enhanced Health Monitoring System
 Tests all components of the ultra-enhanced health monitoring with circuit breakers
 """
@@ -52,9 +55,9 @@ class HealthMonitoringTestSuite:
             "timestamp": time.time()
         }
         self.test_results.append(result)
-        print(f"{status}: {test_name}")
+        logger.info(f"{status}: {test_name}")
         if details and not passed:
-            print(f"   Details: {details}")
+            logger.info(f"   Details: {details}")
     
     async def test_circuit_breaker_basic_functionality(self):
         """Test basic circuit breaker functionality"""
@@ -371,8 +374,8 @@ class HealthMonitoringTestSuite:
     
     async def run_all_tests(self):
         """Run all tests"""
-        print("🚀 Starting Enhanced Health Monitoring System Test Suite")
-        print("=" * 70)
+        logger.info("🚀 Starting Enhanced Health Monitoring System Test Suite")
+        logger.info("=" * 70)
         
         test_methods = [
             self.test_circuit_breaker_basic_functionality,
@@ -397,20 +400,20 @@ class HealthMonitoringTestSuite:
         end_time = time.time()
         total_time = end_time - start_time
         
-        print("=" * 70)
-        print(f"🏁 Test Suite Completed in {total_time:.2f}s")
-        print(f"📊 Results: {self.passed_tests}/{self.total_tests} tests passed")
+        logger.info("=" * 70)
+        logger.info(f"🏁 Test Suite Completed in {total_time:.2f}s")
+        logger.info(f"📊 Results: {self.passed_tests}/{self.total_tests} tests passed")
         
         if self.failed_tests > 0:
-            print(f"❌ {self.failed_tests} tests failed")
-            print("\n🔍 Failed Test Details:")
+            logger.error(f"❌ {self.failed_tests} tests failed")
+            logger.error("\n🔍 Failed Test Details:")
             for result in self.test_results:
                 if not result['passed']:
-                    print(f"   • {result['test']}: {result['details']}")
+                    logger.info(f"   • {result['test']}: {result['details']}")
         else:
-            print("🎉 All tests passed!")
+            logger.info("🎉 All tests passed!")
         
-        print(f"\n📈 Success Rate: {(self.passed_tests/self.total_tests)*100:.1f}%")
+        logger.info(f"\n📈 Success Rate: {(self.passed_tests/self.total_tests)*100:.1f}%")
         
         # Save detailed results
         results_file = "/opt/sutazaiapp/backend/health_monitoring_test_results.json"
@@ -426,7 +429,7 @@ class HealthMonitoringTestSuite:
                 "detailed_results": self.test_results
             }, f, indent=2)
         
-        print(f"📄 Detailed results saved to: {results_file}")
+        logger.info(f"📄 Detailed results saved to: {results_file}")
         
         return self.failed_tests == 0
 
@@ -437,10 +440,10 @@ async def main():
     success = await test_suite.run_all_tests()
     
     if success:
-        print("\n✅ OVERALL: Enhanced Health Monitoring System is ready for production!")
+        logger.info("\n✅ OVERALL: Enhanced Health Monitoring System is ready for production!")
         exit(0)
     else:
-        print("\n❌ OVERALL: Some tests failed - system needs attention before production use")
+        logger.error("\n❌ OVERALL: Some tests failed - system needs attention before production use")
         exit(1)
 
 

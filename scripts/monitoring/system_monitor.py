@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+
+logger = logging.getLogger(__name__)
 System Monitor for SutazAI
 ==========================
 
@@ -574,7 +576,7 @@ if __name__ == "__main__":
     if args.quick:
         # Quick check mode
         result = quick_system_check()
-        print(json.dumps(result, indent=2))
+        logger.info(json.dumps(result, indent=2))
         sys.exit(0)
     
     # Create monitor
@@ -608,4 +610,4 @@ if __name__ == "__main__":
     else:
         # Interactive mode
         overview = monitor.get_system_overview()
-        print(json.dumps(overview, indent=2))
+        logger.info(json.dumps(overview, indent=2))

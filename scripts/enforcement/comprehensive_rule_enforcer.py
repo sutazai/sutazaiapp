@@ -1326,42 +1326,42 @@ def main():
     
     # Display results
     if args.summary:
-        print("\n" + "="*80)
-        print("🔧 SUPREME VALIDATOR - RULE ENFORCEMENT SUMMARY")
-        print("="*80)
-        print(f"Timestamp: {report['timestamp']}")
-        print(f"Execution Time: {report['execution_time_seconds']}s")
-        print(f"Total Violations: {report['total_violations']}")
-        print(f"Compliance Score: {report['compliance_score']}%")
-        print(f"Status: {report['status']}")
-        print(f"Summary: {report['summary']}")
+        logger.info("\n" + "="*80)
+        logger.info("🔧 SUPREME VALIDATOR - RULE ENFORCEMENT SUMMARY")
+        logger.info("="*80)
+        logger.info(f"Timestamp: {report['timestamp']}")
+        logger.info(f"Execution Time: {report['execution_time_seconds']}s")
+        logger.info(f"Total Violations: {report['total_violations']}")
+        logger.info(f"Compliance Score: {report['compliance_score']}%")
+        logger.info(f"Status: {report['status']}")
+        logger.info(f"Summary: {report['summary']}")
         
         if report["violations_by_severity"]:
-            print("\nViolations by Severity:")
+            logger.info("\nViolations by Severity:")
             for severity in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
                 count = report["violations_by_severity"].get(severity, 0)
                 if count > 0:
-                    print(f"  {severity}: {count}")
+                    logger.info(f"  {severity}: {count}")
         
         if report["violations_by_rule"]:
-            print("\nViolations by Rule:")
+            logger.info("\nViolations by Rule:")
             for rule in sorted(report["violations_by_rule"].keys()):
                 count = report["violations_by_rule"][rule]
-                print(f"  Rule {rule}: {count} violations")
+                logger.info(f"  Rule {rule}: {count} violations")
         
         if report["recommendations"]:
-            print("\nRecommendations:")
+            logger.info("\nRecommendations:")
             for rec in report["recommendations"]:
-                print(f"  • {rec}")
+                logger.info(f"  • {rec}")
     else:
         # Full report
-        print(json.dumps(report, indent=2, default=str))
+        logger.info(json.dumps(report, indent=2, default=str))
     
     # Save report if requested
     if args.output:
         with open(args.output, 'w') as f:
             json.dump(report, f, indent=2, default=str)
-        print(f"\n📄 Report saved to {args.output}")
+        logger.info(f"\n📄 Report saved to {args.output}")
     
     # Exit with appropriate code
     if report["status"] == "CRITICAL":

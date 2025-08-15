@@ -437,7 +437,7 @@ async def main():
         target_speedup=3.0
     )
     
-    print(json.dumps(result, indent=2))
+    logger.info(json.dumps(result, indent=2))
 
 
 if __name__ == "__main__":

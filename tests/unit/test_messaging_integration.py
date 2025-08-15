@@ -231,9 +231,9 @@ class MessagingIntegrationTest:
     
     async def run_all_tests(self):
         """Run all integration tests"""
-        print("\n" + "="*50)
-        print("RabbitMQ Messaging Integration Tests")
-        print("="*50 + "\n")
+        logger.info("\n" + "="*50)
+        logger.info("RabbitMQ Messaging Integration Tests")
+        logger.info("="*50 + "\n")
         
         # Run tests
         await self.test_connection()
@@ -243,26 +243,26 @@ class MessagingIntegrationTest:
         await self.test_heartbeat()
         
         # Print results
-        print("\nTest Results:")
-        print("-" * 50)
+        logger.info("\nTest Results:")
+        logger.info("-" * 50)
         
         passed = 0
         failed = 0
         
         for result in self.test_results:
             status = "✅ PASSED" if result["passed"] else "❌ FAILED"
-            print(f"{status}: {result['test']}")
+            logger.info(f"{status}: {result['test']}")
             if result["details"]:
-                print(f"   Details: {result['details']}")
+                logger.info(f"   Details: {result['details']}")
             
             if result["passed"]:
                 passed += 1
             else:
                 failed += 1
         
-        print("-" * 50)
-        print(f"\nSummary: {passed} passed, {failed} failed")
-        print("="*50 + "\n")
+        logger.info("-" * 50)
+        logger.error(f"\nSummary: {passed} passed, {failed} failed")
+        logger.info("="*50 + "\n")
         
         return failed == 0
 

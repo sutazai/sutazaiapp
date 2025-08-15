@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Simple Code Review Workflow
 A practical example of using SutazAI for automated code review
 """
@@ -23,7 +26,7 @@ class CodeReviewWorkflow:
     
     async def review_file(self, file_path: str) -> Dict[str, Any]:
         """Review a single code file"""
-        print(f"📄 Reviewing: {file_path}")
+        logger.info(f"📄 Reviewing: {file_path}")
         
         # Read the file
         try:
@@ -62,7 +65,7 @@ class CodeReviewWorkflow:
     
     async def review_directory(self, directory: str, extensions: List[str] = [".py"]) -> Dict[str, Any]:
         """Review all code files in a directory"""
-        print(f"📁 Reviewing directory: {directory}")
+        logger.info(f"📁 Reviewing directory: {directory}")
         
         # Find all matching files
         path = Path(directory)
@@ -70,7 +73,7 @@ class CodeReviewWorkflow:
         for ext in extensions:
             files.extend(path.rglob(f"*{ext}"))
         
-        print(f"Found {len(files)} files to review")
+        logger.info(f"Found {len(files)} files to review")
         
         # Review each file
         results = []
@@ -150,7 +153,7 @@ async def main():
     # Review a specific directory
     directory = "./backend/app"  # Change this to your target directory
     
-    print("🚀 Starting code review workflow...")
+    logger.info("🚀 Starting code review workflow...")
     
     try:
         # Perform review
@@ -164,14 +167,14 @@ async def main():
         with open(report_path, 'w') as f:
             f.write(report)
         
-        print(f"\n✅ Review complete! Report saved to: {report_path}")
+        logger.info(f"\n✅ Review complete! Report saved to: {report_path}")
         
         # Print summary
-        print("\n📊 Summary:")
-        print(f"- Files reviewed: {results['files_reviewed']}")
+        logger.info("\n📊 Summary:")
+        logger.info(f"- Files reviewed: {results['files_reviewed']}")
         
     except Exception as e:
-        print(f"❌ Error: {e}")
+        logger.error(f"❌ Error: {e}")
     
     finally:
         await workflow.close()

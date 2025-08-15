@@ -1403,27 +1403,27 @@ async def run_comprehensive_tests():
     suite = SutazAITestSuite()
     report = await suite.run_comprehensive_test_suite()
     
-    print("\n" + "="*80)
-    print("SUTAZAI COMPREHENSIVE TEST SUITE RESULTS")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("SUTAZAI COMPREHENSIVE TEST SUITE RESULTS")
+    logger.info("="*80)
     
     summary = report["test_execution_summary"]
-    print(f"Status: {summary['status']}")
-    print(f"Tests: {summary['passed_tests']}/{summary['total_tests']} passed ({summary['success_rate']:.1f}%)")
-    print(f"Execution Time: {summary['total_execution_time']:.2f} seconds")
-    print(f"Health Score: {report['system_health_score']['score']:.1f}% ({report['system_health_score']['level']})")
+    logger.info(f"Status: {summary['status']}")
+    logger.info(f"Tests: {summary['passed_tests']}/{summary['total_tests']} passed ({summary['success_rate']:.1f}%)")
+    logger.info(f"Execution Time: {summary['total_execution_time']:.2f} seconds")
+    logger.info(f"Health Score: {report['system_health_score']['score']:.1f}% ({report['system_health_score']['level']})")
     
-    print(f"\nCategory Results:")
+    logger.info(f"\nCategory Results:")
     for category, stats in report["test_categories"].items():
         status_icon = "✅" if stats["status"] == "PASSED" else "❌"
-        print(f"  {status_icon} {category}: {stats['passed']}/{stats['total']} ({stats['success_rate']:.1f}%)")
+        logger.info(f"  {status_icon} {category}: {stats['passed']}/{stats['total']} ({stats['success_rate']:.1f}%)")
     
     if report["recommendations"]:
-        print(f"\nRecommendations:")
+        logger.info(f"\nRecommendations:")
         for rec in report["recommendations"]:
-            print(f"  • {rec}")
+            logger.info(f"  • {rec}")
     
-    print("="*80)
+    logger.info("="*80)
     
     return report
 

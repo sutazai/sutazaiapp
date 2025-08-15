@@ -594,13 +594,13 @@ async def main():
             
     # Get summary
     summary = aggregator.get_aggregation_summary()
-    print("Aggregation Summary:")
-    print(json.dumps(summary, indent=2, default=str))
+    logger.info("Aggregation Summary:")
+    logger.info(json.dumps(summary, indent=2, default=str))
     
     # Get error analysis
     errors = aggregator.get_error_analysis()
-    print("\nError Analysis:")
-    print(json.dumps(errors, indent=2))
+    logger.error("\nError Analysis:")
+    logger.error(json.dumps(errors, indent=2))
     
     # Cleanup
     await aggregator.cleanup()

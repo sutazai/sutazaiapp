@@ -739,29 +739,29 @@ def main():
         report = asyncio.run(tester.run_all_tests())
         
         # Print summary
-        print("\n" + "="*80)
-        print("SUTAZAI PRODUCTION LOAD TESTING REPORT SUMMARY")
-        print("="*80)
-        print(f"Total Tests: {report['summary']['total_tests']}")
-        print(f"Total Requests: {report['summary']['total_requests']:,}")
-        print(f"Success Rate: {report['summary']['overall_success_rate']:.2f}%")
-        print(f"Error Rate: {report['summary']['overall_error_rate']:.2f}%")
-        print(f"\nProduction Capacity Estimation:")
-        print(f"  Max RPS: {report['production_capacity']['current_max_rps']:.1f}")
-        print(f"  Recommended Max Users: {report['production_capacity']['recommended_max_concurrent_users']:,}")
-        print(f"  Daily Capacity: {report['production_capacity']['estimated_daily_capacity']:,} requests")
+        logger.info("\n" + "="*80)
+        logger.info("SUTAZAI PRODUCTION LOAD TESTING REPORT SUMMARY")
+        logger.info("="*80)
+        logger.info(f"Total Tests: {report['summary']['total_tests']}")
+        logger.info(f"Total Requests: {report['summary']['total_requests']:,}")
+        logger.info(f"Success Rate: {report['summary']['overall_success_rate']:.2f}%")
+        logger.error(f"Error Rate: {report['summary']['overall_error_rate']:.2f}%")
+        logger.info(f"\nProduction Capacity Estimation:")
+        logger.info(f"  Max RPS: {report['production_capacity']['current_max_rps']:.1f}")
+        logger.info(f"  Recommended Max Users: {report['production_capacity']['recommended_max_concurrent_users']:,}")
+        logger.info(f"  Daily Capacity: {report['production_capacity']['estimated_daily_capacity']:,} requests")
         
         if report['breaking_points']:
-            print(f"\nBreaking Points Detected: {len(report['breaking_points'])}")
+            logger.info(f"\nBreaking Points Detected: {len(report['breaking_points'])}")
             for bp in report['breaking_points']:
-                print(f"  - {bp['test']}: {bp['error_rate']:.2f}% error rate")
+                logger.error(f"  - {bp['test']}: {bp['error_rate']:.2f}% error rate")
         
         if report['recommendations']:
-            print(f"\nRecommendations: {len(report['recommendations'])}")
+            logger.info(f"\nRecommendations: {len(report['recommendations'])}")
             for rec in report['recommendations'][:3]:  # Show top 3
-                print(f"  - {rec['category']} ({rec['severity']}): {rec['issue']}")
+                logger.info(f"  - {rec['category']} ({rec['severity']}): {rec['issue']}")
         
-        print("\n" + "="*80)
+        logger.info("\n" + "="*80)
         
         return 0 if report['summary']['overall_error_rate'] < 5.0 else 1
         

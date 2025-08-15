@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+
+logger = logging.getLogger(__name__)
 Verify that all exception handling in the codebase follows best practices.
 This script checks for various exception handling anti-patterns.
 """
@@ -184,32 +186,32 @@ class ExceptionHandlingVerifier:
 
 def main():
     """Main verification function."""
-    print("=" * 60)
-    print("EXCEPTION HANDLING VERIFICATION")
-    print("=" * 60)
+    logger.info("=" * 60)
+    logger.error("EXCEPTION HANDLING VERIFICATION")
+    logger.info("=" * 60)
     
     verifier = ExceptionHandlingVerifier()
     results = verifier.verify_codebase()
     
     # Print results
-    print(f"\nVerification Status: {results['status']}")
-    print(f"Message: {results['message']}")
+    logger.info(f"\nVerification Status: {results['status']}")
+    logger.info(f"Message: {results['message']}")
     
-    print("\n📊 Summary:")
+    logger.info("\n📊 Summary:")
     for key, value in results['summary'].items():
-        print(f"  {key}: {value}")
+        logger.info(f"  {key}: {value}")
     
     if results['critical_issues']:
-        print("\n⚠️  Critical Issues Found:")
+        logger.error("\n⚠️  Critical Issues Found:")
         for issue in results['critical_issues'][:5]:  # Show first 5
-            print(f"  - {issue['file']}:{issue['line']} - {issue['issue']}")
+            logger.info(f"  - {issue['file']}:{issue['line']} - {issue['issue']}")
         if len(results['critical_issues']) > 5:
-            print(f"  ... and {len(results['critical_issues']) - 5} more")
+            logger.error(f"  ... and {len(results['critical_issues']) - 5} more")
     
     if results['recommendations']:
-        print("\n💡 Recommendations:")
+        logger.info("\n💡 Recommendations:")
         for rec in results['recommendations']:
-            print(f"  - {rec}")
+            logger.info(f"  - {rec}")
     
     # Save detailed report
     report_path = '/opt/sutazaiapp/reports/exception_handling_verification.json'
@@ -218,7 +220,7 @@ def main():
     with open(report_path, 'w') as f:
         json.dump(results, f, indent=2, default=str)
     
-    print(f"\n✅ Detailed report saved to: {report_path}")
+    logger.info(f"\n✅ Detailed report saved to: {report_path}")
     
     return 0 if results['status'] == 'PASSED' else 1
 

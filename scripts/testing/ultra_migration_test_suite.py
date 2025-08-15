@@ -108,7 +108,7 @@ class UltraMigrationTester:
 
     def cleanup_test_containers(self):
         """Clean up any existing test containers"""
-        print("\n🧹 Cleaning up existing test containers...")
+        logger.info("\n🧹 Cleaning up existing test containers...")
         for service_name, config in self.services.items():
             container_name = config['container_name']
             image_name = config['image_name']
@@ -122,7 +122,7 @@ class UltraMigrationTester:
 
     def test_docker_build(self, service_name: str, config: Dict) -> Dict:
         """Test Docker build for a service"""
-        print(f"\n🔨 Testing Docker build for {service_name}...")
+        logger.info(f"\n🔨 Testing Docker build for {service_name}...")
         
         result = {
             'build_successful': False,
@@ -153,17 +153,17 @@ class UltraMigrationTester:
         result['build_errors'] = stderr
         
         if success:
-            print(f"✅ Build successful for {service_name} ({build_time:.1f}s)")
+            logger.info(f"✅ Build successful for {service_name} ({build_time:.1f}s)")
             self.results['summary']['builds_successful'] += 1
         else:
-            print(f"❌ Build failed for {service_name}")
-            print(f"Error: {stderr}")
+            logger.error(f"❌ Build failed for {service_name}")
+            logger.error(f"Error: {stderr}")
         
         return result
 
     def test_container_startup(self, service_name: str, config: Dict) -> Dict:
         """Test container startup"""
-        print(f"\n🚀 Testing container startup for {service_name}...")
+        logger.info(f"\n🚀 Testing container startup for {service_name}...")
         
         result = {
             'startup_successful': False,
@@ -204,10 +204,10 @@ class UltraMigrationTester:
             success, logs, _ = self.run_command(logs_cmd)
             result['startup_logs'] = logs
             
-            print(f"✅ Container startup successful for {service_name} ({startup_time:.1f}s)")
+            logger.info(f"✅ Container startup successful for {service_name} ({startup_time:.1f}s)")
             self.results['summary']['startups_successful'] += 1
         else:
-            print(f"❌ Container startup failed for {service_name}")
+            logger.error(f"❌ Container startup failed for {service_name}")
             # Get logs for debugging
             logs_cmd = f"docker logs {container_name}"
             success, logs, _ = self.run_command(logs_cmd)
@@ -217,7 +217,7 @@ class UltraMigrationTester:
 
     def test_health_endpoint(self, service_name: str, config: Dict) -> Dict:
         """Test health endpoint"""
-        print(f"\n🏥 Testing health endpoint for {service_name}...")
+        logger.info(f"\n🏥 Testing health endpoint for {service_name}...")
         
         result = {
             'health_check_passed': False,
@@ -244,20 +244,20 @@ class UltraMigrationTester:
             
             if response.status_code == 200:
                 result['health_check_passed'] = True
-                print(f"✅ Health check passed for {service_name} ({response_time:.1f}ms)")
+                logger.info(f"✅ Health check passed for {service_name} ({response_time:.1f}ms)")
                 self.results['summary']['health_checks_passed'] += 1
             else:
-                print(f"❌ Health check failed for {service_name} - Status: {response.status_code}")
+                logger.error(f"❌ Health check failed for {service_name} - Status: {response.status_code}")
                 
         except Exception as e:
             result['health_errors'] = str(e)
-            print(f"❌ Health check error for {service_name}: {e}")
+            logger.error(f"❌ Health check error for {service_name}: {e}")
         
         return result
 
     def test_non_root_user(self, service_name: str, config: Dict) -> Dict:
         """Test that container is running as non-root user"""
-        print(f"\n👤 Testing non-root user for {service_name}...")
+        logger.info(f"\n👤 Testing non-root user for {service_name}...")
         
         result = {
             'user_validation_passed': False,
@@ -287,21 +287,21 @@ class UltraMigrationTester:
                 # Validate non-root (user should be 'appuser' and ID should not be 0)
                 if current_user == 'appuser' and user_id != '0':
                     result['user_validation_passed'] = True
-                    print(f"✅ Non-root user validation passed for {service_name} (user: {current_user}, id: {user_id})")
+                    logger.info(f"✅ Non-root user validation passed for {service_name} (user: {current_user}, id: {user_id})")
                     self.results['summary']['user_validations_passed'] += 1
                 else:
-                    print(f"❌ Non-root user validation failed for {service_name} (user: {current_user}, id: {user_id})")
+                    logger.error(f"❌ Non-root user validation failed for {service_name} (user: {current_user}, id: {user_id})")
             else:
                 result['user_errors'] = stderr
         else:
             result['user_errors'] = stderr
-            print(f"❌ User validation error for {service_name}: {stderr}")
+            logger.error(f"❌ User validation error for {service_name}: {stderr}")
         
         return result
 
     def test_python_version(self, service_name: str, config: Dict) -> Dict:
         """Test Python version"""
-        print(f"\n🐍 Testing Python version for {service_name}...")
+        logger.info(f"\n🐍 Testing Python version for {service_name}...")
         
         result = {
             'python_validation_passed': False,
@@ -322,19 +322,19 @@ class UltraMigrationTester:
             # Validate Python 3.12.8
             if '3.12.8' in python_version:
                 result['python_validation_passed'] = True
-                print(f"✅ Python version validation passed for {service_name} ({python_version})")
+                logger.info(f"✅ Python version validation passed for {service_name} ({python_version})")
                 self.results['summary']['python_validations_passed'] += 1
             else:
-                print(f"❌ Python version validation failed for {service_name} ({python_version})")
+                logger.error(f"❌ Python version validation failed for {service_name} ({python_version})")
         else:
             result['python_errors'] = stderr
-            print(f"❌ Python version error for {service_name}: {stderr}")
+            logger.error(f"❌ Python version error for {service_name}: {stderr}")
         
         return result
 
     def test_service_functionality(self, service_name: str, config: Dict) -> Dict:
         """Test basic service functionality"""
-        print(f"\n⚙️ Testing service functionality for {service_name}...")
+        logger.info(f"\n⚙️ Testing service functionality for {service_name}...")
         
         result = {
             'functionality_test_passed': False,
@@ -364,18 +364,18 @@ class UltraMigrationTester:
         
         if len(working_endpoints) > 0:
             result['functionality_test_passed'] = True
-            print(f"✅ Functionality test passed for {service_name} - Working endpoints: {working_endpoints}")
+            logger.info(f"✅ Functionality test passed for {service_name} - Working endpoints: {working_endpoints}")
             self.results['summary']['functionality_tests_passed'] += 1
         else:
-            print(f"❌ Functionality test failed for {service_name} - No responsive endpoints")
+            logger.error(f"❌ Functionality test failed for {service_name} - No responsive endpoints")
         
         return result
 
     def run_comprehensive_test(self, service_name: str) -> Dict:
         """Run comprehensive test for a single service"""
-        print(f"\n{'='*60}")
-        print(f"🧪 COMPREHENSIVE TEST: {service_name.upper()}")
-        print(f"{'='*60}")
+        logger.info(f"\n{'='*60}")
+        logger.info(f"🧪 COMPREHENSIVE TEST: {service_name.upper()}")
+        logger.info(f"{'='*60}")
         
         config = self.services[service_name]
         service_results = {
@@ -406,18 +406,18 @@ class UltraMigrationTester:
                 # Test 6: Service Functionality
                 service_results['functionality_test'] = self.test_service_functionality(service_name, config)
             else:
-                print(f"⚠️ Skipping remaining tests for {service_name} due to startup failure")
+                logger.info(f"⚠️ Skipping remaining tests for {service_name} due to startup failure")
         else:
-            print(f"⚠️ Skipping all tests for {service_name} due to build failure")
+            logger.info(f"⚠️ Skipping all tests for {service_name} due to build failure")
         
         service_results['test_end_time'] = datetime.datetime.now().isoformat()
         return service_results
 
     def run_all_tests(self) -> Dict:
         """Run tests for all services"""
-        print("🚀 STARTING ULTRA MIGRATION TEST SUITE")
-        print(f"📊 Testing {len(self.services)} services")
-        print(f"⏰ Started at: {self.results['timestamp']}")
+        logger.info("🚀 STARTING ULTRA MIGRATION TEST SUITE")
+        logger.info(f"📊 Testing {len(self.services)} services")
+        logger.info(f"⏰ Started at: {self.results['timestamp']}")
         
         # Cleanup existing test containers
         self.cleanup_test_containers()
@@ -434,7 +434,7 @@ class UltraMigrationTester:
                 self.run_command(f"docker rm {container_name} 2>/dev/null || true")
                 
             except Exception as e:
-                print(f"❌ Critical error testing {service_name}: {e}")
+                logger.error(f"❌ Critical error testing {service_name}: {e}")
                 self.results['test_results'][service_name] = {
                     'critical_error': str(e),
                     'test_completed': False
@@ -554,25 +554,25 @@ def main():
             f.write(report)
         
         # Display results
-        print(report)
-        print(f"\n📊 Full results saved to: {json_file}")
-        print(f"📋 Report saved to: {report_file}")
+        logger.info(report)
+        logger.info(f"\n📊 Full results saved to: {json_file}")
+        logger.info(f"📋 Report saved to: {report_file}")
         
         # Exit with appropriate code
         summary = results['summary']
         if summary['builds_successful'] == len(tester.services):
-            print("\n🎉 ALL SERVICES PASSED MIGRATION TESTING!")
+            logger.info("\n🎉 ALL SERVICES PASSED MIGRATION TESTING!")
             sys.exit(0)
         else:
-            print("\n⚠️ SOME SERVICES FAILED MIGRATION TESTING!")
+            logger.error("\n⚠️ SOME SERVICES FAILED MIGRATION TESTING!")
             sys.exit(1)
             
     except KeyboardInterrupt:
-        print("\n⚠️ Test interrupted by user")
+        logger.info("\n⚠️ Test interrupted by user")
         tester.cleanup_test_containers()
         sys.exit(1)
     except Exception as e:
-        print(f"\n❌ Critical error in test suite: {e}")
+        logger.error(f"\n❌ Critical error in test suite: {e}")
         tester.cleanup_test_containers()
         sys.exit(1)
 

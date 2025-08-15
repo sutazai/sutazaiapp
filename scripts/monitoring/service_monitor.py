@@ -494,13 +494,13 @@ async def main():
     
     # Check all services once
     health_report = await monitor.check_all_services()
-    print("Health Report:")
-    print(json.dumps(health_report, indent=2))
+    logger.info("Health Report:")
+    logger.info(json.dumps(health_report, indent=2))
     
     # Get health summary
     summary = await api.health_summary()
-    print("\nHealth Summary:")
-    print(json.dumps(summary, indent=2))
+    logger.info("\nHealth Summary:")
+    logger.info(json.dumps(summary, indent=2))
     
     # Start continuous monitoring (in background)
     # monitor_task = asyncio.create_task(monitor.start_continuous_monitoring(30))

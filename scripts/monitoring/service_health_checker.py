@@ -433,17 +433,17 @@ class ServiceHealthChecker:
     
     def print_health_report(self, results: Dict[str, Any]):
         """Print a formatted health report"""
-        print("\n" + "="*80)
-        print(f"🏥 SutazAI Service Health Report - {results['timestamp']}")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info(f"🏥 SutazAI Service Health Report - {results['timestamp']}")
+        logger.info("="*80)
         
         # Overall health
         overall = results['overall_health']
         health_icon = "🟢" if overall['health_percentage'] >= 90 else "🟡" if overall['health_percentage'] >= 70 else "🔴"
-        print(f"{health_icon} Overall Health: {overall['health_percentage']:.1f}% ({overall['healthy_services']}/{overall['total_services']} services healthy)")
+        logger.info(f"{health_icon} Overall Health: {overall['health_percentage']:.1f}% ({overall['healthy_services']}/{overall['total_services']} services healthy)")
         
         # Service details
-        print("\n📋 Service Details:")
+        logger.info("\n📋 Service Details:")
         for service_name, service_data in results['services'].items():
             icon = "✅" if service_data.get('healthy', False) else "❌"
             
@@ -458,42 +458,42 @@ class ServiceHealthChecker:
                 error_msg = error_msg[:47] + "..."
             
             status_msg = error_msg if error_msg else "OK"
-            print(f"   {icon} {service_name:<25} {rt_str:<10} - {status_msg}")
+            logger.info(f"   {icon} {service_name:<25} {rt_str:<10} - {status_msg}")
         
         # Special service details
-        print("\n🔍 Detailed Service Information:")
+        logger.info("\n🔍 Detailed Service Information:")
         
         # Ollama details
         if 'ollama' in results['services']:
             ollama = results['services']['ollama']
             if ollama.get('healthy'):
-                print(f"   🧠 Ollama: {ollama.get('model_count', 0)} models loaded")
+                logger.info(f"   🧠 Ollama: {ollama.get('model_count', 0)} models loaded")
                 if ollama.get('models'):
                     for model in ollama['models'][:3]:  # Show first 3 models
-                        print(f"      - {model}")
+                        logger.info(f"      - {model}")
                     if len(ollama['models']) > 3:
-                        print(f"      ... and {len(ollama['models']) - 3} more")
+                        logger.info(f"      ... and {len(ollama['models']) - 3} more")
         
         # Database details
         for db_name in ['postgres_main', 'postgres_hygiene']:
             if db_name in results['services']:
                 db = results['services'][db_name]
                 if db.get('healthy'):
-                    print(f"   🗄️  {db_name}: {db.get('connection_count', 0)} connections, {db.get('database_size', 'unknown')} size")
+                    logger.info(f"   🗄️  {db_name}: {db.get('connection_count', 0)} connections, {db.get('database_size', 'unknown')} size")
         
         # Redis details
         if 'redis_hygiene' in results['services']:
             redis_data = results['services']['redis_hygiene']
             if redis_data.get('healthy'):
-                print(f"   🔄 Redis: {redis_data.get('connected_clients', 0)} clients, {redis_data.get('used_memory', 'unknown')} memory")
+                logger.info(f"   🔄 Redis: {redis_data.get('connected_clients', 0)} clients, {redis_data.get('used_memory', 'unknown')} memory")
         
         # Neo4j details
         if 'neo4j' in results['services']:
             neo4j_data = results['services']['neo4j']
             if neo4j_data.get('healthy'):
-                print(f"   🕸️  Neo4j: {neo4j_data.get('node_count', 0)} nodes, {neo4j_data.get('relationship_count', 0)} relationships")
+                logger.info(f"   🕸️  Neo4j: {neo4j_data.get('node_count', 0)} nodes, {neo4j_data.get('relationship_count', 0)} relationships")
         
-        print("="*80)
+        logger.info("="*80)
     
     def save_results(self, results: Dict[str, Any]):
         """Save health check results to file"""
@@ -559,8 +559,8 @@ async def main():
     if args.service:
         logger.info(f"Checking health of service: {args.service}")
         result = await checker.check_specific_service(args.service)
-        print(f"\n{args.service} Health Check Result:")
-        print(json.dumps(result, indent=2, default=str))
+        logger.info(f"\n{args.service} Health Check Result:")
+        logger.info(json.dumps(result, indent=2, default=str))
     else:
         logger.info("Checking health of all services...")
         results = await checker.check_all_services()

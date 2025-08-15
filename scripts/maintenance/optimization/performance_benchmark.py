@@ -544,7 +544,7 @@ async def benchmark_all_optimizations():
     
     # Generate report
     report = benchmark.generate_report("tinyllama")
-    print(json.dumps(report, indent=2))
+    logger.info(json.dumps(report, indent=2))
     
     # Create visualizations
     benchmark.plot_results("tinyllama")

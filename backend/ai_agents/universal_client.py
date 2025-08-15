@@ -16,9 +16,9 @@ import aiohttp
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Configure structured logging (Rule 8 compliance)
+from backend.app.core.logging_config import get_logger
+logger = get_logger(__name__)
 
 
 class AgentType(Enum):
@@ -805,28 +805,28 @@ if __name__ == "__main__":
             
             # List all agents
             agents = client.list_agents()
-            print(f"Found {len(agents)} agents")
+            logger.info(f"AGENT_DEMO - Found {len(agents)} agents")
             
             # Find agents with specific capabilities
             code_agents = client.find_agents_by_capability("code")
-            print(f"Found {len(code_agents)} agents with code capabilities")
+            logger.info(f"AGENT_DEMO - Found {len(code_agents)} agents with code capabilities")
             
             # Execute a simple task
             try:
                 response = await client.execute_task(
                     AgentType.CODE_GENERATION_IMPROVER,
                     "Analyze the quality of a Python function",
-                    parameters={"code": "def hello(): print('Hello, World!')"}
+                    parameters={"code": "def hello(): logger.info('Hello, World!')"}
                 )
-                print(f"Task result: {response.status}")
+                logger.info(f"AGENT_DEMO - Task result: {response.status}")
                 
             except Exception as e:
-                print(f"Task execution failed: {str(e)}")
+                logger.error(f"AGENT_DEMO - Task execution failed: {str(e)}")
             
             # Perform system health check
             health_status = await client.health_check_all()
             online_count = sum(1 for status in health_status.values() if status)
-            print(f"Health check: {online_count}/{len(health_status)} agents online")
+            logger.info(f"AGENT_DEMO - Health check: {online_count}/{len(health_status)} agents online")
     
     # Run the example
     asyncio.run(main())

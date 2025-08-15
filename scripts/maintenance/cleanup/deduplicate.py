@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRAORGANIZED Script Deduplication Tool
 Purpose: Identify and remove duplicate scripts across the system
 Generated: August 11, 2025
@@ -29,7 +32,7 @@ class ScriptDeduplicator:
             with open(file_path, 'rb') as f:
                 return hashlib.md5(f.read()).hexdigest()
         except Exception as e:
-            print(f"Error reading {file_path}: {e}")
+            logger.error(f"Error reading {file_path}: {e}")
             return None
     
     def calculate_content_hash(self, file_path):
@@ -48,7 +51,7 @@ class ScriptDeduplicator:
             normalized_content = '\n'.join(normalized_lines)
             return hashlib.md5(normalized_content.encode()).hexdigest()
         except Exception as e:
-            print(f"Error normalizing {file_path}: {e}")
+            logger.error(f"Error normalizing {file_path}: {e}")
             return None
     
     def find_script_files(self):
@@ -70,10 +73,10 @@ class ScriptDeduplicator:
     
     def analyze_duplicates(self):
         """Analyze all scripts and identify duplicates"""
-        print("🔍 ANALYZING SCRIPT DUPLICATES...")
+        logger.info("🔍 ANALYZING SCRIPT DUPLICATES...")
         
         script_files = self.find_script_files()
-        print(f"Found {len(script_files)} script files to analyze")
+        logger.info(f"Found {len(script_files)} script files to analyze")
         
         # Group files by exact hash
         exact_hashes = defaultdict(list)
@@ -92,11 +95,11 @@ class ScriptDeduplicator:
         
         # Find exact duplicates
         exact_duplicates = {h: files for h, files in exact_hashes.items() if len(files) > 1}
-        print(f"Found {len(exact_duplicates)} groups of exact duplicates")
+        logger.info(f"Found {len(exact_duplicates)} groups of exact duplicates")
         
         # Find content duplicates (similar functionality)
         content_duplicates = {h: files for h, files in content_hashes.items() if len(files) > 1}
-        print(f"Found {len(content_duplicates)} groups of content duplicates")
+        logger.info(f"Found {len(content_duplicates)} groups of content duplicates")
         
         return exact_duplicates, content_duplicates
     
@@ -201,35 +204,35 @@ class ScriptDeduplicator:
         output_path = self.project_root / output_file
         with open(output_path, 'w') as f:
             json.dump(plan, f, indent=2)
-        print(f"📄 Deduplication plan saved to: {output_path}")
+        logger.info(f"📄 Deduplication plan saved to: {output_path}")
 
 def main():
     """Main execution function"""
-    print("🚀 ULTRAORGANIZED Script Deduplication Tool")
-    print("=" * 60)
+    logger.info("🚀 ULTRAORGANIZED Script Deduplication Tool")
+    logger.info("=" * 60)
     
     deduplicator = ScriptDeduplicator()
     plan = deduplicator.generate_deduplication_plan()
     
     # Display summary
-    print("\n📊 DEDUPLICATION ANALYSIS SUMMARY")
-    print("=" * 40)
-    print(f"Exact Duplicate Groups: {plan['summary']['exact_duplicate_groups']}")
-    print(f"Content Duplicate Groups: {plan['summary']['content_duplicate_groups']}")
-    print(f"Scripts That Can Be Removed: {plan['summary']['estimated_removal']}")
+    logger.info("\n📊 DEDUPLICATION ANALYSIS SUMMARY")
+    logger.info("=" * 40)
+    logger.info(f"Exact Duplicate Groups: {plan['summary']['exact_duplicate_groups']}")
+    logger.info(f"Content Duplicate Groups: {plan['summary']['content_duplicate_groups']}")
+    logger.info(f"Scripts That Can Be Removed: {plan['summary']['estimated_removal']}")
     
     # Show top exact duplicates
     if plan['exact_duplicates']:
-        print("\n🎯 TOP EXACT DUPLICATES TO REMOVE:")
+        logger.info("\n🎯 TOP EXACT DUPLICATES TO REMOVE:")
         for i, duplicate_group in enumerate(plan['exact_duplicates'][:5], 1):
-            print(f"{i}. Master: {duplicate_group['master']}")
-            print(f"   Remove: {len(duplicate_group['duplicates'])} duplicates")
+            logger.info(f"{i}. Master: {duplicate_group['master']}")
+            logger.info(f"   Remove: {len(duplicate_group['duplicates'])} duplicates")
     
     # Save detailed plan
     deduplicator.save_plan(plan)
     
-    print("\n✅ DEDUPLICATION ANALYSIS COMPLETE")
-    print("📋 Review the generated plan and execute removals safely")
+    logger.info("\n✅ DEDUPLICATION ANALYSIS COMPLETE")
+    logger.info("📋 Review the generated plan and execute removals safely")
 
 if __name__ == "__main__":
     main()

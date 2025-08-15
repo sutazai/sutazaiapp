@@ -369,7 +369,7 @@ def main():
     # Check if running as daemon or one-time
     if len(sys.argv) > 1 and sys.argv[1] == "--once":
         # Run validation once
-        print("Running validation once...")
+        logger.info("Running validation once...")
         validator.hourly_validation()
         
         # Also run daily if requested

@@ -216,51 +216,51 @@ class PerformanceMonitor:
         # Clear screen (works on Unix/Linux/Mac)
         os.system('clear' if os.name == 'posix' else 'cls')
         
-        print("="*80)
-        print("🎯 SUTAZAI PERFORMANCE MONITOR".center(80))
-        print(f"{metrics['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}".center(80))
-        print("="*80)
+        logger.info("="*80)
+        logger.info("🎯 SUTAZAI PERFORMANCE MONITOR".center(80))
+        logger.info(f"{metrics['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}".center(80))
+        logger.info("="*80)
         
         # System Metrics
-        print("\n📊 SYSTEM METRICS")
-        print("-"*40)
-        print(f"  CPU Usage:         {self._format_bar(metrics['system']['cpu_percent'], 100)} {metrics['system']['cpu_percent']:.1f}%")
-        print(f"  Memory Usage:      {self._format_bar(metrics['system']['memory_percent'], 100)} {metrics['system']['memory_percent']:.1f}%")
-        print(f"  Available Memory:  {metrics['system']['memory_available_mb']:.0f} MB")
-        print(f"  Disk Usage:        {self._format_bar(metrics['system']['disk_usage_percent'], 100)} {metrics['system']['disk_usage_percent']:.1f}%")
-        print(f"  Network Conns:     {metrics['system']['network_connections']}")
-        print(f"  Process Count:     {metrics['system']['process_count']}")
+        logger.info("\n📊 SYSTEM METRICS")
+        logger.info("-"*40)
+        logger.info(f"  CPU Usage:         {self._format_bar(metrics['system']['cpu_percent'], 100)} {metrics['system']['cpu_percent']:.1f}%")
+        logger.info(f"  Memory Usage:      {self._format_bar(metrics['system']['memory_percent'], 100)} {metrics['system']['memory_percent']:.1f}%")
+        logger.info(f"  Available Memory:  {metrics['system']['memory_available_mb']:.0f} MB")
+        logger.info(f"  Disk Usage:        {self._format_bar(metrics['system']['disk_usage_percent'], 100)} {metrics['system']['disk_usage_percent']:.1f}%")
+        logger.info(f"  Network Conns:     {metrics['system']['network_connections']}")
+        logger.info(f"  Process Count:     {metrics['system']['process_count']}")
         
         # Performance Metrics
-        print("\n⚡ PERFORMANCE METRICS")
-        print("-"*40)
+        logger.info("\n⚡ PERFORMANCE METRICS")
+        logger.info("-"*40)
         response_time = metrics['performance'].get('response_time_ms', 0)
-        print(f"  Response Time:     {self._format_response_time(response_time)} {response_time:.0f}ms")
-        print(f"  Requests/sec:      {metrics['performance'].get('requests_per_second', 0):.2f}")
-        print(f"  Error Rate:        {metrics['performance'].get('error_rate', 0)*100:.2f}%")
-        print(f"  Health Status:     {'✅ Healthy' if metrics['performance'].get('health_status') else '❌ Unhealthy'}")
+        logger.info(f"  Response Time:     {self._format_response_time(response_time)} {response_time:.0f}ms")
+        logger.info(f"  Requests/sec:      {metrics['performance'].get('requests_per_second', 0):.2f}")
+        logger.error(f"  Error Rate:        {metrics['performance'].get('error_rate', 0)*100:.2f}%")
+        logger.info(f"  Health Status:     {'✅ Healthy' if metrics['performance'].get('health_status') else '❌ Unhealthy'}")
         
         # Application Metrics
-        print("\n🔧 APPLICATION METRICS")
-        print("-"*40)
+        logger.info("\n🔧 APPLICATION METRICS")
+        logger.info("-"*40)
         cache_hit_rate = metrics['application'].get('cache_hit_rate', 0) * 100
-        print(f"  Cache Hit Rate:    {self._format_bar(cache_hit_rate, 100)} {cache_hit_rate:.1f}%")
-        print(f"  Cache Size:        {metrics['application'].get('cache_size', 0)} items")
-        print(f"  Queue Pending:     {metrics['application'].get('task_queue_pending', 0)} tasks")
-        print(f"  Ollama Avg Time:   {metrics['application'].get('ollama_avg_response_time', 0)*1000:.0f}ms")
-        print(f"  Active Conns:      {metrics['application'].get('connection_pool_active', 0)}")
+        logger.info(f"  Cache Hit Rate:    {self._format_bar(cache_hit_rate, 100)} {cache_hit_rate:.1f}%")
+        logger.info(f"  Cache Size:        {metrics['application'].get('cache_size', 0)} items")
+        logger.info(f"  Queue Pending:     {metrics['application'].get('task_queue_pending', 0)} tasks")
+        logger.info(f"  Ollama Avg Time:   {metrics['application'].get('ollama_avg_response_time', 0)*1000:.0f}ms")
+        logger.info(f"  Active Conns:      {metrics['application'].get('connection_pool_active', 0)}")
         
         # Recent Alerts
         if self.alerts:
-            print("\n⚠️  RECENT ALERTS")
-            print("-"*40)
+            logger.info("\n⚠️  RECENT ALERTS")
+            logger.info("-"*40)
             for alert in self.alerts[-5:]:  # Show last 5 alerts
-                print(f"  {alert['timestamp'].strftime('%H:%M:%S')} - {alert['message']}")
+                logger.info(f"  {alert['timestamp'].strftime('%H:%M:%S')} - {alert['message']}")
                 
         # Statistics
         if len(self.metrics_history['response_times']) > 10:
-            print("\n📈 STATISTICS (Last 100 samples)")
-            print("-"*40)
+            logger.info("\n📈 STATISTICS (Last 100 samples)")
+            logger.info("-"*40)
             
             # Response time stats
             recent_response_times = list(self.metrics_history['response_times'])[-20:]
@@ -268,24 +268,24 @@ class PerformanceMonitor:
                 avg_response = sum(recent_response_times) / len(recent_response_times)
                 max_response = max(recent_response_times)
                 min_response = min(recent_response_times)
-                print(f"  Response Time:     Avg: {avg_response:.0f}ms | Max: {max_response:.0f}ms | Min: {min_response:.0f}ms")
+                logger.info(f"  Response Time:     Avg: {avg_response:.0f}ms | Max: {max_response:.0f}ms | Min: {min_response:.0f}ms")
                 
             # CPU stats
             recent_cpu = list(self.metrics_history['cpu_usage'])[-20:]
             if recent_cpu:
                 avg_cpu = sum(recent_cpu) / len(recent_cpu)
                 max_cpu = max(recent_cpu)
-                print(f"  CPU Usage:         Avg: {avg_cpu:.1f}% | Max: {max_cpu:.1f}%")
+                logger.info(f"  CPU Usage:         Avg: {avg_cpu:.1f}% | Max: {max_cpu:.1f}%")
                 
             # Memory stats
             recent_memory = list(self.metrics_history['memory_usage'])[-20:]
             if recent_memory:
                 avg_memory = sum(recent_memory) / len(recent_memory)
                 max_memory = max(recent_memory)
-                print(f"  Memory Usage:      Avg: {avg_memory:.1f}% | Max: {max_memory:.1f}%")
+                logger.info(f"  Memory Usage:      Avg: {avg_memory:.1f}% | Max: {max_memory:.1f}%")
                 
-        print("\n" + "="*80)
-        print("Press Ctrl+C to stop monitoring")
+        logger.info("\n" + "="*80)
+        logger.info("Press Ctrl+C to stop monitoring")
         
     def _format_bar(self, value: float, max_value: float, width: int = 20) -> str:
         """Format a progress bar"""
@@ -403,7 +403,7 @@ async def main():
         await monitor.start_monitoring(interval=5)
         
     except KeyboardInterrupt:
-        print("\n\nStopping monitor...")
+        logger.info("\n\nStopping monitor...")
         await monitor.stop_monitoring()
         
         # Export metrics
@@ -411,27 +411,27 @@ async def main():
         
         # Show final statistics
         stats = monitor.calculate_statistics()
-        print("\n📊 FINAL STATISTICS")
-        print("-"*40)
+        logger.info("\n📊 FINAL STATISTICS")
+        logger.info("-"*40)
         
         if 'response_time' in stats:
-            print(f"Response Time:")
-            print(f"  Average: {stats['response_time']['avg']:.0f}ms")
-            print(f"  Max: {stats['response_time']['max']:.0f}ms")
-            print(f"  Min: {stats['response_time']['min']:.0f}ms")
+            logger.info(f"Response Time:")
+            logger.info(f"  Average: {stats['response_time']['avg']:.0f}ms")
+            logger.info(f"  Max: {stats['response_time']['max']:.0f}ms")
+            logger.info(f"  Min: {stats['response_time']['min']:.0f}ms")
             
         if 'cpu' in stats:
-            print(f"\nCPU Usage:")
-            print(f"  Average: {stats['cpu']['avg']:.1f}%")
-            print(f"  Max: {stats['cpu']['max']:.1f}%")
+            logger.info(f"\nCPU Usage:")
+            logger.info(f"  Average: {stats['cpu']['avg']:.1f}%")
+            logger.info(f"  Max: {stats['cpu']['max']:.1f}%")
             
         if 'memory' in stats:
-            print(f"\nMemory Usage:")
-            print(f"  Average: {stats['memory']['avg']:.1f}%")
-            print(f"  Max: {stats['memory']['max']:.1f}%")
+            logger.info(f"\nMemory Usage:")
+            logger.info(f"  Average: {stats['memory']['avg']:.1f}%")
+            logger.info(f"  Max: {stats['memory']['max']:.1f}%")
             
-        print(f"\nTotal Alerts: {len(monitor.alerts)}")
-        print(f"Metrics exported to: performance_metrics.json")
+        logger.info(f"\nTotal Alerts: {len(monitor.alerts)}")
+        logger.info(f"Metrics exported to: performance_metrics.json")
 
 
 if __name__ == "__main__":

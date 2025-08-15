@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Memory Optimization Validation
 Tests system memory usage reduction from 15GB to 8GB target.
 """
@@ -34,7 +37,7 @@ class UltratestMemoryValidator:
                 'swap_used_mb': int(swap_line[2]) if swap_line else 0,
             }
         except Exception as e:
-            print(f"❌ Failed to get system memory: {e}")
+            logger.error(f"❌ Failed to get system memory: {e}")
             return {}
     
     def get_docker_memory_usage(self) -> Dict[str, Any]:
@@ -85,7 +88,7 @@ class UltratestMemoryValidator:
                 'total_docker_memory_gb': total_docker_memory_mb / 1024
             }
         except Exception as e:
-            print(f"❌ Failed to get Docker memory stats: {e}")
+            logger.error(f"❌ Failed to get Docker memory stats: {e}")
             return {'containers': [], 'total_docker_memory_mb': 0}
     
     def get_process_memory_usage(self) -> Dict[str, Any]:
@@ -119,12 +122,12 @@ class UltratestMemoryValidator:
                 'total_top_processes_memory_mb': sum(p['memory_mb'] for p in processes)
             }
         except Exception as e:
-            print(f"❌ Failed to get process memory: {e}")
+            logger.error(f"❌ Failed to get process memory: {e}")
             return {'top_processes': [], 'total_top_processes_memory_mb': 0}
     
     def analyze_memory_efficiency(self) -> Dict[str, Any]:
         """Analyze memory usage efficiency and optimization"""
-        print("💾 Analyzing memory usage patterns...")
+        logger.info("💾 Analyzing memory usage patterns...")
         
         # Get comprehensive memory data
         system_memory = self.get_system_memory_usage()
@@ -161,7 +164,7 @@ class UltratestMemoryValidator:
     
     def run_memory_stress_test(self) -> Dict[str, Any]:
         """Run a brief memory stress test to see system behavior"""
-        print("🔬 Running memory stress test...")
+        logger.info("🔬 Running memory stress test...")
         
         # Get baseline memory
         baseline = self.get_system_memory_usage()
@@ -201,13 +204,13 @@ class UltratestMemoryValidator:
     
     def generate_memory_report(self, analysis: Dict[str, Any]):
         """Generate comprehensive memory optimization report"""
-        print("\n" + "=" * 80)
-        print("💾 ULTRATEST MEMORY OPTIMIZATION REPORT")
-        print("=" * 80)
-        print(f"Test Execution Time: {datetime.now().isoformat()}")
+        logger.info("\n" + "=" * 80)
+        logger.info("💾 ULTRATEST MEMORY OPTIMIZATION REPORT")
+        logger.info("=" * 80)
+        logger.info(f"Test Execution Time: {datetime.now().isoformat()}")
         
         if 'error' in analysis:
-            print(f"❌ Error: {analysis['error']}")
+            logger.error(f"❌ Error: {analysis['error']}")
             return False
         
         system_analysis = analysis.get('analysis', {})
@@ -215,65 +218,65 @@ class UltratestMemoryValidator:
         system_used_gb = system_analysis.get('system_used_gb', 0)
         docker_used_gb = system_analysis.get('docker_used_gb', 0)
         
-        print(f"\n🖥️  SYSTEM MEMORY OVERVIEW:")
-        print("-" * 50)
-        print(f"Total System Memory: {system_total_gb:.2f} GB")
-        print(f"Used Memory: {system_used_gb:.2f} GB")
-        print(f"Free Memory: {(system_total_gb - system_used_gb):.2f} GB")
-        print(f"Memory Usage: {(system_used_gb / system_total_gb * 100):.1f}%")
+        logger.info(f"\n🖥️  SYSTEM MEMORY OVERVIEW:")
+        logger.info("-" * 50)
+        logger.info(f"Total System Memory: {system_total_gb:.2f} GB")
+        logger.info(f"Used Memory: {system_used_gb:.2f} GB")
+        logger.info(f"Free Memory: {(system_total_gb - system_used_gb):.2f} GB")
+        logger.info(f"Memory Usage: {(system_used_gb / system_total_gb * 100):.1f}%")
         
-        print(f"\n🐳 DOCKER MEMORY USAGE:")
-        print("-" * 50)
-        print(f"Docker Memory: {docker_used_gb:.2f} GB")
-        print(f"Docker Containers: {analysis.get('docker_memory', {}).get('total_containers', 0)}")
-        print(f"Non-Docker Memory: {system_analysis.get('non_docker_memory_gb', 0):.2f} GB")
-        print(f"Docker Efficiency: {system_analysis.get('docker_efficiency_percentage', 0):.1f}%")
+        logger.info(f"\n🐳 DOCKER MEMORY USAGE:")
+        logger.info("-" * 50)
+        logger.info(f"Docker Memory: {docker_used_gb:.2f} GB")
+        logger.info(f"Docker Containers: {analysis.get('docker_memory', {}).get('total_containers', 0)}")
+        logger.info(f"Non-Docker Memory: {system_analysis.get('non_docker_memory_gb', 0):.2f} GB")
+        logger.info(f"Docker Efficiency: {system_analysis.get('docker_efficiency_percentage', 0):.1f}%")
         
         # Target analysis
         target_met = system_analysis.get('memory_target_8gb_met', False)
         optimization_gb = system_analysis.get('optimization_achieved_gb', 0)
         optimization_pct = system_analysis.get('optimization_percentage', 0)
         
-        print(f"\n🎯 OPTIMIZATION TARGET ANALYSIS:")
-        print("-" * 50)
-        print(f"Current Usage: {system_used_gb:.2f} GB")
-        print(f"Target Usage: 8.00 GB")
-        print(f"Previous Usage: 15.00 GB (claimed)")
+        logger.info(f"\n🎯 OPTIMIZATION TARGET ANALYSIS:")
+        logger.info("-" * 50)
+        logger.info(f"Current Usage: {system_used_gb:.2f} GB")
+        logger.info(f"Target Usage: 8.00 GB")
+        logger.info(f"Previous Usage: 15.00 GB (claimed)")
         
         if target_met:
-            print("✅ MEMORY TARGET ACHIEVED (<8GB)")
+            logger.info("✅ MEMORY TARGET ACHIEVED (<8GB)")
         else:
-            print(f"❌ Above target by {system_used_gb - 8.0:.2f} GB")
+            logger.info(f"❌ Above target by {system_used_gb - 8.0:.2f} GB")
         
         if optimization_gb > 0:
-            print(f"✅ Optimization achieved: {optimization_gb:.2f} GB reduction ({optimization_pct:.1f}%)")
+            logger.info(f"✅ Optimization achieved: {optimization_gb:.2f} GB reduction ({optimization_pct:.1f}%)")
         else:
-            print("❌ No optimization from claimed 15GB usage")
+            logger.info("❌ No optimization from claimed 15GB usage")
         
         # Container breakdown
         docker_containers = analysis.get('docker_memory', {}).get('containers', [])
         if docker_containers:
-            print(f"\n📊 TOP MEMORY-CONSUMING CONTAINERS:")
-            print("-" * 50)
+            logger.info(f"\n📊 TOP MEMORY-CONSUMING CONTAINERS:")
+            logger.info("-" * 50)
             
             # Sort by memory usage and show top 10
             sorted_containers = sorted(docker_containers, key=lambda x: x['memory_usage_mb'], reverse=True)[:10]
             for container in sorted_containers:
                 name = container['name'][:30] + "..." if len(container['name']) > 30 else container['name']
                 memory_mb = container['memory_usage_mb']
-                print(f"{name:35} {memory_mb:6.1f} MB")
+                logger.info(f"{name:35} {memory_mb:6.1f} MB")
         
         # Top system processes
         top_processes = analysis.get('process_memory', {}).get('top_processes', [])
         if top_processes:
-            print(f"\n🔍 TOP MEMORY-CONSUMING PROCESSES:")
-            print("-" * 50)
+            logger.info(f"\n🔍 TOP MEMORY-CONSUMING PROCESSES:")
+            logger.info("-" * 50)
             for proc in top_processes[:5]:  # Show top 5
-                print(f"{proc['memory_mb']:6.1f} MB - {proc['command']}")
+                logger.info(f"{proc['memory_mb']:6.1f} MB - {proc['command']}")
         
         # Overall assessment
-        print(f"\n🏆 MEMORY OPTIMIZATION ASSESSMENT:")
-        print("-" * 50)
+        logger.info(f"\n🏆 MEMORY OPTIMIZATION ASSESSMENT:")
+        logger.info("-" * 50)
         
         achievements = []
         issues = []
@@ -298,23 +301,23 @@ class UltratestMemoryValidator:
         if len(docker_containers) <= 30:
             achievements.append(f"Reasonable container count ({len(docker_containers)} containers)")
         
-        print("🎉 ACHIEVEMENTS:")
+        logger.info("🎉 ACHIEVEMENTS:")
         for achievement in achievements:
-            print(f"   ✅ {achievement}")
+            logger.info(f"   ✅ {achievement}")
         
         if issues:
-            print("\n⚠️  AREAS FOR IMPROVEMENT:")
+            logger.info("\n⚠️  AREAS FOR IMPROVEMENT:")
             for issue in issues:
-                print(f"   ❌ {issue}")
+                logger.info(f"   ❌ {issue}")
         
         success_rate = (len(achievements) / (len(achievements) + len(issues))) * 100 if (achievements or issues) else 0
-        print(f"\n📈 Memory Optimization Success Rate: {success_rate:.1f}%")
+        logger.info(f"\n📈 Memory Optimization Success Rate: {success_rate:.1f}%")
         
         return target_met and success_rate >= 75
 
 def main():
     """Run comprehensive memory optimization validation"""
-    print("🚀 Starting ULTRATEST Memory Optimization Validation")
+    logger.info("🚀 Starting ULTRATEST Memory Optimization Validation")
     
     validator = UltratestMemoryValidator()
     
@@ -332,13 +335,13 @@ def main():
     with open('/opt/sutazaiapp/tests/ultratest_memory_report.json', 'w') as f:
         json.dump(analysis, f, indent=2, default=str)
     
-    print(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_memory_report.json")
+    logger.info(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_memory_report.json")
     
     if success:
-        print("\n🎉 MEMORY OPTIMIZATION VALIDATION SUCCESSFUL!")
+        logger.info("\n🎉 MEMORY OPTIMIZATION VALIDATION SUCCESSFUL!")
         return 0
     else:
-        print("\n⚠️  MEMORY OPTIMIZATION NEEDS IMPROVEMENT")
+        logger.info("\n⚠️  MEMORY OPTIMIZATION NEEDS IMPROVEMENT")
         return 1
 
 if __name__ == "__main__":

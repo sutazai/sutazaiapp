@@ -537,12 +537,12 @@ async def main():
     
     # Print summary
     summary = collector.get_metrics_summary()
-    print(json.dumps(summary, indent=2, default=str))
+    logger.info(json.dumps(summary, indent=2, default=str))
     
     # Get Prometheus metrics
     metrics = collector.get_metrics()
-    print("\nPrometheus Metrics Sample:")
-    print(metrics.decode('utf-8')[:1000])
+    logger.info("\nPrometheus Metrics Sample:")
+    logger.info(metrics.decode('utf-8')[:1000])
 
 
 if __name__ == "__main__":

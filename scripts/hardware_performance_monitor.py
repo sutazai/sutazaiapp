@@ -354,9 +354,9 @@ class HardwarePerformanceMonitor:
 def main():
     """Main execution function"""
     if len(sys.argv) < 2:
-        print("Usage:")
-        print("  python3 hardware_performance_monitor.py snapshot")
-        print("  python3 hardware_performance_monitor.py monitor [interval_seconds] [duration_seconds]")
+        logger.info("Usage:")
+        logger.info("  python3 hardware_performance_monitor.py snapshot")
+        logger.info("  python3 hardware_performance_monitor.py monitor [interval_seconds] [duration_seconds]")
         sys.exit(1)
     
     # Ensure logs directory exists
@@ -366,7 +366,7 @@ def main():
     
     if sys.argv[1] == 'snapshot':
         result = monitor.single_snapshot()
-        print(json.dumps(result, indent=2))
+        logger.info(json.dumps(result, indent=2))
     
     elif sys.argv[1] == 'monitor':
         interval = int(sys.argv[2]) if len(sys.argv) > 2 else 60
@@ -374,7 +374,7 @@ def main():
         monitor.monitor_continuous(interval, duration)
     
     else:
-        print("Invalid command. Use 'snapshot' or 'monitor'")
+        logger.info("Invalid command. Use 'snapshot' or 'monitor'")
         sys.exit(1)
 
 if __name__ == "__main__":

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Security Scanning Workflow
 Automated security analysis using local AI agents
 """
@@ -24,7 +27,7 @@ class SecurityScanWorkflow:
     
     async def scan_codebase(self, target_dir: str = ".") -> Dict[str, Any]:
         """Perform comprehensive security scan of codebase"""
-        print(f"🔍 Starting security scan of: {target_dir}")
+        logger.info(f"🔍 Starting security scan of: {target_dir}")
         
         scan_results = {
             "scan_id": datetime.now().strftime("%Y%m%d_%H%M%S"),
@@ -36,27 +39,27 @@ class SecurityScanWorkflow:
         # Run different types of security scans
         
         # 1. Static code analysis
-        print("  📝 Running static code analysis...")
+        logger.info("  📝 Running static code analysis...")
         static_results = await self._static_code_analysis(target_dir)
         scan_results["scans"]["static_analysis"] = static_results
         
         # 2. Dependency vulnerability scan
-        print("  📦 Scanning dependencies...")
+        logger.info("  📦 Scanning dependencies...")
         dep_results = await self._dependency_scan(target_dir)
         scan_results["scans"]["dependencies"] = dep_results
         
         # 3. Secrets detection
-        print("  🔑 Scanning for secrets...")
+        logger.info("  🔑 Scanning for secrets...")
         secrets_results = await self._scan_for_secrets(target_dir)
         scan_results["scans"]["secrets"] = secrets_results
         
         # 4. Container security (if Docker files exist)
-        print("  🐳 Scanning Docker configurations...")
+        logger.info("  🐳 Scanning Docker configurations...")
         docker_results = await self._scan_docker_files(target_dir)
         scan_results["scans"]["docker"] = docker_results
         
         # 5. Configuration security
-        print("  ⚙️  Scanning configurations...")
+        logger.info("  ⚙️  Scanning configurations...")
         config_results = await self._scan_configurations(target_dir)
         scan_results["scans"]["configurations"] = config_results
         
@@ -111,7 +114,7 @@ class SecurityScanWorkflow:
         for req_file in requirements_files:
             file_path = Path(target_dir) / req_file
             if file_path.exists():
-                print(f"    Found {req_file}")
+                logger.info(f"    Found {req_file}")
                 try:
                     response = await self.client.post(
                         f"{self.api_url}/agents/execute",
@@ -424,9 +427,9 @@ async def main():
         # Scan the current directory (or specify a different target)
         target_directory = "."
         
-        print("🛡️  Starting comprehensive security scan...")
-        print(f"📁 Target: {os.path.abspath(target_directory)}")
-        print()
+        logger.info("🛡️  Starting comprehensive security scan...")
+        logger.info(f"📁 Target: {os.path.abspath(target_directory)}")
+        logger.info()
         
         # Run the scan
         scan_results = await scanner.scan_codebase(target_directory)
@@ -439,26 +442,26 @@ async def main():
         with open(report_filename, 'w') as f:
             f.write(report)
         
-        print(f"\n✅ Security scan complete!")
-        print(f"📄 Report saved to: {report_filename}")
+        logger.info(f"\n✅ Security scan complete!")
+        logger.info(f"📄 Report saved to: {report_filename}")
         
         # Print summary
         summary = scan_results["summary"]
-        print(f"\n🎯 Risk Level: {summary['risk_level']}")
-        print(f"📊 Total Issues: {summary['total_issues']}")
+        logger.info(f"\n🎯 Risk Level: {summary['risk_level']}")
+        logger.info(f"📊 Total Issues: {summary['total_issues']}")
         
         if summary['critical'] > 0:
-            print(f"\n⚠️  CRITICAL ISSUES FOUND! Immediate action required.")
+            logger.error(f"\n⚠️  CRITICAL ISSUES FOUND! Immediate action required.")
         
         # Save raw results
         json_filename = f"security_scan_{scan_results['scan_id']}.json"
         with open(json_filename, 'w') as f:
             json.dump(scan_results, f, indent=2)
         
-        print(f"📄 Raw results saved to: {json_filename}")
+        logger.info(f"📄 Raw results saved to: {json_filename}")
         
     except Exception as e:
-        print(f"❌ Security scan failed: {e}")
+        logger.error(f"❌ Security scan failed: {e}")
     
     finally:
         await scanner.close()

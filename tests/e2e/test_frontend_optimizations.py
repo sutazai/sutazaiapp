@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Frontend Optimization Validation Test
 Tests the performance improvements and error handling capabilities
 """
@@ -19,8 +22,8 @@ try:
     from utils.optimized_api_client import optimized_client
     from components.enhanced_ui import ErrorBoundary, ModernMetrics, NotificationSystem
 except ImportError as e:
-    print(f"Import error: {e}")
-    print("This test should be run from the frontend directory")
+    logger.error(f"Import error: {e}")
+    logger.info("This test should be run from the frontend directory")
     sys.exit(1)
 
 class TestFrontendOptimizations(unittest.TestCase):
@@ -33,7 +36,7 @@ class TestFrontendOptimizations(unittest.TestCase):
         
     def test_cache_functionality(self):
         """Test intelligent caching system"""
-        print("🧪 Testing cache functionality...")
+        logger.info("🧪 Testing cache functionality...")
         
         # Test cache set/get
         test_data = {"test": "data", "timestamp": time.time()}
@@ -48,11 +51,11 @@ class TestFrontendOptimizations(unittest.TestCase):
         expired = cache.get("expire_test")
         self.assertIsNone(expired)
         
-        print("✅ Cache functionality verified")
+        logger.info("✅ Cache functionality verified")
     
     def test_smart_refresh(self):
         """Test smart refresh logic"""
-        print("🧪 Testing smart refresh logic...")
+        logger.info("🧪 Testing smart refresh logic...")
         
         # First call should trigger refresh
         should_refresh_1 = SmartRefresh.should_refresh("test_refresh", interval=1)
@@ -62,12 +65,12 @@ class TestFrontendOptimizations(unittest.TestCase):
         should_refresh_2 = SmartRefresh.should_refresh("test_refresh", interval=1)
         self.assertFalse(should_refresh_2)
         
-        print("✅ Smart refresh logic verified")
+        logger.info("✅ Smart refresh logic verified")
     
     @patch('httpx.AsyncClient')
     def test_api_client_optimization(self, mock_client):
         """Test optimized API client functionality"""
-        print("🧪 Testing API client optimization...")
+        logger.info("🧪 Testing API client optimization...")
         
         # Mock successful response
         mock_response = Mock()
@@ -87,11 +90,11 @@ class TestFrontendOptimizations(unittest.TestCase):
         self.assertEqual(result1.get("status"), "healthy")
         self.assertEqual(result2.get("status"), "healthy")
         
-        print("✅ API client optimization verified")
+        logger.info("✅ API client optimization verified")
     
     def test_error_boundary(self):
         """Test error boundary decorator"""
-        print("🧪 Testing error boundary functionality...")
+        logger.error("🧪 Testing error boundary functionality...")
         
         # Create a function that throws an error
         @ErrorBoundary.safe_render("Test Component")
@@ -110,11 +113,11 @@ class TestFrontendOptimizations(unittest.TestCase):
         result = working_component()
         self.assertEqual(result["success"], True)
         
-        print("✅ Error boundary functionality verified")
+        logger.error("✅ Error boundary functionality verified")
     
     def test_cache_performance(self):
         """Test cache performance improvements"""
-        print("🧪 Testing cache performance...")
+        logger.info("🧪 Testing cache performance...")
         
         # Measure cache performance
         start_time = time.time()
@@ -131,12 +134,12 @@ class TestFrontendOptimizations(unittest.TestCase):
         end_time = time.time()
         duration = end_time - start_time
         
-        print(f"✅ Cache performance: 200 operations in {duration:.3f}s")
+        logger.info(f"✅ Cache performance: 200 operations in {duration:.3f}s")
         self.assertLess(duration, 1.0, "Cache operations should be fast")
     
     def test_cache_memory_management(self):
         """Test cache memory management"""
-        print("🧪 Testing cache memory management...")
+        logger.info("🧪 Testing cache memory management...")
         
         # Fill cache beyond limit
         original_limit = cache.max_cache_size
@@ -153,11 +156,11 @@ class TestFrontendOptimizations(unittest.TestCase):
         # Restore original limit
         cache.max_cache_size = original_limit
         
-        print("✅ Cache memory management verified")
+        logger.info("✅ Cache memory management verified")
     
     def test_performance_metrics(self):
         """Test performance metrics collection"""
-        print("🧪 Testing performance metrics...")
+        logger.info("🧪 Testing performance metrics...")
         
         # Test cache statistics
         cache.set("metrics_test", {"data": "test"}, ttl=60)
@@ -167,39 +170,39 @@ class TestFrontendOptimizations(unittest.TestCase):
         self.assertIn('estimated_size_bytes', stats)
         self.assertIn('cache_utilization', stats)
         
-        print("✅ Performance metrics verified")
+        logger.info("✅ Performance metrics verified")
 
 def run_optimization_validation():
     """Run all optimization validation tests"""
-    print("🚀 Running Frontend Optimization Validation Tests")
-    print("=" * 60)
+    logger.info("🚀 Running Frontend Optimization Validation Tests")
+    logger.info("=" * 60)
     
     # Run tests
     unittest.main(verbosity=2, exit=False)
     
     # Performance summary
-    print("\n" + "=" * 60)
-    print("📊 PERFORMANCE OPTIMIZATION SUMMARY")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("📊 PERFORMANCE OPTIMIZATION SUMMARY")
+    logger.info("=" * 60)
     
     # Cache statistics
     cache_stats = cache.get_stats()
-    print(f"Cache entries: {cache_stats['total_entries']}")
-    print(f"Cache utilization: {cache_stats['cache_utilization']}")
+    logger.info(f"Cache entries: {cache_stats['total_entries']}")
+    logger.info(f"Cache utilization: {cache_stats['cache_utilization']}")
     
-    print("\n✅ All optimization tests completed successfully!")
-    print("🎯 Frontend performance improved by 50%+ with:")
-    print("   • Intelligent API response caching")
-    print("   • Smart refresh logic")
-    print("   • Comprehensive error boundaries") 
-    print("   • Performance monitoring")
-    print("   • Memory management")
+    logger.info("\n✅ All optimization tests completed successfully!")
+    logger.info("🎯 Frontend performance improved by 50%+ with:")
+    logger.info("   • Intelligent API response caching")
+    logger.info("   • Smart refresh logic")
+    logger.error("   • Comprehensive error boundaries") 
+    logger.info("   • Performance monitoring")
+    logger.info("   • Memory management")
 
 if __name__ == "__main__":
     try:
         run_optimization_validation()
     except KeyboardInterrupt:
-        print("\n⏸️  Test interrupted by user")
+        logger.info("\n⏸️  Test interrupted by user")
     except Exception as e:
-        print(f"\n❌ Test failed: {e}")
+        logger.error(f"\n❌ Test failed: {e}")
         sys.exit(1)

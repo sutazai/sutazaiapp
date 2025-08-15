@@ -468,12 +468,12 @@ class FinalBulletproofTest:
 
 def main():
     """Run the final bulletproof test suite"""
-    print("🔧 Hardware Resource Optimizer - Final Bulletproof Test Suite")
-    print("="*70)
-    print("✅ Guaranteed to complete under 30 seconds")
-    print("✅ Tests actual system functionality")
-    print("✅ Professional validation and reporting")
-    print("="*70)
+    logger.info("🔧 Hardware Resource Optimizer - Final Bulletproof Test Suite")
+    logger.info("="*70)
+    logger.info("✅ Guaranteed to complete under 30 seconds")
+    logger.info("✅ Tests actual system functionality")
+    logger.info("✅ Professional validation and reporting")
+    logger.info("="*70)
     
     # Run tests
     suite = FinalBulletproofTest()
@@ -488,21 +488,21 @@ def main():
         json.dump(results, f, indent=2)
         
     # Print summary
-    print("\n" + "="*70)
-    print("📊 FINAL TEST RESULTS")
-    print("="*70)
-    print(report)
-    print(f"\nDetailed results: {results_file}")
+    logger.info("\n" + "="*70)
+    logger.info("📊 FINAL TEST RESULTS")
+    logger.info("="*70)
+    logger.info(report)
+    logger.info(f"\nDetailed results: {results_file}")
     
     # Return appropriate exit code
     if results['overall_status'] == "PASS":
-        print("\n🎉 SUCCESS: Agent is fully functional and bulletproof!")
+        logger.info("\n🎉 SUCCESS: Agent is fully functional and bulletproof!")
         return 0
     elif results['overall_status'] == "CRITICAL_FAIL":
-        print("\n🚨 CRITICAL: Agent is not functional!")
+        logger.error("\n🚨 CRITICAL: Agent is not functional!")
         return 2
     else:
-        print(f"\n⚠️ WARNING: {results['failed']} tests failed - needs attention")
+        logger.error(f"\n⚠️ WARNING: {results['failed']} tests failed - needs attention")
         return 1
 
 

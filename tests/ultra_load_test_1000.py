@@ -441,20 +441,20 @@ class UltraLoadTester:
 
 def main():
     """Run the ULTRA load test suite"""
-    print("🚀 ULTRA LOAD TEST - 1000+ CONCURRENT USERS")
-    print("=" * 60)
+    logger.info("🚀 ULTRA LOAD TEST - 1000+ CONCURRENT USERS")
+    logger.info("=" * 60)
     
     tester = UltraLoadTester()
     
     # Run progressive load test
-    print("\n📈 Running Progressive Load Test...")
+    logger.info("\n📈 Running Progressive Load Test...")
     progressive_results = tester.run_progressive_load_test()
     
     # Save progressive results
     progressive_file = tester.save_results(progressive_results)
     
     # Run sustained load test
-    print("\n⏱️  Running Sustained Load Test...")
+    logger.info("\n⏱️  Running Sustained Load Test...")
     sustained_results = tester.run_sustained_load_test()
     
     # Save sustained results
@@ -463,32 +463,32 @@ def main():
     # Final summary
     summary = tester.generate_summary()
     
-    print("\n" + "=" * 60)
-    print("🎯 ULTRA LOAD TEST RESULTS SUMMARY")
-    print("=" * 60)
-    print(f"Performance Grade: {summary['performance_grade']}")
-    print(f"Grade Score: {summary['grade_score']}/100")
-    print(f"All Targets Met: {'✅ YES' if summary['all_targets_met'] else '❌ NO'}")
-    print(f"Total Requests: {summary['total_requests']:,}")
-    print(f"Success Rate: {summary['overall_success_rate']:.1f}%")
-    print(f"Error Rate: {summary['overall_error_rate']:.1f}%")
-    print(f"Avg Response Time: {summary['avg_response_time']:.3f}s")
-    print(f"P95 Response Time: {summary['avg_p95_response_time']:.3f}s")
-    print(f"Max Concurrent Users: {summary['max_concurrent_users']}")
+    logger.info("\n" + "=" * 60)
+    logger.info("🎯 ULTRA LOAD TEST RESULTS SUMMARY")
+    logger.info("=" * 60)
+    logger.info(f"Performance Grade: {summary['performance_grade']}")
+    logger.info(f"Grade Score: {summary['grade_score']}/100")
+    logger.info(f"All Targets Met: {'✅ YES' if summary['all_targets_met'] else '❌ NO'}")
+    logger.info(f"Total Requests: {summary['total_requests']:,}")
+    logger.info(f"Success Rate: {summary['overall_success_rate']:.1f}%")
+    logger.error(f"Error Rate: {summary['overall_error_rate']:.1f}%")
+    logger.info(f"Avg Response Time: {summary['avg_response_time']:.3f}s")
+    logger.info(f"P95 Response Time: {summary['avg_p95_response_time']:.3f}s")
+    logger.info(f"Max Concurrent Users: {summary['max_concurrent_users']}")
     
     # Performance targets check
-    print("\n📊 Performance Targets:")
+    logger.info("\n📊 Performance Targets:")
     targets = summary['targets_met']
-    print(f"Response Time < 2s: {'✅' if targets['avg_response_time'] else '❌'}")
-    print(f"P95 Response Time < 3s: {'✅' if targets['p95_response_time'] else '❌'}")
-    print(f"Success Rate > 95%: {'✅' if targets['success_rate'] else '❌'}")
-    print(f"Error Rate < 5%: {'✅' if targets['error_rate'] else '❌'}")
+    logger.info(f"Response Time < 2s: {'✅' if targets['avg_response_time'] else '❌'}")
+    logger.info(f"P95 Response Time < 3s: {'✅' if targets['p95_response_time'] else '❌'}")
+    logger.info(f"Success Rate > 95%: {'✅' if targets['success_rate'] else '❌'}")
+    logger.error(f"Error Rate < 5%: {'✅' if targets['error_rate'] else '❌'}")
     
-    print(f"\n📄 Results saved to:")
+    logger.info(f"\n📄 Results saved to:")
     if progressive_file:
-        print(f"  - {progressive_file}")
+        logger.info(f"  - {progressive_file}")
     if sustained_file:
-        print(f"  - {sustained_file}")
+        logger.info(f"  - {sustained_file}")
     
     # Return exit code based on success
     return 0 if summary['all_targets_met'] else 1

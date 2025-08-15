@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Security Requirements Validation Script for SutazAI Frontend
 Validates that all security vulnerabilities have been addressed in requirements.txt
 """
@@ -22,7 +25,7 @@ def parse_requirements(file_path):
                         pkg_name, pkg_version = match.groups()[:2]
                         packages[pkg_name.lower()] = pkg_version.strip()
     except FileNotFoundError:
-        print(f"❌ ERROR: {file_path} not found")
+        logger.error(f"❌ ERROR: {file_path} not found")
         return {}
     return packages
 
@@ -72,54 +75,54 @@ def validate_security_requirements(packages):
 
 def print_results(results):
     """Print validation results in a formatted way"""
-    print("\n" + "="*80)
-    print("🔒 SECURITY VULNERABILITY VALIDATION REPORT")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("🔒 SECURITY VULNERABILITY VALIDATION REPORT")
+    logger.info("="*80)
     
     vulnerable_count = 0
     secure_count = 0
     
     for priority, pkg_name, current, minimum, status, description in results:
-        print(f"\n[{priority}] {pkg_name.upper()}")
-        print(f"  Required: >= {minimum}")
-        print(f"  Current:  {current}")
-        print(f"  Status:   {status}")
-        print(f"  Reason:   {description}")
+        logger.info(f"\n[{priority}] {pkg_name.upper()}")
+        logger.info(f"  Required: >= {minimum}")
+        logger.info(f"  Current:  {current}")
+        logger.info(f"  Status:   {status}")
+        logger.info(f"  Reason:   {description}")
         
         if '❌' in status:
             vulnerable_count += 1
         elif '✅' in status:
             secure_count += 1
     
-    print("\n" + "="*80)
-    print("📊 SUMMARY")
-    print("="*80)
-    print(f"✅ Secure packages:     {secure_count}")
-    print(f"❌ Vulnerable packages: {vulnerable_count}")
+    logger.info("\n" + "="*80)
+    logger.info("📊 SUMMARY")
+    logger.info("="*80)
+    logger.info(f"✅ Secure packages:     {secure_count}")
+    logger.info(f"❌ Vulnerable packages: {vulnerable_count}")
     
     if vulnerable_count == 0:
-        print("\n🎉 ALL SECURITY REQUIREMENTS SATISFIED!")
-        print("✅ Frontend is ready for production deployment")
+        logger.info("\n🎉 ALL SECURITY REQUIREMENTS SATISFIED!")
+        logger.info("✅ Frontend is ready for production deployment")
         return True
     else:
-        print(f"\n⚠️  {vulnerable_count} SECURITY ISSUES REMAIN")
-        print("❌ Please update vulnerable packages before deployment")
+        logger.info(f"\n⚠️  {vulnerable_count} SECURITY ISSUES REMAIN")
+        logger.info("❌ Please update vulnerable packages before deployment")
         return False
 
 def main():
     """Main validation function"""
     requirements_file = 'requirements.txt'
     
-    print("🔍 Parsing requirements.txt...")
+    logger.info("🔍 Parsing requirements.txt...")
     packages = parse_requirements(requirements_file)
     
     if not packages:
-        print("❌ No packages found or file not readable")
+        logger.info("❌ No packages found or file not readable")
         sys.exit(1)
     
-    print(f"📦 Found {len(packages)} packages")
+    logger.info(f"📦 Found {len(packages)} packages")
     
-    print("\n🔒 Validating security requirements...")
+    logger.info("\n🔒 Validating security requirements...")
     results = validate_security_requirements(packages)
     
     success = print_results(results)

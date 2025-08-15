@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 SutazAI Dockerfile Template Generator
 Generates service-specific Dockerfiles from master templates
 Author: DevOps Manager - Deduplication Operation
@@ -111,7 +114,7 @@ def create_service_dockerfile(service_name: str, output_dir: Path, template_dir:
     with open(dockerfile_path, 'w') as f:
         f.write(dockerfile_content)
     
-    print(f"Generated: {dockerfile_path}")
+    logger.info(f"Generated: {dockerfile_path}")
     return dockerfile_path
 
 def generate_all_services(output_dir: Path, template_dir: Path):
@@ -124,7 +127,7 @@ def generate_all_services(output_dir: Path, template_dir: Path):
             dockerfile_path = create_service_dockerfile(service_name, output_dir, template_dir)
             generated_files.append(str(dockerfile_path))
         except Exception as e:
-            print(f"Error generating {service_name}: {e}")
+            logger.error(f"Error generating {service_name}: {e}")
     
     # Create summary report
     summary = {
@@ -139,8 +142,8 @@ def generate_all_services(output_dir: Path, template_dir: Path):
     with open(summary_path, 'w') as f:
         json.dump(summary, f, indent=2)
     
-    print(f"Generated {len(generated_files)} Dockerfiles")
-    print(f"Summary: {summary_path}")
+    logger.info(f"Generated {len(generated_files)} Dockerfiles")
+    logger.info(f"Summary: {summary_path}")
 
 def main():
     parser = argparse.ArgumentParser(description="Generate Dockerfiles from templates")
@@ -160,11 +163,11 @@ def main():
         elif args.service:
             create_service_dockerfile(args.service, output_dir, template_dir)
         else:
-            print("Specify --service <name> or --all")
-            print(f"Available services: {list(SERVICE_CONFIG.keys())}")
+            logger.info("Specify --service <name> or --all")
+            logger.info(f"Available services: {list(SERVICE_CONFIG.keys())}")
     
     except Exception as e:
-        print(f"Error: {e}")
+        logger.error(f"Error: {e}")
         return 1
     
     return 0

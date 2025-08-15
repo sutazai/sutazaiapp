@@ -222,14 +222,14 @@ def main():
     project_root = Path("/opt/sutazaiapp")
     detector = BreakingChangeDetector(project_root)
     
-    print("🔍 Checking for breaking changes (Rule 2)...")
+    logger.info("🔍 Checking for breaking changes (Rule 2)...")
     
     # Get staged files
     staged_files = detector.get_staged_files()
     deleted_files = detector.get_deleted_files()
     
     if not staged_files and not deleted_files:
-        print("No staged changes to check")
+        logger.info("No staged changes to check")
         return 0
     
     # Check each staged file
@@ -246,30 +246,30 @@ def main():
     
     # Report results
     if detector.breaking_changes:
-        print("\n❌ Rule 2 Violation: Potential breaking changes detected")
-        print("\n📋 Breaking changes that need attention:")
+        logger.info("\n❌ Rule 2 Violation: Potential breaking changes detected")
+        logger.info("\n📋 Breaking changes that need attention:")
         
         for change in detector.breaking_changes:
-            print(f"  - {change}")
+            logger.info(f"  - {change}")
         
-        print("\n📋 How to proceed:")
-        print("  1. Ensure backward compatibility or provide migration path")
-        print("  2. Update all references to removed/changed functionality")
-        print("  3. Document breaking changes in CHANGELOG.md")
-        print("  4. Consider using feature flags for gradual rollout")
-        print("  5. Update tests to cover both old and new behavior")
-        print("\n  If these are intentional breaking changes:")
-        print("  - Add 'BREAKING CHANGE:' to your commit message")
-        print("  - Update version number according to semver")
+        logger.info("\n📋 How to proceed:")
+        logger.info("  1. Ensure backward compatibility or provide migration path")
+        logger.info("  2. Update all references to removed/changed functionality")
+        logger.info("  3. Document breaking changes in CHANGELOG.md")
+        logger.info("  4. Consider using feature flags for gradual rollout")
+        logger.info("  5. Update tests to cover both old and new behavior")
+        logger.info("\n  If these are intentional breaking changes:")
+        logger.info("  - Add 'BREAKING CHANGE:' to your commit message")
+        logger.info("  - Update version number according to semver")
         
         return 1
     
     if detector.warnings:
-        print("\n⚠️  Potential issues detected:")
+        logger.info("\n⚠️  Potential issues detected:")
         for warning in detector.warnings:
-            print(f"  - {warning}")
+            logger.warning(f"  - {warning}")
     
-    print("✅ Rule 2: No breaking changes detected")
+    logger.info("✅ Rule 2: No breaking changes detected")
     return 0
 
 if __name__ == "__main__":

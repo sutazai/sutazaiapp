@@ -1173,23 +1173,23 @@ async def main():
         # Generate reports
         report_info = await benchmark_suite.generate_report(results)
         
-        print("\n" + "="*80)
-        print("SUTAZAI SYSTEM PERFORMANCE BENCHMARK COMPLETED")
-        print("="*80)
-        print(f"Total Duration: {results['total_duration']:.1f} seconds")
-        print(f"Agents Tested: {len(results['agent_performance'])}")
-        print(f"SLA Compliance: {results['sla_compliance']['compliance_score']:.1f}%")
-        print(f"JSON Report: {report_info['json_report']}")
-        print(f"Markdown Report: {report_info['markdown_report']}")
+        logger.info("\n" + "="*80)
+        logger.info("SUTAZAI SYSTEM PERFORMANCE BENCHMARK COMPLETED")
+        logger.info("="*80)
+        logger.info(f"Total Duration: {results['total_duration']:.1f} seconds")
+        logger.info(f"Agents Tested: {len(results['agent_performance'])}")
+        logger.info(f"SLA Compliance: {results['sla_compliance']['compliance_score']:.1f}%")
+        logger.info(f"JSON Report: {report_info['json_report']}")
+        logger.info(f"Markdown Report: {report_info['markdown_report']}")
         
         # Print summary recommendations
         recommendations = results.get('recommendations', [])
         if recommendations:
-            print("\nKEY RECOMMENDATIONS:")
+            logger.info("\nKEY RECOMMENDATIONS:")
             for i, rec in enumerate(recommendations[:3], 1):
-                print(f"{i}. {rec}")
+                logger.info(f"{i}. {rec}")
         
-        print("="*80)
+        logger.info("="*80)
         
     except Exception as e:
         logger.error(f"Benchmark failed: {e}")

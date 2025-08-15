@@ -61,7 +61,7 @@ class TestEnhancedComplianceMonitor:
             
             # Create some test files
             (temp_path / 'deploy.sh').write_text('#!/bin/bash\necho "deploy"')
-            (temp_path / 'test_file.py').write_text('# Test file\nprint("hello")')
+            (temp_path / 'test_file.py').write_text('# Test file\nlogger.info("hello")')
             (temp_path / 'test_script.sh').write_text('#!/bin/bash\necho "test"')
             
             yield temp_path

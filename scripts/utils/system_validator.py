@@ -569,7 +569,7 @@ def main():
     
     elif args.command == 'status':
         status = validator.get_status()
-        print(json.dumps(status, indent=2))
+        logger.info(json.dumps(status, indent=2))
     
     elif args.command == 'test':
         # Run all tests
@@ -578,21 +578,21 @@ def main():
         
         # Run service health test
         result = loop.run_until_complete(validator.test_service_health_endpoints())
-        print(f"Service Health Test: {result.status}")
+        logger.info(f"Service Health Test: {result.status}")
         
         # Run microservice coordination test
         coordinator = MicroserviceCoordinationValidator()
         coord_result = loop.run_until_complete(coordinator.test_microservice_coordination())
-        print(f"Coordination Test: {coord_result['status']}")
+        logger.info(f"Coordination Test: {coord_result['status']}")
         
         # Run monitoring test
         monitor = ReliabilityMonitoringValidator()
         loop.run_until_complete(monitor.test_monitoring_metrics_accuracy())
-        print("Monitoring Test: passed")
+        logger.info("Monitoring Test: passed")
     
     elif args.command == 'investigate':
         results = validator.investigate_system()
-        print(json.dumps(results, indent=2))
+        logger.info(json.dumps(results, indent=2))
 
 if __name__ == '__main__':
     main()

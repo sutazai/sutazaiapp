@@ -251,9 +251,10 @@ class ContinuousLearner:
     """Main continuous learning orchestrator"""
     
     def __init__(self, config: ContinuousLearningConfig = None, 
-                 ollama_host: str = "http://localhost:11434"):
+                 ollama_host: str = None):
         self.config = config or ContinuousLearningConfig()
-        self.ollama_host = ollama_host
+        # Use environment variable or Docker service name
+        self.ollama_host = ollama_host if ollama_host else os.getenv("OLLAMA_HOST", "http://ollama:10104")
         self.session = None
         
         # Core components
@@ -937,12 +938,12 @@ async def example_continuous_learning():
     
     # Get statistics
     stats = learner.get_learning_statistics()
-    print("Learning Statistics:", json.dumps(stats, indent=2))
+    logger.info("Learning Statistics:", json.dumps(stats, indent=2))
     
     # Generate learning report
     analyzer = LearningAnalyzer(learner.config.database_path)
     report = analyzer.generate_learning_report()
-    print("\nLearning Report:\n", report)
+    logger.info("\nLearning Report:\n", report)
     
     # Cleanup
     await learner.cleanup()

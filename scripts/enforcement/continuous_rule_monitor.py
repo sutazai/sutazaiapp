@@ -305,19 +305,19 @@ def main():
                     monitor.start()
         else:
             # Interactive mode
-            print("\nMonitoring active. Press Ctrl+C to stop.")
+            logger.info("\nMonitoring active. Press Ctrl+C to stop.")
             try:
                 while True:
                     time.sleep(60)
                     # Print periodic status
                     status = monitor.get_status()
                     summary = status["summary"]
-                    print(f"\r[{datetime.now(timezone.utc).strftime('%H:%M:%S')}] "
+                    logger.info(f"\r[{datetime.now(timezone.utc).strftime('%H:%M:%S')}] "
                           f"Checks: {summary['metrics']['checks_performed']} | "
                           f"Trend: {summary['trend']} | "
                           f"Critical: {summary['metrics']['critical_violations']}", end="")
             except KeyboardInterrupt:
-                print("\n\nStopping monitor...")
+                logger.info("\n\nStopping monitor...")
     except Exception as e:
         logger.error(f"Monitor error: {e}")
     finally:

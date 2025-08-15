@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Ollama Performance Testing Script
 Benchmarks response times and validates <2s target
 """
@@ -162,12 +165,12 @@ class OllamaPerformanceTester:
     
     async def run_benchmark(self, num_iterations: int = 10):
         """Run comprehensive benchmark"""
-        print("="*70)
-        print("🏃 OLLAMA PERFORMANCE BENCHMARK")
-        print(f"Target: <2 second response time")
-        print(f"Model: {self.model}")
-        print(f"Iterations: {num_iterations}")
-        print("="*70)
+        logger.info("="*70)
+        logger.info("🏃 OLLAMA PERFORMANCE BENCHMARK")
+        logger.info(f"Target: <2 second response time")
+        logger.info(f"Model: {self.model}")
+        logger.info(f"Iterations: {num_iterations}")
+        logger.info("="*70)
         
         # Test prompts of varying complexity
         test_cases = [
@@ -178,27 +181,27 @@ class OllamaPerformanceTester:
         ]
         
         for test_name, prompt in test_cases:
-            print(f"\n📝 Testing: {test_name}")
-            print(f"   Prompt: {prompt[:60]}...")
-            print("-"*50)
+            logger.info(f"\n📝 Testing: {test_name}")
+            logger.info(f"   Prompt: {prompt[:60]}...")
+            logger.info("-"*50)
             
             # Direct Ollama tests
             direct_times = []
-            print("\n🔹 Direct Ollama API:")
+            logger.info("\n🔹 Direct Ollama API:")
             for i in range(num_iterations):
                 result = await self.test_direct_ollama(prompt)
                 if result["success"]:
                     direct_times.append(result["time"])
                     status = "✅" if result["time"] < 2.0 else "⚠️" if result["time"] < 3.0 else "❌"
-                    print(f"   Run {i+1}: {result['time']:.2f}s {status} ({result['tokens']} tokens)")
+                    logger.info(f"   Run {i+1}: {result['time']:.2f}s {status} ({result['tokens']} tokens)")
                 else:
-                    print(f"   Run {i+1}: ❌ Failed - {result['error']}")
+                    logger.error(f"   Run {i+1}: ❌ Failed - {result['error']}")
             
             if direct_times:
                 self._print_statistics("Direct API", direct_times)
             
             # Streaming tests
-            print("\n🔹 Streaming Performance:")
+            logger.info("\n🔹 Streaming Performance:")
             first_token_times = []
             for i in range(min(3, num_iterations)):  # Fewer streaming tests
                 result = await self.test_streaming_performance(prompt)
@@ -207,17 +210,17 @@ class OllamaPerformanceTester:
                     if ft_ms:
                         first_token_times.append(ft_ms)
                         status = "🎯" if ft_ms < 500 else "✅" if ft_ms < 1000 else "⚠️"
-                        print(f"   Run {i+1}: First token {ft_ms:.0f}ms {status} ({result['tokens_per_second']:.1f} tok/s)")
+                        logger.info(f"   Run {i+1}: First token {ft_ms:.0f}ms {status} ({result['tokens_per_second']:.1f} tok/s)")
                 else:
-                    print(f"   Run {i+1}: ❌ Failed - {result['error']}")
+                    logger.error(f"   Run {i+1}: ❌ Failed - {result['error']}")
             
             if first_token_times:
-                print(f"   Average first token: {statistics.mean(first_token_times):.0f}ms")
+                logger.info(f"   Average first token: {statistics.mean(first_token_times):.0f}ms")
             
             # Backend API tests (with caching)
             backend_times = []
             cached_count = 0
-            print("\n🔹 Backend API (with cache):")
+            logger.info("\n🔹 Backend API (with cache):")
             for i in range(num_iterations):
                 result = await self.test_backend_api(prompt)
                 if result["success"]:
@@ -226,16 +229,16 @@ class OllamaPerformanceTester:
                         cached_count += 1
                     cache_indicator = "💾" if result.get("cached") else "🔄"
                     status = "✅" if result["time"] < 2.0 else "⚠️" if result["time"] < 3.0 else "❌"
-                    print(f"   Run {i+1}: {result['time']:.2f}s {status} {cache_indicator}")
+                    logger.info(f"   Run {i+1}: {result['time']:.2f}s {status} {cache_indicator}")
                 else:
-                    print(f"   Run {i+1}: ❌ Failed - {result['error']}")
+                    logger.error(f"   Run {i+1}: ❌ Failed - {result['error']}")
             
             if backend_times:
                 self._print_statistics("Backend API", backend_times)
                 if cached_count > 0:
-                    print(f"   Cache hits: {cached_count}/{len(backend_times)} ({cached_count*100/len(backend_times):.0f}%)")
+                    logger.info(f"   Cache hits: {cached_count}/{len(backend_times)} ({cached_count*100/len(backend_times):.0f}%)")
             
-            print("-"*50)
+            logger.info("-"*50)
     
     def _print_statistics(self, name: str, times: List[float]):
         """Print statistics for a set of response times"""
@@ -249,34 +252,34 @@ class OllamaPerformanceTester:
         max_time = max(times)
         under_2s = sum(1 for t in times if t < 2.0)
         
-        print(f"\n   📊 {name} Statistics:")
-        print(f"      Average: {avg:.2f}s")
-        print(f"      Median:  {median:.2f}s")
-        print(f"      Min:     {min_time:.2f}s")
-        print(f"      Max:     {max_time:.2f}s")
-        print(f"      StdDev:  {stdev:.2f}s")
-        print(f"      Under 2s: {under_2s}/{len(times)} ({under_2s*100/len(times):.0f}%)")
+        logger.info(f"\n   📊 {name} Statistics:")
+        logger.info(f"      Average: {avg:.2f}s")
+        logger.info(f"      Median:  {median:.2f}s")
+        logger.info(f"      Min:     {min_time:.2f}s")
+        logger.info(f"      Max:     {max_time:.2f}s")
+        logger.info(f"      StdDev:  {stdev:.2f}s")
+        logger.info(f"      Under 2s: {under_2s}/{len(times)} ({under_2s*100/len(times):.0f}%)")
         
         # Performance rating
         if avg < 2.0:
-            print(f"      🎯 EXCELLENT: Average under 2s target!")
+            logger.info(f"      🎯 EXCELLENT: Average under 2s target!")
         elif avg < 3.0:
-            print(f"      ✅ GOOD: Average under 3s")
+            logger.info(f"      ✅ GOOD: Average under 3s")
         elif avg < 5.0:
-            print(f"      ⚠️  FAIR: Average under 5s")
+            logger.info(f"      ⚠️  FAIR: Average under 5s")
         else:
-            print(f"      ❌ POOR: Average over 5s")
+            logger.info(f"      ❌ POOR: Average over 5s")
     
     async def run_load_test(self, concurrent_requests: int = 10):
         """Run concurrent load test"""
-        print("\n" + "="*70)
-        print("🔥 LOAD TEST")
-        print(f"Concurrent requests: {concurrent_requests}")
-        print("="*70)
+        logger.info("\n" + "="*70)
+        logger.info("🔥 LOAD TEST")
+        logger.info(f"Concurrent requests: {concurrent_requests}")
+        logger.info("="*70)
         
         prompt = "What is the capital of France?"
         
-        print(f"\nSending {concurrent_requests} concurrent requests...")
+        logger.info(f"\nSending {concurrent_requests} concurrent requests...")
         tasks = []
         for i in range(concurrent_requests):
             tasks.append(self.test_direct_ollama(prompt))
@@ -288,25 +291,25 @@ class OllamaPerformanceTester:
         successful = [r for r in results if r["success"]]
         failed = [r for r in results if not r["success"]]
         
-        print(f"\n📊 Load Test Results:")
-        print(f"   Total time: {total_time:.2f}s")
-        print(f"   Successful: {len(successful)}/{concurrent_requests}")
-        print(f"   Failed: {len(failed)}/{concurrent_requests}")
+        logger.info(f"\n📊 Load Test Results:")
+        logger.info(f"   Total time: {total_time:.2f}s")
+        logger.info(f"   Successful: {len(successful)}/{concurrent_requests}")
+        logger.error(f"   Failed: {len(failed)}/{concurrent_requests}")
         
         if successful:
             response_times = [r["time"] for r in successful]
-            print(f"   Average response: {statistics.mean(response_times):.2f}s")
-            print(f"   Min response: {min(response_times):.2f}s")
-            print(f"   Max response: {max(response_times):.2f}s")
-            print(f"   Throughput: {len(successful)/total_time:.1f} req/s")
+            logger.info(f"   Average response: {statistics.mean(response_times):.2f}s")
+            logger.info(f"   Min response: {min(response_times):.2f}s")
+            logger.info(f"   Max response: {max(response_times):.2f}s")
+            logger.info(f"   Throughput: {len(successful)/total_time:.1f} req/s")
     
     def print_summary(self):
         """Print final summary and recommendations"""
-        print("\n" + "="*70)
-        print("🎯 OPTIMIZATION SUMMARY")
-        print("="*70)
+        logger.info("\n" + "="*70)
+        logger.info("🎯 OPTIMIZATION SUMMARY")
+        logger.info("="*70)
         
-        print("""
+        logger.info("""
 Key factors for <2s response time:
 
 ✅ ACHIEVED:
@@ -347,5 +350,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    print(f"\n🕐 Starting test at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    logger.info(f"\n🕐 Starting test at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     asyncio.run(main())

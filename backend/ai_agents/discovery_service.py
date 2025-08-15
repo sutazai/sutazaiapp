@@ -18,9 +18,9 @@ from universal_client import (
     UniversalAgentClient, AgentType
 )
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Configure structured logging (Rule 8 compliance)
+from backend.app.core.logging_config import get_logger
+logger = get_logger(__name__)
 
 
 class MatchingAlgorithm(Enum):
@@ -792,25 +792,25 @@ if __name__ == "__main__":
                 )
                 
                 if best_match:
-                    print(f"Best match: {best_match.agent_info.name}")
-                    print(f"Score: {best_match.total_score:.2f}")
-                    print(f"Reasoning: {best_match.reasoning}")
+                    logger.info(f"Best match: {best_match.agent_info.name}")
+                    logger.info(f"Score: {best_match.total_score:.2f}")
+                    logger.info(f"Reasoning: {best_match.reasoning}")
                 
                 # Get recommendations for natural language task
                 recommendations = discovery.get_agent_recommendations(
                     "I need help with security testing and vulnerability assessment"
                 )
                 
-                print(f"\nRecommendations ({len(recommendations)}):")
+                logger.info(f"\nRecommendations ({len(recommendations)}):")
                 for i, match in enumerate(recommendations, 1):
-                    print(f"{i}. {match.agent_info.name} (score: {match.total_score:.2f})")
+                    logger.info(f"{i}. {match.agent_info.name} (score: {match.total_score:.2f})")
                 
                 # Show registry stats
                 stats = discovery.get_registry_stats()
-                print(f"\nRegistry Stats:")
-                print(f"Total agents: {stats['total_agents']}")
-                print(f"Online agents: {stats['online_agents']}")
-                print(f"Top capabilities: {stats['most_common_capabilities'][:5]}")
+                logger.info(f"\nRegistry Stats:")
+                logger.info(f"Total agents: {stats['total_agents']}")
+                logger.info(f"Online agents: {stats['online_agents']}")
+                logger.info(f"Top capabilities: {stats['most_common_capabilities'][:5]}")
                 
             finally:
                 await discovery.stop()

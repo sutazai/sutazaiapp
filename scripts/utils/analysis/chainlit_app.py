@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Chainlit App for SutazAI - Conversational AI Interface
 """
 
@@ -75,7 +78,7 @@ async def route_to_agent(message: str) -> str:
 @cl.on_settings_update
 async def setup_agent_settings(settings):
     """Handle settings updates"""
-    print(f"Settings updated: {settings}")
+    logger.info(f"Settings updated: {settings}")
 
 # Add custom actions
 @cl.action_callback("analyze_code")

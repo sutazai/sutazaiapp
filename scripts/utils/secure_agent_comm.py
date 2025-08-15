@@ -942,10 +942,10 @@ if __name__ == "__main__":
         
         # Receive messages
         messages = await comm_system.receive_messages("worker-001")
-        print(f"Received {len(messages)} messages")
+        logger.info(f"Received {len(messages)} messages")
         
         # Get agent status
         status = comm_system.get_agent_status()
-        print(f"Agent Status: {status}")
+        logger.info(f"Agent Status: {status}")
     
     asyncio.run(main())

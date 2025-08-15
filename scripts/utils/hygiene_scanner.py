@@ -84,7 +84,7 @@ class HygieneScanner:
     
     def scan(self) -> Dict:
         """Run comprehensive hygiene scan"""
-        console.print("[bold blue]Starting Hygiene Scan...[/bold blue]")
+        console.logger.info("[bold blue]Starting Hygiene Scan...[/bold blue]")
         
         with Progress() as progress:
             task = progress.add_task("[cyan]Scanning codebase...", total=5)
@@ -377,7 +377,7 @@ class HygieneScanner:
     
     def _print_summary(self):
         """Print summary to console"""
-        console.print("\n[bold green]Scan Complete![/bold green]\n")
+        console.logger.info("\n[bold green]Scan Complete![/bold green]\n")
         
         # Create summary table
         table = Table(title="Hygiene Scan Summary")
@@ -388,13 +388,13 @@ class HygieneScanner:
         table.add_row("Scan Duration", f"{self.report_data['summary']['scan_duration']:.2f}s")
         table.add_row("Status", self.report_data['summary']['severity'])
         
-        console.print(table)
+        console.logger.info(table)
         
         # Show violation breakdown
         if self.report_data['summary']['violation_types']:
-            console.print("\n[bold]Violations by Type:[/bold]")
+            console.logger.info("\n[bold]Violations by Type:[/bold]")
             for vtype, count in self.report_data['summary']['violation_types'].items():
-                console.print(f"  • {vtype}: {count}")
+                console.logger.info(f"  • {vtype}: {count}")
 
 
 def main():
@@ -411,9 +411,9 @@ def main():
     
     # Save report
     json_path, html_path = scanner.save_report(args.output)
-    console.print(f"\n[bold]Reports saved:[/bold]")
-    console.print(f"  • JSON: {json_path}")
-    console.print(f"  • HTML: {html_path}")
+    console.logger.info(f"\n[bold]Reports saved:[/bold]")
+    console.logger.info(f"  • JSON: {json_path}")
+    console.logger.info(f"  • HTML: {html_path}")
     
     # Exit with appropriate code
     sys.exit(0 if report['summary']['severity'] == 'PASS' else 1)

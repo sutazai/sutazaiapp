@@ -753,11 +753,11 @@ async def main():
         await orchestrator.start()
         
     except KeyboardInterrupt:
-        print("\nShutdown requested...")
+        logger.info("\nShutdown requested...")
         await orchestrator.stop()
         
     except Exception as e:
-        print(f"Orchestrator failed: {e}")
+        logger.error(f"Orchestrator failed: {e}")
         sys.exit(1)
 
 

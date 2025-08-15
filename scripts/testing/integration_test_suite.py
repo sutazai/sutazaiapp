@@ -625,14 +625,14 @@ class IntegrationTestSuite:
         logger.info(f"Test report saved to {report_file}")
         
         # Print summary
-        print("\n" + "="*60)
-        print("INTEGRATION TEST SUMMARY")
-        print("="*60)
-        print(f"Total Scenarios: {self.scenarios_passed + self.scenarios_failed}")
-        print(f"Passed: {self.scenarios_passed}")
-        print(f"Failed: {self.scenarios_failed}")
-        print(f"Success Rate: {report['test_run']['success_rate']:.1f}%")
-        print("="*60)
+        logger.info("\n" + "="*60)
+        logger.info("INTEGRATION TEST SUMMARY")
+        logger.info("="*60)
+        logger.error(f"Total Scenarios: {self.scenarios_passed + self.scenarios_failed}")
+        logger.info(f"Passed: {self.scenarios_passed}")
+        logger.error(f"Failed: {self.scenarios_failed}")
+        logger.info(f"Success Rate: {report['test_run']['success_rate']:.1f}%")
+        logger.info("="*60)
     
     def run_all_scenarios(self):
         """Run all test scenarios"""

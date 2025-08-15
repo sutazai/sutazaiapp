@@ -498,28 +498,28 @@ def main():
     # Find requirements files
     requirements_files = analyzer.find_requirements_files()
     if not requirements_files:
-        print("❌ No requirements files found")
+        logger.info("❌ No requirements files found")
         return
     
-    print(f"📦 Found {len(requirements_files)} requirements files")
+    logger.info(f"📦 Found {len(requirements_files)} requirements files")
     
     # Analyze requirements
     if args.scan or args.clean:
-        print("🔍 Analyzing requirements...")
+        logger.info("🔍 Analyzing requirements...")
         results = analyzer.analyze_requirements()
         
-        print(f"📊 Found {analyzer.stats['unused_requirements']} unused requirements")
-        print(f"📊 Found {analyzer.stats['duplicate_requirements']} duplicate requirements")
+        logger.info(f"📊 Found {analyzer.stats['unused_requirements']} unused requirements")
+        logger.info(f"📊 Found {analyzer.stats['duplicate_requirements']} duplicate requirements")
         
         # Generate and save report
         report = analyzer.generate_report(results)
         with open(args.report, 'w') as f:
             f.write(report)
-        print(f"📋 Report saved to: {args.report}")
+        logger.info(f"📋 Report saved to: {args.report}")
         
         # Clean unused requirements if requested
         if args.clean:
-            print("🧹 Cleaning unused requirements...")
+            logger.info("🧹 Cleaning unused requirements...")
             cleaned_files = 0
             
             for file_path_str, analysis in results.items():
@@ -528,17 +528,17 @@ def main():
                     if analyzer.clean_requirements_file(file_path, analysis['unused_requirements']):
                         cleaned_files += 1
             
-            print(f"✅ Cleaned {cleaned_files} requirements files")
+            logger.info(f"✅ Cleaned {cleaned_files} requirements files")
     
     # Consolidate requirements if requested
     if args.consolidate:
-        print("📝 Consolidating requirements files...")
+        logger.info("📝 Consolidating requirements files...")
         if analyzer.consolidate_requirements():
-            print("✅ Requirements files consolidated")
+            logger.info("✅ Requirements files consolidated")
         else:
-            print("ℹ️ No consolidation needed")
+            logger.info("ℹ️ No consolidation needed")
     
-    print("🎉 ULTRA requirements cleanup complete!")
+    logger.info("🎉 ULTRA requirements cleanup complete!")
 
 
 if __name__ == "__main__":

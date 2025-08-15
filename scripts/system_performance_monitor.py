@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 REAL-TIME SYSTEM PERFORMANCE MONITOR
 Date: August 12, 2025
 Author: System Optimization and Reorganization Specialist
@@ -31,7 +34,7 @@ class SystemPerformanceMonitor:
         
     def signal_handler(self, signum, frame):
         """Handle shutdown signals gracefully"""
-        print(f"\nReceived signal {signum}. Shutting down monitoring...")
+        logger.info(f"\nReceived signal {signum}. Shutting down monitoring...")
         self.monitoring = False
         
     def get_detailed_metrics(self) -> Dict:
@@ -109,7 +112,7 @@ class SystemPerformanceMonitor:
             }
             
         except Exception as e:
-            print(f"Error getting metrics: {e}")
+            logger.error(f"Error getting metrics: {e}")
             return {'error': str(e), 'timestamp': datetime.now().isoformat()}
     
     def get_top_processes(self, limit=5) -> List[Dict]:
@@ -146,47 +149,47 @@ class SystemPerformanceMonitor:
         """Display metrics in a readable format"""
         os.system('clear')  # Clear screen
         
-        print("🔍 ULTRA SYSTEM PERFORMANCE MONITOR")
-        print("=" * 70)
+        logger.info("🔍 ULTRA SYSTEM PERFORMANCE MONITOR")
+        logger.info("=" * 70)
         
         if 'error' in metrics:
-            print(f"❌ Error: {metrics['error']}")
+            logger.error(f"❌ Error: {metrics['error']}")
             return
         
         # System overview
-        print(f"⏰ Time: {metrics['timestamp']}")
-        print(f"🏃 Uptime: {datetime.now() - self.start_time}")
-        print()
+        logger.info(f"⏰ Time: {metrics['timestamp']}")
+        logger.info(f"🏃 Uptime: {datetime.now() - self.start_time}")
+        logger.info()
         
         # Performance metrics
-        print("📊 PERFORMANCE METRICS")
-        print("-" * 30)
-        print(f"CPU Usage:        {metrics['cpu_percent']:6.1f}%")
-        print(f"Memory Usage:     {metrics['memory_percent']:6.1f}% ({metrics['memory_used_gb']:.1f}GB used)")
-        print(f"Disk Usage:       {metrics['disk_used_percent']:6.1f}%")
-        print(f"Load Average:     {metrics['load_average_1m']:.2f}, {metrics['load_average_5m']:.2f}, {metrics['load_average_15m']:.2f}")
-        print()
+        logger.info("📊 PERFORMANCE METRICS")
+        logger.info("-" * 30)
+        logger.info(f"CPU Usage:        {metrics['cpu_percent']:6.1f}%")
+        logger.info(f"Memory Usage:     {metrics['memory_percent']:6.1f}% ({metrics['memory_used_gb']:.1f}GB used)")
+        logger.info(f"Disk Usage:       {metrics['disk_used_percent']:6.1f}%")
+        logger.info(f"Load Average:     {metrics['load_average_1m']:.2f}, {metrics['load_average_5m']:.2f}, {metrics['load_average_15m']:.2f}")
+        logger.info()
         
         # Process and resource metrics
-        print("🔢 RESOURCE METRICS")
-        print("-" * 30)
-        print(f"Processes:        {metrics['process_count']:>6}")
-        print(f"File Descriptors: {metrics['file_descriptors']:>6}")
-        print(f"Network Conns:    {metrics['network_connections']:>6}")
-        print(f"Context Switches: {metrics['context_switches']:>6}")
-        print()
+        logger.info("🔢 RESOURCE METRICS")
+        logger.info("-" * 30)
+        logger.info(f"Processes:        {metrics['process_count']:>6}")
+        logger.info(f"File Descriptors: {metrics['file_descriptors']:>6}")
+        logger.info(f"Network Conns:    {metrics['network_connections']:>6}")
+        logger.info(f"Context Switches: {metrics['context_switches']:>6}")
+        logger.info()
         
         # Container metrics
-        print("🐳 CONTAINER METRICS")
-        print("-" * 30)
-        print(f"Total Running:    {metrics['running_containers']:>6}")
-        print(f"MCP Containers:   {metrics['mcp_containers']:>6} (PRESERVED)")
-        print(f"SutazAI:          {metrics['sutazai_containers']:>6}")
-        print()
+        logger.info("🐳 CONTAINER METRICS")
+        logger.info("-" * 30)
+        logger.info(f"Total Running:    {metrics['running_containers']:>6}")
+        logger.info(f"MCP Containers:   {metrics['mcp_containers']:>6} (PRESERVED)")
+        logger.info(f"SutazAI:          {metrics['sutazai_containers']:>6}")
+        logger.info()
         
         # Health indicators
-        print("🚦 HEALTH INDICATORS")
-        print("-" * 30)
+        logger.info("🚦 HEALTH INDICATORS")
+        logger.info("-" * 30)
         
         # CPU health
         cpu_status = "🟢 Good"
@@ -195,7 +198,7 @@ class SystemPerformanceMonitor:
         elif metrics['cpu_percent'] > 60:
             cpu_status = "🟡 Warning"
             
-        print(f"CPU Health:       {cpu_status}")
+        logger.info(f"CPU Health:       {cpu_status}")
         
         # Memory health
         memory_status = "🟢 Good"
@@ -204,7 +207,7 @@ class SystemPerformanceMonitor:
         elif metrics['memory_percent'] > 70:
             memory_status = "🟡 Warning"
             
-        print(f"Memory Health:    {memory_status}")
+        logger.info(f"Memory Health:    {memory_status}")
         
         # Load health
         load_status = "🟢 Good"
@@ -213,7 +216,7 @@ class SystemPerformanceMonitor:
         elif metrics['load_average_1m'] > 2.0:
             load_status = "🟡 Warning"
             
-        print(f"Load Health:      {load_status}")
+        logger.info(f"Load Health:      {load_status}")
         
         # File descriptor health
         fd_status = "🟢 Good"
@@ -222,21 +225,21 @@ class SystemPerformanceMonitor:
         elif metrics['file_descriptors'] > 50000:
             fd_status = "🟡 Warning"
             
-        print(f"FD Health:        {fd_status}")
-        print()
+        logger.info(f"FD Health:        {fd_status}")
+        logger.info()
         
         # Top processes
         if top_processes and not top_processes[0].get('error'):
-            print("🔝 TOP PROCESSES")
-            print("-" * 70)
-            print(f"{'PID':<8} {'CPU%':<6} {'MEM%':<6} {'NAME':<12} {'COMMAND'}")
-            print("-" * 70)
+            logger.info("🔝 TOP PROCESSES")
+            logger.info("-" * 70)
+            logger.info(f"{'PID':<8} {'CPU%':<6} {'MEM%':<6} {'NAME':<12} {'COMMAND'}")
+            logger.info("-" * 70)
             
             for proc in top_processes:
-                print(f"{proc['pid']:<8} {proc['cpu_percent']:<6.1f} {proc['memory_percent']:<6.1f} {proc['name']:<12} {proc['cmdline'][:30]}")
+                logger.info(f"{proc['pid']:<8} {proc['cpu_percent']:<6.1f} {proc['memory_percent']:<6.1f} {proc['name']:<12} {proc['cmdline'][:30]}")
         
-        print()
-        print("Press Ctrl+C to stop monitoring...")
+        logger.info()
+        logger.info("Press Ctrl+C to stop monitoring...")
     
     def save_metrics_history(self):
         """Save metrics history to file"""
@@ -256,17 +259,17 @@ class SystemPerformanceMonitor:
             with open(log_file, 'w') as f:
                 json.dump(report, f, indent=2)
                 
-            print(f"\n📄 Metrics saved to: {log_file}")
+            logger.info(f"\n📄 Metrics saved to: {log_file}")
             
         except Exception as e:
-            print(f"Error saving metrics: {e}")
+            logger.error(f"Error saving metrics: {e}")
     
     def monitor(self):
         """Main monitoring loop"""
-        print("🔍 Starting Ultra System Performance Monitor...")
-        print(f"📊 Monitoring for {self.monitor_duration} seconds (or until Ctrl+C)")
-        print("🔧 MCP containers are being preserved during optimization")
-        print()
+        logger.info("🔍 Starting Ultra System Performance Monitor...")
+        logger.info(f"📊 Monitoring for {self.monitor_duration} seconds (or until Ctrl+C)")
+        logger.info("🔧 MCP containers are being preserved during optimization")
+        logger.info()
         
         end_time = datetime.now().timestamp() + self.monitor_duration
         
@@ -291,12 +294,12 @@ class SystemPerformanceMonitor:
             except KeyboardInterrupt:
                 break
             except Exception as e:
-                print(f"Error in monitoring loop: {e}")
+                logger.error(f"Error in monitoring loop: {e}")
                 time.sleep(5)
         
         # Save final report
         self.save_metrics_history()
-        print("\n✅ Monitoring session completed.")
+        logger.info("\n✅ Monitoring session completed.")
 
 def main():
     """Main execution"""
@@ -318,10 +321,10 @@ def main():
         monitor.monitor()
         return 0
     except KeyboardInterrupt:
-        print("\n⚠️  Monitoring interrupted by user")
+        logger.info("\n⚠️  Monitoring interrupted by user")
         return 130
     except Exception as e:
-        print(f"❌ Fatal error: {e}")
+        logger.error(f"❌ Fatal error: {e}")
         return 1
 
 if __name__ == "__main__":

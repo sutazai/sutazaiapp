@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+
+logger = logging.getLogger(__name__)
 Test SutazAI Authentication System
 Comprehensive end-to-end testing of authentication components
 """
@@ -492,10 +494,10 @@ async def main():
     """Main test function"""
     tester = AuthenticationTester()
     
-    print("=" * 80)
-    print("SutazAI Authentication System Test Suite")
-    print("=" * 80)
-    print()
+    logger.info("=" * 80)
+    logger.info("SutazAI Authentication System Test Suite")
+    logger.info("=" * 80)
+    logger.info()
     
     # Run all tests
     overall_success = await tester.run_all_tests()
@@ -503,34 +505,34 @@ async def main():
     # Generate report
     report = tester.generate_test_report()
     
-    print()
-    print("=" * 80)
-    print("TEST RESULTS SUMMARY")
-    print("=" * 80)
-    print(f"Total Tests: {report['summary']['total_tests']}")
-    print(f"Passed: {report['summary']['passed']}")
-    print(f"Failed: {report['summary']['failed']}")
-    print(f"Success Rate: {report['summary']['success_rate']}%")
-    print()
+    logger.info()
+    logger.info("=" * 80)
+    logger.info("TEST RESULTS SUMMARY")
+    logger.info("=" * 80)
+    logger.info(f"Total Tests: {report['summary']['total_tests']}")
+    logger.info(f"Passed: {report['summary']['passed']}")
+    logger.error(f"Failed: {report['summary']['failed']}")
+    logger.info(f"Success Rate: {report['summary']['success_rate']}%")
+    logger.info()
     
     # Show category breakdown
-    print("Category Breakdown:")
-    print("-" * 40)
+    logger.info("Category Breakdown:")
+    logger.info("-" * 40)
     for category, stats in report['categories'].items():
         total = stats['passed'] + stats['failed']
         rate = (stats['passed'] / total * 100) if total > 0 else 0
-        print(f"{category:30} {stats['passed']:2}/{total:2} ({rate:5.1f}%)")
+        logger.info(f"{category:30} {stats['passed']:2}/{total:2} ({rate:5.1f}%)")
     
-    print()
+    logger.info()
     
     # Show failed tests
     failed_tests = [r for r in report['detailed_results'] if not r['success']]
     if failed_tests:
-        print("FAILED TESTS:")
-        print("-" * 40)
+        logger.error("FAILED TESTS:")
+        logger.info("-" * 40)
         for test in failed_tests:
-            print(f"✗ {test['test']}: {test['details']}")
-        print()
+            logger.info(f"✗ {test['test']}: {test['details']}")
+        logger.info()
     
     # Save detailed report
     report_file = '/opt/sutazaiapp/logs/auth_test_report.json'
@@ -539,23 +541,23 @@ async def main():
     with open(report_file, 'w') as f:
         json.dump(report, f, indent=2)
     
-    print(f"Detailed report saved to: {report_file}")
-    print()
+    logger.info(f"Detailed report saved to: {report_file}")
+    logger.info()
     
     if overall_success:
-        print("🎉 All authentication tests PASSED!")
-        print("   The authentication system is working correctly.")
+        logger.info("🎉 All authentication tests PASSED!")
+        logger.info("   The authentication system is working correctly.")
     else:
-        print("⚠️  Some authentication tests FAILED!")
-        print("   Please review the failed tests and fix any issues.")
+        logger.error("⚠️  Some authentication tests FAILED!")
+        logger.error("   Please review the failed tests and fix any issues.")
     
-    print()
-    print("Authentication system status:")
-    print(f"  - Service Health: {'✓' if any('Service Health' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
-    print(f"  - JWT Tokens: {'✓' if any('JWT Token' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
-    print(f"  - RBAC Control: {'✓' if any('RBAC Access' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
-    print(f"  - Kong Proxy: {'✓' if any('Kong Proxy' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
-    print(f"  - Service Accounts: {'✓' if any('Service Account' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
+    logger.info()
+    logger.info("Authentication system status:")
+    logger.info(f"  - Service Health: {'✓' if any('Service Health' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
+    logger.info(f"  - JWT Tokens: {'✓' if any('JWT Token' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
+    logger.info(f"  - RBAC Control: {'✓' if any('RBAC Access' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
+    logger.info(f"  - Kong Proxy: {'✓' if any('Kong Proxy' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
+    logger.info(f"  - Service Accounts: {'✓' if any('Service Account' in r['test'] and r['success'] for r in report['detailed_results']) else '✗'}")
     
     return 0 if overall_success else 1
 

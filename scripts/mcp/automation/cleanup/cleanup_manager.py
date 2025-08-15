@@ -705,8 +705,8 @@ async def main():
         
         # Example: Analyze cleanup candidates
         analysis = await cleanup_manager.analyze_cleanup_candidates()
-        print("Cleanup Analysis Results:")
-        print(json.dumps(analysis, indent=2, default=str))
+        logger.info("Cleanup Analysis Results:")
+        logger.info(json.dumps(analysis, indent=2, default=str))
         
         # Example: Create and execute a dry-run job
         if analysis['estimated_impact']['items_to_clean'] > 0:
@@ -718,8 +718,8 @@ async def main():
             )
             
             result = await cleanup_manager.execute_cleanup_job(job_id, dry_run=True)
-            print(f"\nDry Run Results for Job {job_id}:")
-            print(json.dumps(result.to_dict(), indent=2, default=str))
+            logger.info(f"\nDry Run Results for Job {job_id}:")
+            logger.info(json.dumps(result.to_dict(), indent=2, default=str))
         
     except Exception as e:
         logging.error(f"Error in cleanup manager: {e}", exc_info=True)

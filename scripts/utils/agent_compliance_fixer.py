@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 AI Agent Compliance Fixer
 Testing QA Validator Implementation
 
@@ -82,28 +85,28 @@ class AgentComplianceFixer:
     def fix_all_agents(self) -> Dict[str, List[str]]:
         """Fix all agent compliance violations"""
         
-        print("🔧 Starting Comprehensive Agent Compliance Fixing...")
-        print("=" * 70)
+        logger.info("🔧 Starting Comprehensive Agent Compliance Fixing...")
+        logger.info("=" * 70)
         
         # Get all main agent files
         agent_files = self._get_main_agent_files()
         
-        print(f"📊 Found {len(agent_files)} agents to fix")
-        print("-" * 50)
+        logger.info(f"📊 Found {len(agent_files)} agents to fix")
+        logger.info("-" * 50)
         
         for agent_file in agent_files:
             agent_name = agent_file.stem
-            print(f"🔧 Fixing: {agent_name}")
+            logger.info(f"🔧 Fixing: {agent_name}")
             
             fixes = self._fix_single_agent(agent_file)
             self.fixes_applied[agent_name] = fixes
             
             if fixes:
-                print(f"✅ {agent_name}: Applied {len(fixes)} fixes")
+                logger.info(f"✅ {agent_name}: Applied {len(fixes)} fixes")
                 for fix in fixes:
-                    print(f"   - {fix}")
+                    logger.info(f"   - {fix}")
             else:
-                print(f"ℹ️ {agent_name}: No fixes needed")
+                logger.info(f"ℹ️ {agent_name}: No fixes needed")
         
         return self.fixes_applied
     
@@ -451,36 +454,36 @@ Remember: The system MUST work at 100% efficiency with 10/10 code rating. NO exc
 def main():
     """Main function to run comprehensive agent fixing"""
     
-    print("🔧 Testing QA Validator - Agent Compliance Fixer")
-    print("=" * 80)
+    logger.info("🔧 Testing QA Validator - Agent Compliance Fixer")
+    logger.info("=" * 80)
     
     fixer = AgentComplianceFixer()
     results = fixer.fix_all_agents()
     
-    print("\n" + "=" * 80)
-    print("📊 COMPLIANCE FIXING REPORT")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info("📊 COMPLIANCE FIXING REPORT")
+    logger.info("=" * 80)
     
     total_agents = len(results)
     agents_fixed = len([r for r in results.values() if r and not any("ERROR" in fix for fix in r)])
     total_fixes = sum(len(fixes) for fixes in results.values())
     
-    print(f"📈 Total Agents Processed: {total_agents}")
-    print(f"✅ Agents Successfully Fixed: {agents_fixed}")
-    print(f"❌ Agents with Errors: {total_agents - agents_fixed}")
-    print(f"🔧 Total Fixes Applied: {total_fixes}")
+    logger.info(f"📈 Total Agents Processed: {total_agents}")
+    logger.info(f"✅ Agents Successfully Fixed: {agents_fixed}")
+    logger.error(f"❌ Agents with Errors: {total_agents - agents_fixed}")
+    logger.info(f"🔧 Total Fixes Applied: {total_fixes}")
     
     # Show detailed results
-    print(f"\n🔍 Detailed Results:")
-    print("-" * 50)
+    logger.info(f"\n🔍 Detailed Results:")
+    logger.info("-" * 50)
     for agent_name, fixes in results.items():
         if fixes:
             if any("ERROR" in fix for fix in fixes):
-                print(f"❌ {agent_name}: {len(fixes)} issues")
+                logger.info(f"❌ {agent_name}: {len(fixes)} issues")
             else:
-                print(f"✅ {agent_name}: {len(fixes)} fixes applied")
+                logger.info(f"✅ {agent_name}: {len(fixes)} fixes applied")
         else:
-            print(f"ℹ️ {agent_name}: No fixes needed")
+            logger.info(f"ℹ️ {agent_name}: No fixes needed")
     
     # Show summary of fix types
     all_fixes = []
@@ -495,13 +498,13 @@ def main():
             fix_types[fix_key] = fix_types.get(fix_key, 0) + 1
     
     if fix_types:
-        print(f"\n🔧 Fix Types Applied:")
-        print("-" * 50)
+        logger.info(f"\n🔧 Fix Types Applied:")
+        logger.info("-" * 50)
         for fix_type, count in sorted(fix_types.items(), key=lambda x: x[1], reverse=True):
-            print(f"   {count}x {fix_type}")
+            logger.info(f"   {count}x {fix_type}")
     
-    print(f"\n💾 Backups saved to: {fixer.backup_dir}")
-    print("🎉 Agent compliance fixing completed!")
+    logger.info(f"\n💾 Backups saved to: {fixer.backup_dir}")
+    logger.info("🎉 Agent compliance fixing completed!")
     
     return 0 if agents_fixed == total_agents else 1
 

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA CODE REVIEWER - COMPREHENSIVE DUPLICATE ANALYSIS
 Analyzes exact duplicates and near-duplicates in the SutazAI codebase.
 Follows CODEBASE RULE 4: Reuse Before Creating
@@ -34,7 +37,7 @@ class UltraDuplicateAnalyzer:
             with open(file_path, 'rb') as f:
                 return hashlib.md5(f.read()).hexdigest()
         except Exception as e:
-            print(f"Error reading {file_path}: {e}")
+            logger.error(f"Error reading {file_path}: {e}")
             return ""
 
     def get_file_content(self, file_path: Path) -> str:
@@ -43,7 +46,7 @@ class UltraDuplicateAnalyzer:
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 return f.read()
         except Exception as e:
-            print(f"Error reading {file_path}: {e}")
+            logger.error(f"Error reading {file_path}: {e}")
             return ""
 
     def similarity_ratio(self, content1: str, content2: str) -> float:
@@ -82,7 +85,7 @@ class UltraDuplicateAnalyzer:
                                 self.stats["dockerfiles"] += 1
                                 
             except Exception as e:
-                print(f"Error processing pattern {pattern}: {e}")
+                logger.error(f"Error processing pattern {pattern}: {e}")
         
         # Filter to only duplicates (more than one file with same hash)
         duplicates = {h: files for h, files in hash_to_files.items() if len(files) > 1}
@@ -114,7 +117,7 @@ class UltraDuplicateAnalyzer:
                             file_contents[file_path] = content
                             
             except Exception as e:
-                print(f"Error processing near-duplicates for {pattern}: {e}")
+                logger.error(f"Error processing near-duplicates for {pattern}: {e}")
         
         # Compare all pairs
         files_list = list(file_contents.keys())
@@ -155,7 +158,7 @@ class UltraDuplicateAnalyzer:
                     self.stats["docker_compose_references"] += script_refs
                     
         except Exception as e:
-            print(f"Error analyzing docker-compose files: {e}")
+            logger.error(f"Error analyzing docker-compose files: {e}")
             
         return docker_compose_files
 
@@ -212,26 +215,26 @@ class UltraDuplicateAnalyzer:
 
     def run_comprehensive_analysis(self) -> Dict:
         """Run complete duplicate analysis."""
-        print("🔍 Starting ULTRA DUPLICATE ANALYSIS...")
+        logger.info("🔍 Starting ULTRA DUPLICATE ANALYSIS...")
         
         # 1. Find exact duplicates
-        print("📋 Finding exact duplicates...")
+        logger.info("📋 Finding exact duplicates...")
         shell_duplicates = self.find_exact_duplicates(["*.sh"])
         python_duplicates = self.find_exact_duplicates(["*.py"])
         dockerfile_duplicates = self.find_exact_duplicates(["Dockerfile*"])
         
         # 2. Find near-duplicates
-        print("📋 Finding near-duplicates (>90% similar)...")
+        logger.info("📋 Finding near-duplicates (>90% similar)...")
         near_dupes_shell = self.find_near_duplicates(["*.sh"], 0.9)
         near_dupes_python = self.find_near_duplicates(["*.py"], 0.9)
         near_dupes_dockerfile = self.find_near_duplicates(["Dockerfile*"], 0.9)
         
         # 3. Analyze docker-compose references
-        print("📋 Analyzing docker-compose script references...")
+        logger.info("📋 Analyzing docker-compose script references...")
         docker_compose_refs = self.find_docker_compose_script_references()
         
         # 4. Analyze test and build scripts
-        print("📋 Analyzing test and build script duplicates...")
+        logger.info("📋 Analyzing test and build script duplicates...")
         test_duplicates = self.analyze_test_scripts()
         build_duplicates = self.analyze_build_scripts()
         
@@ -296,9 +299,9 @@ class UltraDuplicateAnalyzer:
 if __name__ == "__main__":
     analyzer = UltraDuplicateAnalyzer()
     
-    print("=" * 80)
-    print("🚀 ULTRA CODE REVIEWER - DUPLICATE ANALYSIS")
-    print("=" * 80)
+    logger.info("=" * 80)
+    logger.info("🚀 ULTRA CODE REVIEWER - DUPLICATE ANALYSIS")
+    logger.info("=" * 80)
     
     # Run comprehensive analysis
     results = analyzer.run_comprehensive_analysis()
@@ -308,30 +311,30 @@ if __name__ == "__main__":
     with open(output_file, 'w') as f:
         json.dump(results, f, indent=2)
     
-    print(f"📊 Results saved to: {output_file}")
+    logger.info(f"📊 Results saved to: {output_file}")
     
     # Print summary
-    print("\n" + "=" * 80)
-    print("📈 ANALYSIS SUMMARY")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info("📈 ANALYSIS SUMMARY")
+    logger.info("=" * 80)
     
     stats = results["statistics"]
-    print(f"📁 Total files analyzed: {stats['total_files']}")
-    print(f"🐚 Shell scripts: {stats['shell_scripts']}")
-    print(f"🐍 Python files: {stats['python_files']}")
-    print(f"🐳 Dockerfiles: {stats['dockerfiles']}")
-    print(f"🔀 Exact duplicate groups: {results['exact_duplicates']['total_exact_groups']}")
-    print(f"📦 Total duplicate files: {results['exact_duplicates']['total_duplicate_files']}")
-    print(f"⚖️ Near-duplicate groups: {stats['near_duplicates']}")
-    print(f"🐳 Docker-compose script refs: {stats['docker_compose_references']}")
+    logger.info(f"📁 Total files analyzed: {stats['total_files']}")
+    logger.info(f"🐚 Shell scripts: {stats['shell_scripts']}")
+    logger.info(f"🐍 Python files: {stats['python_files']}")
+    logger.info(f"🐳 Dockerfiles: {stats['dockerfiles']}")
+    logger.info(f"🔀 Exact duplicate groups: {results['exact_duplicates']['total_exact_groups']}")
+    logger.info(f"📦 Total duplicate files: {results['exact_duplicates']['total_duplicate_files']}")
+    logger.info(f"⚖️ Near-duplicate groups: {stats['near_duplicates']}")
+    logger.info(f"🐳 Docker-compose script refs: {stats['docker_compose_references']}")
     
-    print("\n" + "=" * 80)
-    print("🎯 RECOMMENDATIONS")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info("🎯 RECOMMENDATIONS")
+    logger.info("=" * 80)
     
     for rec in results["recommendations"]:
-        print(rec)
+        logger.info(rec)
         
-    print("\n" + "=" * 80)
-    print("✅ ANALYSIS COMPLETE")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info("✅ ANALYSIS COMPLETE")
+    logger.info("=" * 80)

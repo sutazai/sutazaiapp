@@ -752,8 +752,8 @@ if __name__ == "__main__":
         # This would trigger SQL injection detection
         # rasp._check_sql_injection("' OR '1'='1' --")
         
-        print("RASP Engine initialized and monitoring...")
-        print(f"Statistics: {rasp.get_statistics()}")
+        logger.info("RASP Engine initialized and monitoring...")
+        logger.info(f"Statistics: {rasp.get_statistics()}")
         
     except SecurityException as e:
-        print(f"Security threat blocked: {e}")
+        logger.info(f"Security threat blocked: {e}")

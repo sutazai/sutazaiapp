@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 🔧 SutazAI Rule Enforcement Validator (Simplified)
 Core rule validation system for immediate deployment
 """
@@ -16,11 +19,11 @@ def validate_critical_rules(root_path="/opt/sutazaiapp"):
     violations = []
     root = Path(root_path)
     
-    print("🔧 SUTAZAI RULE ENFORCEMENT VALIDATION")
-    print("=" * 50)
+    logger.info("🔧 SUTAZAI RULE ENFORCEMENT VALIDATION")
+    logger.info("=" * 50)
     
     # Rule 1: Check for fantasy/placeholder code
-    print("📌 Rule 1: Real Implementation Only...")
+    logger.info("📌 Rule 1: Real Implementation Only...")
     fantasy_count = 0
     try:
         result = subprocess.run([
@@ -34,7 +37,7 @@ def validate_critical_rules(root_path="/opt/sutazaiapp"):
         pass
     
     # Rule 5: Professional Standards - Test Coverage
-    print("📌 Rule 5: Professional Standards...")
+    logger.info("📌 Rule 5: Professional Standards...")
     test_files = list(root.rglob("test_*.py")) + list(root.rglob("*_test.py"))
     python_files = list(root.rglob("*.py"))
     if python_files:
@@ -43,13 +46,13 @@ def validate_critical_rules(root_path="/opt/sutazaiapp"):
             violations.append(f"Rule 5: Test coverage {test_ratio:.1%} below professional standards")
     
     # Rule 7: Script Organization
-    print("📌 Rule 7: Script Organization...")
+    logger.info("📌 Rule 7: Script Organization...")
     scripts_dir = root / "scripts"
     if not scripts_dir.exists():
         violations.append("Rule 7: Missing centralized /scripts/ directory")
     
     # Rule 11: Docker Excellence - Check for USER directive
-    print("📌 Rule 11: Docker Excellence...")
+    logger.info("📌 Rule 11: Docker Excellence...")
     dockerfiles = list(root.rglob("Dockerfile*"))
     docker_violations = 0
     for dockerfile in dockerfiles:
@@ -63,7 +66,7 @@ def validate_critical_rules(root_path="/opt/sutazaiapp"):
         violations.append(f"Rule 11: {docker_violations} Dockerfiles missing USER directive")
     
     # Rule 13: Zero Tolerance for Waste
-    print("📌 Rule 13: Zero Tolerance for Waste...")
+    logger.info("📌 Rule 13: Zero Tolerance for Waste...")
     try:
         result = subprocess.run([
             'grep', '-r', 'TODO:\|FIXME:\|XXX:\|HACK:', 
@@ -76,7 +79,7 @@ def validate_critical_rules(root_path="/opt/sutazaiapp"):
         pass
     
     # Rule 20: MCP Protection
-    print("📌 Rule 20: MCP Server Protection...")
+    logger.info("📌 Rule 20: MCP Server Protection...")
     mcp_json = root / ".mcp.json"
     if mcp_json.exists():
         import time
@@ -85,16 +88,16 @@ def validate_critical_rules(root_path="/opt/sutazaiapp"):
             violations.append("Rule 20: MCP configuration modified recently - verify authorization")
     
     # Generate summary
-    print("\n" + "=" * 50)
+    logger.info("\n" + "=" * 50)
     if violations:
-        print("⚠️  RULE VIOLATIONS DETECTED:")
+        logger.info("⚠️  RULE VIOLATIONS DETECTED:")
         for violation in violations:
-            print(f"  • {violation}")
-        print(f"\nCompliance Status: {max(0, 100 - len(violations) * 10):.0f}%")
+            logger.info(f"  • {violation}")
+        logger.info(f"\nCompliance Status: {max(0, 100 - len(violations) * 10):.0f}%")
         return len(violations)
     else:
-        print("✅ ALL CRITICAL RULES COMPLIANT")
-        print("Compliance Status: 100%")
+        logger.error("✅ ALL CRITICAL RULES COMPLIANT")
+        logger.info("Compliance Status: 100%")
         return 0
 
 
@@ -104,17 +107,17 @@ def main():
         violation_count = validate_critical_rules()
         
         if violation_count > 3:
-            print("\n❌ CRITICAL: Too many violations detected!")
+            logger.error("\n❌ CRITICAL: Too many violations detected!")
             sys.exit(2)
         elif violation_count > 0:
-            print("\n⚠️  WARNING: Some violations detected")
+            logger.warning("\n⚠️  WARNING: Some violations detected")
             sys.exit(1)
         else:
-            print("\n✅ SUCCESS: No critical violations")
+            logger.error("\n✅ SUCCESS: No critical violations")
             sys.exit(0)
             
     except Exception as e:
-        print(f"\n💥 ERROR: Validation failed: {e}")
+        logger.error(f"\n💥 ERROR: Validation failed: {e}")
         sys.exit(2)
 
 

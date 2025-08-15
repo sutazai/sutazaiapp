@@ -1,4 +1,7 @@
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Enhanced File Reader with automatic large file handling.
 
 This module provides a unified interface for reading files of any size,
@@ -232,13 +235,13 @@ if __name__ == "__main__":
     
     if len(sys.argv) > 1:
         file_path = sys.argv[1]
-        print(f"Reading file: {file_path}")
+        logger.info(f"Reading file: {file_path}")
         
         info = read_file_info(file_path)
-        print(f"File size: {info['size_mb']:.2f}MB")
-        print(f"Exceeds limit: {info['exceeds_256kb_limit']}")
-        print(f"Estimated lines: {info['estimated_lines']:,}")
+        logger.info(f"File size: {info['size_mb']:.2f}MB")
+        logger.info(f"Exceeds limit: {info['exceeds_256kb_limit']}")
+        logger.info(f"Estimated lines: {info['estimated_lines']:,}")
         
-        print("\nFirst 20 lines:")
-        print(read_file(file_path, offset=1, limit=20))
+        logger.info("\nFirst 20 lines:")
+        logger.info(read_file(file_path, offset=1, limit=20))
     else:

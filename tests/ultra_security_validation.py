@@ -754,8 +754,8 @@ class UltraSecurityValidator:
 
 async def main():
     """Run the ULTRA security validation suite"""
-    print("🛡️ ULTRA SECURITY VALIDATION SUITE")
-    print("=" * 50)
+    logger.info("🛡️ ULTRA SECURITY VALIDATION SUITE")
+    logger.info("=" * 50)
     
     validator = UltraSecurityValidator()
     
@@ -769,27 +769,27 @@ async def main():
     summary = results['summary']
     compliance = results['compliance_check']
     
-    print("\n" + "=" * 50)
-    print("🎯 SECURITY VALIDATION RESULTS")
-    print("=" * 50)
-    print(f"Overall Grade: {summary['overall_grade']}")
-    print(f"Security Score: {summary['security_score']:.1f}/100")
-    print(f"Total Tests: {summary['total_tests']}")
-    print(f"Passed: {summary['passed_tests']}")
-    print(f"Failed: {summary['failed_tests']}")
+    logger.info("\n" + "=" * 50)
+    logger.info("🎯 SECURITY VALIDATION RESULTS")
+    logger.info("=" * 50)
+    logger.info(f"Overall Grade: {summary['overall_grade']}")
+    logger.info(f"Security Score: {summary['security_score']:.1f}/100")
+    logger.info(f"Total Tests: {summary['total_tests']}")
+    logger.info(f"Passed: {summary['passed_tests']}")
+    logger.error(f"Failed: {summary['failed_tests']}")
     
-    print(f"\n🚨 Issues by Severity:")
-    print(f"Critical: {summary['critical_issues']}")
-    print(f"High: {summary['high_issues']}")
-    print(f"Medium: {summary['medium_issues']}")
-    print(f"Low: {summary['low_issues']}")
+    logger.info(f"\n🚨 Issues by Severity:")
+    logger.error(f"Critical: {summary['critical_issues']}")
+    logger.info(f"High: {summary['high_issues']}")
+    logger.info(f"Medium: {summary['medium_issues']}")
+    logger.info(f"Low: {summary['low_issues']}")
     
-    print(f"\n✅ Compliance Status:")
+    logger.info(f"\n✅ Compliance Status:")
     for requirement, status in summary['compliance_status'].items():
-        print(f"{requirement}: {'✅ PASS' if status else '❌ FAIL'}")
+        logger.info(f"{requirement}: {'✅ PASS' if status else '❌ FAIL'}")
     
-    print(f"\nProduction Ready: {'✅ YES' if compliance['production_ready'] else '❌ NO'}")
-    print(f"Results saved to: {results_file}")
+    logger.info(f"\nProduction Ready: {'✅ YES' if compliance['production_ready'] else '❌ NO'}")
+    logger.info(f"Results saved to: {results_file}")
     
     # Return exit code based on critical issues
     return 0 if summary['critical_issues'] == 0 else 1

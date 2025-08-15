@@ -23,13 +23,13 @@ def check_component(name, check_func):
     try:
         result = check_func()
         if result:
-            print(f"✓ {name}: OK")
+            logger.info(f"✓ {name}: OK")
             return True
         else:
-            print(f"✗ {name}: FAILED")
+            logger.error(f"✗ {name}: FAILED")
             return False
     except Exception as e:
-        print(f"✗ {name}: ERROR - {str(e)}")
+        logger.error(f"✗ {name}: ERROR - {str(e)}")
         return False
 
 def check_python_version():
@@ -46,8 +46,8 @@ def check_required_modules():
             missing.append(module)
     
     if missing:
-        print(f"  Missing modules: {', '.join(missing)}")
-        print("  Install with: pip3 install " + ' '.join(missing))
+        logger.info(f"  Missing modules: {', '.join(missing)}")
+        logger.info("  Install with: pip3 install " + ' '.join(missing))
         return False
     return True
 
@@ -77,7 +77,7 @@ def check_test_files():
             missing.append(file)
     
     if missing:
-        print(f"  Missing files: {', '.join(missing)}")
+        logger.info(f"  Missing files: {', '.join(missing)}")
         return False
     return True
 
@@ -101,7 +101,7 @@ def check_docker():
         return result.returncode == 0
     except (AssertionError, Exception) as e:
         logger.error(f"Unexpected exception: {e}", exc_info=True)
-        print("  Docker not installed or not in PATH")
+        logger.info("  Docker not installed or not in PATH")
         return False
 
 def check_disk_space():
@@ -110,7 +110,7 @@ def check_disk_space():
     stat = shutil.disk_usage("/tmp")
     free_gb = stat.free / (1024**3)
     if free_gb < 1:
-        print(f"  Low disk space: {free_gb:.1f} GB free")
+        logger.info(f"  Low disk space: {free_gb:.1f} GB free")
         return False
     return True
 
@@ -124,14 +124,14 @@ def check_port_availability():
         return True
     except (AssertionError, Exception) as e:
         logger.error(f"Unexpected exception: {e}", exc_info=True)
-        print("  Port 8117 is in use")
+        logger.info("  Port 8117 is in use")
         return False
 
 def main():
     """Run all validation checks"""
-    print("Hardware Optimizer Test Setup Validation")
-    print("=" * 40)
-    print()
+    logger.info("Hardware Optimizer Test Setup Validation")
+    logger.info("=" * 40)
+    logger.info()
     
     checks = [
         ("Python Version (3.6+)", check_python_version),
@@ -154,27 +154,27 @@ def main():
         else:
             failed += 1
     
-    print()
-    print("=" * 40)
-    print(f"Total: {passed + failed} checks")
-    print(f"Passed: {passed}")
-    print(f"Failed: {failed}")
-    print()
+    logger.info()
+    logger.info("=" * 40)
+    logger.error(f"Total: {passed + failed} checks")
+    logger.info(f"Passed: {passed}")
+    logger.error(f"Failed: {failed}")
+    logger.info()
     
     if failed == 0:
-        print("✓ All checks passed! Ready to run tests.")
-        print()
-        print("Quick start:")
-        print("  ./run_tests.sh")
+        logger.info("✓ All checks passed! Ready to run tests.")
+        logger.info()
+        logger.info("Quick start:")
+        logger.info("  ./run_tests.sh")
         return 0
     else:
-        print("✗ Some checks failed. Please fix issues before running tests.")
+        logger.error("✗ Some checks failed. Please fix issues before running tests.")
         
         if not check_agent_running():
-            print()
-            print("To start the agent:")
-            print("  cd /opt/sutazaiapp/agents/hardware-resource-optimizer")
-            print("  python3 app.py")
+            logger.info()
+            logger.info("To start the agent:")
+            logger.info("  cd /opt/sutazaiapp/agents/hardware-resource-optimizer")
+            logger.info("  python3 app.py")
         
         return 1
 

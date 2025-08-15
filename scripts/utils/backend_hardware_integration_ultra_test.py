@@ -845,34 +845,34 @@ def main():
     results = tester.run_all_tests()
     
     # Print final summary
-    print("\n" + "=" * 80)
-    print("🎯 ULTRA-COMPREHENSIVE BACKEND HARDWARE INTEGRATION TEST RESULTS")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info("🎯 ULTRA-COMPREHENSIVE BACKEND HARDWARE INTEGRATION TEST RESULTS")
+    logger.info("=" * 80)
     
     status_emoji = "🟢" if results["overall_status"] == "PASS" else "🔴" if results["overall_status"] == "FAIL" else "🟡"
-    print(f"{status_emoji} Overall Status: {results['overall_status']}")
-    print(f"📊 Pass Rate: {results['pass_rate']}%")
-    print(f"✅ Passed: {results['passed_tests']}")
-    print(f"❌ Failed: {results['failed_tests']}")
-    print(f"⚠️  Warnings: {results['warn_tests']}")
-    print(f"💥 Errors: {results['error_tests']}")
-    print(f"⏱️  Total Duration: {results['total_duration_ms']:.2f}ms")
-    print(f"⚡ Avg Test Duration: {results['avg_test_duration_ms']:.2f}ms")
+    logger.info(f"{status_emoji} Overall Status: {results['overall_status']}")
+    logger.info(f"📊 Pass Rate: {results['pass_rate']}%")
+    logger.info(f"✅ Passed: {results['passed_tests']}")
+    logger.error(f"❌ Failed: {results['failed_tests']}")
+    logger.warning(f"⚠️  Warnings: {results['warn_tests']}")
+    logger.error(f"💥 Errors: {results['error_tests']}")
+    logger.info(f"⏱️  Total Duration: {results['total_duration_ms']:.2f}ms")
+    logger.info(f"⚡ Avg Test Duration: {results['avg_test_duration_ms']:.2f}ms")
     
     if results["performance"]["direct_service_avg_ms"] > 0:
-        print(f"\n🏎️  PERFORMANCE ANALYSIS:")
-        print(f"   Direct Service: {results['performance']['direct_service_avg_ms']:.2f}ms")
-        print(f"   Proxy Service: {results['performance']['proxy_service_avg_ms']:.2f}ms")
-        print(f"   Proxy Overhead: {results['performance']['proxy_overhead_percent']:.2f}%")
+        logger.info(f"\n🏎️  PERFORMANCE ANALYSIS:")
+        logger.info(f"   Direct Service: {results['performance']['direct_service_avg_ms']:.2f}ms")
+        logger.info(f"   Proxy Service: {results['performance']['proxy_service_avg_ms']:.2f}ms")
+        logger.info(f"   Proxy Overhead: {results['performance']['proxy_overhead_percent']:.2f}%")
     
     # Print failed tests
     failed_results = [r for r in results["detailed_results"] if r["status"] in ["FAIL", "ERROR"]]
     if failed_results:
-        print(f"\n❌ FAILED TESTS ({len(failed_results)}):")
+        logger.error(f"\n❌ FAILED TESTS ({len(failed_results)}):")
         for result in failed_results:
-            print(f"   • {result['test_name']}: {result['error'] or 'See details'}")
+            logger.error(f"   • {result['test_name']}: {result['error'] or 'See details'}")
     
-    print("\n" + "=" * 80)
+    logger.info("\n" + "=" * 80)
     
     # Save results to file
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -881,9 +881,9 @@ def main():
     try:
         with open(filename, 'w') as f:
             json.dump(results, f, indent=2)
-        print(f"📄 Detailed results saved to: {filename}")
+        logger.info(f"📄 Detailed results saved to: {filename}")
     except Exception as e:
-        print(f"⚠️  Could not save results to file: {e}")
+        logger.info(f"⚠️  Could not save results to file: {e}")
     
     # Exit with appropriate code
     if results["overall_status"] == "FAIL":

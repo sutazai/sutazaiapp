@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA Performance Load Test
 Validates <2s response times with 1000+ concurrent users
 """
@@ -153,11 +156,11 @@ class UltraLoadTester:
         requests_per_user: int
     ) -> None:
         """Run concurrent load test"""
-        print(f"\n🚀 Starting ULTRA Load Test")
-        print(f"   Users: {num_users}")
-        print(f"   Requests per user: {requests_per_user}")
-        print(f"   Total requests: {num_users * requests_per_user}")
-        print(f"   Target: <2000ms response time\n")
+        logger.info(f"\n🚀 Starting ULTRA Load Test")
+        logger.info(f"   Users: {num_users}")
+        logger.info(f"   Requests per user: {requests_per_user}")
+        logger.info(f"   Total requests: {num_users * requests_per_user}")
+        logger.info(f"   Target: <2000ms response time\n")
         
         self.start_time = time.time()
         self.results = []
@@ -170,7 +173,7 @@ class UltraLoadTester:
         
         async with aiohttp.ClientSession(connector=connector) as session:
             # Warm up cache first
-            print("⏳ Warming up cache...")
+            logger.info("⏳ Warming up cache...")
             warmup_tasks = []
             for prompt in self.test_prompts[:5]:
                 task = self.make_request(
@@ -180,10 +183,10 @@ class UltraLoadTester:
                 warmup_tasks.append(task)
             
             await asyncio.gather(*warmup_tasks)
-            print("✅ Cache warmed up\n")
+            logger.info("✅ Cache warmed up\n")
             
             # Create all user tasks
-            print("🔥 Starting load test...")
+            logger.info("🔥 Starting load test...")
             tasks = []
             request_id = 0
             
@@ -207,7 +210,7 @@ class UltraLoadTester:
         
         self.end_time = time.time()
         
-        print(f"\n✅ Load test completed in {self.end_time - self.start_time:.2f} seconds")
+        logger.info(f"\n✅ Load test completed in {self.end_time - self.start_time:.2f} seconds")
     
     async def _delayed_request(
         self,
@@ -311,66 +314,66 @@ class UltraLoadTester:
     
     def print_report(self, stats: Dict[str, Any]) -> None:
         """Print formatted test report"""
-        print("\n" + "="*80)
-        print(" ULTRA PERFORMANCE LOAD TEST REPORT")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info(" ULTRA PERFORMANCE LOAD TEST REPORT")
+        logger.info("="*80)
         
         # Overall stats
-        print(f"\n📊 OVERALL STATISTICS")
-        print(f"   Total Requests: {stats['total_requests']}")
-        print(f"   Successful: {stats['successful_requests']} ({stats['success_rate']:.1f}%)")
-        print(f"   Failed: {stats['failed_requests']}")
-        print(f"   Duration: {stats['total_time_seconds']:.2f}s")
-        print(f"   Throughput: {stats['requests_per_second']:.1f} req/s")
+        logger.info(f"\n📊 OVERALL STATISTICS")
+        logger.info(f"   Total Requests: {stats['total_requests']}")
+        logger.info(f"   Successful: {stats['successful_requests']} ({stats['success_rate']:.1f}%)")
+        logger.error(f"   Failed: {stats['failed_requests']}")
+        logger.info(f"   Duration: {stats['total_time_seconds']:.2f}s")
+        logger.info(f"   Throughput: {stats['requests_per_second']:.1f} req/s")
         
         # Response times
         rt = stats["response_times"]
-        print(f"\n⏱️  RESPONSE TIMES")
-        print(f"   Mean: {rt['mean_ms']:.1f}ms")
-        print(f"   Median: {rt['median_ms']:.1f}ms")
-        print(f"   Min: {rt['min_ms']:.1f}ms")
-        print(f"   Max: {rt['max_ms']:.1f}ms")
-        print(f"   StdDev: {rt['stdev_ms']:.1f}ms")
-        print(f"   P95: {rt['p95_ms']:.1f}ms")
-        print(f"   P99: {rt['p99_ms']:.1f}ms")
+        logger.info(f"\n⏱️  RESPONSE TIMES")
+        logger.info(f"   Mean: {rt['mean_ms']:.1f}ms")
+        logger.info(f"   Median: {rt['median_ms']:.1f}ms")
+        logger.info(f"   Min: {rt['min_ms']:.1f}ms")
+        logger.info(f"   Max: {rt['max_ms']:.1f}ms")
+        logger.info(f"   StdDev: {rt['stdev_ms']:.1f}ms")
+        logger.info(f"   P95: {rt['p95_ms']:.1f}ms")
+        logger.info(f"   P99: {rt['p99_ms']:.1f}ms")
         
         # Cache performance
         cache = stats["cache"]
-        print(f"\n💾 CACHE PERFORMANCE")
-        print(f"   Cache Hits: {cache['total_hits']}")
-        print(f"   Hit Rate: {cache['hit_rate']:.1f}%")
+        logger.info(f"\n💾 CACHE PERFORMANCE")
+        logger.info(f"   Cache Hits: {cache['total_hits']}")
+        logger.info(f"   Hit Rate: {cache['hit_rate']:.1f}%")
         
         # Performance goals
         goals = stats["performance_goals"]
-        print(f"\n🎯 PERFORMANCE GOALS")
-        print(f"   < 2000ms: {goals['under_2000ms']:.1f}% ✅" if goals['under_2000ms'] > 95 else f"   < 2000ms: {goals['under_2000ms']:.1f}% ❌")
-        print(f"   < 1000ms: {goals['under_1000ms']:.1f}%")
-        print(f"   < 500ms: {goals['under_500ms']:.1f}%")
+        logger.info(f"\n🎯 PERFORMANCE GOALS")
+        logger.info(f"   < 2000ms: {goals['under_2000ms']:.1f}% ✅" if goals['under_2000ms'] > 95 else f"   < 2000ms: {goals['under_2000ms']:.1f}% ❌")
+        logger.info(f"   < 1000ms: {goals['under_1000ms']:.1f}%")
+        logger.info(f"   < 500ms: {goals['under_500ms']:.1f}%")
         
         # Endpoint breakdown
         if stats.get("endpoints"):
-            print(f"\n📍 ENDPOINT PERFORMANCE")
+            logger.info(f"\n📍 ENDPOINT PERFORMANCE")
             for endpoint, data in stats["endpoints"].items():
-                print(f"   {endpoint}:")
-                print(f"      Requests: {data['count']}")
-                print(f"      Mean: {data['mean_ms']:.1f}ms")
-                print(f"      P95: {data['p95_ms']:.1f}ms")
+                logger.info(f"   {endpoint}:")
+                logger.info(f"      Requests: {data['count']}")
+                logger.info(f"      Mean: {data['mean_ms']:.1f}ms")
+                logger.info(f"      P95: {data['p95_ms']:.1f}ms")
         
         # Errors
         if stats.get("errors"):
-            print(f"\n❌ ERRORS")
+            logger.error(f"\n❌ ERRORS")
             for error_type, count in stats["errors"].items():
-                print(f"   {error_type}: {count}")
+                logger.error(f"   {error_type}: {count}")
         
         # Final verdict
-        print(f"\n{'='*80}")
+        logger.info(f"\n{'='*80}")
         if stats['success_rate'] > 99 and rt['p95_ms'] < 2000:
-            print("✅ ULTRA PERFORMANCE ACHIEVED! System meets <2s response time target!")
+            logger.info("✅ ULTRA PERFORMANCE ACHIEVED! System meets <2s response time target!")
         elif stats['success_rate'] > 95 and rt['p95_ms'] < 3000:
-            print("🟡 GOOD PERFORMANCE. Close to target, minor optimizations needed.")
+            logger.info("🟡 GOOD PERFORMANCE. Close to target, minor optimizations needed.")
         else:
-            print("❌ PERFORMANCE TARGET NOT MET. Further optimization required.")
-        print("="*80 + "\n")
+            logger.info("❌ PERFORMANCE TARGET NOT MET. Further optimization required.")
+        logger.info("="*80 + "\n")
 
 
 async def main():
@@ -411,7 +414,7 @@ async def main():
             "timestamp": timestamp
         }, f, indent=2)
     
-    print(f"📁 Results saved to {filename}")
+    logger.info(f"📁 Results saved to {filename}")
     
     # Exit code based on performance
     if stats['success_rate'] > 99 and stats['response_times']['p95_ms'] < 2000:

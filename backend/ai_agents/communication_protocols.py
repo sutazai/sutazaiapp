@@ -855,10 +855,10 @@ if __name__ == "__main__":
             
             # Show statistics
             stats = hub.get_statistics()
-            print(f"Communication stats: {stats}")
+            logger.info(f"Communication stats: {stats}")
             
             connected_agents = hub.get_connected_agents()
-            print(f"Connected agents: {len(connected_agents)}")
+            logger.info(f"Connected agents: {len(connected_agents)}")
             
             await asyncio.sleep(5)  # Let messages process
             

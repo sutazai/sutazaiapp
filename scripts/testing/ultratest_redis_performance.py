@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Redis Cache Performance Validation
 Tests Redis cache hit rate and performance improvements.
 """
@@ -24,10 +27,10 @@ class UltratestRedisValidator:
         try:
             self.redis_client = redis.Redis(host='localhost', port=10001, db=0)
             self.redis_client.ping()
-            print("✅ Connected to Redis successfully")
+            logger.info("✅ Connected to Redis successfully")
             return True
         except Exception as e:
-            print(f"❌ Failed to connect to Redis: {e}")
+            logger.error(f"❌ Failed to connect to Redis: {e}")
             return False
     
     def get_redis_info(self) -> Dict[str, Any]:
@@ -46,7 +49,7 @@ class UltratestRedisValidator:
                 'total_commands_processed': info.get('total_commands_processed')
             }
         except Exception as e:
-            print(f"❌ Failed to get Redis info: {e}")
+            logger.error(f"❌ Failed to get Redis info: {e}")
             return {}
     
     def calculate_cache_hit_rate(self) -> float:
@@ -63,7 +66,7 @@ class UltratestRedisValidator:
     
     def test_cache_performance(self, num_operations: int = 1000) -> Dict[str, float]:
         """Test cache read/write performance"""
-        print(f"🚀 Testing Redis performance with {num_operations} operations...")
+        logger.info(f"🚀 Testing Redis performance with {num_operations} operations...")
         
         # Generate test data
         test_keys = [f"test_key_{i}" for i in range(num_operations)]
@@ -100,7 +103,7 @@ class UltratestRedisValidator:
     
     def simulate_cache_usage(self, duration_seconds: int = 30) -> Dict[str, Any]:
         """Simulate realistic cache usage patterns"""
-        print(f"🎯 Simulating cache usage for {duration_seconds} seconds...")
+        logger.info(f"🎯 Simulating cache usage for {duration_seconds} seconds...")
         
         # Common cache keys that would be used frequently
         common_keys = [f"user_session_{i}" for i in range(100)]
@@ -140,7 +143,7 @@ class UltratestRedisValidator:
     
     def test_memory_usage(self) -> Dict[str, Any]:
         """Test Redis memory usage patterns"""
-        print("💾 Testing Redis memory usage...")
+        logger.info("💾 Testing Redis memory usage...")
         
         initial_info = self.get_redis_info()
         initial_memory = initial_info.get('used_memory', 0)
@@ -175,33 +178,33 @@ class UltratestRedisValidator:
     
     def run_comprehensive_test(self) -> Dict[str, Any]:
         """Run comprehensive Redis performance validation"""
-        print("\n🔧 ULTRATEST: Redis Cache Performance Validation")
-        print("=" * 70)
+        logger.info("\n🔧 ULTRATEST: Redis Cache Performance Validation")
+        logger.info("=" * 70)
         
         if not self.connect_to_redis():
             return {'error': 'Failed to connect to Redis'}
         
         # Get initial Redis information
         initial_info = self.get_redis_info()
-        print(f"Redis Version: {initial_info.get('redis_version', 'Unknown')}")
-        print(f"Memory Usage: {initial_info.get('used_memory_human', 'Unknown')}")
+        logger.info(f"Redis Version: {initial_info.get('redis_version', 'Unknown')}")
+        logger.info(f"Memory Usage: {initial_info.get('used_memory_human', 'Unknown')}")
         
         # Test 1: Current cache hit rate
         initial_hit_rate = self.calculate_cache_hit_rate()
-        print(f"Initial Cache Hit Rate: {initial_hit_rate:.2f}%")
+        logger.info(f"Initial Cache Hit Rate: {initial_hit_rate:.2f}%")
         
         # Test 2: Performance benchmarking
         perf_metrics = self.test_cache_performance(1000)
-        print(f"Average Write Time: {perf_metrics['avg_write_time_ms']:.2f}ms")
-        print(f"Average Read Time: {perf_metrics['avg_read_time_ms']:.2f}ms")
+        logger.info(f"Average Write Time: {perf_metrics['avg_write_time_ms']:.2f}ms")
+        logger.info(f"Average Read Time: {perf_metrics['avg_read_time_ms']:.2f}ms")
         
         # Test 3: Simulate realistic usage
         usage_simulation = self.simulate_cache_usage(30)
-        print(f"Simulated Operations/sec: {usage_simulation['operations_per_second']:.2f}")
+        logger.info(f"Simulated Operations/sec: {usage_simulation['operations_per_second']:.2f}")
         
         # Test 4: Memory usage patterns
         memory_test = self.test_memory_usage()
-        print(f"Memory efficiency: {memory_test['avg_memory_per_key_bytes']:.2f} bytes per key")
+        logger.info(f"Memory efficiency: {memory_test['avg_memory_per_key_bytes']:.2f} bytes per key")
         
         # Calculate final hit rate after tests
         final_info = self.get_redis_info()
@@ -230,74 +233,74 @@ class UltratestRedisValidator:
     
     def generate_performance_report(self, results: Dict[str, Any]):
         """Generate detailed performance report"""
-        print("\n" + "=" * 80)
-        print("📊 ULTRATEST REDIS PERFORMANCE REPORT")
-        print("=" * 80)
-        print(f"Test Execution Time: {results.get('timestamp', 'Unknown')}")
+        logger.info("\n" + "=" * 80)
+        logger.info("📊 ULTRATEST REDIS PERFORMANCE REPORT")
+        logger.info("=" * 80)
+        logger.info(f"Test Execution Time: {results.get('timestamp', 'Unknown')}")
         
         # Cache Hit Rate Analysis
-        print(f"\n🎯 CACHE HIT RATE ANALYSIS:")
-        print("-" * 40)
+        logger.info(f"\n🎯 CACHE HIT RATE ANALYSIS:")
+        logger.info("-" * 40)
         initial_rate = results.get('initial_hit_rate', 0)
         final_rate = results.get('final_hit_rate', 0)
         target_rate = results.get('target_hit_rate', 85)
         
-        print(f"Initial Hit Rate: {initial_rate:.2f}%")
-        print(f"Final Hit Rate: {final_rate:.2f}%")
-        print(f"Target Hit Rate: {target_rate:.2f}%")
+        logger.info(f"Initial Hit Rate: {initial_rate:.2f}%")
+        logger.info(f"Final Hit Rate: {final_rate:.2f}%")
+        logger.info(f"Target Hit Rate: {target_rate:.2f}%")
         
         if results.get('hit_rate_achieved', False):
-            print("✅ CACHE HIT RATE TARGET ACHIEVED!")
+            logger.info("✅ CACHE HIT RATE TARGET ACHIEVED!")
         else:
-            print(f"❌ Cache hit rate below target (gap: {target_rate - final_rate:.2f}%)")
+            logger.info(f"❌ Cache hit rate below target (gap: {target_rate - final_rate:.2f}%)")
         
         # Performance Analysis
-        print(f"\n⚡ PERFORMANCE ANALYSIS:")
-        print("-" * 40)
+        logger.info(f"\n⚡ PERFORMANCE ANALYSIS:")
+        logger.info("-" * 40)
         perf = results.get('performance_metrics', {})
         perf_targets = results.get('performance_targets', {})
         
-        print(f"Average Read Time: {perf.get('avg_read_time_ms', 0):.2f}ms (target: {perf_targets.get('target_read_time_ms', 1):.2f}ms)")
-        print(f"Average Write Time: {perf.get('avg_write_time_ms', 0):.2f}ms (target: {perf_targets.get('target_write_time_ms', 2):.2f}ms)")
+        logger.info(f"Average Read Time: {perf.get('avg_read_time_ms', 0):.2f}ms (target: {perf_targets.get('target_read_time_ms', 1):.2f}ms)")
+        logger.info(f"Average Write Time: {perf.get('avg_write_time_ms', 0):.2f}ms (target: {perf_targets.get('target_write_time_ms', 2):.2f}ms)")
         
         if perf_targets.get('read_performance_achieved', False):
-            print("✅ READ PERFORMANCE TARGET ACHIEVED!")
+            logger.info("✅ READ PERFORMANCE TARGET ACHIEVED!")
         else:
-            print("❌ Read performance below target")
+            logger.info("❌ Read performance below target")
             
         if perf_targets.get('write_performance_achieved', False):
-            print("✅ WRITE PERFORMANCE TARGET ACHIEVED!")
+            logger.info("✅ WRITE PERFORMANCE TARGET ACHIEVED!")
         else:
-            print("❌ Write performance below target")
+            logger.info("❌ Write performance below target")
         
         # Throughput Analysis
-        print(f"\n🚀 THROUGHPUT ANALYSIS:")
-        print("-" * 40)
+        logger.info(f"\n🚀 THROUGHPUT ANALYSIS:")
+        logger.info("-" * 40)
         usage_sim = results.get('usage_simulation', {})
         ops_per_sec = usage_sim.get('operations_per_second', 0)
-        print(f"Operations per Second: {ops_per_sec:.2f}")
-        print(f"Total Operations: {usage_sim.get('total_operations', 0)}")
+        logger.info(f"Operations per Second: {ops_per_sec:.2f}")
+        logger.info(f"Total Operations: {usage_sim.get('total_operations', 0)}")
         
         if ops_per_sec >= 1000:
-            print("✅ HIGH THROUGHPUT ACHIEVED (1000+ ops/sec)")
+            logger.info("✅ HIGH THROUGHPUT ACHIEVED (1000+ ops/sec)")
         elif ops_per_sec >= 500:
-            print("⚠️  MEDIUM THROUGHPUT (500+ ops/sec)")
+            logger.info("⚠️  MEDIUM THROUGHPUT (500+ ops/sec)")
         else:
-            print("❌ LOW THROUGHPUT (<500 ops/sec)")
+            logger.info("❌ LOW THROUGHPUT (<500 ops/sec)")
         
         # Memory Efficiency
-        print(f"\n💾 MEMORY EFFICIENCY:")
-        print("-" * 40)
+        logger.info(f"\n💾 MEMORY EFFICIENCY:")
+        logger.info("-" * 40)
         memory = results.get('memory_test', {})
         memory_per_key = memory.get('avg_memory_per_key_bytes', 0)
         memory_increase_mb = memory.get('memory_increase_mb', 0)
         
-        print(f"Memory per Key: {memory_per_key:.2f} bytes")
-        print(f"Memory Increase: {memory_increase_mb:.2f} MB for {memory.get('keys_added', 0)} keys")
+        logger.info(f"Memory per Key: {memory_per_key:.2f} bytes")
+        logger.info(f"Memory Increase: {memory_increase_mb:.2f} MB for {memory.get('keys_added', 0)} keys")
         
         # Overall Assessment
-        print(f"\n🏆 OVERALL ASSESSMENT:")
-        print("-" * 40)
+        logger.info(f"\n🏆 OVERALL ASSESSMENT:")
+        logger.info("-" * 40)
         
         achievements = []
         issues = []
@@ -320,29 +323,29 @@ class UltratestRedisValidator:
         if ops_per_sec >= 1000:
             achievements.append(f"High throughput achieved ({ops_per_sec:.2f} ops/sec)")
         
-        print("🎉 ACHIEVEMENTS:")
+        logger.info("🎉 ACHIEVEMENTS:")
         for achievement in achievements:
-            print(f"   ✅ {achievement}")
+            logger.info(f"   ✅ {achievement}")
         
         if issues:
-            print("\n⚠️  AREAS FOR IMPROVEMENT:")
+            logger.info("\n⚠️  AREAS FOR IMPROVEMENT:")
             for issue in issues:
-                print(f"   ❌ {issue}")
+                logger.info(f"   ❌ {issue}")
         
         success_rate = (len(achievements) / (len(achievements) + len(issues))) * 100 if (achievements or issues) else 0
-        print(f"\n📈 Redis Performance Success Rate: {success_rate:.1f}%")
+        logger.info(f"\n📈 Redis Performance Success Rate: {success_rate:.1f}%")
         
         return success_rate >= 80  # Consider 80%+ success rate as passing
 
 def main():
     """Run comprehensive Redis performance validation"""
-    print("🚀 Starting ULTRATEST Redis Performance Validation")
+    logger.info("🚀 Starting ULTRATEST Redis Performance Validation")
     
     validator = UltratestRedisValidator()
     results = validator.run_comprehensive_test()
     
     if 'error' in results:
-        print(f"❌ Test failed: {results['error']}")
+        logger.error(f"❌ Test failed: {results['error']}")
         return 1
     
     # Generate report
@@ -352,13 +355,13 @@ def main():
     with open('/opt/sutazaiapp/tests/ultratest_redis_report.json', 'w') as f:
         json.dump(results, f, indent=2)
     
-    print(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_redis_report.json")
+    logger.info(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_redis_report.json")
     
     if success:
-        print("\n🎉 REDIS PERFORMANCE VALIDATION SUCCESSFUL!")
+        logger.info("\n🎉 REDIS PERFORMANCE VALIDATION SUCCESSFUL!")
         return 0
     else:
-        print("\n⚠️  REDIS PERFORMANCE NEEDS IMPROVEMENT")
+        logger.info("\n⚠️  REDIS PERFORMANCE NEEDS IMPROVEMENT")
         return 1
 
 if __name__ == "__main__":

@@ -773,15 +773,15 @@ if __name__ == "__main__":
             current = await version_manager.get_current_version(server_name)
             available = await version_manager.get_available_version(server_name)
             
-            print(f"{server_name}:")
-            print(f"  Current: {current}")
-            print(f"  Available: {available}")
-            print()
+            logger.info(f"{server_name}:")
+            logger.info(f"  Current: {current}")
+            logger.info(f"  Available: {available}")
+            logger.info()
         
         # Show operation history
         operations = version_manager.get_operation_history(limit=5)
-        print(f"Recent operations: {len(operations)}")
+        logger.info(f"Recent operations: {len(operations)}")
         for op in operations:
-            print(f"  {op.timestamp}: {op.operation_type.value} {op.server_name} -> {op.to_version}")
+            logger.info(f"  {op.timestamp}: {op.operation_type.value} {op.server_name} -> {op.to_version}")
     
     asyncio.run(main())

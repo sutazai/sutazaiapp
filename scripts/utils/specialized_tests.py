@@ -428,20 +428,20 @@ async def main():
     suite = SpecializedTestSuite()
     report = await suite.run_all_specialized_tests()
     
-    print("\n" + "="*80)
-    print("SUTAZAI SPECIALIZED TEST RESULTS")
-    print("="*80)
-    print(f"Status: {report['status']}")
-    print(f"Tests: {report['passed_tests']}/{report['total_tests']} passed ({report['success_rate']:.1f}%)")
+    logger.info("\n" + "="*80)
+    logger.info("SUTAZAI SPECIALIZED TEST RESULTS")
+    logger.info("="*80)
+    logger.info(f"Status: {report['status']}")
+    logger.info(f"Tests: {report['passed_tests']}/{report['total_tests']} passed ({report['success_rate']:.1f}%)")
     
-    print(f"\nDetailed Results:")
+    logger.info(f"\nDetailed Results:")
     for test_name, result in report["detailed_results"].items():
         status_icon = "✅" if result["status"] == "passed" else "❌" if result["status"] == "failed" else "⚠️"
-        print(f"  {status_icon} {test_name}: {result['status']}")
+        logger.info(f"  {status_icon} {test_name}: {result['status']}")
         if result["status"] != "passed" and "reason" in result:
-            print(f"    Reason: {result['reason']}")
+            logger.info(f"    Reason: {result['reason']}")
     
-    print("="*80)
+    logger.info("="*80)
     
     return report
 

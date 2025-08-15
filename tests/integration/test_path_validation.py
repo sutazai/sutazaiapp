@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Test path validation function independently
 """
 
@@ -21,14 +24,14 @@ def validate_safe_path(requested_path: str, base_path: str = "/") -> str:
 
 def test_path_validation():
     """Test the path validation function"""
-    print("🔒 Testing path traversal protection...")
+    logger.info("🔒 Testing path traversal protection...")
     
     # Test valid paths
     try:
         safe_path = validate_safe_path("/tmp", "/")
-        print(f"   ✅ Valid path accepted: {safe_path}")
+        logger.info(f"   ✅ Valid path accepted: {safe_path}")
     except Exception as e:
-        print(f"   ❌ Valid path rejected: {e}")
+        logger.info(f"   ❌ Valid path rejected: {e}")
         return False
     
     # Test path traversal attempts
@@ -43,25 +46,25 @@ def test_path_validation():
     for dangerous_path in dangerous_paths:
         try:
             result = validate_safe_path(dangerous_path, "/tmp")
-            print(f"   ❌ Dangerous path allowed: {dangerous_path} -> {result}")
+            logger.info(f"   ❌ Dangerous path allowed: {dangerous_path} -> {result}")
         except ValueError as e:
-            print(f"   ✅ Blocked dangerous path: {dangerous_path}")
+            logger.info(f"   ✅ Blocked dangerous path: {dangerous_path}")
             blocked_count += 1
         except Exception as e:
-            print(f"   ❌ Unexpected error for {dangerous_path}: {e}")
+            logger.error(f"   ❌ Unexpected error for {dangerous_path}: {e}")
     
     if blocked_count == len(dangerous_paths):
-        print("   ✅ All path traversal attempts blocked!")
+        logger.info("   ✅ All path traversal attempts blocked!")
         return True
     else:
-        print(f"   ❌ Only {blocked_count}/{len(dangerous_paths)} attacks blocked")
+        logger.info(f"   ❌ Only {blocked_count}/{len(dangerous_paths)} attacks blocked")
         return False
 
 if __name__ == "__main__":
     success = test_path_validation()
     if success:
-        print("\n✅ PATH VALIDATION ULTRA-FIX VERIFIED!")
+        logger.info("\n✅ PATH VALIDATION ULTRA-FIX VERIFIED!")
         exit(0)
     else:
-        print("\n❌ PATH VALIDATION NEEDS FIXING!")
+        logger.info("\n❌ PATH VALIDATION NEEDS FIXING!")
         exit(1)

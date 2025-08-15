@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 health-monitor Agent Implementation
 """
 import os
@@ -45,18 +48,18 @@ class HealthMonitorAgent:
 
 def run():
     """Run the agent"""
-    print(f"Starting health-monitor agent...")
+    logger.info(f"Starting health-monitor agent...")
     agent = Health-monitorAgent()
     
     # In production, this would start a web server
     # For now, just indicate the agent is ready
-    print(f"health-monitor agent ready on port :8100")
+    logger.info(f"health-monitor agent ready on port :8100")
     
     # Keep the agent running
     try:
         asyncio.get_event_loop().run_forever()
     except KeyboardInterrupt:
-        print(f"Shutting down health-monitor agent...")
+        logger.info(f"Shutting down health-monitor agent...")
 
 if __name__ == "__main__":
     run()

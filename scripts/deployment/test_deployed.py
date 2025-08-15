@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """Test why _is_agent_deployed returns False"""
 
+import logging
+
+logger = logging.getLogger(__name__)
 import subprocess
 import json
 from pathlib import Path
 
 def test_is_deployed(agent_id):
     """Test the exact logic from _is_agent_deployed"""
-    print(f"\nTesting {agent_id}:")
+    logger.info(f"\nTesting {agent_id}:")
     
     # Method 1: Check if running as Python process
     agent_dir = Path('/opt/sutazaiapp/agents') / agent_id
-    print(f"  Agent dir exists: {agent_dir.exists()}")
+    logger.info(f"  Agent dir exists: {agent_dir.exists()}")
     
     if agent_dir.exists():
         # Look for running Python processes with this agent's app.py
@@ -23,12 +26,12 @@ def test_is_deployed(agent_id):
             processes = ps_result.stdout.strip().split('\n')
             for proc in processes:
                 if 'python' in proc and agent_id in proc and 'app.py' in proc:
-                    print(f"  ✓ Found Python process")
+                    logger.info(f"  ✓ Found Python process")
                     return True
     
     # Method 2: Check if agent registry communication config exists
     comm_config_path = Path('/opt/sutazaiapp/agents/communication_config.json')
-    print(f"  Comm config exists: {comm_config_path.exists()}")
+    logger.info(f"  Comm config exists: {comm_config_path.exists()}")
     
     # Method 3: Check if container exists
     name_patterns = [
@@ -44,10 +47,10 @@ def test_is_deployed(agent_id):
             capture_output=True, text=True, timeout=2
         )
         if result.returncode == 0 and result.stdout.strip():
-            print(f"  ✓ Found container with pattern '{pattern}': {result.stdout.strip()}")
+            logger.info(f"  ✓ Found container with pattern '{pattern}': {result.stdout.strip()}")
             return True
     
-    print(f"  ✗ Not deployed")
+    logger.info(f"  ✗ Not deployed")
     return False
 
 # Test the specific agents the monitor is looking for

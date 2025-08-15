@@ -905,7 +905,7 @@ async def main():
         scheduler = CleanupScheduler(config)
         
         # Example: Create some test schedules
-        print("Creating test schedules...")
+        logger.info("Creating test schedules...")
         
         # Daily cleanup schedule
         daily_schedule_id = scheduler.create_schedule(
@@ -942,32 +942,32 @@ async def main():
         )
         
         # List schedules
-        print(f"\nCreated schedules:")
+        logger.info(f"\nCreated schedules:")
         for schedule in scheduler.list_schedules():
-            print(f"- {schedule.schedule_name} ({schedule.schedule_type.value})")
-            print(f"  Next run: {schedule.next_run_time}")
-            print(f"  Targets: {', '.join(schedule.target_servers)}")
+            logger.info(f"- {schedule.schedule_name} ({schedule.schedule_type.value})")
+            logger.info(f"  Next run: {schedule.next_run_time}")
+            logger.info(f"  Targets: {', '.join(schedule.target_servers)}")
         
         # Test manual trigger
-        print(f"\nManually triggering schedule: {daily_schedule_id}")
+        logger.info(f"\nManually triggering schedule: {daily_schedule_id}")
         success = await scheduler.trigger_schedule(daily_schedule_id)
-        print(f"Trigger success: {success}")
+        logger.info(f"Trigger success: {success}")
         
         # Wait a moment
         await asyncio.sleep(2)
         
         # Get statistics
-        print(f"\nScheduler statistics:")
+        logger.info(f"\nScheduler statistics:")
         stats = scheduler.get_statistics()
-        print(json.dumps(stats, indent=2, default=str))
+        logger.info(json.dumps(stats, indent=2, default=str))
         
         # Start scheduler briefly
-        print("\nStarting scheduler for 10 seconds...")
+        logger.info("\nStarting scheduler for 10 seconds...")
         await scheduler.start()
         await asyncio.sleep(10)
         await scheduler.stop()
         
-        print("Scheduler test completed")
+        logger.info("Scheduler test completed")
         
     except Exception as e:
         logging.error(f"Error in cleanup scheduler: {e}", exc_info=True)

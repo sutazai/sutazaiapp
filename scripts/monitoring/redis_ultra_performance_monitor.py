@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA Redis Performance Monitor
 Real-time monitoring and verification of 19x performance improvement
 """
@@ -40,7 +43,7 @@ class UltraRedisMonitor:
             health_check_interval=10
         )
         await self.redis_client.ping()
-        print("✅ Connected to Redis")
+        logger.info("✅ Connected to Redis")
         
     async def get_current_metrics(self) -> Dict[str, Any]:
         """Get current Redis performance metrics"""
@@ -118,29 +121,29 @@ class UltraRedisMonitor:
             ('slowlog-max-len', '128')
         ]
         
-        print("\n🔧 Applying runtime optimizations...")
+        logger.info("\n🔧 Applying runtime optimizations...")
         success_count = 0
         
         for key, value in optimizations:
             try:
                 await self.redis_client.config_set(key, value)
-                print(f"  ✅ Set {key} = {value}")
+                logger.info(f"  ✅ Set {key} = {value}")
                 success_count += 1
             except Exception as e:
-                print(f"  ⚠️  Cannot set {key}: {e}")
+                logger.info(f"  ⚠️  Cannot set {key}: {e}")
                 
-        print(f"\n✨ Applied {success_count}/{len(optimizations)} optimizations")
+        logger.info(f"\n✨ Applied {success_count}/{len(optimizations)} optimizations")
         
         # Save configuration
         try:
             await self.redis_client.config_rewrite()
-            print("💾 Configuration saved to disk")
+            logger.info("💾 Configuration saved to disk")
         except:
-            print("⚠️  Could not save configuration (may require persistence)")
+            logger.info("⚠️  Could not save configuration (may require persistence)")
             
     async def warm_cache(self):
         """Warm up cache with test data to improve hit rate"""
-        print("\n🔥 Warming up cache...")
+        logger.info("\n🔥 Warming up cache...")
         
         # Add frequently accessed keys
         test_data = {
@@ -162,11 +165,11 @@ class UltraRedisMonitor:
             for key in test_data.keys():
                 await self.redis_client.get(key)
                 
-        print(f"  ✅ Warmed cache with {len(test_data)} keys")
+        logger.info(f"  ✅ Warmed cache with {len(test_data)} keys")
         
     async def simulate_workload(self):
         """Simulate realistic workload to test performance"""
-        print("\n🚀 Simulating workload...")
+        logger.info("\n🚀 Simulating workload...")
         
         # Mix of reads and writes (90% reads, 10% writes for cache-heavy workload)
         operations = []
@@ -195,13 +198,13 @@ class UltraRedisMonitor:
         elapsed = time.time() - start_time
         ops_per_sec = operations_count / elapsed
         
-        print(f"  ✅ Completed {operations_count} operations in {elapsed:.2f}s")
-        print(f"  📊 Performance: {ops_per_sec:.0f} ops/sec")
+        logger.info(f"  ✅ Completed {operations_count} operations in {elapsed:.2f}s")
+        logger.info(f"  📊 Performance: {ops_per_sec:.0f} ops/sec")
         
     async def monitor_performance(self, duration: int = 30):
         """Monitor performance for specified duration"""
-        print(f"\n📊 Monitoring performance for {duration} seconds...")
-        print("=" * 60)
+        logger.info(f"\n📊 Monitoring performance for {duration} seconds...")
+        logger.info("=" * 60)
         
         start_time = time.time()
         
@@ -210,55 +213,55 @@ class UltraRedisMonitor:
             self.metrics_history.append(metrics)
             
             # Display current metrics
-            print(f"\n⏰ {metrics['timestamp']}")
-            print(f"  Hit Rate: {metrics['hit_rate']}% (Target: {self.baseline_metrics['target_hit_rate']}%)")
-            print(f"  Response: {metrics['response_time_ms']}ms")
-            print(f"  Memory: {metrics['memory_used_mb']}MB / {metrics['memory_peak_mb']}MB peak")
-            print(f"  Clients: {metrics['connected_clients']}")
-            print(f"  Ops/sec: {metrics['ops_per_sec']}")
+            logger.info(f"\n⏰ {metrics['timestamp']}")
+            logger.info(f"  Hit Rate: {metrics['hit_rate']}% (Target: {self.baseline_metrics['target_hit_rate']}%)")
+            logger.info(f"  Response: {metrics['response_time_ms']}ms")
+            logger.info(f"  Memory: {metrics['memory_used_mb']}MB / {metrics['memory_peak_mb']}MB peak")
+            logger.info(f"  Clients: {metrics['connected_clients']}")
+            logger.info(f"  Ops/sec: {metrics['ops_per_sec']}")
             
             # Check if target achieved
             if metrics['hit_rate'] >= self.baseline_metrics['target_hit_rate']:
-                print(f"\n🎯 TARGET ACHIEVED! {metrics['improvement_factor']}x improvement!")
+                logger.info(f"\n🎯 TARGET ACHIEVED! {metrics['improvement_factor']}x improvement!")
             elif metrics['improvement_factor'] > 1:
-                print(f"  📈 Improvement: {metrics['improvement_factor']}x")
+                logger.info(f"  📈 Improvement: {metrics['improvement_factor']}x")
                 
             await asyncio.sleep(5)
             
     def generate_report(self):
         """Generate final performance report"""
         if not self.metrics_history:
-            print("No metrics collected")
+            logger.info("No metrics collected")
             return
             
-        print("\n" + "=" * 60)
-        print("📋 ULTRA PERFORMANCE REPORT")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.info("📋 ULTRA PERFORMANCE REPORT")
+        logger.info("=" * 60)
         
         # Calculate averages
         avg_hit_rate = sum(m['hit_rate'] for m in self.metrics_history) / len(self.metrics_history)
         avg_response = sum(m['response_time_ms'] for m in self.metrics_history) / len(self.metrics_history)
         max_ops = max(m['ops_per_sec'] for m in self.metrics_history)
         
-        print(f"\n📊 Performance Summary:")
-        print(f"  Average Hit Rate: {avg_hit_rate:.2f}%")
-        print(f"  Average Response: {avg_response:.2f}ms")
-        print(f"  Peak Ops/sec: {max_ops}")
+        logger.info(f"\n📊 Performance Summary:")
+        logger.info(f"  Average Hit Rate: {avg_hit_rate:.2f}%")
+        logger.info(f"  Average Response: {avg_response:.2f}ms")
+        logger.info(f"  Peak Ops/sec: {max_ops}")
         
         # Check achievement
         improvement = avg_hit_rate / self.baseline_metrics['hit_rate']
         
-        print(f"\n🎯 Achievement Status:")
-        print(f"  Baseline Hit Rate: {self.baseline_metrics['hit_rate']}%")
-        print(f"  Achieved Hit Rate: {avg_hit_rate:.2f}%")
-        print(f"  Improvement Factor: {improvement:.1f}x")
+        logger.info(f"\n🎯 Achievement Status:")
+        logger.info(f"  Baseline Hit Rate: {self.baseline_metrics['hit_rate']}%")
+        logger.info(f"  Achieved Hit Rate: {avg_hit_rate:.2f}%")
+        logger.info(f"  Improvement Factor: {improvement:.1f}x")
         
         if improvement >= 19:
-            print("\n✨ ULTRA SUCCESS: 19x IMPROVEMENT ACHIEVED! ✨")
+            logger.info("\n✨ ULTRA SUCCESS: 19x IMPROVEMENT ACHIEVED! ✨")
         elif improvement >= 10:
-            print(f"\n✅ SIGNIFICANT IMPROVEMENT: {improvement:.1f}x achieved")
+            logger.info(f"\n✅ SIGNIFICANT IMPROVEMENT: {improvement:.1f}x achieved")
         else:
-            print(f"\n⚠️  Target not yet reached. Current: {improvement:.1f}x / Target: 19x")
+            logger.info(f"\n⚠️  Target not yet reached. Current: {improvement:.1f}x / Target: 19x")
             
     async def run(self):
         """Main execution flow"""

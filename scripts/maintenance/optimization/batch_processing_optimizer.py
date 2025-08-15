@@ -474,7 +474,7 @@ async def main():
     
     # Get metrics
     metrics = optimizer.get_metrics()
-    print(json.dumps(metrics, indent=2))
+    logger.info(json.dumps(metrics, indent=2))
     
     await optimizer.stop()
 

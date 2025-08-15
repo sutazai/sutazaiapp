@@ -470,30 +470,30 @@ def main():
             if f['complexity'] > 30
         ]
         
-        print("\n" + "="*70)
-        print("CRITICAL FUNCTION REFACTORING PLAN")
-        print("="*70)
-        print(f"Critical functions to refactor: {len(critical_functions)}")
+        logger.info("\n" + "="*70)
+        logger.error("CRITICAL FUNCTION REFACTORING PLAN")
+        logger.info("="*70)
+        logger.error(f"Critical functions to refactor: {len(critical_functions)}")
         
         # Sort by complexity
         critical_functions.sort(key=lambda x: x['complexity'], reverse=True)
         
         for i, func in enumerate(critical_functions[:20], 1):  # Top 20
-            print(f"{i:2d}. {func['function_name']} (complexity: {func['complexity']}) - {func['file_path']}")
+            logger.info(f"{i:2d}. {func['function_name']} (complexity: {func['complexity']}) - {func['file_path']}")
             
         return 0
         
     # Perform refactoring
     results = refactorer.refactor_critical_functions(args.complexity_report)
     
-    print("\n" + "="*70)
-    print("CRITICAL FUNCTION REFACTORING RESULTS")
-    print("="*70)
-    print(f"Functions processed: {results['critical_functions_processed']}")
-    print(f"Successful refactorings: {results['successful_refactorings']}")
-    print(f"Failed refactorings: {results['failed_refactorings']}")
-    print(f"Estimated complexity reduction: {results['complexity_reduction']}")
-    print(f"Backup directory: {refactorer.backup_dir}")
+    logger.info("\n" + "="*70)
+    logger.error("CRITICAL FUNCTION REFACTORING RESULTS")
+    logger.info("="*70)
+    logger.error(f"Functions processed: {results['critical_functions_processed']}")
+    logger.info(f"Successful refactorings: {results['successful_refactorings']}")
+    logger.error(f"Failed refactorings: {results['failed_refactorings']}")
+    logger.info(f"Estimated complexity reduction: {results['complexity_reduction']}")
+    logger.info(f"Backup directory: {refactorer.backup_dir}")
     
     return 0
 

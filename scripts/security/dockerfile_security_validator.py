@@ -618,16 +618,16 @@ def main():
     validator.save_security_results(results, results_file)
     
     # Print summary
-    print("\n" + "="*70)
-    print("  DOCKERFILE CONSOLIDATION SECURITY VALIDATION RESULTS")
-    print("="*70)
-    print(f"Dockerfiles Analyzed:     {results['summary']['total_dockerfiles']}")
-    print(f"Secure Dockerfiles:       {results['summary']['secure_dockerfiles']}")
-    print(f"Vulnerable Dockerfiles:   {results['summary']['vulnerable_dockerfiles']}")
-    print(f"Total Vulnerabilities:    {results['summary']['total_vulnerabilities']}")
-    print(f"Critical Vulnerabilities: {results['summary']['critical_vulnerabilities']}")
-    print(f"Overall Security Grade:   {results['summary']['overall_security_grade']}")
-    print("="*70)
+    logger.info("\n" + "="*70)
+    logger.info("  DOCKERFILE CONSOLIDATION SECURITY VALIDATION RESULTS")
+    logger.info("="*70)
+    logger.info(f"Dockerfiles Analyzed:     {results['summary']['total_dockerfiles']}")
+    logger.info(f"Secure Dockerfiles:       {results['summary']['secure_dockerfiles']}")
+    logger.info(f"Vulnerable Dockerfiles:   {results['summary']['vulnerable_dockerfiles']}")
+    logger.info(f"Total Vulnerabilities:    {results['summary']['total_vulnerabilities']}")
+    logger.error(f"Critical Vulnerabilities: {results['summary']['critical_vulnerabilities']}")
+    logger.info(f"Overall Security Grade:   {results['summary']['overall_security_grade']}")
+    logger.info("="*70)
     
     # Show critical issues
     critical_issues = []
@@ -636,14 +636,14 @@ def main():
             critical_issues.append(service)
     
     if critical_issues:
-        print("\n🚨 CRITICAL SECURITY ISSUES FOUND:")
+        logger.error("\n🚨 CRITICAL SECURITY ISSUES FOUND:")
         for service in critical_issues:
-            print(f"  • {service}")
-        print("\n⚠️  Address critical issues before production deployment!")
+            logger.info(f"  • {service}")
+        logger.error("\n⚠️  Address critical issues before production deployment!")
     else:
-        print("\n✅ No critical security issues found")
+        logger.error("\n✅ No critical security issues found")
     
-    print(f"\nDetailed Report: {results_file}")
+    logger.info(f"\nDetailed Report: {results_file}")
     
     # Return appropriate exit code
     return 0 if results['summary']['overall_security_grade'] in ['A', 'B'] else 1

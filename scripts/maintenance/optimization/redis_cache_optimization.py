@@ -309,8 +309,8 @@ class RedisCacheOptimizer:
 
 async def main():
     """Main optimization workflow"""
-    print("🔥 REDIS CACHE OPTIMIZATION TOOL")
-    print("=" * 50)
+    logger.info("🔥 REDIS CACHE OPTIMIZATION TOOL")
+    logger.info("=" * 50)
     
     optimizer = RedisCacheOptimizer()
     
@@ -319,40 +319,40 @@ async def main():
         await optimizer.connect()
         
         # Step 2: Analyze current state
-        print("\n📊 ANALYZING CURRENT CACHE STATE...")
+        logger.info("\n📊 ANALYZING CURRENT CACHE STATE...")
         report = optimizer.generate_optimization_report()
-        print(report)
+        logger.info(report)
         
         # Step 3: Run performance benchmark
-        print("\n🏃 RUNNING PERFORMANCE BENCHMARK...")
+        logger.info("\n🏃 RUNNING PERFORMANCE BENCHMARK...")
         benchmark = optimizer.benchmark_performance(1000)
         
         # Step 4: Apply optimizations
-        print("\n🔧 APPLYING OPTIMIZATIONS...")
+        logger.info("\n🔧 APPLYING OPTIMIZATIONS...")
         config_result = optimizer.optimize_redis_config()
-        print(f"✅ Applied {len(config_result['applied'])} configuration changes")
+        logger.info(f"✅ Applied {len(config_result['applied'])} configuration changes")
         if config_result['failed']:
-            print(f"❌ Failed to apply {len(config_result['failed'])} changes")
+            logger.error(f"❌ Failed to apply {len(config_result['failed'])} changes")
             
         # Step 5: Warm cache
-        print("\n🔥 WARMING CACHE...")
+        logger.info("\n🔥 WARMING CACHE...")
         warmed_keys = optimizer.warm_cache_with_common_patterns()
         
         # Step 6: Set up monitoring
-        print("\n📊 SETTING UP MONITORING...")
+        logger.info("\n📊 SETTING UP MONITORING...")
         optimizer.setup_cache_monitoring()
         
         # Step 7: Final metrics
-        print("\n📈 FINAL OPTIMIZATION RESULTS:")
+        logger.info("\n📈 FINAL OPTIMIZATION RESULTS:")
         final_metrics = optimizer.get_current_metrics()
-        print(f"Hit Rate: {final_metrics.hit_rate}%")
-        print(f"Total Keys: {final_metrics.total_keys}")
-        print(f"Memory Used: {final_metrics.memory_used}")
+        logger.info(f"Hit Rate: {final_metrics.hit_rate}%")
+        logger.info(f"Total Keys: {final_metrics.total_keys}")
+        logger.info(f"Memory Used: {final_metrics.memory_used}")
         
-        print(f"\n🎉 OPTIMIZATION COMPLETE!")
-        print(f"✅ Cache warmed with {warmed_keys} patterns")
-        print(f"✅ Monitoring configured")
-        print(f"✅ Performance benchmarked")
+        logger.info(f"\n🎉 OPTIMIZATION COMPLETE!")
+        logger.info(f"✅ Cache warmed with {warmed_keys} patterns")
+        logger.info(f"✅ Monitoring configured")
+        logger.info(f"✅ Performance benchmarked")
         
         # Save detailed results
         results = {
@@ -369,7 +369,7 @@ async def main():
         }
         
         optimizer.client.set('cache:optimization:results', json.dumps(results), ex=86400)
-        print(f"📝 Optimization results saved to Redis key: cache:optimization:results")
+        logger.info(f"📝 Optimization results saved to Redis key: cache:optimization:results")
         
     except Exception as e:
         logger.error(f"❌ Optimization failed: {e}")

@@ -853,7 +853,7 @@ async def main():
         audit_logger = AuditLogger(config)
         
         # Example: Log some audit events
-        print("Testing audit logging...")
+        logger.info("Testing audit logging...")
         
         # Start a correlation context
         correlation_id = audit_logger.start_correlation("test_cleanup_session")
@@ -896,27 +896,27 @@ async def main():
         audit_logger.end_correlation()
         
         # Query events
-        print("\nQuerying audit events...")
+        logger.info("\nQuerying audit events...")
         queried_events = await audit_logger.query_events(
             event_types=[AuditEventType.JOB_CREATED, AuditEventType.VERSION_REMOVED]
         )
         
-        print(f"Found {len(queried_events)} events")
+        logger.info(f"Found {len(queried_events)} events")
         for event in queried_events:
-            print(f"- {event.event_type.value}: {event.action} on {event.resource}")
+            logger.info(f"- {event.event_type.value}: {event.action} on {event.resource}")
         
         # Generate compliance report
-        print("\nGenerating compliance report...")
+        logger.info("\nGenerating compliance report...")
         start_time = datetime.now(timezone.utc) - timedelta(hours=1)
         end_time = datetime.now(timezone.utc)
         
         report = await audit_logger.generate_compliance_report(start_time, end_time)
-        print(f"Report summary: {report['summary']}")
+        logger.info(f"Report summary: {report['summary']}")
         
         # Get statistics
-        print("\nAudit statistics:")
+        logger.info("\nAudit statistics:")
         stats = audit_logger.get_statistics()
-        print(json.dumps(stats, indent=2, default=str))
+        logger.info(json.dumps(stats, indent=2, default=str))
         
         # Shutdown
         audit_logger.shutdown()

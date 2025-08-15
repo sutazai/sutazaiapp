@@ -504,8 +504,8 @@ if __name__ == "__main__":
             options={"max_tokens": 50}
         )
         
-        print("Response:", response)
-        print("Pool Status:", pool.get_status())
+        logger.info("Response:", response)
+        logger.info("Pool Status:", pool.get_status())
         
         await pool.shutdown()
 

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Live Monitoring System Validation
 =================================
 
@@ -30,7 +33,7 @@ class LiveMonitoringValidator:
     
     def test_docker_container_detection(self):
         """Test that Docker containers are correctly detected"""
-        print("🐳 Testing Docker Container Detection...")
+        logger.info("🐳 Testing Docker Container Detection...")
         
         try:
             # Get Docker containers
@@ -72,7 +75,7 @@ class LiveMonitoringValidator:
                 "containers": containers[:10]  # Limit for readability
             })
             
-            print(f"  ✅ Found {len(containers)} SutazAI containers")
+            logger.info(f"  ✅ Found {len(containers)} SutazAI containers")
             return True
             
         except Exception as e:
@@ -81,12 +84,12 @@ class LiveMonitoringValidator:
                 "status": "failed",
                 "error": str(e)
             })
-            print(f"  ❌ Error: {e}")
+            logger.error(f"  ❌ Error: {e}")
             return False
     
     def test_agent_health_endpoints(self):
         """Test health endpoints of running agents"""
-        print("🏥 Testing Agent Health Endpoints...")
+        logger.info("🏥 Testing Agent Health Endpoints...")
         
         try:
             # Get running containers with ports
@@ -97,7 +100,7 @@ class LiveMonitoringValidator:
             )
             
             if result.returncode != 0:
-                print(f"  ❌ Docker command failed: {result.stderr}")
+                logger.error(f"  ❌ Docker command failed: {result.stderr}")
                 return False
             
             health_results = []
@@ -132,7 +135,7 @@ class LiveMonitoringValidator:
                 "results": health_results[:10]
             })
             
-            print(f"  ✅ Tested {total_count} agents, {healthy_count} healthy ({healthy_count/total_count*100:.1f}%)")
+            logger.info(f"  ✅ Tested {total_count} agents, {healthy_count} healthy ({healthy_count/total_count*100:.1f}%)")
             return True
             
         except Exception as e:
@@ -141,12 +144,12 @@ class LiveMonitoringValidator:
                 "status": "failed",
                 "error": str(e)
             })
-            print(f"  ❌ Error: {e}")
+            logger.error(f"  ❌ Error: {e}")
             return False
     
     def test_monitoring_system_integration(self):
         """Test the monitoring system components work together"""
-        print("🔄 Testing Monitoring System Integration...")
+        logger.info("🔄 Testing Monitoring System Integration...")
         
         try:
             # Test that agent registry exists and is valid
@@ -178,7 +181,7 @@ class LiveMonitoringValidator:
                     "config_sections": list(config.keys())
                 })
                 
-                print(f"  ✅ Configuration valid, health monitoring: {'enabled' if is_enabled else 'disabled'}")
+                logger.info(f"  ✅ Configuration valid, health monitoring: {'enabled' if is_enabled else 'disabled'}")
                 return True
             else:
                 self.results["tests"].append({
@@ -186,7 +189,7 @@ class LiveMonitoringValidator:
                     "status": "failed",
                     "error": "Agent registry configuration not found"
                 })
-                print("  ❌ Agent registry not found")
+                logger.info("  ❌ Agent registry not found")
                 return False
                 
         except Exception as e:
@@ -195,12 +198,12 @@ class LiveMonitoringValidator:
                 "status": "failed",
                 "error": str(e)
             })
-            print(f"  ❌ Error: {e}")
+            logger.error(f"  ❌ Error: {e}")
             return False
     
     def test_status_consistency(self):
         """Test consistency between different status sources"""
-        print("🔍 Testing Status Consistency...")
+        logger.info("🔍 Testing Status Consistency...")
         
         try:
             # Get Docker status
@@ -211,7 +214,7 @@ class LiveMonitoringValidator:
             )
             
             if docker_result.returncode != 0:
-                print(f"  ❌ Docker command failed")
+                logger.error(f"  ❌ Docker command failed")
                 return False
             
             docker_agents = {}
@@ -242,7 +245,7 @@ class LiveMonitoringValidator:
                 "status_distribution": status_counts
             })
             
-            print(f"  ✅ Status consistency validated: {running_agents}/{total_agents} agents running")
+            logger.info(f"  ✅ Status consistency validated: {running_agents}/{total_agents} agents running")
             return True
             
         except Exception as e:
@@ -251,7 +254,7 @@ class LiveMonitoringValidator:
                 "status": "failed",
                 "error": str(e)
             })
-            print(f"  ❌ Error: {e}")
+            logger.error(f"  ❌ Error: {e}")
             return False
     
     def _parse_docker_status(self, status_string):
@@ -316,8 +319,8 @@ class LiveMonitoringValidator:
 
 def run_live_validation():
     """Run live validation tests"""
-    print("🧪 SutazAI Monitoring System Live Validation")
-    print("=" * 50)
+    logger.info("🧪 SutazAI Monitoring System Live Validation")
+    logger.info("=" * 50)
     
     validator = LiveMonitoringValidator()
     
@@ -336,51 +339,51 @@ def run_live_validation():
     # Generate report
     report = validator.generate_report()
     
-    print("\n" + "=" * 50)
-    print("📊 LIVE VALIDATION RESULTS")
-    print("=" * 50)
+    logger.info("\n" + "=" * 50)
+    logger.info("📊 LIVE VALIDATION RESULTS")
+    logger.info("=" * 50)
     
     summary = report["summary"]
-    print(f"Tests Run: {summary['total_tests']}")
-    print(f"Passed: {summary['passed_tests']}")
-    print(f"Failed: {summary['failed_tests']}")
-    print(f"Success Rate: {summary['success_rate']:.1f}%")
+    logger.info(f"Tests Run: {summary['total_tests']}")
+    logger.info(f"Passed: {summary['passed_tests']}")
+    logger.error(f"Failed: {summary['failed_tests']}")
+    logger.info(f"Success Rate: {summary['success_rate']:.1f}%")
     
     # Show detailed results
     for test in report["tests"]:
         status_icon = "✅" if test["status"] == "passed" else "❌"
-        print(f"\n{status_icon} {test['name']}")
+        logger.info(f"\n{status_icon} {test['name']}")
         
         if test["status"] == "failed":
-            print(f"  Error: {test.get('error', 'Unknown error')}")
+            logger.error(f"  Error: {test.get('error', 'Unknown error')}")
         else:
             # Show relevant metrics
             if "containers_found" in test:
-                print(f"  Containers found: {test['containers_found']}")
+                logger.info(f"  Containers found: {test['containers_found']}")
             if "healthy_agents" in test:
-                print(f"  Healthy agents: {test['healthy_agents']}/{test['total_agents']}")
+                logger.info(f"  Healthy agents: {test['healthy_agents']}/{test['total_agents']}")
             if "health_monitoring_enabled" in test:
-                print(f"  Health monitoring: {'enabled' if test['health_monitoring_enabled'] else 'disabled'}")
+                logger.info(f"  Health monitoring: {'enabled' if test['health_monitoring_enabled'] else 'disabled'}")
             if "running_agents" in test:
-                print(f"  Running agents: {test['running_agents']}/{test['total_agents']}")
+                logger.info(f"  Running agents: {test['running_agents']}/{test['total_agents']}")
     
     # Overall assessment
-    print(f"\n🎯 OVERALL ASSESSMENT")
+    logger.info(f"\n🎯 OVERALL ASSESSMENT")
     if summary["success_rate"] >= 90:
-        print("🟢 EXCELLENT - Monitoring system is working perfectly!")
+        logger.info("🟢 EXCELLENT - Monitoring system is working perfectly!")
     elif summary["success_rate"] >= 75:
-        print("🟡 GOOD - Monitoring system is working well with minor issues")
+        logger.info("🟡 GOOD - Monitoring system is working well with minor issues")
     elif summary["success_rate"] >= 50:
-        print("🟠 FAIR - Monitoring system has significant issues that need attention")
+        logger.info("🟠 FAIR - Monitoring system has significant issues that need attention")
     else:
-        print("🔴 POOR - Monitoring system requires immediate fixes")
+        logger.info("🔴 POOR - Monitoring system requires immediate fixes")
     
     # Save report
     report_file = f"/opt/sutazaiapp/tests/live_validation_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     with open(report_file, 'w') as f:
         json.dump(report, f, indent=2)
     
-    print(f"\n📄 Detailed report saved to: {report_file}")
+    logger.info(f"\n📄 Detailed report saved to: {report_file}")
     
     return summary["success_rate"] >= 75
 

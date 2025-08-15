@@ -631,7 +631,7 @@ def main():
     json_file, report_file = runner.save_results(result)
     
     # Print summary
-    print(runner.generate_report(result))
+    logger.info(runner.generate_report(result))
     
     # Exit with appropriate code
     if result.get("failed", 0) > 0:

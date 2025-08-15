@@ -1253,15 +1253,15 @@ if __name__ == "__main__":
         
         # Run SOC2 assessment
         soc2_report_id = await compliance_engine.run_automated_assessment(ComplianceFramework.SOC2)
-        print(f"SOC2 assessment completed: {soc2_report_id}")
+        logger.info(f"SOC2 assessment completed: {soc2_report_id}")
         
         # Run ISO27001 assessment
         iso_report_id = await compliance_engine.run_automated_assessment(ComplianceFramework.ISO27001)
-        print(f"ISO27001 assessment completed: {iso_report_id}")
+        logger.info(f"ISO27001 assessment completed: {iso_report_id}")
         
         # Get compliance status
         status = compliance_engine.get_compliance_status(ComplianceFramework.SOC2)
-        print(f"SOC2 Compliance Status: {status}")
+        logger.info(f"SOC2 Compliance Status: {status}")
         
         # Start continuous monitoring
         # await compliance_engine.start_continuous_monitoring()

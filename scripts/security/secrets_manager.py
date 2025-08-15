@@ -432,17 +432,17 @@ if __name__ == "__main__":
     manager = initialize_production_secrets()
     
     # Validate all secrets
-    print("\n=== Secret Validation Report ===")
+    logger.info("\n=== Secret Validation Report ===")
     for key in manager.list_secrets():
         secret = manager.retrieve_secret(key)
         validation = manager.validate_secret_strength(secret)
         status = "✅ COMPLIANT" if validation["is_compliant"] else "❌ NON-COMPLIANT"
-        print(f"{key}: {status}")
+        logger.info(f"{key}: {status}")
         if not validation["is_compliant"]:
-            print(f"  Reason: {validation.get('reason', 'Unknown')}")
+            logger.info(f"  Reason: {validation.get('reason', 'Unknown')}")
             
     # Show audit log
-    print("\n=== Audit Log Summary ===")
+    logger.info("\n=== Audit Log Summary ===")
     audit_entries = manager.get_audit_log()
     for entry in audit_entries[-10:]:  # Last 10 entries
-        print(f"{entry['timestamp']}: {entry['action']} - {entry['key']}")
+        logger.info(f"{entry['timestamp']}: {entry['action']} - {entry['key']}")

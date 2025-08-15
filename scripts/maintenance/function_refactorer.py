@@ -440,10 +440,10 @@ def main():
             
         high_complexity_functions = report['all_high_complexity_functions']
         
-        print("\n" + "="*60)
-        print("REFACTORING PLAN (DRY RUN)")
-        print("="*60)
-        print(f"Functions to refactor: {len(high_complexity_functions)}")
+        logger.info("\n" + "="*60)
+        logger.info("REFACTORING PLAN (DRY RUN)")
+        logger.info("="*60)
+        logger.info(f"Functions to refactor: {len(high_complexity_functions)}")
         
         # Group by file
         files_to_refactor = {}
@@ -454,9 +454,9 @@ def main():
             files_to_refactor[file_path].append(func_info)
             
         for file_path, functions in list(files_to_refactor.items())[:10]:  # Show top 10
-            print(f"\n{file_path}: {len(functions)} functions")
+            logger.info(f"\n{file_path}: {len(functions)} functions")
             for func in functions[:3]:  # Show top 3 per file
-                print(f"  - {func['function_name']} (complexity: {func['complexity']}, lines: {func['lines_of_code']})")
+                logger.info(f"  - {func['function_name']} (complexity: {func['complexity']}, lines: {func['lines_of_code']})")
                 
         return 0
         
@@ -469,12 +469,12 @@ def main():
         logger.info("Running validation on refactored files...")
         # Validation logic would go here
         
-    print("\n" + "="*60)
-    print("REFACTORING COMPLETE")
-    print("="*60)
-    print(f"Files processed: {refactorer.refactoring_stats['files_processed']}")
-    print(f"Functions refactored: {refactorer.refactoring_stats['functions_refactored']}")
-    print(f"Backup directory: {refactorer.backup_dir}")
+    logger.info("\n" + "="*60)
+    logger.info("REFACTORING COMPLETE")
+    logger.info("="*60)
+    logger.info(f"Files processed: {refactorer.refactoring_stats['files_processed']}")
+    logger.info(f"Functions refactored: {refactorer.refactoring_stats['functions_refactored']}")
+    logger.info(f"Backup directory: {refactorer.backup_dir}")
     
     return 0
 

@@ -429,18 +429,18 @@ def main():
         json.dump(report, f, indent=2)
     
     # Print summary
-    print("\n" + "="*80)
-    print("UNUSED IMPORTS AUDIT SUMMARY")
-    print("="*80)
-    print(f"Total files analyzed: {report['summary']['total_files_analyzed']}")
-    print(f"Files with unused imports: {report['summary']['files_with_unused_imports']}")
-    print(f"Total unused imports found: {report['summary']['total_unused_imports']}")
-    print(f"Estimated cleanup benefit: {report['summary']['cleanup_potential_mb']} MB")
-    print("\nTop 10 Most Unused Modules:")
+    logger.info("\n" + "="*80)
+    logger.info("UNUSED IMPORTS AUDIT SUMMARY")
+    logger.info("="*80)
+    logger.info(f"Total files analyzed: {report['summary']['total_files_analyzed']}")
+    logger.info(f"Files with unused imports: {report['summary']['files_with_unused_imports']}")
+    logger.info(f"Total unused imports found: {report['summary']['total_unused_imports']}")
+    logger.info(f"Estimated cleanup benefit: {report['summary']['cleanup_potential_mb']} MB")
+    logger.info("\nTop 10 Most Unused Modules:")
     for module, count in list(report['summary']['most_unused_modules'].items())[:10]:
-        print(f"  {module}: {count} occurrences")
+        logger.info(f"  {module}: {count} occurrences")
     
-    print(f"\nDetailed report saved to: {args.output_report}")
+    logger.info(f"\nDetailed report saved to: {args.output_report}")
     
     # Phase 2: Cleanup (if requested)
     if args.cleanup:
@@ -448,14 +448,14 @@ def main():
         cleaner = UnusedImportCleaner(dry_run=args.dry_run)
         cleanup_stats = cleaner.cleanup_files(results)
         
-        print("\n" + "="*80)
-        print("CLEANUP SUMMARY")
-        print("="*80)
-        print(f"Files processed: {cleanup_stats['files_processed']}")
-        print(f"Files cleaned: {cleanup_stats['files_cleaned']}")
-        print(f"Total imports removed: {cleanup_stats['total_imports_removed']}")
+        logger.info("\n" + "="*80)
+        logger.info("CLEANUP SUMMARY")
+        logger.info("="*80)
+        logger.info(f"Files processed: {cleanup_stats['files_processed']}")
+        logger.info(f"Files cleaned: {cleanup_stats['files_cleaned']}")
+        logger.info(f"Total imports removed: {cleanup_stats['total_imports_removed']}")
         if cleanup_stats['errors']:
-            print(f"Errors encountered: {len(cleanup_stats['errors'])}")
+            logger.error(f"Errors encountered: {len(cleanup_stats['errors'])}")
     
     return 0
 

@@ -887,8 +887,8 @@ class UltraIntegrationTester:
 
 async def main():
     """Run the ULTRA integration test suite"""
-    print("🔧 ULTRA INTEGRATION TEST SUITE")
-    print("=" * 50)
+    logger.info("🔧 ULTRA INTEGRATION TEST SUITE")
+    logger.info("=" * 50)
     
     tester = UltraIntegrationTester()
     
@@ -901,29 +901,29 @@ async def main():
     # Print summary
     summary = results['summary']
     
-    print("\n" + "=" * 50)
-    print("🎯 INTEGRATION TEST RESULTS")
-    print("=" * 50)
-    print(f"Integration Grade: {summary['integration_grade']}")
-    print(f"Integration Score: {summary['integration_score']}/100")
-    print(f"Success Rate: {summary['success_rate']}%")
-    print(f"Total Tests: {summary['total_tests']}")
-    print(f"Passed: {summary['passed_tests']}")
-    print(f"Failed: {summary['failed_tests']}")
-    print(f"Errors: {summary['error_tests']}")
+    logger.info("\n" + "=" * 50)
+    logger.info("🎯 INTEGRATION TEST RESULTS")
+    logger.info("=" * 50)
+    logger.info(f"Integration Grade: {summary['integration_grade']}")
+    logger.info(f"Integration Score: {summary['integration_score']}/100")
+    logger.info(f"Success Rate: {summary['success_rate']}%")
+    logger.info(f"Total Tests: {summary['total_tests']}")
+    logger.info(f"Passed: {summary['passed_tests']}")
+    logger.error(f"Failed: {summary['failed_tests']}")
+    logger.error(f"Errors: {summary['error_tests']}")
     
-    print(f"\n🏥 Service Health:")
+    logger.info(f"\n🏥 Service Health:")
     service_health = summary['service_health']
-    print(f"Healthy Services: {service_health['healthy_services']}/{service_health['total_services']}")
-    print(f"Service Health Rate: {service_health['health_rate']}%")
+    logger.info(f"Healthy Services: {service_health['healthy_services']}/{service_health['total_services']}")
+    logger.info(f"Service Health Rate: {service_health['health_rate']}%")
     
-    print(f"\n📊 Test Categories:")
+    logger.info(f"\n📊 Test Categories:")
     for category, stats in summary['category_breakdown'].items():
-        print(f"{category}: {stats['passed']}/{stats['total']} passed")
+        logger.info(f"{category}: {stats['passed']}/{stats['total']} passed")
     
-    print(f"\nPerfect Integration: {'✅ YES' if summary['perfect_integration'] else '❌ NO'}")
-    print(f"Production Ready: {'✅ YES' if summary['production_ready'] else '❌ NO'}")
-    print(f"Results saved to: {results_file}")
+    logger.info(f"\nPerfect Integration: {'✅ YES' if summary['perfect_integration'] else '❌ NO'}")
+    logger.info(f"Production Ready: {'✅ YES' if summary['production_ready'] else '❌ NO'}")
+    logger.info(f"Results saved to: {results_file}")
     
     # Return exit code based on success
     return 0 if summary['failed_tests'] == 0 and summary['error_tests'] == 0 else 1

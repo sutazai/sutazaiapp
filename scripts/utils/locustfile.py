@@ -1,4 +1,6 @@
 """
+
+logger = logging.getLogger(__name__)
 Locust load testing script for SutazAI system
 Tests system performance under various load conditions
 """
@@ -500,14 +502,14 @@ def create_load_test_scenarios():
 
 
 if __name__ == "__main__":
-    print("SutazAI Load Testing Scenarios:")
+    logger.info("SutazAI Load Testing Scenarios:")
     scenarios = create_load_test_scenarios()
     
     for name, scenario in scenarios.items():
-        print(f"\n{name}: {scenario['description']}")
-        print(f"  User types: {[user.__name__ for user in scenario['users']]}")
+        logger.info(f"\n{name}: {scenario['description']}")
+        logger.info(f"  User types: {[user.__name__ for user in scenario['users']]}")
     
-    print("\nTo run a specific scenario:")
-    print("locust -f locustfile.py --users 10 --spawn-rate 2 --run-time 300s --host http://localhost:8000")
-    print("\nTo run with web UI:")
-    print("locust -f locustfile.py --host http://localhost:8000")
+    logger.info("\nTo run a specific scenario:")
+    logger.info("locust -f locustfile.py --users 10 --spawn-rate 2 --run-time 300s --host http://localhost:8000")
+    logger.info("\nTo run with web UI:")
+    logger.info("locust -f locustfile.py --host http://localhost:8000")

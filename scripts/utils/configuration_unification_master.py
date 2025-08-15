@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Configuration Unification Master
 
 Centralizes all configuration files into perfect structure.
@@ -27,7 +30,7 @@ class ConfigurationUnificationMaster:
         
     def analyze_configuration_chaos(self) -> Dict:
         """Analyze scattered configuration files."""
-        print("🔍 Analyzing configuration file chaos...")
+        logger.info("🔍 Analyzing configuration file chaos...")
         
         analysis = {
             'config_directories': [],
@@ -64,18 +67,18 @@ class ConfigurationUnificationMaster:
         for env_file in self.root_path.rglob('.env*'):
             analysis['env_files'].append(str(env_file))
         
-        print(f"✅ Found:")
-        print(f"  - {len(analysis['config_directories'])} config directories")
-        print(f"  - {len(analysis['requirements_files'])} requirements files")
-        print(f"  - {len(analysis['yaml_configs'])} YAML configs")
-        print(f"  - {len(analysis['json_configs'])} JSON configs")
-        print(f"  - {len(analysis['env_files'])} environment files")
+        logger.info(f"✅ Found:")
+        logger.info(f"  - {len(analysis['config_directories'])} config directories")
+        logger.info(f"  - {len(analysis['requirements_files'])} requirements files")
+        logger.info(f"  - {len(analysis['yaml_configs'])} YAML configs")
+        logger.info(f"  - {len(analysis['json_configs'])} JSON configs")
+        logger.info(f"  - {len(analysis['env_files'])} environment files")
         
         return analysis
     
     def create_unified_structure(self) -> None:
         """Create unified configuration directory structure."""
-        print("🏗️  Creating unified configuration structure...")
+        logger.info("🏗️  Creating unified configuration structure...")
         
         # Create perfect config structure
         config_structure = [
@@ -90,11 +93,11 @@ class ConfigurationUnificationMaster:
         for dir_name in config_structure:
             (self.config_dir / dir_name).mkdir(parents=True, exist_ok=True)
         
-        print("✅ Created unified configuration structure")
+        logger.info("✅ Created unified configuration structure")
     
     def consolidate_requirements_files(self) -> None:
         """Consolidate all requirements files."""
-        print("📋 Consolidating requirements files...")
+        logger.info("📋 Consolidating requirements files...")
         
         requirements_dir = self.config_dir / 'requirements'
         analysis = self.analyze_configuration_chaos()
@@ -126,10 +129,10 @@ class ConfigurationUnificationMaster:
                         master_requirements[category].add(line)
                 
                 processed += 1
-                print(f"  📁 Processed {req_file.name}")
+                logger.info(f"  📁 Processed {req_file.name}")
                 
             except Exception as e:
-                print(f"  ⚠️  Error processing {req_file_path}: {e}")
+                logger.error(f"  ⚠️  Error processing {req_file_path}: {e}")
         
         # Write consolidated requirements
         for req_type, packages in master_requirements.items():
@@ -141,9 +144,9 @@ class ConfigurationUnificationMaster:
                     for package in sorted(packages):
                         f.write(f'{package}\n')
                 
-                print(f"  ✅ Created {req_type} with {len(packages)} packages")
+                logger.info(f"  ✅ Created {req_type} with {len(packages)} packages")
         
-        print(f"✅ Consolidated {processed} requirements files")
+        logger.info(f"✅ Consolidated {processed} requirements files")
     
     def _categorize_requirements(self, file_path: str) -> str:
         """Categorize requirements file based on path/name."""
@@ -164,7 +167,7 @@ class ConfigurationUnificationMaster:
     
     def create_master_configurations(self) -> None:
         """Create master configuration files."""
-        print("⚙️  Creating master configuration files...")
+        logger.info("⚙️  Creating master configuration files...")
         
         # Master system configuration
         system_config = {
@@ -280,11 +283,11 @@ class ConfigurationUnificationMaster:
         with open(self.config_dir / 'core' / 'ports.yaml', 'w') as f:
             yaml.dump(port_registry, f, default_flow_style=False, indent=2)
         
-        print("✅ Created master configuration files")
+        logger.info("✅ Created master configuration files")
     
     def create_environment_configs(self) -> None:
         """Create environment-specific configurations."""
-        print("🌍 Creating environment configurations...")
+        logger.info("🌍 Creating environment configurations...")
         
         environments_dir = self.config_dir / 'environments'
         
@@ -322,12 +325,12 @@ class ConfigurationUnificationMaster:
         with open(environments_dir / 'production.yaml', 'w') as f:
             yaml.dump(prod_config, f, default_flow_style=False, indent=2)
         
-        print("✅ Created environment configurations")
+        logger.info("✅ Created environment configurations")
     
     def execute_configuration_unification(self) -> Dict:
         """Execute complete configuration unification."""
-        print("🚀 CONFIGURATION UNIFICATION MASTER - STARTING")
-        print("=" * 55)
+        logger.info("🚀 CONFIGURATION UNIFICATION MASTER - STARTING")
+        logger.info("=" * 55)
         
         # Analyze current state
         analysis = self.analyze_configuration_chaos()
@@ -352,8 +355,8 @@ class ConfigurationUnificationMaster:
             'environment_configs_created': 2
         }
         
-        print("=" * 55)
-        print("✅ CONFIGURATION UNIFICATION MASTER - COMPLETE")
+        logger.info("=" * 55)
+        logger.info("✅ CONFIGURATION UNIFICATION MASTER - COMPLETE")
         
         return result
 
@@ -361,5 +364,5 @@ if __name__ == '__main__':
     unifier = ConfigurationUnificationMaster()
     result = unifier.execute_configuration_unification()
     
-    print(f"📁 Result: {result}")
-    print(f"🔧 Configuration chaos eliminated - Perfect structure achieved!")
+    logger.info(f"📁 Result: {result}")
+    logger.info(f"🔧 Configuration chaos eliminated - Perfect structure achieved!")

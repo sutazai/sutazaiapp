@@ -506,12 +506,12 @@ def main():
     architect = UltraCleanupArchitect()
     
     if not args.dry_run and not args.force:
-        print("\n⚠️  ULTRA-CLEANUP WARNING ⚠️")
-        print("This will permanently delete files and directories.")
-        print("A backup will be created, but please confirm.")
+        logger.warning("\n⚠️  ULTRA-CLEANUP WARNING ⚠️")
+        logger.info("This will permanently delete files and directories.")
+        logger.info("A backup will be created, but please confirm.")
         response = input("\nType 'CLEAN' to proceed: ")
         if response != 'CLEAN':
-            print("Cleanup cancelled.")
+            logger.info("Cleanup cancelled.")
             sys.exit(0)
     
     success = architect.execute_ultra_cleanup(dry_run=args.dry_run)

@@ -449,7 +449,7 @@ def main():
     
     try:
         report = generator.run_comprehensive_analysis()
-        print(report)
+        logger.info(report)
         
         # Determine exit code based on assessment
         assessment = generator.report_data['overall_assessment']

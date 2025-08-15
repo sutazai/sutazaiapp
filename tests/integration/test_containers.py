@@ -482,7 +482,7 @@ class TestContainerNetworking:
             # Start client container
             client_container = docker_client.containers.run(
                 "python:3.12-slim",
-                command="python -c \"import urllib.request; print(urllib.request.urlopen('http://sutazai-server:8000').read())\"",
+                command="python -c \"import urllib.request; logger.info(urllib.request.urlopen('http://sutazai-server:8000').read())\"",
                 name="sutazai-client",
                 networks=["sutazai-comm-test"],
                 detach=True
@@ -681,7 +681,7 @@ class TestContainerSecurity:
         # Create container with dropped capabilities
         container = docker_client.containers.run(
             "python:3.12-slim",
-            command="python -c \"import os; print('CAP_NET_RAW' not in str(os.system('capsh --print')))\"",
+            command="python -c \"import os; logger.info('CAP_NET_RAW' not in str(os.system('capsh --print')))\"",
             name="sutazai-caps-test",
             cap_drop=["NET_RAW"],
             detach=True
@@ -836,7 +836,7 @@ class TestContainerMonitoring:
         # Create container that generates logs
         container = docker_client.containers.run(
             "python:3.12-slim",
-            command="python -c \"print('Log message 1'); print('Log message 2')\"",
+            command="python -c \"logger.info('Log message 1'); logger.info('Log message 2')\"",
             name="sutazai-log-test",
             detach=True
         )

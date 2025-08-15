@@ -853,16 +853,16 @@ async def main():
         artifact_cleanup = ArtifactCleanupService(config, audit_logger)
         
         # Example: Analyze artifact cleanup candidates
-        print("Analyzing artifact cleanup candidates...")
+        logger.info("Analyzing artifact cleanup candidates...")
         servers = ['postgres', 'files']  # Example servers
         
         for server in servers:
             try:
                 analysis = await artifact_cleanup.analyze_cleanup_candidates(server)
-                print(f"\nArtifact analysis for {server}:")
-                print(json.dumps(analysis, indent=2, default=str))
+                logger.info(f"\nArtifact analysis for {server}:")
+                logger.info(json.dumps(analysis, indent=2, default=str))
             except Exception as e:
-                print(f"Error analyzing {server}: {e}")
+                logger.error(f"Error analyzing {server}: {e}")
         
     except Exception as e:
         logging.error(f"Error in artifact cleanup: {e}", exc_info=True)

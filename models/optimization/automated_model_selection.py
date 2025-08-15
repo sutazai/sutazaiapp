@@ -719,8 +719,9 @@ class ModelSelectionEngine:
 class AutoDeployer:
     """Handles automated model deployment"""
     
-    def __init__(self, ollama_host: str = "http://localhost:10104"):
-        self.ollama_host = ollama_host
+    def __init__(self, ollama_host: str = None):
+        # Use environment variable or Docker service name
+        self.ollama_host = ollama_host if ollama_host else os.getenv("OLLAMA_HOST", "http://ollama:10104")
         self.deployed_models = set()
         self.deployment_history = []
         self.session = None
@@ -1187,12 +1188,12 @@ async def example_model_selection():
         # Update performance
         orchestrator.update_performance(selected_model, context, outcome_metrics)
         
-        print(f"Selection {i+1}: {selected_model} (confidence: {confidence:.3f})")
+        logger.info(f"Selection {i+1}: {selected_model} (confidence: {confidence:.3f})")
     
     # Get status
     status = orchestrator.get_status()
-    print("\nSystem Status:")
-    print(json.dumps(status, indent=2, default=str))
+    logger.info("\nSystem Status:")
+    logger.info(json.dumps(status, indent=2, default=str))
     
     # Optimize deployments
     await orchestrator.optimize_deployment()

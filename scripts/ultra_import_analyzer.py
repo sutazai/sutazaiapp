@@ -552,24 +552,24 @@ def main():
     backup_path = None
     if args.backup:
         backup_path = analyzer.create_backup()
-        print(f"✅ Backup created at: {backup_path}")
+        logger.info(f"✅ Backup created at: {backup_path}")
     
     # Scan for unused imports
     if args.scan or args.clean:
-        print("🔍 Scanning for unused imports...")
+        logger.info("🔍 Scanning for unused imports...")
         results = analyzer.scan_all_files()
         
-        print(f"📊 Found {analyzer.import_stats['total_unused_imports']} unused imports in {analyzer.import_stats['files_with_unused_imports']} files")
+        logger.info(f"📊 Found {analyzer.import_stats['total_unused_imports']} unused imports in {analyzer.import_stats['files_with_unused_imports']} files")
         
         # Generate and save report
         report = analyzer.generate_report(results)
         with open(args.report, 'w') as f:
             f.write(report)
-        print(f"📋 Report saved to: {args.report}")
+        logger.info(f"📋 Report saved to: {args.report}")
         
         # Clean unused imports if requested
         if args.clean and results:
-            print("🧹 Cleaning unused imports...")
+            logger.info("🧹 Cleaning unused imports...")
             cleaned_files = 0
             
             for file_path_str, analysis in results.items():
@@ -577,11 +577,11 @@ def main():
                 if analyzer.clean_file_imports(file_path, analysis['unused_imports']):
                     cleaned_files += 1
             
-            print(f"✅ Cleaned {cleaned_files} files")
+            logger.info(f"✅ Cleaned {cleaned_files} files")
     
     # Organize imports if requested
     if args.organize:
-        print("📝 Organizing imports...")
+        logger.info("📝 Organizing imports...")
         python_files = analyzer.find_python_files()
         organized_files = 0
         
@@ -589,11 +589,11 @@ def main():
             if analyzer.organize_imports(file_path):
                 organized_files += 1
         
-        print(f"✅ Organized imports in {organized_files} files")
+        logger.info(f"✅ Organized imports in {organized_files} files")
     
-    print("🎉 ULTRA import cleanup complete!")
+    logger.info("🎉 ULTRA import cleanup complete!")
     if backup_path:
-        print(f"🔒 Backup available at: {backup_path}")
+        logger.info(f"🔒 Backup available at: {backup_path}")
 
 
 if __name__ == "__main__":

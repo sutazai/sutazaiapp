@@ -860,47 +860,47 @@ async def main():
             
             insights = monitor.generate_insights_report()
             
-            print("\n" + "="*80)
-            print(f"Neural Health Monitor Insights - {insights['timestamp']}")
-            print("="*80)
+            logger.info("\n" + "="*80)
+            logger.info(f"Neural Health Monitor Insights - {insights['timestamp']}")
+            logger.info("="*80)
             
             # Health Summary
-            print("\n📊 Current Health Status:")
+            logger.info("\n📊 Current Health Status:")
             for container, health in insights['health_summary'].items():
                 status = 'healthy' if health['healthy'] > 0.5 else \
                         'warning' if health['warning'] > 0.5 else \
                         'critical' if health['critical'] > 0.5 else 'failed'
                 anomaly = " [ANOMALY]" if health.get('anomaly') else ""
-                print(f"  {container}: {status.upper()}{anomaly}")
+                logger.info(f"  {container}: {status.upper()}{anomaly}")
             
             # Recommendations
             if insights['recommendations']:
-                print("\n💡 Recommended Actions:")
+                logger.info("\n💡 Recommended Actions:")
                 for rec in insights['recommendations']:
-                    print(f"\n  Container: {rec['container']}")
-                    print(f"  Action: {rec['recommendation']['primary_action']}")
-                    print(f"  Confidence: {rec['recommendation']['confidence']:.2%}")
-                    print(f"  Reasoning: {rec['recommendation']['reasoning']}")
+                    logger.info(f"\n  Container: {rec['container']}")
+                    logger.info(f"  Action: {rec['recommendation']['primary_action']}")
+                    logger.info(f"  Confidence: {rec['recommendation']['confidence']:.2%}")
+                    logger.info(f"  Reasoning: {rec['recommendation']['reasoning']}")
             
             # Predicted Issues
             if insights['predicted_issues']:
-                print("\n⚠️  Predicted Issues:")
+                logger.info("\n⚠️  Predicted Issues:")
                 for issue in insights['predicted_issues']:
-                    print(f"\n  Container: {issue['container']}")
-                    print(f"  Issue: {issue['issue']}")
-                    print(f"  Timeframe: {issue['timeframe']}")
-                    print(f"  Confidence: {issue['confidence']:.2%}")
-                    print(f"  Trend: {issue['trend']}")
+                    logger.info(f"\n  Container: {issue['container']}")
+                    logger.info(f"  Issue: {issue['issue']}")
+                    logger.info(f"  Timeframe: {issue['timeframe']}")
+                    logger.info(f"  Confidence: {issue['confidence']:.2%}")
+                    logger.info(f"  Trend: {issue['trend']}")
             
             # Optimization Opportunities
             if insights['optimization_opportunities']:
-                print("\n🔧 Optimization Opportunities:")
+                logger.info("\n🔧 Optimization Opportunities:")
                 for opt in insights['optimization_opportunities']:
-                    print(f"\n  Container: {opt['container']}")
-                    print(f"  Type: {opt['type']}")
-                    print(f"  Suggestion: {opt['suggestion']}")
+                    logger.info(f"\n  Container: {opt['container']}")
+                    logger.info(f"  Type: {opt['type']}")
+                    logger.info(f"  Suggestion: {opt['suggestion']}")
             
-            print("\n" + "="*80)
+            logger.info("\n" + "="*80)
             
     except KeyboardInterrupt:
         logger.info("Shutting down neural health monitor")

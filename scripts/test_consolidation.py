@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA Test Consolidation Script
 Moves scattered test files from scripts/testing/ to proper /tests/ structure
 Following pytest conventions and professional standards per Rules 1-19
@@ -129,7 +132,7 @@ def update_imports_in_file(file_path: Path, old_path: str, new_path: str):
             f.write(content)
             
     except Exception as e:
-        print(f"Warning: Could not update imports in {file_path}: {e}")
+        logger.warning(f"Warning: Could not update imports in {file_path}: {e}")
 
 def consolidate_tests():
     """Main consolidation function to move and organize test files."""
@@ -138,7 +141,7 @@ def consolidate_tests():
     tests_dir = base_dir / 'tests'
     
     if not scripts_testing.exists():
-        print("scripts/testing directory not found")
+        logger.info("scripts/testing directory not found")
         return
     
     # Track moves for reporting
@@ -147,7 +150,7 @@ def consolidate_tests():
     # Get all Python test files in scripts/testing
     test_files = list(scripts_testing.glob('test_*.py'))
     
-    print(f"Found {len(test_files)} test files to consolidate")
+    logger.info(f"Found {len(test_files)} test files to consolidate")
     
     for test_file in test_files:
         # Determine target category
@@ -163,7 +166,7 @@ def consolidate_tests():
         # Move the file
         try:
             if target_file.exists():
-                print(f"Warning: {target_file} already exists, creating backup")
+                logger.warning(f"Warning: {target_file} already exists, creating backup")
                 backup_file = target_file.with_suffix('.py.backup')
                 shutil.move(str(target_file), str(backup_file))
             
@@ -173,10 +176,10 @@ def consolidate_tests():
             update_imports_in_file(target_file, str(test_file), str(target_file))
             
             moves_made.append((test_file.name, category))
-            print(f"Moved {test_file.name} -> tests/{category}/")
+            logger.info(f"Moved {test_file.name} -> tests/{category}/")
             
         except Exception as e:
-            print(f"Error moving {test_file}: {e}")
+            logger.error(f"Error moving {test_file}: {e}")
     
     # Handle special test subdirectories
     special_dirs = ['load', 'integration', 'reports']
@@ -198,16 +201,16 @@ def consolidate_tests():
                     shutil.move(str(file_path), str(target_file))
                     update_imports_in_file(target_file, str(file_path), str(target_file))
                     moves_made.append((f"{special_dir}/{file_path.name}", str(target_special.relative_to(tests_dir))))
-                    print(f"Moved {special_dir}/{file_path.name} -> tests/{target_special.relative_to(tests_dir)}/")
+                    logger.info(f"Moved {special_dir}/{file_path.name} -> tests/{target_special.relative_to(tests_dir)}/")
                 except Exception as e:
-                    print(f"Error moving {file_path}: {e}")
+                    logger.error(f"Error moving {file_path}: {e}")
     
     # Generate consolidation report
     generate_consolidation_report(moves_made, tests_dir)
     
-    print(f"\nConsolidation complete! Moved {len(moves_made)} test files")
-    print("Updated PYTHONPATH configuration in pytest.ini")
-    print("All tests should now be discoverable with 'make test' and pytest")
+    logger.info(f"\nConsolidation complete! Moved {len(moves_made)} test files")
+    logger.info("Updated PYTHONPATH configuration in pytest.ini")
+    logger.info("All tests should now be discoverable with 'make test' and pytest")
 
 def generate_consolidation_report(moves_made: List[Tuple[str, str]], tests_dir: Path):
     """Generate a report of all test consolidation moves."""
@@ -254,7 +257,7 @@ All moved tests are now:
     with open(report_file, 'w') as f:
         f.write(report_content)
     
-    print(f"Consolidation report written to: {report_file}")
+    logger.info(f"Consolidation report written to: {report_file}")
 
 if __name__ == "__main__":
     consolidate_tests()

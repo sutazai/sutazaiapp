@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 More comprehensive script to fix docker-compose.yml by removing ALL deploy: sections
 """
 
@@ -12,7 +15,7 @@ def fix_docker_compose(file_path):
     with open(file_path, 'r') as f:
         content = f.read()
     
-    print(f"Original file size: {len(content)} characters")
+    logger.info(f"Original file size: {len(content)} characters")
     
     # More aggressive pattern to match deploy sections
     # This matches the entire deploy: block including all nested content
@@ -25,7 +28,7 @@ def fix_docker_compose(file_path):
         if re.match(r'(\s*)deploy:\s*$', line):
             indent_level = len(line) - len(line.lstrip())
             skip_until_indent = indent_level
-            print(f"Found deploy: section at line {i+1}, indentation {indent_level}")
+            logger.info(f"Found deploy: section at line {i+1}, indentation {indent_level}")
             continue
             
         # If we're skipping (inside a deploy section)
@@ -43,12 +46,12 @@ def fix_docker_compose(file_path):
             new_lines.append(line)
     
     new_content = '\n'.join(new_lines)
-    print(f"New file size: {len(new_content)} characters")
+    logger.info(f"New file size: {len(new_content)} characters")
     
     with open(file_path, 'w') as f:
         f.write(new_content)
     
-    print("✅ Fixed docker-compose.yml by removing all deploy: sections")
+    logger.info("✅ Fixed docker-compose.yml by removing all deploy: sections")
 
 if __name__ == "__main__":
     fix_docker_compose('/opt/sutazaiapp/docker-compose.yml')

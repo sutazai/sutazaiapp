@@ -431,6 +431,6 @@ if __name__ == "__main__":
             model, 
             task_type='code_generation'
         )
-        print(f"\n{model}:")
-        print(optimized)
-        print(f"Tokens: ~{optimizer.token_counter.count(optimized)}")
+        logger.info(f"\n{model}:")
+        logger.info(optimized)
+        logger.info(f"Tokens: ~{optimizer.token_counter.count(optimized)}")

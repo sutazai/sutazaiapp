@@ -942,40 +942,40 @@ async def main():
     }
     
     # Early fusion
-    print("Testing Early Fusion:")
+    logger.info("Testing Early Fusion:")
     early_result = await coordinator.process_multi_modal_input(
         modality_input, 
         FusionStrategy.EARLY
     )
-    print(f"  Result shape: {early_result.fused_representation.shape}")
-    print(f"  Processing time: {early_result.processing_latency:.3f}s")
-    print(f"  Confidence scores: {early_result.confidence_scores}")
+    logger.info(f"  Result shape: {early_result.fused_representation.shape}")
+    logger.info(f"  Processing time: {early_result.processing_latency:.3f}s")
+    logger.info(f"  Confidence scores: {early_result.confidence_scores}")
     
     # Late fusion
-    print("\nTesting Late Fusion:")
+    logger.info("\nTesting Late Fusion:")
     late_result = await coordinator.process_multi_modal_input(
         modality_input,
         FusionStrategy.LATE
     )
-    print(f"  Result shape: {late_result.fused_representation.shape}")
-    print(f"  Processing time: {late_result.processing_latency:.3f}s")
-    print(f"  Metadata: {late_result.metadata}")
+    logger.info(f"  Result shape: {late_result.fused_representation.shape}")
+    logger.info(f"  Processing time: {late_result.processing_latency:.3f}s")
+    logger.info(f"  Metadata: {late_result.metadata}")
     
     # Hybrid fusion
-    print("\nTesting Hybrid Fusion:")
+    logger.info("\nTesting Hybrid Fusion:")
     hybrid_result = await coordinator.process_multi_modal_input(
         modality_input,
         FusionStrategy.HYBRID
     )
-    print(f"  Result shape: {hybrid_result.fused_representation.shape}")
-    print(f"  Processing time: {hybrid_result.processing_latency:.3f}s")
-    print(f"  Fusion weights: {hybrid_result.fusion_weights}")
+    logger.info(f"  Result shape: {hybrid_result.fused_representation.shape}")
+    logger.info(f"  Processing time: {hybrid_result.processing_latency:.3f}s")
+    logger.info(f"  Fusion weights: {hybrid_result.fusion_weights}")
     
     # Print statistics
-    print("\nProcessing Statistics:")
+    logger.info("\nProcessing Statistics:")
     stats = coordinator.get_processing_statistics()
     for key, value in stats.items():
-        print(f"  {key}: {value}")
+        logger.info(f"  {key}: {value}")
     
     # Shutdown
     await coordinator.shutdown()

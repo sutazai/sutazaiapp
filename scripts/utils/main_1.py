@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 semgrep Agent Implementation
 """
 import os
@@ -45,18 +48,18 @@ class SemgrepAgent:
 
 def run():
     """Run the agent"""
-    print(f"Starting semgrep agent...")
+    logger.info(f"Starting semgrep agent...")
     agent = SemgrepAgent()
     
     # In production, this would start a web server
     # For now, just indicate the agent is ready
-    print(f"semgrep agent ready on port :8080")
+    logger.info(f"semgrep agent ready on port :8080")
     
     # Keep the agent running
     try:
         asyncio.get_event_loop().run_forever()
     except KeyboardInterrupt:
-        print(f"Shutting down semgrep agent...")
+        logger.info(f"Shutting down semgrep agent...")
 
 if __name__ == "__main__":
     run()

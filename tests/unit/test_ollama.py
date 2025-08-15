@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Test and diagnose Ollama performance issues"""
 
+import logging
+
+logger = logging.getLogger(__name__)
 import requests
 import time
 import json
@@ -13,15 +16,15 @@ def test_ollama():
     try:
         r = requests.get("http://localhost:10104/api/tags", timeout=2)
         models = r.json().get("models", [])
-        print(f"✅ Ollama is running with {len(models)} models")
+        logger.info(f"✅ Ollama is running with {len(models)} models")
         for model in models:
-            print(f"  - {model['name']}: {model['size'] / 1024 / 1024:.0f}MB")
+            logger.info(f"  - {model['name']}: {model['size'] / 1024 / 1024:.0f}MB")
     except Exception as e:
-        print(f"❌ Cannot connect to Ollama: {e}")
+        logger.info(f"❌ Cannot connect to Ollama: {e}")
         return False
     
     # Test 2: Try a   generation
-    print("\n🔄 Testing generation with   settings...")
+    logger.info("\n🔄 Testing generation with   settings...")
     
     payload = {
         "model": "tinyllama",
@@ -51,26 +54,26 @@ def test_ollama():
         
         if r.status_code == 200:
             result = r.json()
-            print(f"✅ Response in {elapsed:.2f}s")
-            print(f"Generated: {result.get('response', 'NO RESPONSE')}")
+            logger.info(f"✅ Response in {elapsed:.2f}s")
+            logger.info(f"Generated: {result.get('response', 'NO RESPONSE')}")
             
             if elapsed < 2:
-                print("🎉 PERFORMANCE IS GOOD!")
+                logger.info("🎉 PERFORMANCE IS GOOD!")
             elif elapsed < 5:
-                print("⚠️ Performance is acceptable but could be better")
+                logger.info("⚠️ Performance is acceptable but could be better")
             else:
-                print("❌ Performance is too slow!")
+                logger.info("❌ Performance is too slow!")
                 
             return elapsed < 5
         else:
-            print(f"❌ Error {r.status_code}: {r.text}")
+            logger.error(f"❌ Error {r.status_code}: {r.text}")
             return False
             
     except requests.Timeout:
-        print(f"❌ Request timed out after 10 seconds")
+        logger.info(f"❌ Request timed out after 10 seconds")
         return False
     except Exception as e:
-        print(f"❌ Error: {e}")
+        logger.error(f"❌ Error: {e}")
         return False
 
 if __name__ == "__main__":

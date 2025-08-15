@@ -83,10 +83,15 @@ class DifyWorkflowManager:
     
     def __init__(self, config_path: str = "/opt/sutazaiapp/workflows"):
         self.config_path = config_path
+        # Security fix: Require REDIS_PASSWORD environment variable (no fallback)
+        redis_password = os.getenv('REDIS_PASSWORD')
+        if not redis_password:
+            raise ValueError("REDIS_PASSWORD environment variable is required for security")
+        
         self.redis_client = redis.Redis(
             host='redis', 
             port=6379, 
-            password=os.getenv('REDIS_PASSWORD', 'redis_password'),
+            password=redis_password,
             decode_responses=True
         )
         

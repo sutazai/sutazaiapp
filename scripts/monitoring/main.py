@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 SutazAI Resource Manager Service
 Manages CPU, memory, and service allocation across the AI system
 """
@@ -72,10 +75,10 @@ class ResourceManager:
                 params = pika.URLParameters(rabbitmq_url)
                 self.rabbitmq_connection = pika.BlockingConnection(params)
                 
-            print("Resource Manager initialized successfully")
+            logger.info("Resource Manager initialized successfully")
             
         except Exception as e:
-            print(f"Failed to initialize Resource Manager: {e}")
+            logger.error(f"Failed to initialize Resource Manager: {e}")
             
     def get_system_metrics(self) -> SystemMetrics:
         """Get current system resource usage"""
@@ -129,7 +132,7 @@ class ResourceManager:
             return True
             
         except Exception as e:
-            print(f"Failed to allocate resources for {allocation.service_name}: {e}")
+            logger.error(f"Failed to allocate resources for {allocation.service_name}: {e}")
             return False
     
     async def deallocate_resources(self, service_name: str) -> bool:
@@ -153,7 +156,7 @@ class ResourceManager:
                 return True
                 
         except Exception as e:
-            print(f"Failed to deallocate resources for {service_name}: {e}")
+            logger.error(f"Failed to deallocate resources for {service_name}: {e}")
             
         return False
 
@@ -239,14 +242,14 @@ async def get_allocations():
 async def webhook_alert(alert_data: dict):
     """Handle webhook alerts from Alertmanager"""
     REQUEST_COUNT.labels(method="POST", endpoint="/alerts/webhook").inc()
-    print(f"Received alert: {alert_data}")
+    logger.info(f"Received alert: {alert_data}")
     return {"status": "received"}
 
 @app.post("/alerts/critical")
 async def critical_alert(alert_data: dict):
     """Handle critical alerts"""
     REQUEST_COUNT.labels(method="POST", endpoint="/alerts/critical").inc()
-    print(f"CRITICAL ALERT: {alert_data}")
+    logger.error(f"CRITICAL ALERT: {alert_data}")
     # Implement emergency resource management here
     return {"status": "processed"}
 
@@ -254,7 +257,7 @@ async def critical_alert(alert_data: dict):
 async def ai_agent_alert(alert_data: dict):
     """Handle AI agent alerts"""
     REQUEST_COUNT.labels(method="POST", endpoint="/alerts/ai-agent").inc()
-    print(f"AI Agent Alert: {alert_data}")
+    logger.info(f"AI Agent Alert: {alert_data}")
     return {"status": "processed"}
 
 if __name__ == "__main__":

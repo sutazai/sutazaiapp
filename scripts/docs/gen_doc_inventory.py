@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Generate Phase 1 documentation inventory for /opt/sutazaiapp/IMPORTANT.
 
 Outputs under IMPORTANT/00_inventory/:
@@ -279,7 +282,7 @@ def main() -> int:
         f.write(f"- Text documents (eligible for line coverage): {text_docs}\n")
         f.write(f"- Outputs: inventory.json, inventory.md, archives_audit.json, doc_review_matrix.csv\n")
 
-    print(f"Phase 1 outputs written to: {outdir}")
+    logger.info(f"Phase 1 outputs written to: {outdir}")
     return 0
 
 

@@ -12,7 +12,19 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import os
 
 # Security configuration
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "CHANGE_THIS_IN_PRODUCTION_" + os.urandom(32).hex())
+# Security fix: Require JWT_SECRET_KEY environment variable (no fallback with random generation)
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+if not SECRET_KEY:
+    raise ValueError(
+        "JWT_SECRET_KEY environment variable is required for security. "
+        "Generate a secure key with: python -c 'import secrets; print(secrets.token_hex(32))'"
+    )
+if len(SECRET_KEY) < 64:
+    raise ValueError(
+        "JWT_SECRET_KEY must be at least 64 characters for adequate security. "
+        "Current length: {}".format(len(SECRET_KEY))
+    )
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

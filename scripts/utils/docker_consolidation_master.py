@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Docker Consolidation Master
 
 Consolidates 389+ Dockerfiles into perfect architecture with base images.
@@ -38,7 +41,7 @@ class DockerConsolidationMaster:
     
     def analyze_dockerfile_patterns(self) -> Dict:
         """Analyze all Dockerfiles to identify consolidation opportunities."""
-        print("🔍 Analyzing 389+ Dockerfiles for consolidation patterns...")
+        logger.info("🔍 Analyzing 389+ Dockerfiles for consolidation patterns...")
         
         patterns = {
             'base_images_used': defaultdict(int),
@@ -54,7 +57,7 @@ class DockerConsolidationMaster:
                 dockerfile_count += 1
                 self._analyze_single_dockerfile(dockerfile, patterns)
         
-        print(f"✅ Analyzed {dockerfile_count} Dockerfiles")
+        logger.info(f"✅ Analyzed {dockerfile_count} Dockerfiles")
         return patterns
     
     def _analyze_single_dockerfile(self, dockerfile_path: Path, patterns: Dict):
@@ -76,7 +79,7 @@ class DockerConsolidationMaster:
             patterns['dockerfile_categories'][category].append(str(dockerfile_path))
             
         except Exception as e:
-            print(f"  ⚠️  Error analyzing {dockerfile_path.name}: {e}")
+            logger.error(f"  ⚠️  Error analyzing {dockerfile_path.name}: {e}")
     
     def _categorize_dockerfile(self, dockerfile_path: str, content: str) -> str:
         """Categorize Dockerfile based on path and content."""
@@ -88,7 +91,7 @@ class DockerConsolidationMaster:
     
     def create_master_base_images(self) -> None:
         """Create master base images for consolidation."""
-        print("🏗️  Creating master base images...")
+        logger.info("🏗️  Creating master base images...")
         
         base_dir = self.docker_dir / 'base'
         base_dir.mkdir(exist_ok=True)
@@ -108,7 +111,7 @@ class DockerConsolidationMaster:
         # Create Database Master Base
         self._create_database_base(base_dir)
         
-        print("✅ Created 5 master base images")
+        logger.info("✅ Created 5 master base images")
     
     def _create_python_agent_base(self, base_dir: Path):
         """Create Python Agent master base image."""
@@ -239,7 +242,7 @@ USER appuser
 
 # Default health check
 HEALTHCHEK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD ["python", "-c", "print('healthy')"]
+    CMD ["python", "-c", "logger.info('healthy')"]
 
 # Default command
 CMD ["python", "app.py"]
@@ -281,7 +284,7 @@ USER appuser
 
 # Default health check
 HEALTHCHEK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD ["python", "-c", "print('healthy')"]
+    CMD ["python", "-c", "logger.info('healthy')"]
 
 # Default command
 CMD ["python", "monitor.py"]
@@ -326,7 +329,7 @@ USER appuser
 
 # Default health check
 HEALTHCHEK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD ["python", "-c", "print('healthy')"]
+    CMD ["python", "-c", "logger.info('healthy')"]
 
 # Default command
 CMD ["python", "database_service.py"]
@@ -337,7 +340,7 @@ CMD ["python", "database_service.py"]
     
     def create_service_dockerfile_templates(self) -> None:
         """Create service Dockerfile templates using base images."""
-        print("📋 Creating service Dockerfile templates...")
+        logger.info("📋 Creating service Dockerfile templates...")
         
         templates_dir = self.docker_dir / 'templates'
         templates_dir.mkdir(exist_ok=True)
@@ -367,11 +370,11 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
         with open(templates_dir / 'Dockerfile.python-service-template', 'w') as f:
             f.write(python_template)
         
-        print("✅ Created service templates")
+        logger.info("✅ Created service templates")
     
     def generate_dockerfile_migration_plan(self) -> Dict:
         """Generate migration plan for existing Dockerfiles."""
-        print("🗺️  Generating Dockerfile migration plan...")
+        logger.info("🗺️  Generating Dockerfile migration plan...")
         
         patterns = self.analyze_dockerfile_patterns()
         
@@ -413,8 +416,8 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
     
     def execute_docker_consolidation(self) -> Dict:
         """Execute complete Docker consolidation."""
-        print("🚀 DOCKER CONSOLIDATION MASTER - STARTING")
-        print("=" * 50)
+        logger.info("🚀 DOCKER CONSOLIDATION MASTER - STARTING")
+        logger.info("=" * 50)
         
         # Create master base images
         self.create_master_base_images()
@@ -432,8 +435,8 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
         production_dir = self.docker_dir / 'production'
         production_dir.mkdir(exist_ok=True)
         
-        print("=" * 50)
-        print("✅ DOCKER CONSOLIDATION MASTER - PHASE 1 COMPLETE")
+        logger.info("=" * 50)
+        logger.info("✅ DOCKER CONSOLIDATION MASTER - PHASE 1 COMPLETE")
         
         return migration_plan
 
@@ -446,5 +449,5 @@ if __name__ == '__main__':
     with open(plan_path, 'w') as f:
         json.dump(migration_plan, f, indent=2)
     
-    print(f"📁 Migration plan saved to: {plan_path}")
-    print(f"📏 Potential consolidation: {migration_plan['consolidation_savings']} files")
+    logger.info(f"📁 Migration plan saved to: {plan_path}")
+    logger.info(f"📏 Potential consolidation: {migration_plan['consolidation_savings']} files")

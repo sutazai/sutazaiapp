@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+
+logger = logging.getLogger(__name__)
 Deployment Manager for SutazAI
 ==============================
 
@@ -766,32 +768,32 @@ if __name__ == "__main__":
     
     if args.action == 'deploy':
         result = manager.deploy(args.services, args.compose_file)
-        print(f"Deployment result: {result.status.value}")
+        logger.info(f"Deployment result: {result.status.value}")
         if result.error_messages:
-            print("Errors:")
+            logger.error("Errors:")
             for error in result.error_messages:
-                print(f"  - {error}")
+                logger.error(f"  - {error}")
     
     elif args.action == 'stop':
         result = manager.stop(args.services)
-        print(f"Stop result: {result.status.value}")
+        logger.info(f"Stop result: {result.status.value}")
     
     elif args.action == 'restart':
         result = manager.restart(args.services)
-        print(f"Restart result: {result.status.value}")
+        logger.info(f"Restart result: {result.status.value}")
     
     elif args.action == 'status':
         status = manager.status()
-        print(json.dumps(status, indent=2))
+        logger.info(json.dumps(status, indent=2))
     
     elif args.action == 'health':
         health = manager.health_check(args.services)
-        print(json.dumps(health, indent=2))
+        logger.info(json.dumps(health, indent=2))
     
     elif args.action == 'logs':
         if not args.services or len(args.services) != 1:
-            print("Error: logs action requires exactly one service")
+            logger.error("Error: logs action requires exactly one service")
             sys.exit(1)
         
         logs = manager.logs(args.services[0], args.lines)
-        print(logs)
+        logger.info(logs)

@@ -722,7 +722,7 @@ async def main():
     
     # Print summary
     summary = monitor.get_health_summary()
-    print(json.dumps(summary, indent=2))
+    logger.info(json.dumps(summary, indent=2))
     
     # Cleanup
     await monitor.cleanup()

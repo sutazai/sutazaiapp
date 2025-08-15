@@ -666,7 +666,7 @@ if __name__ == "__main__":
         async with DownloadManager(config) as dm:
             # Test download progress callback
             def progress_callback(progress: DownloadProgress):
-                print(f"Progress: {progress.percentage:.1f}% ({progress.speed_mbps:.2f} MB/s, ETA: {progress.eta_seconds:.0f}s)")
+                logger.info(f"Progress: {progress.percentage:.1f}% ({progress.speed_mbps:.2f} MB/s, ETA: {progress.eta_seconds:.0f}s)")
             
             # Test downloading a small MCP package
             result = await dm.download_package(
@@ -675,14 +675,14 @@ if __name__ == "__main__":
                 progress_callback=progress_callback
             )
             
-            print(f"Download result: {result.success}")
+            logger.info(f"Download result: {result.success}")
             if result.success:
-                print(f"  File: {result.file_path}")
-                print(f"  Size: {result.size_bytes} bytes")
-                print(f"  Time: {result.download_time_seconds:.2f}s")
-                print(f"  Checksum: {result.checksum}")
+                logger.info(f"  File: {result.file_path}")
+                logger.info(f"  Size: {result.size_bytes} bytes")
+                logger.info(f"  Time: {result.download_time_seconds:.2f}s")
+                logger.info(f"  Checksum: {result.checksum}")
             else:
-                print(f"  Error: {result.error_message}")
+                logger.error(f"  Error: {result.error_message}")
     
     # Run test
     asyncio.run(test_download())

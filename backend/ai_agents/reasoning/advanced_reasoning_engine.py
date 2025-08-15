@@ -18,7 +18,9 @@ from dataclasses import dataclass, field
 from enum import Enum
 import uuid
 
-logger = logging.getLogger(__name__)
+from backend.app.core.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 
 class ReasoningType(Enum):
@@ -811,9 +813,9 @@ async def example_reasoning():
         reasoning_type=ReasoningType.CAUSAL
     )
     
-    print(f"Conclusion: {result.final_conclusion}")
-    print(f"Confidence: {result.overall_confidence}")
-    print(f"Steps: {len(result.steps)}")
+    logger.info(f"REASONING_EXAMPLE - Conclusion: {result.final_conclusion}")
+    logger.info(f"REASONING_EXAMPLE - Confidence: {result.overall_confidence}")
+    logger.info(f"REASONING_EXAMPLE - Steps: {len(result.steps)}")
     
     # Strategic reasoning
     strategic_result = await engine.reason(
@@ -822,11 +824,11 @@ async def example_reasoning():
         reasoning_type=ReasoningType.STRATEGIC
     )
     
-    print(f"Strategic Plan: {strategic_result.final_conclusion}")
+    logger.info(f"REASONING_EXAMPLE - Strategic Plan: {strategic_result.final_conclusion}")
     
     # Get statistics
     stats = await engine.get_reasoning_statistics()
-    print(f"Reasoning Stats: {stats}")
+    logger.info(f"REASONING_EXAMPLE - Stats: {stats}")
 
 
 if __name__ == "__main__":

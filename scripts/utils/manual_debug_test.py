@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import logging
 Manual Debug Testing Framework for Hardware Resource Optimizer
 
 Purpose: Create real system stress and test actual optimization effects
@@ -23,6 +24,10 @@ from pathlib import Path
 from typing import Dict, Any, List
 from debug_tracer import debug_tracer
 
+# Configure structured logging (Rule 8 compliance)
+from backend.app.core.logging_config import get_logger
+logger = get_logger('ManualDebugTest')
+
 class ManualTestFramework:
     """Framework for manual testing with real system effects"""
     
@@ -38,11 +43,11 @@ class ManualTestFramework:
         try:
             self.docker_client = docker.from_env()
         except Exception as e:
-            print(f"Docker not available: {e}")
+            logger.warning(f"DEBUG_TEST - Docker not available: {e}")
             self.docker_client = None
         
-        print(f"Manual test framework initialized - agent: {agent_url}")
-        print(f"Test data directory: {self.test_data_dir}")
+        logger.info(f"DEBUG_TEST - Manual test framework initialized - agent: {agent_url}")
+        logger.info(f"DEBUG_TEST - Test data directory: {self.test_data_dir}")
     
     def verify_agent_running(self) -> bool:
         """Verify the agent is running and accessible"""
@@ -50,18 +55,18 @@ class ManualTestFramework:
             response = requests.get(f"{self.agent_url}/health", timeout=5)
             if response.status_code == 200:
                 health_data = response.json()
-                print(f"Agent healthy: {health_data}")
+                logger.info(f"Agent healthy: {health_data}")
                 return True
             else:
-                print(f"Agent unhealthy - status: {response.status_code}")
+                logger.info(f"Agent unhealthy - status: {response.status_code}")
                 return False
         except Exception as e:
-            print(f"Cannot connect to agent: {e}")
+            logger.info(f"Cannot connect to agent: {e}")
             return False
     
     def create_memory_pressure(self, mb_to_allocate: int = 100) -> List[bytearray]:
         """Create real memory pressure by allocating large blocks"""
-        print(f"Creating memory pressure: {mb_to_allocate}MB")
+        logger.info(f"Creating memory pressure: {mb_to_allocate}MB")
         
         memory_blocks = []
         try:
@@ -74,19 +79,19 @@ class ManualTestFramework:
                 memory_blocks.append(block)
                 
                 if i % 10 == 0:
-                    print(f"  Allocated {i+1}MB...")
+                    logger.info(f"  Allocated {i+1}MB...")
                     
-            print(f"Memory pressure created: {len(memory_blocks)}MB allocated")
+            logger.info(f"Memory pressure created: {len(memory_blocks)}MB allocated")
             self.cleanup_required.append(('memory', memory_blocks))
             return memory_blocks
             
         except MemoryError as e:
-            print(f"Memory allocation failed at {len(memory_blocks)}MB: {e}")
+            logger.error(f"Memory allocation failed at {len(memory_blocks)}MB: {e}")
             return memory_blocks
     
     def create_disk_pressure(self, mb_to_create: int = 50) -> List[str]:
         """Create disk pressure with temporary files and duplicates"""
-        print(f"Creating disk pressure: {mb_to_create}MB of test files")
+        logger.info(f"Creating disk pressure: {mb_to_create}MB of test files")
         
         created_files = []
         
@@ -98,7 +103,7 @@ class ManualTestFramework:
                 for chunk in range(10):
                     f.write(os.urandom(1024 * 1024))
             created_files.append(file_path)
-            print(f"  Created large file: {file_path} (10MB)")
+            logger.info(f"  Created large file: {file_path} (10MB)")
         
         # Create duplicate files
         original_data = os.urandom(1024 * 1024)  # 1MB of data
@@ -107,7 +112,7 @@ class ManualTestFramework:
             with open(file_path, 'wb') as f:
                 f.write(original_data)
             created_files.append(file_path)
-        print(f"  Created 10 duplicate files (1MB each)")
+        logger.info(f"  Created 10 duplicate files (1MB each)")
         
         # Create old log files
         for i in range(5):
@@ -120,7 +125,7 @@ class ManualTestFramework:
             old_time = time.time() - (40 * 24 * 3600)  # 40 days old
             os.utime(log_path, (old_time, old_time))
             created_files.append(log_path)
-        print(f"  Created 5 old log files")
+        logger.info(f"  Created 5 old log files")
         
         # Create cache-like files
         cache_dir = os.path.join(self.test_data_dir, "cache")
@@ -135,14 +140,14 @@ class ManualTestFramework:
                 old_time = time.time() - (10 * 24 * 3600)  # 10 days old
                 os.utime(cache_file, (old_time, old_time))
             created_files.append(cache_file)
-        print(f"  Created 20 cache files")
+        logger.info(f"  Created 20 cache files")
         
         self.cleanup_required.append(('disk', created_files))
         return created_files
     
     def create_cpu_pressure(self) -> List[threading.Thread]:
         """Create CPU pressure with background threads"""
-        print("Creating CPU pressure with background threads")
+        logger.info("Creating CPU pressure with background threads")
         
         def cpu_intensive_task():
             """CPU intensive task for stress testing"""
@@ -161,17 +166,17 @@ class ManualTestFramework:
             thread.start()
             threads.append(thread)
         
-        print(f"  Started {len(threads)} CPU intensive threads")
+        logger.info(f"  Started {len(threads)} CPU intensive threads")
         self.cleanup_required.append(('cpu', threads))
         return threads
     
     def create_docker_pressure(self) -> List[str]:
         """Create Docker pressure with containers and images"""
         if not self.docker_client:
-            print("Docker not available - skipping Docker pressure test")
+            logger.info("Docker not available - skipping Docker pressure test")
             return []
         
-        print("Creating Docker pressure")
+        logger.info("Creating Docker pressure")
         container_ids = []
         
         try:
@@ -184,27 +189,27 @@ class ManualTestFramework:
                     name=f"test_container_{i}_{int(time.time())}"
                 )
                 container_ids.append(container.id)
-                print(f"  Created container: {container.name}")
+                logger.info(f"  Created container: {container.name}")
                 time.sleep(1)
             
             # Stop containers to create "stopped" containers for cleanup
             for container_id in container_ids:
                 container = self.docker_client.containers.get(container_id)
                 container.stop()
-                print(f"  Stopped container: {container.name}")
+                logger.info(f"  Stopped container: {container.name}")
             
             self.cleanup_required.append(('docker', container_ids))
             return container_ids
             
         except Exception as e:
-            print(f"Docker pressure creation failed: {e}")
+            logger.error(f"Docker pressure creation failed: {e}")
             return container_ids
     
     def measure_system_before_after(self, test_name: str, test_func):
         """Measure system state before and after test execution"""
-        print(f"\n{'='*60}")
-        print(f"MANUAL TEST: {test_name}")
-        print(f"{'='*60}")
+        logger.info(f"\n{'='*60}")
+        logger.info(f"MANUAL TEST: {test_name}")
+        logger.info(f"{'='*60}")
         
         # Take before snapshot
         before_snapshot = debug_tracer.take_system_snapshot(f"before_{test_name}")
@@ -219,15 +224,15 @@ class ManualTestFramework:
             # Calculate differences
             differences = debug_tracer._calculate_snapshot_differences(before_snapshot, after_snapshot)
             
-            print(f"\nTEST RESULTS for {test_name}:")
-            print(f"Memory change: {differences.get('memory_change_mb', 0):.2f}MB")
-            print(f"Disk change: {differences.get('disk_freed_mb', 0):.2f}MB")
-            print(f"Process change: {differences.get('process_count_change', 0)}")
+            logger.info(f"\nTEST RESULTS for {test_name}:")
+            logger.info(f"Memory change: {differences.get('memory_change_mb', 0):.2f}MB")
+            logger.info(f"Disk change: {differences.get('disk_freed_mb', 0):.2f}MB")
+            logger.info(f"Process change: {differences.get('process_count_change', 0)}")
             
             if isinstance(result, dict) and 'actions_taken' in result:
-                print(f"Actions taken: {len(result['actions_taken'])}")
+                logger.info(f"Actions taken: {len(result['actions_taken'])}")
                 for action in result['actions_taken'][:5]:  # Show first 5 actions
-                    print(f"  - {action}")
+                    logger.info(f"  - {action}")
             
             return {
                 "test_name": test_name,
@@ -238,7 +243,7 @@ class ManualTestFramework:
             }
             
         except Exception as e:
-            print(f"TEST FAILED: {test_name} - {e}")
+            logger.error(f"TEST FAILED: {test_name} - {e}")
             after_snapshot = debug_tracer.take_system_snapshot(f"error_{test_name}")
             return {
                 "test_name": test_name,
@@ -253,13 +258,13 @@ class ManualTestFramework:
             # Create memory pressure
             memory_blocks = self.create_memory_pressure(50)  # 50MB
             
-            print(f"Memory allocated, current usage: {psutil.virtual_memory().percent:.1f}%")
+            logger.info(f"Memory allocated, current usage: {psutil.virtual_memory().percent:.1f}%")
             
             # Call memory optimization
             response = requests.post(f"{self.agent_url}/optimize/memory")
             result = response.json()
             
-            print(f"Memory optimization result: {result.get('status')}")
+            logger.info(f"Memory optimization result: {result.get('status')}")
             
             # Keep memory blocks alive to test if optimization actually helps
             # In real scenario, we'd release them, but here we test the optimization under pressure
@@ -275,17 +280,17 @@ class ManualTestFramework:
             # Create disk pressure
             files_created = self.create_disk_pressure(100)  # 100MB of test files
             
-            print(f"Files created, current disk usage: {psutil.disk_usage('/').percent:.1f}%")
+            logger.info(f"Files created, current disk usage: {psutil.disk_usage('/').percent:.1f}%")
             
             # Call comprehensive storage optimization
             response = requests.post(f"{self.agent_url}/optimize/storage?dry_run=false")
             result = response.json()
             
-            print(f"Storage optimization result: {result.get('status')}")
+            logger.info(f"Storage optimization result: {result.get('status')}")
             
             # Verify files were actually processed
             remaining_files = [f for f in files_created if os.path.exists(f)]
-            print(f"Files remaining after optimization: {len(remaining_files)}/{len(files_created)}")
+            logger.info(f"Files remaining after optimization: {len(remaining_files)}/{len(files_created)}")
             
             return result
         
@@ -298,13 +303,13 @@ class ManualTestFramework:
             cpu_threads = self.create_cpu_pressure()
             
             time.sleep(2)  # Let CPU load stabilize
-            print(f"CPU load created, current usage: {psutil.cpu_percent(interval=1):.1f}%")
+            logger.info(f"CPU load created, current usage: {psutil.cpu_percent(interval=1):.1f}%")
             
             # Call CPU optimization
             response = requests.post(f"{self.agent_url}/optimize/cpu")
             result = response.json()
             
-            print(f"CPU optimization result: {result.get('status')}")
+            logger.info(f"CPU optimization result: {result.get('status')}")
             
             # Check if process nice values were actually changed
             nice_changes = 0
@@ -315,7 +320,7 @@ class ManualTestFramework:
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     continue
             
-            print(f"Processes with adjusted nice values: {nice_changes}")
+            logger.info(f"Processes with adjusted nice values: {nice_changes}")
             
             # Wait for threads to complete
             for thread in cpu_threads:
@@ -337,21 +342,21 @@ class ManualTestFramework:
             initial_containers = len(self.docker_client.containers.list(all=True))
             initial_images = len(self.docker_client.images.list())
             
-            print(f"Docker pressure created - containers: {initial_containers}, images: {initial_images}")
+            logger.info(f"Docker pressure created - containers: {initial_containers}, images: {initial_images}")
             
             # Call Docker optimization
             response = requests.post(f"{self.agent_url}/optimize/docker")
             result = response.json()
             
-            print(f"Docker optimization result: {result.get('status')}")
+            logger.info(f"Docker optimization result: {result.get('status')}")
             
             # Verify actual cleanup
             final_containers = len(self.docker_client.containers.list(all=True))
             final_images = len(self.docker_client.images.list())
             
-            print(f"Docker after cleanup - containers: {final_containers}, images: {final_images}")
-            print(f"Actual containers removed: {initial_containers - final_containers}")
-            print(f"Actual images removed: {initial_images - final_images}")
+            logger.info(f"Docker after cleanup - containers: {final_containers}, images: {final_images}")
+            logger.info(f"Actual containers removed: {initial_containers - final_containers}")
+            logger.info(f"Actual images removed: {initial_images - final_images}")
             
             return result
         
@@ -374,14 +379,14 @@ class ManualTestFramework:
                     f.write(identical_content)
                 duplicate_files.append(file_path)
             
-            print(f"Created {len(duplicate_files)} identical files")
+            logger.info(f"Created {len(duplicate_files)} identical files")
             
             # Analyze duplicates
             response = requests.get(f"{self.agent_url}/analyze/storage/duplicates?path={test_dir}")
             analysis_result = response.json()
             
-            print(f"Duplicate analysis: {analysis_result.get('duplicate_groups', 0)} groups found")
-            print(f"Space wasted: {analysis_result.get('space_wasted_mb', 0):.2f}MB")
+            logger.info(f"Duplicate analysis: {analysis_result.get('duplicate_groups', 0)} groups found")
+            logger.info(f"Space wasted: {analysis_result.get('space_wasted_mb', 0):.2f}MB")
             
             # Optimize duplicates
             response = requests.post(f"{self.agent_url}/optimize/storage/duplicates?path={test_dir}&dry_run=false")
@@ -389,14 +394,14 @@ class ManualTestFramework:
             
             # Check actual file removal
             remaining_files = [f for f in duplicate_files if os.path.exists(f)]
-            print(f"Files remaining after deduplication: {len(remaining_files)}/{len(duplicate_files)}")
+            logger.info(f"Files remaining after deduplication: {len(remaining_files)}/{len(duplicate_files)}")
             
             # Should keep 1 file, remove 4 duplicates
             expected_remaining = 1
             actual_removed = len(duplicate_files) - len(remaining_files)
             
-            print(f"Expected to remove: {len(duplicate_files) - expected_remaining}")
-            print(f"Actually removed: {actual_removed}")
+            logger.info(f"Expected to remove: {len(duplicate_files) - expected_remaining}")
+            logger.info(f"Actually removed: {actual_removed}")
             
             self.cleanup_required.append(('disk', remaining_files))
             
@@ -440,7 +445,7 @@ class ManualTestFramework:
                     
                     cache_files.append(cache_file)
             
-            print(f"Created {len(cache_files)} cache files in {len(cache_dirs)} directories")
+            logger.info(f"Created {len(cache_files)} cache files in {len(cache_dirs)} directories")
             
             # Call cache optimization
             response = requests.post(f"{self.agent_url}/optimize/storage/cache")
@@ -450,7 +455,7 @@ class ManualTestFramework:
             remaining_files = [f for f in cache_files if os.path.exists(f)]
             removed_count = len(cache_files) - len(remaining_files)
             
-            print(f"Cache files removed: {removed_count}/{len(cache_files)}")
+            logger.info(f"Cache files removed: {removed_count}/{len(cache_files)}")
             
             self.cleanup_required.append(('disk', remaining_files))
             
@@ -477,13 +482,13 @@ class ManualTestFramework:
             os.makedirs(restricted_dir, exist_ok=True)
             os.chmod(restricted_dir, 0o000)
             
-            print("Created files/directories with restricted permissions")
+            logger.info("Created files/directories with restricted permissions")
             
             # Try to analyze storage - should handle permission errors gracefully
             response = requests.get(f"{self.agent_url}/analyze/storage?path={permission_test_dir}")
             result = response.json()
             
-            print(f"Storage analysis with permissions: {result.get('status')}")
+            logger.info(f"Storage analysis with permissions: {result.get('status')}")
             
             # Restore permissions for cleanup
             os.chmod(restricted_file, 0o644)
@@ -514,14 +519,14 @@ class ManualTestFramework:
             broken_symlink = os.path.join(symlink_test_dir, "broken.txt")
             os.symlink("/nonexistent/file", broken_symlink)
             
-            print("Created regular file, symlink, and broken symlink")
+            logger.info("Created regular file, symlink, and broken symlink")
             
             # Analyze storage - should handle symlinks properly
             response = requests.get(f"{self.agent_url}/analyze/storage?path={symlink_test_dir}")
             result = response.json()
             
-            print(f"Storage analysis with symlinks: {result.get('status')}")
-            print(f"Files found: {result.get('total_files', 0)}")
+            logger.info(f"Storage analysis with symlinks: {result.get('status')}")
+            logger.info(f"Files found: {result.get('total_files', 0)}")
             
             self.cleanup_required.append(('disk', [regular_file, symlink_file, broken_symlink]))
             
@@ -537,18 +542,18 @@ class ManualTestFramework:
             
             # Create many small files
             files_created = []
-            print("Creating 1000 small files...")
+            logger.info("Creating 1000 small files...")
             
             for i in range(1000):
                 if i % 100 == 0:
-                    print(f"  Created {i} files...")
+                    logger.info(f"  Created {i} files...")
                 
                 file_path = os.path.join(large_dir, f"small_file_{i:04d}.txt")
                 with open(file_path, 'w') as f:
                     f.write(f"Small file {i} content\n" * 10)
                 files_created.append(file_path)
             
-            print(f"Created {len(files_created)} small files")
+            logger.info(f"Created {len(files_created)} small files")
             
             # Analyze this large directory
             start_time = time.time()
@@ -557,8 +562,8 @@ class ManualTestFramework:
             
             result = response.json()
             
-            print(f"Analysis completed in {analysis_time:.2f} seconds")
-            print(f"Files analyzed: {result.get('total_files', 0)}")
+            logger.info(f"Analysis completed in {analysis_time:.2f} seconds")
+            logger.info(f"Files analyzed: {result.get('total_files', 0)}")
             
             self.cleanup_required.append(('disk', files_created))
             
@@ -572,12 +577,12 @@ class ManualTestFramework:
     
     def run_comprehensive_manual_tests(self):
         """Run all manual tests and generate comprehensive report"""
-        print("\n" + "="*80)
-        print("COMPREHENSIVE MANUAL TESTING OF HARDWARE RESOURCE OPTIMIZER")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("COMPREHENSIVE MANUAL TESTING OF HARDWARE RESOURCE OPTIMIZER")
+        logger.info("="*80)
         
         if not self.verify_agent_running():
-            print("ERROR: Agent is not running. Please start the agent first.")
+            logger.error("ERROR: Agent is not running. Please start the agent first.")
             return
         
         # Run all tests
@@ -597,17 +602,17 @@ class ManualTestFramework:
         
         for test_name, test_func in tests_to_run:
             try:
-                print(f"\n{'='*60}")
-                print(f"RUNNING: {test_name}")
-                print(f"{'='*60}")
+                logger.info(f"\n{'='*60}")
+                logger.info(f"RUNNING: {test_name}")
+                logger.info(f"{'='*60}")
                 
                 result = test_func()
                 test_results.append(result)
                 
-                print(f"✓ COMPLETED: {test_name}")
+                logger.info(f"✓ COMPLETED: {test_name}")
                 
             except Exception as e:
-                print(f"✗ FAILED: {test_name} - {e}")
+                logger.error(f"✗ FAILED: {test_name} - {e}")
                 test_results.append({
                     "test_name": test_name,
                     "error": str(e),
@@ -635,13 +640,13 @@ class ManualTestFramework:
         with open(report_file, 'w') as f:
             json.dump(comprehensive_report, f, indent=2, default=str)
         
-        print(f"\n{'='*80}")
-        print("MANUAL TESTING COMPLETED")
-        print(f"{'='*80}")
-        print(f"Total tests: {comprehensive_report['test_session_summary']['total_tests']}")
-        print(f"Successful: {comprehensive_report['test_session_summary']['successful_tests']}")
-        print(f"Failed: {comprehensive_report['test_session_summary']['failed_tests']}")
-        print(f"Comprehensive report saved: {report_file}")
+        logger.info(f"\n{'='*80}")
+        logger.info("MANUAL TESTING COMPLETED")
+        logger.info(f"{'='*80}")
+        logger.info(f"Total tests: {comprehensive_report['test_session_summary']['total_tests']}")
+        logger.info(f"Successful: {comprehensive_report['test_session_summary']['successful_tests']}")
+        logger.error(f"Failed: {comprehensive_report['test_session_summary']['failed_tests']}")
+        logger.info(f"Comprehensive report saved: {report_file}")
         
         # Cleanup
         self.cleanup_test_artifacts()
@@ -650,14 +655,14 @@ class ManualTestFramework:
     
     def cleanup_test_artifacts(self):
         """Clean up test artifacts"""
-        print("\nCleaning up test artifacts...")
+        logger.info("\nCleaning up test artifacts...")
         
         for cleanup_type, items in self.cleanup_required:
             try:
                 if cleanup_type == 'memory':
                     # Memory blocks will be garbage collected
                     del items
-                    print("  Memory blocks released")
+                    logger.info("  Memory blocks released")
                     
                 elif cleanup_type == 'disk':
                     for file_path in items:
@@ -667,7 +672,7 @@ class ManualTestFramework:
                             elif os.path.isdir(file_path):
                                 import shutil
                                 shutil.rmtree(file_path)
-                    print(f"  Removed {len(items)} disk artifacts")
+                    logger.info(f"  Removed {len(items)} disk artifacts")
                     
                 elif cleanup_type == 'docker':
                     if self.docker_client:
@@ -677,23 +682,23 @@ class ManualTestFramework:
                                 container.remove(force=True)
                             except Exception:
                                 pass
-                        print(f"  Removed {len(items)} Docker containers")
+                        logger.info(f"  Removed {len(items)} Docker containers")
                         
                 elif cleanup_type == 'cpu':
                     # CPU threads should have completed
-                    print("  CPU threads completed")
+                    logger.info("  CPU threads completed")
                     
             except Exception as e:
-                print(f"  Cleanup error for {cleanup_type}: {e}")
+                logger.error(f"  Cleanup error for {cleanup_type}: {e}")
         
         # Remove test data directory
         try:
             import shutil
             if os.path.exists(self.test_data_dir):
                 shutil.rmtree(self.test_data_dir)
-                print(f"  Removed test data directory: {self.test_data_dir}")
+                logger.info(f"  Removed test data directory: {self.test_data_dir}")
         except Exception as e:
-            print(f"  Could not remove test data directory: {e}")
+            logger.info(f"  Could not remove test data directory: {e}")
 
 if __name__ == "__main__":
     test_framework = ManualTestFramework()
@@ -703,9 +708,9 @@ if __name__ == "__main__":
         if hasattr(test_framework, f"test_{test_name}"):
             test_func = getattr(test_framework, f"test_{test_name}")
             result = test_func()
-            print(json.dumps(result, indent=2, default=str))
+            logger.info(json.dumps(result, indent=2, default=str))
         else:
-            print(f"Test '{test_name}' not found")
+            logger.info(f"Test '{test_name}' not found")
     else:
         # Run comprehensive tests
         test_framework.run_comprehensive_manual_tests()

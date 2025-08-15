@@ -575,11 +575,11 @@ class SutazAISystemTester:
 
 async def main():
     """Main execution function"""
-    print("=" * 80)
-    print("🧪 ULTRA COMPREHENSIVE SUTAZAI SYSTEM TEST SUITE")
-    print("=" * 80)
-    print(f"Started at: {datetime.now().isoformat()}")
-    print()
+    logger.info("=" * 80)
+    logger.info("🧪 ULTRA COMPREHENSIVE SUTAZAI SYSTEM TEST SUITE")
+    logger.info("=" * 80)
+    logger.info(f"Started at: {datetime.now().isoformat()}")
+    logger.info()
     
     async with SutazAISystemTester() as tester:
         results = await tester.run_comprehensive_test_suite()
@@ -592,25 +592,25 @@ async def main():
             json.dump(results, f, indent=2)
         
         # Print summary
-        print("\n" + "=" * 80)
-        print("📋 FINAL TEST RESULTS SUMMARY")
-        print("=" * 80)
-        print(f"Overall Status: {results['overall_status']}")
-        print(f"Total Tests: {results['total_tests']}")
-        print(f"Passed: {results['passed_tests']}")
-        print(f"Failed: {results['failed_tests']}")
-        print(f"Success Rate: {results.get('success_rate_percent', 0):.1f}%")
-        print(f"Execution Time: {results.get('execution_time_seconds', 0):.2f}s")
-        print(f"Results saved to: {results_file}")
+        logger.info("\n" + "=" * 80)
+        logger.info("📋 FINAL TEST RESULTS SUMMARY")
+        logger.info("=" * 80)
+        logger.info(f"Overall Status: {results['overall_status']}")
+        logger.info(f"Total Tests: {results['total_tests']}")
+        logger.info(f"Passed: {results['passed_tests']}")
+        logger.error(f"Failed: {results['failed_tests']}")
+        logger.info(f"Success Rate: {results.get('success_rate_percent', 0):.1f}%")
+        logger.info(f"Execution Time: {results.get('execution_time_seconds', 0):.2f}s")
+        logger.info(f"Results saved to: {results_file}")
         
         # Print failed tests
         if results['failed_tests'] > 0:
-            print("\n❌ FAILED TESTS:")
+            logger.error("\n❌ FAILED TESTS:")
             for test_name, test_result in results['test_results'].items():
                 if test_result['status'] == 'FAIL':
-                    print(f"  • {test_name}: {test_result['details']}")
+                    logger.info(f"  • {test_name}: {test_result['details']}")
         
-        print("\n✅ Test suite execution completed!")
+        logger.info("\n✅ Test suite execution completed!")
         
         # Return appropriate exit code
         return 0 if results['overall_status'] in ['PASS', 'PASS_WITH_WARNINGS'] else 1

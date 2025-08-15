@@ -230,12 +230,12 @@ class TestExecutionOrchestrator:
             if not self.manual_tester:
                 self.manual_tester = ManualTestProcedures(self.base_url)
             
-            print("\n" + "="*80)
-            print("STARTING MANUAL TEST PROCEDURES")
-            print("="*80)
-            print("The system will now guide you through manual testing procedures.")
-            print("Please follow the instructions carefully.")
-            print("="*80)
+            logger.info("\n" + "="*80)
+            logger.info("STARTING MANUAL TEST PROCEDURES")
+            logger.info("="*80)
+            logger.info("The system will now guide you through manual testing procedures.")
+            logger.info("Please follow the instructions carefully.")
+            logger.info("="*80)
             
             results = self.manual_tester.run_manual_test_suite()
             
@@ -385,37 +385,37 @@ class TestExecutionOrchestrator:
     
     def print_summary(self, report: Dict[str, Any]):
         """Print executive summary of test results"""
-        print("\n" + "="*80)
-        print("COMPREHENSIVE TEST EXECUTION SUMMARY")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("COMPREHENSIVE TEST EXECUTION SUMMARY")
+        logger.info("="*80)
         
         summary = report['test_execution_summary']
         stats = report['test_statistics']
         thresholds = report['threshold_validation']
         
-        print(f"Agent URL: {summary['agent_url']}")
-        print(f"Execution Time: {summary['total_duration_seconds']:.1f} seconds")
-        print(f"Timestamp: {summary['timestamp']}")
+        logger.info(f"Agent URL: {summary['agent_url']}")
+        logger.info(f"Execution Time: {summary['total_duration_seconds']:.1f} seconds")
+        logger.info(f"Timestamp: {summary['timestamp']}")
         
-        print(f"\nTest Suites Executed: {len(summary['executed_suites'])}")
+        logger.info(f"\nTest Suites Executed: {len(summary['executed_suites'])}")
         for suite in summary['executed_suites']:
             status = "✅ PASSED" if suite in summary['successful_suites'] else "❌ FAILED"
-            print(f"  - {suite.upper()}: {status}")
+            logger.info(f"  - {suite.upper()}: {status}")
         
-        print(f"\nOverall Statistics:")
-        print(f"  - Total Tests: {stats['total_tests']}")
-        print(f"  - Successful: {stats['successful_tests']}")
-        print(f"  - Failed: {stats['failed_tests']}")
-        print(f"  - Success Rate: {stats['overall_success_rate']:.1f}%")
+        logger.info(f"\nOverall Statistics:")
+        logger.info(f"  - Total Tests: {stats['total_tests']}")
+        logger.info(f"  - Successful: {stats['successful_tests']}")
+        logger.error(f"  - Failed: {stats['failed_tests']}")
+        logger.info(f"  - Success Rate: {stats['overall_success_rate']:.1f}%")
         
-        print(f"\nThreshold Validation:")
-        print(f"  - Total Checks: {thresholds['total_checks']}")
-        print(f"  - Failed Checks: {thresholds['failed_checks']}")
+        logger.info(f"\nThreshold Validation:")
+        logger.info(f"  - Total Checks: {thresholds['total_checks']}")
+        logger.error(f"  - Failed Checks: {thresholds['failed_checks']}")
         
         if thresholds['failures']:
-            print(f"  - Failures:")
+            logger.info(f"  - Failures:")
             for failure in thresholds['failures']:
-                print(f"    * {failure['suite']} - {failure['check']}: {failure['value']} (threshold: {failure['threshold']})")
+                logger.info(f"    * {failure['suite']} - {failure['check']}: {failure['value']} (threshold: {failure['threshold']})")
         
         # Overall assessment
         overall_pass = (
@@ -424,18 +424,18 @@ class TestExecutionOrchestrator:
             thresholds['failed_checks'] == 0
         )
         
-        print(f"\nOVERALL ASSESSMENT: {'✅ PASS' if overall_pass else '❌ FAIL'}")
+        logger.info(f"\nOVERALL ASSESSMENT: {'✅ PASS' if overall_pass else '❌ FAIL'}")
         
         if not overall_pass:
-            print(f"\nIssues Found:")
+            logger.info(f"\nIssues Found:")
             if summary['failed_suites']:
-                print(f"  - Failed test suites: {', '.join(summary['failed_suites'])}")
+                logger.error(f"  - Failed test suites: {', '.join(summary['failed_suites'])}")
             if stats['overall_success_rate'] < 95:
-                print(f"  - Low success rate: {stats['overall_success_rate']:.1f}% (minimum: 95%)")
+                logger.info(f"  - Low success rate: {stats['overall_success_rate']:.1f}% (minimum: 95%)")
             if thresholds['failed_checks'] > 0:
-                print(f"  - {thresholds['failed_checks']} threshold validation failures")
+                logger.error(f"  - {thresholds['failed_checks']} threshold validation failures")
         
-        print("="*80)
+        logger.info("="*80)
     
     def execute_comprehensive_testing(self, test_types: List[str] = None) -> Dict[str, Any]:
         """Execute comprehensive testing suite"""
@@ -552,7 +552,7 @@ def main():
     if args.output:
         with open(args.output, 'w') as f:
             json.dump(results, f, indent=2)
-        print(f"\nResults also saved to: {args.output}")
+        logger.info(f"\nResults also saved to: {args.output}")
     
     # Exit with appropriate code
     if results.get('status') == 'failed':

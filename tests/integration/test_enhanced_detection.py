@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Test enhanced container detection"""
 
+import logging
+
+logger = logging.getLogger(__name__)
 import subprocess
 from typing import Dict, Any, Optional
 
@@ -135,7 +138,7 @@ def _get_container_info_enhanced(agent_id: str) -> Optional[Dict[str, Any]]:
         
         return None
     except Exception as e:
-        print(f"Error: {e}")
+        logger.error(f"Error: {e}")
         return None
 
 def test_enhanced_detection():
@@ -149,20 +152,20 @@ def test_enhanced_detection():
         'hardware-resource-optimizer'
     ]
     
-    print("=== Enhanced Container Detection Test ===\n")
+    logger.info("=== Enhanced Container Detection Test ===\n")
     
     for agent_id in test_agents:
-        print(f"Testing: {agent_id}")
+        logger.info(f"Testing: {agent_id}")
         container_info = _get_container_info_enhanced(agent_id)
         
         if container_info:
-            print(f"  ✓ Found: {container_info['name']}")
-            print(f"    Status: {container_info['status']} ({container_info['status_full']})")
+            logger.info(f"  ✓ Found: {container_info['name']}")
+            logger.info(f"    Status: {container_info['status']} ({container_info['status_full']})")
             if container_info['ports']:
-                print(f"    Ports: {container_info['ports']}")
+                logger.info(f"    Ports: {container_info['ports']}")
         else:
-            print(f"  ✗ Not found")
-        print()
+            logger.info(f"  ✗ Not found")
+        logger.info()
 
 if __name__ == "__main__":
     test_enhanced_detection()

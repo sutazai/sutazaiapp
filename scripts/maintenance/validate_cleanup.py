@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Post-Cleanup Validation Script
 ==============================
 
@@ -58,20 +61,20 @@ def validate_python_files(root_path: str) -> dict:
     return results
 
 if __name__ == "__main__":
-    print("🔍 Validating Python files after import cleanup...")
+    logger.info("🔍 Validating Python files after import cleanup...")
     
     results = validate_python_files('/opt/sutazaiapp')
     
-    print(f"\n📊 VALIDATION RESULTS:")
-    print(f"  Total Python files: {results['total_files']}")
-    print(f"  Successfully validated: {results['validated_files']}")
-    print(f"  Syntax errors: {results['syntax_errors']}")
+    logger.info(f"\n📊 VALIDATION RESULTS:")
+    logger.info(f"  Total Python files: {results['total_files']}")
+    logger.info(f"  Successfully validated: {results['validated_files']}")
+    logger.error(f"  Syntax errors: {results['syntax_errors']}")
     
     if results['syntax_errors'] == 0:
-        print("\n✅ ALL FILES PASSED SYNTAX VALIDATION!")
+        logger.info("\n✅ ALL FILES PASSED SYNTAX VALIDATION!")
         sys.exit(0)
     else:
-        print(f"\n❌ {results['syntax_errors']} files have syntax errors:")
+        logger.error(f"\n❌ {results['syntax_errors']} files have syntax errors:")
         for error_info in results['error_files']:
-            print(f"  - {error_info['file']}: {error_info['error']}")
+            logger.error(f"  - {error_info['file']}: {error_info['error']}")
         sys.exit(1)

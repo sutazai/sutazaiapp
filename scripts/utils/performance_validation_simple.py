@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 SutazAI Performance Validation Suite (Simplified)
 Comprehensive performance testing for production readiness assessment
 """
@@ -25,7 +28,7 @@ class PerformanceValidator:
         
     def test_health_endpoints(self) -> Dict:
         """Test health endpoint response times - Target: <200ms"""
-        print("\n[1/7] Testing Health Endpoints Response Times...")
+        logger.info("\n[1/7] Testing Health Endpoints Response Times...")
         
         endpoints = [
             ("Backend API", "http://localhost:10010/health"),
@@ -68,7 +71,7 @@ class PerformanceValidator:
             }
             response_times.append(avg_time)
             
-            print(f"  {name}: {avg_time:.2f}ms avg ({'PASS' if avg_time < 200 else 'FAIL'})")
+            logger.info(f"  {name}: {avg_time:.2f}ms avg ({'PASS' if avg_time < 200 else 'FAIL'})")
             
             if avg_time >= 200:
                 results["pass"] = False
@@ -78,7 +81,7 @@ class PerformanceValidator:
     
     def test_chat_endpoint(self) -> Dict:
         """Test chat endpoint response time - Target: <5s"""
-        print("\n[2/7] Testing Chat Endpoint Response Times...")
+        logger.info("\n[2/7] Testing Chat Endpoint Response Times...")
         
         results = {"response_times": [], "avg_time": 0, "pass": True}
         
@@ -98,23 +101,23 @@ class PerformanceValidator:
                 )
                 elapsed = time.time() - start
                 results["response_times"].append(round(elapsed, 2))
-                print(f"  Message {i}: {elapsed:.2f}s")
+                logger.info(f"  Message {i}: {elapsed:.2f}s")
             except Exception as e:
                 results["response_times"].append(10.0)  # Timeout
-                print(f"  Message {i}: TIMEOUT")
+                logger.info(f"  Message {i}: TIMEOUT")
                 
         if results["response_times"]:
             results["avg_time"] = round(statistics.mean(results["response_times"]), 2)
             results["min_time"] = round(min(results["response_times"]), 2)
             results["max_time"] = round(max(results["response_times"]), 2)
             results["pass"] = results["avg_time"] < 5.0
-            print(f"  Average: {results['avg_time']}s ({'PASS' if results['pass'] else 'FAIL'})")
+            logger.info(f"  Average: {results['avg_time']}s ({'PASS' if results['pass'] else 'FAIL'})")
         
         return results
     
     def measure_system_resources(self) -> Dict:
         """Measure system resource utilization using docker stats"""
-        print("\n[3/7] Measuring System Resource Utilization...")
+        logger.info("\n[3/7] Measuring System Resource Utilization...")
         
         # Get container stats
         cmd = "docker stats --no-stream --format 'json'"
@@ -164,10 +167,10 @@ class PerformanceValidator:
                 if len(parts) > 4:
                     disk_usage = int(parts[4].replace('%', ''))
         
-        print(f"  Total containers: {len(containers)}")
-        print(f"  Total CPU usage: {total_cpu:.1f}%")
-        print(f"  Total memory usage: {total_memory:.0f} MB")
-        print(f"  Disk usage: {disk_usage}%")
+        logger.info(f"  Total containers: {len(containers)}")
+        logger.info(f"  Total CPU usage: {total_cpu:.1f}%")
+        logger.info(f"  Total memory usage: {total_memory:.0f} MB")
+        logger.info(f"  Disk usage: {disk_usage}%")
         
         return {
             "containers_count": len(containers),
@@ -180,7 +183,7 @@ class PerformanceValidator:
     
     def test_database_performance(self) -> Dict:
         """Test database query performance"""
-        print("\n[4/7] Testing Database Performance...")
+        logger.info("\n[4/7] Testing Database Performance...")
         
         results = {"postgres": {}, "redis": {}, "pass": True}
         
@@ -200,7 +203,7 @@ class PerformanceValidator:
                 "max_query_ms": round(max(query_times), 2),
                 "pass": statistics.mean(query_times) < 100
             }
-            print(f"  PostgreSQL avg query: {results['postgres']['avg_query_ms']}ms")
+            logger.info(f"  PostgreSQL avg query: {results['postgres']['avg_query_ms']}ms")
             
         except Exception as e:
             results["postgres"] = {"error": str(e), "pass": False}
@@ -225,7 +228,7 @@ class PerformanceValidator:
                 "max_operation_ms": round(max(cache_times), 2),
                 "pass": statistics.mean(cache_times) < 50
             }
-            print(f"  Redis avg operation: {results['redis']['avg_operation_ms']}ms")
+            logger.info(f"  Redis avg operation: {results['redis']['avg_operation_ms']}ms")
             
         except Exception as e:
             results["redis"] = {"error": str(e), "pass": False}
@@ -234,7 +237,7 @@ class PerformanceValidator:
     
     def evaluate_container_efficiency(self) -> Dict:
         """Evaluate container resource allocation and efficiency"""
-        print("\n[5/7] Evaluating Container Efficiency...")
+        logger.info("\n[5/7] Evaluating Container Efficiency...")
         
         # Get container inspection data
         cmd = "docker ps --format '{{.Names}}' | xargs -I {} docker inspect {} --format '{{.Name}},{{.HostConfig.Memory}},{{.HostConfig.CpuShares}}'"
@@ -262,9 +265,9 @@ class PerformanceValidator:
                             mem_mb = int(memory) / (1024*1024) if memory.isdigit() else 0
                             containers[name] = {"memory_mb": mem_mb, "cpu_shares": cpu_shares}
         
-        print(f"  Containers with memory limits: {limited_memory}")
-        print(f"  Containers without limits: {unlimited_memory}")
-        print(f"  Resource efficiency: {'Good' if limited_memory > unlimited_memory else 'Needs optimization'}")
+        logger.info(f"  Containers with memory limits: {limited_memory}")
+        logger.info(f"  Containers without limits: {unlimited_memory}")
+        logger.info(f"  Resource efficiency: {'Good' if limited_memory > unlimited_memory else 'Needs optimization'}")
         
         return {
             "total_containers": limited_memory + unlimited_memory,
@@ -276,7 +279,7 @@ class PerformanceValidator:
     
     def test_concurrent_load(self) -> Dict:
         """Test concurrent user load handling - Target: 50+ users"""
-        print("\n[6/7] Testing Concurrent Load Handling...")
+        logger.info("\n[6/7] Testing Concurrent Load Handling...")
         
         results = {"concurrent_users": 50, "success_rate": 0, "avg_response_time": 0, "pass": False}
         
@@ -292,7 +295,7 @@ class PerformanceValidator:
             except Exception:
                 return {"success": False, "time": 10}
         
-        print("  Simulating 50 concurrent users...")
+        logger.info("  Simulating 50 concurrent users...")
         
         # Simulate 50 concurrent users
         with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
@@ -311,20 +314,20 @@ class PerformanceValidator:
         results["95th_percentile"] = round(statistics.quantiles(response_times, n=20)[18], 2)
         results["pass"] = results["success_rate"] >= 95 and results["avg_response_time"] < 2
         
-        print(f"  Success rate: {results['success_rate']}%")
-        print(f"  Average response: {results['avg_response_time']}s")
-        print(f"  95th percentile: {results['95th_percentile']}s")
+        logger.info(f"  Success rate: {results['success_rate']}%")
+        logger.info(f"  Average response: {results['avg_response_time']}s")
+        logger.info(f"  95th percentile: {results['95th_percentile']}s")
         
         return results
     
     def test_ollama_and_cache(self) -> Dict:
         """Test Ollama response times and cache performance"""
-        print("\n[7/7] Testing Ollama and Cache Performance...")
+        logger.info("\n[7/7] Testing Ollama and Cache Performance...")
         
         results = {"ollama": {}, "cache": {}, "pass": True}
         
         # Test Ollama response times
-        print("  Testing Ollama response times...")
+        logger.info("  Testing Ollama response times...")
         try:
             ollama_times = []
             for i in range(3):
@@ -336,7 +339,7 @@ class PerformanceValidator:
                 )
                 elapsed = time.time() - start
                 ollama_times.append(elapsed)
-                print(f"    Test {i+1}: {elapsed:.2f}s")
+                logger.info(f"    Test {i+1}: {elapsed:.2f}s")
                 
             results["ollama"] = {
                 "avg_response_s": round(statistics.mean(ollama_times), 2),
@@ -345,15 +348,15 @@ class PerformanceValidator:
                 "model": "tinyllama (637MB)",
                 "pass": statistics.mean(ollama_times) < 10
             }
-            print(f"  Ollama average: {results['ollama']['avg_response_s']}s")
+            logger.info(f"  Ollama average: {results['ollama']['avg_response_s']}s")
             
         except Exception as e:
             results["ollama"] = {"error": str(e), "pass": False}
             results["pass"] = False
-            print(f"  Ollama test failed: {e}")
+            logger.error(f"  Ollama test failed: {e}")
         
         # Test cache performance through repeated API calls
-        print("  Testing cache performance...")
+        logger.info("  Testing cache performance...")
         try:
             # First call (cache miss)
             start1 = time.time()
@@ -379,7 +382,7 @@ class PerformanceValidator:
                 "effective": cache_improvement > 20,
                 "pass": True
             }
-            print(f"  Cache improvement: {cache_improvement:.1f}%")
+            logger.info(f"  Cache improvement: {cache_improvement:.1f}%")
             
         except Exception as e:
             results["cache"] = {"error": str(e), "pass": False}
@@ -434,9 +437,9 @@ class PerformanceValidator:
     def run_all_tests(self):
         """Execute all performance tests"""
         
-        print("=" * 60)
-        print("SutazAI Performance Validation Suite")
-        print("=" * 60)
+        logger.info("=" * 60)
+        logger.info("SutazAI Performance Validation Suite")
+        logger.info("=" * 60)
         
         # Run tests
         self.results["tests"]["health_endpoints"] = self.test_health_endpoints()
@@ -457,22 +460,22 @@ class PerformanceValidator:
         with open(report_file, 'w') as f:
             json.dump(self.results, f, indent=2)
         
-        print(f"\n\nResults saved to: {report_file}")
+        logger.info(f"\n\nResults saved to: {report_file}")
         
         # Print summary
-        print("\n" + "=" * 60)
-        print("PERFORMANCE VALIDATION SUMMARY")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.info("PERFORMANCE VALIDATION SUMMARY")
+        logger.info("=" * 60)
         
         summary = self.results["summary"]
-        print(f"\nTests Passed: {summary['passed_tests']}/{summary['total_tests']} ({summary['success_rate']}%)")
-        print(f"Production Criteria Met: {summary['production_criteria_met']}/{summary['production_criteria_total']}")
-        print(f"\nPRODUCTION READY: {'YES' if self.results['production_ready'] else 'NO'}")
+        logger.info(f"\nTests Passed: {summary['passed_tests']}/{summary['total_tests']} ({summary['success_rate']}%)")
+        logger.info(f"Production Criteria Met: {summary['production_criteria_met']}/{summary['production_criteria_total']}")
+        logger.info(f"\nPRODUCTION READY: {'YES' if self.results['production_ready'] else 'NO'}")
         
         if summary.get("improvements_achieved"):
-            print("\nPerformance Improvements Achieved:")
+            logger.info("\nPerformance Improvements Achieved:")
             for improvement in summary["improvements_achieved"]:
-                print(f"  - {improvement}")
+                logger.info(f"  - {improvement}")
         
         return self.results
 

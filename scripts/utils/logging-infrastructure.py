@@ -78,7 +78,7 @@ class LogAggregator:
         self.processing_thread = threading.Thread(target=self._process_log_queue, daemon=True)
         self.processing_thread.start()
         
-        print(f"Log Aggregator initialized - Logs dir: {self.logs_dir}")
+        logger.info(f"Log Aggregator initialized - Logs dir: {self.logs_dir}")
 
     def _init_database(self):
         """Initialize SQLite database for log storage"""
@@ -127,7 +127,7 @@ class LogAggregator:
             except queue.Empty:
                 continue
             except Exception as e:
-                print(f"Error processing log entry: {e}")
+                logger.error(f"Error processing log entry: {e}")
 
     def _store_log_entry(self, log_entry: LogEntry):
         """Store log entry in database"""
@@ -155,7 +155,7 @@ class LogAggregator:
             conn.close()
             
         except Exception as e:
-            print(f"Error storing log entry: {e}")
+            logger.error(f"Error storing log entry: {e}")
 
     def _update_stats(self, log_entry: LogEntry):
         """Update log statistics"""
@@ -313,7 +313,7 @@ class LogAggregator:
             return logs
             
         except Exception as e:
-            print(f"Error searching logs: {e}")
+            logger.error(f"Error searching logs: {e}")
             return []
 
 class StructuredLogger:
@@ -420,7 +420,7 @@ class LogFileWatcher(FileSystemEventHandler):
         try:
             self._process_log_file(event.src_path)
         except Exception as e:
-            print(f"Error processing log file {event.src_path}: {e}")
+            logger.error(f"Error processing log file {event.src_path}: {e}")
 
     def _process_log_file(self, file_path: str):
         """Process new lines in a log file"""
@@ -441,7 +441,7 @@ class LogFileWatcher(FileSystemEventHandler):
                     self._parse_log_line(line.strip(), file_path)
                     
         except Exception as e:
-            print(f"Error reading log file {file_path}: {e}")
+            logger.error(f"Error reading log file {file_path}: {e}")
 
     def _parse_log_line(self, line: str, file_path: str):
         """Parse a log line and extract structured data"""
@@ -487,7 +487,7 @@ class LogFileWatcher(FileSystemEventHandler):
                 )
                 
         except Exception as e:
-            print(f"Error parsing log line: {e}")
+            logger.error(f"Error parsing log line: {e}")
 
 def setup_logging_infrastructure(project_root: str = "/opt/sutazaiapp") -> LogAggregator:
     """Set up the complete logging infrastructure"""
@@ -500,10 +500,10 @@ def setup_logging_infrastructure(project_root: str = "/opt/sutazaiapp") -> LogAg
     observer.schedule(event_handler, str(aggregator.logs_dir), recursive=True)
     observer.start()
     
-    print(f"Logging infrastructure initialized")
-    print(f"Logs directory: {aggregator.logs_dir}")
-    print(f"Database: {aggregator.db_path}")
-    print(f"File watcher started for: {aggregator.logs_dir}")
+    logger.info(f"Logging infrastructure initialized")
+    logger.info(f"Logs directory: {aggregator.logs_dir}")
+    logger.info(f"Database: {aggregator.db_path}")
+    logger.info(f"File watcher started for: {aggregator.logs_dir}")
     
     return aggregator
 
@@ -537,17 +537,17 @@ if __name__ == '__main__':
                         error_details={"error_type": "PermissionError", "file": "locked.tmp"})
     
     # Print stats
-    print("\nLog Statistics:")
+    logger.info("\nLog Statistics:")
     stats = aggregator.get_log_stats()
     for key, value in stats.items():
-        print(f"  {key}: {value}")
+        logger.info(f"  {key}: {value}")
     
-    print(f"\nRecent logs: {len(aggregator.get_recent_logs())}")
+    logger.info(f"\nRecent logs: {len(aggregator.get_recent_logs())}")
     
     # Keep running to monitor file changes
     try:
-        print("\nMonitoring logs (Ctrl+C to stop)...")
+        logger.info("\nMonitoring logs (Ctrl+C to stop)...")
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("\nShutting down...")
+        logger.info("\nShutting down...")

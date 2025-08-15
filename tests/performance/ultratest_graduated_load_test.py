@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Graduated Load Testing Suite
 Progressive load testing with automatic scaling
 """
@@ -70,7 +73,7 @@ class GraduatedLoadTest:
     
     async def test_load_level(self, endpoints: List[Dict], concurrent_users: int) -> Dict:
         """Test specific load level"""
-        print(f"🔄 Testing load level: {concurrent_users} concurrent users...")
+        logger.info(f"🔄 Testing load level: {concurrent_users} concurrent users...")
         
         connector = aiohttp.TCPConnector(limit=100, limit_per_host=20)
         timeout = aiohttp.ClientTimeout(total=30)
@@ -116,8 +119,8 @@ class GraduatedLoadTest:
     
     async def run_graduated_test(self) -> List[Dict]:
         """Run graduated load test"""
-        print("🚀 Starting ULTRATEST Graduated Load Testing")
-        print("=" * 60)
+        logger.info("🚀 Starting ULTRATEST Graduated Load Testing")
+        logger.info("=" * 60)
         
         # Test load levels: 1, 5, 10, 20, 50, 100, 150 users
         load_levels = [1, 5, 10, 20, 50, 100, 150]
@@ -131,19 +134,19 @@ class GraduatedLoadTest:
                 result = await self.test_load_level(endpoints, load_level)
                 results.append(result)
                 
-                print(f"✅ Load Level {load_level}: {result['success_rate']:.1f}% success, "
+                logger.info(f"✅ Load Level {load_level}: {result['success_rate']:.1f}% success, "
                       f"{result['avg_response_time']:.3f}s avg, {result['throughput']:.1f} req/s")
                 
                 # Stop if success rate drops below 80%
                 if result['success_rate'] < 80:
-                    print(f"⚠️  Success rate dropped below 80% at {load_level} users - stopping progression")
+                    logger.info(f"⚠️  Success rate dropped below 80% at {load_level} users - stopping progression")
                     break
                 
                 # Wait between tests to let system recover
                 await asyncio.sleep(2)
                 
             except Exception as e:
-                print(f"❌ Failed at load level {load_level}: {e}")
+                logger.error(f"❌ Failed at load level {load_level}: {e}")
                 break
         
         return results
@@ -204,60 +207,60 @@ class GraduatedLoadTest:
     
     def print_final_report(self, analysis: Dict):
         """Print comprehensive final report"""
-        print("\n" + "=" * 80)
-        print("🏆 ULTRATEST GRADUATED LOAD TEST - FINAL REPORT")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("🏆 ULTRATEST GRADUATED LOAD TEST - FINAL REPORT")
+        logger.info("=" * 80)
         
         if "error" in analysis:
-            print(f"❌ Error: {analysis['error']}")
+            logger.error(f"❌ Error: {analysis['error']}")
             return
         
-        print(f"📊 Tests Completed: {analysis['total_tests']}")
-        print(f"🎯 Maximum Stable Load: {analysis['max_successful_load']} concurrent users")
-        print(f"📈 System Grade: {analysis['system_grade']}")
+        logger.info(f"📊 Tests Completed: {analysis['total_tests']}")
+        logger.info(f"🎯 Maximum Stable Load: {analysis['max_successful_load']} concurrent users")
+        logger.info(f"📈 System Grade: {analysis['system_grade']}")
         
         if analysis['optimal_performance']:
             opt = analysis['optimal_performance']
-            print(f"\n🚀 OPTIMAL PERFORMANCE:")
-            print(f"   • Concurrent Users: {opt['concurrent_users']}")
-            print(f"   • Success Rate: {opt['success_rate']:.1f}%")
-            print(f"   • Average Response Time: {opt['avg_response_time']:.3f}s")
-            print(f"   • Throughput: {opt['throughput']:.1f} requests/second")
+            logger.info(f"\n🚀 OPTIMAL PERFORMANCE:")
+            logger.info(f"   • Concurrent Users: {opt['concurrent_users']}")
+            logger.info(f"   • Success Rate: {opt['success_rate']:.1f}%")
+            logger.info(f"   • Average Response Time: {opt['avg_response_time']:.3f}s")
+            logger.info(f"   • Throughput: {opt['throughput']:.1f} requests/second")
         
         if analysis['breaking_point']:
             bp = analysis['breaking_point']
-            print(f"\n⚠️  BREAKING POINT:")
-            print(f"   • Load Level: {bp['concurrent_users']} users")
-            print(f"   • Success Rate: {bp['success_rate']:.1f}%")
-            print(f"   • Response Time: {bp['avg_response_time']:.3f}s")
+            logger.info(f"\n⚠️  BREAKING POINT:")
+            logger.info(f"   • Load Level: {bp['concurrent_users']} users")
+            logger.info(f"   • Success Rate: {bp['success_rate']:.1f}%")
+            logger.info(f"   • Response Time: {bp['avg_response_time']:.3f}s")
         
-        print(f"\n📋 DETAILED RESULTS:")
+        logger.info(f"\n📋 DETAILED RESULTS:")
         for result in analysis['detailed_results']:
             status = "✅" if result['success_rate'] >= 95 else "⚠️" if result['success_rate'] >= 80 else "❌"
-            print(f"   {status} {result['concurrent_users']:3d} users: "
+            logger.info(f"   {status} {result['concurrent_users']:3d} users: "
                   f"{result['success_rate']:5.1f}% success, "
                   f"{result['avg_response_time']:5.3f}s avg, "
                   f"{result['throughput']:5.1f} req/s")
         
         # Final determination
-        print("\n" + "=" * 80)
+        logger.info("\n" + "=" * 80)
         if analysis['max_successful_load'] >= 100:
-            print("🏆 ULTRATEST FINAL RESULT: SYSTEM READY FOR PRODUCTION")
-            print("   ✅ Can handle 100+ concurrent users")
-            print("   ✅ Meets enterprise performance standards")
+            logger.info("🏆 ULTRATEST FINAL RESULT: SYSTEM READY FOR PRODUCTION")
+            logger.info("   ✅ Can handle 100+ concurrent users")
+            logger.info("   ✅ Meets enterprise performance standards")
         elif analysis['max_successful_load'] >= 50:
-            print("✅ ULTRATEST FINAL RESULT: SYSTEM READY WITH MONITORING")
-            print("   ⚠️  Monitor performance under high load")
-            print("   ✅ Suitable for most production workloads")
+            logger.info("✅ ULTRATEST FINAL RESULT: SYSTEM READY WITH MONITORING")
+            logger.info("   ⚠️  Monitor performance under high load")
+            logger.info("   ✅ Suitable for most production workloads")
         elif analysis['max_successful_load'] >= 20:
-            print("⚠️  ULTRATEST FINAL RESULT: OPTIMIZATION NEEDED")
-            print("   🔧 Performance tuning recommended")
-            print("   ⚠️  Limited concurrent user capacity")
+            logger.info("⚠️  ULTRATEST FINAL RESULT: OPTIMIZATION NEEDED")
+            logger.info("   🔧 Performance tuning recommended")
+            logger.info("   ⚠️  Limited concurrent user capacity")
         else:
-            print("🚨 ULTRATEST FINAL RESULT: CRITICAL PERFORMANCE ISSUES")
-            print("   🚨 System not ready for production")
-            print("   🔧 Immediate optimization required")
-        print("=" * 80)
+            logger.error("🚨 ULTRATEST FINAL RESULT: CRITICAL PERFORMANCE ISSUES")
+            logger.info("   🚨 System not ready for production")
+            logger.info("   🔧 Immediate optimization required")
+        logger.info("=" * 80)
 
 async def main():
     """Main execution function"""
@@ -265,7 +268,7 @@ async def main():
     
     try:
         # Wait for system to be ready
-        print("⏳ Waiting for system to stabilize...")
+        logger.info("⏳ Waiting for system to stabilize...")
         await asyncio.sleep(5)
         
         results = await tester.run_graduated_test()
@@ -278,7 +281,7 @@ async def main():
             json.dump(analysis, f, indent=2)
         
         tester.print_final_report(analysis)
-        print(f"\n📄 Detailed report saved: {report_file}")
+        logger.info(f"\n📄 Detailed report saved: {report_file}")
         
         # Return appropriate exit code
         if analysis.get('max_successful_load', 0) >= 50:
@@ -287,7 +290,7 @@ async def main():
             sys.exit(1)  # Needs improvement
             
     except Exception as e:
-        print(f"🚨 ULTRATEST CRITICAL ERROR: {e}")
+        logger.error(f"🚨 ULTRATEST CRITICAL ERROR: {e}")
         traceback.print_exc()
         sys.exit(2)
 

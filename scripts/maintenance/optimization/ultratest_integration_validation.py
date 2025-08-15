@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Integration Validation
 Tests all service interconnections and dependencies.
 """
@@ -224,11 +227,11 @@ class UltratestIntegrationValidator:
     
     def run_comprehensive_integration_test(self) -> Dict[str, Any]:
         """Run comprehensive integration validation"""
-        print("\n🔗 ULTRATEST: Integration Validation")
-        print("=" * 60)
+        logger.info("\n🔗 ULTRATEST: Integration Validation")
+        logger.info("=" * 60)
         
         # Test 1: Individual service health
-        print("1. Testing individual service health...")
+        logger.info("1. Testing individual service health...")
         service_results = {}
         for service_name, base_url in self.services.items():
             if base_url.startswith('http'):
@@ -236,35 +239,35 @@ class UltratestIntegrationValidator:
                 service_results[service_name] = result
                 
                 icon = "✅" if result.get('healthy', False) else "❌"
-                print(f"   {icon} {service_name}")
+                logger.info(f"   {icon} {service_name}")
         
         # Test 2: Database connectivity
-        print("\n2. Testing database connectivity...")
+        logger.info("\n2. Testing database connectivity...")
         db_results = self.test_database_connectivity()
         for db_name, result in db_results.items():
             icon = "✅" if result.get('healthy', False) else "❌"
-            print(f"   {icon} {db_name}")
+            logger.info(f"   {icon} {db_name}")
         
         # Test 3: Service dependencies
-        print("\n3. Testing service dependencies...")
+        logger.info("\n3. Testing service dependencies...")
         dependency_results = self.test_service_dependencies()
         for dep_name, result in dependency_results.items():
             icon = "✅" if result.get('healthy', False) else "❌"
-            print(f"   {icon} {dep_name}")
+            logger.info(f"   {icon} {dep_name}")
         
         # Test 4: Container communication
-        print("\n4. Testing container communication...")
+        logger.info("\n4. Testing container communication...")
         communication_results = self.test_container_communication()
         for comm_name, result in communication_results.items():
             icon = "✅" if result.get('healthy', False) else "❌"
-            print(f"   {icon} {comm_name}")
+            logger.info(f"   {icon} {comm_name}")
         
         # Test 5: Monitoring stack
-        print("\n5. Testing monitoring stack...")
+        logger.info("\n5. Testing monitoring stack...")
         monitoring_results = self.test_monitoring_stack()
         for monitor_name, result in monitoring_results.items():
             icon = "✅" if result.get('healthy', False) else "❌"
-            print(f"   {icon} {monitor_name}")
+            logger.info(f"   {icon} {monitor_name}")
         
         return {
             'timestamp': datetime.now().isoformat(),
@@ -277,63 +280,63 @@ class UltratestIntegrationValidator:
     
     def generate_integration_report(self, results: Dict[str, Any]):
         """Generate comprehensive integration report"""
-        print("\n" + "=" * 80)
-        print("🔗 ULTRATEST INTEGRATION VALIDATION REPORT")
-        print("=" * 80)
-        print(f"Test Execution Time: {results.get('timestamp', 'Unknown')}")
+        logger.info("\n" + "=" * 80)
+        logger.info("🔗 ULTRATEST INTEGRATION VALIDATION REPORT")
+        logger.info("=" * 80)
+        logger.info(f"Test Execution Time: {results.get('timestamp', 'Unknown')}")
         
         # Service health summary
         service_health = results.get('service_health', {})
         healthy_services = sum(1 for result in service_health.values() if result.get('healthy', False))
         total_services = len(service_health)
         
-        print(f"\n🏥 SERVICE HEALTH SUMMARY:")
-        print("-" * 50)
-        print(f"Healthy Services: {healthy_services}/{total_services}")
-        print(f"Service Health Rate: {(healthy_services/total_services*100):.1f}%")
+        logger.info(f"\n🏥 SERVICE HEALTH SUMMARY:")
+        logger.info("-" * 50)
+        logger.info(f"Healthy Services: {healthy_services}/{total_services}")
+        logger.info(f"Service Health Rate: {(healthy_services/total_services*100):.1f}%")
         
         # Database connectivity summary
         db_connectivity = results.get('database_connectivity', {})
         healthy_databases = sum(1 for result in db_connectivity.values() if result.get('healthy', False))
         total_databases = len(db_connectivity)
         
-        print(f"\n💾 DATABASE CONNECTIVITY:")
-        print("-" * 50)
-        print(f"Connected Databases: {healthy_databases}/{total_databases}")
-        print(f"Database Connectivity Rate: {(healthy_databases/total_databases*100):.1f}%")
+        logger.info(f"\n💾 DATABASE CONNECTIVITY:")
+        logger.info("-" * 50)
+        logger.info(f"Connected Databases: {healthy_databases}/{total_databases}")
+        logger.info(f"Database Connectivity Rate: {(healthy_databases/total_databases*100):.1f}%")
         
         # Service dependencies summary
         dependencies = results.get('service_dependencies', {})
         healthy_deps = sum(1 for result in dependencies.values() if result.get('healthy', False))
         total_deps = len(dependencies)
         
-        print(f"\n🔗 SERVICE DEPENDENCIES:")
-        print("-" * 50)
-        print(f"Working Dependencies: {healthy_deps}/{total_deps}")
-        print(f"Dependency Health Rate: {(healthy_deps/total_deps*100):.1f}%")
+        logger.info(f"\n🔗 SERVICE DEPENDENCIES:")
+        logger.info("-" * 50)
+        logger.info(f"Working Dependencies: {healthy_deps}/{total_deps}")
+        logger.info(f"Dependency Health Rate: {(healthy_deps/total_deps*100):.1f}%")
         
         # Container communication
         communication = results.get('container_communication', {})
         healthy_comm = sum(1 for result in communication.values() if result.get('healthy', False))
         total_comm = len(communication)
         
-        print(f"\n🐳 CONTAINER COMMUNICATION:")
-        print("-" * 50)
-        print(f"Working Communication: {healthy_comm}/{total_comm}")
+        logger.info(f"\n🐳 CONTAINER COMMUNICATION:")
+        logger.info("-" * 50)
+        logger.info(f"Working Communication: {healthy_comm}/{total_comm}")
         
         # Monitoring stack
         monitoring = results.get('monitoring_stack', {})
         healthy_monitoring = sum(1 for result in monitoring.values() if result.get('healthy', False))
         total_monitoring = len(monitoring)
         
-        print(f"\n📊 MONITORING STACK:")
-        print("-" * 50)
-        print(f"Working Monitoring: {healthy_monitoring}/{total_monitoring}")
-        print(f"Monitoring Health Rate: {(healthy_monitoring/total_monitoring*100):.1f}%")
+        logger.info(f"\n📊 MONITORING STACK:")
+        logger.info("-" * 50)
+        logger.info(f"Working Monitoring: {healthy_monitoring}/{total_monitoring}")
+        logger.info(f"Monitoring Health Rate: {(healthy_monitoring/total_monitoring*100):.1f}%")
         
         # Overall integration assessment
-        print(f"\n🎯 INTEGRATION ASSESSMENT:")
-        print("-" * 50)
+        logger.info(f"\n🎯 INTEGRATION ASSESSMENT:")
+        logger.info("-" * 50)
         
         # Calculate overall health scores
         service_score = (healthy_services / total_services * 100) if total_services > 0 else 0
@@ -372,34 +375,34 @@ class UltratestIntegrationValidator:
         else:
             issues.append(f"Overall integration needs improvement ({overall_score:.1f}%)")
         
-        print("🎉 ACHIEVEMENTS:")
+        logger.info("🎉 ACHIEVEMENTS:")
         for achievement in achievements:
-            print(f"   ✅ {achievement}")
+            logger.info(f"   ✅ {achievement}")
         
         if issues:
-            print("\n⚠️  AREAS FOR IMPROVEMENT:")
+            logger.info("\n⚠️  AREAS FOR IMPROVEMENT:")
             for issue in issues:
-                print(f"   ❌ {issue}")
+                logger.info(f"   ❌ {issue}")
         
-        print(f"\n📈 Overall Integration Score: {overall_score:.1f}%")
+        logger.info(f"\n📈 Overall Integration Score: {overall_score:.1f}%")
         
         # Detailed breakdown
-        print(f"\n🔍 DETAILED SERVICE STATUS:")
-        print("-" * 50)
+        logger.info(f"\n🔍 DETAILED SERVICE STATUS:")
+        logger.info("-" * 50)
         
         for service_name, result in service_health.items():
             status = "✅ HEALTHY" if result.get('healthy', False) else "❌ UNHEALTHY"
             response_time = result.get('response_time_ms', 0)
             if response_time > 0:
-                print(f"{service_name:20} {status} ({response_time:.1f}ms)")
+                logger.info(f"{service_name:20} {status} ({response_time:.1f}ms)")
             else:
-                print(f"{service_name:20} {status}")
+                logger.info(f"{service_name:20} {status}")
         
         return overall_score >= 75  # 75% overall integration score for success
 
 def main():
     """Run comprehensive integration validation"""
-    print("🚀 Starting ULTRATEST Integration Validation")
+    logger.info("🚀 Starting ULTRATEST Integration Validation")
     
     validator = UltratestIntegrationValidator()
     results = validator.run_comprehensive_integration_test()
@@ -411,13 +414,13 @@ def main():
     with open('/opt/sutazaiapp/tests/ultratest_integration_report.json', 'w') as f:
         json.dump(results, f, indent=2, default=str)
     
-    print(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_integration_report.json")
+    logger.info(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_integration_report.json")
     
     if success:
-        print("\n🎉 INTEGRATION VALIDATION SUCCESSFUL!")
+        logger.info("\n🎉 INTEGRATION VALIDATION SUCCESSFUL!")
         return 0
     else:
-        print("\n⚠️  INTEGRATION NEEDS IMPROVEMENT")
+        logger.info("\n⚠️  INTEGRATION NEEDS IMPROVEMENT")
         return 1
 
 if __name__ == "__main__":

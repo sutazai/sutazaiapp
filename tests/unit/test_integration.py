@@ -295,7 +295,7 @@ class TestMultiAgentCoordination:
             # Execution should be reasonably fast with proper concurrency
             assert execution_time < 5.0
             
-            print(f"Multi-agent execution completed in {execution_time:.2f} seconds")
+            logger.info(f"Multi-agent execution completed in {execution_time:.2f} seconds")
         
         # Cleanup
         for agent in agents:

@@ -526,12 +526,12 @@ async def main():
         
         elif args.stats:
             stats = processor.get_stats()
-            print(json.dumps(stats, indent=2))
+            logger.info(json.dumps(stats, indent=2))
             
             cache_manager = OllamaCacheManager()
             cache_stats = cache_manager.get_cache_stats()
-            print("\nCache Statistics:")
-            print(json.dumps(cache_stats, indent=2))
+            logger.info("\nCache Statistics:")
+            logger.info(json.dumps(cache_stats, indent=2))
         
         elif args.clear_cache:
             await processor.clear_cache()

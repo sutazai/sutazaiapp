@@ -1184,10 +1184,10 @@ if __name__ == "__main__":
             )
             
             if result.success:
-                print("Architecture design completed successfully")
-                print(f"Execution time: {result.execution_time:.2f}s")
+                logger.info("Architecture design completed successfully")
+                logger.info(f"Execution time: {result.execution_time:.2f}s")
             else:
-                print(f"Architecture design failed: {result.error}")
+                logger.error(f"Architecture design failed: {result.error}")
             
             # Example: Use Code Generation Improver
             code_result = await api.code_improver.analyze_code_quality(
@@ -1204,17 +1204,17 @@ if __name__ == "__main__":
             )
             
             if code_result.success:
-                print("Code analysis completed")
-                print(f"Analysis results: {code_result.data}")
+                logger.info("Code analysis completed")
+                logger.info(f"Analysis results: {code_result.data}")
             
             # Example: Health check all agents
             health_results = await api.health_check_all()
             healthy_agents = sum(1 for result in health_results.values() if result.success)
-            print(f"Health check: {healthy_agents}/{len(health_results)} agents healthy")
+            logger.info(f"Health check: {healthy_agents}/{len(health_results)} agents healthy")
             
             # Example: Get system capabilities
             capabilities = await api.get_system_capabilities()
-            print(f"Retrieved capabilities for {len(capabilities)} agents")
+            logger.info(f"Retrieved capabilities for {len(capabilities)} agents")
     
     # Run the example
     asyncio.run(main())

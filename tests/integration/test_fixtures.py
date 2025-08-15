@@ -39,7 +39,7 @@ class TestFixtureCreation(unittest.TestCase):
         # Create various types of junk files
         junk_files = {
             "backup_file.backup": "Original file backup content",
-            "old_script.py.bak": "#!/usr/bin/env python3\nprint('old script')",
+            "old_script.py.bak": "#!/usr/bin/env python3\nlogger.info('old script')",
             "temp_data.tmp": "temporary data for processing",
             "editor_save~": "editor backup file content",
             "config.old": "old configuration settings",
@@ -70,7 +70,7 @@ export ENV=staging
 docker-compose -f docker-compose.staging.yml up -d
 """,
             "deploy_production.py": """#!/usr/bin/env python3
-print("Production deployment script")
+logger.info("Production deployment script")
 import subprocess
 subprocess.run(["docker-compose", "up", "-d"])
 """,
@@ -88,10 +88,10 @@ def validate_deployment():
 
 if __name__ == "__main__":
     if validate_deployment():
-        print("Deployment validation passed")
+        logger.info("Deployment validation passed")
         sys.exit(0)
     else:
-        print("Deployment validation failed")
+        logger.error("Deployment validation failed")
         sys.exit(1)
 """,
             "old_deploy.sh": """#!/bin/bash
@@ -145,7 +145,7 @@ for file in os.listdir('.'):
     if file.endswith('.tmp'):
         shutil.move(file, 'archive/' + file)
         
-print("Batch operations completed")
+logger.info("Batch operations completed")
 """,
             "api_client.py": """import requests
 

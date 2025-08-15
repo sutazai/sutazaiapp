@@ -1001,9 +1001,9 @@ async def example_router_usage():
     
     # Route the task
     decision = await router.route_task(task)
-    print(f"Task routed to: {decision.selected_agents}")
-    print(f"Confidence: {decision.confidence_score:.2f}")
-    print(f"Reasoning: {decision.reasoning}")
+    logger.info(f"Task routed to: {decision.selected_agents}")
+    logger.info(f"Confidence: {decision.confidence_score:.2f}")
+    logger.info(f"Reasoning: {decision.reasoning}")
     
     # Simulate task completion and update metrics
     # This would normally be done by the workflow system

@@ -372,7 +372,7 @@ class UltraSystemAnalyzer:
         except Exception as e:
             logger.error(f"Unexpected exception: {e}", exc_info=True)
             # Fallback: print newlines if clear command fails
-            print("\n" * 50)
+            logger.info("\n" * 50)
     
     def save_results(self):
         """Save analysis results to file"""
@@ -384,9 +384,9 @@ class UltraSystemAnalyzer:
     
     def run_continuous_monitoring(self, interval=60):
         """Run continuous monitoring"""
-        print("🚀 Starting ULTRA-DEEP System Monitoring...")
-        print(f"📊 Monitoring interval: {interval} seconds")
-        print("Press Ctrl+C to stop\n")
+        logger.info("🚀 Starting ULTRA-DEEP System Monitoring...")
+        logger.info(f"📊 Monitoring interval: {interval} seconds")
+        logger.info("Press Ctrl+C to stop\n")
         
         try:
             while True:
@@ -401,20 +401,20 @@ class UltraSystemAnalyzer:
                 report = self.generate_report()
                 # SECURE: Safe screen clear without shell injection
                 self._clear_screen()
-                print(report)
+                logger.info(report)
                 
                 # Save results
                 self.save_results()
                 
                 # Wait for next cycle
-                print(f"\n⏱️  Next update in {interval} seconds...")
+                logger.info(f"\n⏱️  Next update in {interval} seconds...")
                 time.sleep(interval)
                 
         except KeyboardInterrupt:
-            print("\n\n✋ Monitoring stopped by user")
-            print(f"📁 Final report saved to:")
-            print("   - /opt/sutazaiapp/ultra_deep_analysis_report.json")
-            print("   - /opt/sutazaiapp/ultra_deep_analysis_report.txt")
+            logger.info("\n\n✋ Monitoring stopped by user")
+            logger.info(f"📁 Final report saved to:")
+            logger.info("   - /opt/sutazaiapp/ultra_deep_analysis_report.json")
+            logger.info("   - /opt/sutazaiapp/ultra_deep_analysis_report.txt")
 
 def main():
     """Main execution"""
@@ -429,14 +429,14 @@ def main():
             analyzer.analyze_code_quality()
             analyzer.check_security_status()
             analyzer.monitor_agent_progress()
-            print(analyzer.generate_report())
+            logger.info(analyzer.generate_report())
             analyzer.save_results()
         elif sys.argv[1] == '--interval':
             # Custom interval
             interval = int(sys.argv[2]) if len(sys.argv) > 2 else 60
             analyzer.run_continuous_monitoring(interval)
         else:
-            print("Usage: python ultra_deep_system_analysis.py [--once | --interval <seconds>]")
+            logger.info("Usage: python ultra_deep_system_analysis.py [--once | --interval <seconds>]")
     else:
         # Default: continuous monitoring every 60 seconds
         analyzer.run_continuous_monitoring(60)

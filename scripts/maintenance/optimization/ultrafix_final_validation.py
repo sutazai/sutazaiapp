@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRAFIX Final Validation Test
 Validates the complete success of the backend health endpoint timeout fix
 """
@@ -12,8 +15,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def single_request_test():
     """Test single request performance"""
-    print("🎯 Single Request Performance Test")
-    print("-" * 40)
+    logger.info("🎯 Single Request Performance Test")
+    logger.info("-" * 40)
     
     times = []
     for i in range(10):
@@ -24,18 +27,18 @@ def single_request_test():
         
         if response.status_code == 200:
             data = response.json()
-            print(f"  Request {i+1}: {response_time:.1f}ms - Status: {data['status']}")
+            logger.info(f"  Request {i+1}: {response_time:.1f}ms - Status: {data['status']}")
         else:
-            print(f"  Request {i+1}: {response_time:.1f}ms - ERROR: HTTP {response.status_code}")
+            logger.error(f"  Request {i+1}: {response_time:.1f}ms - ERROR: HTTP {response.status_code}")
     
     avg_time = statistics.mean(times)
     min_time = min(times)
     max_time = max(times)
     
-    print(f"\n📊 Results:")
-    print(f"  Average: {avg_time:.2f}ms")
-    print(f"  Min: {min_time:.2f}ms") 
-    print(f"  Max: {max_time:.2f}ms")
+    logger.info(f"\n📊 Results:")
+    logger.info(f"  Average: {avg_time:.2f}ms")
+    logger.info(f"  Min: {min_time:.2f}ms") 
+    logger.info(f"  Max: {max_time:.2f}ms")
     
     return {
         "avg_ms": avg_time,
@@ -46,8 +49,8 @@ def single_request_test():
 
 def concurrent_test(num_threads=20, requests_per_thread=5):
     """Test concurrent request handling"""
-    print(f"\n⚡ Concurrent Test: {num_threads} threads × {requests_per_thread} requests")
-    print("-" * 60)
+    logger.info(f"\n⚡ Concurrent Test: {num_threads} threads × {requests_per_thread} requests")
+    logger.info("-" * 60)
     
     def make_request(thread_id, request_id):
         start = time.time()
@@ -115,20 +118,20 @@ def concurrent_test(num_threads=20, requests_per_thread=5):
     else:
         avg_time = p95_time = max_time = 0
     
-    print(f"📈 Results:")
-    print(f"  Total requests: {len(results)}")
-    print(f"  Successful: {len(successful)} ({success_rate:.1f}%)")
-    print(f"  Failed: {len(failed)}")
-    print(f"  Test duration: {total_test_time:.2f}s")
-    print(f"  Throughput: {len(results)/total_test_time:.1f} req/sec")
-    print(f"  Avg response time: {avg_time:.2f}ms")
-    print(f"  P95 response time: {p95_time:.2f}ms")
-    print(f"  Max response time: {max_time:.2f}ms")
+    logger.info(f"📈 Results:")
+    logger.info(f"  Total requests: {len(results)}")
+    logger.info(f"  Successful: {len(successful)} ({success_rate:.1f}%)")
+    logger.error(f"  Failed: {len(failed)}")
+    logger.info(f"  Test duration: {total_test_time:.2f}s")
+    logger.info(f"  Throughput: {len(results)/total_test_time:.1f} req/sec")
+    logger.info(f"  Avg response time: {avg_time:.2f}ms")
+    logger.info(f"  P95 response time: {p95_time:.2f}ms")
+    logger.info(f"  Max response time: {max_time:.2f}ms")
     
     if failed:
-        print(f"  Sample failures:")
+        logger.info(f"  Sample failures:")
         for failure in failed[:3]:
-            print(f"    - Thread {failure['thread_id']}: {failure['error']}")
+            logger.error(f"    - Thread {failure['thread_id']}: {failure['error']}")
     
     return {
         "total_requests": len(results),
@@ -145,8 +148,8 @@ def concurrent_test(num_threads=20, requests_per_thread=5):
 
 def main():
     """Run complete ULTRAFIX validation"""
-    print("🚀 ULTRAFIX BACKEND HEALTH ENDPOINT VALIDATION")
-    print("=" * 70)
+    logger.info("🚀 ULTRAFIX BACKEND HEALTH ENDPOINT VALIDATION")
+    logger.info("=" * 70)
     
     # Test 1: Single request performance
     single_results = single_request_test()
@@ -155,63 +158,63 @@ def main():
     concurrent_results = concurrent_test(20, 5)
     
     # Final assessment
-    print("\n" + "=" * 70)
-    print("🏆 ULTRAFIX PERFORMANCE ASSESSMENT")
-    print("=" * 70)
+    logger.info("\n" + "=" * 70)
+    logger.info("🏆 ULTRAFIX PERFORMANCE ASSESSMENT")
+    logger.info("=" * 70)
     
     # Criteria for success
     single_avg = single_results["avg_ms"]
     concurrent_success_rate = concurrent_results["success_rate_percent"]
     concurrent_avg = concurrent_results["avg_response_time_ms"]
     
-    print(f"📊 Performance Metrics:")
-    print(f"  Single Request Average: {single_avg:.2f}ms")
-    print(f"  Concurrent Success Rate: {concurrent_success_rate:.1f}%")
-    print(f"  Concurrent Average Response: {concurrent_avg:.2f}ms")
-    print(f"  Throughput: {concurrent_results['throughput_rps']:.1f} requests/second")
+    logger.info(f"📊 Performance Metrics:")
+    logger.info(f"  Single Request Average: {single_avg:.2f}ms")
+    logger.info(f"  Concurrent Success Rate: {concurrent_success_rate:.1f}%")
+    logger.info(f"  Concurrent Average Response: {concurrent_avg:.2f}ms")
+    logger.info(f"  Throughput: {concurrent_results['throughput_rps']:.1f} requests/second")
     
     # Success criteria
     criteria_met = []
     
     # Criterion 1: Single request <50ms average
     if single_avg < 50:
-        print("  ✅ Single request performance: EXCELLENT (<50ms)")
+        logger.info("  ✅ Single request performance: EXCELLENT (<50ms)")
         criteria_met.append(True)
     else:
-        print(f"  ❌ Single request performance: POOR (>{single_avg:.1f}ms)")
+        logger.info(f"  ❌ Single request performance: POOR (>{single_avg:.1f}ms)")
         criteria_met.append(False)
     
     # Criterion 2: Concurrent success rate >95%
     if concurrent_success_rate >= 95:
-        print("  ✅ Concurrent reliability: EXCELLENT (>95% success)")
+        logger.info("  ✅ Concurrent reliability: EXCELLENT (>95% success)")
         criteria_met.append(True)
     elif concurrent_success_rate >= 90:
-        print("  🟡 Concurrent reliability: GOOD (>90% success)")
+        logger.info("  🟡 Concurrent reliability: GOOD (>90% success)")
         criteria_met.append(True)
     else:
-        print(f"  ❌ Concurrent reliability: POOR ({concurrent_success_rate:.1f}% success)")
+        logger.info(f"  ❌ Concurrent reliability: POOR ({concurrent_success_rate:.1f}% success)")
         criteria_met.append(False)
     
     # Criterion 3: Concurrent average <100ms
     if concurrent_avg < 100:
-        print("  ✅ Concurrent performance: EXCELLENT (<100ms)")
+        logger.info("  ✅ Concurrent performance: EXCELLENT (<100ms)")
         criteria_met.append(True)
     else:
-        print(f"  ❌ Concurrent performance: POOR ({concurrent_avg:.1f}ms)")
+        logger.info(f"  ❌ Concurrent performance: POOR ({concurrent_avg:.1f}ms)")
         criteria_met.append(False)
     
     # Overall assessment
     overall_success = all(criteria_met)
     
-    print(f"\n🎯 OVERALL ASSESSMENT:")
+    logger.info(f"\n🎯 OVERALL ASSESSMENT:")
     if overall_success:
-        print("  🎉 ULTRAFIX SUCCESS! All performance targets achieved.")
-        print("  🚀 Backend health endpoint timeout issue COMPLETELY RESOLVED!")
-        print("  📈 System now handles high load without timeouts.")
-        print("  ⚡ Response times optimized to <50ms under all conditions.")
+        logger.info("  🎉 ULTRAFIX SUCCESS! All performance targets achieved.")
+        logger.info("  🚀 Backend health endpoint timeout issue COMPLETELY RESOLVED!")
+        logger.info("  📈 System now handles high load without timeouts.")
+        logger.info("  ⚡ Response times optimized to <50ms under all conditions.")
     else:
-        print("  ⚠️  Some performance targets not fully met.")
-        print("  📊 Review metrics above for improvement areas.")
+        logger.info("  ⚠️  Some performance targets not fully met.")
+        logger.info("  📊 Review metrics above for improvement areas.")
     
     # Save detailed results
     full_results = {
@@ -229,18 +232,18 @@ def main():
     with open("/opt/sutazaiapp/ultrafix_validation_results.json", "w") as f:
         json.dump(full_results, f, indent=2)
     
-    print(f"\n💾 Detailed results saved to: /opt/sutazaiapp/ultrafix_validation_results.json")
+    logger.info(f"\n💾 Detailed results saved to: /opt/sutazaiapp/ultrafix_validation_results.json")
     
     return overall_success
 
 if __name__ == "__main__":
     success = main()
-    print(f"\n{'='*70}")
+    logger.info(f"\n{'='*70}")
     if success:
-        print("🏁 ULTRAFIX VALIDATION: COMPLETE SUCCESS")
-        print("✅ Backend health endpoint timeout issue SOLVED!")
+        logger.info("🏁 ULTRAFIX VALIDATION: COMPLETE SUCCESS")
+        logger.info("✅ Backend health endpoint timeout issue SOLVED!")
     else:
-        print("🔄 ULTRAFIX VALIDATION: NEEDS IMPROVEMENT")
-        print("📊 Some performance targets require attention.")
+        logger.info("🔄 ULTRAFIX VALIDATION: NEEDS IMPROVEMENT")
+        logger.info("📊 Some performance targets require attention.")
     
     exit(0 if success else 1)

@@ -561,34 +561,34 @@ async def main():
     suite = PerformanceTestSuite()
     report = await suite.run_comprehensive_performance_suite()
     
-    print("\n" + "="*80)
-    print("SUTAZAI PERFORMANCE TEST RESULTS")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("SUTAZAI PERFORMANCE TEST RESULTS")
+    logger.info("="*80)
     
     summary = report.get("performance_summary", {})
-    print(f"Performance Grade: {summary.get('performance_grade', 'UNKNOWN')}")
-    print(f"Overall Score: {summary.get('overall_performance_score', 0):.1f}/100")
+    logger.info(f"Performance Grade: {summary.get('performance_grade', 'UNKNOWN')}")
+    logger.info(f"Overall Score: {summary.get('overall_performance_score', 0):.1f}/100")
     
     key_metrics = summary.get("key_metrics", {})
-    print(f"\nKey Metrics:")
-    print(f"  Average Response Time: {key_metrics.get('avg_response_time', 0):.3f}s")
-    print(f"  Success Rate: {key_metrics.get('success_rate', 0):.1f}%")
-    print(f"  Requests per Second: {key_metrics.get('requests_per_second', 0):.1f}")
-    print(f"  High Concurrency Success Rate: {key_metrics.get('high_concurrency_success_rate', 0):.1f}%")
+    logger.info(f"\nKey Metrics:")
+    logger.info(f"  Average Response Time: {key_metrics.get('avg_response_time', 0):.3f}s")
+    logger.info(f"  Success Rate: {key_metrics.get('success_rate', 0):.1f}%")
+    logger.info(f"  Requests per Second: {key_metrics.get('requests_per_second', 0):.1f}")
+    logger.info(f"  High Concurrency Success Rate: {key_metrics.get('high_concurrency_success_rate', 0):.1f}%")
     
     issues = summary.get("performance_issues", [])
     if issues:
-        print(f"\nPerformance Issues:")
+        logger.info(f"\nPerformance Issues:")
         for issue in issues:
-            print(f"  • {issue}")
+            logger.info(f"  • {issue}")
     
     recommendations = summary.get("recommendations", [])
     if recommendations:
-        print(f"\nRecommendations:")
+        logger.info(f"\nRecommendations:")
         for rec in recommendations:
-            print(f"  • {rec}")
+            logger.info(f"  • {rec}")
     
-    print("="*80)
+    logger.info("="*80)
     
     return report
 

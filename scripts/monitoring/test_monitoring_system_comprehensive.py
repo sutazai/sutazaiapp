@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Comprehensive Test Suite for SutazAI Monitoring System
 =====================================================
 
@@ -519,8 +522,8 @@ class TestValidationScenarios(TestMonitoringSystemBase):
 
 def run_comprehensive_tests():
     """Run all tests and generate a detailed report"""
-    print("🧪 Running Comprehensive SutazAI Monitoring System Tests")
-    print("=" * 60)
+    logger.info("🧪 Running Comprehensive SutazAI Monitoring System Tests")
+    logger.info("=" * 60)
     
     # Create test suite
     loader = unittest.TestLoader()
@@ -546,35 +549,35 @@ def run_comprehensive_tests():
     result = runner.run(suite)
     
     # Generate summary report  
-    print("\n" + "=" * 60)
-    print("📊 TEST EXECUTION SUMMARY")
-    print("=" * 60)
-    print(f"Tests Run: {result.testsRun}")
-    print(f"Failures: {len(result.failures)}")
-    print(f"Errors: {len(result.errors)}")
-    print(f"Skipped: {len(result.skipped) if hasattr(result, 'skipped') else 0}")
+    logger.info("\n" + "=" * 60)
+    logger.info("📊 TEST EXECUTION SUMMARY")
+    logger.info("=" * 60)
+    logger.info(f"Tests Run: {result.testsRun}")
+    logger.info(f"Failures: {len(result.failures)}")
+    logger.error(f"Errors: {len(result.errors)}")
+    logger.info(f"Skipped: {len(result.skipped) if hasattr(result, 'skipped') else 0}")
     
     if result.failures:
-        print("\n❌ FAILURES:")
+        logger.info("\n❌ FAILURES:")
         for test, traceback in result.failures:
-            print(f"  - {test}: {traceback.split('AssertionError:')[-1].strip() if 'AssertionError:' in traceback else 'Unknown failure'}")
+            logger.error(f"  - {test}: {traceback.split('AssertionError:')[-1].strip() if 'AssertionError:' in traceback else 'Unknown failure'}")
     
     if result.errors:
-        print("\n💥 ERRORS:")
+        logger.error("\n💥 ERRORS:")
         for test, traceback in result.errors:
-            print(f"  - {test}: {traceback.split('Exception:')[-1].strip() if 'Exception:' in traceback else 'Unknown error'}")
+            logger.error(f"  - {test}: {traceback.split('Exception:')[-1].strip() if 'Exception:' in traceback else 'Unknown error'}")
     
     success_rate = ((result.testsRun - len(result.failures) - len(result.errors)) / result.testsRun * 100) if result.testsRun > 0 else 0
-    print(f"\n✅ SUCCESS RATE: {success_rate:.1f}%")
+    logger.info(f"\n✅ SUCCESS RATE: {success_rate:.1f}%")
     
     if success_rate >= 90:
-        print("🎉 EXCELLENT - Monitoring system is highly reliable!")
+        logger.info("🎉 EXCELLENT - Monitoring system is highly reliable!")
     elif success_rate >= 80:
-        print("👍 GOOD - Monitoring system is mostly working well")
+        logger.info("👍 GOOD - Monitoring system is mostly working well")
     elif success_rate >= 70:
-        print("⚠️  FAIR - Some issues need attention")
+        logger.info("⚠️  FAIR - Some issues need attention")
     else:
-        print("🔴 POOR - Significant issues require immediate attention")
+        logger.info("🔴 POOR - Significant issues require immediate attention")
     
     return result.wasSuccessful(), result
 

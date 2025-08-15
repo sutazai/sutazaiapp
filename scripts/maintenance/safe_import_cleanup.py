@@ -234,30 +234,30 @@ def main():
                 safe_files += 1
                 safe_imports += len(file_info['unused_imports'])
         
-        print(f"\n=== DRY RUN ANALYSIS ===")
-        print(f"Files safe for automated cleanup: {safe_files}")
-        print(f"Unused imports that can be safely removed: {safe_imports}")
-        print(f"Total files in audit: {len(audit_report.get('files_with_unused_imports', []))}")
-        print(f"Total unused imports in audit: {audit_report.get('statistics', {}).get('unused_imports', 0)}")
+        logger.info(f"\n=== DRY RUN ANALYSIS ===")
+        logger.info(f"Files safe for automated cleanup: {safe_files}")
+        logger.info(f"Unused imports that can be safely removed: {safe_imports}")
+        logger.info(f"Total files in audit: {len(audit_report.get('files_with_unused_imports', []))}")
+        logger.info(f"Total unused imports in audit: {audit_report.get('statistics', {}).get('unused_imports', 0)}")
         
     else:
         # Execute cleanup
         logger.info("Starting safe import cleanup...")
         results = cleaner.process_cleanup_batch(audit_report, args.batch_size)
         
-        print(f"\n=== CLEANUP RESULTS ===")
-        print(f"Files processed: {results['processed']}")
-        print(f"Files cleaned successfully: {results['cleaned']}")
-        print(f"Files skipped (not safe): {results['skipped']}")
-        print(f"Files failed: {results['failed']}")
-        print(f"Files rolled back: {results['rollbacks']}")
+        logger.info(f"\n=== CLEANUP RESULTS ===")
+        logger.info(f"Files processed: {results['processed']}")
+        logger.info(f"Files cleaned successfully: {results['cleaned']}")
+        logger.info(f"Files skipped (not safe): {results['skipped']}")
+        logger.error(f"Files failed: {results['failed']}")
+        logger.info(f"Files rolled back: {results['rollbacks']}")
         
         if results['errors']:
-            print(f"\nErrors encountered:")
+            logger.error(f"\nErrors encountered:")
             for error in results['errors'][:10]:  # Show first 10 errors
-                print(f"  - {error}")
+                logger.error(f"  - {error}")
             if len(results['errors']) > 10:
-                print(f"  ... and {len(results['errors']) - 10} more")
+                logger.error(f"  ... and {len(results['errors']) - 10} more")
     
     return 0
 

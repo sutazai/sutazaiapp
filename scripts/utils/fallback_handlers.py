@@ -606,29 +606,29 @@ async def example_usage():
         "Hello, can you help me?",
         "general"
     )
-    print(f"AI Response: {result}")
+    logger.info(f"AI Response: {result}")
     
     # Search fallback
     search_result = await search_with_fallback(
         "machine learning",
         ["AI and machine learning", "deep learning models", "natural language processing"]
     )
-    print(f"Search Result: {search_result}")
+    logger.info(f"Search Result: {search_result}")
     
     # Storage fallback
     store_result = await store_with_fallback(
         "user_preference",
         {"theme": "dark", "language": "en"}
     )
-    print(f"Store Result: {store_result}")
+    logger.info(f"Store Result: {store_result}")
     
     # Retrieval fallback
     retrieve_result = await retrieve_with_fallback("user_preference")
-    print(f"Retrieve Result: {retrieve_result}")
+    logger.info(f"Retrieve Result: {retrieve_result}")
     
     # Get cache statistics
     cache_stats = fallback_handlers.get_cache_stats()
-    print(f"Cache Stats: {cache_stats}")
+    logger.info(f"Cache Stats: {cache_stats}")
 
 if __name__ == "__main__":
     asyncio.run(example_usage())

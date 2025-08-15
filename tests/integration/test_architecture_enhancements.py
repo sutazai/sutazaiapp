@@ -29,10 +29,10 @@ class EnhancementTestSuite:
         
     async def run_all_tests(self):
         """Run all test categories"""
-        print("=" * 60)
-        print("SutazAI Architecture Enhancement Test Suite")
-        print("=" * 60)
-        print()
+        logger.info("=" * 60)
+        logger.info("SutazAI Architecture Enhancement Test Suite")
+        logger.info("=" * 60)
+        logger.info()
         
         # Test categories
         await self.test_service_mesh()
@@ -45,8 +45,8 @@ class EnhancementTestSuite:
     
     async def test_service_mesh(self):
         """Test service mesh components"""
-        print("Testing Service Mesh Components")
-        print("-" * 40)
+        logger.info("Testing Service Mesh Components")
+        logger.info("-" * 40)
         
         # Test Kong Gateway
         result = await self.test_kong()
@@ -60,7 +60,7 @@ class EnhancementTestSuite:
         result = await self.test_rabbitmq()
         self.results.append(("RabbitMQ Messaging", result))
         
-        print()
+        logger.info()
     
     async def test_kong(self) -> bool:
         """Test Kong Gateway functionality"""
@@ -69,16 +69,16 @@ class EnhancementTestSuite:
                 # Test proxy endpoint
                 response = await client.get("http://localhost:10005/", timeout=5.0)
                 if response.status_code in [200, 404]:
-                    print("✓ Kong proxy endpoint accessible")
+                    logger.info("✓ Kong proxy endpoint accessible")
                     
                     # Test admin API
                     admin_response = await client.get("http://localhost:8001/status", timeout=5.0)
                     if admin_response.status_code == 200:
-                        print("✓ Kong admin API accessible")
+                        logger.info("✓ Kong admin API accessible")
                         return True
                     
         except Exception as e:
-            print(f"✗ Kong test failed: {e}")
+            logger.error(f"✗ Kong test failed: {e}")
         
         return False
     
@@ -90,11 +90,11 @@ class EnhancementTestSuite:
             # Check if Consul is running
             leader = self.consul_client.status.leader()
             if leader:
-                print("✓ Consul cluster has leader")
+                logger.info("✓ Consul cluster has leader")
                 
                 # List services
                 services = self.consul_client.catalog.services()
-                print(f"✓ Consul has {len(services)} registered services")
+                logger.info(f"✓ Consul has {len(services)} registered services")
                 
                 # Register test service
                 self.consul_client.agent.service.register(
@@ -103,7 +103,7 @@ class EnhancementTestSuite:
                     port=9999,
                     check=consul.Check.http('http://localhost:9999/health', interval='10s')
                 )
-                print("✓ Successfully registered test service")
+                logger.info("✓ Successfully registered test service")
                 
                 # Deregister test service
                 self.consul_client.agent.service.deregister('test-1')
@@ -111,7 +111,7 @@ class EnhancementTestSuite:
                 return True
                 
         except Exception as e:
-            print(f"✗ Consul test failed: {e}")
+            logger.error(f"✗ Consul test failed: {e}")
         
         return False
     
@@ -127,7 +127,7 @@ class EnhancementTestSuite:
             
             # Declare test queue
             channel.queue_declare(queue='test_queue', durable=False)
-            print("✓ Connected to RabbitMQ")
+            logger.info("✓ Connected to RabbitMQ")
             
             # Publish test message
             test_message = {'test': 'message', 'timestamp': datetime.utcnow().isoformat()}
@@ -136,14 +136,14 @@ class EnhancementTestSuite:
                 routing_key='test_queue',
                 body=json.dumps(test_message)
             )
-            print("✓ Published test message")
+            logger.info("✓ Published test message")
             
             # Consume test message
             method, properties, body = channel.basic_get('test_queue')
             if body:
                 received = json.loads(body)
                 if received['test'] == 'message':
-                    print("✓ Successfully received test message")
+                    logger.info("✓ Successfully received test message")
                     channel.basic_ack(method.delivery_tag)
             
             # Cleanup
@@ -153,14 +153,14 @@ class EnhancementTestSuite:
             return True
             
         except Exception as e:
-            print(f"✗ RabbitMQ test failed: {e}")
+            logger.error(f"✗ RabbitMQ test failed: {e}")
         
         return False
     
     async def test_ai_agents(self):
         """Test AI agent implementations"""
-        print("Testing AI Agents")
-        print("-" * 40)
+        logger.info("Testing AI Agents")
+        logger.info("-" * 40)
         
         # Test AI Orchestrator
         result = await self.test_orchestrator()
@@ -178,7 +178,7 @@ class EnhancementTestSuite:
             result = await self.test_agent_health(name, url)
             self.results.append((f"{name} Health", result))
         
-        print()
+        logger.info()
     
     async def test_orchestrator(self) -> bool:
         """Test AI Agent Orchestrator functionality"""
@@ -203,7 +203,7 @@ class EnhancementTestSuite:
                 if response.status_code == 200:
                     result = response.json()
                     if "task_id" in result:
-                        print(f"✓ Task orchestrated: {result['task_id']}")
+                        logger.info(f"✓ Task orchestrated: {result['task_id']}")
                         
                         # Check task status
                         await asyncio.sleep(2)
@@ -214,11 +214,11 @@ class EnhancementTestSuite:
                         
                         if status_response.status_code == 200:
                             status = status_response.json()
-                            print(f"✓ Task status: {status.get('status', 'unknown')}")
+                            logger.info(f"✓ Task status: {status.get('status', 'unknown')}")
                             return True
                 
         except Exception as e:
-            print(f"✗ Orchestrator test failed: {e}")
+            logger.error(f"✗ Orchestrator test failed: {e}")
         
         return False
     
@@ -230,18 +230,18 @@ class EnhancementTestSuite:
                 if response.status_code == 200:
                     data = response.json()
                     if data.get("status") in ["healthy", "degraded"]:
-                        print(f"✓ {name} is {data.get('status')}")
+                        logger.info(f"✓ {name} is {data.get('status')}")
                         return True
         except (AssertionError, Exception) as e:
             logger.error(f"Unexpected exception: {e}", exc_info=True)
-            print(f"✗ {name} not responding")
+            logger.info(f"✗ {name} not responding")
         
         return False
     
     async def test_integration(self):
         """Test system integration"""
-        print("Testing System Integration")
-        print("-" * 40)
+        logger.info("Testing System Integration")
+        logger.info("-" * 40)
         
         # Test Redis connectivity
         result = await self.test_redis_integration()
@@ -251,7 +251,7 @@ class EnhancementTestSuite:
         result = await self.test_end_to_end_flow()
         self.results.append(("End-to-End Flow", result))
         
-        print()
+        logger.info()
     
     async def test_redis_integration(self) -> bool:
         """Test Redis integration"""
@@ -268,12 +268,12 @@ class EnhancementTestSuite:
             value = self.redis_client.get(test_key)
             
             if value == "test_value":
-                print("✓ Redis integration working")
+                logger.info("✓ Redis integration working")
                 self.redis_client.delete(test_key)
                 return True
                 
         except Exception as e:
-            print(f"✗ Redis integration failed: {e}")
+            logger.error(f"✗ Redis integration failed: {e}")
         
         return False
     
@@ -282,7 +282,7 @@ class EnhancementTestSuite:
         try:
             async with httpx.AsyncClient() as client:
                 # Step 1: Submit task through Kong
-                print("  1. Submitting task through Kong...")
+                logger.info("  1. Submitting task through Kong...")
                 response = await client.post(
                     "http://localhost:10005/ai/orchestrate",
                     json={
@@ -294,35 +294,35 @@ class EnhancementTestSuite:
                 )
                 
                 if response.status_code in [200, 404]:  # 404 if route not configured yet
-                    print("  ✓ Kong routing attempted")
+                    logger.info("  ✓ Kong routing attempted")
                 
                 # Step 2: Check Consul for service registration
-                print("  2. Checking Consul service registry...")
+                logger.info("  2. Checking Consul service registry...")
                 if self.consul_client:
                     services = self.consul_client.catalog.services()
-                    print(f"  ✓ Found {len(services)} services in Consul")
+                    logger.info(f"  ✓ Found {len(services)} services in Consul")
                 
                 # Step 3: Verify monitoring metrics
-                print("  3. Checking monitoring stack...")
+                logger.info("  3. Checking monitoring stack...")
                 prometheus_response = await client.get(
                     "http://localhost:10200/api/v1/query?query=up",
                     timeout=5.0
                 )
                 
                 if prometheus_response.status_code == 200:
-                    print("  ✓ Prometheus metrics available")
+                    logger.info("  ✓ Prometheus metrics available")
                 
                 return True
                 
         except Exception as e:
-            print(f"✗ End-to-end test failed: {e}")
+            logger.error(f"✗ End-to-end test failed: {e}")
         
         return False
     
     async def test_performance(self):
         """Test system performance"""
-        print("Testing System Performance")
-        print("-" * 40)
+        logger.info("Testing System Performance")
+        logger.info("-" * 40)
         
         # Test response times
         endpoints = [
@@ -340,46 +340,46 @@ class EnhancementTestSuite:
                     elapsed = (time.time() - start_time) * 1000
                     
                     if response.status_code in [200, 401]:  # 401 for auth-required endpoints
-                        print(f"✓ {name}: {elapsed:.2f}ms")
+                        logger.info(f"✓ {name}: {elapsed:.2f}ms")
                         self.results.append((f"{name} Response Time", elapsed < 1000))
                     else:
-                        print(f"✗ {name}: Status {response.status_code}")
+                        logger.info(f"✗ {name}: Status {response.status_code}")
                         self.results.append((f"{name} Response Time", False))
                         
                 except Exception as e:
-                    print(f"✗ {name}: Failed - {e}")
+                    logger.error(f"✗ {name}: Failed - {e}")
                     self.results.append((f"{name} Response Time", False))
         
-        print()
+        logger.info()
     
     def print_summary(self):
         """Print test summary"""
-        print("=" * 60)
-        print("Test Summary")
-        print("=" * 60)
+        logger.info("=" * 60)
+        logger.info("Test Summary")
+        logger.info("=" * 60)
         
         passed = sum(1 for _, result in self.results if result)
         total = len(self.results)
         percentage = (passed / total * 100) if total > 0 else 0
         
-        print(f"\nResults: {passed}/{total} passed ({percentage:.1f}%)\n")
+        logger.info(f"\nResults: {passed}/{total} passed ({percentage:.1f}%)\n")
         
         # Group results
-        print("Detailed Results:")
-        print("-" * 40)
+        logger.info("Detailed Results:")
+        logger.info("-" * 40)
         
         for test_name, result in self.results:
             status = "✓ PASS" if result else "✗ FAIL"
-            print(f"{status} - {test_name}")
+            logger.info(f"{status} - {test_name}")
         
-        print()
+        logger.info()
         
         if percentage >= 80:
-            print("🎉 System enhancement successful!")
+            logger.info("🎉 System enhancement successful!")
         elif percentage >= 60:
-            print("⚠️ System partially enhanced, some components need attention")
+            logger.info("⚠️ System partially enhanced, some components need attention")
         else:
-            print("❌ System enhancement incomplete, review failed components")
+            logger.error("❌ System enhancement incomplete, review failed components")
 
 async def main():
     """Main test execution"""

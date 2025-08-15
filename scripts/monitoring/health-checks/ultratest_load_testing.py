@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Load Testing Suite
 Tests system ability to handle 100+ concurrent users.
 """
@@ -94,7 +97,7 @@ class UltratestLoadValidator:
     
     def run_concurrent_load_test(self, num_users: int = 50, duration_seconds: int = 30) -> Dict[str, Any]:
         """Run concurrent load test with specified number of users"""
-        print(f"🚀 Running load test with {num_users} concurrent users for {duration_seconds} seconds...")
+        logger.info(f"🚀 Running load test with {num_users} concurrent users for {duration_seconds} seconds...")
         
         all_results = []
         test_start_time = time.time()
@@ -114,9 +117,9 @@ class UltratestLoadValidator:
                     user_results = future.result()
                     all_results.extend(user_results)
                     if user_id % 10 == 0:  # Progress indicator
-                        print(f"   User {user_id} completed...")
+                        logger.info(f"   User {user_id} completed...")
                 except Exception as e:
-                    print(f"   User {user_id} failed: {e}")
+                    logger.error(f"   User {user_id} failed: {e}")
         
         test_end_time = time.time()
         total_test_duration = test_end_time - test_start_time
@@ -200,13 +203,13 @@ class UltratestLoadValidator:
     
     def run_scalability_test(self) -> Dict[str, Any]:
         """Run incremental load test to find system limits"""
-        print("📈 Running scalability test...")
+        logger.info("📈 Running scalability test...")
         
         user_counts = [10, 25, 50, 75, 100]  # Progressive load
         scalability_results = {}
         
         for user_count in user_counts:
-            print(f"   Testing with {user_count} users...")
+            logger.info(f"   Testing with {user_count} users...")
             
             # Run shorter tests for scalability
             test_data = self.run_concurrent_load_test(user_count, 15)  # 15 second tests
@@ -221,98 +224,98 @@ class UltratestLoadValidator:
             
             # Stop if success rate drops below 80%
             if analysis.get('overall_success_rate', 0) < 80:
-                print(f"   Stopping scalability test - success rate dropped to {analysis.get('overall_success_rate', 0):.1f}%")
+                logger.info(f"   Stopping scalability test - success rate dropped to {analysis.get('overall_success_rate', 0):.1f}%")
                 break
         
         return scalability_results
     
     def generate_load_test_report(self, analysis: Dict[str, Any], scalability: Dict[str, Any]):
         """Generate comprehensive load test report"""
-        print("\n" + "=" * 80)
-        print("🚀 ULTRATEST LOAD TESTING REPORT")
-        print("=" * 80)
-        print(f"Test Execution Time: {datetime.now().isoformat()}")
+        logger.info("\n" + "=" * 80)
+        logger.info("🚀 ULTRATEST LOAD TESTING REPORT")
+        logger.info("=" * 80)
+        logger.info(f"Test Execution Time: {datetime.now().isoformat()}")
         
         if 'error' in analysis:
-            print(f"❌ Error: {analysis['error']}")
+            logger.error(f"❌ Error: {analysis['error']}")
             return False
         
         # Overall performance summary
-        print(f"\n📊 LOAD TEST PERFORMANCE SUMMARY:")
-        print("-" * 50)
-        print(f"Concurrent Users: {analysis.get('concurrent_users_achieved', 0)}")
-        print(f"Total Requests: {analysis.get('total_requests', 0)}")
-        print(f"Successful Requests: {analysis.get('successful_requests', 0)}")
-        print(f"Failed Requests: {analysis.get('failed_requests', 0)}")
-        print(f"Overall Success Rate: {analysis.get('overall_success_rate', 0):.1f}%")
-        print(f"Requests per Second: {analysis.get('requests_per_second', 0):.2f}")
-        print(f"Test Duration: {analysis.get('test_duration_seconds', 0):.1f} seconds")
+        logger.info(f"\n📊 LOAD TEST PERFORMANCE SUMMARY:")
+        logger.info("-" * 50)
+        logger.info(f"Concurrent Users: {analysis.get('concurrent_users_achieved', 0)}")
+        logger.info(f"Total Requests: {analysis.get('total_requests', 0)}")
+        logger.info(f"Successful Requests: {analysis.get('successful_requests', 0)}")
+        logger.error(f"Failed Requests: {analysis.get('failed_requests', 0)}")
+        logger.info(f"Overall Success Rate: {analysis.get('overall_success_rate', 0):.1f}%")
+        logger.info(f"Requests per Second: {analysis.get('requests_per_second', 0):.2f}")
+        logger.info(f"Test Duration: {analysis.get('test_duration_seconds', 0):.1f} seconds")
         
         # Response time analysis
         if 'avg_response_time_ms' in analysis:
-            print(f"\n⚡ RESPONSE TIME ANALYSIS:")
-            print("-" * 50)
-            print(f"Average Response Time: {analysis['avg_response_time_ms']:.2f}ms")
-            print(f"Median Response Time: {analysis.get('median_response_time_ms', 0):.2f}ms")
-            print(f"95th Percentile: {analysis.get('response_time_95th_percentile', 0):.2f}ms")
-            print(f"Min/Max Response Time: {analysis.get('min_response_time_ms', 0):.2f}ms / {analysis.get('max_response_time_ms', 0):.2f}ms")
-            print(f"Fast Responses (<50ms): {analysis.get('fast_responses_under_50ms', 0)} ({analysis.get('fast_response_rate', 0):.1f}%)")
+            logger.info(f"\n⚡ RESPONSE TIME ANALYSIS:")
+            logger.info("-" * 50)
+            logger.info(f"Average Response Time: {analysis['avg_response_time_ms']:.2f}ms")
+            logger.info(f"Median Response Time: {analysis.get('median_response_time_ms', 0):.2f}ms")
+            logger.info(f"95th Percentile: {analysis.get('response_time_95th_percentile', 0):.2f}ms")
+            logger.info(f"Min/Max Response Time: {analysis.get('min_response_time_ms', 0):.2f}ms / {analysis.get('max_response_time_ms', 0):.2f}ms")
+            logger.info(f"Fast Responses (<50ms): {analysis.get('fast_responses_under_50ms', 0)} ({analysis.get('fast_response_rate', 0):.1f}%)")
         
         # Endpoint-specific results
         endpoint_stats = analysis.get('endpoint_statistics', {})
         if endpoint_stats:
-            print(f"\n🎯 ENDPOINT PERFORMANCE:")
-            print("-" * 50)
+            logger.info(f"\n🎯 ENDPOINT PERFORMANCE:")
+            logger.info("-" * 50)
             for endpoint, stats in endpoint_stats.items():
                 success_rate = stats.get('success_rate', 0)
                 avg_response = stats.get('avg_response_time_ms', 0)
                 if avg_response:
-                    print(f"{endpoint:20} {success_rate:5.1f}% success, {avg_response:6.2f}ms avg")
+                    logger.info(f"{endpoint:20} {success_rate:5.1f}% success, {avg_response:6.2f}ms avg")
                 else:
-                    print(f"{endpoint:20} {success_rate:5.1f}% success, FAILED")
+                    logger.error(f"{endpoint:20} {success_rate:5.1f}% success, FAILED")
         
         # Scalability results
         if scalability:
-            print(f"\n📈 SCALABILITY ANALYSIS:")
-            print("-" * 50)
+            logger.info(f"\n📈 SCALABILITY ANALYSIS:")
+            logger.info("-" * 50)
             for user_count, metrics in scalability.items():
                 success_rate = metrics.get('success_rate', 0)
                 avg_response = metrics.get('avg_response_time', 0)
                 rps = metrics.get('requests_per_second', 0)
-                print(f"{user_count:3d} users: {success_rate:5.1f}% success, {avg_response:6.2f}ms avg, {rps:5.2f} req/s")
+                logger.info(f"{user_count:3d} users: {success_rate:5.1f}% success, {avg_response:6.2f}ms avg, {rps:5.2f} req/s")
         
         # Target assessment
         target_100_users = analysis.get('concurrent_users_achieved', 0) >= 100
         acceptable_success_rate = analysis.get('overall_success_rate', 0) >= 90
         reasonable_response_time = analysis.get('avg_response_time_ms', float('inf')) <= 100  # 100ms under load is reasonable
         
-        print(f"\n🎯 LOAD TESTING TARGETS:")
-        print("-" * 50)
-        print(f"Target: Handle 100+ concurrent users")
-        print(f"Achieved: {analysis.get('concurrent_users_achieved', 0)} users")
+        logger.info(f"\n🎯 LOAD TESTING TARGETS:")
+        logger.info("-" * 50)
+        logger.info(f"Target: Handle 100+ concurrent users")
+        logger.info(f"Achieved: {analysis.get('concurrent_users_achieved', 0)} users")
         if target_100_users:
-            print("✅ 100+ USER TARGET ACHIEVED")
+            logger.info("✅ 100+ USER TARGET ACHIEVED")
         else:
-            print("❌ Did not reach 100 concurrent users")
+            logger.info("❌ Did not reach 100 concurrent users")
         
-        print(f"\nTarget: >90% success rate under load")
-        print(f"Achieved: {analysis.get('overall_success_rate', 0):.1f}% success rate")
+        logger.info(f"\nTarget: >90% success rate under load")
+        logger.info(f"Achieved: {analysis.get('overall_success_rate', 0):.1f}% success rate")
         if acceptable_success_rate:
-            print("✅ SUCCESS RATE TARGET ACHIEVED")
+            logger.info("✅ SUCCESS RATE TARGET ACHIEVED")
         else:
-            print("❌ Success rate below 90%")
+            logger.info("❌ Success rate below 90%")
         
-        print(f"\nTarget: Reasonable response times under load (<100ms)")
+        logger.info(f"\nTarget: Reasonable response times under load (<100ms)")
         if 'avg_response_time_ms' in analysis:
-            print(f"Achieved: {analysis['avg_response_time_ms']:.2f}ms average")
+            logger.info(f"Achieved: {analysis['avg_response_time_ms']:.2f}ms average")
             if reasonable_response_time:
-                print("✅ RESPONSE TIME TARGET ACHIEVED")
+                logger.info("✅ RESPONSE TIME TARGET ACHIEVED")
             else:
-                print("❌ Response times too high under load")
+                logger.info("❌ Response times too high under load")
         
         # Overall assessment
-        print(f"\n🏆 LOAD TESTING ASSESSMENT:")
-        print("-" * 50)
+        logger.info(f"\n🏆 LOAD TESTING ASSESSMENT:")
+        logger.info("-" * 50)
         
         achievements = []
         issues = []
@@ -335,31 +338,31 @@ class UltratestLoadValidator:
         if analysis.get('requests_per_second', 0) >= 10:
             achievements.append(f"Good throughput ({analysis['requests_per_second']:.2f} req/s)")
         
-        print("🎉 ACHIEVEMENTS:")
+        logger.info("🎉 ACHIEVEMENTS:")
         for achievement in achievements:
-            print(f"   ✅ {achievement}")
+            logger.info(f"   ✅ {achievement}")
         
         if issues:
-            print("\n⚠️  AREAS FOR IMPROVEMENT:")
+            logger.info("\n⚠️  AREAS FOR IMPROVEMENT:")
             for issue in issues:
-                print(f"   ❌ {issue}")
+                logger.info(f"   ❌ {issue}")
         
         success_count = len(achievements)
         total_criteria = len(achievements) + len(issues)
         success_rate = (success_count / total_criteria * 100) if total_criteria > 0 else 0
         
-        print(f"\n📈 Load Testing Success Rate: {success_rate:.1f}%")
+        logger.info(f"\n📈 Load Testing Success Rate: {success_rate:.1f}%")
         
         return target_100_users and acceptable_success_rate and success_rate >= 75
 
 def main():
     """Run comprehensive load testing validation"""
-    print("🚀 Starting ULTRATEST Load Testing Validation")
+    logger.info("🚀 Starting ULTRATEST Load Testing Validation")
     
     validator = UltratestLoadValidator()
     
     # Run main load test with 100+ users
-    print("\n🔥 Primary load test with 100 concurrent users...")
+    logger.info("\n🔥 Primary load test with 100 concurrent users...")
     test_data = validator.run_concurrent_load_test(100, 30)
     analysis = validator.analyze_load_test_results(test_data)
     
@@ -380,13 +383,13 @@ def main():
     with open('/opt/sutazaiapp/tests/ultratest_load_testing_report.json', 'w') as f:
         json.dump(full_results, f, indent=2, default=str)
     
-    print(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_load_testing_report.json")
+    logger.info(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_load_testing_report.json")
     
     if success:
-        print("\n🎉 LOAD TESTING VALIDATION SUCCESSFUL!")
+        logger.info("\n🎉 LOAD TESTING VALIDATION SUCCESSFUL!")
         return 0
     else:
-        print("\n⚠️  LOAD TESTING NEEDS IMPROVEMENT")
+        logger.info("\n⚠️  LOAD TESTING NEEDS IMPROVEMENT")
         return 1
 
 if __name__ == "__main__":

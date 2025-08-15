@@ -2,6 +2,9 @@
 """Debug safety path checking"""
 
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 protected_paths = {'/etc', '/boot', '/usr', '/bin', '/sbin', '/lib', '/proc', '/sys', '/dev'}
 user_protected_patterns = {'/home/*/Documents', '/home/*/Desktop', '/home/*/Pictures'}
@@ -9,12 +12,12 @@ user_protected_patterns = {'/home/*/Documents', '/home/*/Desktop', '/home/*/Pict
 def _is_safe_path(path: str) -> bool:
     """Check if a path is safe to analyze/modify"""
     path = os.path.abspath(path)
-    print(f"Checking path: {path}")
+    logger.debug(f"Checking path: {path}")
     
     # Never touch protected system paths
     for protected in protected_paths:
         if path.startswith(protected):
-            print(f"  Blocked by protected path: {protected}")
+            logger.debug(f"  Blocked by protected path: {protected}")
             return False
     
     # Check user protected patterns
@@ -22,13 +25,13 @@ def _is_safe_path(path: str) -> bool:
         if '*' in pattern:
             pattern_parts = pattern.split('*')
             if len(pattern_parts) == 2 and path.startswith(pattern_parts[0]) and path.endswith(pattern_parts[1]):
-                print(f"  Blocked by pattern: {pattern}")
+                logger.debug(f"  Blocked by pattern: {pattern}")
                 return False
         elif path.startswith(pattern):
-            print(f"  Blocked by pattern: {pattern}")
+            logger.debug(f"  Blocked by pattern: {pattern}")
             return False
     
-    print(f"  Path is safe: True")
+    logger.debug(f"  Path is safe: True")
     return True
 
 test_paths = [
@@ -40,8 +43,7 @@ test_paths = [
     '/home/user/test'
 ]
 
-print("Testing path safety:")
+logger.info("Testing path safety:")
 for path in test_paths:
     result = _is_safe_path(path)
-    print(f"{path}: {'SAFE' if result else 'BLOCKED'}")
-    print()
+    logger.info(f"{path}: {'SAFE' if result else 'BLOCKED'}")

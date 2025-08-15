@@ -638,10 +638,10 @@ async def main():
     workflow.save_report(report, args.output)
     
     # Print summary
-    print(f"\nAnalysis complete!")
-    print(f"Total issues found: {len(report.issues)}")
-    print(f"Critical issues: {len([i for i in report.issues if i.severity == 'critical'])}")
-    print(f"Report saved to: {args.output}")
+    logger.info(f"\nAnalysis complete!")
+    logger.info(f"Total issues found: {len(report.issues)}")
+    logger.error(f"Critical issues: {len([i for i in report.issues if i.severity == 'critical'])}")
+    logger.info(f"Report saved to: {args.output}")
 
 
 if __name__ == "__main__":

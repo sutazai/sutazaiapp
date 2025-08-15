@@ -460,10 +460,10 @@ def main():
     with open(output_file, 'w') as f:
         json.dump(results, f, indent=2)
     
-    print(f"\n🔍 MONITORING SYSTEM VALIDATION RESULTS")
-    print(f"Results saved to: {output_file}")
-    print(f"Monitoring Systems Health: {results['monitoring_validation_summary']['success_rate']:.1f}%")
-    print(f"Tests Passed: {results['monitoring_validation_summary']['passed_tests']}/{results['monitoring_validation_summary']['total_monitoring_tests']}")
+    logger.info(f"\n🔍 MONITORING SYSTEM VALIDATION RESULTS")
+    logger.info(f"Results saved to: {output_file}")
+    logger.info(f"Monitoring Systems Health: {results['monitoring_validation_summary']['success_rate']:.1f}%")
+    logger.info(f"Tests Passed: {results['monitoring_validation_summary']['passed_tests']}/{results['monitoring_validation_summary']['total_monitoring_tests']}")
     
     return results
 

@@ -257,32 +257,32 @@ class LoadTestRunner:
     
     def _print_load_test_summary(self, analysis, total_time):
         """Print comprehensive load testing summary"""
-        print("\n" + "=" * 80)
-        print("🎯 ULTRA-CRITICAL LOAD TESTING SUMMARY")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.error("🎯 ULTRA-CRITICAL LOAD TESTING SUMMARY")
+        logger.info("=" * 80)
         
         # Overall results
         sla_data = analysis["sla_compliance"]
-        print(f"📊 SLA Compliance: {sla_data['sla_compliant']}/{sla_data['total_tests']} ({sla_data['compliance_rate']:.1f}%)")
-        print(f"⏱️  Total Execution Time: {total_time:.1f} seconds")
-        print(f"{'✅ PASS' if sla_data['passed'] else '❌ FAIL'} - Overall Load Testing Assessment")
+        logger.info(f"📊 SLA Compliance: {sla_data['sla_compliant']}/{sla_data['total_tests']} ({sla_data['compliance_rate']:.1f}%)")
+        logger.info(f"⏱️  Total Execution Time: {total_time:.1f} seconds")
+        logger.info(f"{'✅ PASS' if sla_data['passed'] else '❌ FAIL'} - Overall Load Testing Assessment")
         
         # Performance metrics
         perf = analysis["performance_summary"]
-        print(f"\n📈 Performance Metrics:")
-        print(f"  • Average Response Time: {perf['avg_response_time_ms']:.1f}ms")
-        print(f"  • Average Success Rate: {perf['avg_success_rate']:.1f}%")
-        print(f"  • Average Throughput: {perf['avg_throughput_rps']:.1f} RPS")
-        print(f"  • Peak Memory Usage: {perf['peak_memory_mb']:.1f}MB")
+        logger.info(f"\n📈 Performance Metrics:")
+        logger.info(f"  • Average Response Time: {perf['avg_response_time_ms']:.1f}ms")
+        logger.info(f"  • Average Success Rate: {perf['avg_success_rate']:.1f}%")
+        logger.info(f"  • Average Throughput: {perf['avg_throughput_rps']:.1f} RPS")
+        logger.info(f"  • Peak Memory Usage: {perf['peak_memory_mb']:.1f}MB")
         
         # Critical findings
         if analysis["critical_findings"]:
-            print(f"\n🚨 Critical Findings ({len(analysis['critical_findings'])}):")
+            logger.error(f"\n🚨 Critical Findings ({len(analysis['critical_findings'])}):")
             for finding in analysis["critical_findings"]:
                 severity_emoji = "🔴" if finding["severity"] == "HIGH" else "🟡"
-                print(f"  {severity_emoji} [{finding['severity']}] {finding['type']}: {finding['description']}")
+                logger.info(f"  {severity_emoji} [{finding['severity']}] {finding['type']}: {finding['description']}")
         else:
-            print("\n✅ No Critical Issues Detected")
+            logger.error("\n✅ No Critical Issues Detected")
         
         # Top performing endpoints
         endpoint_data = analysis["endpoint_analysis"]
@@ -292,19 +292,19 @@ class LoadTestRunner:
             reverse=True
         )[:5]
         
-        print(f"\n🏆 Top Performing Endpoints:")
+        logger.info(f"\n🏆 Top Performing Endpoints:")
         for endpoint, data in top_performers:
-            print(f"  • {endpoint}: {data['max_successful_load']} max concurrent users")
+            logger.info(f"  • {endpoint}: {data['max_successful_load']} max concurrent users")
         
         # Recommendations
         if analysis["recommendations"]:
-            print(f"\n💡 Key Recommendations ({len(analysis['recommendations'])}:")
+            logger.info(f"\n💡 Key Recommendations ({len(analysis['recommendations'])}:")
             for i, rec in enumerate(analysis["recommendations"][:5], 1):  # Show top 5
-                print(f"  {i}. {rec}")
+                logger.info(f"  {i}. {rec}")
             if len(analysis["recommendations"]) > 5:
-                print(f"  ... and {len(analysis['recommendations']) - 5} more recommendations in the full report")
+                logger.info(f"  ... and {len(analysis['recommendations']) - 5} more recommendations in the full report")
         
-        print("=" * 80)
+        logger.info("=" * 80)
 
 async def main():
     """Main execution function"""

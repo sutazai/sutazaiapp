@@ -630,8 +630,8 @@ def main():
     # Initialize remediator
     remediator = AutoRemediator(args.root)
     
-    print("🔧 AUTO-REMEDIATION SYSTEM")
-    print("=" * 60)
+    logger.info("🔧 AUTO-REMEDIATION SYSTEM")
+    logger.info("=" * 60)
     
     fixed_count = 0
     failed_count = 0
@@ -639,21 +639,21 @@ def main():
     for violation in report.get("violations", []):
         if violation.get("auto_fixable", False):
             if args.dry_run:
-                print(f"Would fix: Rule {violation['rule']} - {violation['description']}")
+                logger.info(f"Would fix: Rule {violation['rule']} - {violation['description']}")
             else:
                 success, message = remediator.remediate_violation(violation)
                 if success:
                     fixed_count += 1
-                    print(f"✅ Fixed: {message}")
+                    logger.info(f"✅ Fixed: {message}")
                 else:
                     failed_count += 1
-                    print(f"❌ Failed: {message}")
+                    logger.error(f"❌ Failed: {message}")
     
-    print("\n" + "=" * 60)
-    print(f"Summary: {fixed_count} fixed, {failed_count} failed")
+    logger.info("\n" + "=" * 60)
+    logger.error(f"Summary: {fixed_count} fixed, {failed_count} failed")
     
     if args.dry_run:
-        print("(Dry run - no changes made)")
+        logger.info("(Dry run - no changes made)")
 
 
 if __name__ == "__main__":

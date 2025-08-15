@@ -23,8 +23,8 @@ try:
     import requests
     from prometheus_client import CollectorRegistry, Gauge, Counter, Histogram, generate_latest
 except ImportError as e:
-    print(f"Missing required dependency: {e}")
-    print("Install with: pip install docker psutil requests prometheus-client")
+    logger.info(f"Missing required dependency: {e}")
+    logger.info("Install with: pip install docker psutil requests prometheus-client")
     sys.exit(1)
 
 # Configure logging
@@ -435,56 +435,56 @@ class SutazAIMonitor:
     
     def print_summary(self, report: Dict[str, Any]):
         """Print monitoring summary to console"""
-        print("\n" + "="*80)
-        print(f"🔍 SutazAI Deployment Monitor - {report['timestamp']}")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info(f"🔍 SutazAI Deployment Monitor - {report['timestamp']}")
+        logger.info("="*80)
         
         # Overall health
         health_score = report['overall_health']['score']
         health_icon = "🟢" if health_score >= 90 else "🟡" if health_score >= 70 else "🔴"
-        print(f"{health_icon} Overall Health Score: {health_score:.1f}%")
-        print(f"   Services: {report['overall_health']['healthy_services']}/{report['overall_health']['total_services']} healthy")
-        print(f"   Containers: {report['overall_health']['running_containers']}/{report['overall_health']['total_containers']} running")
+        logger.info(f"{health_icon} Overall Health Score: {health_score:.1f}%")
+        logger.info(f"   Services: {report['overall_health']['healthy_services']}/{report['overall_health']['total_services']} healthy")
+        logger.info(f"   Containers: {report['overall_health']['running_containers']}/{report['overall_health']['total_containers']} running")
         
         # Service Mesh Status
-        print(f"\n🕸️  Service Mesh Components:")
+        logger.info(f"\n🕸️  Service Mesh Components:")
         for service, status in report['service_mesh'].items():
             icon = "✅" if status.get('healthy') else "❌"
             rt = status.get('response_time', 0) * 1000
-            print(f"   {icon} {service:<20} ({rt:.1f}ms) - {status.get('status_message', 'Unknown')}")
+            logger.info(f"   {icon} {service:<20} ({rt:.1f}ms) - {status.get('status_message', 'Unknown')}")
         
         # Core Services Status
-        print(f"\n⚙️  Core Services:")
+        logger.info(f"\n⚙️  Core Services:")
         for service, status in report['core_services'].items():
             if status:  # Only show if we have status data
                 icon = "✅" if status.get('healthy') else "❌"
                 rt = status.get('response_time', 0) * 1000
                 stype = status.get('type', 'unknown')
-                print(f"   {icon} {service:<30} ({stype}) - {rt:.1f}ms")
+                logger.info(f"   {icon} {service:<30} ({stype}) - {rt:.1f}ms")
         
         # System Resources
         sys_stats = report['system_resources']
         if sys_stats:
-            print(f"\n📊 System Resources:")
-            print(f"   CPU: {sys_stats.get('cpu_percent', 0):.1f}%")
+            logger.info(f"\n📊 System Resources:")
+            logger.info(f"   CPU: {sys_stats.get('cpu_percent', 0):.1f}%")
             if 'memory' in sys_stats:
                 mem = sys_stats['memory']
-                print(f"   Memory: {mem.get('percent', 0):.1f}% ({mem.get('used', 0) / 1024**3:.1f}GB / {mem.get('total', 0) / 1024**3:.1f}GB)")
+                logger.info(f"   Memory: {mem.get('percent', 0):.1f}% ({mem.get('used', 0) / 1024**3:.1f}GB / {mem.get('total', 0) / 1024**3:.1f}GB)")
             
             # Show disk usage for main partitions
             for mount, disk in sys_stats.get('disk_usage', {}).items():
                 if mount in ['/', '/var', '/opt']:
-                    print(f"   Disk {mount}: {disk['percent']:.1f}% ({disk['used'] / 1024**3:.1f}GB / {disk['total'] / 1024**3:.1f}GB)")
+                    logger.info(f"   Disk {mount}: {disk['percent']:.1f}% ({disk['used'] / 1024**3:.1f}GB / {disk['total'] / 1024**3:.1f}GB)")
         
         # Alerts
         if report['resource_alerts'] or report['alerts']:
-            print(f"\n🚨 Active Alerts:")
+            logger.info(f"\n🚨 Active Alerts:")
             for alert in report['resource_alerts']:
-                print(f"   ⚠️  {alert}")
+                logger.info(f"   ⚠️  {alert}")
             for alert in report['alerts'][-3:]:  # Last 3 service alerts
-                print(f"   🔥 {alert.get('service', 'Unknown')}: {alert.get('message', 'No message')}")
+                logger.info(f"   🔥 {alert.get('service', 'Unknown')}: {alert.get('message', 'No message')}")
         
-        print("="*80)
+        logger.info("="*80)
     
     async def run_monitoring_cycle(self):
         """Run one complete monitoring cycle"""

@@ -559,11 +559,11 @@ class BulletproofQuickTest:
 
 def main():
     """Run the bulletproof quick test suite"""
-    print("🔧 Hardware Resource Optimizer - Bulletproof Quick Test Suite")
-    print("="*70)
-    print("Target: Complete all tests in under 30 seconds")
-    print("Focus: Verify actual system effects, not just API responses")
-    print("="*70)
+    logger.info("🔧 Hardware Resource Optimizer - Bulletproof Quick Test Suite")
+    logger.info("="*70)
+    logger.info("Target: Complete all tests in under 30 seconds")
+    logger.info("Focus: Verify actual system effects, not just API responses")
+    logger.info("="*70)
     
     # Run tests
     suite = BulletproofQuickTest()
@@ -578,23 +578,23 @@ def main():
         json.dump(results, f, indent=2)
         
     # Print summary
-    print("\n" + "="*70)
-    print("📊 BULLETPROOF TEST SUMMARY")
-    print("="*70)
-    print(report)
-    print(f"\nDetailed results: {results_file}")
-    print(f"Duration: {results['duration_seconds']}s")
-    print(f"Under 30s Target: {'✅ YES' if results['under_30_seconds'] else '❌ NO'}")
+    logger.info("\n" + "="*70)
+    logger.info("📊 BULLETPROOF TEST SUMMARY")
+    logger.info("="*70)
+    logger.info(report)
+    logger.info(f"\nDetailed results: {results_file}")
+    logger.info(f"Duration: {results['duration_seconds']}s")
+    logger.info(f"Under 30s Target: {'✅ YES' if results['under_30_seconds'] else '❌ NO'}")
     
     # Return appropriate exit code
     if results['overall_status'] == "PASS":
-        print("\n🎉 All tests passed! Agent is bulletproof.")
+        logger.info("\n🎉 All tests passed! Agent is bulletproof.")
         return 0
     elif results['overall_status'] == "CRITICAL_FAIL":
-        print("\n🚨 Critical failure! Agent is not functioning.")
+        logger.error("\n🚨 Critical failure! Agent is not functioning.")
         return 2
     else:
-        print(f"\n⚠️  {results['failed']} tests failed. Agent needs attention.")
+        logger.error(f"\n⚠️  {results['failed']} tests failed. Agent needs attention.")
         return 1
 
 

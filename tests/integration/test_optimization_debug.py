@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA DEBUGGING TEST for SutazAI Frontend Optimization
 Comprehensive validation of optimization implementation without requiring dependencies
 """
@@ -28,7 +31,7 @@ class UltraFrontendDebugger:
             "component": component, 
             "message": message
         })
-        print(f"❌ [{severity}] {component}: {message}")
+        logger.info(f"❌ [{severity}] {component}: {message}")
     
     def log_warning(self, component: str, message: str):
         """Log warnings"""
@@ -36,7 +39,7 @@ class UltraFrontendDebugger:
             "component": component,
             "message": message
         })
-        print(f"⚠️  [WARNING] {component}: {message}")
+        logger.warning(f"⚠️  [WARNING] {component}: {message}")
     
     def log_success(self, component: str, message: str):
         """Log successes"""
@@ -44,7 +47,7 @@ class UltraFrontendDebugger:
             "component": component,
             "message": message
         })
-        print(f"✅ [SUCCESS] {component}: {message}")
+        logger.info(f"✅ [SUCCESS] {component}: {message}")
 
     def test_file_exists(self, file_path: str, description: str) -> bool:
         """Test if optimization file exists"""
@@ -281,11 +284,11 @@ class UltraFrontendDebugger:
 
     def run_comprehensive_debug(self) -> Dict[str, Any]:
         """Run all debugging tests"""
-        print("🚀 Starting ULTRA FRONTEND DEBUGGING...")
-        print("=" * 60)
+        logger.debug("🚀 Starting ULTRA FRONTEND DEBUGGING...")
+        logger.info("=" * 60)
         
         # Test 1: File existence
-        print("\n📁 Testing File Existence...")
+        logger.info("\n📁 Testing File Existence...")
         files_exist = {
             "app_optimized.py": self.test_file_exists("app_optimized.py", "Optimized App"),
             "requirements_optimized.txt": self.test_file_exists("requirements_optimized.txt", "Optimized Requirements"),
@@ -295,7 +298,7 @@ class UltraFrontendDebugger:
         }
         
         # Test 2: Syntax validation
-        print("\n🐍 Testing Python Syntax...")
+        logger.info("\n🐍 Testing Python Syntax...")
         syntax_valid = {}
         if files_exist["app_optimized.py"]:
             syntax_valid["app_optimized.py"] = self.test_python_syntax("app_optimized.py", "Optimized App")
@@ -307,7 +310,7 @@ class UltraFrontendDebugger:
             syntax_valid["lazy_loader.py"] = self.test_python_syntax("components/lazy_loader.py", "Lazy Loader")
         
         # Test 3: Import analysis
-        print("\n📦 Analyzing Import Structure...")
+        logger.info("\n📦 Analyzing Import Structure...")
         import_analysis = {}
         if syntax_valid.get("app_optimized.py", False):
             import_analysis["app_optimized"] = self.analyze_import_structure("app_optimized.py", "Optimized App")
@@ -315,47 +318,47 @@ class UltraFrontendDebugger:
             import_analysis["api_client"] = self.analyze_import_structure("utils/optimized_api_client.py", "API Client")
         
         # Test 4: Requirements validation
-        print("\n📋 Validating Requirements...")
+        logger.info("\n📋 Validating Requirements...")
         requirements_validation = self.validate_requirements_file("requirements_optimized.txt")
         
         # Test 5: Optimization features
-        print("\n⚡ Analyzing Optimization Features...")
+        logger.info("\n⚡ Analyzing Optimization Features...")
         optimization_features = {}
         if files_exist["app_optimized.py"]:
             optimization_features = self.analyze_optimization_features("app_optimized.py")
         
         # Test 6: Component structure
-        print("\n🏗️ Checking Component Structure...")
+        logger.info("\n🏗️ Checking Component Structure...")
         structure_valid = self.check_component_structure()
         
         # Test 7: Circular imports
-        print("\n🔄 Checking for Circular Imports...")
+        logger.info("\n🔄 Checking for Circular Imports...")
         no_circular_imports = self.validate_circular_imports()
         
         # Generate final report
-        print("\n" + "=" * 60)
-        print("📊 ULTRA DEBUGGING RESULTS")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.debug("📊 ULTRA DEBUGGING RESULTS")
+        logger.info("=" * 60)
         
         critical_issues = len([i for i in self.issues if i["severity"] == "CRITICAL"])
         error_issues = len([i for i in self.issues if i["severity"] == "ERROR"])
         total_warnings = len(self.warnings)
         total_successes = len(self.successes)
         
-        print(f"✅ Successes: {total_successes}")
-        print(f"⚠️  Warnings: {total_warnings}")
-        print(f"❌ Errors: {error_issues}")
-        print(f"🔥 Critical Issues: {critical_issues}")
+        logger.info(f"✅ Successes: {total_successes}")
+        logger.warning(f"⚠️  Warnings: {total_warnings}")
+        logger.error(f"❌ Errors: {error_issues}")
+        logger.error(f"🔥 Critical Issues: {critical_issues}")
         
         overall_score = (total_successes / (total_successes + total_warnings + error_issues + critical_issues)) * 100
-        print(f"\n🎯 Overall Health Score: {overall_score:.1f}%")
+        logger.info(f"\n🎯 Overall Health Score: {overall_score:.1f}%")
         
         if critical_issues == 0 and error_issues == 0:
-            print("🎉 OPTIMIZATION IMPLEMENTATION IS VALID!")
+            logger.info("🎉 OPTIMIZATION IMPLEMENTATION IS VALID!")
         elif critical_issues == 0:
-            print("✅ OPTIMIZATION IMPLEMENTATION IS FUNCTIONAL (with warnings)")
+            logger.warning("✅ OPTIMIZATION IMPLEMENTATION IS FUNCTIONAL (with warnings)")
         else:
-            print("❌ OPTIMIZATION IMPLEMENTATION HAS CRITICAL ISSUES")
+            logger.error("❌ OPTIMIZATION IMPLEMENTATION HAS CRITICAL ISSUES")
         
         return {
             "files_exist": files_exist,
@@ -380,7 +383,7 @@ def main():
     with open("frontend_debug_report.json", "w") as f:
         json.dump(results, f, indent=2)
     
-    print(f"\n📄 Detailed report saved to: frontend_debug_report.json")
+    logger.debug(f"\n📄 Detailed report saved to: frontend_debug_report.json")
     
     return results
 

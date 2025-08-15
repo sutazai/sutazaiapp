@@ -614,7 +614,7 @@ def main():
         
         # Generate and display report
         report = tester.generate_report()
-        print(report)
+        logger.info(report)
         
         # Save results to file
         os.makedirs('/opt/sutazaiapp/backend/tests/reports', exist_ok=True)

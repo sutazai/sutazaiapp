@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Comprehensive Test Coverage Validator for SutazAI System
 Ultra-thinking QA approach per Rules 1-19
 """
@@ -41,7 +44,7 @@ class TestCoverageAnalyzer:
         
     def analyze_codebase_structure(self):
         """Analyze the codebase structure for coverage potential"""
-        print("=== ULTRA-THINKING CODEBASE ANALYSIS ===")
+        logger.info("=== ULTRA-THINKING CODEBASE ANALYSIS ===")
         
         # Scan backend files
         backend_dir = os.path.join(os.path.dirname(__file__), '..', 'backend')
@@ -55,9 +58,9 @@ class TestCoverageAnalyzer:
         tests_dir = os.path.dirname(__file__)
         self.test_files = self._scan_python_files(tests_dir, only_tests=True)
         
-        print(f"📊 Backend Python files: {len(self.backend_files)}")
-        print(f"🤖 Agent Python files: {len(self.agent_files)}")
-        print(f"🧪 Test files: {len(self.test_files)}")
+        logger.info(f"📊 Backend Python files: {len(self.backend_files)}")
+        logger.info(f"🤖 Agent Python files: {len(self.agent_files)}")
+        logger.info(f"🧪 Test files: {len(self.test_files)}")
         
         return {
             'backend_files': len(self.backend_files),
@@ -94,7 +97,7 @@ class TestCoverageAnalyzer:
     
     def analyze_test_categories(self):
         """Ultra-thinking analysis of test category coverage"""
-        print("=== ULTRA-THINKING TEST CATEGORY ANALYSIS ===")
+        logger.info("=== ULTRA-THINKING TEST CATEGORY ANALYSIS ===")
         
         categories = {
             'unit': {'files': 0, 'test_methods': 0, 'coverage_potential': 'high'},
@@ -112,7 +115,7 @@ class TestCoverageAnalyzer:
             categories[category]['files'] += 1
             categories[category]['test_methods'] += test_methods
             
-            print(f"📝 {os.path.basename(test_file)}: {category.upper()} ({test_methods} test methods)")
+            logger.info(f"📝 {os.path.basename(test_file)}: {category.upper()} ({test_methods} test methods)")
         
         self.coverage_report['test_categories'] = categories
         return categories
@@ -152,12 +155,12 @@ class TestCoverageAnalyzer:
             
             return test_methods
         except Exception as e:
-            print(f"⚠️ Error analyzing {file_path}: {e}")
+            logger.error(f"⚠️ Error analyzing {file_path}: {e}")
             return 0
     
     def analyze_system_health(self):
         """Check if the SutazAI system is running for integration tests"""
-        print("=== ULTRA-THINKING SYSTEM HEALTH CHECK ===")
+        logger.info("=== ULTRA-THINKING SYSTEM HEALTH CHECK ===")
         
         health_endpoints = [
             'http://localhost:10010/health',  # Backend
@@ -178,17 +181,17 @@ class TestCoverageAnalyzer:
                 if response.status == 200:
                     if 'localhost:10010' in endpoint:
                         system_status['backend_healthy'] = True
-                        print("✅ Backend API: HEALTHY")
+                        logger.info("✅ Backend API: HEALTHY")
                     elif 'localhost:10011' in endpoint:
                         system_status['frontend_accessible'] = True  
-                        print("✅ Frontend: ACCESSIBLE")
+                        logger.info("✅ Frontend: ACCESSIBLE")
                     elif 'localhost:10104' in endpoint:
                         system_status['ollama_accessible'] = True
-                        print("✅ Ollama: ACCESSIBLE")
+                        logger.info("✅ Ollama: ACCESSIBLE")
                 else:
-                    print(f"⚠️ {endpoint}: Status {response.status}")
+                    logger.info(f"⚠️ {endpoint}: Status {response.status}")
             except Exception as e:
-                print(f"❌ {endpoint}: {e}")
+                logger.info(f"❌ {endpoint}: {e}")
         
         # Determine overall health
         healthy_services = sum([
@@ -204,14 +207,14 @@ class TestCoverageAnalyzer:
         else:
             system_status['overall_health'] = 'unhealthy'
             
-        print(f"🏥 Overall System Health: {system_status['overall_health'].upper()}")
+        logger.info(f"🏥 Overall System Health: {system_status['overall_health'].upper()}")
         
         self.coverage_report['system_status'] = system_status
         return system_status
     
     def calculate_coverage_potential(self):
         """Ultra-thinking coverage potential analysis"""
-        print("=== ULTRA-THINKING COVERAGE POTENTIAL ANALYSIS ===")
+        logger.info("=== ULTRA-THINKING COVERAGE POTENTIAL ANALYSIS ===")
         
         structure = self.analyze_codebase_structure()
         categories = self.coverage_report.get('test_categories', {})
@@ -249,9 +252,9 @@ class TestCoverageAnalyzer:
                 
             coverage_potential = min(100, base_coverage + category_bonus + infrastructure_bonus)
         
-        print(f"📊 Coverage Potential: {coverage_potential:.1f}%")
-        print(f"🎯 Target Coverage: 80%")
-        print(f"📈 Gap to Target: {max(0, 80 - coverage_potential):.1f}%")
+        logger.info(f"📊 Coverage Potential: {coverage_potential:.1f}%")
+        logger.info(f"🎯 Target Coverage: 80%")
+        logger.info(f"📈 Gap to Target: {max(0, 80 - coverage_potential):.1f}%")
         
         achievable_80_percent = coverage_potential >= 80
         
@@ -270,7 +273,7 @@ class TestCoverageAnalyzer:
     
     def generate_recommendations(self):
         """Ultra-thinking QA recommendations"""
-        print("=== ULTRA-THINKING QA RECOMMENDATIONS ===")
+        logger.info("=== ULTRA-THINKING QA RECOMMENDATIONS ===")
         
         recommendations = []
         coverage = self.coverage_report.get('coverage_analysis', {})
@@ -314,20 +317,20 @@ class TestCoverageAnalyzer:
         self.coverage_report['recommendations'] = recommendations
         
         for i, rec in enumerate(recommendations, 1):
-            print(f"  {i}. {rec}")
+            logger.info(f"  {i}. {rec}")
         
         return recommendations
     
     def run_sample_tests(self):
         """Run sample tests to validate infrastructure"""
-        print("=== ULTRA-THINKING SAMPLE TEST EXECUTION ===")
+        logger.info("=== ULTRA-THINKING SAMPLE TEST EXECUTION ===")
         
         # Test 1: Basic system health
         try:
             response = urllib.request.urlopen('http://localhost:10010/health', timeout=5)
-            print("✅ Backend health check: PASSED")
+            logger.info("✅ Backend health check: PASSED")
         except Exception as e:
-            print(f"❌ Backend health check: FAILED ({e})")
+            logger.error(f"❌ Backend health check: FAILED ({e})")
         
         # Test 2: Basic Python import test
         try:
@@ -338,9 +341,9 @@ class TestCoverageAnalyzer:
             
             # Test if we can import core modules
             from app.core.config import settings
-            print("✅ Backend config import: PASSED")
+            logger.info("✅ Backend config import: PASSED")
         except Exception as e:
-            print(f"❌ Backend config import: FAILED ({e})")
+            logger.error(f"❌ Backend config import: FAILED ({e})")
         
         # Test 3: Mock-based unit test
         try:
@@ -348,9 +351,9 @@ class TestCoverageAnalyzer:
             mock_function = Mock(return_value='test_result')
             result = mock_function()
             assert result == 'test_result'
-            print("✅ Mock-based testing: PASSED")
+            logger.info("✅ Mock-based testing: PASSED")
         except Exception as e:
-            print(f"❌ Mock-based testing: FAILED ({e})")
+            logger.error(f"❌ Mock-based testing: FAILED ({e})")
         
         # Test 4: Async test capability
         try:
@@ -360,15 +363,15 @@ class TestCoverageAnalyzer:
             
             result = asyncio.run(sample_async_test())
             assert result is True
-            print("✅ Async test support: PASSED")
+            logger.info("✅ Async test support: PASSED")
         except Exception as e:
-            print(f"❌ Async test support: FAILED ({e})")
+            logger.error(f"❌ Async test support: FAILED ({e})")
         
         return True
     
     def generate_comprehensive_report(self):
         """Generate the comprehensive test coverage validation report"""
-        print("=== GENERATING COMPREHENSIVE REPORT ===")
+        logger.info("=== GENERATING COMPREHENSIVE REPORT ===")
         
         # Run all analyses
         self.analyze_codebase_structure()
@@ -398,7 +401,7 @@ class ComprehensiveTestRunner:
     
     def run_basic_health_tests(self):
         """Run basic health tests using urllib"""
-        print("=== RUNNING BASIC HEALTH TESTS ===")
+        logger.info("=== RUNNING BASIC HEALTH TESTS ===")
         
         tests = {
             'backend_health': 'http://localhost:10010/health',
@@ -415,26 +418,26 @@ class ComprehensiveTestRunner:
                     'status_code': response.status,
                     'accessible': True
                 }
-                print(f"✅ {test_name}: PASSED")
+                logger.info(f"✅ {test_name}: PASSED")
             except Exception as e:
                 results[test_name] = {
                     'status': 'FAILED', 
                     'error': str(e),
                     'accessible': False
                 }
-                print(f"❌ {test_name}: FAILED ({e})")
+                logger.error(f"❌ {test_name}: FAILED ({e})")
         
         return results
 
 
 def main():
     """Main test coverage validation function"""
-    print("🎯 SUTAZAI TEST COVERAGE VALIDATION")
-    print("=" * 60)
-    print("QA Team Lead: Senior QA with 15+ years experience")
-    print("Approach: Ultra-thinking with all architects")
-    print("Target: 80% test coverage validation")
-    print("=" * 60)
+    logger.info("🎯 SUTAZAI TEST COVERAGE VALIDATION")
+    logger.info("=" * 60)
+    logger.info("QA Team Lead: Senior QA with 15+ years experience")
+    logger.info("Approach: Ultra-thinking with all architects")
+    logger.info("Target: 80% test coverage validation")
+    logger.info("=" * 60)
     
     # Initialize ultra-thinking analyzer
     analyzer = TestCoverageAnalyzer()
@@ -455,37 +458,37 @@ def main():
     with open(report_file, 'w') as f:
         json.dump(report, f, indent=2)
     
-    print(f"\n📊 Comprehensive report saved: {report_file}")
+    logger.info(f"\n📊 Comprehensive report saved: {report_file}")
     
     # Print executive summary
-    print("\n" + "=" * 60)
-    print("📋 EXECUTIVE SUMMARY")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("📋 EXECUTIVE SUMMARY")
+    logger.info("=" * 60)
     
     coverage = report['coverage_analysis']
-    print(f"📈 Current Coverage Potential: {coverage['current_potential']:.1f}%")
-    print(f"🎯 Target Coverage: {coverage['target_coverage']}%")
-    print(f"📊 Gap to Target: {coverage['gap_to_target']:.1f}%")
-    print(f"✅ 80% Target Achievable: {'YES' if coverage['achievable_80_percent'] else 'NO'}")
+    logger.info(f"📈 Current Coverage Potential: {coverage['current_potential']:.1f}%")
+    logger.info(f"🎯 Target Coverage: {coverage['target_coverage']}%")
+    logger.info(f"📊 Gap to Target: {coverage['gap_to_target']:.1f}%")
+    logger.info(f"✅ 80% Target Achievable: {'YES' if coverage['achievable_80_percent'] else 'NO'}")
     
     system_status = report['system_status']['overall_health']
-    print(f"🏥 System Health: {system_status.upper()}")
+    logger.info(f"🏥 System Health: {system_status.upper()}")
     
-    print(f"\n📝 Total Test Files: {report['test_categories']['unit']['files'] + report['test_categories']['integration']['files'] + report['test_categories']['security']['files']}")
-    print(f"🧪 Total Test Methods: {sum(cat['test_methods'] for cat in report['test_categories'].values())}")
-    print(f"📂 Source Files to Cover: {coverage['total_source_files']}")
+    logger.info(f"\n📝 Total Test Files: {report['test_categories']['unit']['files'] + report['test_categories']['integration']['files'] + report['test_categories']['security']['files']}")
+    logger.info(f"🧪 Total Test Methods: {sum(cat['test_methods'] for cat in report['test_categories'].values())}")
+    logger.info(f"📂 Source Files to Cover: {coverage['total_source_files']}")
     
-    print("\n💡 Top Recommendations:")
+    logger.info("\n💡 Top Recommendations:")
     for i, rec in enumerate(report['recommendations'][:3], 1):
-        print(f"  {i}. {rec}")
+        logger.info(f"  {i}. {rec}")
     
-    print("\n" + "=" * 60)
+    logger.info("\n" + "=" * 60)
     
     if coverage['achievable_80_percent']:
-        print("🎉 CONCLUSION: 80% test coverage target IS ACHIEVABLE")
+        logger.info("🎉 CONCLUSION: 80% test coverage target IS ACHIEVABLE")
         return True
     else:
-        print("⚠️ CONCLUSION: Additional test development needed for 80% target")
+        logger.info("⚠️ CONCLUSION: Additional test development needed for 80% target")
         return False
 
 

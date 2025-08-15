@@ -411,12 +411,12 @@ class AlertingTestSuite:
 def main():
     """Main test execution"""
     if len(sys.argv) > 1 and sys.argv[1] == '--quick':
-        print("Running quick connectivity test...")
+        logger.info("Running quick connectivity test...")
         suite = AlertingTestSuite()
         suite.test_prometheus_connectivity()
         suite.test_alertmanager_connectivity()
     else:
-        print("Running full alerting pipeline test suite...")
+        logger.info("Running full alerting pipeline test suite...")
         suite = AlertingTestSuite()
         results = suite.run_full_test_suite()
         

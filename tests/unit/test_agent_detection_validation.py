@@ -512,8 +512,8 @@ class TestRealSystemValidation(unittest.TestCase):
 
 def run_agent_detection_tests():
     """Run agent detection validation tests"""
-    print("🔍 Running Agent Detection and Validation Tests")
-    print("=" * 50)
+    logger.info("🔍 Running Agent Detection and Validation Tests")
+    logger.info("=" * 50)
     
     # Create test suite
     loader = unittest.TestLoader()
@@ -535,23 +535,23 @@ def run_agent_detection_tests():
     result = runner.run(suite)
     
     # Generate report
-    print(f"\n📊 Agent Detection Test Results:")
-    print(f"Tests Run: {result.testsRun}")
-    print(f"Failures: {len(result.failures)}")
-    print(f"Errors: {len(result.errors)}")
+    logger.info(f"\n📊 Agent Detection Test Results:")
+    logger.info(f"Tests Run: {result.testsRun}")
+    logger.info(f"Failures: {len(result.failures)}")
+    logger.error(f"Errors: {len(result.errors)}")
     
     success_rate = ((result.testsRun - len(result.failures) - len(result.errors)) / result.testsRun * 100) if result.testsRun > 0 else 0
-    print(f"Success Rate: {success_rate:.1f}%")
+    logger.info(f"Success Rate: {success_rate:.1f}%")
     
     if result.failures:
-        print("\n❌ Failures:")
+        logger.info("\n❌ Failures:")
         for test, error in result.failures:
-            print(f"  - {test}")
+            logger.info(f"  - {test}")
     
     if result.errors:
-        print("\n💥 Errors:")
+        logger.error("\n💥 Errors:")
         for test, error in result.errors:
-            print(f"  - {test}")
+            logger.info(f"  - {test}")
     
     return result.wasSuccessful()
 

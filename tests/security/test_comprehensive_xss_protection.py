@@ -1,4 +1,7 @@
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Comprehensive XSS Protection Test Suite for SutazAI
 Tests all aspects of XSS protection including frontend, backend, and API security
 """
@@ -100,19 +103,19 @@ class TestXSSProtection:
     
     def test_frontend_xss_protection(self):
         """Test frontend XSS protection"""
-        print("\n=== Frontend XSS Protection Tests ===")
+        logger.info("\n=== Frontend XSS Protection Tests ===")
         
         blocked_count = 0
         
         for i, payload in enumerate(self.xss_payloads, 1):
             try:
                 result = self.xss_protection.sanitize_string(payload)
-                print(f"   {i:2d}. FAIL: XSS payload was not blocked: {payload[:50]}...")
+                logger.info(f"   {i:2d}. FAIL: XSS payload was not blocked: {payload[:50]}...")
             except ValueError as e:
-                print(f"   {i:2d}. PASS: XSS payload blocked - {str(e)[:60]}...")
+                logger.info(f"   {i:2d}. PASS: XSS payload blocked - {str(e)[:60]}...")
                 blocked_count += 1
         
-        print(f"\n   Frontend Result: {blocked_count}/{len(self.xss_payloads)} XSS payloads blocked")
+        logger.info(f"\n   Frontend Result: {blocked_count}/{len(self.xss_payloads)} XSS payloads blocked")
         
         # Test safe content
         safe_passed = 0
@@ -121,9 +124,9 @@ class TestXSSProtection:
                 result = self.xss_protection.sanitize_string(content)
                 safe_passed += 1
             except ValueError:
-                print(f"   FAIL: Safe content blocked: {content}")
+                logger.info(f"   FAIL: Safe content blocked: {content}")
         
-        print(f"   Safe Content: {safe_passed}/{len(self.safe_content)} passed")
+        logger.info(f"   Safe Content: {safe_passed}/{len(self.safe_content)} passed")
         
         # Frontend should block all XSS payloads
         assert blocked_count == len(self.xss_payloads), f"Frontend only blocked {blocked_count}/{len(self.xss_payloads)} XSS payloads"
@@ -131,26 +134,26 @@ class TestXSSProtection:
     
     def test_backend_xss_protection(self):
         """Test backend XSS protection"""
-        print("\n=== Backend XSS Protection Tests ===")
+        logger.info("\n=== Backend XSS Protection Tests ===")
         
         blocked_count = 0
         
         for i, payload in enumerate(self.xss_payloads, 1):
             try:
                 result = self.xss_validator.validate_input(payload, "text")
-                print(f"   {i:2d}. FAIL: XSS payload was not blocked: {payload[:50]}...")
+                logger.info(f"   {i:2d}. FAIL: XSS payload was not blocked: {payload[:50]}...")
             except ValueError as e:
-                print(f"   {i:2d}. PASS: XSS payload blocked - {str(e)[:60]}...")
+                logger.info(f"   {i:2d}. PASS: XSS payload blocked - {str(e)[:60]}...")
                 blocked_count += 1
         
-        print(f"\n   Backend Result: {blocked_count}/{len(self.xss_payloads)} XSS payloads blocked")
+        logger.info(f"\n   Backend Result: {blocked_count}/{len(self.xss_payloads)} XSS payloads blocked")
         
         # Backend should block most XSS payloads
         assert blocked_count >= len(self.xss_payloads) * 0.9, f"Backend only blocked {blocked_count}/{len(self.xss_payloads)} XSS payloads"
     
     def test_model_name_validation(self):
         """Test model name validation against injection attacks"""
-        print("\n=== Model Name Validation Tests ===")
+        logger.info("\n=== Model Name Validation Tests ===")
         
         malicious_model_names = [
             "../../../etc/passwd",
@@ -171,12 +174,12 @@ class TestXSSProtection:
         for i, malicious_name in enumerate(malicious_model_names, 1):
             try:
                 result = validate_model_name(malicious_name)
-                print(f"   {i:2d}. FAIL: Malicious model name allowed: {malicious_name}")
+                logger.info(f"   {i:2d}. FAIL: Malicious model name allowed: {malicious_name}")
             except ValueError as e:
-                print(f"   {i:2d}. PASS: Malicious model name blocked - {str(e)[:50]}...")
+                logger.info(f"   {i:2d}. PASS: Malicious model name blocked - {str(e)[:50]}...")
                 blocked_count += 1
         
-        print(f"\n   Model Validation Result: {blocked_count}/{len(malicious_model_names)} malicious names blocked")
+        logger.info(f"\n   Model Validation Result: {blocked_count}/{len(malicious_model_names)} malicious names blocked")
         
         # Test valid model names
         valid_models = ["tinyllama", "llama2:7b", "codellama", "mistral:7b"]
@@ -187,20 +190,20 @@ class TestXSSProtection:
                 result = validate_model_name(model)
                 if result == model or result is None:  # None is valid (uses default)
                     valid_passed += 1
-                    print(f"   PASS: Valid model name: {model}")
+                    logger.info(f"   PASS: Valid model name: {model}")
                 else:
-                    print(f"   FAIL: Valid model name rejected: {model}")
+                    logger.info(f"   FAIL: Valid model name rejected: {model}")
             except ValueError:
-                print(f"   FAIL: Valid model name rejected: {model}")
+                logger.info(f"   FAIL: Valid model name rejected: {model}")
         
-        print(f"   Valid Models: {valid_passed}/{len(valid_models)} passed")
+        logger.info(f"   Valid Models: {valid_passed}/{len(valid_models)} passed")
         
         assert blocked_count == len(malicious_model_names), f"Model validation only blocked {blocked_count}/{len(malicious_model_names)} malicious names"
         assert valid_passed == len(valid_models), f"Model validation rejected {len(valid_models) - valid_passed} valid models"
     
     def test_csp_header_generation(self):
         """Test Content Security Policy header generation"""
-        print("\n=== CSP Header Tests ===")
+        logger.info("\n=== CSP Header Tests ===")
         
         csp_header = get_csp_header()
         
@@ -216,19 +219,19 @@ class TestXSSProtection:
         passed_directives = 0
         for directive in required_directives:
             if directive in csp_header:
-                print(f"   PASS: CSP directive present: {directive}")
+                logger.info(f"   PASS: CSP directive present: {directive}")
                 passed_directives += 1
             else:
-                print(f"   FAIL: CSP directive missing: {directive}")
+                logger.info(f"   FAIL: CSP directive missing: {directive}")
         
-        print(f"\n   CSP Result: {passed_directives}/{len(required_directives)} required directives present")
-        print(f"   Full CSP: {csp_header}")
+        logger.info(f"\n   CSP Result: {passed_directives}/{len(required_directives)} required directives present")
+        logger.info(f"   Full CSP: {csp_header}")
         
         assert passed_directives == len(required_directives), f"CSP missing {len(required_directives) - passed_directives} required directives"
     
     def test_json_sanitization(self):
         """Test JSON response sanitization"""
-        print("\n=== JSON Sanitization Tests ===")
+        logger.info("\n=== JSON Sanitization Tests ===")
         
         malicious_json = {
             "message": "<script>alert('XSS')</script>",
@@ -257,21 +260,21 @@ class TestXSSProtection:
             dangerous_found = any(pattern in json_str.lower() for pattern in dangerous_patterns)
             
             if not dangerous_found:
-                print("   PASS: JSON sanitization removed all dangerous content")
-                print(f"   Sanitized JSON: {json_str}")
+                logger.info("   PASS: JSON sanitization removed all dangerous content")
+                logger.info(f"   Sanitized JSON: {json_str}")
             else:
-                print("   FAIL: JSON sanitization did not remove all dangerous content")
-                print(f"   Result: {json_str}")
+                logger.info("   FAIL: JSON sanitization did not remove all dangerous content")
+                logger.info(f"   Result: {json_str}")
                 
         except Exception as e:
-            print(f"   FAIL: JSON sanitization failed: {e}")
+            logger.error(f"   FAIL: JSON sanitization failed: {e}")
             dangerous_found = True
         
         assert not dangerous_found, "JSON sanitization failed to remove dangerous content"
     
     def test_html_encoding(self):
         """Test HTML encoding functionality"""
-        print("\n=== HTML Encoding Tests ===")
+        logger.info("\n=== HTML Encoding Tests ===")
         
         test_cases = [
             ("Hello <world>", "&lt;", "&gt;"),
@@ -296,21 +299,21 @@ class TestXSSProtection:
                 all_encoded = all(encoding in result for encoding in expected_encodings)
                 
                 if all_encoded:
-                    print(f"   {i}. PASS: '{input_text}' -> '{result}'")
+                    logger.info(f"   {i}. PASS: '{input_text}' -> '{result}'")
                     encoding_passed += 1
                 else:
-                    print(f"   {i}. FAIL: '{input_text}' -> '{result}' (not properly encoded)")
+                    logger.info(f"   {i}. FAIL: '{input_text}' -> '{result}' (not properly encoded)")
                     
             except ValueError as e:
-                print(f"   {i}. FAIL: '{input_text}' was blocked: {e}")
+                logger.info(f"   {i}. FAIL: '{input_text}' was blocked: {e}")
         
-        print(f"\n   Encoding Result: {encoding_passed}/{len(test_cases)} encoding tests passed")
+        logger.info(f"\n   Encoding Result: {encoding_passed}/{len(test_cases)} encoding tests passed")
         
         assert encoding_passed == len(test_cases), f"HTML encoding failed {len(test_cases) - encoding_passed} tests"
     
     def test_url_validation(self):
         """Test URL validation for security"""
-        print("\n=== URL Validation Tests ===")
+        logger.info("\n=== URL Validation Tests ===")
         
         malicious_urls = [
             "javascript:alert('XSS')",
@@ -330,27 +333,27 @@ class TestXSSProtection:
         for url in malicious_urls:
             if not self.xss_protection.validate_url(url):
                 malicious_blocked += 1
-                print(f"   PASS: Malicious URL blocked: {url}")
+                logger.info(f"   PASS: Malicious URL blocked: {url}")
             else:
-                print(f"   FAIL: Malicious URL allowed: {url}")
+                logger.info(f"   FAIL: Malicious URL allowed: {url}")
         
         safe_allowed = 0
         for url in safe_urls:
             if self.xss_protection.validate_url(url):
                 safe_allowed += 1
-                print(f"   PASS: Safe URL allowed: {url}")
+                logger.info(f"   PASS: Safe URL allowed: {url}")
             else:
-                print(f"   FAIL: Safe URL blocked: {url}")
+                logger.info(f"   FAIL: Safe URL blocked: {url}")
         
-        print(f"\n   URL Validation Result: {malicious_blocked}/{len(malicious_urls)} malicious URLs blocked")
-        print(f"   Safe URLs: {safe_allowed}/{len(safe_urls)} allowed")
+        logger.info(f"\n   URL Validation Result: {malicious_blocked}/{len(malicious_urls)} malicious URLs blocked")
+        logger.info(f"   Safe URLs: {safe_allowed}/{len(safe_urls)} allowed")
         
         assert malicious_blocked == len(malicious_urls), f"URL validation only blocked {malicious_blocked}/{len(malicious_urls)} malicious URLs"
         assert safe_allowed == len(safe_urls), f"URL validation blocked {len(safe_urls) - safe_allowed} safe URLs"
     
     def test_integration_with_backend(self):
         """Test integration between frontend and backend security"""
-        print("\n=== Frontend-Backend Integration Tests ===")
+        logger.info("\n=== Frontend-Backend Integration Tests ===")
         
         # Test that both frontend and backend reject the same XSS payloads
         integration_passed = 0
@@ -370,22 +373,22 @@ class TestXSSProtection:
                 backend_blocked = True
             
             if frontend_blocked and backend_blocked:
-                print(f"   PASS: Both frontend and backend blocked: {payload[:30]}...")
+                logger.info(f"   PASS: Both frontend and backend blocked: {payload[:30]}...")
                 integration_passed += 1
             elif not frontend_blocked and not backend_blocked:
-                print(f"   FAIL: Neither frontend nor backend blocked: {payload[:30]}...")
+                logger.info(f"   FAIL: Neither frontend nor backend blocked: {payload[:30]}...")
             else:
-                print(f"   PARTIAL: Only {'frontend' if frontend_blocked else 'backend'} blocked: {payload[:30]}...")
+                logger.info(f"   PARTIAL: Only {'frontend' if frontend_blocked else 'backend'} blocked: {payload[:30]}...")
         
-        print(f"\n   Integration Result: {integration_passed}/5 payloads consistently handled")
+        logger.info(f"\n   Integration Result: {integration_passed}/5 payloads consistently handled")
         
         assert integration_passed >= 4, f"Frontend-Backend integration only consistent for {integration_passed}/5 payloads"
 
 def test_comprehensive_xss_suite():
     """Run comprehensive XSS protection test suite"""
-    print("=" * 60)
-    print("COMPREHENSIVE XSS PROTECTION TEST SUITE")
-    print("=" * 60)
+    logger.info("=" * 60)
+    logger.info("COMPREHENSIVE XSS PROTECTION TEST SUITE")
+    logger.info("=" * 60)
     
     test_instance = TestXSSProtection()
     test_instance.setup_method()
@@ -417,26 +420,26 @@ def test_comprehensive_xss_suite():
             test_results.append((test_name, f"ERROR: {str(e)}"))
     
     # Print final results
-    print("\n" + "=" * 60)
-    print("FINAL TEST RESULTS")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("FINAL TEST RESULTS")
+    logger.info("=" * 60)
     
     for test_name, result in test_results:
         status = "✅" if result == "PASSED" else "❌"
-        print(f"{status} {test_name}: {result}")
+        logger.info(f"{status} {test_name}: {result}")
     
-    print(f"\nOverall Result: {passed_tests}/{len(tests)} tests passed")
+    logger.info(f"\nOverall Result: {passed_tests}/{len(tests)} tests passed")
     success_rate = (passed_tests / len(tests)) * 100
-    print(f"Success Rate: {success_rate:.1f}%")
+    logger.info(f"Success Rate: {success_rate:.1f}%")
     
     if success_rate >= 95:
-        print("\n🛡️  XSS PROTECTION IS EXCELLENT!")
+        logger.info("\n🛡️  XSS PROTECTION IS EXCELLENT!")
     elif success_rate >= 85:
-        print("\n✅ XSS PROTECTION IS GOOD (minor issues)")
+        logger.info("\n✅ XSS PROTECTION IS GOOD (minor issues)")
     elif success_rate >= 70:
-        print("\n⚠️  XSS PROTECTION NEEDS IMPROVEMENT")
+        logger.info("\n⚠️  XSS PROTECTION NEEDS IMPROVEMENT")
     else:
-        print("\n❌ XSS PROTECTION HAS CRITICAL ISSUES")
+        logger.error("\n❌ XSS PROTECTION HAS CRITICAL ISSUES")
     
     return success_rate >= 85
 

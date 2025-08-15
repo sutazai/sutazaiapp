@@ -526,9 +526,9 @@ if __name__ == "__main__":
         async with HttpCircuitBreaker("api_service", "http://api.example.com") as http_breaker:
             try:
                 response = await http_breaker.get("/health")
-                print(f"Health check status: {response.status}")
+                logger.info(f"Health check status: {response.status}")
             except CircuitBreakerOpenError:
-                print("Circuit breaker is open - service unavailable")
+                logger.info("Circuit breaker is open - service unavailable")
         
         # Using decorator
         @circuit_breaker("decorated_service")
@@ -539,12 +539,12 @@ if __name__ == "__main__":
         
         try:
             result = await external_api_call()
-            print(f"API result: {result}")
+            logger.info(f"API result: {result}")
         except CircuitBreakerOpenError:
-            print("Service unavailable due to circuit breaker")
+            logger.info("Service unavailable due to circuit breaker")
         
         # Get statistics
         stats = breaker.get_stats()
-        print(f"Circuit breaker stats: {json.dumps(stats, indent=2)}")
+        logger.info(f"Circuit breaker stats: {json.dumps(stats, indent=2)}")
     
     asyncio.run(example_usage())

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRAPERFORMANCE Load Testing Suite
 Target: <50ms response, 100+ concurrent users, 80%+ cache hit rate
 """
@@ -74,7 +77,7 @@ class UltraPerformanceTest:
     
     async def run_concurrent_load(self, endpoint: str, concurrent_users: int, requests_per_user: int, method: str = "GET", data: Any = None):
         """Run concurrent load test on an endpoint"""
-        print(f"\n🚀 Testing {endpoint} with {concurrent_users} concurrent users...")
+        logger.info(f"\n🚀 Testing {endpoint} with {concurrent_users} concurrent users...")
         
         async with aiohttp.ClientSession() as session:
             # Warm up the endpoint first
@@ -140,9 +143,9 @@ class UltraPerformanceTest:
     
     async def run_comprehensive_test(self):
         """Run comprehensive performance test suite"""
-        print("=" * 80)
-        print("ULTRAPERFORMANCE LOAD TEST SUITE")
-        print("=" * 80)
+        logger.info("=" * 80)
+        logger.info("ULTRAPERFORMANCE LOAD TEST SUITE")
+        logger.info("=" * 80)
         
         self.results["start_time"] = datetime.now().isoformat()
         
@@ -192,83 +195,83 @@ class UltraPerformanceTest:
     
     def print_results(self, stats: Dict):
         """Print formatted test results"""
-        print(f"\n📊 Results for {stats.get('endpoint', 'Unknown')}:")
-        print(f"   Total Requests: {stats.get('total_requests', 0)}")
-        print(f"   Successful: {stats.get('successful_requests', 0)}")
-        print(f"   Failed: {stats.get('failed_requests', 0)}")
+        logger.info(f"\n📊 Results for {stats.get('endpoint', 'Unknown')}:")
+        logger.info(f"   Total Requests: {stats.get('total_requests', 0)}")
+        logger.info(f"   Successful: {stats.get('successful_requests', 0)}")
+        logger.error(f"   Failed: {stats.get('failed_requests', 0)}")
         
         if "response_times" in stats:
             rt = stats["response_times"]
-            print(f"   Response Times:")
-            print(f"      Min: {rt['min_ms']:.2f}ms")
-            print(f"      Median: {rt['median_ms']:.2f}ms")
-            print(f"      Mean: {rt['mean_ms']:.2f}ms")
-            print(f"      Max: {rt['max_ms']:.2f}ms")
-            print(f"      P95: {rt['p95_ms']:.2f}ms")
-            print(f"      P99: {rt['p99_ms']:.2f}ms")
+            logger.info(f"   Response Times:")
+            logger.info(f"      Min: {rt['min_ms']:.2f}ms")
+            logger.info(f"      Median: {rt['median_ms']:.2f}ms")
+            logger.info(f"      Mean: {rt['mean_ms']:.2f}ms")
+            logger.info(f"      Max: {rt['max_ms']:.2f}ms")
+            logger.info(f"      P95: {rt['p95_ms']:.2f}ms")
+            logger.info(f"      P99: {rt['p99_ms']:.2f}ms")
             
             if "cache_hit_rate" in stats:
-                print(f"   Cache Hit Rate: {stats['cache_hit_rate']:.1f}%")
+                logger.info(f"   Cache Hit Rate: {stats['cache_hit_rate']:.1f}%")
             
             # Performance verdict
             if stats.get("meets_ultraperformance"):
-                print(f"   ✅ MEETS ULTRAPERFORMANCE TARGET (<50ms median)")
+                logger.info(f"   ✅ MEETS ULTRAPERFORMANCE TARGET (<50ms median)")
             else:
-                print(f"   ❌ FAILS ULTRAPERFORMANCE TARGET (>{rt['median_ms']:.2f}ms median)")
+                logger.info(f"   ❌ FAILS ULTRAPERFORMANCE TARGET (>{rt['median_ms']:.2f}ms median)")
     
     def generate_final_report(self, test_results: List[Dict]):
         """Generate comprehensive final report"""
-        print("\n" + "=" * 80)
-        print("FINAL PERFORMANCE REPORT")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("FINAL PERFORMANCE REPORT")
+        logger.info("=" * 80)
         
         # Overall statistics
         total_requests = sum(r.get("total_requests", 0) for r in test_results)
         successful_requests = sum(r.get("successful_requests", 0) for r in test_results)
         failed_requests = sum(r.get("failed_requests", 0) for r in test_results)
         
-        print(f"\n📈 Overall Statistics:")
-        print(f"   Total Requests: {total_requests}")
-        print(f"   Successful: {successful_requests} ({(successful_requests/total_requests*100):.1f}%)")
-        print(f"   Failed: {failed_requests} ({(failed_requests/total_requests*100):.1f}%)")
+        logger.info(f"\n📈 Overall Statistics:")
+        logger.info(f"   Total Requests: {total_requests}")
+        logger.info(f"   Successful: {successful_requests} ({(successful_requests/total_requests*100):.1f}%)")
+        logger.error(f"   Failed: {failed_requests} ({(failed_requests/total_requests*100):.1f}%)")
         
         # Performance summary
         passing_endpoints = sum(1 for r in test_results if r.get("meets_ultraperformance"))
         total_endpoints = len(test_results)
         
-        print(f"\n🎯 ULTRAPERFORMANCE Targets:")
-        print(f"   Endpoints Meeting <50ms Target: {passing_endpoints}/{total_endpoints}")
+        logger.info(f"\n🎯 ULTRAPERFORMANCE Targets:")
+        logger.info(f"   Endpoints Meeting <50ms Target: {passing_endpoints}/{total_endpoints}")
         
         # Endpoint breakdown
-        print(f"\n📊 Endpoint Performance Summary:")
+        logger.info(f"\n📊 Endpoint Performance Summary:")
         for result in test_results:
             if "response_times" in result:
                 endpoint = result["endpoint"]
                 median = result["response_times"]["median_ms"]
                 status = "✅" if result.get("meets_ultraperformance") else "❌"
                 cache_rate = result.get("cache_hit_rate", 0)
-                print(f"   {status} {endpoint}: {median:.2f}ms median, {cache_rate:.1f}% cache hits")
+                logger.info(f"   {status} {endpoint}: {median:.2f}ms median, {cache_rate:.1f}% cache hits")
         
         # Recommendations
-        print(f"\n💡 Recommendations:")
+        logger.info(f"\n💡 Recommendations:")
         slow_endpoints = [r for r in test_results if not r.get("meets_ultraperformance")]
         
         if not slow_endpoints:
-            print("   ✅ All endpoints meet ULTRAPERFORMANCE targets!")
-            print("   ✅ System is ready for production load")
+            logger.info("   ✅ All endpoints meet ULTRAPERFORMANCE targets!")
+            logger.info("   ✅ System is ready for production load")
         else:
-            print("   ⚠️ The following endpoints need optimization:")
+            logger.info("   ⚠️ The following endpoints need optimization:")
             for result in slow_endpoints:
                 endpoint = result.get("endpoint", "Unknown")
                 median = result.get("response_times", {}).get("median_ms", 0)
-                print(f"      - {endpoint}: {median:.2f}ms (target: <50ms)")
+                logger.info(f"      - {endpoint}: {median:.2f}ms (target: <50ms)")
             
-            print("\n   Optimization suggestions:")
-            print("   1. Implement Redis caching for slow endpoints")
-            print("   2. Add database query optimization and indexing")
-            print("   3. Use connection pooling for external services")
-            print("   4. Implement request coalescing for duplicate requests")
-            print("   5. Add CDN caching for static content")
+            logger.info("\n   Optimization suggestions:")
+            logger.info("   1. Implement Redis caching for slow endpoints")
+            logger.info("   2. Add database query optimization and indexing")
+            logger.info("   3. Use connection pooling for external services")
+            logger.info("   4. Implement request coalescing for duplicate requests")
+            logger.info("   5. Add CDN caching for static content")
         
         # Save report to file
         report_file = f"performance_report_{int(time.time())}.json"
@@ -285,7 +288,7 @@ class UltraPerformanceTest:
                 "timestamp": datetime.now().isoformat()
             }, f, indent=2, default=str)
         
-        print(f"\n📁 Full report saved to: {report_file}")
+        logger.info(f"\n📁 Full report saved to: {report_file}")
 
 
 async def main():
@@ -297,10 +300,10 @@ async def main():
         async with aiohttp.ClientSession() as session:
             async with session.get("http://localhost:10010/health") as response:
                 if response.status != 200:
-                    print("❌ Backend is not healthy!")
+                    logger.info("❌ Backend is not healthy!")
                     return
     except:
-        print("❌ Backend is not running! Start it with: docker-compose up -d")
+        logger.info("❌ Backend is not running! Start it with: docker-compose up -d")
         return
     
     # Run comprehensive test

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRAPERFORMANCE Load Testing Suite
 Complete performance testing with k6-style metrics
 """
@@ -88,10 +91,10 @@ class UltraPerformanceLoadTester:
         """
         Ramp-up load test: gradually increase users
         """
-        print(f"\n{'='*60}")
-        print(f"RAMP-UP LOAD TEST: {endpoint}")
-        print(f"Max Users: {max_users}, Ramp: {ramp_duration}s, Test: {test_duration}s")
-        print(f"{'='*60}")
+        logger.info(f"\n{'='*60}")
+        logger.info(f"RAMP-UP LOAD TEST: {endpoint}")
+        logger.info(f"Max Users: {max_users}, Ramp: {ramp_duration}s, Test: {test_duration}s")
+        logger.info(f"{'='*60}")
         
         url = f"{self.base_url}{endpoint}"
         all_results = []
@@ -144,7 +147,7 @@ class UltraPerformanceLoadTester:
                     # Print progress
                     elapsed = time.time() - start_time
                     active_users = sum(1 for f in futures if not f.done())
-                    print(f"  [{elapsed:5.1f}s] Active users: {active_users:3d}, "
+                    logger.info(f"  [{elapsed:5.1f}s] Active users: {active_users:3d}, "
                           f"CPU: {cpu_samples[-1]:5.1f}%, "
                           f"Memory: {memory_samples[-1]:6.0f}MB")
                     
@@ -166,10 +169,10 @@ class UltraPerformanceLoadTester:
         """
         Spike test: sudden increase in load
         """
-        print(f"\n{'='*60}")
-        print(f"SPIKE TEST: {endpoint}")
-        print(f"Normal: {normal_users} users, Spike: {spike_users} users for {spike_duration}s")
-        print(f"{'='*60}")
+        logger.info(f"\n{'='*60}")
+        logger.info(f"SPIKE TEST: {endpoint}")
+        logger.info(f"Normal: {normal_users} users, Spike: {spike_users} users for {spike_duration}s")
+        logger.info(f"{'='*60}")
         
         url = f"{self.base_url}{endpoint}"
         all_results = []
@@ -201,10 +204,10 @@ class UltraPerformanceLoadTester:
         """
         Stress test: find breaking point
         """
-        print(f"\n{'='*60}")
-        print(f"STRESS TEST: {endpoint}")
-        print(f"Finding breaking point (max response time: {max_response_time}ms)")
-        print(f"{'='*60}")
+        logger.info(f"\n{'='*60}")
+        logger.info(f"STRESS TEST: {endpoint}")
+        logger.info(f"Finding breaking point (max response time: {max_response_time}ms)")
+        logger.info(f"{'='*60}")
         
         url = f"{self.base_url}{endpoint}"
         current_users = initial_users
@@ -212,7 +215,7 @@ class UltraPerformanceLoadTester:
         all_results = []
         
         while not breaking_point_found and current_users <= 500:
-            print(f"\nTesting with {current_users} users...")
+            logger.info(f"\nTesting with {current_users} users...")
             
             round_results = []
             
@@ -238,13 +241,13 @@ class UltraPerformanceLoadTester:
             avg_response = statistics.mean(response_times) if response_times else 0
             error_rate = sum(1 for r in round_results if not r['success']) / len(round_results) * 100
             
-            print(f"  Avg response: {avg_response:.0f}ms, Error rate: {error_rate:.1f}%")
+            logger.error(f"  Avg response: {avg_response:.0f}ms, Error rate: {error_rate:.1f}%")
             
             all_results.extend(round_results)
             
             if avg_response > max_response_time or error_rate > 10:
                 breaking_point_found = True
-                print(f"\n🔴 Breaking point found at {current_users} users!")
+                logger.info(f"\n🔴 Breaking point found at {current_users} users!")
             else:
                 current_users += user_increment
                 
@@ -256,10 +259,10 @@ class UltraPerformanceLoadTester:
         """
         Endurance/Soak test: sustained load over time
         """
-        print(f"\n{'='*60}")
-        print(f"ENDURANCE TEST: {endpoint}")
-        print(f"{users} users for {duration_minutes} minutes")
-        print(f"{'='*60}")
+        logger.info(f"\n{'='*60}")
+        logger.info(f"ENDURANCE TEST: {endpoint}")
+        logger.info(f"{users} users for {duration_minutes} minutes")
+        logger.info(f"{'='*60}")
         
         url = f"{self.base_url}{endpoint}"
         duration_seconds = duration_minutes * 60
@@ -281,7 +284,7 @@ class UltraPerformanceLoadTester:
             while time.time() - start_time < duration_seconds:
                 elapsed = time.time() - start_time
                 progress = (elapsed / duration_seconds) * 100
-                print(f"  Progress: {progress:.1f}% ({elapsed:.0f}/{duration_seconds}s)")
+                logger.info(f"  Progress: {progress:.1f}% ({elapsed:.0f}/{duration_seconds}s)")
                 time.sleep(10)
                 
         # Start monitoring thread
@@ -369,9 +372,9 @@ class UltraPerformanceLoadTester:
     def run_complete_test_suite(self) -> Dict[str, Any]:
         """Run complete ULTRAPERFORMANCE test suite"""
         
-        print("=" * 80)
-        print("ULTRAPERFORMANCE LOAD TESTING SUITE")
-        print("=" * 80)
+        logger.info("=" * 80)
+        logger.info("ULTRAPERFORMANCE LOAD TESTING SUITE")
+        logger.info("=" * 80)
         
         test_results = {
             'timestamp': datetime.now().isoformat(),
@@ -390,7 +393,7 @@ class UltraPerformanceLoadTester:
         ]
         
         for endpoint, test_type, params in test_scenarios:
-            print(f"\n{'='*60}")
+            logger.info(f"\n{'='*60}")
             
             if test_type == "ramp":
                 result = self.ramp_up_load_test(endpoint, **params)
@@ -407,13 +410,13 @@ class UltraPerformanceLoadTester:
             })
             
             # Print results
-            print(f"\nResults:")
-            print(f"  Total Requests: {result.total_requests}")
-            print(f"  Success Rate: {100 - result.error_rate_percent:.1f}%")
-            print(f"  Requests/Second: {result.requests_per_second:.1f}")
-            print(f"  Avg Response: {result.avg_response_time_ms:.0f}ms")
-            print(f"  P95 Response: {result.p95_response_time_ms:.0f}ms")
-            print(f"  P99 Response: {result.p99_response_time_ms:.0f}ms")
+            logger.info(f"\nResults:")
+            logger.info(f"  Total Requests: {result.total_requests}")
+            logger.error(f"  Success Rate: {100 - result.error_rate_percent:.1f}%")
+            logger.info(f"  Requests/Second: {result.requests_per_second:.1f}")
+            logger.info(f"  Avg Response: {result.avg_response_time_ms:.0f}ms")
+            logger.info(f"  P95 Response: {result.p95_response_time_ms:.0f}ms")
+            logger.info(f"  P99 Response: {result.p99_response_time_ms:.0f}ms")
             
         # Generate summary and recommendations
         test_results['summary'] = self._generate_summary(test_results['tests'])
@@ -495,26 +498,26 @@ def main():
     results = tester.run_complete_test_suite()
     
     # Print final summary
-    print("\n" + "=" * 80)
-    print("ULTRAPERFORMANCE TEST SUMMARY")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info("ULTRAPERFORMANCE TEST SUMMARY")
+    logger.info("=" * 80)
     
     summary = results['summary']
-    print(f"\nPerformance Score: {summary['performance_score']}/100 (Grade: {summary['grade']})")
-    print(f"Average Response Time: {summary['avg_response_time_ms']:.0f}ms")
-    print(f"Average Error Rate: {summary['avg_error_rate_percent']:.1f}%")
-    print(f"Average Throughput: {summary['avg_throughput_rps']:.1f} req/s")
+    logger.info(f"\nPerformance Score: {summary['performance_score']}/100 (Grade: {summary['grade']})")
+    logger.info(f"Average Response Time: {summary['avg_response_time_ms']:.0f}ms")
+    logger.error(f"Average Error Rate: {summary['avg_error_rate_percent']:.1f}%")
+    logger.info(f"Average Throughput: {summary['avg_throughput_rps']:.1f} req/s")
     
-    print("\nRECOMMENDATIONS:")
+    logger.info("\nRECOMMENDATIONS:")
     for rec in results['recommendations']:
-        print(f"  {rec}")
+        logger.info(f"  {rec}")
         
     # Save results
     report_file = f"/opt/sutazaiapp/reports/load_test_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     with open(report_file, "w") as f:
         json.dump(results, f, indent=2)
         
-    print(f"\nFull report saved to: {report_file}")
+    logger.info(f"\nFull report saved to: {report_file}")
     
     return results
 

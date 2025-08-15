@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Rules Compliance Validator
 
 Validates complete compliance with all 19 codebase rules.
@@ -207,7 +210,7 @@ class RulesComplianceValidator:
     
     def validate_all_rules(self) -> Dict:
         """Validate compliance with all applicable rules."""
-        print("🔍 ULTRAORGANIZE: Validating compliance with 19 codebase rules...")
+        logger.info("🔍 ULTRAORGANIZE: Validating compliance with 19 codebase rules...")
         
         rules_to_validate = [
             (1, "No conceptual Elements", self.validate_rule_01_no_fantasy_elements),
@@ -237,7 +240,7 @@ class RulesComplianceValidator:
                 if compliance:
                     passed += 1
                 
-                print(f"  Rule {rule_num:2d}: {message}")
+                logger.info(f"  Rule {rule_num:2d}: {message}")
                 
             except Exception as e:
                 results[f"Rule_{rule_num:02d}"] = {
@@ -245,7 +248,7 @@ class RulesComplianceValidator:
                     'compliant': False,
                     'message': f"❌ Validation error: {e}"
                 }
-                print(f"  Rule {rule_num:2d}: ❌ Validation error: {e}")
+                logger.error(f"  Rule {rule_num:2d}: ❌ Validation error: {e}")
         
         self.compliance_score = (passed / total) * 100
         
@@ -315,8 +318,8 @@ best practices and enables future development velocity.
 if __name__ == '__main__':
     validator = RulesComplianceValidator()
     
-    print("🚀 ULTRAORGANIZE Infrastructure Master - Final Validation")
-    print("=" * 60)
+    logger.info("🚀 ULTRAORGANIZE Infrastructure Master - Final Validation")
+    logger.info("=" * 60)
     
     # Generate and save final report
     final_report = validator.generate_final_report()
@@ -325,7 +328,7 @@ if __name__ == '__main__':
     with open(report_path, 'w') as f:
         f.write(final_report)
     
-    print("=" * 60)
-    print(f"✅ ULTRAORGANIZE COMPLETE - Compliance Score: {validator.compliance_score:.1f}%")
-    print(f"📊 Final report saved to: {report_path}")
-    print("🎆 PERFECT ORGANIZATION ACHIEVED!")
+    logger.info("=" * 60)
+    logger.info(f"✅ ULTRAORGANIZE COMPLETE - Compliance Score: {validator.compliance_score:.1f}%")
+    logger.info(f"📊 Final report saved to: {report_path}")
+    logger.info("🎆 PERFECT ORGANIZATION ACHIEVED!")

@@ -181,45 +181,45 @@ class SimpleEndpointTester:
         summary = report['test_summary']
         coverage = report['endpoint_coverage']
         
-        print("\n" + "="*80)
-        print("HARDWARE RESOURCE OPTIMIZER - ENDPOINT TEST SUMMARY")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("HARDWARE RESOURCE OPTIMIZER - ENDPOINT TEST SUMMARY")
+        logger.info("="*80)
         
-        print(f"Agent URL: {self.base_url}")
-        print(f"Test Timestamp: {summary['timestamp']}")
-        print(f"Total Tests: {summary['total_tests']}")
-        print(f"Successful Tests: {summary['successful_tests']}")
-        print(f"Failed Tests: {summary['failed_tests']}")
-        print(f"Success Rate: {summary['success_rate_percent']:.1f}%")
-        print(f"Average Response Time: {summary['avg_response_time_seconds']:.3f}s")
-        print(f"Max Response Time: {summary['max_response_time_seconds']:.3f}s")
-        print(f"Unique Endpoints Tested: {coverage['unique_endpoints_tested']}")
+        logger.info(f"Agent URL: {self.base_url}")
+        logger.info(f"Test Timestamp: {summary['timestamp']}")
+        logger.info(f"Total Tests: {summary['total_tests']}")
+        logger.info(f"Successful Tests: {summary['successful_tests']}")
+        logger.error(f"Failed Tests: {summary['failed_tests']}")
+        logger.info(f"Success Rate: {summary['success_rate_percent']:.1f}%")
+        logger.info(f"Average Response Time: {summary['avg_response_time_seconds']:.3f}s")
+        logger.info(f"Max Response Time: {summary['max_response_time_seconds']:.3f}s")
+        logger.info(f"Unique Endpoints Tested: {coverage['unique_endpoints_tested']}")
         
-        print(f"\nEndpoint Coverage:")
+        logger.info(f"\nEndpoint Coverage:")
         for endpoint, data in coverage['endpoint_summary'].items():
             success_rate = (data['success'] / data['total'] * 100) if data['total'] > 0 else 0
             methods = ', '.join(data['methods'])
-            print(f"  {endpoint} ({methods}): {data['success']}/{data['total']} ({success_rate:.1f}%)")
+            logger.info(f"  {endpoint} ({methods}): {data['success']}/{data['total']} ({success_rate:.1f}%)")
         
-        print(f"\nFailed Tests:")
+        logger.error(f"\nFailed Tests:")
         failed_results = [r for r in self.results if not r['success']]
         if failed_results:
             for result in failed_results:
-                print(f"  ❌ {result['method']} {result['endpoint']}: {result['error'][:50]}...")
+                logger.error(f"  ❌ {result['method']} {result['endpoint']}: {result['error'][:50]}...")
         else:
-            print("  ✅ No failed tests")
+            logger.error("  ✅ No failed tests")
         
         # Overall assessment
         if summary['success_rate_percent'] >= 90:
-            print(f"\n🎉 OVERALL ASSESSMENT: EXCELLENT ({summary['success_rate_percent']:.1f}% success rate)")
+            logger.info(f"\n🎉 OVERALL ASSESSMENT: EXCELLENT ({summary['success_rate_percent']:.1f}% success rate)")
         elif summary['success_rate_percent'] >= 75:
-            print(f"\n👍 OVERALL ASSESSMENT: GOOD ({summary['success_rate_percent']:.1f}% success rate)")
+            logger.info(f"\n👍 OVERALL ASSESSMENT: GOOD ({summary['success_rate_percent']:.1f}% success rate)")
         elif summary['success_rate_percent'] >= 50:
-            print(f"\n⚠️ OVERALL ASSESSMENT: NEEDS IMPROVEMENT ({summary['success_rate_percent']:.1f}% success rate)")
+            logger.info(f"\n⚠️ OVERALL ASSESSMENT: NEEDS IMPROVEMENT ({summary['success_rate_percent']:.1f}% success rate)")
         else:
-            print(f"\n❌ OVERALL ASSESSMENT: POOR ({summary['success_rate_percent']:.1f}% success rate)")
+            logger.info(f"\n❌ OVERALL ASSESSMENT: POOR ({summary['success_rate_percent']:.1f}% success rate)")
         
-        print("="*80)
+        logger.info("="*80)
     
     def save_report(self, report, filename=None):
         """Save report to file"""
@@ -230,7 +230,7 @@ class SimpleEndpointTester:
         with open(filename, 'w') as f:
             json.dump(report, f, indent=2)
         
-        print(f"\nDetailed report saved to: {filename}")
+        logger.info(f"\nDetailed report saved to: {filename}")
         return filename
 
 def main():
@@ -251,11 +251,11 @@ def main():
     try:
         response = requests.get(f"{args.url}/health", timeout=10)
         if response.status_code != 200:
-            print(f"❌ Agent not available at {args.url}")
+            logger.info(f"❌ Agent not available at {args.url}")
             return 1
-        print(f"✅ Agent is available at {args.url}")
+        logger.info(f"✅ Agent is available at {args.url}")
     except Exception as e:
-        print(f"❌ Cannot connect to agent at {args.url}: {e}")
+        logger.info(f"❌ Cannot connect to agent at {args.url}: {e}")
         return 1
     
     # Run tests

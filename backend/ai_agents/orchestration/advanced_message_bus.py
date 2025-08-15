@@ -1100,11 +1100,11 @@ async def example_message_bus():
     
     response = await bus.send_request(request_msg, timeout=10.0)
     if response:
-        print(f"Received response: {response.payload}")
+        logger.info(f"Received response: {response.payload}")
     
     # Get system status
     status = await bus.get_system_status()
-    print(f"System status: {status}")
+    logger.info(f"System status: {status}")
     
     await bus.shutdown()
 

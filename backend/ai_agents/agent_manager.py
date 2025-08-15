@@ -819,7 +819,8 @@ class AgentManager:
                 # Add ignore for potentially untyped return
                 return agent.config.model_dump() if hasattr(agent.config, 'model_dump') else vars(agent.config) # type: ignore[no-any-return]
             else:
-                 raise NotImplementedError(f"Agent {agent_id} does not support configuration updates.")
+                logger.error(f"Agent {agent_id} not found in active agents registry")
+                raise ValueError(f"Agent {agent_id} not found. Available agents: {list(self.agents.keys())}")
 
         except Exception as e:
             logger.error(f"Error updating agent {agent_id} configuration: {str(e)}")

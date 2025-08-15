@@ -716,16 +716,16 @@ async def main():
     report = monitor.generate_sla_report()
     
     # Print summary
-    print(f"Overall Compliance: {report.overall_compliance:.2f}%")
-    print(f"Violations: {len(report.violations)}")
-    print("\nRecommendations:")
+    logger.info(f"Overall Compliance: {report.overall_compliance:.2f}%")
+    logger.info(f"Violations: {len(report.violations)}")
+    logger.info("\nRecommendations:")
     for rec in report.recommendations:
-        print(f"  - {rec}")
+        logger.info(f"  - {rec}")
         
     # Get current status
     status = monitor.get_current_status()
-    print(f"\nCurrent Status: {status['overall_health']}")
-    print(f"At Risk: {status['at_risk_count']}, Violated: {status['violated_count']}")
+    logger.info(f"\nCurrent Status: {status['overall_health']}")
+    logger.info(f"At Risk: {status['at_risk_count']}, Violated: {status['violated_count']}")
     
     # Export report
     monitor.export_report(report, "/tmp/sla_report.json")

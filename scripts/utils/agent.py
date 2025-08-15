@@ -96,9 +96,9 @@ from typing import Dict, List, Any
 try:
     result = None
     {code}
-    print(json.dumps({{"success": True, "result": result if 'result' in locals() else "Code executed successfully"}}))
+    logger.info(json.dumps({{"success": True, "result": result if 'result' in locals() else "Code executed successfully"}}))
 except Exception as e:
-    print(json.dumps({{"success": False, "error": str(e)}}))
+    logger.error(json.dumps({{"success": False, "error": str(e)}}))
 """
                 
                 # Execute in subprocess for safety

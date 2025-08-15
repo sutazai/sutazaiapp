@@ -137,79 +137,79 @@ class QuickPerformanceTest:
     
     async def run_all_tests(self):
         """Run all performance tests"""
-        print("\n" + "="*80)
-        print("MCP MONITORING SYSTEM - PERFORMANCE TEST REPORT")
-        print("="*80)
-        print(f"Timestamp: {datetime.now(timezone.utc).isoformat()}")
-        print(f"Target: {self.base_url}")
+        logger.info("\n" + "="*80)
+        logger.info("MCP MONITORING SYSTEM - PERFORMANCE TEST REPORT")
+        logger.info("="*80)
+        logger.info(f"Timestamp: {datetime.now(timezone.utc).isoformat()}")
+        logger.info(f"Target: {self.base_url}")
         
         # Test 1: Basic endpoint response times
-        print("\n[TEST 1] Single-threaded Response Time Benchmarks")
-        print("-"*50)
+        logger.info("\n[TEST 1] Single-threaded Response Time Benchmarks")
+        logger.info("-"*50)
         
         endpoints = ['/health', '/metrics', '/']
         for endpoint in endpoints:
             result = await self.benchmark_endpoint(endpoint, 100)
-            print(f"\n{endpoint}:")
-            print(f"  Requests: {result['successful']}/{result['requests']} successful")
-            print(f"  Response times (ms):")
-            print(f"    Min: {result.get('min_ms', 0):.2f}")
-            print(f"    Avg: {result.get('avg_ms', 0):.2f}")
-            print(f"    P50: {result.get('p50_ms', 0):.2f}")
-            print(f"    P95: {result.get('p95_ms', 0):.2f}")
-            print(f"    P99: {result.get('p99_ms', 0):.2f}")
-            print(f"    Max: {result.get('max_ms', 0):.2f}")
+            logger.info(f"\n{endpoint}:")
+            logger.info(f"  Requests: {result['successful']}/{result['requests']} successful")
+            logger.info(f"  Response times (ms):")
+            logger.info(f"    Min: {result.get('min_ms', 0):.2f}")
+            logger.info(f"    Avg: {result.get('avg_ms', 0):.2f}")
+            logger.info(f"    P50: {result.get('p50_ms', 0):.2f}")
+            logger.info(f"    P95: {result.get('p95_ms', 0):.2f}")
+            logger.info(f"    P99: {result.get('p99_ms', 0):.2f}")
+            logger.info(f"    Max: {result.get('max_ms', 0):.2f}")
             if result['error_rate'] > 0:
-                print(f"  ⚠️ Error rate: {result['error_rate']:.1f}%")
+                logger.error(f"  ⚠️ Error rate: {result['error_rate']:.1f}%")
             
             self.results[f"baseline_{endpoint}"] = result
         
         # Test 2: Concurrent load tests
-        print("\n[TEST 2] Concurrent Load Tests (5 second duration each)")
-        print("-"*50)
+        logger.info("\n[TEST 2] Concurrent Load Tests (5 second duration each)")
+        logger.info("-"*50)
         
         load_levels = [10, 50, 100, 200]
         target_endpoints = ['/health', '/metrics']  # Skip /health/detailed as it's slow
         
         for endpoint in target_endpoints:
-            print(f"\n{endpoint}:")
+            logger.info(f"\n{endpoint}:")
             for concurrent in load_levels:
                 result = await self.concurrent_load_test(endpoint, concurrent, 5)
-                print(f"  {concurrent} concurrent users:")
-                print(f"    Throughput: {result['requests_per_sec']:.2f} req/s")
-                print(f"    Avg response: {result['avg_ms']:.2f}ms")
-                print(f"    P95 response: {result['p95_ms']:.2f}ms")
-                print(f"    P99 response: {result['p99_ms']:.2f}ms")
+                logger.info(f"  {concurrent} concurrent users:")
+                logger.info(f"    Throughput: {result['requests_per_sec']:.2f} req/s")
+                logger.info(f"    Avg response: {result['avg_ms']:.2f}ms")
+                logger.info(f"    P95 response: {result['p95_ms']:.2f}ms")
+                logger.info(f"    P99 response: {result['p99_ms']:.2f}ms")
                 if result['error_rate'] > 0:
-                    print(f"    ⚠️ Error rate: {result['error_rate']:.1f}%")
+                    logger.error(f"    ⚠️ Error rate: {result['error_rate']:.1f}%")
                 
                 self.results[f"load_{endpoint}_{concurrent}"] = result
         
         # Test 3: Stress test to find limits
-        print("\n[TEST 3] Stress Test - Finding System Limits")
-        print("-"*50)
+        logger.info("\n[TEST 3] Stress Test - Finding System Limits")
+        logger.info("-"*50)
         
         endpoint = '/health'
         for concurrent in [100, 200, 500, 1000]:
             result = await self.concurrent_load_test(endpoint, concurrent, 3)
-            print(f"\n{concurrent} concurrent users:")
-            print(f"  Throughput: {result['requests_per_sec']:.2f} req/s")
-            print(f"  P95 response: {result['p95_ms']:.2f}ms")
+            logger.info(f"\n{concurrent} concurrent users:")
+            logger.info(f"  Throughput: {result['requests_per_sec']:.2f} req/s")
+            logger.info(f"  P95 response: {result['p95_ms']:.2f}ms")
             
             if result['error_rate'] > 5:
-                print(f"  ❌ System limit reached - {result['error_rate']:.1f}% error rate")
+                logger.error(f"  ❌ System limit reached - {result['error_rate']:.1f}% error rate")
                 break
             elif result['p95_ms'] > 1000:
-                print(f"  ⚠️ Performance degraded - P95 > 1000ms")
+                logger.info(f"  ⚠️ Performance degraded - P95 > 1000ms")
             else:
-                print(f"  ✅ System stable")
+                logger.info(f"  ✅ System stable")
             
             self.results[f"stress_{concurrent}"] = result
         
         # Performance Requirements Validation
-        print("\n" + "="*80)
-        print("PERFORMANCE REQUIREMENTS VALIDATION")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("PERFORMANCE REQUIREMENTS VALIDATION")
+        logger.info("="*80)
         
         # Check requirements
         requirements = {
@@ -243,14 +243,14 @@ class QuickPerformanceTest:
         
         for req, status in requirements.items():
             if isinstance(status, bool):
-                print(f"  {req}: {'✅ PASS' if status else '❌ FAIL'}")
+                logger.info(f"  {req}: {'✅ PASS' if status else '❌ FAIL'}")
             else:
-                print(f"  {req}: ℹ️ {status}")
+                logger.info(f"  {req}: ℹ️ {status}")
         
         # Recommendations
-        print("\n" + "="*80)
-        print("PERFORMANCE OPTIMIZATION RECOMMENDATIONS")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("PERFORMANCE OPTIMIZATION RECOMMENDATIONS")
+        logger.info("="*80)
         
         recommendations = []
         
@@ -274,9 +274,9 @@ class QuickPerformanceTest:
         
         if recommendations:
             for i, rec in enumerate(recommendations, 1):
-                print(f"  {i}. {rec}")
+                logger.info(f"  {i}. {rec}")
         else:
-            print("  No critical issues found - system performing within acceptable parameters")
+            logger.error("  No critical issues found - system performing within acceptable parameters")
         
         # Save results
         report_file = f"/opt/sutazaiapp/scripts/mcp/automation/tests/performance_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
@@ -289,8 +289,8 @@ class QuickPerformanceTest:
                 'recommendations': recommendations
             }, f, indent=2)
         
-        print(f"\n📊 Detailed report saved to: {report_file}")
-        print("="*80)
+        logger.info(f"\n📊 Detailed report saved to: {report_file}")
+        logger.info("="*80)
         
         return all(v for v in requirements.values() if isinstance(v, bool))
 
@@ -301,10 +301,10 @@ async def main():
     all_passed = await tester.run_all_tests()
     
     if all_passed:
-        print("\n✅ All performance requirements met!")
+        logger.info("\n✅ All performance requirements met!")
         return 0
     else:
-        print("\n⚠️ Some performance requirements not met. See recommendations above.")
+        logger.info("\n⚠️ Some performance requirements not met. See recommendations above.")
         return 1
 
 

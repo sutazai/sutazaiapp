@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """
+import logging
+
+logger = logging.getLogger(__name__)
 UltimateCoder
 A FastMCP server that exposes comprehensive file-system operations along with
 advanced coding functionalities using MCP core concepts: Resources, Prompts, and Context.
@@ -72,7 +75,7 @@ def validate_path(requested_path: str) -> str:
         return os.path.realpath(full_path)
     if validate_parent_directories(full_path):
         return full_path
-    print(f"Warning: No existing parent directory found for: {os.path.dirname(full_path)}")
+    logger.warning(f"Warning: No existing parent directory found for: {os.path.dirname(full_path)}")
     return full_path
 
 def is_image_file(mime_type: str) -> bool:
@@ -428,7 +431,7 @@ def replace_block(file_path: str, search_block: str, replacement_block: str, use
       {
         "file_path": "path/to/code.py",
         "search_block": "oldFunction()\\n    pass",
-        "replacement_block": "newFunction()\\n    print('Hello')",
+        "replacement_block": "newFunction()\\n    logger.info('Hello')",
         "use_regex": false
       }
 
@@ -1294,7 +1297,7 @@ def tool_replace_block(file_path: str, search_block: str, replacement_block: str
       {
         "file_path": "path/to/code.py",
         "search_block": "oldFunction()\\n    pass",
-        "replacement_block": "newFunction()\\n    print('Hello')",
+        "replacement_block": "newFunction()\\n    logger.info('Hello')",
         "use_regex": false
       }
 

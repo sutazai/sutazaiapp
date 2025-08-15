@@ -632,10 +632,10 @@ if __name__ == "__main__":
             raise ValueError("Test error for demonstration")
         except Exception as e:
             error_id = tracker.record_error(e, "test_component", "test_function")
-            print(f"Recorded error: {error_id}")
+            logger.error(f"Recorded error: {error_id}")
         
         # Test statistics
         stats = tracker.get_error_statistics()
-        print(f"Error statistics: {json.dumps(stats, indent=2)}")
+        logger.error(f"Error statistics: {json.dumps(stats, indent=2)}")
     
     asyncio.run(test_error_handling())

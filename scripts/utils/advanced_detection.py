@@ -961,5 +961,5 @@ if __name__ == "__main__":
     # Start detection
     asyncio.run(threat_detector.start_detection())
     
-    print("Threat Detection Engine initialized and running...")
-    print(f"Statistics: {threat_detector.get_threat_statistics()}")
+    logger.info("Threat Detection Engine initialized and running...")
+    logger.info(f"Statistics: {threat_detector.get_threat_statistics()}")

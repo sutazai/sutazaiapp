@@ -291,7 +291,7 @@ class AlertManager:
         for rule in default_rules:
             self.alert_rules[rule.name] = rule
             
-    def generate_fingerprint(self, alert_data: Dict[str, Any]) -> str:
+    def generate_fingerlogger.info(self, alert_data: Dict[str, Any]) -> str:
         """Generate unique fingerprint for alert deduplication"""
         key_fields = ['name', 'component', 'severity']
         fingerprint_data = {k: alert_data.get(k, '') for k in key_fields}
@@ -324,7 +324,7 @@ class AlertManager:
             'details': details or {}
         }
         
-        fingerprint = self.generate_fingerprint(alert_data)
+        fingerprint = self.generate_fingerlogger.info(alert_data)
         
         # Check for duplicate alerts
         if fingerprint in self.active_alerts:
@@ -715,7 +715,7 @@ async def main():
     
     # Get statistics
     stats = manager.get_alert_statistics()
-    print(json.dumps(stats, indent=2))
+    logger.info(json.dumps(stats, indent=2))
     
     # Cleanup
     await manager.cleanup()

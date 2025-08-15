@@ -638,29 +638,29 @@ async def main():
     }
     
     # Create unified representation
-    print("Creating unified representation...")
+    logger.info("Creating unified representation...")
     unified_repr = await framework.create_unified_representation(modality_input)
     
-    print(f"Representation ID: {unified_repr.representation_id}")
-    print(f"Unified embedding shape: {unified_repr.unified_embedding.shape}")
-    print(f"Confidence score: {unified_repr.confidence_score}")
-    print(f"Semantic features: {unified_repr.semantic_features}")
+    logger.info(f"Representation ID: {unified_repr.representation_id}")
+    logger.info(f"Unified embedding shape: {unified_repr.unified_embedding.shape}")
+    logger.info(f"Confidence score: {unified_repr.confidence_score}")
+    logger.info(f"Semantic features: {unified_repr.semantic_features}")
     
     # Find similar representations
     similar = framework.find_similar_representations(unified_repr)
-    print(f"Similar representations: {similar}")
+    logger.info(f"Similar representations: {similar}")
     
     # Get analytics
     analytics = framework.get_representation_analytics(unified_repr.representation_id)
-    print(f"Analytics: {json.dumps(analytics, indent=2)}")
+    logger.info(f"Analytics: {json.dumps(analytics, indent=2)}")
     
     # Export representation
     exported = framework.export_representation(unified_repr.representation_id)
-    print(f"Exported representation length: {len(exported) if exported else 0}")
+    logger.info(f"Exported representation length: {len(exported) if exported else 0}")
     
     # Get framework statistics
     stats = framework.get_framework_statistics()
-    print(f"Framework statistics: {json.dumps(stats, indent=2)}")
+    logger.info(f"Framework statistics: {json.dumps(stats, indent=2)}")
     
     # Cleanup
     await framework.cleanup()

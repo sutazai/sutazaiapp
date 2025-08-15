@@ -173,7 +173,7 @@ if PROMETHEUS_AVAILABLE and PUSH_GATEWAY_URL:
             push_to_gateway(PUSH_GATEWAY_URL, job="sutazai", registry=REGISTRY)
         except Exception as e:
             # Can't use our logger here to avoid circular logging
-            print(f"Error pushing metrics: {e}")
+            logger.error(f"Error pushing metrics: {e}")
 
     # Set up periodic push (every 15 seconds)
     def _periodic_push():

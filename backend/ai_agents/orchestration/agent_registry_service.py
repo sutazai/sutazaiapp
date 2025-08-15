@@ -995,7 +995,7 @@ async def example_registry_usage():
     
     # Register service
     success = await registry.register_service(service)
-    print(f"Registration successful: {success}")
+    logger.info(f"Registration successful: {success}")
     
     # Discover services
     query = DiscoveryQuery(
@@ -1004,7 +1004,7 @@ async def example_registry_usage():
     )
     
     discovered = await registry.discover_services(query)
-    print(f"Discovered {len(discovered)} services")
+    logger.info(f"Discovered {len(discovered)} services")
     
     # Update health
     await registry.update_service_health("test_service", {
@@ -1015,7 +1015,7 @@ async def example_registry_usage():
     
     # Get stats
     stats = registry.get_registry_stats()
-    print(f"Registry stats: {stats}")
+    logger.info(f"Registry stats: {stats}")
     
     await registry.shutdown()
 

@@ -459,13 +459,13 @@ async def main():
         
         elif args.quantization:
             configs = await optimizer.analyze_quantization_opportunities()
-            print("Quantization Analysis Results:")
+            logger.info("Quantization Analysis Results:")
             for model, config in configs.items():
-                print(f"  {model}: {config.memory_savings:.0f}MB savings with {config.quantization_method}")
+                logger.info(f"  {model}: {config.memory_savings:.0f}MB savings with {config.quantization_method}")
         
         elif args.report:
             report = optimizer.generate_optimization_report()
-            print(json.dumps(report, indent=2))
+            logger.info(json.dumps(report, indent=2))
         
         else:
             parser.print_help()

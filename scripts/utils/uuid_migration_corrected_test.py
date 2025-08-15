@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRA UUID Migration Validation Test Suite - CORRECTED VERSION
 Comprehensive testing for UUID/INTEGER migration fix
 """
@@ -30,7 +33,7 @@ class UUIDMigrationCorrectedTester:
             "details": details
         }
         self.test_results.append(result)
-        print(f"[{'PASS' if passed else 'FAIL'}] {test_name}: {details.get('message', 'No message')}")
+        logger.info(f"[{'PASS' if passed else 'FAIL'}] {test_name}: {details.get('message', 'No message')}")
         
     def log_error(self, test_name: str, error: str):
         """Log test error"""
@@ -39,7 +42,7 @@ class UUIDMigrationCorrectedTester:
             "error": error,
             "timestamp": datetime.now().isoformat()
         })
-        print(f"[ERROR] {test_name}: {error}")
+        logger.error(f"[ERROR] {test_name}: {error}")
     
     def test_backend_health(self) -> bool:
         """Test backend health endpoint"""
@@ -328,9 +331,9 @@ class UUIDMigrationCorrectedTester:
     
     def run_comprehensive_corrected_test_suite(self) -> Dict[str, Any]:
         """Run the corrected UUID migration validation test suite"""
-        print("=" * 80)
-        print("ULTRA UUID Migration Validation Test Suite - CORRECTED VERSION")
-        print("=" * 80)
+        logger.info("=" * 80)
+        logger.info("ULTRA UUID Migration Validation Test Suite - CORRECTED VERSION")
+        logger.info("=" * 80)
         
         start_time = time.time()
         
@@ -400,25 +403,25 @@ class UUIDMigrationCorrectedTester:
             }
         }
         
-        print("\n" + "=" * 80)
-        print("TEST SUITE SUMMARY - UUID MIGRATION VALIDATION")
-        print("=" * 80)
-        print(f"Duration: {duration:.2f} seconds")
-        print(f"Total Tests: {total_tests}")
-        print(f"Passed: {passed_tests}")
-        print(f"Failed: {failed_tests}")
-        print(f"Success Rate: {success_rate:.1f}%")
-        print(f"Overall Status: {summary['overall_status']}")
-        print(f"UUID Migration Status: {summary['validation_summary']['uuid_migration_status']}")
+        logger.info("\n" + "=" * 80)
+        logger.info("TEST SUITE SUMMARY - UUID MIGRATION VALIDATION")
+        logger.info("=" * 80)
+        logger.info(f"Duration: {duration:.2f} seconds")
+        logger.info(f"Total Tests: {total_tests}")
+        logger.info(f"Passed: {passed_tests}")
+        logger.error(f"Failed: {failed_tests}")
+        logger.info(f"Success Rate: {success_rate:.1f}%")
+        logger.info(f"Overall Status: {summary['overall_status']}")
+        logger.info(f"UUID Migration Status: {summary['validation_summary']['uuid_migration_status']}")
         
-        print("\nCritical Test Results:")
+        logger.error("\nCritical Test Results:")
         for test_name, result in summary["critical_tests"].items():
-            print(f"  - {test_name.replace('_', ' ').title()}: {'PASS' if result else 'FAIL'}")
+            logger.info(f"  - {test_name.replace('_', ' ').title()}: {'PASS' if result else 'FAIL'}")
         
         if self.errors:
-            print(f"\nErrors: {len(self.errors)}")
+            logger.error(f"\nErrors: {len(self.errors)}")
             for error in self.errors:
-                print(f"  - {error['test_name']}: {error['error']}")
+                logger.error(f"  - {error['test_name']}: {error['error']}")
         
         return summary
 
@@ -434,7 +437,7 @@ def main():
     with open(results_file, 'w') as f:
         json.dump(results, f, indent=2, default=str)
     
-    print(f"\nDetailed results saved to: {results_file}")
+    logger.info(f"\nDetailed results saved to: {results_file}")
     
     # Exit with appropriate code
     exit_code = 0 if results["overall_status"] == "PASS" else 1

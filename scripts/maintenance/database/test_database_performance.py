@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRAFIX: Database Performance Testing and Benchmarking Script
 Tests connection pooling, query performance, and Redis cache hit rates
 
@@ -57,11 +60,11 @@ class DatabasePerformanceTester:
             decode_responses=True
         )
         
-        print("✅ Database connections initialized")
+        logger.info("✅ Database connections initialized")
         
     async def test_connection_pool_performance(self) -> Dict[str, Any]:
         """Test PostgreSQL connection pooling performance"""
-        print("\n🔍 Testing PostgreSQL connection pool performance...")
+        logger.info("\n🔍 Testing PostgreSQL connection pool performance...")
         
         query_times = []
         connection_times = []
@@ -96,16 +99,16 @@ class DatabasePerformanceTester:
             'status': 'EXCELLENT' if statistics.mean(query_times) < 0.01 else 'GOOD' if statistics.mean(query_times) < 0.05 else 'NEEDS_IMPROVEMENT'
         }
         
-        print(f"   📊 Queries per second: {results['queries_per_second']}")
-        print(f"   ⚡ Avg query time: {results['avg_query_time']}ms")
-        print(f"   🔗 Avg connection time: {results['avg_connection_time']}ms")
-        print(f"   🎯 Status: {results['status']}")
+        logger.info(f"   📊 Queries per second: {results['queries_per_second']}")
+        logger.info(f"   ⚡ Avg query time: {results['avg_query_time']}ms")
+        logger.info(f"   🔗 Avg connection time: {results['avg_connection_time']}ms")
+        logger.info(f"   🎯 Status: {results['status']}")
         
         return results
     
     async def test_redis_cache_performance(self) -> Dict[str, Any]:
         """Test Redis cache performance and hit rates"""
-        print("\n🔍 Testing Redis cache performance...")
+        logger.info("\n🔍 Testing Redis cache performance...")
         
         set_times = []
         get_times = []
@@ -165,16 +168,16 @@ class DatabasePerformanceTester:
             'status': 'EXCELLENT' if hit_rate > 0.85 else 'GOOD' if hit_rate > 0.7 else 'NEEDS_IMPROVEMENT'
         }
         
-        print(f"   📈 Cache hit rate: {results['hit_rate_percent']}%")
-        print(f"   ⚡ GET ops/sec: {results['get_ops_per_second']}")
-        print(f"   💾 SET ops/sec: {results['set_ops_per_second']}")
-        print(f"   🎯 Status: {results['status']}")
+        logger.info(f"   📈 Cache hit rate: {results['hit_rate_percent']}%")
+        logger.info(f"   ⚡ GET ops/sec: {results['get_ops_per_second']}")
+        logger.info(f"   💾 SET ops/sec: {results['set_ops_per_second']}")
+        logger.info(f"   🎯 Status: {results['status']}")
         
         return results
     
     async def test_uuid_vs_serial_performance(self) -> Dict[str, Any]:
         """Test UUID vs SERIAL primary key performance"""
-        print("\n🔍 Testing UUID vs SERIAL performance...")
+        logger.info("\n🔍 Testing UUID vs SERIAL performance...")
         
         # Create test tables
         await self.create_test_tables()
@@ -237,11 +240,11 @@ class DatabasePerformanceTester:
             'recommendation': 'UUID' if statistics.mean(uuid_query_times) < statistics.mean(serial_query_times) * 1.1 else 'SERIAL'
         }
         
-        print(f"   📊 SERIAL insert: {results['serial_avg_insert_time']}ms")
-        print(f"   🆔 UUID insert: {results['uuid_avg_insert_time']}ms")
-        print(f"   📊 SERIAL query: {results['serial_avg_query_time']}ms") 
-        print(f"   🆔 UUID query: {results['uuid_avg_query_time']}ms")
-        print(f"   💡 Recommendation: {results['recommendation']}")
+        logger.info(f"   📊 SERIAL insert: {results['serial_avg_insert_time']}ms")
+        logger.info(f"   🆔 UUID insert: {results['uuid_avg_insert_time']}ms")
+        logger.info(f"   📊 SERIAL query: {results['serial_avg_query_time']}ms") 
+        logger.info(f"   🆔 UUID query: {results['uuid_avg_query_time']}ms")
+        logger.info(f"   💡 Recommendation: {results['recommendation']}")
         
         return results
     
@@ -274,7 +277,7 @@ class DatabasePerformanceTester:
     
     async def load_test(self, concurrent_users: int = 50, duration: int = 30):
         """Run load test with multiple concurrent users"""
-        print(f"\n🚀 Running load test with {concurrent_users} concurrent users for {duration}s...")
+        logger.info(f"\n🚀 Running load test with {concurrent_users} concurrent users for {duration}s...")
         
         results = {
             'concurrent_users': concurrent_users,
@@ -356,17 +359,17 @@ class DatabasePerformanceTester:
             results['avg_response_time'] = round(statistics.mean(response_times) * 1000, 2)  # ms
             results['requests_per_second'] = round(results['total_requests'] / total_time, 2)
         
-        print(f"   📊 Total requests: {results['total_requests']}")
-        print(f"   ✅ Success rate: {round((results['successful_requests'] / results['total_requests']) * 100, 2)}%")
-        print(f"   ⚡ Requests/sec: {results['requests_per_second']}")
-        print(f"   🕒 Avg response: {results['avg_response_time']}ms")
+        logger.info(f"   📊 Total requests: {results['total_requests']}")
+        logger.info(f"   ✅ Success rate: {round((results['successful_requests'] / results['total_requests']) * 100, 2)}%")
+        logger.info(f"   ⚡ Requests/sec: {results['requests_per_second']}")
+        logger.info(f"   🕒 Avg response: {results['avg_response_time']}ms")
         
         return results
     
     async def generate_performance_report(self) -> Dict[str, Any]:
         """Generate comprehensive performance report"""
-        print("\n🎯 ULTRAFIX DATABASE PERFORMANCE REPORT")
-        print("=" * 60)
+        logger.info("\n🎯 ULTRAFIX DATABASE PERFORMANCE REPORT")
+        logger.info("=" * 60)
         
         # Run all tests
         pool_results = await self.test_connection_pool_performance()
@@ -430,10 +433,10 @@ class DatabasePerformanceTester:
             report['recommendations'].append("System performance is optimal - no immediate improvements needed")
         
         # Print final report
-        print(f"\n🏆 OVERALL PERFORMANCE GRADE: {report['overall_grade']} ({report['overall_score']}%)")
-        print(f"🔧 RECOMMENDATIONS:")
+        logger.info(f"\n🏆 OVERALL PERFORMANCE GRADE: {report['overall_grade']} ({report['overall_score']}%)")
+        logger.info(f"🔧 RECOMMENDATIONS:")
         for i, rec in enumerate(report['recommendations'], 1):
-            print(f"   {i}. {rec}")
+            logger.info(f"   {i}. {rec}")
         
         return report
     
@@ -470,12 +473,12 @@ async def main():
         if args.output_file:
             with open(args.output_file, 'w') as f:
                 json.dump(report, f, indent=2)
-            print(f"\n💾 Results saved to {args.output_file}")
+            logger.info(f"\n💾 Results saved to {args.output_file}")
         
-        print(f"\n✅ Performance testing completed successfully!")
+        logger.info(f"\n✅ Performance testing completed successfully!")
         
     except Exception as e:
-        print(f"❌ Error during performance testing: {e}")
+        logger.error(f"❌ Error during performance testing: {e}")
         sys.exit(1)
         
     finally:

@@ -129,7 +129,7 @@ class ZeroTrustEngine:
                 return None
             
             # Device fingerprinting
-            device_fingerprint = self._generate_device_fingerprint(client_info)
+            device_fingerprint = self._generate_device_fingerlogger.info(client_info)
             
             # Risk assessment
             risk_score = await self._calculate_risk_score(user_data, client_info, device_fingerprint)
@@ -236,7 +236,7 @@ class ZeroTrustEngine:
             self.logger.error(f"Credential verification error: {e}")
             return None
     
-    def _generate_device_fingerprint(self, client_info: Dict[str, str]) -> str:
+    def _generate_device_fingerlogger.info(self, client_info: Dict[str, str]) -> str:
         """Generate unique device fingerprint"""
         fingerprint_data = {
             'user_agent': client_info.get('user_agent', ''),
@@ -479,4 +479,4 @@ if __name__ == "__main__":
     }
     
     zt_engine = ZeroTrustEngine(config)
-    print("Zero-Trust Architecture initialized successfully")
+    logger.info("Zero-Trust Architecture initialized successfully")

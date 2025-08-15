@@ -893,53 +893,53 @@ def main():
     results = tester.run_all_tests()
     
     # Print comprehensive summary
-    print("\n" + "=" * 80)
-    print("🎯 ULTRA-CORRECTED BACKEND HARDWARE INTEGRATION TEST RESULTS")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info("🎯 ULTRA-CORRECTED BACKEND HARDWARE INTEGRATION TEST RESULTS")
+    logger.info("=" * 80)
     
     status_emoji = {"PASS": "🟢", "WARN": "🟡", "FAIL": "🔴"}[results["overall_status"]]
-    print(f"{status_emoji} Overall Status: {results['overall_status']}")
-    print(f"📊 Pass Rate: {results['overall_pass_rate']}%")
-    print(f"✅ Passed: {results['test_summary']['passed']}")
-    print(f"❌ Failed: {results['test_summary']['failed']}")
-    print(f"⚠️  Warnings: {results['test_summary']['warnings']}")
-    print(f"💥 Errors: {results['test_summary']['errors']}")
-    print(f"⏱️  Total Duration: {results['execution_time_ms']:.2f}ms")
+    logger.info(f"{status_emoji} Overall Status: {results['overall_status']}")
+    logger.info(f"📊 Pass Rate: {results['overall_pass_rate']}%")
+    logger.info(f"✅ Passed: {results['test_summary']['passed']}")
+    logger.error(f"❌ Failed: {results['test_summary']['failed']}")
+    logger.warning(f"⚠️  Warnings: {results['test_summary']['warnings']}")
+    logger.error(f"💥 Errors: {results['test_summary']['errors']}")
+    logger.info(f"⏱️  Total Duration: {results['execution_time_ms']:.2f}ms")
     
     # Category breakdown
-    print(f"\n📋 CATEGORY BREAKDOWN:")
+    logger.info(f"\n📋 CATEGORY BREAKDOWN:")
     for category, stats in results["category_breakdown"].items():
         pass_rate = (stats['pass'] / stats['total'] * 100) if stats['total'] > 0 else 0
-        print(f"   {category}: {stats['pass']}/{stats['total']} ({pass_rate:.1f}% pass)")
+        logger.info(f"   {category}: {stats['pass']}/{stats['total']} ({pass_rate:.1f}% pass)")
     
     # Performance summary
     if results["performance_metrics"]:
-        print(f"\n🏎️  PERFORMANCE SUMMARY:")
+        logger.info(f"\n🏎️  PERFORMANCE SUMMARY:")
         for metric, data in results["performance_metrics"].items():
-            print(f"   {metric}: {data['avg_ms']}ms avg ({data['samples']} samples)")
+            logger.info(f"   {metric}: {data['avg_ms']}ms avg ({data['samples']} samples)")
     
     # Service discovery results
-    print(f"\n🔍 DISCOVERED ENDPOINTS:")
-    print(f"   Hardware Service: {len(results['discovered_endpoints']['hardware_service'])} endpoints")
-    print(f"   Backend Proxy: {len(results['discovered_endpoints']['backend_proxy'])} endpoints")
+    logger.info(f"\n🔍 DISCOVERED ENDPOINTS:")
+    logger.info(f"   Hardware Service: {len(results['discovered_endpoints']['hardware_service'])} endpoints")
+    logger.info(f"   Backend Proxy: {len(results['discovered_endpoints']['backend_proxy'])} endpoints")
     
     # Critical issues
     failed_results = [r for r in results["detailed_results"] if r["status"] in ["FAIL", "ERROR"]]
     if failed_results:
-        print(f"\n❌ CRITICAL ISSUES ({len(failed_results)}):")
+        logger.error(f"\n❌ CRITICAL ISSUES ({len(failed_results)}):")
         for result in failed_results[:5]:  # Show top 5
-            print(f"   • {result['test_name']}: {result.get('error', 'See details')}")
+            logger.error(f"   • {result['test_name']}: {result.get('error', 'See details')}")
         if len(failed_results) > 5:
-            print(f"   ... and {len(failed_results) - 5} more")
+            logger.error(f"   ... and {len(failed_results) - 5} more")
     
     # Known issues
     warn_results = [r for r in results["detailed_results"] if r["status"] == "WARN"]
     if warn_results:
-        print(f"\n⚠️  KNOWN ISSUES ({len(warn_results)}):")
+        logger.warning(f"\n⚠️  KNOWN ISSUES ({len(warn_results)}):")
         for result in warn_results[:3]:  # Show top 3
-            print(f"   • {result['test_name']}: {result.get('error', 'Minor issue')}")
+            logger.error(f"   • {result['test_name']}: {result.get('error', 'Minor issue')}")
     
-    print("\n" + "=" * 80)
+    logger.info("\n" + "=" * 80)
     
     # Save results
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -948,9 +948,9 @@ def main():
     try:
         with open(filename, 'w') as f:
             json.dump(results, f, indent=2, default=str)
-        print(f"📄 Detailed results saved to: {filename}")
+        logger.info(f"📄 Detailed results saved to: {filename}")
     except Exception as e:
-        print(f"⚠️  Could not save results: {e}")
+        logger.info(f"⚠️  Could not save results: {e}")
     
     # Exit with appropriate code
     if results["overall_status"] == "FAIL":

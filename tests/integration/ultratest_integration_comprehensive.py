@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Comprehensive Integration Testing Suite
 Testing all service integrations and data flows
 """
@@ -21,7 +24,7 @@ class IntegrationTestSuite:
         
     async def test_database_integration(self) -> Dict:
         """Test database connectivity and operations"""
-        print("🗄️  Testing Database Integration...")
+        logger.info("🗄️  Testing Database Integration...")
         
         tests = []
         
@@ -121,7 +124,7 @@ class IntegrationTestSuite:
     
     async def test_ai_service_integration(self) -> Dict:
         """Test AI service integration and communication"""
-        print("🤖 Testing AI Service Integration...")
+        logger.info("🤖 Testing AI Service Integration...")
         
         tests = []
         
@@ -214,7 +217,7 @@ class IntegrationTestSuite:
     
     async def test_monitoring_integration(self) -> Dict:
         """Test monitoring stack integration"""
-        print("📊 Testing Monitoring Integration...")
+        logger.info("📊 Testing Monitoring Integration...")
         
         tests = []
         
@@ -277,7 +280,7 @@ class IntegrationTestSuite:
     
     async def test_agent_communication(self) -> Dict:
         """Test agent-to-agent communication"""
-        print("🤝 Testing Agent Communication...")
+        logger.info("🤝 Testing Agent Communication...")
         
         tests = []
         
@@ -323,7 +326,7 @@ class IntegrationTestSuite:
     
     async def test_end_to_end_workflow(self) -> Dict:
         """Test end-to-end workflow integration"""
-        print("🔄 Testing End-to-End Workflow...")
+        logger.info("🔄 Testing End-to-End Workflow...")
         
         tests = []
         
@@ -379,8 +382,8 @@ class IntegrationTestSuite:
     
     async def run_comprehensive_integration_test(self) -> Dict:
         """Run all integration tests"""
-        print("🚀 ULTRATEST: Comprehensive Integration Testing")
-        print("=" * 60)
+        logger.info("🚀 ULTRATEST: Comprehensive Integration Testing")
+        logger.info("=" * 60)
         
         test_categories = [
             await self.test_database_integration(),
@@ -428,40 +431,40 @@ class IntegrationTestSuite:
     
     def print_integration_report(self, results: Dict):
         """Print comprehensive integration test report"""
-        print("\n" + "=" * 80)
-        print("🎯 ULTRATEST COMPREHENSIVE INTEGRATION TEST REPORT")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("🎯 ULTRATEST COMPREHENSIVE INTEGRATION TEST REPORT")
+        logger.info("=" * 80)
         
         summary = results["test_summary"]
-        print(f"⏱️  Duration: {summary['duration']:.2f}s")
-        print(f"📊 Total Tests: {summary['total_tests']}")
-        print(f"✅ Passed: {summary['total_passes']}")
-        print(f"❌ Failed: {summary['total_failures']}")
-        print(f"📈 Success Rate: {summary['success_rate']:.1f}%")
-        print(f"📋 Categories: {summary['categories']}")
-        print(f"🏆 Grade: {results['overall_grade']}")
+        logger.info(f"⏱️  Duration: {summary['duration']:.2f}s")
+        logger.info(f"📊 Total Tests: {summary['total_tests']}")
+        logger.info(f"✅ Passed: {summary['total_passes']}")
+        logger.error(f"❌ Failed: {summary['total_failures']}")
+        logger.info(f"📈 Success Rate: {summary['success_rate']:.1f}%")
+        logger.info(f"📋 Categories: {summary['categories']}")
+        logger.info(f"🏆 Grade: {results['overall_grade']}")
         
-        print(f"\n📋 DETAILED RESULTS BY CATEGORY:")
+        logger.info(f"\n📋 DETAILED RESULTS BY CATEGORY:")
         for category in results["categories"]:
             status = "✅" if category["fail_count"] == 0 else "⚠️" if category["pass_count"] > category["fail_count"] else "❌"
-            print(f"\n{status} {category['category']}:")
-            print(f"   📊 Tests: {category['total_count']}, Passed: {category['pass_count']}, Failed: {category['fail_count']}")
+            logger.info(f"\n{status} {category['category']}:")
+            logger.error(f"   📊 Tests: {category['total_count']}, Passed: {category['pass_count']}, Failed: {category['fail_count']}")
             
             for test in category["tests"]:
                 test_status = "✅" if test["status"] == "PASS" else "❌"
-                print(f"      {test_status} {test['test']}: {test['details']}")
+                logger.info(f"      {test_status} {test['test']}: {test['details']}")
         
         # Final assessment
-        print("\n" + "=" * 80)
+        logger.info("\n" + "=" * 80)
         if summary['success_rate'] >= 95:
-            print("🏆 INTEGRATION TEST RESULT: EXCELLENT - ALL SYSTEMS INTEGRATED")
+            logger.info("🏆 INTEGRATION TEST RESULT: EXCELLENT - ALL SYSTEMS INTEGRATED")
         elif summary['success_rate'] >= 85:
-            print("✅ INTEGRATION TEST RESULT: GOOD - MINOR INTEGRATION ISSUES")
+            logger.info("✅ INTEGRATION TEST RESULT: GOOD - MINOR INTEGRATION ISSUES")
         elif summary['success_rate'] >= 70:
-            print("⚠️  INTEGRATION TEST RESULT: MODERATE - INTEGRATION IMPROVEMENTS NEEDED")
+            logger.info("⚠️  INTEGRATION TEST RESULT: MODERATE - INTEGRATION IMPROVEMENTS NEEDED")
         else:
-            print("🚨 INTEGRATION TEST RESULT: CRITICAL - MAJOR INTEGRATION FAILURES")
-        print("=" * 80)
+            logger.error("🚨 INTEGRATION TEST RESULT: CRITICAL - MAJOR INTEGRATION FAILURES")
+        logger.info("=" * 80)
 
 async def main():
     """Main execution function"""
@@ -477,7 +480,7 @@ async def main():
             json.dump(results, f, indent=2)
         
         test_suite.print_integration_report(results)
-        print(f"\n📄 Detailed report saved: {report_file}")
+        logger.info(f"\n📄 Detailed report saved: {report_file}")
         
         # Exit with appropriate code
         if results["test_summary"]["success_rate"] >= 85:
@@ -486,7 +489,7 @@ async def main():
             sys.exit(1)  # Failure
             
     except Exception as e:
-        print(f"🚨 INTEGRATION TEST CRITICAL ERROR: {e}")
+        logger.error(f"🚨 INTEGRATION TEST CRITICAL ERROR: {e}")
         traceback.print_exc()
         sys.exit(2)
 

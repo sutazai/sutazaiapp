@@ -34,13 +34,13 @@ class RuleValidator:
         
     def validate_all(self) -> Dict:
         """Validate all CLAUDE.md rules"""
-        console.print("[bold blue]Starting Rule Validation...[/bold blue]\n")
+        console.logger.info("[bold blue]Starting Rule Validation...[/bold blue]\n")
         
         rules = self._parse_claude_rules()
         total_score = 0
         
         for rule_num, rule in enumerate(rules, 1):
-            console.print(f"[cyan]Checking Rule {rule_num}: {rule['title']}[/cyan]")
+            console.logger.info(f"[cyan]Checking Rule {rule_num}: {rule['title']}[/cyan]")
             score = self._validate_rule(rule)
             total_score += score
             
@@ -59,7 +59,7 @@ class RuleValidator:
         rules = []
         
         if not self.rules_path.exists():
-            console.print(f"[red]Warning: CLAUDE.md not found at {self.rules_path}[/red]")
+            console.logger.warning(f"[red]Warning: CLAUDE.md not found at {self.rules_path}[/red]")
             return rules
         
         with open(self.rules_path, 'r', encoding='utf-8') as f:
@@ -198,7 +198,7 @@ class RuleValidator:
     
     def _print_summary(self):
         """Print validation summary"""
-        console.print("\n[bold green]Validation Complete![/bold green]\n")
+        console.logger.info("\n[bold green]Validation Complete![/bold green]\n")
         
         table = Table(title="Rule Compliance Summary")
         table.add_column("Rule", style="cyan")
@@ -215,8 +215,8 @@ class RuleValidator:
                 status
             )
         
-        console.print(table)
-        console.print(f"\n[bold]Overall Compliance Score: {self.validation_results['compliance_score']:.1f}%[/bold]")
+        console.logger.info(table)
+        console.logger.info(f"\n[bold]Overall Compliance Score: {self.validation_results['compliance_score']:.1f}%[/bold]")
 
 
 def main():
@@ -233,7 +233,7 @@ def main():
     
     # Save report
     report_path = validator.save_report(args.output)
-    console.print(f"\n[bold]Report saved to:[/bold] {report_path}")
+    console.logger.info(f"\n[bold]Report saved to:[/bold] {report_path}")
     
     # Exit with appropriate code
     sys.exit(0 if results['compliance_score'] >= 80 else 1)

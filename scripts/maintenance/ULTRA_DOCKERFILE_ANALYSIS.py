@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRAFIX DOCKERFILE ANALYSIS ENGINE
 ===================================
 Comprehensive analysis of Docker chaos in SutazAI system
@@ -45,7 +48,7 @@ class DockerfileAnalyzer:
             self.dockerfiles.append(dockerfile)
         
         self.analysis['total_files'] = len(self.dockerfiles)
-        print(f"Found {len(self.dockerfiles)} Dockerfiles")
+        logger.info(f"Found {len(self.dockerfiles)} Dockerfiles")
     
     def analyze_dockerfile(self, filepath):
         """Analyze individual Dockerfile for patterns"""
@@ -92,7 +95,7 @@ class DockerfileAnalyzer:
             }
             
         except Exception as e:
-            print(f"Error analyzing {filepath}: {e}")
+            logger.error(f"Error analyzing {filepath}: {e}")
             return None
     
     def categorize_dockerfiles(self):
@@ -240,21 +243,21 @@ class DockerfileAnalyzer:
     
     def run_analysis(self):
         """Run complete analysis"""
-        print("ULTRAFIX DOCKERFILE ANALYSIS - Starting...")
+        logger.info("ULTRAFIX DOCKERFILE ANALYSIS - Starting...")
         
         # Find all Dockerfiles
         self.find_dockerfiles()
         
         # Categorize by purpose
-        print("Categorizing Dockerfiles...")
+        logger.info("Categorizing Dockerfiles...")
         categories = self.categorize_dockerfiles()
         
         # Find duplicates
-        print("Finding duplicates...")
+        logger.info("Finding duplicates...")
         exact_dups, near_dups = self.find_duplicates(categories)
         
         # Generate consolidation plan
-        print("Generating consolidation plan...")
+        logger.info("Generating consolidation plan...")
         opportunities = self.generate_consolidation_plan(categories)
         
         return self.analysis, categories
@@ -340,7 +343,7 @@ RECOMMENDED ACTIONS:
 if __name__ == "__main__":
     analyzer = DockerfileAnalyzer()
     report = analyzer.generate_report()
-    print(report)
+    logger.info(report)
     
     # Save detailed analysis to JSON
     analysis, categories = analyzer.run_analysis()
@@ -351,4 +354,4 @@ if __name__ == "__main__":
                              for item in v] for k, v in categories.items()}
         }, f, indent=2)
     
-    print("\nDetailed analysis saved to: ULTRA_DOCKERFILE_ANALYSIS_RESULTS.json")
+    logger.info("\nDetailed analysis saved to: ULTRA_DOCKERFILE_ANALYSIS_RESULTS.json")

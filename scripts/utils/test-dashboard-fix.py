@@ -433,7 +433,7 @@ async def main():
         results = await agent.run_all_tests()
         report = agent.generate_report(results)
         
-        print(report)
+        logger.info(report)
         
         # Save report
         report_file = Path("/tmp/dashboard_test_report.txt")

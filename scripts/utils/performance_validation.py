@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 SutazAI Performance Validation Suite
 Comprehensive performance testing for production readiness assessment
 """
@@ -31,7 +34,7 @@ class PerformanceValidator:
         
     def test_health_endpoints(self) -> Dict:
         """Test health endpoint response times - Target: <200ms"""
-        print("\n[1/7] Testing Health Endpoints Response Times...")
+        logger.info("\n[1/7] Testing Health Endpoints Response Times...")
         
         endpoints = [
             ("Backend API", "http://localhost:10010/health"),
@@ -81,7 +84,7 @@ class PerformanceValidator:
     
     def test_chat_endpoint(self) -> Dict:
         """Test chat endpoint response time - Target: <5s"""
-        print("\n[2/7] Testing Chat Endpoint Response Times...")
+        logger.info("\n[2/7] Testing Chat Endpoint Response Times...")
         
         results = {"response_times": [], "avg_time": 0, "pass": True}
         
@@ -115,7 +118,7 @@ class PerformanceValidator:
     
     def measure_system_resources(self) -> Dict:
         """Measure system resource utilization"""
-        print("\n[3/7] Measuring System Resource Utilization...")
+        logger.info("\n[3/7] Measuring System Resource Utilization...")
         
         # System-wide metrics
         cpu_percent = psutil.cpu_percent(interval=5)
@@ -166,7 +169,7 @@ class PerformanceValidator:
     
     def test_database_performance(self) -> Dict:
         """Test database query performance and connection pooling"""
-        print("\n[4/7] Testing Database Performance...")
+        logger.info("\n[4/7] Testing Database Performance...")
         
         results = {"postgres": {}, "redis": {}, "pass": True}
         
@@ -252,7 +255,7 @@ class PerformanceValidator:
     
     def evaluate_container_efficiency(self) -> Dict:
         """Evaluate container resource allocation and efficiency"""
-        print("\n[5/7] Evaluating Container Efficiency...")
+        logger.info("\n[5/7] Evaluating Container Efficiency...")
         
         results = {"containers": {}, "total_memory_mb": 0, "total_cpu_cores": 0, "pass": True}
         
@@ -303,7 +306,7 @@ class PerformanceValidator:
     
     def test_concurrent_load(self) -> Dict:
         """Test concurrent user load handling - Target: 50+ users"""
-        print("\n[6/7] Testing Concurrent Load Handling...")
+        logger.info("\n[6/7] Testing Concurrent Load Handling...")
         
         results = {"concurrent_users": 50, "success_rate": 0, "avg_response_time": 0, "pass": False}
         
@@ -338,7 +341,7 @@ class PerformanceValidator:
     
     def test_ollama_and_cache(self) -> Dict:
         """Test Ollama response times and Redis cache performance"""
-        print("\n[7/7] Testing Ollama and Cache Performance...")
+        logger.info("\n[7/7] Testing Ollama and Cache Performance...")
         
         results = {"ollama": {}, "cache": {}, "pass": True}
         
@@ -448,9 +451,9 @@ class PerformanceValidator:
     def run_all_tests(self):
         """Execute all performance tests"""
         
-        print("=" * 60)
-        print("SutazAI Performance Validation Suite")
-        print("=" * 60)
+        logger.info("=" * 60)
+        logger.info("SutazAI Performance Validation Suite")
+        logger.info("=" * 60)
         
         # Run tests
         self.results["tests"]["health_endpoints"] = self.test_health_endpoints()
@@ -471,22 +474,22 @@ class PerformanceValidator:
         with open(report_file, 'w') as f:
             json.dump(self.results, f, indent=2)
         
-        print(f"\n\nResults saved to: {report_file}")
+        logger.info(f"\n\nResults saved to: {report_file}")
         
         # Print summary
-        print("\n" + "=" * 60)
-        print("PERFORMANCE VALIDATION SUMMARY")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.info("PERFORMANCE VALIDATION SUMMARY")
+        logger.info("=" * 60)
         
         summary = self.results["summary"]
-        print(f"\nTests Passed: {summary['passed_tests']}/{summary['total_tests']} ({summary['success_rate']}%)")
-        print(f"Production Criteria Met: {summary['production_criteria_met']}/{summary['production_criteria_total']}")
-        print(f"\nPRODUCTION READY: {'YES' if self.results['production_ready'] else 'NO'}")
+        logger.info(f"\nTests Passed: {summary['passed_tests']}/{summary['total_tests']} ({summary['success_rate']}%)")
+        logger.info(f"Production Criteria Met: {summary['production_criteria_met']}/{summary['production_criteria_total']}")
+        logger.info(f"\nPRODUCTION READY: {'YES' if self.results['production_ready'] else 'NO'}")
         
         if summary.get("improvements_achieved"):
-            print("\nPerformance Improvements Achieved:")
+            logger.info("\nPerformance Improvements Achieved:")
             for improvement in summary["improvements_achieved"]:
-                print(f"  - {improvement}")
+                logger.info(f"  - {improvement}")
         
         return self.results
 

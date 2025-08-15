@@ -557,21 +557,21 @@ def main():
     validator.save_results(results, results_file)
     
     # Print summary
-    print("\n" + "="*60)
-    print("  DOCKERFILE CONSOLIDATION VALIDATION RESULTS")
-    print("="*60)
-    print(f"Total Dockerfiles:      {results['summary']['total_dockerfiles']}")
-    print(f"Syntax Valid:           {results['summary']['syntax_valid']}")
-    print(f"Uses Base Images:       {results['summary']['uses_base_images']}")
-    print(f"Security Compliant:     {results['summary']['security_compliant']}")
-    print(f"Build Optimized:        {results['summary']['build_optimized']}")
-    print(f"Builds Successful:      {results['summary']['builds_successful']}")
-    print(f"Overall Score:          {results['overall_score']}/100")
-    print(f"Grade:                  {results['grade']}")
-    print("\nRecommendations:")
+    logger.info("\n" + "="*60)
+    logger.info("  DOCKERFILE CONSOLIDATION VALIDATION RESULTS")
+    logger.info("="*60)
+    logger.info(f"Total Dockerfiles:      {results['summary']['total_dockerfiles']}")
+    logger.info(f"Syntax Valid:           {results['summary']['syntax_valid']}")
+    logger.info(f"Uses Base Images:       {results['summary']['uses_base_images']}")
+    logger.info(f"Security Compliant:     {results['summary']['security_compliant']}")
+    logger.info(f"Build Optimized:        {results['summary']['build_optimized']}")
+    logger.info(f"Builds Successful:      {results['summary']['builds_successful']}")
+    logger.info(f"Overall Score:          {results['overall_score']}/100")
+    logger.info(f"Grade:                  {results['grade']}")
+    logger.info("\nRecommendations:")
     for rec in results['recommendations']:
-        print(f"  • {rec}")
-    print("\n" + "="*60)
+        logger.info(f"  • {rec}")
+    logger.info("\n" + "="*60)
     
     # Return exit code based on score
     return 0 if results['overall_score'] >= 80 else 1

@@ -380,13 +380,13 @@ def main():
         
     elif args.action == 'status':
         current_env = manager.get_current_environment()
-        print(f"Current environment: {current_env}")
+        logger.info(f"Current environment: {current_env}")
         
         blue_healthy = manager.health_check(manager.config['blue_port'])
         green_healthy = manager.health_check(manager.config['green_port'])
         
-        print(f"Blue environment (port {manager.config['blue_port']}): {'✅ Healthy' if blue_healthy else '❌ Unhealthy'}")
-        print(f"Green environment (port {manager.config['green_port']}): {'✅ Healthy' if green_healthy else '❌ Unhealthy'}")
+        logger.info(f"Blue environment (port {manager.config['blue_port']}): {'✅ Healthy' if blue_healthy else '❌ Unhealthy'}")
+        logger.info(f"Green environment (port {manager.config['green_port']}): {'✅ Healthy' if green_healthy else '❌ Unhealthy'}")
         
     elif args.action == 'rollback':
         if not args.backup_dir:

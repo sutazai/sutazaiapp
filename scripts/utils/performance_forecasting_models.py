@@ -856,14 +856,14 @@ if __name__ == "__main__":
             )
             
             if forecast:
-                print(f"\nForecast for {metric}:")
-                print(f"  Trend: {forecast.trend}")
-                print(f"  Model Accuracy: {forecast.model_accuracy:.2%}")
-                print(f"  Seasonality Detected: {forecast.seasonality_detected}")
-                print(f"  Recommendations: {len(forecast.recommendations)}")
+                logger.info(f"\nForecast for {metric}:")
+                logger.info(f"  Trend: {forecast.trend}")
+                logger.info(f"  Model Accuracy: {forecast.model_accuracy:.2%}")
+                logger.info(f"  Seasonality Detected: {forecast.seasonality_detected}")
+                logger.info(f"  Recommendations: {len(forecast.recommendations)}")
                 
                 for rec in forecast.recommendations:
-                    print(f"    - {rec}")
+                    logger.info(f"    - {rec}")
             
         except Exception as e:
             logger.error(f"Failed to generate forecast for {metric}: {e}")
@@ -876,19 +876,19 @@ if __name__ == "__main__":
             'cpu_percent', 'memory_percent'
         ], horizon_days=7)
         
-        print(f"\nCapacity Predictions ({len(capacity_predictions)} resources):")
+        logger.info(f"\nCapacity Predictions ({len(capacity_predictions)} resources):")
         for pred in capacity_predictions:
-            print(f"  {pred.resource}:")
-            print(f"    Current: {pred.current_utilization:.1f}%")
-            print(f"    Predicted: {pred.predicted_utilization:.1f}%")
+            logger.info(f"  {pred.resource}:")
+            logger.info(f"    Current: {pred.current_utilization:.1f}%")
+            logger.info(f"    Predicted: {pred.predicted_utilization:.1f}%")
             if pred.capacity_exhaustion_date:
-                print(f"    Capacity exhaustion: {pred.capacity_exhaustion_date}")
+                logger.info(f"    Capacity exhaustion: {pred.capacity_exhaustion_date}")
             if pred.recommended_scaling_date:
-                print(f"    Recommended scaling: {pred.recommended_scaling_date}")
-            print(f"    Scaling factor: {pred.scaling_factor:.2f}")
-            print(f"    Confidence: {pred.confidence:.2%}")
+                logger.info(f"    Recommended scaling: {pred.recommended_scaling_date}")
+            logger.info(f"    Scaling factor: {pred.scaling_factor:.2f}")
+            logger.info(f"    Confidence: {pred.confidence:.2%}")
         
     except Exception as e:
         logger.error(f"Failed to generate capacity predictions: {e}")
     
-    print("\nForecasting system test completed!")
+    logger.info("\nForecasting system test completed!")

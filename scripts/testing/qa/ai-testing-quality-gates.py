@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 AI Testing Quality Gates
 Enterprise-grade quality enforcement for AI testing - Rule 5 compliance
 """
@@ -31,7 +34,7 @@ class AITestingQualityGate:
         
     def run_ai_test_coverage_analysis(self) -> Tuple[bool, str, Dict[str, Any]]:
         """Run comprehensive AI test coverage analysis"""
-        print("🔍 Running AI test coverage analysis...")
+        logger.info("🔍 Running AI test coverage analysis...")
         
         try:
             # Install coverage tools if not available
@@ -102,7 +105,7 @@ class AITestingQualityGate:
         
     def validate_ai_test_completeness(self) -> Tuple[bool, str, Dict[str, Any]]:
         """Validate all required AI test categories exist and have proper tests"""
-        print("📋 Validating AI test completeness...")
+        logger.info("📋 Validating AI test completeness...")
         
         completeness_report = {
             'categories': {},
@@ -158,7 +161,7 @@ class AITestingQualityGate:
             
     def run_ai_security_validation(self) -> Tuple[bool, str, Dict[str, Any]]:
         """Run AI security validation tests"""
-        print("🛡️ Running AI security validation...")
+        logger.info("🛡️ Running AI security validation...")
         
         try:
             result = subprocess.run([
@@ -186,7 +189,7 @@ class AITestingQualityGate:
             
     def run_ai_performance_validation(self) -> Tuple[bool, str, Dict[str, Any]]:
         """Run AI performance validation tests"""
-        print("⚡ Running AI performance validation...")
+        logger.info("⚡ Running AI performance validation...")
         
         try:
             result = subprocess.run([
@@ -214,7 +217,7 @@ class AITestingQualityGate:
             
     def validate_ai_testing_infrastructure(self) -> Tuple[bool, str, Dict[str, Any]]:
         """Validate AI testing infrastructure and dependencies"""
-        print("🔧 Validating AI testing infrastructure...")
+        logger.info("🔧 Validating AI testing infrastructure...")
         
         infrastructure_checks = {
             'python_version': sys.version_info >= (3, 8),
@@ -320,13 +323,13 @@ class AITestingQualityGate:
         with open(report_path, 'w') as f:
             json.dump(report, f, indent=2, default=str)
             
-        print(f"📊 Quality report saved to: {report_path}")
+        logger.info(f"📊 Quality report saved to: {report_path}")
         return report_path
 
 def main():
     """Main quality gate execution"""
-    print("🚀 Starting AI Testing Quality Gates Validation")
-    print("=" * 60)
+    logger.info("🚀 Starting AI Testing Quality Gates Validation")
+    logger.info("=" * 60)
     
     gate = AITestingQualityGate()
     
@@ -343,47 +346,47 @@ def main():
     
     # Run all quality checks
     for check_name, check_func in quality_checks:
-        print(f"\n🔍 Running {check_name}...")
+        logger.info(f"\n🔍 Running {check_name}...")
         try:
             passed, message, details = check_func()
             results.append((check_name, passed, message, details))
             
             if passed:
-                print(f"✅ {check_name}: {message}")
+                logger.info(f"✅ {check_name}: {message}")
             else:
-                print(f"❌ {check_name}: {message}")
+                logger.info(f"❌ {check_name}: {message}")
                 
         except Exception as e:
             error_message = f"Check execution failed: {e}"
             results.append((check_name, False, error_message, {'error': str(e)}))
-            print(f"💥 {check_name}: {error_message}")
+            logger.error(f"💥 {check_name}: {error_message}")
     
     # Generate and save quality report
-    print(f"\n📊 Generating quality report...")
+    logger.info(f"\n📊 Generating quality report...")
     report = gate.generate_quality_report(results)
     report_path = gate.save_quality_report(report)
     
     # Display summary
-    print(f"\n📋 Quality Gates Summary")
-    print("=" * 40)
-    print(f"Overall Status: {report['overall_status']}")
-    print(f"Success Rate: {report['summary']['success_rate']*100:.1f}%")
-    print(f"Passed Checks: {report['summary']['passed_checks']}/{report['summary']['total_checks']}")
+    logger.info(f"\n📋 Quality Gates Summary")
+    logger.info("=" * 40)
+    logger.info(f"Overall Status: {report['overall_status']}")
+    logger.info(f"Success Rate: {report['summary']['success_rate']*100:.1f}%")
+    logger.info(f"Passed Checks: {report['summary']['passed_checks']}/{report['summary']['total_checks']}")
     
     if report['recommendations']:
-        print(f"\n💡 Recommendations:")
+        logger.info(f"\n💡 Recommendations:")
         for i, rec in enumerate(report['recommendations'], 1):
-            print(f"  {i}. {rec}")
+            logger.info(f"  {i}. {rec}")
     
     # Exit with appropriate code
     if report['overall_status'] == 'PASSED':
-        print(f"\n🎉 All AI testing quality gates passed!")
+        logger.info(f"\n🎉 All AI testing quality gates passed!")
         sys.exit(0)
     elif report['overall_status'] == 'WARNING':
-        print(f"\n⚠️ AI testing quality gates passed with warnings.")
+        logger.warning(f"\n⚠️ AI testing quality gates passed with warnings.")
         sys.exit(0)  # Allow warnings for now
     else:
-        print(f"\n🚫 AI testing quality gates failed. Fix issues before proceeding.")
+        logger.error(f"\n🚫 AI testing quality gates failed. Fix issues before proceeding.")
         sys.exit(1)
 
 if __name__ == "__main__":

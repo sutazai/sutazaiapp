@@ -2,6 +2,7 @@
 Edge Inference API - REST API for edge inference optimization system
 """
 
+import logging
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -105,6 +106,9 @@ class EdgeDeploymentRequest(BaseModel):
 # Global system state
 _system_initialized = False
 
+# Configure logger
+logger = logging.getLogger(__name__)
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize the edge inference system on startup"""
@@ -120,9 +124,9 @@ async def startup_event():
         
         status = await initialize_edge_inference_system(config)
         _system_initialized = True
-        print(f"Edge inference system initialized: {status}")
+        logger.info(f"Edge inference system initialized: {status}")
     except Exception as e:
-        print(f"Failed to initialize edge inference system: {e}")
+        logger.error(f"Failed to initialize edge inference system: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -131,9 +135,9 @@ async def shutdown_event():
     if _system_initialized:
         try:
             status = await shutdown_edge_inference_system()
-            print(f"Edge inference system shutdown: {status}")
+            logger.info(f"Edge inference system shutdown: {status}")
         except Exception as e:
-            print(f"Error during shutdown: {e}")
+            logger.error(f"Error during shutdown: {e}")
         finally:
             _system_initialized = False
 

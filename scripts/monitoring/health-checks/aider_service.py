@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Aider AI Code Assistant Service
 """
 
@@ -43,7 +46,7 @@ def improved_function():
         result = "Aider has improved this code"
         return result
     except Exception as e:
-        print(f"Error: {{e}}")
+        logger.error(f"Error: {{e}}")
         return None
 """
         

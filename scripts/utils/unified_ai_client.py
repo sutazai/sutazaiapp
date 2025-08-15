@@ -376,11 +376,11 @@ if __name__ == "__main__":
     
     # Discover services
     services = client.discover_services()
-    print(f"Discovered {len(services)} services")
+    logger.info(f"Discovered {len(services)} services")
     
     # Check health
     healthy = client.get_healthy_services()
-    print(f"Healthy services: {healthy}")
+    logger.info(f"Healthy services: {healthy}")
     
     # Example: Chat completion
     try:
@@ -388,9 +388,9 @@ if __name__ == "__main__":
             prompt="What is the capital of France?",
             model="tinyllama"
         )
-        print(f"Chat response: {response}")
+        logger.info(f"Chat response: {response}")
     except Exception as e:
-        print(f"Chat failed: {e}")
+        logger.error(f"Chat failed: {e}")
     
     # Example: Execute chain
     try:
@@ -398,6 +398,6 @@ if __name__ == "__main__":
             prompt="Explain advanced computing in simple terms",
             chain_type="simple"
         )
-        print(f"Chain response: {response}")
+        logger.info(f"Chain response: {response}")
     except Exception as e:
-        print(f"Chain failed: {e}")
+        logger.error(f"Chain failed: {e}")

@@ -165,38 +165,38 @@ def categorize_scripts():
     }
 
 if __name__ == "__main__":
-    print("=== ULTRA SCRIPT CONSOLIDATION ANALYSIS ===\n")
+    logger.info("=== ULTRA SCRIPT CONSOLIDATION ANALYSIS ===\n")
     
     # Run analysis
     analysis = analyze_scripts()
     categorization = categorize_scripts()
     
     # Print results
-    print(f"TOTAL SCRIPTS FOUND: {analysis['total_scripts']}")
-    print(f"\nBY TYPE:")
+    logger.info(f"TOTAL SCRIPTS FOUND: {analysis['total_scripts']}")
+    logger.info(f"\nBY TYPE:")
     for ext, count in analysis['by_type'].items():
-        print(f"  {ext}: {count}")
+        logger.info(f"  {ext}: {count}")
     
-    print(f"\nBY TOP DIRECTORY:")
+    logger.info(f"\nBY TOP DIRECTORY:")
     for dir_name, count in sorted(analysis['by_directory'].items(), key=lambda x: x[1], reverse=True)[:10]:
-        print(f"  {dir_name}/: {count}")
+        logger.info(f"  {dir_name}/: {count}")
     
-    print(f"\nDUPLICATES:")
-    print(f"  Duplicate groups: {analysis['duplicate_groups']}")
-    print(f"  Total duplicate files: {analysis['duplicates']}")
+    logger.info(f"\nDUPLICATES:")
+    logger.info(f"  Duplicate groups: {analysis['duplicate_groups']}")
+    logger.info(f"  Total duplicate files: {analysis['duplicates']}")
     
-    print(f"\nSMALL/STUB SCRIPTS: {analysis['small_scripts']}")
+    logger.info(f"\nSMALL/STUB SCRIPTS: {analysis['small_scripts']}")
     
-    print(f"\nCATEGORIZATION:")
+    logger.info(f"\nCATEGORIZATION:")
     for category, count in categorization['categories'].items():
-        print(f"  {category}: {count}")
-    print(f"  uncategorized: {categorization['uncategorized']}")
+        logger.info(f"  {category}: {count}")
+    logger.info(f"  uncategorized: {categorization['uncategorized']}")
     
-    print(f"\nCONSOLIDATION POTENTIAL:")
+    logger.info(f"\nCONSOLIDATION POTENTIAL:")
     reduction_potential = analysis['duplicates'] + analysis['small_scripts']
-    print(f"  Immediate reduction possible: {reduction_potential} scripts")
-    print(f"  Target reduction: {int(analysis['total_scripts'] * 0.8)} scripts")
-    print(f"  Final target: {int(analysis['total_scripts'] * 0.2)} scripts (~350)")
+    logger.info(f"  Immediate reduction possible: {reduction_potential} scripts")
+    logger.info(f"  Target reduction: {int(analysis['total_scripts'] * 0.8)} scripts")
+    logger.info(f"  Final target: {int(analysis['total_scripts'] * 0.2)} scripts (~350)")
     
     # Save detailed report
     with open('/opt/sutazaiapp/script_consolidation_report.json', 'w') as f:
@@ -205,4 +205,4 @@ if __name__ == "__main__":
             'categorization': categorization
         }, f, indent=2)
     
-    print("\nDetailed report saved to: /opt/sutazaiapp/script_consolidation_report.json")
+    logger.info("\nDetailed report saved to: /opt/sutazaiapp/script_consolidation_report.json")

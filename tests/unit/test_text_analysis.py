@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import logging
 Test Script for Text Analysis Agent
 ====================================
 
@@ -19,8 +20,12 @@ from typing import Dict, Any
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Import the Text Analysis Agent
+# Import the Text Analysis Agent and structured logging
 from agents.text_analysis_agent import TextAnalysisAgent
+from backend.app.core.logging_config import get_logger
+
+# Configure test logging (Rule 8 compliance)
+logger = get_logger(__name__)
 
 
 # Test texts demonstrating various scenarios
@@ -94,252 +99,253 @@ TEST_TEXTS = {
 
 async def test_sentiment_analysis(agent: TextAnalysisAgent):
     """Test sentiment analysis capability"""
-    print("\n" + "="*60)
-    print("TESTING: Sentiment Analysis")
-    print("="*60)
+    logger.info("TEST_START: Sentiment Analysis")
+    logger.info("\n" + "="*60)
+    logger.info("TESTING: Sentiment Analysis")
+    logger.info("="*60)
     
     for text_name, text in [
         ("positive_review", TEST_TEXTS["positive_review"]),
         ("negative_feedback", TEST_TEXTS["negative_feedback"]),
         ("short_text", TEST_TEXTS["short_text"])
     ]:
-        print(f"\n📝 Analyzing: {text_name}")
-        print(f"Text preview: {text[:100]}...")
+        logger.info(f"\n📝 Analyzing: {text_name}")
+        logger.info(f"Text preview: {text[:100]}...")
         
         result = await agent.analyze_sentiment(text)
         
-        print(f"✅ Result:")
-        print(f"  - Sentiment: {result['sentiment']}")
-        print(f"  - Confidence: {result['confidence']:.2%}")
-        print(f"  - Reason: {result.get('reason', 'N/A')}")
-        print(f"  - Processing time: {result['processing_time']:.3f}s")
-        print(f"  - Model used: {result['model_used']}")
+        logger.info(f"✅ Result:")
+        logger.info(f"  - Sentiment: {result['sentiment']}")
+        logger.info(f"  - Confidence: {result['confidence']:.2%}")
+        logger.info(f"  - Reason: {result.get('reason', 'N/A')}")
+        logger.info(f"  - Processing time: {result['processing_time']:.3f}s")
+        logger.info(f"  - Model used: {result['model_used']}")
 
 
 async def test_entity_extraction(agent: TextAnalysisAgent):
     """Test entity extraction capability"""
-    print("\n" + "="*60)
-    print("TESTING: Entity Extraction")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("TESTING: Entity Extraction")
+    logger.info("="*60)
     
     text = TEST_TEXTS["news_article"]
-    print(f"\n📝 Analyzing news article...")
-    print(f"Text preview: {text[:150]}...")
+    logger.info(f"\n📝 Analyzing news article...")
+    logger.info(f"Text preview: {text[:150]}...")
     
     result = await agent.extract_entities(text)
     
-    print(f"\n✅ Entities Found:")
+    logger.info(f"\n✅ Entities Found:")
     entities = result.get("entities", {})
     for entity_type, entity_list in entities.items():
         if entity_list:
-            print(f"\n  {entity_type.upper()}:")
+            logger.info(f"\n  {entity_type.upper()}:")
             for entity in entity_list[:5]:  # Show first 5
-                print(f"    - {entity}")
+                logger.info(f"    - {entity}")
     
-    print(f"\n  Total entities: {result['entity_count']}")
-    print(f"  Processing time: {result['processing_time']:.3f}s")
-    print(f"  Model used: {result['model_used']}")
+    logger.info(f"\n  Total entities: {result['entity_count']}")
+    logger.info(f"  Processing time: {result['processing_time']:.3f}s")
+    logger.info(f"  Model used: {result['model_used']}")
 
 
 async def test_summarization(agent: TextAnalysisAgent):
     """Test text summarization capability"""
-    print("\n" + "="*60)
-    print("TESTING: Text Summarization")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("TESTING: Text Summarization")
+    logger.info("="*60)
     
     text = TEST_TEXTS["long_technical"]
-    print(f"\n📝 Summarizing technical article...")
-    print(f"Original length: {len(text)} characters")
+    logger.info(f"\n📝 Summarizing technical article...")
+    logger.info(f"Original length: {len(text)} characters")
     
     result = await agent.generate_summary(text, max_sentences=3)
     
-    print(f"\n✅ Summary:")
-    print(f"  {result['summary']}")
-    print(f"\n  Compression ratio: {result['compression_ratio']:.2%}")
-    print(f"  Summary length: {result['summary_length']} characters")
-    print(f"  Processing time: {result['processing_time']:.3f}s")
-    print(f"  Model used: {result['model_used']}")
+    logger.info(f"\n✅ Summary:")
+    logger.info(f"  {result['summary']}")
+    logger.info(f"\n  Compression ratio: {result['compression_ratio']:.2%}")
+    logger.info(f"  Summary length: {result['summary_length']} characters")
+    logger.info(f"  Processing time: {result['processing_time']:.3f}s")
+    logger.info(f"  Model used: {result['model_used']}")
 
 
 async def test_keyword_extraction(agent: TextAnalysisAgent):
     """Test keyword extraction capability"""
-    print("\n" + "="*60)
-    print("TESTING: Keyword Extraction")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("TESTING: Keyword Extraction")
+    logger.info("="*60)
     
     text = TEST_TEXTS["technical_article"]
-    print(f"\n📝 Extracting keywords from technical article...")
+    logger.info(f"\n📝 Extracting keywords from technical article...")
     
     result = await agent.extract_keywords(text, num_keywords=8)
     
-    print(f"\n✅ Keywords:")
+    logger.info(f"\n✅ Keywords:")
     for i, keyword in enumerate(result['keywords'], 1):
-        print(f"  {i}. {keyword}")
+        logger.info(f"  {i}. {keyword}")
     
-    print(f"\n  Processing time: {result['processing_time']:.3f}s")
-    print(f"  Model used: {result['model_used']}")
+    logger.info(f"\n  Processing time: {result['processing_time']:.3f}s")
+    logger.info(f"  Model used: {result['model_used']}")
 
 
 async def test_language_detection(agent: TextAnalysisAgent):
     """Test language detection capability"""
-    print("\n" + "="*60)
-    print("TESTING: Language Detection")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("TESTING: Language Detection")
+    logger.info("="*60)
     
     for text_name, text in [
         ("english", TEST_TEXTS["technical_article"]),
         ("multilingual", TEST_TEXTS["multilingual"])
     ]:
-        print(f"\n📝 Detecting language: {text_name}")
-        print(f"Text preview: {text[:100]}...")
+        logger.info(f"\n📝 Detecting language: {text_name}")
+        logger.info(f"Text preview: {text[:100]}...")
         
         result = await agent.detect_language(text)
         
-        print(f"✅ Result:")
-        print(f"  - Language: {result['language']}")
-        print(f"  - Confidence: {result['confidence']:.2%}")
-        print(f"  - Processing time: {result['processing_time']:.3f}s")
-        print(f"  - Model used: {result['model_used']}")
+        logger.info(f"✅ Result:")
+        logger.info(f"  - Language: {result['language']}")
+        logger.info(f"  - Confidence: {result['confidence']:.2%}")
+        logger.info(f"  - Processing time: {result['processing_time']:.3f}s")
+        logger.info(f"  - Model used: {result['model_used']}")
 
 
 async def test_full_analysis(agent: TextAnalysisAgent):
     """Test comprehensive analysis capability"""
-    print("\n" + "="*60)
-    print("TESTING: Full Comprehensive Analysis")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("TESTING: Full Comprehensive Analysis")
+    logger.info("="*60)
     
     text = TEST_TEXTS["news_article"]
-    print(f"\n📝 Performing full analysis on news article...")
+    logger.info(f"\n📝 Performing full analysis on news article...")
     
     result = await agent.analyze_text_full(text)
     result_dict = result.to_dict()
     
-    print(f"\n✅ Comprehensive Analysis Results:")
+    logger.info(f"\n✅ Comprehensive Analysis Results:")
     
     # Sentiment
     if result_dict['sentiment']:
-        print(f"\n  SENTIMENT:")
-        print(f"    - {result_dict['sentiment']['sentiment']} "
+        logger.info(f"\n  SENTIMENT:")
+        logger.info(f"    - {result_dict['sentiment']['sentiment']} "
               f"({result_dict['sentiment']['confidence']:.2%} confidence)")
     
     # Entities
     if result_dict['entities']:
-        print(f"\n  ENTITIES:")
+        logger.info(f"\n  ENTITIES:")
         for entity_type, entities in result_dict['entities'].items():
             if entities:
-                print(f"    {entity_type}: {', '.join(entities[:3])}...")
+                logger.info(f"    {entity_type}: {', '.join(entities[:3])}...")
     
     # Summary
     if result_dict['summary']:
-        print(f"\n  SUMMARY:")
-        print(f"    {result_dict['summary'][:200]}...")
+        logger.info(f"\n  SUMMARY:")
+        logger.info(f"    {result_dict['summary'][:200]}...")
     
     # Keywords
     if result_dict['keywords']:
-        print(f"\n  KEYWORDS:")
-        print(f"    {', '.join(result_dict['keywords'][:5])}")
+        logger.info(f"\n  KEYWORDS:")
+        logger.info(f"    {', '.join(result_dict['keywords'][:5])}")
     
     # Language
     if result_dict['language']:
-        print(f"\n  LANGUAGE:")
-        print(f"    {result_dict['language']['language']} "
+        logger.info(f"\n  LANGUAGE:")
+        logger.info(f"    {result_dict['language']['language']} "
               f"({result_dict['language']['confidence']:.2%} confidence)")
     
-    print(f"\n  Overall confidence: {result_dict['confidence']:.2%}")
-    print(f"  Total processing time: {result_dict['processing_time']:.3f}s")
-    print(f"  Model used: {result_dict['model_used']}")
+    logger.info(f"\n  Overall confidence: {result_dict['confidence']:.2%}")
+    logger.info(f"  Total processing time: {result_dict['processing_time']:.3f}s")
+    logger.info(f"  Model used: {result_dict['model_used']}")
 
 
 async def test_caching(agent: TextAnalysisAgent):
     """Test caching functionality"""
-    print("\n" + "="*60)
-    print("TESTING: Caching Performance")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("TESTING: Caching Performance")
+    logger.info("="*60)
     
     text = TEST_TEXTS["short_text"]
     
-    print(f"\n📝 Testing cache with: '{text}'")
+    logger.info(f"\n📝 Testing cache with: '{text}'")
     
     # First call - should miss cache
-    print("\n  First call (cache miss expected)...")
+    logger.info("\n  First call (cache miss expected)...")
     start = datetime.utcnow()
     result1 = await agent.analyze_sentiment(text)
     time1 = (datetime.utcnow() - start).total_seconds()
-    print(f"    Time: {time1:.3f}s")
+    logger.info(f"    Time: {time1:.3f}s")
     
     # Second call - should hit cache
-    print("\n  Second call (cache hit expected)...")
+    logger.info("\n  Second call (cache hit expected)...")
     start = datetime.utcnow()
     result2 = await agent.analyze_sentiment(text)
     time2 = (datetime.utcnow() - start).total_seconds()
-    print(f"    Time: {time2:.3f}s")
+    logger.info(f"    Time: {time2:.3f}s")
     
     if time2 < time1:
-        print(f"\n✅ Cache working! Second call {(time1/time2):.1f}x faster")
+        logger.info(f"\n✅ Cache working! Second call {(time1/time2):.1f}x faster")
     else:
-        print(f"\n⚠️ Cache may not be working (Redis might be unavailable)")
+        logger.info(f"\n⚠️ Cache may not be working (Redis might be unavailable)")
     
     # Show cache statistics
     stats = await agent.get_agent_stats()
     cache_metrics = stats['analysis_metrics']
-    print(f"\n  Cache Statistics:")
-    print(f"    - Cache hits: {cache_metrics['cache_hits']}")
-    print(f"    - Cache misses: {cache_metrics['cache_misses']}")
-    print(f"    - Hit rate: {stats['cache_hit_rate']:.2%}")
+    logger.info(f"\n  Cache Statistics:")
+    logger.info(f"    - Cache hits: {cache_metrics['cache_hits']}")
+    logger.info(f"    - Cache misses: {cache_metrics['cache_misses']}")
+    logger.info(f"    - Hit rate: {stats['cache_hit_rate']:.2%}")
 
 
 async def test_error_handling(agent: TextAnalysisAgent):
     """Test error handling and edge cases"""
-    print("\n" + "="*60)
-    print("TESTING: Error Handling")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.error("TESTING: Error Handling")
+    logger.info("="*60)
     
     # Test empty text
-    print("\n📝 Testing with empty text...")
+    logger.info("\n📝 Testing with empty text...")
     result = await agent.analyze_text_full("")
-    print(f"  ✅ Handled empty text gracefully")
+    logger.info(f"  ✅ Handled empty text gracefully")
     
     # Test very long text
-    print("\n📝 Testing with very long text (100K chars)...")
+    logger.info("\n📝 Testing with very long text (100K chars)...")
     long_text = "AI " * 33000  # ~100K characters
     result = await agent.analyze_sentiment(long_text)
-    print(f"  ✅ Handled long text (truncated to {agent.max_text_length} chars)")
+    logger.info(f"  ✅ Handled long text (truncated to {agent.max_text_length} chars)")
     
     # Test special characters
-    print("\n📝 Testing with special characters...")
+    logger.info("\n📝 Testing with special characters...")
     special_text = "AI is amazing! 🤖 #AI #ML @OpenAI $100 <script>alert('test')</script>"
     result = await agent.analyze_sentiment(special_text)
-    print(f"  ✅ Handled special characters: sentiment = {result['sentiment']}")
+    logger.info(f"  ✅ Handled special characters: sentiment = {result['sentiment']}")
     
-    print("\n✅ All error handling tests passed!")
+    logger.error("\n✅ All error handling tests passed!")
 
 
 async def run_all_tests():
     """Run all tests for the Text Analysis Agent"""
-    print("\n" + "="*80)
-    print(" TEXT ANALYSIS AGENT - COMPREHENSIVE TEST SUITE")
-    print(" Demonstrating REAL AI Intelligence (Not Stubs!)")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info(" TEXT ANALYSIS AGENT - COMPREHENSIVE TEST SUITE")
+    logger.info(" Demonstrating REAL AI Intelligence (Not Stubs!)")
+    logger.info("="*80)
     
     # Create agent instance
-    print("\n🚀 Initializing Text Analysis Agent...")
+    logger.info("\n🚀 Initializing Text Analysis Agent...")
     agent = TextAnalysisAgent()
     
     # Initialize the agent
     success = await agent.initialize()
     if not success:
-        print("❌ Failed to initialize agent!")
+        logger.error("❌ Failed to initialize agent!")
         return
     
-    print("✅ Agent initialized successfully!")
+    logger.info("✅ Agent initialized successfully!")
     
     # Show agent configuration
-    print(f"\n📊 Agent Configuration:")
-    print(f"  - Agent ID: {agent.agent_id}")
-    print(f"  - Model: {agent.default_model}")
-    print(f"  - Ollama URL: {agent.ollama_url}")
-    print(f"  - Cache TTL: {agent.cache_ttl}s")
-    print(f"  - Max text length: {agent.max_text_length} chars")
+    logger.info(f"\n📊 Agent Configuration:")
+    logger.info(f"  - Agent ID: {agent.agent_id}")
+    logger.info(f"  - Model: {agent.default_model}")
+    logger.info(f"  - Ollama URL: {agent.ollama_url}")
+    logger.info(f"  - Cache TTL: {agent.cache_ttl}s")
+    logger.info(f"  - Max text length: {agent.max_text_length} chars")
     
     # Run all tests
     try:
@@ -353,30 +359,30 @@ async def run_all_tests():
         await test_error_handling(agent)
         
         # Show final statistics
-        print("\n" + "="*60)
-        print("FINAL STATISTICS")
-        print("="*60)
+        logger.info("\n" + "="*60)
+        logger.info("FINAL STATISTICS")
+        logger.info("="*60)
         
         stats = await agent.get_agent_stats()
         metrics = stats['analysis_metrics']
         
-        print(f"\n📊 Agent Performance Metrics:")
-        print(f"  - Total analyses: {stats['total_analyses']}")
-        print(f"  - Sentiment analyses: {metrics['sentiment_analyses']}")
-        print(f"  - Entity extractions: {metrics['entity_extractions']}")
-        print(f"  - Summaries generated: {metrics['summaries_generated']}")
-        print(f"  - Keywords extracted: {metrics['keywords_extracted']}")
-        print(f"  - Languages detected: {metrics['languages_detected']}")
-        print(f"  - Total characters: {metrics['total_characters_processed']:,}")
-        print(f"  - Cache hit rate: {stats['cache_hit_rate']:.2%}")
+        logger.info(f"\n📊 Agent Performance Metrics:")
+        logger.info(f"  - Total analyses: {stats['total_analyses']}")
+        logger.info(f"  - Sentiment analyses: {metrics['sentiment_analyses']}")
+        logger.info(f"  - Entity extractions: {metrics['entity_extractions']}")
+        logger.info(f"  - Summaries generated: {metrics['summaries_generated']}")
+        logger.info(f"  - Keywords extracted: {metrics['keywords_extracted']}")
+        logger.info(f"  - Languages detected: {metrics['languages_detected']}")
+        logger.info(f"  - Total characters: {metrics['total_characters_processed']:,}")
+        logger.info(f"  - Cache hit rate: {stats['cache_hit_rate']:.2%}")
         
-        print("\n" + "="*80)
-        print(" ✅ ALL TESTS COMPLETED SUCCESSFULLY!")
-        print(" This agent demonstrates REAL AI capabilities, not stubs!")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info(" ✅ ALL TESTS COMPLETED SUCCESSFULLY!")
+        logger.info(" This agent demonstrates REAL AI capabilities, not stubs!")
+        logger.info("="*80)
         
     except Exception as e:
-        print(f"\n❌ Test failed with error: {e}")
+        logger.error(f"\n❌ Test failed with error: {e}")
         import traceback
         traceback.print_exc()
     
@@ -387,22 +393,22 @@ async def run_all_tests():
 
 async def interactive_mode():
     """Run the agent in interactive mode"""
-    print("\n" + "="*80)
-    print(" TEXT ANALYSIS AGENT - INTERACTIVE MODE")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info(" TEXT ANALYSIS AGENT - INTERACTIVE MODE")
+    logger.info("="*80)
     
     agent = TextAnalysisAgent()
     await agent.initialize()
     
-    print("\n✅ Agent ready for interactive analysis!")
-    print("\nCommands:")
-    print("  sentiment <text>  - Analyze sentiment")
-    print("  entities <text>   - Extract entities")
-    print("  summary <text>    - Generate summary")
-    print("  keywords <text>   - Extract keywords")
-    print("  language <text>   - Detect language")
-    print("  full <text>       - Full analysis")
-    print("  quit              - Exit")
+    logger.info("\n✅ Agent ready for interactive analysis!")
+    logger.info("\nCommands:")
+    logger.info("  sentiment <text>  - Analyze sentiment")
+    logger.info("  entities <text>   - Extract entities")
+    logger.info("  summary <text>    - Generate summary")
+    logger.info("  keywords <text>   - Extract keywords")
+    logger.info("  language <text>   - Detect language")
+    logger.info("  full <text>       - Full analysis")
+    logger.info("  quit              - Exit")
     
     while True:
         try:
@@ -413,39 +419,39 @@ async def interactive_mode():
             
             parts = user_input.split(maxsplit=1)
             if len(parts) < 2:
-                print("Please provide a command and text")
+                logger.info("Please provide a command and text")
                 continue
             
             command, text = parts
             
             if command == "sentiment":
                 result = await agent.analyze_sentiment(text)
-                print(f"Sentiment: {result['sentiment']} ({result['confidence']:.2%})")
+                logger.info(f"Sentiment: {result['sentiment']} ({result['confidence']:.2%})")
             elif command == "entities":
                 result = await agent.extract_entities(text)
-                print(f"Entities: {result['entities']}")
+                logger.info(f"Entities: {result['entities']}")
             elif command == "summary":
                 result = await agent.generate_summary(text)
-                print(f"Summary: {result['summary']}")
+                logger.info(f"Summary: {result['summary']}")
             elif command == "keywords":
                 result = await agent.extract_keywords(text)
-                print(f"Keywords: {', '.join(result['keywords'])}")
+                logger.info(f"Keywords: {', '.join(result['keywords'])}")
             elif command == "language":
                 result = await agent.detect_language(text)
-                print(f"Language: {result['language']} ({result['confidence']:.2%})")
+                logger.info(f"Language: {result['language']} ({result['confidence']:.2%})")
             elif command == "full":
                 result = await agent.analyze_text_full(text)
-                print(json.dumps(result.to_dict(), indent=2))
+                logger.info(json.dumps(result.to_dict(), indent=2))
             else:
-                print(f"Unknown command: {command}")
+                logger.info(f"Unknown command: {command}")
                 
         except KeyboardInterrupt:
             break
         except Exception as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}")
     
     await agent.shutdown()
-    print("\n👋 Goodbye!")
+    logger.info("\n👋 Goodbye!")
 
 
 def main():

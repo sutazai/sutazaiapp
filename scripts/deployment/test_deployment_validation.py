@@ -443,7 +443,7 @@ def main():
         
         # Generate and display report
         report = validator.generate_report()
-        print(report)
+        logger.info(report)
         
         # Save results
         os.makedirs('/opt/sutazaiapp/backend/tests/reports', exist_ok=True)

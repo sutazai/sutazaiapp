@@ -713,8 +713,8 @@ class BulletproofTestSuite:
 
 def main():
     """Run bulletproof test suite"""
-    print("🚀 Starting Bulletproof Test Suite for Hardware Resource Optimizer")
-    print("=" * 80)
+    logger.info("🚀 Starting Bulletproof Test Suite for Hardware Resource Optimizer")
+    logger.info("=" * 80)
     
     suite = BulletproofTestSuite()
     
@@ -726,34 +726,34 @@ def main():
         summary = results["bulletproof_test_suite"]
         effects = results["system_effects_verified"]
         
-        print("\n" + "=" * 80)
-        print("📊 BULLETPROOF TEST RESULTS SUMMARY")
-        print("=" * 80)
-        print(f"Total Tests: {summary['total_tests']}")
-        print(f"Passed: {summary['passed']}")
-        print(f"Failed: {summary['failed']}")
-        print(f"Pass Rate: {summary['pass_rate']:.1%}")
-        print(f"Total Time: {summary['total_time_seconds']:.2f} seconds")
-        print(f"System Effects Verified: {'✅ YES' if effects['system_optimization_verified'] else '❌ NO'}")
-        print(f"Memory Freed: {effects['total_memory_freed_mb']:.2f} MB")
-        print(f"Disk Freed: {effects['total_disk_freed_mb']:.2f} MB")
+        logger.info("\n" + "=" * 80)
+        logger.info("📊 BULLETPROOF TEST RESULTS SUMMARY")
+        logger.info("=" * 80)
+        logger.info(f"Total Tests: {summary['total_tests']}")
+        logger.info(f"Passed: {summary['passed']}")
+        logger.error(f"Failed: {summary['failed']}")
+        logger.info(f"Pass Rate: {summary['pass_rate']:.1%}")
+        logger.info(f"Total Time: {summary['total_time_seconds']:.2f} seconds")
+        logger.info(f"System Effects Verified: {'✅ YES' if effects['system_optimization_verified'] else '❌ NO'}")
+        logger.info(f"Memory Freed: {effects['total_memory_freed_mb']:.2f} MB")
+        logger.info(f"Disk Freed: {effects['total_disk_freed_mb']:.2f} MB")
         
         # Print detailed test results
-        print("\n🔍 DETAILED TEST RESULTS:")
-        print("-" * 40)
+        logger.info("\n🔍 DETAILED TEST RESULTS:")
+        logger.info("-" * 40)
         for result in results["detailed_results"]:
             status = "✅ PASS" if result.get("success", False) else "❌ FAIL"
             test_name = result.get("test", "unknown")
             response_time = result.get("response_time", 0)
             changes = result.get("system_changes", {})
             
-            print(f"{status} {test_name} ({response_time:.3f}s)")
+            logger.info(f"{status} {test_name} ({response_time:.3f}s)")
             
             if isinstance(changes, dict):
                 memory_change = changes.get("memory_freed_mb", 0)
                 disk_change = changes.get("disk_freed_mb", 0)
                 if memory_change != 0 or disk_change != 0:
-                    print(f"    💾 Memory: {memory_change:+.2f}MB, Disk: {disk_change:+.2f}MB")
+                    logger.info(f"    💾 Memory: {memory_change:+.2f}MB, Disk: {disk_change:+.2f}MB")
                     
         # Save results
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -761,28 +761,28 @@ def main():
         with open(results_file, 'w') as f:
             json.dump(results, f, indent=2)
             
-        print(f"\n📄 Full results saved to: {results_file}")
+        logger.info(f"\n📄 Full results saved to: {results_file}")
         
         # Final verdict
         if summary['pass_rate'] >= 1.0 and effects['system_optimization_verified']:
-            print("\n🎉 BULLETPROOF TEST VERDICT: ALL SYSTEMS GO! 🎉")
-            print("✅ 100% functionality verified")
-            print("✅ Actual system effects confirmed")
-            print("✅ Ready for production use")
+            logger.info("\n🎉 BULLETPROOF TEST VERDICT: ALL SYSTEMS GO! 🎉")
+            logger.info("✅ 100% functionality verified")
+            logger.info("✅ Actual system effects confirmed")
+            logger.info("✅ Ready for production use")
         elif summary['pass_rate'] >= 0.9:
-            print("\n⚠️  BULLETPROOF TEST VERDICT: MOSTLY FUNCTIONAL")
-            print(f"✅ {summary['pass_rate']:.1%} pass rate")
-            print("⚠️  Some issues detected - review failed tests")
+            logger.info("\n⚠️  BULLETPROOF TEST VERDICT: MOSTLY FUNCTIONAL")
+            logger.info(f"✅ {summary['pass_rate']:.1%} pass rate")
+            logger.error("⚠️  Some issues detected - review failed tests")
         else:
-            print("\n❌ BULLETPROOF TEST VERDICT: NEEDS ATTENTION")
-            print(f"❌ Only {summary['pass_rate']:.1%} pass rate")
-            print("❌ Significant issues detected")
+            logger.info("\n❌ BULLETPROOF TEST VERDICT: NEEDS ATTENTION")
+            logger.info(f"❌ Only {summary['pass_rate']:.1%} pass rate")
+            logger.info("❌ Significant issues detected")
             
         return summary['pass_rate'] >= 0.9
         
     except Exception as e:
         logger.error(f"Test suite failed: {e}")
-        print(f"\n❌ BULLETPROOF TEST SUITE FAILED: {e}")
+        logger.error(f"\n❌ BULLETPROOF TEST SUITE FAILED: {e}")
         return False
         
     finally:

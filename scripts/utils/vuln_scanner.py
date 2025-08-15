@@ -1079,18 +1079,18 @@ if __name__ == "__main__":
         
         # Scan containers
         container_scan_id = await scanner.scan_containers(['ubuntu:latest', 'nginx:latest'])
-        print(f"Container scan started: {container_scan_id}")
+        logger.info(f"Container scan started: {container_scan_id}")
         
         # Scan network
         network_scan_id = await scanner.scan_network(['127.0.0.1', '172.20.0.1'])
-        print(f"Network scan started: {network_scan_id}")
+        logger.info(f"Network scan started: {network_scan_id}")
         
         # Scan application code
         code_scan_id = await scanner.scan_application_code('/opt/sutazaiapp')
-        print(f"Code scan started: {code_scan_id}")
+        logger.info(f"Code scan started: {code_scan_id}")
         
         # Generate report
         await asyncio.sleep(5)  # Wait for scans to complete
         report = await scanner.generate_scan_report(container_scan_id, "json")
-        print("Scan report generated")
+        logger.info("Scan report generated")
     

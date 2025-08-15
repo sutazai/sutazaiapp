@@ -295,13 +295,13 @@ Statistics:
 ```
 
 #### 2. Remove print() Statements (Rule 8)
-**Expert Agents Required**: ai-senior-engineer.md, python-pro.md
+**Expert Agents Required**: senior-engineer.md, python-pro.md
 - Replace all 361 print() statements with proper logging
 - Implement structured logging with appropriate levels
 - Configure production log management
 
 #### 3. Address Critical TODOs (Rule 1)
-**Expert Agents Required**: ai-senior-engineer.md, code-reviewer.md
+**Expert Agents Required**: senior-engineer.md, code-reviewer.md
 - Review and implement 20 critical TODO items
 - Remove or convert FIXMEs to proper issues
 - Eliminate HACK workarounds with proper solutions
@@ -309,7 +309,7 @@ Statistics:
 ### HIGH PRIORITY ACTIONS (Week 2)
 
 #### 4. Fix Hardcoded Values (Rule 2)
-**Expert Agents Required**: backend-architect.md, ai-senior-engineer.md
+**Expert Agents Required**: backend-architect.md, senior-engineer.md
 - Replace hardcoded localhost references with configuration
 - Implement environment-based configuration management
 - Add proper service discovery mechanisms
@@ -337,7 +337,7 @@ Statistics:
 ### LOW PRIORITY ACTIONS (Month 2)
 
 #### 8. Script Organization (Rule 7)
-**Expert Agents Required**: ai-senior-engineer.md
+**Expert Agents Required**: senior-engineer.md
 - Add proper headers to all scripts
 - Organize scripts by purpose
 - Document all script dependencies
@@ -354,7 +354,7 @@ Statistics:
 
 ### Primary Team (Immediate Deployment)
 1. **infrastructure-devops-manager.md** - Lead Docker and infrastructure fixes
-2. **ai-senior-engineer.md** - Lead code quality improvements
+2. **senior-engineer.md** - Lead code quality improvements
 3. **python-pro.md** - Python-specific violations and improvements
 4. **code-reviewer.md** - Validate all changes against rules
 

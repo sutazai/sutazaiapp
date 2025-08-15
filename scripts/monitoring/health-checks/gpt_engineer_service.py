@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 GPT-Engineer Code Generation Service
 """
 
@@ -36,13 +39,13 @@ def generated_function():
     \"\"\"
     This function was generated based on: {prompt}
     \"\"\"
-    print("Hello from GPT-Engineer!")
+    logger.info("Hello from GPT-Engineer!")
     return "Generated code for: {prompt}"
 
 # Example usage
 if __name__ == "__main__":
     result = generated_function()
-    print(result)
+    logger.info(result)
 """
         
         return {

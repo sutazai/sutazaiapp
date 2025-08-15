@@ -362,4 +362,4 @@ if __name__ == "__main__":
     
     # Analyze patterns
     patterns = analyzer.analyze_interaction_patterns()
-    print(json.dumps(patterns, indent=2, default=str))
+    logger.info(json.dumps(patterns, indent=2, default=str))

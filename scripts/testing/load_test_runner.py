@@ -566,7 +566,7 @@ def main():
         }
         
         suite_results = runner.run_scenario_suite(scenarios)
-        print(f"Suite completed. {suite_results['summary']['successful_scenarios']}/{suite_results['summary']['total_scenarios']} scenarios successful.")
+        logger.info(f"Suite completed. {suite_results['summary']['successful_scenarios']}/{suite_results['summary']['total_scenarios']} scenarios successful.")
     else:
         # Run single scenario
         results = runner.run_load_test(
@@ -576,11 +576,11 @@ def main():
             run_time=args.run_time
         )
         
-        print(f"Load test completed. Test ID: {results['test_id']}")
+        logger.info(f"Load test completed. Test ID: {results['test_id']}")
         if results['subprocess_result']['returncode'] == 0:
-            print("Test executed successfully.")
+            logger.info("Test executed successfully.")
         else:
-            print("Test had issues. Check the logs for details.")
+            logger.info("Test had issues. Check the logs for details.")
 
 
 if __name__ == "__main__":

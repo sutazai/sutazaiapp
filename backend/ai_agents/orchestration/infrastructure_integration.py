@@ -1370,11 +1370,11 @@ async def example_infrastructure_management():
     
     # Deploy all AI agents
     results = await integration.deploy_all_agents()
-    print(f"Agent deployment results: {results}")
+    logger.info(f"Agent deployment results: {results}")
     
     # Get system status
     status = await integration.get_system_status()
-    print(f"System status: {status}")
+    logger.info(f"System status: {status}")
     
     # Scale a service
     await integration.scale_service("senior-ai-engineer", 2)

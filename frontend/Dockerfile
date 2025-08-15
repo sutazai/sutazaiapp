@@ -1,21 +1,22 @@
 # SutazAI Frontend Service - ULTRAFIX Dockerfile Consolidation  
 # Migrated to use sutazai-python-agent-master base image
 # Date: August 10, 2025 - CRITICAL DOCKERFILE DEDUPLICATION
+# Security Fix: 2025-08-16 - Removed root user elevation for package installation
 FROM sutazai-python-agent-master:v1.0.0
 
-# Ensure we can install Python packages system-wide
-USER root
+# Copy requirements with proper ownership (avoid root elevation)
+# The base image already has appuser:appgroup configured
+COPY --chown=appuser:appgroup requirements_optimized.txt /tmp/frontend-requirements.txt
 
-# Install frontend-specific requirements on top of base  
-# Note: Copy from context root, not relative path
-# Use local optimized requirements within frontend context
-COPY requirements_optimized.txt /tmp/frontend-requirements.txt
-RUN pip install --no-cache-dir -r /tmp/frontend-requirements.txt && rm /tmp/frontend-requirements.txt
+# Install frontend-specific requirements as non-root user
+# Using --user flag to install packages in user directory
+USER appuser
+RUN pip install --user --no-cache-dir -r /tmp/frontend-requirements.txt && rm /tmp/frontend-requirements.txt
 
-# Copy application and components
-COPY app.py .
-COPY components/ ./components/
-COPY pages/ ./pages/
+# Copy application and components with proper ownership
+COPY --chown=appuser:appgroup app.py .
+COPY --chown=appuser:appgroup components/ ./components/
+COPY --chown=appuser:appgroup pages/ ./pages/
 
 # Override base environment variables for frontend service
 ENV SERVICE_PORT=8501
@@ -30,7 +31,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 # Expose frontend port
 EXPOSE 8501
 
-# Switch back to non-root user (inherited from base)
+# Ensure we're running as non-root user (already set above, but explicit for clarity)
 USER appuser
 
 # Start frontend service

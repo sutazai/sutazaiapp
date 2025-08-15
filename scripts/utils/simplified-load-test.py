@@ -475,59 +475,59 @@ def main():
         report = asyncio.run(tester.run_all_tests())
         
         if "error" in report:
-            print(f"\nERROR: {report['error']}")
+            logger.error(f"\nERROR: {report['error']}")
             return 1
         
         # Print comprehensive summary
-        print("\n" + "="*80)
-        print("SUTAZAI PRODUCTION LOAD TESTING REPORT")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("SUTAZAI PRODUCTION LOAD TESTING REPORT")
+        logger.info("="*80)
         
         summary = report['summary']
         metrics = report['performance_metrics']
         capacity = report['production_capacity']
         
-        print(f"\nTEST SUMMARY:")
-        print(f"  Total Tests: {summary['total_tests']}")
-        print(f"  Total Requests: {summary['total_requests']:,}")
-        print(f"  Success Rate: {summary['overall_success_rate']:.2f}%")
-        print(f"  Error Rate: {summary['overall_error_rate']:.2f}%")
-        print(f"  Test Duration: {summary['test_duration_total']:.1f} seconds")
+        logger.info(f"\nTEST SUMMARY:")
+        logger.info(f"  Total Tests: {summary['total_tests']}")
+        logger.info(f"  Total Requests: {summary['total_requests']:,}")
+        logger.info(f"  Success Rate: {summary['overall_success_rate']:.2f}%")
+        logger.error(f"  Error Rate: {summary['overall_error_rate']:.2f}%")
+        logger.info(f"  Test Duration: {summary['test_duration_total']:.1f} seconds")
         
-        print(f"\nPERFORMANCE METRICS:")
-        print(f"  Average Response Time: {metrics['avg_response_time_ms']:.0f}ms")
-        print(f"  P95 Response Time: {metrics['avg_p95_response_time_ms']:.0f}ms")
-        print(f"  Max Throughput: {metrics['max_throughput_rps']:.1f} RPS")
-        print(f"  Average Throughput: {metrics['avg_throughput_rps']:.1f} RPS")
+        logger.info(f"\nPERFORMANCE METRICS:")
+        logger.info(f"  Average Response Time: {metrics['avg_response_time_ms']:.0f}ms")
+        logger.info(f"  P95 Response Time: {metrics['avg_p95_response_time_ms']:.0f}ms")
+        logger.info(f"  Max Throughput: {metrics['max_throughput_rps']:.1f} RPS")
+        logger.info(f"  Average Throughput: {metrics['avg_throughput_rps']:.1f} RPS")
         
-        print(f"\nPRODUCTION CAPACITY ESTIMATE:")
-        print(f"  Max Requests/Second: {capacity['max_requests_per_second']:.1f}")
-        print(f"  Daily Request Capacity: {capacity['estimated_daily_requests']:,.0f}")
-        print(f"  Recommended Max Users: {capacity['recommended_max_concurrent_users']:,}")
+        logger.info(f"\nPRODUCTION CAPACITY ESTIMATE:")
+        logger.info(f"  Max Requests/Second: {capacity['max_requests_per_second']:.1f}")
+        logger.info(f"  Daily Request Capacity: {capacity['estimated_daily_requests']:,.0f}")
+        logger.info(f"  Recommended Max Users: {capacity['recommended_max_concurrent_users']:,}")
         
         if report['breaking_points']:
-            print(f"\nBREAKING POINTS DETECTED: {len(report['breaking_points'])}")
+            logger.info(f"\nBREAKING POINTS DETECTED: {len(report['breaking_points'])}")
             for bp in report['breaking_points']:
-                print(f"  - {bp['test']}: {bp['error_rate']:.2f}% errors, {bp['p95_response_time_ms']:.0f}ms P95")
+                logger.error(f"  - {bp['test']}: {bp['error_rate']:.2f}% errors, {bp['p95_response_time_ms']:.0f}ms P95")
         
         if report['recommendations']:
-            print(f"\nRECOMMENDATIONS: {len(report['recommendations'])}")
+            logger.info(f"\nRECOMMENDATIONS: {len(report['recommendations'])}")
             for i, rec in enumerate(report['recommendations'], 1):
-                print(f"  {i}. {rec['category']} ({rec['severity']}):")
-                print(f"     Issue: {rec['issue']}")
-                print(f"     Fix: {rec['recommendation']}")
+                logger.info(f"  {i}. {rec['category']} ({rec['severity']}):")
+                logger.info(f"     Issue: {rec['issue']}")
+                logger.info(f"     Fix: {rec['recommendation']}")
         
-        print("\n" + "="*80)
+        logger.info("\n" + "="*80)
         
         # Return exit code based on overall performance
         if summary['overall_error_rate'] > 5.0:
-            print("WARNING: High error rate detected. System may need attention.")
+            logger.error("WARNING: High error rate detected. System may need attention.")
             return 2
         elif metrics['avg_response_time_ms'] > 3000:
-            print("WARNING: High response times detected. Performance optimization recommended.")
+            logger.warning("WARNING: High response times detected. Performance optimization recommended.")
             return 1
         else:
-            print("SUCCESS: System performance within acceptable limits.")
+            logger.info("SUCCESS: System performance within acceptable limits.")
             return 0
             
     except KeyboardInterrupt:

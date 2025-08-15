@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Quick Verification Test for Hardware Resource Optimizer
 Tests core functionality to ensure everything works properly.
 """
@@ -49,8 +52,8 @@ def test_endpoint(method, endpoint, params=None, description=""):
 
 def main():
     """Run quick verification tests"""
-    print("🔍 Quick Verification Test for Hardware Resource Optimizer")
-    print("=" * 60)
+    logger.info("🔍 Quick Verification Test for Hardware Resource Optimizer")
+    logger.info("=" * 60)
     
     # Test cases
     tests = [
@@ -70,16 +73,16 @@ def main():
     failed = 0
     
     for method, endpoint, params, description in tests:
-        print(f"\n🧪 Testing: {description}")
-        print(f"   {method} {endpoint}")
+        logger.info(f"\n🧪 Testing: {description}")
+        logger.info(f"   {method} {endpoint}")
         
         success, result = test_endpoint(method, endpoint, params, description)
         
         if success:
-            print(f"   ✅ PASS ({result['response_time']:.3f}s)")
+            logger.info(f"   ✅ PASS ({result['response_time']:.3f}s)")
             passed += 1
         else:
-            print(f"   ❌ FAIL - {result}")
+            logger.info(f"   ❌ FAIL - {result}")
             failed += 1
             
         results.append({
@@ -92,7 +95,7 @@ def main():
         })
     
     # Create test files for duplicate testing
-    print(f"\n🧪 Testing: Duplicate file detection and cleanup")
+    logger.info(f"\n🧪 Testing: Duplicate file detection and cleanup")
     
     with tempfile.TemporaryDirectory() as temp_dir:
         # Create duplicate files
@@ -110,11 +113,11 @@ def main():
                                        {"path": temp_dir}, "Duplicate detection")
         
         if success:
-            print(f"   ✅ Duplicate detection PASS")
+            logger.info(f"   ✅ Duplicate detection PASS")
             duplicates_found = len(result['data'].get('duplicate_groups', []))
-            print(f"      Found {duplicates_found} duplicate groups")
+            logger.info(f"      Found {duplicates_found} duplicate groups")
         else:
-            print(f"   ❌ Duplicate detection FAIL")
+            logger.info(f"   ❌ Duplicate detection FAIL")
             
         # Test duplicate cleanup
         success, result = test_endpoint("POST", "/optimize/storage/duplicates", 
@@ -123,11 +126,11 @@ def main():
         files_after = len(os.listdir(temp_dir))
         
         if success:
-            print(f"   ✅ Duplicate cleanup PASS")
-            print(f"      Files before: {files_before}, after: {files_after}")
-            print(f"      Files removed: {files_before - files_after}")
+            logger.info(f"   ✅ Duplicate cleanup PASS")
+            logger.info(f"      Files before: {files_before}, after: {files_after}")
+            logger.info(f"      Files removed: {files_before - files_after}")
         else:
-            print(f"   ❌ Duplicate cleanup FAIL - {result}")
+            logger.info(f"   ❌ Duplicate cleanup FAIL - {result}")
             
         results.append({
             "test": "Duplicate file operations",
@@ -139,19 +142,19 @@ def main():
     
     # Summary
     total_tests = len(tests) + 1  # +1 for duplicate test
-    print(f"\n" + "=" * 60)
-    print(f"📊 QUICK VERIFICATION RESULTS")
-    print(f"=" * 60)
-    print(f"Total Tests: {total_tests}")
-    print(f"Passed: {passed + (1 if success else 0)}")
-    print(f"Failed: {failed + (0 if success else 1)}")
-    print(f"Pass Rate: {((passed + (1 if success else 0)) / total_tests) * 100:.1f}%")
+    logger.info(f"\n" + "=" * 60)
+    logger.info(f"📊 QUICK VERIFICATION RESULTS")
+    logger.info(f"=" * 60)
+    logger.info(f"Total Tests: {total_tests}")
+    logger.info(f"Passed: {passed + (1 if success else 0)}")
+    logger.error(f"Failed: {failed + (0 if success else 1)}")
+    logger.info(f"Pass Rate: {((passed + (1 if success else 0)) / total_tests) * 100:.1f}%")
     
     if passed == len(tests) and success:
-        print(f"\n🎉 ALL TESTS PASSED! Hardware Resource Optimizer is working perfectly!")
+        logger.info(f"\n🎉 ALL TESTS PASSED! Hardware Resource Optimizer is working perfectly!")
         return True
     else:
-        print(f"\n⚠️  Some tests failed. Check the output above for details.")
+        logger.error(f"\n⚠️  Some tests failed. Check the output above for details.")
         return False
 
 if __name__ == "__main__":

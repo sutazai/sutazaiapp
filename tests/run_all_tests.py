@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 SutazAI Ultra Test Runner
 Professional test execution with comprehensive reporting per Rules 1-19
 """
@@ -105,7 +108,7 @@ class UltraTestRunner:
         
         os.environ['PYTHONPATH'] = pythonpath
         
-        print("✅ Test environment configured")
+        logger.info("✅ Test environment configured")
     
     def check_system_health(self) -> bool:
         """Check if system services are running for integration tests."""
@@ -115,15 +118,15 @@ class UltraTestRunner:
             # Check backend health
             response = requests.get(f"{os.environ['TEST_BASE_URL']}/health", timeout=5)
             if response.status_code == 200:
-                print("✅ Backend service is healthy")
+                logger.info("✅ Backend service is healthy")
                 return True
             else:
-                print("⚠️ Backend service not responding, skipping integration tests")
+                logger.info("⚠️ Backend service not responding, skipping integration tests")
                 return False
                 
         except Exception as e:
-            print(f"⚠️ Cannot connect to backend service: {e}")
-            print("🔄 Running tests in unit-only mode")
+            logger.info(f"⚠️ Cannot connect to backend service: {e}")
+            logger.info("🔄 Running tests in unit-only mode")
             return False
     
     def run_test_suite(self, suite_name: str, fast_mode: bool = False, verbose: bool = False) -> Dict:
@@ -133,10 +136,10 @@ class UltraTestRunner:
             raise ValueError(f"Unknown test suite: {suite_name}")
         
         if fast_mode and not suite['fast']:
-            print(f"⏭️ Skipping {suite_name} tests in fast mode")
+            logger.info(f"⏭️ Skipping {suite_name} tests in fast mode")
             return {'skipped': True, 'reason': 'fast_mode'}
         
-        print(f"🧪 Running {suite_name} tests: {suite['description']}")
+        logger.info(f"🧪 Running {suite_name} tests: {suite['description']}")
         
         # Build pytest command - start with basics
         cmd = [
@@ -268,8 +271,8 @@ class UltraTestRunner:
                     if 'error' in result:
                         f.write(f"   Error: {result['error']}\n")
         
-        print(f"\n📊 Test report written to: {output_file}")
-        print(f"📝 Text summary written to: {text_file}")
+        logger.info(f"\n📊 Test report written to: {output_file}")
+        logger.info(f"📝 Text summary written to: {text_file}")
         
         return report
     
@@ -290,14 +293,14 @@ class UltraTestRunner:
         # Skip integration tests if system is not healthy
         if not system_healthy:
             suites_to_run = [s for s in suites_to_run if s not in ['integration', 'e2e']]
-            print("⚠️ Skipping integration and e2e tests due to system health")
+            logger.info("⚠️ Skipping integration and e2e tests due to system health")
         
         # Run test suites
         results = []
         overall_success = True
         
-        print(f"\n🚀 Starting test execution for {len(suites_to_run)} suites")
-        print("=" * 50)
+        logger.info(f"\n🚀 Starting test execution for {len(suites_to_run)} suites")
+        logger.info("=" * 50)
         
         for suite_name in suites_to_run:
             try:
@@ -305,19 +308,19 @@ class UltraTestRunner:
                 results.append(result)
                 
                 if result.get('success'):
-                    print(f"✅ {suite_name}: PASSED ({result['duration']:.1f}s)")
+                    logger.info(f"✅ {suite_name}: PASSED ({result['duration']:.1f}s)")
                 elif result.get('skipped'):
-                    print(f"⏭️ {suite_name}: SKIPPED - {result.get('reason', 'unknown')}")
+                    logger.info(f"⏭️ {suite_name}: SKIPPED - {result.get('reason', 'unknown')}")
                 else:
-                    print(f"❌ {suite_name}: FAILED ({result.get('duration', 0):.1f}s)")
+                    logger.error(f"❌ {suite_name}: FAILED ({result.get('duration', 0):.1f}s)")
                     if not result.get('skipped'):
                         overall_success = False
                     
                     if verbose and 'stderr' in result and result['stderr']:
-                        print(f"   Error output: {result['stderr'][:500]}...")
+                        logger.error(f"   Error output: {result['stderr'][:500]}...")
                         
             except Exception as e:
-                print(f"❌ {suite_name}: ERROR - {e}")
+                logger.error(f"❌ {suite_name}: ERROR - {e}")
                 results.append({
                     'suite': suite_name,
                     'success': False,
@@ -330,15 +333,15 @@ class UltraTestRunner:
         report = self.generate_report(results)
         
         # Print summary
-        print("\n" + "=" * 50)
-        print(f"🎯 Test Execution Complete")
-        print(f"Success Rate: {report['summary']['success_rate']:.1f}%")
-        print(f"Total Duration: {report['summary']['total_duration']:.1f} seconds")
+        logger.info("\n" + "=" * 50)
+        logger.info(f"🎯 Test Execution Complete")
+        logger.info(f"Success Rate: {report['summary']['success_rate']:.1f}%")
+        logger.info(f"Total Duration: {report['summary']['total_duration']:.1f} seconds")
         
         if overall_success:
-            print("🎉 All tests passed!")
+            logger.info("🎉 All tests passed!")
         else:
-            print("⚠️ Some tests failed - check reports for details")
+            logger.error("⚠️ Some tests failed - check reports for details")
         
         # Exit with appropriate code for CI
         if ci_mode:

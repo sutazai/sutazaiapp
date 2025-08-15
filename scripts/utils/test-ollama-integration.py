@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Purpose: Test complete Ollama integration with all 131 agents
 Usage: python test-ollama-integration.py [--full] [--agents AGENT1,AGENT2]
 Requirements: httpx, asyncio, pyyaml
@@ -44,26 +47,26 @@ class OllamaIntegrationTester:
         
     async def test_ollama_connectivity(self) -> bool:
         """Test basic Ollama connectivity"""
-        print("Testing Ollama connectivity...")
+        logger.info("Testing Ollama connectivity...")
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(f"{self.ollama_url}/api/tags")
                 if response.status_code == 200:
                     models = response.json().get("models", [])
-                    print(f"✅ Ollama is running with {len(models)} models")
+                    logger.info(f"✅ Ollama is running with {len(models)} models")
                     self.results["ollama_models"] = [m.get("name") for m in models]
                     return True
                 else:
-                    print(f"❌ Ollama returned status {response.status_code}")
+                    logger.info(f"❌ Ollama returned status {response.status_code}")
                     return False
         except Exception as e:
-            print(f"❌ Cannot connect to Ollama: {e}")
+            logger.info(f"❌ Cannot connect to Ollama: {e}")
             self.results["errors"].append(f"Ollama connectivity: {str(e)}")
             return False
             
     async def test_model_availability(self) -> Dict[str, bool]:
         """Test if required models are available"""
-        print("\nTesting model availability...")
+        logger.info("\nTesting model availability...")
         required_models = [
             OllamaConfig.DEFAULT_MODEL,
             OllamaConfig.SONNET_MODEL,
@@ -77,10 +80,10 @@ class OllamaIntegrationTester:
                     available = await ollama.ensure_model_available(model)
                     results[model] = available
                     status = "✅" if available else "❌"
-                    print(f"{status} Model {model}: {'Available' if available else 'Not found'}")
+                    logger.info(f"{status} Model {model}: {'Available' if available else 'Not found'}")
                 except Exception as e:
                     results[model] = False
-                    print(f"❌ Model {model}: Error - {e}")
+                    logger.error(f"❌ Model {model}: Error - {e}")
                     
         self.results["model_availability"] = results
         return results
@@ -132,7 +135,7 @@ class OllamaIntegrationTester:
         
     async def test_concurrent_agents(self, agent_names: List[str], max_concurrent: int = 10) -> List[Dict[str, Any]]:
         """Test multiple agents concurrently"""
-        print(f"\nTesting {len(agent_names)} agents with max {max_concurrent} concurrent...")
+        logger.info(f"\nTesting {len(agent_names)} agents with max {max_concurrent} concurrent...")
         
         semaphore = asyncio.Semaphore(max_concurrent)
         
@@ -145,7 +148,7 @@ class OllamaIntegrationTester:
         
     async def test_model_switching(self) -> Dict[str, Any]:
         """Test model switching performance"""
-        print("\nTesting model switching performance...")
+        logger.info("\nTesting model switching performance...")
         
         models = [
             OllamaConfig.DEFAULT_MODEL,
@@ -178,25 +181,25 @@ class OllamaIntegrationTester:
                 switch_time = time.time() - switch_start
                 
                 results["switching_times"][f"{current_model}_to_{next_model}"] = switch_time
-                print(f"  {current_model} → {next_model}: {switch_time:.2f}s")
+                logger.info(f"  {current_model} → {next_model}: {switch_time:.2f}s")
                 
         return results
         
     async def run_integration_tests(self, full_test: bool = False, specific_agents: Optional[List[str]] = None):
         """Run complete integration tests"""
-        print("=" * 60)
-        print("SutazAI Ollama Integration Test Suite")
-        print("=" * 60)
+        logger.info("=" * 60)
+        logger.info("SutazAI Ollama Integration Test Suite")
+        logger.info("=" * 60)
         
         # Test Ollama connectivity
         if not await self.test_ollama_connectivity():
-            print("\n❌ Cannot proceed without Ollama connectivity")
+            logger.info("\n❌ Cannot proceed without Ollama connectivity")
             return self.results
             
         # Test model availability
         model_status = await self.test_model_availability()
         if not any(model_status.values()):
-            print("\n❌ No required models available")
+            logger.info("\n❌ No required models available")
             return self.results
             
         # Determine which agents to test
@@ -227,7 +230,7 @@ class OllamaIntegrationTester:
         self.results["total_agents"] = len(OllamaConfig.AGENT_MODELS)
         self.results["tested"] = len(agents_to_test)
         
-        print(f"\nTesting {len(agents_to_test)} agents...")
+        logger.info(f"\nTesting {len(agents_to_test)} agents...")
         
         # Test agents
         agent_results = await self.test_concurrent_agents(agents_to_test)
@@ -252,10 +255,10 @@ class OllamaIntegrationTester:
                 
             response_time = result.get("response_time", 0)
             if response_time:
-                print(f"{status_icon} {agent_name} ({model}): {response_time:.2f}s")
+                logger.info(f"{status_icon} {agent_name} ({model}): {response_time:.2f}s")
             else:
                 error = result.get("error", "Unknown error")
-                print(f"{status_icon} {agent_name} ({model}): {error}")
+                logger.info(f"{status_icon} {agent_name} ({model}): {error}")
                 
         # Test model switching if not full test
         if not full_test:
@@ -263,20 +266,20 @@ class OllamaIntegrationTester:
             self.results["performance"]["model_switching"] = switch_results
             
         # Summary
-        print("\n" + "=" * 60)
-        print("Test Summary")
-        print("=" * 60)
-        print(f"Total Agents: {self.results['total_agents']}")
-        print(f"Tested: {self.results['tested']}")
-        print(f"Passed: {self.results['passed']}")
-        print(f"Failed: {self.results['failed']}")
-        print(f"Success Rate: {(self.results['passed'] / self.results['tested'] * 100):.1f}%")
+        logger.info("\n" + "=" * 60)
+        logger.info("Test Summary")
+        logger.info("=" * 60)
+        logger.info(f"Total Agents: {self.results['total_agents']}")
+        logger.info(f"Tested: {self.results['tested']}")
+        logger.info(f"Passed: {self.results['passed']}")
+        logger.error(f"Failed: {self.results['failed']}")
+        logger.info(f"Success Rate: {(self.results['passed'] / self.results['tested'] * 100):.1f}%")
         
-        print("\nModel Performance:")
+        logger.info("\nModel Performance:")
         for model, stats in self.results["models"].items():
             if stats["tested"] > 0:
                 success_rate = (stats["passed"] / stats["tested"] * 100)
-                print(f"  {model}: {stats['passed']}/{stats['tested']} ({success_rate:.1f}%)")
+                logger.info(f"  {model}: {stats['passed']}/{stats['tested']} ({success_rate:.1f}%)")
                 
         # Calculate average response times
         response_times = defaultdict(list)
@@ -286,10 +289,10 @@ class OllamaIntegrationTester:
                 response_times[model].append(agent_data["response_time"])
                 
         if response_times:
-            print("\nAverage Response Times:")
+            logger.info("\nAverage Response Times:")
             for model, times in response_times.items():
                 avg_time = sum(times) / len(times)
-                print(f"  {model}: {avg_time:.2f}s")
+                logger.info(f"  {model}: {avg_time:.2f}s")
                 
         return self.results
         
@@ -304,7 +307,7 @@ class OllamaIntegrationTester:
         with open(filepath, 'w') as f:
             json.dump(self.results, f, indent=2)
             
-        print(f"\nResults saved to: {filepath}")
+        logger.info(f"\nResults saved to: {filepath}")
         
 
 async def main():

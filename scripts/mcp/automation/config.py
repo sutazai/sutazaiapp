@@ -370,12 +370,12 @@ def reload_config(config_file: Optional[Path] = None) -> MCPAutomationConfig:
 if __name__ == "__main__":
     # Configuration validation and testing
     config = get_config()
-    print("MCP Automation Configuration:")
-    print(f"  MCP Root: {config.paths.mcp_root}")
-    print(f"  Update Mode: {config.update_mode.value}")
-    print(f"  Dry Run: {config.dry_run}")
-    print(f"  Servers: {len(config.mcp_servers)}")
+    logger.info("MCP Automation Configuration:")
+    logger.info(f"  MCP Root: {config.paths.mcp_root}")
+    logger.info(f"  Update Mode: {config.update_mode.value}")
+    logger.info(f"  Dry Run: {config.dry_run}")
+    logger.info(f"  Servers: {len(config.mcp_servers)}")
     
     # Test configuration serialization
     config_dict = config.to_dict()
-    print(f"  Configuration sections: {list(config_dict.keys())}")
+    logger.info(f"  Configuration sections: {list(config_dict.keys())}")

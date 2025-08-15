@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Response Time Validation
 Tests all API endpoints for <50ms response times.
 """
@@ -113,7 +116,7 @@ class UltratestResponseTimeValidator:
     
     def test_concurrent_load(self, num_concurrent: int = 10) -> Dict[str, Any]:
         """Test response times under concurrent load"""
-        print(f"🔄 Testing concurrent load with {num_concurrent} simultaneous requests...")
+        logger.info(f"🔄 Testing concurrent load with {num_concurrent} simultaneous requests...")
         
         # Use the fastest endpoints for concurrent testing
         fast_endpoints = [
@@ -181,9 +184,9 @@ class UltratestResponseTimeValidator:
     
     def run_comprehensive_test(self) -> Dict[str, Any]:
         """Run comprehensive response time validation"""
-        print("\n⚡ ULTRATEST: Response Time Validation")
-        print("=" * 70)
-        print("Testing all endpoints for <50ms response times...")
+        logger.info("\n⚡ ULTRATEST: Response Time Validation")
+        logger.info("=" * 70)
+        logger.info("Testing all endpoints for <50ms response times...")
         
         # Test each endpoint individually
         endpoint_results = []
@@ -192,20 +195,20 @@ class UltratestResponseTimeValidator:
         failed_endpoints = 0
         
         for name, url, method in self.endpoints:
-            print(f"Testing: {name}")
+            logger.info(f"Testing: {name}")
             result = self.test_endpoint_response_time(name, url, method)
             endpoint_results.append(result)
             
             if result['is_successful']:
                 if result.get('avg_response_time_ms', float('inf')) <= 50.0:
                     fast_endpoints += 1
-                    print(f"  ✅ {result['avg_response_time_ms']:.2f}ms (FAST)")
+                    logger.info(f"  ✅ {result['avg_response_time_ms']:.2f}ms (FAST)")
                 else:
                     slow_endpoints += 1
-                    print(f"  ⚠️  {result['avg_response_time_ms']:.2f}ms (SLOW)")
+                    logger.info(f"  ⚠️  {result['avg_response_time_ms']:.2f}ms (SLOW)")
             else:
                 failed_endpoints += 1
-                print(f"  ❌ FAILED - {result.get('errors', ['Unknown error'])[0]}")
+                logger.error(f"  ❌ FAILED - {result.get('errors', ['Unknown error'])[0]}")
         
         # Test concurrent load
         concurrent_results = self.test_concurrent_load(10)
@@ -233,30 +236,30 @@ class UltratestResponseTimeValidator:
     
     def generate_performance_report(self, results: Dict[str, Any]):
         """Generate detailed performance report"""
-        print("\n" + "=" * 80)
-        print("⚡ ULTRATEST RESPONSE TIME REPORT")
-        print("=" * 80)
-        print(f"Test Execution Time: {results.get('timestamp', 'Unknown')}")
+        logger.info("\n" + "=" * 80)
+        logger.info("⚡ ULTRATEST RESPONSE TIME REPORT")
+        logger.info("=" * 80)
+        logger.info(f"Test Execution Time: {results.get('timestamp', 'Unknown')}")
         
         summary = results.get('summary', {})
         
-        print(f"\n📊 ENDPOINT PERFORMANCE SUMMARY:")
-        print("-" * 50)
-        print(f"Total Endpoints: {summary.get('total_endpoints_tested', 0)}")
-        print(f"Fast Endpoints (<50ms): {summary.get('fast_endpoints', 0)}")
-        print(f"Slow Endpoints (>50ms): {summary.get('slow_endpoints', 0)}")
-        print(f"Failed Endpoints: {summary.get('failed_endpoints', 0)}")
-        print(f"Performance Score: {summary.get('performance_score', 0):.1f}%")
+        logger.info(f"\n📊 ENDPOINT PERFORMANCE SUMMARY:")
+        logger.info("-" * 50)
+        logger.info(f"Total Endpoints: {summary.get('total_endpoints_tested', 0)}")
+        logger.info(f"Fast Endpoints (<50ms): {summary.get('fast_endpoints', 0)}")
+        logger.info(f"Slow Endpoints (>50ms): {summary.get('slow_endpoints', 0)}")
+        logger.error(f"Failed Endpoints: {summary.get('failed_endpoints', 0)}")
+        logger.info(f"Performance Score: {summary.get('performance_score', 0):.1f}%")
         
         target_met = summary.get('meets_performance_target', False)
         if target_met:
-            print("✅ PERFORMANCE TARGET ACHIEVED (70%+ fast endpoints)")
+            logger.info("✅ PERFORMANCE TARGET ACHIEVED (70%+ fast endpoints)")
         else:
-            print("❌ Performance target not met")
+            logger.info("❌ Performance target not met")
         
         # Detailed endpoint results
-        print(f"\n🔍 DETAILED ENDPOINT RESULTS:")
-        print("-" * 50)
+        logger.info(f"\n🔍 DETAILED ENDPOINT RESULTS:")
+        logger.info("-" * 50)
         
         for result in results.get('endpoint_results', []):
             name = result.get('name', 'Unknown')
@@ -266,26 +269,26 @@ class UltratestResponseTimeValidator:
             
             if is_successful and avg_time is not None:
                 icon = "✅" if meets_target else "⚠️"
-                print(f"{icon} {name}: {avg_time:.2f}ms")
+                logger.info(f"{icon} {name}: {avg_time:.2f}ms")
             else:
                 errors = result.get('errors', ['Unknown error'])
-                print(f"❌ {name}: {errors[0] if errors else 'Failed'}")
+                logger.error(f"❌ {name}: {errors[0] if errors else 'Failed'}")
         
         # Concurrent load results
         concurrent = results.get('concurrent_load_results', {})
         if 'error' not in concurrent:
-            print(f"\n🔄 CONCURRENT LOAD RESULTS:")
-            print("-" * 50)
-            print(f"Total Requests: {concurrent.get('total_requests', 0)}")
-            print(f"Successful Requests: {concurrent.get('successful_requests', 0)}")
-            print(f"Success Rate: {concurrent.get('success_rate', 0):.1f}%")
-            print(f"Average Response Time: {concurrent.get('avg_response_time_ms', 0):.2f}ms")
-            print(f"Fast Responses (<50ms): {concurrent.get('under_50ms_count', 0)}")
-            print(f"Fast Response Rate: {concurrent.get('fast_response_rate', 0):.1f}%")
+            logger.info(f"\n🔄 CONCURRENT LOAD RESULTS:")
+            logger.info("-" * 50)
+            logger.info(f"Total Requests: {concurrent.get('total_requests', 0)}")
+            logger.info(f"Successful Requests: {concurrent.get('successful_requests', 0)}")
+            logger.info(f"Success Rate: {concurrent.get('success_rate', 0):.1f}%")
+            logger.info(f"Average Response Time: {concurrent.get('avg_response_time_ms', 0):.2f}ms")
+            logger.info(f"Fast Responses (<50ms): {concurrent.get('under_50ms_count', 0)}")
+            logger.info(f"Fast Response Rate: {concurrent.get('fast_response_rate', 0):.1f}%")
         
         # Overall assessment
-        print(f"\n🎯 PERFORMANCE ASSESSMENT:")
-        print("-" * 50)
+        logger.info(f"\n🎯 PERFORMANCE ASSESSMENT:")
+        logger.info("-" * 50)
         
         achievements = []
         issues = []
@@ -309,23 +312,23 @@ class UltratestResponseTimeValidator:
         if summary.get('failed_endpoints', 0) > 0:
             issues.append(f"{summary['failed_endpoints']} endpoints failed to respond")
         
-        print("🎉 ACHIEVEMENTS:")
+        logger.info("🎉 ACHIEVEMENTS:")
         for achievement in achievements:
-            print(f"   ✅ {achievement}")
+            logger.info(f"   ✅ {achievement}")
         
         if issues:
-            print("\n⚠️  AREAS FOR IMPROVEMENT:")
+            logger.info("\n⚠️  AREAS FOR IMPROVEMENT:")
             for issue in issues:
-                print(f"   ❌ {issue}")
+                logger.info(f"   ❌ {issue}")
         
         success_rate = (len(achievements) / (len(achievements) + len(issues))) * 100 if (achievements or issues) else 0
-        print(f"\n📈 Response Time Success Rate: {success_rate:.1f}%")
+        logger.info(f"\n📈 Response Time Success Rate: {success_rate:.1f}%")
         
         return target_met and success_rate >= 75
 
 def main():
     """Run comprehensive response time validation"""
-    print("🚀 Starting ULTRATEST Response Time Validation")
+    logger.info("🚀 Starting ULTRATEST Response Time Validation")
     
     validator = UltratestResponseTimeValidator()
     results = validator.run_comprehensive_test()
@@ -337,13 +340,13 @@ def main():
     with open('/opt/sutazaiapp/tests/ultratest_response_times_report.json', 'w') as f:
         json.dump(results, f, indent=2, default=str)
     
-    print(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_response_times_report.json")
+    logger.info(f"\n📄 Full report saved to: /opt/sutazaiapp/tests/ultratest_response_times_report.json")
     
     if success:
-        print("\n🎉 RESPONSE TIME VALIDATION SUCCESSFUL!")
+        logger.info("\n🎉 RESPONSE TIME VALIDATION SUCCESSFUL!")
         return 0
     else:
-        print("\n⚠️  RESPONSE TIME NEEDS IMPROVEMENT")
+        logger.info("\n⚠️  RESPONSE TIME NEEDS IMPROVEMENT")
         return 1
 
 if __name__ == "__main__":

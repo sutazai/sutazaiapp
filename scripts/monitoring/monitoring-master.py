@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Master Monitoring Script - Orchestrates all monitoring operations
 Usage: python monitoring-master.py [health|alerts|logs|all]
 """
@@ -11,7 +14,7 @@ from datetime import datetime
 
 def log(message):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    print(f"[{timestamp}] MONITOR: {message}")
+    logger.info(f"[{timestamp}] MONITOR: {message}")
 
 def run_scripts(category):
     script_dir = os.path.dirname(os.path.abspath(__file__))

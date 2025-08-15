@@ -548,22 +548,22 @@ Total Databases: {len(metrics)}
 
 async def main():
     """Main monitoring loop"""
-    print("🔥 DATABASE MONITORING DASHBOARD")
-    print("=" * 50)
+    logger.info("🔥 DATABASE MONITORING DASHBOARD")
+    logger.info("=" * 50)
     
     monitor = DatabaseMonitor()
     
     # Run monitoring loop
     try:
         while True:
-            print(f"\n⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Collecting metrics...")
+            logger.info(f"\n⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Collecting metrics...")
             
             # Collect all metrics
             all_metrics = await monitor.collect_all_metrics()
             
             # Generate and display report
             report = monitor.generate_dashboard_report(all_metrics)
-            print(report)
+            logger.info(report)
             
             # Save to Redis for persistence
             monitor.save_metrics_to_redis(all_metrics)
@@ -577,16 +577,16 @@ async def main():
                     critical_alerts.extend([f"{m.name}: {alert}" for alert in m.alerts if 'CRITICAL' in alert])
             
             if critical_alerts:
-                print("\n🚨 CRITICAL ALERTS DETECTED:")
+                logger.error("\n🚨 CRITICAL ALERTS DETECTED:")
                 for alert in critical_alerts:
-                    print(f"   {alert}")
+                    logger.info(f"   {alert}")
             
             # Wait 60 seconds before next check
-            print(f"\n💤 Sleeping 60 seconds... (Press Ctrl+C to stop)")
+            logger.info(f"\n💤 Sleeping 60 seconds... (Press Ctrl+C to stop)")
             await asyncio.sleep(60)
             
     except KeyboardInterrupt:
-        print("\n👋 Monitoring stopped by user")
+        logger.info("\n👋 Monitoring stopped by user")
     except Exception as e:
         logger.error(f"Monitoring failed: {e}")
         raise

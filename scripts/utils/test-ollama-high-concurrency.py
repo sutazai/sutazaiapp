@@ -443,67 +443,67 @@ class OllamaLoadTester:
 
     def print_metrics_report(self, metrics: LoadTestMetrics):
         """Print a comprehensive metrics report."""
-        print("\n" + "="*80)
-        print("OLLAMA HIGH-CONCURRENCY LOAD TEST RESULTS")
-        print("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("OLLAMA HIGH-CONCURRENCY LOAD TEST RESULTS")
+        logger.info("="*80)
         
-        print(f"\nTest Configuration:")
-        print(f"  Concurrent Users: {metrics.concurrent_users}")
-        print(f"  Total Duration: {metrics.total_test_duration_s:.1f}s")
-        print(f"  Ollama Instances: {len(self.ollama_urls)}")
-        print(f"  Target Model: tinyllama")
+        logger.info(f"\nTest Configuration:")
+        logger.info(f"  Concurrent Users: {metrics.concurrent_users}")
+        logger.info(f"  Total Duration: {metrics.total_test_duration_s:.1f}s")
+        logger.info(f"  Ollama Instances: {len(self.ollama_urls)}")
+        logger.info(f"  Target Model: tinyllama")
         
-        print(f"\nRequest Statistics:")
-        print(f"  Total Requests: {metrics.total_requests}")
-        print(f"  Successful: {metrics.successful_requests}")
-        print(f"  Failed: {metrics.failed_requests}")
-        print(f"  Success Rate: {metrics.success_rate:.2f}%")
-        print(f"  Throughput: {metrics.throughput_rps:.2f} requests/second")
+        logger.info(f"\nRequest Statistics:")
+        logger.info(f"  Total Requests: {metrics.total_requests}")
+        logger.info(f"  Successful: {metrics.successful_requests}")
+        logger.error(f"  Failed: {metrics.failed_requests}")
+        logger.info(f"  Success Rate: {metrics.success_rate:.2f}%")
+        logger.info(f"  Throughput: {metrics.throughput_rps:.2f} requests/second")
         
-        print(f"\nResponse Time Statistics (ms):")
-        print(f"  Average: {metrics.avg_response_time_ms:.1f}")
-        print(f"  Median: {metrics.median_response_time_ms:.1f}")
-        print(f"  95th Percentile: {metrics.p95_response_time_ms:.1f}")
-        print(f"  99th Percentile: {metrics.p99_response_time_ms:.1f}")
-        print(f"  Minimum: {metrics.min_response_time_ms:.1f}")
-        print(f"  Maximum: {metrics.max_response_time_ms:.1f}")
+        logger.info(f"\nResponse Time Statistics (ms):")
+        logger.info(f"  Average: {metrics.avg_response_time_ms:.1f}")
+        logger.info(f"  Median: {metrics.median_response_time_ms:.1f}")
+        logger.info(f"  95th Percentile: {metrics.p95_response_time_ms:.1f}")
+        logger.info(f"  99th Percentile: {metrics.p99_response_time_ms:.1f}")
+        logger.info(f"  Minimum: {metrics.min_response_time_ms:.1f}")
+        logger.info(f"  Maximum: {metrics.max_response_time_ms:.1f}")
         
         if metrics.errors_by_type:
-            print(f"\nError Analysis:")
+            logger.error(f"\nError Analysis:")
             for error_type, count in sorted(metrics.errors_by_type.items(), 
                                           key=lambda x: x[1], reverse=True):
-                print(f"  {error_type}: {count} ({count/metrics.total_requests*100:.1f}%)")
+                logger.error(f"  {error_type}: {count} ({count/metrics.total_requests*100:.1f}%)")
         
         # Performance assessment
-        print(f"\nPerformance Assessment:")
+        logger.info(f"\nPerformance Assessment:")
         if metrics.success_rate >= 99:
-            print("  ✅ EXCELLENT: >99% success rate")
+            logger.info("  ✅ EXCELLENT: >99% success rate")
         elif metrics.success_rate >= 95:
-            print("  ✅ GOOD: >95% success rate")
+            logger.info("  ✅ GOOD: >95% success rate")
         elif metrics.success_rate >= 90:
-            print("  ⚠️  ACCEPTABLE: >90% success rate")
+            logger.info("  ⚠️  ACCEPTABLE: >90% success rate")
         else:
-            print("  ❌ POOR: <90% success rate")
+            logger.info("  ❌ POOR: <90% success rate")
         
         if metrics.p95_response_time_ms <= 2000:
-            print("  ✅ EXCELLENT: P95 response time ≤2s")
+            logger.info("  ✅ EXCELLENT: P95 response time ≤2s")
         elif metrics.p95_response_time_ms <= 5000:
-            print("  ✅ GOOD: P95 response time ≤5s")
+            logger.info("  ✅ GOOD: P95 response time ≤5s")
         elif metrics.p95_response_time_ms <= 10000:
-            print("  ⚠️  ACCEPTABLE: P95 response time ≤10s")
+            logger.info("  ⚠️  ACCEPTABLE: P95 response time ≤10s")
         else:
-            print("  ❌ POOR: P95 response time >10s")
+            logger.info("  ❌ POOR: P95 response time >10s")
         
         if metrics.throughput_rps >= 50:
-            print("  ✅ EXCELLENT: Throughput ≥50 RPS")
+            logger.info("  ✅ EXCELLENT: Throughput ≥50 RPS")
         elif metrics.throughput_rps >= 25:
-            print("  ✅ GOOD: Throughput ≥25 RPS")
+            logger.info("  ✅ GOOD: Throughput ≥25 RPS")
         elif metrics.throughput_rps >= 10:
-            print("  ⚠️  ACCEPTABLE: Throughput ≥10 RPS")
+            logger.info("  ⚠️  ACCEPTABLE: Throughput ≥10 RPS")
         else:
-            print("  ❌ POOR: Throughput <10 RPS")
+            logger.info("  ❌ POOR: Throughput <10 RPS")
         
-        print("\n" + "="*80)
+        logger.info("\n" + "="*80)
 
     async def save_results(self, metrics: LoadTestMetrics, filename: str):
         """Save test results to a JSON file."""
@@ -563,14 +563,14 @@ async def main():
     try:
         await tester.initialize()
         
-        print(f"\n🚀 Starting Ollama High-Concurrency Load Test")
-        print(f"Target: {args.concurrent_users} concurrent connections")
-        print(f"Ollama instances: {args.urls}")
-        print(f"Model: tinyllama")
+        logger.info(f"\n🚀 Starting Ollama High-Concurrency Load Test")
+        logger.info(f"Target: {args.concurrent_users} concurrent connections")
+        logger.info(f"Ollama instances: {args.urls}")
+        logger.info(f"Model: tinyllama")
         
         # Run tests based on type
         if args.test_type in ["concurrent", "both"]:
-            print(f"\n📊 Running Concurrent Load Test...")
+            logger.info(f"\n📊 Running Concurrent Load Test...")
             concurrent_metrics = await tester.run_concurrent_test(
                 concurrent_users=args.concurrent_users,
                 requests_per_user=args.requests_per_user,
@@ -582,7 +582,7 @@ async def main():
                 await tester.save_results(concurrent_metrics, args.output_file)
         
         if args.test_type in ["sustained", "both"]:
-            print(f"\n⏱️  Running Sustained Load Test...")
+            logger.info(f"\n⏱️  Running Sustained Load Test...")
             sustained_metrics = await tester.run_sustained_test(
                 concurrent_users=args.concurrent_users,
                 duration_seconds=args.duration
@@ -603,7 +603,7 @@ async def main():
                 json.dump(combined_data, f, indent=2)
             logger.info(f"Combined results saved to {args.output_file}")
         
-        print(f"\n✅ Load testing completed successfully!")
+        logger.info(f"\n✅ Load testing completed successfully!")
         
     except KeyboardInterrupt:
         logger.info("Load test interrupted by user")

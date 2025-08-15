@@ -23,44 +23,44 @@ def validate_frontend_health():
         "overall_status": "PENDING"
     }
     
-    print("=" * 60)
-    print("FINAL FRONTEND VALIDATION")
-    print("=" * 60)
+    logger.info("=" * 60)
+    logger.info("FINAL FRONTEND VALIDATION")
+    logger.info("=" * 60)
     
     # Test 1: Basic connectivity
-    print("\n1. Testing basic connectivity...")
+    logger.info("\n1. Testing basic connectivity...")
     try:
         response = requests.get("http://localhost:10011", timeout=10)
         connectivity_status = response.status_code == 200
-        print(f"   Status: {'✅ PASS' if connectivity_status else '❌ FAIL'}")
+        logger.info(f"   Status: {'✅ PASS' if connectivity_status else '❌ FAIL'}")
         results["validation_results"]["connectivity"] = {
             "status": "PASS" if connectivity_status else "FAIL",
             "status_code": response.status_code,
             "response_time": response.elapsed.total_seconds()
         }
     except Exception as e:
-        print(f"   Status: ❌ FAIL - {e}")
+        logger.info(f"   Status: ❌ FAIL - {e}")
         results["validation_results"]["connectivity"] = {"status": "FAIL", "error": str(e)}
     
     # Test 2: Container health
-    print("\n2. Checking container health...")
+    logger.info("\n2. Checking container health...")
     try:
         result = subprocess.run(
             ["docker", "inspect", "sutazai-frontend", "--format", "{{.State.Health.Status}}"],
             capture_output=True, text=True, timeout=10
         )
         container_health = result.stdout.strip() == "healthy"
-        print(f"   Status: {'✅ PASS' if container_health else '❌ FAIL'}")
+        logger.info(f"   Status: {'✅ PASS' if container_health else '❌ FAIL'}")
         results["validation_results"]["container_health"] = {
             "status": "PASS" if container_health else "FAIL",
             "health_status": result.stdout.strip()
         }
     except Exception as e:
-        print(f"   Status: ❌ FAIL - {e}")
+        logger.info(f"   Status: ❌ FAIL - {e}")
         results["validation_results"]["container_health"] = {"status": "FAIL", "error": str(e)}
     
     # Test 3: Resource usage check
-    print("\n3. Checking resource usage...")
+    logger.info("\n3. Checking resource usage...")
     try:
         result = subprocess.run(
             ["docker", "stats", "sutazai-frontend", "--no-stream", "--format", "json"],
@@ -81,9 +81,9 @@ def validate_frontend_health():
                 logger.error(f"Unexpected exception: {e}", exc_info=True)
                 resource_ok = True
             
-            print(f"   Memory: {mem_usage}")
-            print(f"   CPU: {cpu_usage}")
-            print(f"   Status: {'✅ PASS' if resource_ok else '⚠️ HIGH USAGE'}")
+            logger.info(f"   Memory: {mem_usage}")
+            logger.info(f"   CPU: {cpu_usage}")
+            logger.info(f"   Status: {'✅ PASS' if resource_ok else '⚠️ HIGH USAGE'}")
             
             results["validation_results"]["resource_usage"] = {
                 "status": "PASS" if resource_ok else "HIGH_USAGE",
@@ -91,14 +91,14 @@ def validate_frontend_health():
                 "cpu_usage": cpu_usage
             }
         else:
-            print("   Status: ❌ FAIL - Cannot get stats")
+            logger.info("   Status: ❌ FAIL - Cannot get stats")
             results["validation_results"]["resource_usage"] = {"status": "FAIL", "error": "Cannot get stats"}
     except Exception as e:
-        print(f"   Status: ❌ FAIL - {e}")
+        logger.info(f"   Status: ❌ FAIL - {e}")
         results["validation_results"]["resource_usage"] = {"status": "FAIL", "error": str(e)}
     
     # Test 4: Performance regression check
-    print("\n4. Performance regression check (5 quick requests)...")
+    logger.info("\n4. Performance regression check (5 quick requests)...")
     response_times = []
     try:
         for i in range(5):
@@ -114,8 +114,8 @@ def validate_frontend_health():
         if response_times:
             avg_time = sum(response_times) / len(response_times)
             performance_ok = avg_time < 0.1  # Less than 100ms
-            print(f"   Average response time: {avg_time:.3f}s")
-            print(f"   Status: {'✅ PASS' if performance_ok else '⚠️ SLOW'}")
+            logger.info(f"   Average response time: {avg_time:.3f}s")
+            logger.info(f"   Status: {'✅ PASS' if performance_ok else '⚠️ SLOW'}")
             
             results["validation_results"]["performance"] = {
                 "status": "PASS" if performance_ok else "SLOW",
@@ -123,31 +123,31 @@ def validate_frontend_health():
                 "response_times": response_times
             }
         else:
-            print("   Status: ❌ FAIL - No successful requests")
+            logger.info("   Status: ❌ FAIL - No successful requests")
             results["validation_results"]["performance"] = {"status": "FAIL", "error": "No successful requests"}
     except Exception as e:
-        print(f"   Status: ❌ FAIL - {e}")
+        logger.info(f"   Status: ❌ FAIL - {e}")
         results["validation_results"]["performance"] = {"status": "FAIL", "error": str(e)}
     
     # Overall assessment
-    print("\n" + "=" * 60)
-    print("OVERALL ASSESSMENT")
-    print("=" * 60)
+    logger.info("\n" + "=" * 60)
+    logger.info("OVERALL ASSESSMENT")
+    logger.info("=" * 60)
     
     all_tests = list(results["validation_results"].values())
     passed_tests = [test for test in all_tests if test.get("status") == "PASS"]
     
     if len(passed_tests) == len(all_tests):
         results["overall_status"] = "PASS"
-        print("🎉 ALL TESTS PASSED - Frontend is HEALTHY and READY")
+        logger.info("🎉 ALL TESTS PASSED - Frontend is HEALTHY and READY")
     elif len(passed_tests) >= len(all_tests) * 0.75:
         results["overall_status"] = "MOSTLY_PASS"
-        print("⚠️ MOSTLY PASSED - Minor issues detected but frontend is operational")
+        logger.info("⚠️ MOSTLY PASSED - Minor issues detected but frontend is operational")
     else:
         results["overall_status"] = "FAIL"
-        print("❌ MULTIPLE FAILURES - Frontend needs attention")
+        logger.info("❌ MULTIPLE FAILURES - Frontend needs attention")
     
-    print(f"Tests passed: {len(passed_tests)}/{len(all_tests)}")
+    logger.info(f"Tests passed: {len(passed_tests)}/{len(all_tests)}")
     
     # Save results
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -156,7 +156,7 @@ def validate_frontend_health():
     with open(filename, 'w') as f:
         json.dump(results, f, indent=2, default=str)
     
-    print(f"Results saved to: {filename}")
+    logger.info(f"Results saved to: {filename}")
     
     return results
 

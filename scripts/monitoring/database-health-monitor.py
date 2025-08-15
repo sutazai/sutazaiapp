@@ -565,25 +565,25 @@ async def main():
             health = await monitor.run_health_check()
             
             # Print status
-            print(f"\n{'='*60}")
-            print(f"DATABASE HEALTH REPORT - {health.timestamp}")
-            print(f"Overall Status: {health.overall_status.upper()}")
-            print(f"{'='*60}")
+            logger.info(f"\n{'='*60}")
+            logger.info(f"DATABASE HEALTH REPORT - {health.timestamp}")
+            logger.info(f"Overall Status: {health.overall_status.upper()}")
+            logger.info(f"{'='*60}")
             
             for db_name, metrics in health.databases.items():
-                print(f"\n{db_name.upper()}:")
-                print(f"  Status: {metrics.status}")
-                print(f"  Connections: {metrics.connection_count}/{metrics.max_connections} ({metrics.connection_utilization:.1%})")
-                print(f"  Cache Hit Ratio: {metrics.cache_hit_ratio:.1%}")
+                logger.info(f"\n{db_name.upper()}:")
+                logger.info(f"  Status: {metrics.status}")
+                logger.info(f"  Connections: {metrics.connection_count}/{metrics.max_connections} ({metrics.connection_utilization:.1%})")
+                logger.info(f"  Cache Hit Ratio: {metrics.cache_hit_ratio:.1%}")
                 if metrics.backup_age_hours is not None:
-                    print(f"  Backup Age: {metrics.backup_age_hours} hours")
+                    logger.info(f"  Backup Age: {metrics.backup_age_hours} hours")
                 if metrics.alerts:
-                    print(f"  Alerts: {', '.join(metrics.alerts)}")
+                    logger.info(f"  Alerts: {', '.join(metrics.alerts)}")
             
             if health.recommendations:
-                print(f"\nRECOMMENDATIONS:")
+                logger.info(f"\nRECOMMENDATIONS:")
                 for rec in health.recommendations:
-                    print(f"  • {rec}")
+                    logger.info(f"  • {rec}")
             
             # Send alerts and save metrics
             await monitor.send_alerts(health)

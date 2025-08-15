@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 Test the caching system logic without Streamlit dependencies
 """
 
@@ -33,10 +36,10 @@ sys.modules['streamlit'].session_state = mock_session_state
 
 def test_caching_system():
     """Test the caching system functionality"""
-    print("🧪 Testing Caching System Logic...")
+    logger.info("🧪 Testing Caching System Logic...")
     
     # Test 1: Cache Key Generation
-    print("\n1️⃣ Testing cache key generation...")
+    logger.info("\n1️⃣ Testing cache key generation...")
     
     def test_cache_key_generation():
         """Test the cache key generation logic"""
@@ -55,11 +58,11 @@ def test_caching_system():
         key3 = _get_cache_key("test", "arg1", "arg3", param1="value1", param2="value2")
         assert key1 != key3, "Different inputs should produce different cache keys"
         
-        print("✅ Cache key generation working correctly")
+        logger.info("✅ Cache key generation working correctly")
         return True
     
     # Test 2: TTL Logic
-    print("\n2️⃣ Testing TTL (Time To Live) logic...")
+    logger.info("\n2️⃣ Testing TTL (Time To Live) logic...")
     
     def test_ttl_logic():
         """Test TTL expiration logic"""
@@ -112,11 +115,11 @@ def test_caching_system():
         expired_result = cache.get("test_key", "default")
         assert expired_result == "default", "Should get default value after TTL expiration"
         
-        print("✅ TTL logic working correctly")
+        logger.info("✅ TTL logic working correctly")
         return True
     
     # Test 3: Cache Size Management
-    print("\n3️⃣ Testing cache size management...")
+    logger.info("\n3️⃣ Testing cache size management...")
     
     def test_cache_size_management():
         """Test cache size limits"""
@@ -167,11 +170,11 @@ def test_caching_system():
         assert "key2" in cache.cache, "Second item should remain"
         assert "key3" in cache.cache, "New item should be added"
         
-        print("✅ Cache size management working correctly")
+        logger.info("✅ Cache size management working correctly")
         return True
     
     # Test 4: Decorator Logic
-    print("\n4️⃣ Testing decorator logic...")
+    logger.info("\n4️⃣ Testing decorator logic...")
     
     def test_decorator_logic():
         """Test caching decorator functionality"""
@@ -222,7 +225,7 @@ def test_caching_system():
         result3 = expensive_function(1)
         assert result1 != result3, "Third call should execute function again after expiration"
         
-        print("✅ Decorator logic working correctly")
+        logger.info("✅ Decorator logic working correctly")
         return True
     
     # Run all tests
@@ -232,17 +235,17 @@ def test_caching_system():
         test_cache_size_management()
         test_decorator_logic()
         
-        print("\n" + "="*60)
-        print("🎉 ALL CACHING TESTS PASSED!")
-        print("✅ Cache system implementation is functionally correct")
-        print("="*60)
+        logger.info("\n" + "="*60)
+        logger.info("🎉 ALL CACHING TESTS PASSED!")
+        logger.info("✅ Cache system implementation is functionally correct")
+        logger.info("="*60)
         return True
         
     except AssertionError as e:
-        print(f"\n❌ Test Failed: {e}")
+        logger.error(f"\n❌ Test Failed: {e}")
         return False
     except Exception as e:
-        print(f"\n🔥 Test Error: {e}")
+        logger.error(f"\n🔥 Test Error: {e}")
         return False
 
 if __name__ == "__main__":

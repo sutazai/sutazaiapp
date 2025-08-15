@@ -6,7 +6,10 @@ Requirements: None - uses only standard library
 """
 
 import re
+import logging
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 def update_agent_file(file_path: Path) -> bool:
     """Update a single agent file to use BaseAgent"""
@@ -33,11 +36,11 @@ def update_agent_file(file_path: Path) -> bool:
                 
         if modified:
             file_path.write_text(content)
-            print(f"✅ Updated: {file_path.parent.name}/{file_path.name}")
+            logger.info(f"✅ Updated: {file_path.parent.name}/{file_path.name}")
             return True
         return False
     except Exception as e:
-        print(f"❌ Error updating {file_path}: {e}")
+        logger.error(f"❌ Error updating {file_path}: {e}")
         return False
 
 def main():
@@ -54,7 +57,7 @@ def main():
                         updated += 1
                     break
                     
-    print(f"\n✅ Updated {updated} agents to use BaseAgent")
+    logger.info(f"\n✅ Updated {updated} agents to use BaseAgent")
 
 if __name__ == "__main__":
     main()

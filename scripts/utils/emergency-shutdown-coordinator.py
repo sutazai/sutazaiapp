@@ -1054,29 +1054,29 @@ def main():
             trigger = ShutdownTrigger(args.trigger)
             success = coordinator.initiate_emergency_shutdown(trigger, args.force)
             if success:
-                print("Emergency shutdown completed successfully")
+                logger.info("Emergency shutdown completed successfully")
             else:
-                print("Emergency shutdown failed")
+                logger.error("Emergency shutdown failed")
                 sys.exit(1)
                 
         elif args.command == "abort":
             success = coordinator.abort_emergency_shutdown()
             if success:
-                print("Emergency shutdown aborted")
+                logger.info("Emergency shutdown aborted")
             else:
-                print("Could not abort shutdown")
+                logger.info("Could not abort shutdown")
                 sys.exit(1)
                 
         elif args.command == "status":
             status = coordinator.get_shutdown_status()
             if status:
-                print(json.dumps(status, indent=2))
+                logger.info(json.dumps(status, indent=2))
             else:
-                print("No active shutdown")
+                logger.info("No active shutdown")
                 
         elif args.command == "deadman":
             coordinator.touch_deadman_switch()
-            print("Deadman switch touched")
+            logger.info("Deadman switch touched")
     
     except KeyboardInterrupt:
         logger.info("Received interrupt signal")

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import logging
+
+logger = logging.getLogger(__name__)
 ULTRATEST Comprehensive Load Testing Suite
 Testing all 29 services with 100+ concurrent users
 Achieving 100% system validation with zero defects
@@ -126,7 +129,7 @@ class UltraTestLoadRunner:
     
     async def run_concurrent_async_tests(self, endpoint: TestEndpoint, num_requests: int) -> LoadTestResult:
         """Run concurrent async tests for a single endpoint"""
-        print(f"🔄 Testing {endpoint.name} with {num_requests} async requests...")
+        logger.info(f"🔄 Testing {endpoint.name} with {num_requests} async requests...")
         
         response_times = []
         status_codes = {}
@@ -177,7 +180,7 @@ class UltraTestLoadRunner:
     
     def run_concurrent_threaded_tests(self, endpoint: TestEndpoint, num_requests: int) -> LoadTestResult:
         """Run concurrent threaded tests for a single endpoint"""
-        print(f"🔄 Testing {endpoint.name} with {num_requests} threaded requests...")
+        logger.info(f"🔄 Testing {endpoint.name} with {num_requests} threaded requests...")
         
         response_times = []
         status_codes = {}
@@ -224,17 +227,17 @@ class UltraTestLoadRunner:
     
     async def run_comprehensive_load_test(self) -> Dict[str, LoadTestResult]:
         """Run comprehensive load test on all endpoints"""
-        print(f"🚀 ULTRATEST: Starting comprehensive load test with {self.concurrent_users} concurrent users")
-        print(f"📊 Testing {len(self.endpoints)} service endpoints")
-        print("=" * 80)
+        logger.info(f"🚀 ULTRATEST: Starting comprehensive load test with {self.concurrent_users} concurrent users")
+        logger.info(f"📊 Testing {len(self.endpoints)} service endpoints")
+        logger.info("=" * 80)
         
         # Calculate requests per endpoint to achieve total concurrent users
         requests_per_endpoint = max(1, self.concurrent_users // len(self.endpoints))
         total_requests = requests_per_endpoint * len(self.endpoints)
         
-        print(f"📈 Total requests planned: {total_requests}")
-        print(f"⚡ Requests per endpoint: {requests_per_endpoint}")
-        print("=" * 80)
+        logger.info(f"📈 Total requests planned: {total_requests}")
+        logger.info(f"⚡ Requests per endpoint: {requests_per_endpoint}")
+        logger.info("=" * 80)
         
         results = {}
         
@@ -245,7 +248,7 @@ class UltraTestLoadRunner:
                 result = await self.run_concurrent_async_tests(endpoint, requests_per_endpoint)
                 results[endpoint.name] = result
             except Exception as e:
-                print(f"❌ Failed to test {endpoint.name}: {e}")
+                logger.error(f"❌ Failed to test {endpoint.name}: {e}")
                 results[endpoint.name] = LoadTestResult(
                     endpoint=endpoint.name,
                     success_count=0,
@@ -264,7 +267,7 @@ class UltraTestLoadRunner:
                 result = self.run_concurrent_threaded_tests(endpoint, requests_per_endpoint)
                 results[endpoint.name] = result
             except Exception as e:
-                print(f"❌ Failed to test {endpoint.name}: {e}")
+                logger.error(f"❌ Failed to test {endpoint.name}: {e}")
                 results[endpoint.name] = LoadTestResult(
                     endpoint=endpoint.name,
                     success_count=0,
@@ -355,44 +358,44 @@ class UltraTestLoadRunner:
     
     def print_report(self, report: Dict):
         """Print formatted test report"""
-        print("\n" + "=" * 80)
-        print("🎯 ULTRATEST COMPREHENSIVE LOAD TEST REPORT")
-        print("=" * 80)
+        logger.info("\n" + "=" * 80)
+        logger.info("🎯 ULTRATEST COMPREHENSIVE LOAD TEST REPORT")
+        logger.info("=" * 80)
         
         summary = report["test_summary"]
         health = report["service_health"]
         
-        print(f"⏱️  Total Duration: {summary['total_duration_seconds']}s")
-        print(f"📊 Total Requests: {summary['total_requests']:,}")
-        print(f"✅ Success Rate: {summary['success_rate_percent']}%")
-        print(f"⚡ Throughput: {summary['throughput_requests_per_second']:.1f} req/s")
-        print(f"🎯 Concurrent Users: {summary['concurrent_users']}")
-        print(f"🏥 Service Health: {health['health_percentage']}% ({health['healthy_services']}/{health['total_services']})")
-        print(f"📈 Performance Grade: {report['performance_grade']}")
+        logger.info(f"⏱️  Total Duration: {summary['total_duration_seconds']}s")
+        logger.info(f"📊 Total Requests: {summary['total_requests']:,}")
+        logger.info(f"✅ Success Rate: {summary['success_rate_percent']}%")
+        logger.info(f"⚡ Throughput: {summary['throughput_requests_per_second']:.1f} req/s")
+        logger.info(f"🎯 Concurrent Users: {summary['concurrent_users']}")
+        logger.info(f"🏥 Service Health: {health['health_percentage']}% ({health['healthy_services']}/{health['total_services']})")
+        logger.info(f"📈 Performance Grade: {report['performance_grade']}")
         
         if report["failed_services"]:
-            print(f"\n❌ Failed Services ({len(report['failed_services'])}):")
+            logger.error(f"\n❌ Failed Services ({len(report['failed_services'])}):")
             for service in report["failed_services"]:
                 result = report["detailed_results"][service]
-                print(f"   • {service}: {result['success_rate']}% success, avg: {result['avg_response_time']}s")
+                logger.info(f"   • {service}: {result['success_rate']}% success, avg: {result['avg_response_time']}s")
         
-        print(f"\n✅ Healthy Services ({len(report['healthy_services'])}):")
+        logger.info(f"\n✅ Healthy Services ({len(report['healthy_services'])}):")
         for service in report["healthy_services"][:10]:  # Show top 10
             result = report["detailed_results"][service]
-            print(f"   • {service}: 100% success, avg: {result['avg_response_time']}s")
+            logger.info(f"   • {service}: 100% success, avg: {result['avg_response_time']}s")
         
         if len(report["healthy_services"]) > 10:
-            print(f"   ... and {len(report['healthy_services']) - 10} more healthy services")
+            logger.info(f"   ... and {len(report['healthy_services']) - 10} more healthy services")
         
         # Final assessment
-        print("\n" + "=" * 80)
+        logger.info("\n" + "=" * 80)
         if health['health_percentage'] >= 95:
-            print("🏆 ULTRATEST RESULT: SYSTEM PASSES - PRODUCTION READY")
+            logger.info("🏆 ULTRATEST RESULT: SYSTEM PASSES - PRODUCTION READY")
         elif health['health_percentage'] >= 90:
-            print("⚠️  ULTRATEST RESULT: MINOR ISSUES - INVESTIGATE FAILED SERVICES")
+            logger.error("⚠️  ULTRATEST RESULT: MINOR ISSUES - INVESTIGATE FAILED SERVICES")
         else:
-            print("🚨 ULTRATEST RESULT: CRITICAL ISSUES - SYSTEM NOT READY")
-        print("=" * 80)
+            logger.error("🚨 ULTRATEST RESULT: CRITICAL ISSUES - SYSTEM NOT READY")
+        logger.info("=" * 80)
 
 async def main():
     """Main execution function"""
@@ -415,7 +418,7 @@ async def main():
         
         runner.print_report(report)
         
-        print(f"\n📄 Detailed report saved: {report_file}")
+        logger.info(f"\n📄 Detailed report saved: {report_file}")
         
         # Exit with appropriate code
         if report["service_health"]["health_percentage"] >= 95:
@@ -424,7 +427,7 @@ async def main():
             sys.exit(1)  # Failure
             
     except Exception as e:
-        print(f"🚨 ULTRATEST CRITICAL ERROR: {e}")
+        logger.error(f"🚨 ULTRATEST CRITICAL ERROR: {e}")
         traceback.print_exc()
         sys.exit(2)
 

@@ -639,31 +639,31 @@ async def main():
     suite = SecurityTestSuite()
     report = await suite.run_comprehensive_security_suite()
     
-    print("\n" + "="*80)
-    print("SUTAZAI SECURITY TEST RESULTS")
-    print("="*80)
+    logger.info("\n" + "="*80)
+    logger.info("SUTAZAI SECURITY TEST RESULTS")
+    logger.info("="*80)
     
     summary = report.get("security_summary", {})
-    print(f"Security Status: {summary.get('overall_status', 'UNKNOWN')}")
-    print(f"Security Grade: {summary.get('security_grade', 'UNKNOWN')}")
-    print(f"Security Score: {summary.get('security_score', 0):.1f}/100")
-    print(f"Checks Passed: {summary.get('passed_checks', 0)}/{summary.get('total_checks', 0)}")
+    logger.info(f"Security Status: {summary.get('overall_status', 'UNKNOWN')}")
+    logger.info(f"Security Grade: {summary.get('security_grade', 'UNKNOWN')}")
+    logger.info(f"Security Score: {summary.get('security_score', 0):.1f}/100")
+    logger.info(f"Checks Passed: {summary.get('passed_checks', 0)}/{summary.get('total_checks', 0)}")
     
     issues = summary.get("security_issues", [])
     if issues:
-        print(f"\nSecurity Issues:")
+        logger.info(f"\nSecurity Issues:")
         for issue in issues:
-            print(f"  ⚠️  {issue}")
+            logger.info(f"  ⚠️  {issue}")
     else:
-        print(f"\n✅ No security issues detected!")
+        logger.info(f"\n✅ No security issues detected!")
     
     recommendations = summary.get("recommendations", [])
     if recommendations:
-        print(f"\nSecurity Recommendations:")
+        logger.info(f"\nSecurity Recommendations:")
         for rec in recommendations:
-            print(f"  • {rec}")
+            logger.info(f"  • {rec}")
     
-    print("="*80)
+    logger.info("="*80)
     
     return report
 

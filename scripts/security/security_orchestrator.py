@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+
+logger = logging.getLogger(__name__)
 Security Orchestrator
 Main orchestration system for comprehensive security hardening framework
 """
@@ -152,7 +154,7 @@ class SecurityOrchestrator:
                     # Merge with default config
                     default_config.update(user_config)
             except Exception as e:
-                print(f"Warning: Failed to load config from {self.config_path}: {e}")
+                logger.error(f"Warning: Failed to load config from {self.config_path}: {e}")
         
         return default_config
     
@@ -744,7 +746,7 @@ async def main():
     try:
         await orchestrator.run()
     except KeyboardInterrupt:
-        print("\nShutdown requested by user")
+        logger.info("\nShutdown requested by user")
     except Exception as e:
         logging.error(f"Security orchestrator failed: {e}")
         sys.exit(1)
