@@ -296,7 +296,8 @@
       "Bash([ ! -f \"$dir/CHANGELOG.md\" ])",
       "Bash(then)",
       "Bash(do [ -f \"$file\" ])",
-      "Bash(then echo \"=== $file ===\")"
+      "Bash(then echo \"=== $file ===\")",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
