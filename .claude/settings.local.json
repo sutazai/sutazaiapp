@@ -279,7 +279,12 @@
       "Bash(coverage run:*)",
       "Bash(./selfcheck_all.sh)",
       "Bash(do echo \"=== $dir ===\")",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(do if [ -f \"$file\" ])",
+      "Bash(if [ -d /opt/sutazaiapp/scripts/devops ])",
+      "Bash(then mv /opt/sutazaiapp/scripts/devops/* /opt/sutazaiapp/scripts/automation/deployment/)",
+      "Bash(if [ -d /opt/sutazaiapp/scripts/sync ])",
+      "Bash(then mv /opt/sutazaiapp/scripts/sync/* /opt/sutazaiapp/scripts/automation/sync/)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
