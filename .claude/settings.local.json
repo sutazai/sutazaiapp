@@ -276,7 +276,10 @@
       "WebSearch",
       "Bash(MONITORING_PORT=10250 timeout 5s python monitoring_server.py)",
       "Bash(/opt/sutazaiapp/deploy.sh:*)",
-      "Bash(coverage run:*)"
+      "Bash(coverage run:*)",
+      "Bash(./selfcheck_all.sh)",
+      "Bash(do echo \"=== $dir ===\")",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

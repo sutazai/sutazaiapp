@@ -1,0 +1,391 @@
+{
+  "report_metadata": {
+    "title": "MCP Automation Security Audit Report",
+    "timestamp": "2025-08-15T15:18:05.384502",
+    "version": "1.0.0",
+    "auditor": "SecurityAuditor"
+  },
+  "executive_summary": {
+    "risk_level": "CRITICAL",
+    "risk_score": 109,
+    "total_findings": 22,
+    "critical_findings": 3,
+    "high_findings": 14,
+    "tests_passed": 7,
+    "tests_failed": 3,
+    "compliance_status": "NON-COMPLIANT"
+  },
+  "test_results": [
+    {
+      "name": "Authentication Security",
+      "category": "authentication",
+      "passed": false,
+      "message": "Found 7 authentication issues",
+      "duration": 5.517965316772461
+    },
+    {
+      "name": "Authorization Security",
+      "category": "authorization",
+      "passed": false,
+      "message": "Found 1 authorization issues",
+      "duration": 3.4601938724517822
+    },
+    {
+      "name": "Injection Attack Prevention",
+      "category": "injection",
+      "passed": true,
+      "message": "Tested 17 injection payloads",
+      "duration": 5.529975891113281
+    },
+    {
+      "name": "XSS Prevention",
+      "category": "xss",
+      "passed": false,
+      "message": "Tested 9 XSS payloads",
+      "duration": 5.51791524887085
+    },
+    {
+      "name": "Input Validation",
+      "category": "input_validation",
+      "passed": true,
+      "message": "Tested 7 input validation cases",
+      "duration": 5.5110297203063965
+    },
+    {
+      "name": "Information Disclosure",
+      "category": "information_disclosure",
+      "passed": true,
+      "message": "Checked for various information disclosure issues",
+      "duration": 5.510850429534912
+    },
+    {
+      "name": "Access Control",
+      "category": "access_control",
+      "passed": true,
+      "message": "Checked file permissions and access controls",
+      "duration": 5.5019354820251465
+    },
+    {
+      "name": "Error Handling",
+      "category": "error_handling",
+      "passed": true,
+      "message": "Tested 5 error scenarios",
+      "duration": 5.5325026512146
+    },
+    {
+      "name": "Configuration Security",
+      "category": "configuration",
+      "passed": true,
+      "message": "Checked configuration security",
+      "duration": 3.474130630493164
+    },
+    {
+      "name": "MCP Infrastructure Protection",
+      "category": "mcp_protection",
+      "passed": true,
+      "message": "Verified MCP protection compliance",
+      "duration": 0.0005638599395751953
+    }
+  ],
+  "vulnerabilities": {
+    "critical": [
+      {
+        "category": "authentication",
+        "title": "Weak Authentication Accepted",
+        "description": "Weak credentials accepted: Authorization",
+        "endpoint": "/alerts",
+        "remediation": "Implement strong authentication validation",
+        "evidence": {
+          "header": "Authorization",
+          "status": 200
+        },
+        "timestamp": "2025-08-15T15:18:05.358539"
+      },
+      {
+        "category": "authentication",
+        "title": "Weak Authentication Accepted",
+        "description": "Weak credentials accepted: Authorization",
+        "endpoint": "/alerts",
+        "remediation": "Implement strong authentication validation",
+        "evidence": {
+          "header": "Authorization",
+          "status": 200
+        },
+        "timestamp": "2025-08-15T15:18:05.360090"
+      },
+      {
+        "category": "authentication",
+        "title": "Weak Authentication Accepted",
+        "description": "Weak credentials accepted: X-API-Key",
+        "endpoint": "/alerts",
+        "remediation": "Implement strong authentication validation",
+        "evidence": {
+          "header": "X-API-Key",
+          "status": 200
+        },
+        "timestamp": "2025-08-15T15:18:05.362306"
+      }
+    ],
+    "high": [
+      {
+        "category": "authentication",
+        "title": "Missing Authentication",
+        "description": "Endpoint /metrics accessible without authentication",
+        "endpoint": "/metrics",
+        "remediation": "Implement authentication middleware for sensitive endpoints",
+        "evidence": {
+          "status": 200,
+          "headers": {
+            "Date": "Fri, 15 Aug 2025 13:17:53 GMT",
+            "Server": "uvicorn",
+            "Content-Length": "5645",
+            "Content-Type": "text/plain; version=0.0.4; charset=utf-8; charset=utf-8"
+          }
+        },
+        "timestamp": "2025-08-15T15:18:03.026274"
+      },
+      {
+        "category": "xss",
+        "title": "Reflected XSS Vulnerability",
+        "description": "User input reflected without proper encoding",
+        "endpoint": "/logs/search",
+        "remediation": "HTML-encode all user input before displaying",
+        "evidence": {
+          "payload": "<script>alert(\"XSS\")</script>"
+        },
+        "timestamp": "2025-08-15T15:18:03.030866"
+      },
+      {
+        "category": "authorization",
+        "title": "Insufficient Authorization",
+        "description": "Privileged action allowed without proper authorization: POST /alerts/test-id/resolve",
+        "endpoint": "/alerts/test-id/resolve",
+        "remediation": "Implement proper role-based access control",
+        "evidence": {
+          "method": "POST",
+          "status": 200
+        },
+        "timestamp": "2025-08-15T15:18:03.031467"
+      },
+      {
+        "category": "xss",
+        "title": "Reflected XSS Vulnerability",
+        "description": "User input reflected without proper encoding",
+        "endpoint": "/logs/search",
+        "remediation": "HTML-encode all user input before displaying",
+        "evidence": {
+          "payload": "<img src=x onerror=alert(\"XSS\")>"
+        },
+        "timestamp": "2025-08-15T15:18:03.304445"
+      },
+      {
+        "category": "xss",
+        "title": "Reflected XSS Vulnerability",
+        "description": "User input reflected without proper encoding",
+        "endpoint": "/logs/search",
+        "remediation": "HTML-encode all user input before displaying",
+        "evidence": {
+          "payload": "<svg onload=alert(\"XSS\")>"
+        },
+        "timestamp": "2025-08-15T15:18:03.307888"
+      },
+      {
+        "category": "xss",
+        "title": "Reflected XSS Vulnerability",
+        "description": "User input reflected without proper encoding",
+        "endpoint": "/logs/search",
+        "remediation": "HTML-encode all user input before displaying",
+        "evidence": {
+          "payload": "javascript:alert(\"XSS\")"
+        },
+        "timestamp": "2025-08-15T15:18:03.311188"
+      },
+      {
+        "category": "xss",
+        "title": "Reflected XSS Vulnerability",
+        "description": "User input reflected without proper encoding",
+        "endpoint": "/logs/search",
+        "remediation": "HTML-encode all user input before displaying",
+        "evidence": {
+          "payload": "<iframe src=\"javascript:alert('XSS')\">"
+        },
+        "timestamp": "2025-08-15T15:18:03.323306"
+      },
+      {
+        "category": "authentication",
+        "title": "Missing Authentication",
+        "description": "Endpoint /health/detailed accessible without authentication",
+        "endpoint": "/health/detailed",
+        "remediation": "Implement authentication middleware for sensitive endpoints",
+        "evidence": {
+          "status": 200,
+          "headers": {
+            "Date": "Fri, 15 Aug 2025 13:17:53 GMT",
+            "Server": "uvicorn",
+            "Content-Length": "4114",
+            "Content-Type": "application/json"
+          }
+        },
+        "timestamp": "2025-08-15T15:18:05.341064"
+      },
+      {
+        "category": "xss",
+        "title": "Reflected XSS Vulnerability",
+        "description": "User input reflected without proper encoding",
+        "endpoint": "/logs/search",
+        "remediation": "HTML-encode all user input before displaying",
+        "evidence": {
+          "payload": "<body onload=alert(\"XSS\")>"
+        },
+        "timestamp": "2025-08-15T15:18:05.350991"
+      },
+      {
+        "category": "authentication",
+        "title": "Missing Authentication",
+        "description": "Endpoint /alerts accessible without authentication",
+        "endpoint": "/alerts",
+        "remediation": "Implement authentication middleware for sensitive endpoints",
+        "evidence": {
+          "status": 200,
+          "headers": {
+            "Date": "Fri, 15 Aug 2025 13:18:03 GMT",
+            "Server": "uvicorn",
+            "Content-Length": "169",
+            "Content-Type": "application/json"
+          }
+        },
+        "timestamp": "2025-08-15T15:18:05.351960"
+      },
+      {
+        "category": "xss",
+        "title": "Reflected XSS Vulnerability",
+        "description": "User input reflected without proper encoding",
+        "endpoint": "/logs/search",
+        "remediation": "HTML-encode all user input before displaying",
+        "evidence": {
+          "payload": "\"><script>alert(\"XSS\")</script>"
+        },
+        "timestamp": "2025-08-15T15:18:05.353971"
+      },
+      {
+        "category": "authentication",
+        "title": "Missing Authentication",
+        "description": "Endpoint /sla/status accessible without authentication",
+        "endpoint": "/sla/status",
+        "remediation": "Implement authentication middleware for sensitive endpoints",
+        "evidence": {
+          "status": 200,
+          "headers": {
+            "Date": "Fri, 15 Aug 2025 13:18:03 GMT",
+            "Server": "uvicorn",
+            "Content-Length": "671",
+            "Content-Type": "application/json"
+          }
+        },
+        "timestamp": "2025-08-15T15:18:05.354968"
+      },
+      {
+        "category": "xss",
+        "title": "Reflected XSS Vulnerability",
+        "description": "User input reflected without proper encoding",
+        "endpoint": "/logs/search",
+        "remediation": "HTML-encode all user input before displaying",
+        "evidence": {
+          "payload": "<script>document.location=\"http://evil.com\"</script>"
+        },
+        "timestamp": "2025-08-15T15:18:05.356493"
+      },
+      {
+        "category": "xss",
+        "title": "Reflected XSS Vulnerability",
+        "description": "User input reflected without proper encoding",
+        "endpoint": "/logs/search",
+        "remediation": "HTML-encode all user input before displaying",
+        "evidence": {
+          "payload": "<meta http-equiv=\"refresh\" content=\"0;url=http://evil.com\">"
+        },
+        "timestamp": "2025-08-15T15:18:05.359191"
+      }
+    ],
+    "medium": [
+      {
+        "category": "access_control",
+        "title": "Sensitive File Readable",
+        "description": "Configuration file /opt/sutazaiapp/scripts/mcp/automation/config.py readable by others",
+        "endpoint": null,
+        "remediation": "Restrict access to sensitive files (e.g., 600)",
+        "evidence": {
+          "path": "/opt/sutazaiapp/scripts/mcp/automation/config.py",
+          "permissions": "755"
+        },
+        "timestamp": "2025-08-15T15:17:59.847794"
+      },
+      {
+        "category": "access_control",
+        "title": "Sensitive File Readable",
+        "description": "Configuration file /opt/sutazaiapp/scripts/mcp/automation/monitoring/config/ readable by others",
+        "endpoint": null,
+        "remediation": "Restrict access to sensitive files (e.g., 600)",
+        "evidence": {
+          "path": "/opt/sutazaiapp/scripts/mcp/automation/monitoring/config/",
+          "permissions": "755"
+        },
+        "timestamp": "2025-08-15T15:17:59.848477"
+      },
+      {
+        "category": "mcp_protection",
+        "title": "Missing Audit Trail",
+        "description": "MCP operations audit trail not found",
+        "endpoint": null,
+        "remediation": "Implement comprehensive audit logging",
+        "evidence": {},
+        "timestamp": "2025-08-15T15:17:59.850730"
+      },
+      {
+        "category": "xss",
+        "title": "Potential DOM XSS",
+        "description": "Unsafe JavaScript pattern detected: innerHTML =",
+        "endpoint": "/",
+        "remediation": "Use safe DOM manipulation methods",
+        "evidence": {
+          "pattern": "innerHTML ="
+        },
+        "timestamp": "2025-08-15T15:18:05.364265"
+      }
+    ],
+    "low": [
+      {
+        "category": "information_disclosure",
+        "title": "Version Disclosure",
+        "description": "Server version disclosed in Server header",
+        "endpoint": "/health",
+        "remediation": "Remove or obfuscate version headers",
+        "evidence": {
+          "Server": "uvicorn"
+        },
+        "timestamp": "2025-08-15T15:18:03.308422"
+      }
+    ],
+    "info": []
+  },
+  "recommendations": {
+    "immediate_actions": [
+      "Fix 3 critical vulnerabilities",
+      "Address 14 high-risk issues",
+      "Implement authentication and authorization middleware",
+      "Enable comprehensive input validation"
+    ],
+    "short_term": [
+      "Implement rate limiting and DDoS protection",
+      "Enable security headers (CSP, HSTS, etc.)",
+      "Set up security monitoring and alerting",
+      "Conduct regular security assessments"
+    ],
+    "long_term": [
+      "Implement zero-trust architecture",
+      "Deploy Web Application Firewall (WAF)",
+      "Establish security training program",
+      "Implement automated security testing in CI/CD"
+    ]
+  }
+}

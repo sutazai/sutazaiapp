@@ -152,27 +152,24 @@ test-infra-down: ## Stop test infrastructure
 # Reports and Analytics
 report-dashboard: ## Generate test dashboard
 	@echo "$(YELLOW)📊 Generating test dashboard...$(NC)"
-	$(PYTHON) -c "
-import json
-from datetime import datetime
-import os
-
-# Find latest test report
-reports_dir = 'tests/reports'
-if os.path.exists(reports_dir):
-    files = [f for f in os.listdir(reports_dir) if f.startswith('test_report_') and f.endswith('.json')]
-    if files:
-        latest = max(files)
-        with open(os.path.join(reports_dir, latest)) as f:
-            data = json.load(f)
-        print('📊 Latest Test Results:')
-        print(f'⏰ Date: {data[\"timestamp\"]}')
-        print(f'✅ Success Rate: {data[\"summary\"][\"success_rate\"]:.1f}%')
-        print(f'🏃 Duration: {data[\"duration_seconds\"]:.1f}s')
-    else:
-        print('No test reports found')
-else:
-    print('Reports directory not found')
+	@$(PYTHON) -c "\
+import json; \
+from datetime import datetime; \
+import os; \
+reports_dir = 'tests/reports'; \
+print('📊 Test Dashboard'); \
+if os.path.exists(reports_dir): \
+    files = [f for f in os.listdir(reports_dir) if f.startswith('test_report_') and f.endswith('.json')]; \
+    if files: \
+        latest = max(files); \
+        with open(os.path.join(reports_dir, latest)) as f: \
+            data = json.load(f); \
+        print(f'⏰ Date: {data.get(\"timestamp\", \"N/A\")}'); \
+        print(f'✅ Status: Report Generated'); \
+    else: \
+        print('No test reports found'); \
+else: \
+    print('Reports directory not found'); \
 "
 
 # Benchmark Tests
