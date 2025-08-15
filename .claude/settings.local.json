@@ -251,7 +251,8 @@
       "Bash(unset:*)",
       "Bash(./scripts/mcp/wrappers/postgres.sh:*)",
       "Bash(./scripts/enforcement/validate_all.sh:*)",
-      "Bash(DATABASE_URI=\"postgresql://sutazai:sutazai123@sutazai-postgres:5432/sutazai\" ./scripts/mcp/wrappers/postgres.sh --selfcheck)"
+      "Bash(DATABASE_URI=\"postgresql://sutazai:sutazai123@sutazai-postgres:5432/sutazai\" ./scripts/mcp/wrappers/postgres.sh --selfcheck)",
+      "Bash(DATABASE_URL=\"postgresql://sutazai:sutazai123@sutazai-postgres:5432/sutazai\" ./scripts/mcp/wrappers/postgres.sh --selfcheck)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

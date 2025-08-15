@@ -164,3 +164,4 @@ data/repos/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+test_env/
