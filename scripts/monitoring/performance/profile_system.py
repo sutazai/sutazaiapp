@@ -12,6 +12,7 @@ import time
 import psutil
 import aiohttp
 import json
+import os
 from datetime import datetime
 from typing import Dict, List, Tuple
 import statistics
@@ -121,12 +122,13 @@ class UltraPerformanceProfiler:
         """Profile PostgreSQL performance"""
         conn = None
         try:
+            # Connect to PostgreSQL with secure environment variables
             conn = await asyncpg.connect(
-                host='localhost',
-                port=10000,
-                user='sutazai',
-                password='sutazai_secure_2024',
-                database='sutazai_db'
+                host=os.getenv('POSTGRES_HOST', 'localhost'),
+                port=int(os.getenv('POSTGRES_PORT', '10000')),
+                user=os.getenv('POSTGRES_USER', 'sutazai'),
+                password=os.getenv('POSTGRES_PASSWORD', ''),  # MUST be set in environment
+                database=os.getenv('POSTGRES_DB', 'sutazai')
             )
             
             # Test query performance
@@ -134,7 +136,7 @@ class UltraPerformanceProfiler:
                 ("SELECT 1", "ping"),
                 ("SELECT COUNT(*) FROM pg_tables", "count_tables"),
                 ("SELECT * FROM pg_stat_activity", "active_connections"),
-                ("SELECT * FROM pg_stat_database WHERE datname = 'sutazai_db'", "db_stats")
+                (f"SELECT * FROM pg_stat_database WHERE datname = '{os.getenv('POSTGRES_DB', 'sutazai')}'", "db_stats")
             ]
             
             for query, name in queries:
@@ -152,8 +154,10 @@ class UltraPerformanceProfiler:
                 }
             
             # Get connection pool stats
+            db_name = os.getenv('POSTGRES_DB', 'sutazai')
             stats = await conn.fetchone(
-                "SELECT count(*) as connections FROM pg_stat_activity WHERE datname = 'sutazai_db'"
+                "SELECT count(*) as connections FROM pg_stat_activity WHERE datname = $1",
+                db_name
             )
             self.results["database_performance"]["active_connections"] = stats['connections']
             
@@ -168,7 +172,17 @@ class UltraPerformanceProfiler:
     def profile_redis_cache(self) -> Dict:
         """Profile Redis cache performance"""
         try:
-            r = redis.Redis(host='localhost', port=10001, decode_responses=True)
+            # Connect to Redis with secure environment variables
+            redis_host = os.getenv('REDIS_HOST', 'localhost')
+            redis_port = int(os.getenv('REDIS_PORT', '10001'))
+            redis_password = os.getenv('REDIS_PASSWORD', '')
+            
+            r = redis.Redis(
+                host=redis_host,
+                port=redis_port,
+                password=redis_password if redis_password else None,
+                decode_responses=True
+            )
             
             # Test operations
             operations = []
@@ -373,6 +387,11 @@ class UltraPerformanceProfiler:
         logger.info("\n✅ Full report saved to: /opt/sutazaiapp/reports/performance_profile.json")
 
 async def main():
+    # Validate required environment variables for security
+    if not os.getenv('POSTGRES_PASSWORD'):
+        logger.warning("⚠️ POSTGRES_PASSWORD not set in environment. Database profiling may fail.")
+        logger.warning("Please set POSTGRES_PASSWORD environment variable for production use.")
+    
     profiler = UltraPerformanceProfiler()
     await profiler.run_full_profile()
 

@@ -152,14 +152,11 @@ SutazAI operates a **comprehensive multi-agent architecture** with enterprise-gr
 
 | Agent Name | Port | Status | Implementation |
 |------------|------|---------|----------------|
-| ollama-integration | 11000 | ✅ Running | Full |
-| hardware-resource-optimizer | 11001 | ✅ Running | Full |
-| jarvis-automation-agent | 11003 | ✅ Running | Full |
-| ai-agent-orchestrator | 11004 | ✅ Running | Full |
-| task-assignment-coordinator | 11005 | ✅ Running | Full |
+| ollama-integration | 11071 | 🔴 Defined but not running | Full |
+| hardware-resource-optimizer | 11019 | 🔴 Defined but not running | Full |
+| task-assignment-coordinator | 11069 | 🔴 Defined but not running | Full |
 | ultra-system-architect | 11200 | ✅ Running | Full |
-| ultra-frontend-ui-architect | 11201 | ✅ Running | Full |
-| resource-arbitration-agent | 11210 | ✅ Running | Full |
+| ultra-frontend-ui-architect | 11201 | 🔴 Defined but not running | Full |
 ```
 
 ### Section 4: Add Communication Architecture

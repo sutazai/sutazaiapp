@@ -15,6 +15,8 @@
 .PHONY: quality-gates quality-gates-quick quality-gates-comprehensive quality-gates-security
 .PHONY: security-comprehensive docker-security performance-gates infrastructure-gates
 .PHONY: quality-report quality-dashboard pre-commit-install
+# Facade Prevention Testing
+.PHONY: test-facade-prevention facade-check facade-prevention-quick facade-prevention-full
 
 # Default target
 .DEFAULT_GOAL := help
@@ -196,6 +198,37 @@ clean-all: clean ## Clean everything including dependencies
 	@echo "$(YELLOW)🧹 Deep cleaning...$(NC)"
 	rm -rf .pytest_cache
 	rm -rf .coverage
+
+# Facade Prevention Testing
+test-facade-prevention: ## Run comprehensive facade prevention tests
+	@echo "$(BLUE)🛡️ Running facade prevention tests...$(NC)"
+	cd tests/facade_prevention && $(PYTHON) facade_prevention_runner.py --base-url http://localhost:10010
+
+facade-check: test-facade-prevention ## Alias for facade prevention tests
+
+facade-prevention-quick: ## Run quick facade prevention checks
+	@echo "$(BLUE)🔍 Running quick facade prevention checks...$(NC)"
+	cd tests/facade_prevention && $(PYTHON) facade_prevention_runner.py \
+		--suites service_mesh api_functionality \
+		--base-url http://localhost:10010 \
+		--fail-fast
+
+facade-prevention-full: ## Run full facade prevention test suite with monitoring
+	@echo "$(BLUE)🛡️ Running full facade prevention test suite...$(NC)"
+	mkdir -p reports
+	cd tests/facade_prevention && $(PYTHON) facade_prevention_runner.py \
+		--base-url http://localhost:10010 \
+		--output ../../reports/facade_prevention_report.json
+
+facade-prevention-ci: ## Run facade prevention tests for CI/CD
+	@echo "$(BLUE)🤖 Running facade prevention tests for CI/CD...$(NC)"
+	mkdir -p reports
+	cd tests/facade_prevention && $(PYTHON) facade_prevention_runner.py \
+		--base-url http://localhost:10010 \
+		--frontend-url http://localhost:10011 \
+		--output ../../reports/facade_prevention_ci_report.json \
+		--fail-fast \
+		--json-only
 	rm -rf htmlcov
 	@echo "$(GREEN)✅ Deep clean complete$(NC)"
 

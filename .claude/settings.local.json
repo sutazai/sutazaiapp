@@ -314,7 +314,13 @@
       "Bash(export PGPASSWORD=sutazai123)",
       "Bash(psql:*)",
       "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/files.sh:*)",
-      "Bash(./scripts/mcp/wrappers/files.sh:*)"
+      "Bash(./scripts/mcp/wrappers/files.sh:*)",
+      "Bash(do echo \"Checking /opt/sutazaiapp/$dir/\")",
+      "Bash(ls:*)",
+      "Bash(ruby --version)",
+      "Bash(claude --version)",
+      "Bash(gem install:*)",
+      "Bash(claude-swarm version)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

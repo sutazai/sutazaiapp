@@ -1,0 +1,280 @@
+name: Facade Prevention Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run daily at 6 AM UTC to catch facade regressions
+    - cron: '0 6 * * *'
+
+jobs:
+  facade-prevention:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: sutazai
+          POSTGRES_USER: sutazai
+          POSTGRES_PASSWORD: sutazai123
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 10000:5432
+      
+      redis:
+        image: redis:7.2
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 10001:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose netcat-openbsd
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+        pip install pytest pytest-asyncio httpx docker pyyaml
+        pip install asyncpg redis neo4j
+        
+    - name: Start SutazAI services
+      run: |
+        # Create necessary directories
+        mkdir -p logs
+        
+        # Start core services using docker-compose
+        docker-compose up -d postgres redis neo4j
+        
+        # Wait for services to be healthy
+        sleep 30
+        
+        # Start backend
+        cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+        
+        # Wait for backend to start
+        sleep 10
+        
+        # Verify services are running
+        curl -f http://localhost:10010/health || (echo "Backend not ready" && exit 1)
+        
+    - name: Run facade prevention tests
+      id: facade_tests
+      run: |
+        cd tests/facade_prevention
+        python facade_prevention_runner.py \
+          --base-url http://localhost:10010 \
+          --output ../../facade_prevention_report.json \
+          --fail-fast
+      continue-on-error: true
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: facade-prevention-results
+        path: |
+          facade_prevention_report.json
+          logs/
+        retention-days: 30
+        
+    - name: Process test results
+      if: always()
+      run: |
+        if [ -f facade_prevention_report.json ]; then
+          echo "FACADE_TEST_RESULTS<<EOF" >> $GITHUB_ENV
+          cat facade_prevention_report.json >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          # Extract key metrics
+          DEPLOYMENT_SAFE=$(jq -r '.facade_prevention_report.deployment_safe' facade_prevention_report.json)
+          CRITICAL_FAILURES=$(jq -r '.facade_prevention_report.summary.critical_failures' facade_prevention_report.json)
+          FACADE_ISSUES=$(jq -r '.facade_prevention_report.summary.total_facade_issues' facade_prevention_report.json)
+          
+          echo "DEPLOYMENT_SAFE=$DEPLOYMENT_SAFE" >> $GITHUB_ENV
+          echo "CRITICAL_FAILURES=$CRITICAL_FAILURES" >> $GITHUB_ENV
+          echo "FACADE_ISSUES=$FACADE_ISSUES" >> $GITHUB_ENV
+        else
+          echo "DEPLOYMENT_SAFE=false" >> $GITHUB_ENV
+          echo "CRITICAL_FAILURES=999" >> $GITHUB_ENV
+          echo "FACADE_ISSUES=999" >> $GITHUB_ENV
+        fi
+        
+    - name: Comment on PR (if applicable)
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          let comment = '## 🛡️ Facade Prevention Test Results\n\n';
+          
+          if (process.env.DEPLOYMENT_SAFE === 'true') {
+            comment += '✅ **All facade prevention tests passed!**\n';
+            comment += '🚀 This PR is safe for deployment.\n\n';
+          } else {
+            comment += '❌ **Facade prevention tests failed!**\n';
+            comment += '⚠️ This PR should NOT be deployed until issues are fixed.\n\n';
+            
+            if (process.env.CRITICAL_FAILURES > 0) {
+              comment += `🚨 **Critical Failures:** ${process.env.CRITICAL_FAILURES}\n`;
+            }
+            
+            if (process.env.FACADE_ISSUES > 0) {
+              comment += `🎭 **Facade Issues Detected:** ${process.env.FACADE_ISSUES}\n`;
+            }
+            
+            comment += '\n';
+          }
+          
+          // Add detailed results if available
+          if (fs.existsSync('facade_prevention_report.json')) {
+            const report = JSON.parse(fs.readFileSync('facade_prevention_report.json', 'utf8'));
+            const facadeReport = report.facade_prevention_report;
+            
+            comment += '### Summary\n';
+            comment += `- **Success Rate:** ${(facadeReport.summary.success_rate * 100).toFixed(1)}%\n`;
+            comment += `- **Duration:** ${facadeReport.duration_seconds.toFixed(1)}s\n`;
+            comment += `- **Total Suites:** ${facadeReport.summary.total_suites}\n`;
+            comment += `- **Passed:** ${facadeReport.summary.passed_suites}\n`;
+            comment += `- **Failed:** ${facadeReport.summary.failed_suites}\n\n`;
+            
+            if (facadeReport.critical_issues.length > 0) {
+              comment += '### 🚨 Critical Issues\n';
+              facadeReport.critical_issues.forEach(issue => {
+                comment += `- **${issue.suite}:** ${issue.error}\n`;
+              });
+              comment += '\n';
+            }
+            
+            if (facadeReport.facade_issues.length > 0) {
+              comment += '### 🎭 Facade Issues\n';
+              facadeReport.facade_issues.forEach(issue => {
+                comment += `- **${issue.suite}:** ${issue.facade_count} facade implementations detected\n`;
+              });
+              comment += '\n';
+            }
+            
+            comment += '### Recommendations\n';
+            facadeReport.recommendations.forEach(rec => {
+              comment += `- ${rec}\n`;
+            });
+          }
+          
+          comment += '\n---\n*Facade prevention tests help ensure that claimed functionality actually works.*';
+          
+          // Post comment
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+          
+    - name: Fail job if facade issues detected
+      if: always()
+      run: |
+        if [ "$DEPLOYMENT_SAFE" != "true" ]; then
+          echo "❌ Facade prevention tests failed"
+          echo "Critical failures: $CRITICAL_FAILURES"
+          echo "Facade issues: $FACADE_ISSUES"
+          exit 1
+        else
+          echo "✅ All facade prevention tests passed"
+        fi
+        
+    - name: Cleanup
+      if: always()
+      run: |
+        docker-compose down
+        pkill -f uvicorn || true
+
+  # Quick facade check for fast feedback
+  quick-facade-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install minimal dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest httpx docker pyyaml asyncio-dgram
+        
+    - name: Quick facade syntax check
+      run: |
+        # Check for obvious facade patterns in code
+        echo "🔍 Checking for facade patterns..."
+        
+        # Look for TODO/FIXME comments that might indicate facades
+        FACADE_PATTERNS=$(grep -r -i "TODO.*facade\|FIXME.*facade\|placeholder.*implementation\|mock.*response\|fake.*data" . --include="*.py" || true)
+        
+        if [ ! -z "$FACADE_PATTERNS" ]; then
+          echo "⚠️ Potential facade patterns found:"
+          echo "$FACADE_PATTERNS"
+          echo "Please review these before merging."
+        else
+          echo "✅ No obvious facade patterns detected"
+        fi
+        
+        # Check for empty function implementations
+        EMPTY_FUNCTIONS=$(grep -r -A 3 "def.*:" . --include="*.py" | grep -B 1 -A 2 "pass\|return None\|return {}\|return \[\]" | head -10 || true)
+        
+        if [ ! -z "$EMPTY_FUNCTIONS" ]; then
+          echo "⚠️ Empty function implementations found (potential facades):"
+          echo "$EMPTY_FUNCTIONS"
+        fi
+        
+    - name: Check for facade test patterns
+      run: |
+        # Ensure facade prevention tests exist
+        if [ ! -d "tests/facade_prevention" ]; then
+          echo "❌ Facade prevention test directory missing"
+          exit 1
+        fi
+        
+        # Count facade prevention tests
+        FACADE_TESTS=$(find tests/facade_prevention -name "test_*.py" | wc -l)
+        echo "✅ Found $FACADE_TESTS facade prevention test files"
+        
+        if [ $FACADE_TESTS -lt 5 ]; then
+          echo "⚠️ Consider adding more facade prevention tests"
+        fi

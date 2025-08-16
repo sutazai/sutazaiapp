@@ -917,107 +917,109 @@ services:
     - ./configs:/app/configs:ro
     - ./logs:/app/logs:rw,noexec
   # jarvis-hardware-resource-optimizer: CONSOLIDATED with hardware-resource-optimizer
+  # DISABLED: jarvis-automation-agent - Build context ./agents/jarvis-automation-agent does not exist
   # Use hardware-resource-optimizer service which provides comprehensive optimization
   # Original jarvis functionality maintained through unified interface
-  # DISABLED: Build context ./agents/jarvis-automation-agent does not exist
+  #
   # jarvis-automation-agent:
   #   build:
   #     context: ./agents/jarvis-automation-agent
   #     dockerfile: Dockerfile
   #   container_name: sutazai-jarvis-automation-agent
-    depends_on:
-      backend:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 256M
-    environment:
-      AGENT_TYPE: jarvis-automation-agent
-      API_ENDPOINT: http://backend:8000
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@sutazai-postgres:5432/${POSTGRES_DB:-sutazai}
-      LOG_LEVEL: INFO
-      OLLAMA_BASE_URL: http://ollama:11434
-      PORT: 11102
-      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
-      REDIS_URL: redis://sutazai-redis:6379/0
-      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
-      TZ: ${TZ:-UTC}
-    healthcheck:
-      test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:11102/health
-      interval: 60s
-      timeout: 30s
-      retries: 5
-      start_period: 60s
-    networks:
-    - sutazai-network
-    ports:
-    - 11102:11102
-    restart: unless-stopped
-    volumes:
-    - ./agents/core:/app/agents/core:ro
-    - ./data:/app/data
-    - ./configs:/app/configs
-    - ./logs:/app/logs
-    - /tmp:/tmp
-    - /opt/sutazaiapp:/opt/sutazaiapp:ro
-  ai-agent-orchestrator:
-    build:
-      context: ./agents/ai_agent_orchestrator
-      dockerfile: Dockerfile
-    container_name: sutazai-ai-agent-orchestrator
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 256M
-        reservations:
-          cpus: '0.25'
-          memory: 64M
-    environment:
-      AGENT_TYPE: ai-agent-orchestrator
-      API_ENDPOINT: http://backend:8000
-      LOG_LEVEL: INFO
-      PORT: 11000
-      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
-      REDIS_URL: redis://sutazai-redis:6379/0
-      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
-      TZ: ${TZ:-UTC}
-    healthcheck:
-      test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:11000/health
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 120s
-    networks:
-    - sutazai-network
-    ports:
-    - 11000:11000
-    restart: unless-stopped
-    volumes:
-    - ./agents/core:/app/agents/core:ro
-    - ./logs:/app/logs
+  #   depends_on:
+  #     backend:
+  #       condition: service_started
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '2'
+  #         memory: 1G
+  #       reservations:
+  #         cpus: '0.5'
+  #         memory: 256M
+  #   environment:
+  #     AGENT_TYPE: jarvis-automation-agent
+  #     API_ENDPOINT: http://backend:8000
+  #     DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@sutazai-postgres:5432/${POSTGRES_DB:-sutazai}
+  #     LOG_LEVEL: INFO
+  #     OLLAMA_BASE_URL: http://ollama:11434
+  #     PORT: 11102
+  #     RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+  #     REDIS_URL: redis://sutazai-redis:6379/0
+  #     SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+  #     TZ: ${TZ:-UTC}
+  #   healthcheck:
+  #     test:
+  #     - CMD
+  #     - curl
+  #     - -f
+  #     - http://localhost:11102/health
+  #     interval: 60s
+  #     timeout: 30s
+  #     retries: 5
+  #     start_period: 60s
+  #   networks:
+  #   - sutazai-network
+  #   ports:
+  #   - 11102:11102
+  #   restart: unless-stopped
+  #   volumes:
+  #   - ./agents/core:/app/agents/core:ro
+  #   - ./data:/app/data
+  #   - ./configs:/app/configs
+  #   - ./logs:/app/logs
+  #   - /tmp:/tmp
+  #   - /opt/sutazaiapp:/opt/sutazaiapp:ro
+  # DISABLED: ai-agent-orchestrator - Build context ./agents/ai_agent_orchestrator does not exist
+  # ai-agent-orchestrator:
+  #   build:
+  #     context: ./agents/ai_agent_orchestrator
+  #     dockerfile: Dockerfile
+  #   container_name: sutazai-ai-agent-orchestrator
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: 256M
+  #       reservations:
+  #         cpus: '0.25'
+  #         memory: 64M
+  #   environment:
+  #     AGENT_TYPE: ai-agent-orchestrator
+  #     API_ENDPOINT: http://backend:8000
+  #     LOG_LEVEL: INFO
+  #     PORT: 11000
+  #     RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+  #     REDIS_URL: redis://sutazai-redis:6379/0
+  #     SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+  #     TZ: ${TZ:-UTC}
+  #   healthcheck:
+  #     test:
+  #     - CMD
+  #     - curl
+  #     - -f
+  #     - http://localhost:11000/health
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 120s
+  #   networks:
+  #   - sutazai-network
+  #   ports:
+  #   - 11000:11000
+  #   restart: unless-stopped
+  #   volumes:
+  #   - ./agents/core:/app/agents/core:ro
+  #   - ./logs:/app/logs
   task-assignment-coordinator:
     image: sutazaiapp-task-assignment-coordinator:v1.0.0
     container_name: sutazai-task-assignment-coordinator
@@ -1062,9 +1064,10 @@ services:
     - ./agents/core:/app/agents/core:ro
     - ./logs:/app/logs
   ultra-system-architect:
-    build:
-      context: ./agents/ultra-system-architect
-      dockerfile: Dockerfile
+    # Build context ./agents/ultra-system-architect does not exist - using pre-built image
+    # build:
+    #   context: ./agents/ultra-system-architect
+    #   dockerfile: Dockerfile
     image: sutazaiapp-ultra-system-architect:v1.0.0
     container_name: sutazai-ultra-system-architect
     depends_on:
@@ -1113,9 +1116,10 @@ services:
     - /opt/sutazaiapp:/opt/sutazaiapp:ro
     - ./logs:/app/logs:rw,noexec
   ultra-frontend-ui-architect:
-    build:
-      context: ./agents/ultra-frontend-ui-architect
-      dockerfile: Dockerfile
+    # Build context ./agents/ultra-frontend-ui-architect does not exist - using pre-built image
+    # build:
+    #   context: ./agents/ultra-frontend-ui-architect
+    #   dockerfile: Dockerfile
     image: sutazaiapp-ultra-frontend-ui-architect:v1.0.0
     container_name: sutazai-ultra-frontend-ui-architect
     depends_on:
@@ -1167,59 +1171,60 @@ services:
     - /opt/sutazaiapp:/opt/sutazaiapp:ro
     - ./frontend:/app/frontend:rw
     - ./logs:/app/logs:rw,noexec
-  resource-arbitration-agent:
-    image: sutazaiapp-resource-arbitration-agent:v1.0.0
-    container_name: sutazai-resource-arbitration-agent
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 256M
-    environment:
-      AGENT_TYPE: resource-arbitration-agent
-      API_ENDPOINT: http://backend:8000
-      LOG_LEVEL: INFO
-      PORT: 11070
-      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
-      REDIS_URL: redis://sutazai-redis:6379/0
-      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
-      TZ: ${TZ:-UTC}
-    healthcheck:
-      test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:11070/health
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 120s
-    networks:
-    - sutazai-network
-    ports:
-    - 11070:11070
-    privileged: false
-    cap_drop:
-    - ALL
-    cap_add:
-    - SYS_PTRACE
-    security_opt:
-    - no-new-privileges:true
-    - seccomp:unconfined
-    user: 1001:1001
-    restart: unless-stopped
-    volumes:
-    - ./agents/core:/app/agents/core:ro
-    - ./data:/app/data:rw,noexec
-    - ./logs:/app/logs:rw,noexec
+  # DISABLED: resource-arbitration-agent - Image sutazaiapp-resource-arbitration-agent:v1.0.0 does not exist
+  # resource-arbitration-agent:
+  #   image: sutazaiapp-resource-arbitration-agent:v1.0.0
+  #   container_name: sutazai-resource-arbitration-agent
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '2'
+  #         memory: 1G
+  #       reservations:
+  #         cpus: '0.5'
+  #         memory: 256M
+  #   environment:
+  #     AGENT_TYPE: resource-arbitration-agent
+  #     API_ENDPOINT: http://backend:8000
+  #     LOG_LEVEL: INFO
+  #     PORT: 11070
+  #     RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+  #     REDIS_URL: redis://sutazai-redis:6379/0
+  #     SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+  #     TZ: ${TZ:-UTC}
+  #   healthcheck:
+  #     test:
+  #     - CMD
+  #     - curl
+  #     - -f
+  #     - http://localhost:11070/health
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 120s
+  #   networks:
+  #   - sutazai-network
+  #   ports:
+  #   - 11070:11070
+  #   privileged: false
+  #   cap_drop:
+  #   - ALL
+  #   cap_add:
+  #   - SYS_PTRACE
+  #   security_opt:
+  #   - no-new-privileges:true
+  #   - seccomp:unconfined
+  #   user: 1001:1001
+  #   restart: unless-stopped
+  #   volumes:
+  #   - ./agents/core:/app/agents/core:ro
+  #   - ./data:/app/data:rw,noexec
+  #   - ./logs:/app/logs:rw,noexec
   jaeger:
     container_name: sutazai-jaeger
     image: jaegertracing/all-in-one:1.53

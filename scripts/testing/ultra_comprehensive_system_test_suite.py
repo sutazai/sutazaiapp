@@ -159,11 +159,11 @@ class SutazAISystemTester:
         try:
             start_time = time.time()
             conn = psycopg2.connect(
-                host="localhost",
-                port="10000",
-                database="sutazai",
-                user="sutazai",
-                password="sutazai_secure_2024"
+                host=os.getenv("POSTGRES_HOST", "localhost"),
+                port=os.getenv("POSTGRES_PORT", "10000"),
+                database=os.getenv("POSTGRES_DB", "sutazai"),
+                user=os.getenv("POSTGRES_USER", "sutazai"),
+                password=os.getenv("POSTGRES_PASSWORD", "")  # MUST be set in environment
             )
             cursor = conn.cursor()
             cursor.execute("SELECT version();")

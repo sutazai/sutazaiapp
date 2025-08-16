@@ -18,6 +18,7 @@ import requests
 import psutil
 import json
 import time
+import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional
 import logging
@@ -62,13 +63,13 @@ class DatabaseMonitor:
         try:
             start_time = time.time()
             
-            # Connect to PostgreSQL
+            # Connect to PostgreSQL with secure environment variables
             conn = await asyncpg.connect(
-                host='localhost',
-                port=10000,
-                user='sutazai',
-                password='sutazai',  # Use env var in production
-                database='sutazai'
+                host=os.getenv('POSTGRES_HOST', 'localhost'),
+                port=int(os.getenv('POSTGRES_PORT', '10000')),
+                user=os.getenv('POSTGRES_USER', 'sutazai'),
+                password=os.getenv('POSTGRES_PASSWORD', ''),  # MUST be set in environment
+                database=os.getenv('POSTGRES_DB', 'sutazai')
             )
             
             # Basic health check
@@ -188,8 +189,18 @@ class DatabaseMonitor:
         try:
             start_time = time.time()
             
-            # Connect to Redis
-            client = redis.from_url('redis://localhost:10001', decode_responses=True)
+            # Connect to Redis with secure environment variables
+            redis_host = os.getenv('REDIS_HOST', 'localhost')
+            redis_port = int(os.getenv('REDIS_PORT', '10001'))
+            redis_password = os.getenv('REDIS_PASSWORD', '')
+            
+            # Build Redis URL with optional password
+            if redis_password:
+                redis_url = f'redis://:{redis_password}@{redis_host}:{redis_port}'
+            else:
+                redis_url = f'redis://{redis_host}:{redis_port}'
+            
+            client = redis.from_url(redis_url, decode_responses=True)
             client.ping()
             response_time = (time.time() - start_time) * 1000
             
@@ -527,7 +538,18 @@ Total Databases: {len(metrics)}
     def save_metrics_to_redis(self, metrics: List[DatabaseMetrics]):
         """Save metrics to Redis for persistence and visualization"""
         try:
-            client = redis.from_url('redis://localhost:10001', decode_responses=True)
+            # Connect to Redis with secure environment variables
+            redis_host = os.getenv('REDIS_HOST', 'localhost')
+            redis_port = int(os.getenv('REDIS_PORT', '10001'))
+            redis_password = os.getenv('REDIS_PASSWORD', '')
+            
+            # Build Redis URL with optional password
+            if redis_password:
+                redis_url = f'redis://:{redis_password}@{redis_host}:{redis_port}'
+            else:
+                redis_url = f'redis://{redis_host}:{redis_port}'
+            
+            client = redis.from_url(redis_url, decode_responses=True)
             
             # Save current metrics
             metrics_data = {m.name: asdict(m) for m in metrics}
@@ -548,6 +570,11 @@ Total Databases: {len(metrics)}
 
 async def main():
     """Main monitoring loop"""
+    # Validate required environment variables for security
+    if not os.getenv('POSTGRES_PASSWORD'):
+        logger.warning("⚠️ POSTGRES_PASSWORD not set in environment. Using default (INSECURE!)")
+        logger.warning("Please set POSTGRES_PASSWORD environment variable for production use.")
+    
     logger.info("🔥 DATABASE MONITORING DASHBOARD")
     logger.info("=" * 50)
     
