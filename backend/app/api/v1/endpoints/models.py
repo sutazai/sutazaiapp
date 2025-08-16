@@ -30,7 +30,7 @@ class PullModelResponse(BaseModel):
     success: bool
     message: str
 
-@router.get("/", response_model=ModelsResponse)
+@router.get("/models/", response_model=ModelsResponse)
 async def list_models(
     model_manager: ConsolidatedOllamaService = Depends(get_model_manager)
 ):
@@ -58,7 +58,7 @@ async def list_models(
         logger.error(f"Error listing models: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/pull", response_model=PullModelResponse)
+@router.post("/models/pull", response_model=PullModelResponse)
 async def pull_model(
     request: PullModelRequest,
     model_manager: ConsolidatedOllamaService = Depends(get_model_manager)

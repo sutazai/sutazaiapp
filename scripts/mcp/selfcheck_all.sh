@@ -22,6 +22,9 @@ servers=(
   "puppeteer-mcp"
   "knowledge-graph-mcp"
   "compass-mcp"
+  "claude-flow"
+  "ruv-swarm"
+  "claude-task-runner"
 )
 
 declare -A map
@@ -41,6 +44,9 @@ map=(
   [puppeteer-mcp]="$WRAP/puppeteer-mcp.sh"
   [knowledge-graph-mcp]="$WRAP/knowledge-graph-mcp.sh"
   [compass-mcp]="$WRAP/compass-mcp.sh"
+  [claude-flow]="$WRAP/claude-flow.sh"
+  [ruv-swarm]="$WRAP/ruv-swarm.sh"
+  [claude-task-runner]="$WRAP/claude-task-runner.sh"
 )
 
 echo "MCP selfcheck started at $(date)" | tee "$OUT"

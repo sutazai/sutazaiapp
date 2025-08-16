@@ -1,0 +1,527 @@
+# Workspace Isolation Service - K3s Manifest
+# Service for Git worktree and environment isolation
+# Port: 10031
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: workspace-isolation-config
+  namespace: sutazai-mesh
+data:
+  service.yaml: |
+    server:
+      host: 0.0.0.0
+      port: 8081
+      workers: 2
+      timeout: 600
+    
+    workspace:
+      root_path: /workspace
+      git_repos_path: /repos
+      max_workspaces: 50
+      default_branch: main
+      cleanup_interval: 3600
+      retention_days: 7
+    
+    isolation:
+      mode: strict
+      enable_docker: true
+      enable_containerd: false
+      enable_podman: false
+      network_isolation: true
+      resource_limits:
+        cpu: 1000m
+        memory: 1Gi
+        disk: 10Gi
+    
+    git:
+      default_remote: origin
+      fetch_depth: 50
+      gc_auto: true
+      prune_on_fetch: true
+      worktree_options:
+        - --detach
+        - --no-track
+    
+    docker:
+      socket_path: /var/run/docker.sock
+      api_version: "1.41"
+      timeout: 120
+      max_containers: 20
+      cleanup_stopped: true
+      prune_images: true
+      prune_interval: 86400
+    
+    security:
+      enable_rbac: true
+      audit_logging: true
+      secure_defaults: true
+      allowed_commands:
+        - git
+        - docker
+        - kubectl
+        - npm
+        - yarn
+        - python
+        - go
+      blocked_commands:
+        - rm -rf /
+        - chmod 777
+        - sudo
+    
+    monitoring:
+      metrics_port: 9091
+      metrics_path: /metrics
+      enable_tracing: true
+      trace_sample_rate: 0.1
+      log_level: INFO
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: workspace-isolation-secrets
+  namespace: sutazai-mesh
+type: Opaque
+stringData:
+  git-token: "github-token-placeholder"
+  docker-registry-password: "registry-password-placeholder"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: workspace-root-pvc
+  namespace: sutazai-mesh
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: git-repos-pvc
+  namespace: sutazai-mesh
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: workspace-isolation
+  namespace: sutazai-mesh
+  labels:
+    app: workspace-isolation
+    version: v1.0.0
+    tier: infrastructure
+spec:
+  selector:
+    matchLabels:
+      app: workspace-isolation
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: workspace-isolation
+        version: v1.0.0
+        tier: infrastructure
+        mesh: sutazai
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9091"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: workspace-isolation-sa
+      hostNetwork: true
+      hostPID: true
+      dnsPolicy: ClusterFirstWithHostNet
+      priorityClassName: system-node-critical
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      initContainers:
+      - name: setup-workspace-dirs
+        image: busybox:1.36
+        command: 
+        - sh
+        - -c
+        - |
+          mkdir -p /workspace/.tmp
+          mkdir -p /repos
+          chmod 755 /workspace
+          chmod 755 /repos
+          echo "Workspace directories initialized"
+        volumeMounts:
+        - name: workspace-root
+          mountPath: /workspace
+        - name: git-repos
+          mountPath: /repos
+        securityContext:
+          privileged: true
+      containers:
+      - name: workspace-isolation
+        image: sutazai/workspace-isolation:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8081
+          hostPort: 10031
+          name: http
+          protocol: TCP
+        - containerPort: 9091
+          hostPort: 19031
+          name: metrics
+          protocol: TCP
+        env:
+        - name: SERVICE_NAME
+          value: "workspace-isolation"
+        - name: SERVICE_VERSION
+          value: "v1.0.0"
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: DOCKER_HOST
+          value: "unix:///var/run/docker.sock"
+        - name: GIT_WORKSPACE_ROOT
+          value: "/workspace"
+        - name: GIT_REPOS_ROOT
+          value: "/repos"
+        - name: ISOLATION_MODE
+          value: "strict"
+        - name: ENABLE_DOCKER
+          value: "true"
+        - name: MAX_WORKSPACES
+          value: "50"
+        - name: GIT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: workspace-isolation-secrets
+              key: git-token
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+            ephemeral-storage: "2Gi"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+            ephemeral-storage: "10Gi"
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8081
+            httpHeaders:
+            - name: X-Health-Check
+              value: liveness
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8081
+            httpHeaders:
+            - name: X-Health-Check
+              value: readiness
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: 8081
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 20
+        volumeMounts:
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
+        - name: containerd-socket
+          mountPath: /run/containerd/containerd.sock
+          readOnly: true
+        - name: workspace-root
+          mountPath: /workspace
+        - name: git-repos
+          mountPath: /repos
+        - name: config
+          mountPath: /app/config
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+        - name: host-proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: host-sys
+          mountPath: /host/sys
+          readOnly: true
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+            - SYS_ADMIN
+            - NET_ADMIN
+            - SYS_PTRACE
+            - DAC_READ_SEARCH
+          runAsUser: 0
+          runAsGroup: 0
+      volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+      - name: containerd-socket
+        hostPath:
+          path: /run/containerd/containerd.sock
+          type: Socket
+      - name: workspace-root
+        persistentVolumeClaim:
+          claimName: workspace-root-pvc
+      - name: git-repos
+        persistentVolumeClaim:
+          claimName: git-repos-pvc
+      - name: config
+        configMap:
+          name: workspace-isolation-config
+      - name: tmp
+        emptyDir: {}
+      - name: host-proc
+        hostPath:
+          path: /proc
+          type: Directory
+      - name: host-sys
+        hostPath:
+          path: /sys
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: workspace-isolation-service
+  namespace: sutazai-mesh
+  labels:
+    app: workspace-isolation
+    monitoring: prometheus
+spec:
+  type: NodePort
+  selector:
+    app: workspace-isolation
+  ports:
+  - port: 10031
+    targetPort: 8081
+    nodePort: 30031
+    protocol: TCP
+    name: http
+  - port: 19031
+    targetPort: 9091
+    nodePort: 30091
+    protocol: TCP
+    name: metrics
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: workspace-isolation-sa
+  namespace: sutazai-mesh
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: workspace-isolation-role
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "pods", "namespaces", "services"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods/exec", "pods/log"]
+  verbs: ["create", "get"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "daemonsets", "statefulsets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["batch"]
+  resources: ["jobs", "cronjobs"]
+  verbs: ["create", "get", "list", "watch", "delete"]
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list", "watch", "create", "update", "patch"]
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "patch"]
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: workspace-isolation-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: workspace-isolation-role
+subjects:
+- kind: ServiceAccount
+  name: workspace-isolation-sa
+  namespace: sutazai-mesh
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: workspace-isolation-pdb
+  namespace: sutazai-mesh
+spec:
+  minAvailable: "50%"
+  selector:
+    matchLabels:
+      app: workspace-isolation
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: workspace-isolation-netpol
+  namespace: sutazai-mesh
+spec:
+  podSelector:
+    matchLabels:
+      app: workspace-isolation
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: sutazai-mesh
+    ports:
+    - protocol: TCP
+      port: 8081
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: sutazai-monitoring
+    ports:
+    - protocol: TCP
+      port: 9091
+  egress:
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443  # HTTPS for git operations
+    - protocol: TCP
+      port: 22   # SSH for git operations
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: sutazai-mesh
+    ports:
+    - protocol: TCP
+      port: 2375  # Docker API
+    - protocol: TCP
+      port: 2376  # Docker TLS
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: workspace-isolation-monitor
+  namespace: sutazai-mesh
+  labels:
+    app: workspace-isolation
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: workspace-isolation
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+    scrapeTimeout: 10s
+    honorLabels: true
+    relabelings:
+    - sourceLabels: [__meta_kubernetes_pod_node_name]
+      targetLabel: node
+    - sourceLabels: [__meta_kubernetes_namespace]
+      targetLabel: namespace
+    - sourceLabels: [__meta_kubernetes_pod_name]
+      targetLabel: pod
+    - sourceLabels: [__meta_kubernetes_pod_container_name]
+      targetLabel: container
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: workspace-isolation-psp
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+spec:
+  privileged: true
+  allowPrivilegeEscalation: true
+  allowedCapabilities:
+  - '*'
+  volumes:
+  - '*'
+  hostNetwork: true
+  hostPorts:
+  - min: 0
+    max: 65535
+  hostIPC: false
+  hostPID: true
+  runAsUser:
+    rule: 'RunAsAny'
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'RunAsAny'
+  fsGroup:
+    rule: 'RunAsAny'

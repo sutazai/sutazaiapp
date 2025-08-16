@@ -56,6 +56,7 @@ class MCPLoadBalancer:
             Selected instance or None if no suitable instance
         """
         if not instances:
+            logger.debug(f"No instances available for {service_name}")
             return None
         
         # Filter healthy instances
@@ -65,7 +66,16 @@ class MCPLoadBalancer:
         ]
         
         if not healthy_instances:
-            logger.warning(f"No healthy instances for {service_name}")
+            # Try degraded instances as last resort
+            degraded_instances = [
+                inst for inst in instances
+                if inst.state.value == "degraded"
+            ]
+            if degraded_instances:
+                logger.warning(f"Only degraded instances available for {service_name}, attempting to use")
+                return degraded_instances[0]
+            
+            logger.warning(f"No healthy or degraded instances for {service_name}")
             return None
         
         # Check for sticky session
@@ -156,6 +166,10 @@ class MCPLoadBalancer:
             
             # Calculate load score
             load = metrics.active_requests + (metrics.error_rate * 10)
+            
+            # Penalize instances with recent consecutive errors
+            if metrics.consecutive_errors > 0:
+                load *= (1 + metrics.consecutive_errors * 0.5)
             
             # Prefer instances not recently used
             if time.time() - metrics.last_used > 1:
@@ -309,6 +323,9 @@ class MCPLoadBalancer:
             metrics.consecutive_errors = 0
         else:
             metrics.consecutive_errors += 1
+            # Implement circuit breaker pattern
+            if metrics.consecutive_errors >= 5:
+                logger.warning(f"Instance {instance_id} has {metrics.consecutive_errors} consecutive errors, marking for recovery")
         
         # Update error rate (sliding window)
         window_size = 100
@@ -345,6 +362,15 @@ class MCPLoadBalancer:
     def get_instance_stats(self, instance_id: str) -> Dict[str, Any]:
         """Get statistics for an instance"""
         metrics = self._get_or_create_metrics(instance_id)
+        
+        # Calculate health score
+        health_score = 100.0
+        if metrics.error_rate > 0:
+            health_score -= metrics.error_rate * 50
+        if metrics.consecutive_errors > 0:
+            health_score -= metrics.consecutive_errors * 10
+        health_score = max(0, min(100, health_score))
+        
         return {
             "instance_id": instance_id,
             "total_requests": metrics.total_requests,
@@ -355,7 +381,9 @@ class MCPLoadBalancer:
             "memory_usage": metrics.memory_usage,
             "capability_score": metrics.capability_score,
             "consecutive_errors": metrics.consecutive_errors,
-            "last_used": metrics.last_used
+            "last_used": metrics.last_used,
+            "health_score": health_score,
+            "status": "healthy" if health_score > 70 else "degraded" if health_score > 30 else "unhealthy"
         }
 
 # Global MCP load balancer instance
@@ -364,3 +392,14 @@ _mcp_load_balancer = MCPLoadBalancer()
 def get_mcp_load_balancer() -> MCPLoadBalancer:
     """Get the global MCP load balancer instance"""
     return _mcp_load_balancer
+
+async def check_and_recover_unhealthy_instances():
+    """Periodic task to check and attempt recovery of unhealthy instances"""
+    load_balancer = get_mcp_load_balancer()
+    
+    for instance_id, metrics in load_balancer.instance_metrics.items():
+        if metrics.consecutive_errors >= 5:
+            logger.info(f"Attempting to recover unhealthy instance {instance_id}")
+            # Reset error count to give it another chance
+            metrics.consecutive_errors = 0
+            metrics.error_rate *= 0.5  # Reduce error rate to allow recovery

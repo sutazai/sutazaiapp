@@ -65,14 +65,15 @@ class ServiceInstance:
         return f"http://{self.address}:{self.port}"
     
     def to_consul_format(self) -> Dict[str, Any]:
-        """Convert to Consul service format - using lowercase keys for python-consul"""
-        return {
+        """Convert to Consul service format - compatible with python-consul 1.1.0"""
+        # Note: python-consul 1.1.0 does not support 'meta' parameter
+        # Metadata is stored in tags instead for compatibility
+        consul_format = {
             "service_id": self.service_id,
             "name": self.service_name,
             "address": self.address,
             "port": self.port,
-            "tags": self.tags,
-            "meta": self.metadata,
+            "tags": self.tags.copy(),  # Create copy to avoid modifying original
             "check": {
                 "http": f"{self.url}/health",
                 "interval": "10s",
@@ -80,6 +81,13 @@ class ServiceInstance:
                 "deregister_critical_service_after": "1m"
             }
         }
+        
+        # Add metadata as tags (workaround for python-consul 1.1.0 compatibility)
+        if self.metadata:
+            for key, value in self.metadata.items():
+                consul_format["tags"].append(f"meta_{key}={value}")
+        
+        return consul_format
 
 @dataclass
 class ServiceRequest:
@@ -145,22 +153,32 @@ class ServiceDiscovery:
         self.last_cache_update: Dict[str, float] = {}
         
     async def connect(self):
-        """Connect to Consul"""
+        """Connect to Consul with improved error detection"""
         try:
-            # Use synchronous Consul client with proper host
             self.consul_client = consul.Consul(
                 host=self.consul_host,
                 port=self.consul_port
             )
-            # Test connection
-            self.consul_client.agent.self()
+            # CRITICAL FIX #4: Test connection with timeout
+            import socket
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(5)
+            result = sock.connect_ex((self.consul_host, self.consul_port))
+            sock.close()
+            
+            if result != 0:
+                raise Exception(f"Cannot connect to Consul at {self.consul_host}:{self.consul_port}")
+            
+            # Test API call
+            leader = self.consul_client.status.leader()
+            logger.info(f"✅ Connected to Consul (leader: {leader})")
             service_discovery_counter.labels(operation='connect', status='success').inc()
-            logger.info(f"Connected to Consul at {self.consul_host}:{self.consul_port}")
+            
         except Exception as e:
-            logger.error(f"Failed to connect to Consul at {self.consul_host}:{self.consul_port}: {e}")
-            service_discovery_counter.labels(operation='connect', status='failure').inc()
-            # Don't raise, allow graceful degradation
+            logger.error(f"❌ Consul connection failed: {e}")
+            logger.warning("Continuing in degraded mode without service discovery")
             self.consul_client = None
+            service_discovery_counter.labels(operation='connect', status='failure').inc()
     
     async def register_service(self, instance: ServiceInstance) -> bool:
         """Register service with Consul"""

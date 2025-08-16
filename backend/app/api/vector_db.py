@@ -79,7 +79,11 @@ class VectorDBService:
         # Check ChromaDB availability
         try:
             async with httpx.AsyncClient() as client:
-                headers = {"X-Chroma-Token": "sk-dcebf71d6136dafc1405f3d3b6f7a9ce43723e36f93542fb"}
+                # Get ChromaDB token from environment variable
+                chroma_token = os.getenv("CHROMADB_API_KEY")
+                headers = {"X-Chroma-Token": chroma_token} if chroma_token else {}
+                if not chroma_token:
+                    logger.warning("CHROMADB_API_KEY not set in environment variables")
                 response = await client.get(f"{CHROMADB_URL}/api/v2/heartbeat", headers=headers, timeout=3.0)
                 if response.status_code == 200:
                     self.chromadb_available = True

@@ -34,8 +34,8 @@ from app.core.circuit_breaker_integration import (
 from app.core.unified_agent_registry import UnifiedAgentRegistry
 from app.mesh.service_mesh import ServiceMesh, LoadBalancerStrategy
 # Temporarily use disabled MCP module to bypass startup failures
-# from app.core.mcp_startup import initialize_mcp_background, shutdown_mcp_services
-from app.core.mcp_disabled import initialize_mcp_background, shutdown_mcp_services
+from app.core.mcp_startup import initialize_mcp_background, shutdown_mcp_services
+# from app.core.mcp_disabled import initialize_mcp_background, shutdown_mcp_services
 
 # Use uvloop for better async performance
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -144,14 +144,46 @@ async def lifespan(app: FastAPI):
     await service_mesh.initialize()
     logger.info("Service Mesh initialized for distributed task coordination")
     
-    # RULE 1 FIX: Register ACTUAL running services with the mesh
-    # This ensures we have real service discovery, not a facade
+    # CRITICAL FIX #2: Register backend and core services with mesh
     try:
-        from app.mesh.service_registry import register_all_services
-        registration_result = await register_all_services(service_mesh)
-        logger.info(f"Service registration complete: {registration_result['registered']} services registered")
+        # Register backend service itself with mesh
+        await service_mesh.register_service(
+            service_name="backend-api",
+            address="localhost", 
+            port=8000,
+            tags=["api", "backend", "core"],
+            metadata={"version": "1.0.0", "health": "/health"}
+        )
+        
+        # Register Ollama with mesh
+        await service_mesh.register_service(
+            service_name="ollama",
+            address="sutazai-ollama",
+            port=11434,
+            tags=["ai", "llm", "inference"],
+            metadata={"models": ["tinyllama", "llama2"]}
+        )
+        
+        # Register vector DBs
+        await service_mesh.register_service(
+            service_name="chromadb",
+            address="sutazai-chromadb",
+            port=8000,
+            tags=["vector", "database", "embeddings"],
+            metadata={"type": "chromadb"}
+        )
+        
+        await service_mesh.register_service(
+            service_name="qdrant",
+            address="sutazai-qdrant", 
+            port=6333,
+            tags=["vector", "database", "embeddings"],
+            metadata={"type": "qdrant"}
+        )
+        
+        logger.info("Core services registered with mesh successfully")
     except Exception as e:
-        logger.error(f"Failed to register services with mesh: {e}")
+        logger.error(f"Failed to register core services with mesh: {e}")
         # Continue startup even if registration fails
     
     # Register task handlers
@@ -171,11 +203,11 @@ async def lifespan(app: FastAPI):
     
     logger.info("Task queue initialized with handlers")
     
-    # Initialize MCP-Mesh integration
+    # Initialize MCP-Mesh integration with mesh registration
     logger.info("Initializing MCP servers with service mesh...")
     try:
-        mcp_task = await initialize_mcp_background()
-        logger.info("MCP initialization started in background")
+        mcp_task = await initialize_mcp_background(service_mesh)
+        logger.info("MCP initialization started in background with mesh integration")
     except Exception as e:
         logger.error(f"Failed to start MCP initialization: {e}")
         # Don't fail startup if MCP initialization fails
@@ -361,12 +393,21 @@ except Exception as e:
 try:
     from app.api.v1.endpoints.mcp import router as mcp_router
     app.include_router(mcp_router, prefix="/api/v1", tags=["MCP Integration"])
-    logger.info("MCP-Mesh Integration router loaded successfully - All 16 MCP servers available via mesh")
+    logger.info("MCP-Mesh Integration router loaded successfully - All 21 MCP servers available via mesh")
     MCP_MESH_ENABLED = True
 except Exception as e:
     logger.error(f"MCP-Mesh Integration router setup failed: {e}")
     logger.warning("MCP servers not available via mesh - direct invocation only")
     MCP_MESH_ENABLED = False
+
+# CRITICAL FIX #1: Add missing API endpoint routers
+try:
+    from app.api.v1.endpoints import models, chat
+    app.include_router(models.router, prefix="/api/v1")
+    app.include_router(chat.router, prefix="/api/v1")
+    logger.info("Models and Chat endpoint routers loaded successfully")
+except Exception as e:
+    logger.error(f"Models/Chat endpoint router setup failed: {e}")
 
 # Initialize Unified Agent Registry for centralized agent management
 agent_registry = UnifiedAgentRegistry()

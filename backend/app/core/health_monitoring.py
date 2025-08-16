@@ -457,7 +457,11 @@ class HealthMonitoringService:
         """Check ChromaDB health using v2 API"""
         try:
             if self._pool_manager:
-                headers = {"X-Chroma-Token": "sk-dcebf71d6136dafc1405f3d3b6f7a9ce43723e36f93542fb"}
+                # Get ChromaDB token from environment variable
+                chroma_token = os.getenv("CHROMADB_API_KEY")
+                headers = {"X-Chroma-Token": chroma_token} if chroma_token else {}
+                if not chroma_token:
+                    logger.warning("CHROMADB_API_KEY not set in environment variables")
                 async with await self._pool_manager.get_http_client('vector_db') as client:
                     response = await client.get("http://sutazai-chromadb:8000/api/v2/heartbeat", headers=headers)
                     return response.status_code == 200

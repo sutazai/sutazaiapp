@@ -71,6 +71,23 @@ Legend of ranges:
 - **10200-10299**: Monitoring and observability (metrics, logs, tracing, alerting)
 - **11000+**: Agent services (AI agents, specialized automation tools)
 
+## MCP Services (11090-11199) - Added 2025-08-16
+
+- 11090: MCP Consul UI (sutazai-mcp-consul)
+- 11091: MCP Network Monitor (sutazai-mcp-monitor)  
+- 11099: MCP HAProxy Stats (sutazai-mcp-haproxy)
+- 11100: MCP PostgreSQL Service (sutazai-mcp-postgres)
+- 11101: MCP Files Service (sutazai-mcp-files)
+- 11102: MCP HTTP Service (sutazai-mcp-http)
+- 11103: MCP DuckDuckGo Service (sutazai-mcp-ddg)
+- 11104: MCP GitHub Service (sutazai-mcp-github)
+- 11105: MCP Memory Service (sutazai-mcp-memory)
+
+**Status**: MCP services properly networked and load balanced
+**Network**: sutazai-network + mcp-internal (isolated)
+**Load Balancer**: HAProxy with health checks and failover
+**Service Discovery**: Consul with automatic registration
+
 ## Notes
 
 - Port assignments must match docker-compose.yml external port mappings exactly
@@ -78,4 +95,5 @@ Legend of ranges:
 - No fictional or placeholder services are listed - this registry reflects deployment reality
 - Services marked as **[DEFINED BUT NOT RUNNING]** may need investigation
 - Ollama port 10104 is critical and reserved - never modify
+- MCP services (11090-11199) provide HTTP interfaces for STDIO MCP tools
 

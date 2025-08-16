@@ -1,416 +1,309 @@
-# CLAUDE.md
+# Claude Code Configuration - SPARC Development Environment
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## 🚨 CRITICAL: CONCURRENT EXECUTION & FILE MANAGEMENT
 
-## ⚠️ MANDATORY PREREQUISITE - READ FIRST
+**ABSOLUTE RULES**:
+1. ALL operations MUST be concurrent/parallel in a single message
+2. **NEVER save working files, text/mds and tests to the root folder**
+3. ALWAYS organize files in appropriate subdirectories
 
-**🚨 CRITICAL:** Before executing ANY code changes, modifications, or development tasks in this repository, you MUST first read and understand the complete Enforcement Rules document:
+### ⚡ GOLDEN RULE: "1 MESSAGE = ALL RELATED OPERATIONS"
 
-**👉 `/opt/sutazaiapp/IMPORTANT/Enforcement_Rules`**
+**MANDATORY PATTERNS:**
+- **TodoWrite**: ALWAYS batch ALL todos in ONE call (5-10+ todos minimum)
+- **Task tool**: ALWAYS spawn ALL agents in ONE message with full instructions
+- **File operations**: ALWAYS batch ALL reads/writes/edits in ONE message
+- **Bash commands**: ALWAYS batch ALL terminal operations in ONE message
+- **Memory operations**: ALWAYS batch ALL memory store/retrieve in ONE message
 
-This 356KB comprehensive document contains:
-- 🔧 Professional Codebase Standards & Hygiene Guide
-- 🎯 Core Non-Negotiable Standards 
-- 🧼 Detailed Codebase Hygiene Requirements
-- 🔒 Security and Quality Enforcement Rules
-- 📋 Complete Rule Set with Implementation Details
+### 📁 File Organization Rules
 
-**NO EXCEPTIONS:** All work in this codebase MUST comply with the standards defined in the Enforcement Rules. Failure to review these rules prior to execution will result in code that violates established patterns and may be rejected.
-
-**Last Updated:** 2024-12-20 17:00:00 UTC  
-**System Version:** SutazAI v89 - Local AI Automation Platform  
-**Status:** Not Production Ready ✅  
-**Architecture:** Multi-tier containerized system with 25 operational services
+**NEVER save to root folder. Use these directories:**
+- `/src` - Source code files
+- `/tests` - Test files
+- `/docs` - Documentation and markdown files
+- `/config` - Configuration files
+- `/scripts` - Utility scripts
+- `/examples` - Example code
 
 ## Project Overview
 
-SutazAI is a comprehensive local AI automation platform designed for enterprise deployment without external AI service dependencies. The system provides:
+This project uses SPARC (Specification, Pseudocode, Architecture, Refinement, Completion) methodology with Claude-Flow orchestration for systematic Test-Driven Development.
 
-- **Local AI Processing**: Ollama with TinyLlama model for on-premises AI capabilities
-- **Multi-Database Architecture**: PostgreSQL, Redis, Neo4j, ChromaDB, Qdrant, FAISS
-- **FastAPI Backend**: High-performance API server with async support
-- **Streamlit Frontend**: Modern web interface for AI automation
-- **Agent System**: 7+ operational AI agents for various automation tasks
-- **Vector Intelligence**: Multiple vector databases for semantic search and AI workflows
-- **Monitoring Stack**: Prometheus, Grafana, Loki for comprehensive observability
-- **MCP Integration**: 17 Model Context Protocol servers for extended AI capabilities
-- **Service Mesh**: Kong API Gateway with Consul service discovery and circuit breaking
+## 🚀 MCP Server Integration Status (Updated 2025-08-16 23:00:00 UTC)
 
-## Quick Start Commands
+### ⚠️ CRITICAL SYSTEM STATUS ⚠️
+**System is undergoing 3-week remediation plan to fix critical architectural failures**
+- See `/opt/sutazaiapp/docs/reports/SYSTEM_ARCHITECTURE_REMEDIATION_MASTER_PLAN.md`
+- See `/opt/sutazaiapp/docs/reports/EXECUTIVE_SUMMARY_CRITICAL_FINDINGS.md`
 
-### Core System Operations
+### Active MCP Servers (21 total, 20 operational):
+- **claude-flow** - SPARC workflow orchestration and agent coordination ✅
+- **ruv-swarm** - Multi-agent swarm coordination and task distribution ✅
+- **claude-task-runner** - Task isolation and focused execution ✅
+- **files** - File system operations and management ✅
+- **context7** - Documentation and library context retrieval ✅
+- **http_fetch** - HTTP requests and web content fetching ✅
+- **ddg** - DuckDuckGo search integration ✅
+- **sequentialthinking** - Multi-step reasoning and analysis ✅
+- **nx-mcp** - Nx workspace management and monorepo operations ✅
+- **extended-memory** - Persistent memory and context storage ✅
+- **mcp_ssh** - Secure SSH operations and remote access ✅
+- **ultimatecoder** - Advanced coding assistance ❌ (FAILING - missing dependencies)
+- **postgres** - PostgreSQL database operations ✅
+- **playwright-mcp** - Browser automation and testing ✅
+- **memory-bank-mcp** - Advanced memory management ✅
+- **puppeteer-mcp** - Web scraping and browser control ✅
+- **knowledge-graph-mcp** - Knowledge graph operations ✅
+- **compass-mcp** - Navigation and project exploration ✅
+- **github** - GitHub API integration and repository management ✅
+- **http** - HTTP protocol operations ✅
+- **language-server** - Language server protocol integration ✅
+
+### MCP Server Critical Issues:
+- 🔴 **ZERO mesh integration** - MCPs run in complete isolation
+- 🔴 **No protocol translation** - STDIO MCPs cannot communicate with HTTP mesh
+- 🔴 **API endpoints non-functional** - /api/v1/mcp/* returns empty/404
+- 🟡 **4 orphaned MCP containers** - Running outside service namespace
+- ✅ **20/21 servers pass selfcheck** - But this only validates configuration, not integration
+
+## SPARC Commands
+
+### Core Commands
+- `npx claude-flow sparc modes` - List available modes
+- `npx claude-flow sparc run <mode> "<task>"` - Execute specific mode
+- `npx claude-flow sparc tdd "<feature>"` - Run complete TDD workflow
+- `npx claude-flow sparc info <mode>` - Get mode details
+
+### Batchtools Commands
+- `npx claude-flow sparc batch <modes> "<task>"` - Parallel execution
+- `npx claude-flow sparc pipeline "<task>"` - Full pipeline processing
+- `npx claude-flow sparc concurrent <mode> "<tasks-file>"` - Multi-task processing
+
+### Build Commands
+- `npm run build` - Build project
+- `npm run test` - Run tests
+- `npm run lint` - Linting
+- `npm run typecheck` - Type checking
+
+## SPARC Workflow Phases
+
+1. **Specification** - Requirements analysis (`sparc run spec-pseudocode`)
+2. **Pseudocode** - Algorithm design (`sparc run spec-pseudocode`)
+3. **Architecture** - System design (`sparc run architect`)
+4. **Refinement** - TDD implementation (`sparc tdd`)
+5. **Completion** - Integration (`sparc run integration`)
+
+## Code Style & Best Practices
+
+- **Modular Design**: Files under 500 lines
+- **Environment Safety**: Never hardcode secrets
+- **Test-First**: Write tests before implementation
+- **Clean Architecture**: Separate concerns
+- **Documentation**: Keep updated
+
+## 🚀 Available Agents (54 Total)
+
+### Core Development
+`coder`, `reviewer`, `tester`, `planner`, `researcher`
+
+### Swarm Coordination
+`hierarchical-coordinator`, `mesh-coordinator`, `adaptive-coordinator`, `collective-intelligence-coordinator`, `swarm-memory-manager`
+
+### Consensus & Distributed
+`byzantine-coordinator`, `raft-manager`, `gossip-coordinator`, `consensus-builder`, `crdt-synchronizer`, `quorum-manager`, `security-manager`
+
+### Performance & Optimization
+`perf-analyzer`, `performance-benchmarker`, `task-orchestrator`, `memory-coordinator`, `smart-agent`
+
+### GitHub & Repository
+`github-modes`, `pr-manager`, `code-review-swarm`, `issue-tracker`, `release-manager`, `workflow-automation`, `project-board-sync`, `repo-architect`, `multi-repo-swarm`
+
+### SPARC Methodology
+`sparc-coord`, `sparc-coder`, `specification`, `pseudocode`, `architecture`, `refinement`
+
+### Specialized Development
+`backend-dev`, `mobile-dev`, `ml-developer`, `cicd-engineer`, `api-docs`, `system-architect`, `code-analyzer`, `base-template-generator`
+
+### Testing & Validation
+`tdd-london-swarm`, `production-validator`
+
+### Migration & Planning
+`migration-planner`, `swarm-init`
+
+## 🎯 Claude Code vs MCP Tools
+
+### Claude Code Handles ALL:
+- File operations (Read, Write, Edit, MultiEdit, Glob, Grep)
+- Code generation and programming
+- Bash commands and system operations
+- Implementation work
+- Project navigation and analysis
+- TodoWrite and task management
+- Git operations
+- Package management
+- Testing and debugging
+
+### MCP Tools ONLY:
+- Coordination and planning
+- Memory management
+- Neural features
+- Performance tracking
+- Swarm orchestration
+- GitHub integration
+
+**KEY**: MCP coordinates, Claude Code executes.
+
+## 🚀 Quick Setup
+
 ```bash
-# Start core services (database, cache, backend, frontend)
-make up-core
-
-# Start full stack including monitoring and agents
-make stack-up
-
-# View system status
-make status
-
-# Stop all services
-make down
+# Add Claude Flow MCP server
+claude mcp add claude-flow npx claude-flow@alpha mcp start
 ```
 
-### Development Workflow
+## MCP Tool Categories
+
+### Coordination
+`swarm_init`, `agent_spawn`, `task_orchestrate`
+
+### Monitoring
+`swarm_status`, `agent_list`, `agent_metrics`, `task_status`, `task_results`
+
+### Memory & Neural
+`memory_usage`, `neural_status`, `neural_train`, `neural_patterns`
+
+### GitHub Integration
+`github_swarm`, `repo_analyze`, `pr_enhance`, `issue_triage`, `code_review`
+
+### System
+`benchmark_run`, `features_detect`, `swarm_monitor`
+
+## 📋 Agent Coordination Protocol
+
+### Every Agent MUST:
+
+**1️⃣ BEFORE Work:**
 ```bash
-# Install dependencies and setup development environment
-make install
-make setup-dev
-
-# Run all tests
-make test
-
-# Run specific test types
-make test-unit           # Unit tests only
-make test-integration    # Integration tests
-make test-e2e           # End-to-end tests
-make test-performance   # Performance benchmarks
-
-# Code quality checks
-make lint               # Run linting (black, flake8, mypy)
-make format            # Auto-format code
-make coverage          # Generate test coverage report
-
-# Quality gates (comprehensive validation)
-make quality-gates      # Full enterprise-grade quality validation
-make quality-gates-quick # Quick quality validation (5-10 minutes)
-
-# Run single test file
-pytest backend/tests/test_specific.py -v
-
-# Run specific test function
-pytest backend/tests/test_file.py::test_function_name -v
+npx claude-flow@alpha hooks pre-task --description "[task]"
+npx claude-flow@alpha hooks session-restore --session-id "swarm-[id]"
 ```
 
-### System Monitoring
+**2️⃣ DURING Work:**
 ```bash
-# Start monitoring stack
-make monitoring-up
-
-# View system metrics
-curl http://localhost:10010/health      # Backend health
-curl http://localhost:10104/api/tags    # Ollama models
-
-# Access monitoring dashboards
-open http://localhost:10201             # Grafana (admin/admin)
-open http://localhost:10200             # Prometheus
-open http://localhost:10202             # Loki logs
+npx claude-flow@alpha hooks post-edit --file "[file]" --memory-key "swarm/[agent]/[step]"
+npx claude-flow@alpha hooks notify --message "[what was done]"
 ```
 
-## Architecture Overview
-
-### Port Allocation (Complete Registry)
-The system uses structured port allocation in the 10000+ range:
-
-**Infrastructure Services (10000-10099)**
-- 10000: PostgreSQL database
-- 10001: Redis cache  
-- 10002-10003: Neo4j graph database (bolt/http)
-- 10005: Kong API Gateway (proxy)
-- 10006: Consul service discovery
-- 10007-10008: RabbitMQ (amqp/mgmt)
-- 10010: FastAPI backend
-- 10011: Streamlit frontend
-- 10015: Kong Admin API
-
-**Vector & AI Services (10100-10199)**  
-- 10100: ChromaDB vector database
-- 10101-10102: Qdrant vector database
-- 10103: FAISS vector service
-- 10104: Ollama AI model server (**RESERVED - CRITICAL**)
-
-**Monitoring Stack (10200-10299)**
-- 10200: Prometheus metrics
-- 10201: Grafana dashboards
-- 10202: Loki log aggregation
-- 10203: AlertManager
-- 10220-10221: Node exporters and cAdvisor
-
-**AI Agents (11000+)**
-- 11000+: Various AI automation agents (dynamic port allocation)
-
-### Service Dependencies
-Understanding the service startup order and dependencies:
-
-1. **Core Infrastructure**: PostgreSQL → Redis → Neo4j
-2. **Vector Databases**: ChromaDB, Qdrant, FAISS (can start in parallel)
-3. **AI Services**: Ollama model server (independent)
-4. **Application Layer**: Backend API (depends on databases) → Frontend (depends on backend)
-5. **Monitoring**: Independent services that can start in any order
-6. **Agent Services**: Depend on core infrastructure and AI services
-
-### Key Configuration Files
-
-**Docker & Deployment:**
-- `docker-compose.yml` - Core service definitions with resource limits
-- `Makefile` - Build, test, and deployment automation
-- `.env.example` - Environment variables template
-
-**Backend Configuration:**  
-- `backend/requirements.txt` - Python dependencies with security patches
-- `backend/app/main.py` - FastAPI application with performance optimizations
-- `backend/app/core/` - Core configurations and utilities
-
-**Frontend Configuration:**
-- Uses Streamlit with modular architecture
-- Custom components for AI interactions
-- Real-time monitoring dashboard integration
-
-## Development Guidelines
-
-### Code Quality Requirements
-- **Python 3.11+** required for all backend components
-- **Type hints** mandatory for new code
-- **Test coverage** minimum 80% for new features
-- **Security scanning** with bandit and safety
-- **Linting** with black, flake8, mypy (configured in pyproject.toml)
-
-### Database Schema Management
+**3️⃣ AFTER Work:**
 ```bash
-# Create new migration
-alembic revision --autogenerate -m "Description"
-
-# Apply migrations
-alembic upgrade head
-
-# Database connection testing
-python -c "from backend.app.core.database import get_db; print('DB OK')"
+npx claude-flow@alpha hooks post-task --task-id "[task]"
+npx claude-flow@alpha hooks session-end --export-metrics true
 ```
 
-### AI Model Management
-```bash
-# Check loaded models
-curl http://localhost:10104/api/tags
+## 🎯 Concurrent Execution Examples
 
-# Model health check  
-curl http://localhost:10104/api/version
-
-# Backend AI integration test
-curl -X POST http://localhost:10010/api/v1/chat/ \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Hello", "model": "tinyllama"}'
+### ✅ CORRECT (Single Message):
+```javascript
+[BatchTool]:
+  // Initialize swarm
+  mcp__claude-flow__swarm_init { topology: "mesh", maxAgents: 6 }
+  mcp__claude-flow__agent_spawn { type: "researcher" }
+  mcp__claude-flow__agent_spawn { type: "coder" }
+  mcp__claude-flow__agent_spawn { type: "tester" }
+  
+  // Spawn agents with Task tool
+  Task("Research agent: Analyze requirements...")
+  Task("Coder agent: Implement features...")
+  Task("Tester agent: Create test suite...")
+  
+  // Batch todos
+  TodoWrite { todos: [
+    {id: "1", content: "Research", status: "in_progress", priority: "high"},
+    {id: "2", content: "Design", status: "pending", priority: "high"},
+    {id: "3", content: "Implement", status: "pending", priority: "high"},
+    {id: "4", content: "Test", status: "pending", priority: "medium"},
+    {id: "5", content: "Document", status: "pending", priority: "low"}
+  ]}
+  
+  // File operations
+  Bash "mkdir -p app/{src,tests,docs}"
+  Write "app/src/index.js"
+  Write "app/tests/index.test.js"
+  Write "app/docs/README.md"
 ```
 
-## MCP Server Management
-
-The system includes 17 Model Context Protocol servers for extended AI capabilities:
-
-### Configured MCP Servers
-- **language-server**: Code language support and definitions
-- **github**: GitHub repository management
-- **ultimatecoder**: Advanced code generation and analysis
-- **sequentialthinking**: Advanced reasoning and problem-solving
-- **context7**: Library documentation and code examples
-- **files**: Local file system access
-- **http**: HTTP requests and web content fetching
-- **ddg**: DuckDuckGo search integration
-- **postgres**: Database operations and queries
-- **extended-memory**: Persistent memory across sessions
-- **mcp_ssh**: Remote command execution and file operations
-- **nx-mcp**: Nx workspace and monorepo management
-- **puppeteer-mcp**: Browser automation with Puppeteer
-- **memory-bank-mcp**: Memory management and persistence
-- **playwright-mcp**: Browser automation with Playwright
-- **knowledge-graph-mcp**: Knowledge graph management
-- **compass-mcp**: MCP server discovery and recommendations
-
-### MCP Commands
-```bash
-# Test all MCP servers
-scripts/mcp/selfcheck_all.sh
-
-# Test individual MCP server
-scripts/mcp/wrappers/[server-name].sh --selfcheck
-
-# List MCP status (in Claude)
-/mcp list
+### ❌ WRONG (Multiple Messages):
+```javascript
+Message 1: mcp__claude-flow__swarm_init
+Message 2: Task("agent 1")
+Message 3: TodoWrite { todos: [single todo] }
+Message 4: Write "file.js"
+// This breaks parallel coordination!
 ```
 
-⚠️ **MCP Protection**: MCP servers are protected infrastructure. Never modify `.mcp.json` or wrapper scripts without explicit authorization.
+## Performance Benefits
 
-## Troubleshooting Guide
+- **84.8% SWE-Bench solve rate**
+- **32.3% token reduction**
+- **2.8-4.4x speed improvement**
+- **27+ neural models**
 
-### Common Issues
+## Hooks Integration
 
-**Service Won't Start:**
-```bash
-# Check service logs
-docker-compose logs [service-name]
+### Pre-Operation
+- Auto-assign agents by file type
+- Validate commands for safety
+- Prepare resources automatically
+- Optimize topology by complexity
+- Cache searches
 
-# Verify port availability
-ss -tulpn | grep [port-number]
+### Post-Operation
+- Auto-format code
+- Train neural patterns
+- Update memory
+- Analyze performance
+- Track token usage
 
-# Check resource usage
-docker stats
-```
+### Session Management
+- Generate summaries
+- Persist state
+- Track metrics
+- Restore context
+- Export workflows
 
-**Database Connection Issues:**
-```bash
-# Test PostgreSQL connection
-docker exec -it sutazai-postgres pg_isready -U sutazai
+## Advanced Features (v2.0.0)
 
-# Test Redis connection
-docker exec -it sutazai-redis redis-cli ping
+- 🚀 Automatic Topology Selection
+- ⚡ Parallel Execution (2.8-4.4x speed)
+- 🧠 Neural Training
+- 📊 Bottleneck Analysis
+- 🤖 Smart Auto-Spawning
+- 🛡️ Self-Healing Workflows
+- 💾 Cross-Session Memory
+- 🔗 GitHub Integration
 
-# Reset database (CAUTION: destroys data)
-make db-reset
-```
+## Integration Tips
 
-**AI Model Issues:**
-```bash
-# Check Ollama status
-curl http://localhost:10104/api/tags
+1. Start with basic swarm init
+2. Scale agents gradually
+3. Use memory for context
+4. Monitor progress regularly
+5. Train patterns from success
+6. Enable hooks automation
+7. Use GitHub tools first
 
-# Restart Ollama service
-docker-compose restart ollama
+## Support
 
-# Check model loading
-docker exec -it ollama ollama list
-```
+- Documentation: https://github.com/ruvnet/claude-flow
+- Issues: https://github.com/ruvnet/claude-flow/issues
 
-**Performance Issues:**
-```bash
-# Monitor resource usage
-make monitoring-up
-# Then access Grafana at http://localhost:10201
+---
 
-# Check container resource limits
-docker inspect [container-name] | grep -A 10 Resources
-```
+Remember: **Claude Flow coordinates, Claude Code creates!**
 
-### Health Check Endpoints
-- Backend API: `GET http://localhost:10010/health`
-- Frontend: `GET http://localhost:10011/` 
-- PostgreSQL: `docker exec sutazai-postgres pg_isready`
-- Redis: `docker exec sutazai-redis redis-cli ping`
-- Ollama: `GET http://localhost:10104/api/version`
-
-## Security Considerations
-
-**Current Security Status: 88% Hardened**
-- 22/25 containers run as non-root users
-- JWT authentication with bcrypt password hashing
-- Environment-based secrets management
-- Regular security patches in requirements.txt
-
-**Remaining Security Tasks:**
-- Migrate 3 remaining containers to non-root users
-- Enable SSL/TLS for production deployment
-- Implement advanced secrets management
-
-## Performance Characteristics
-
-**System Requirements:**
-- **Minimum**: 8GB RAM, 4 CPU cores, 50GB storage
-- **Recommended**: 16GB RAM, 8 CPU cores, 100GB storage
-- **Docker**: Version 20.0+ with Docker Compose
-
-**Expected Performance:**
-- Backend API response: <100ms for standard requests
-- AI model inference: 5-8 seconds (TinyLlama)
-- Database operations: <50ms for standard queries
-- Full system startup: 2-3 minutes
-
-## Container Architecture
-
-The system runs 25 operational containers organized in tiers:
-
-**Tier 1: Core Infrastructure (5 containers)**
-- PostgreSQL, Redis, Neo4j databases
-- FastAPI backend, Streamlit frontend
-
-**Tier 2: AI & Vector Services (6 containers)**  
-- Ollama AI model server
-- ChromaDB, Qdrant, FAISS vector databases
-- Vector processing services
-
-**Tier 3: Agent Services (7 containers)**
-- Hardware Resource Optimizer
-- Jarvis Automation Agent
-- Task Assignment Coordinator
-- Resource Arbitration Agent
-- AI Agent Orchestrator
-- Ollama Integration Agent
-- Jarvis Hardware Optimizer
-
-**Tier 4: Monitoring Stack (7 containers)**
-- Prometheus, Grafana, Loki
-- Various exporters and monitoring tools
-
-## API Documentation
-
-**Primary API Endpoints:**
-- `POST /api/v1/chat/` - Chat with AI models
-- `GET /api/v1/models/` - List available models
-- `GET /api/v1/agents/` - Agent management and status
-- `GET /api/v1/documents/` - Document management operations
-- `GET /api/v1/system/` - System status and information
-- `GET /api/v1/hardware/` - Hardware resource monitoring
-- `GET /api/v1/cache/` - Cache management operations
-- `GET /api/v1/cache-optimized/` - Optimized cache operations
-- `GET /api/v1/circuit-breaker/` - Circuit breaker status
-- `POST /api/v1/mesh/enqueue` - Legacy task queue operations
-- `GET /api/v1/mesh/results` - Legacy task results
-- `POST /api/v1/mesh/v2/register` - Service mesh registration
-- `GET /api/v1/mesh/v2/services` - Service discovery
-- `GET /api/v1/features/` - Feature flags and configuration
-- `GET /health` - System health status
-- `GET /metrics` - Prometheus metrics
-
-**Interactive Documentation:**
-- Swagger UI: http://localhost:10010/docs
-- ReDoc: http://localhost:10010/redoc
-
-## Important Files and Directories
-
-### Configuration Files
-- `/CLAUDE.md` - This developer guidance file
-- `/README.md` - Project overview and quick start
-- `/docker-compose.yml` - Service definitions
-- `/Makefile` - Build and deployment automation
-- `/.env.example` - Environment variables template
-
-### Source Code Structure
-- `/backend/` - FastAPI application source
-  - `/app/main.py` - Application entry point
-  - `/app/api/` - API route definitions  
-  - `/app/core/` - Core configurations
-  - `/app/models/` - Database models
-  - `/tests/` - Backend test suite
-- `/frontend/` - Streamlit application
-- `/agents/` - AI agent implementations
-- `/scripts/` - Utility and deployment scripts
-- `/monitoring/` - Monitoring configurations
-
-### Critical Directories
-- `/IMPORTANT/` - Critical system documentation and architecture diagrams
-- `/scripts/mcp/` - MCP server wrapper scripts (**PROTECTED**)
-- `/config/` - Service configuration files
-- `/logs/` - Application logs (development)
-
-## Best Practices
-
-### Development Workflow
-1. Always run `make test` before committing code
-2. Use `make lint` to ensure code quality
-3. Update tests when modifying functionality  
-4. Follow semantic versioning for releases
-5. Document API changes in OpenAPI specs
-
-### Deployment Guidelines
-1. Use `make up-core` for basic development
-2. Use `make stack-up` for full feature testing
-3. Monitor resource usage with Grafana
-4. Backup databases before major changes
-5. Test rollback procedures
-
-### Monitoring Best Practices
-1. Check Grafana dashboards for system health
-2. Monitor container resource usage
-3. Review application logs in Loki
-4. Set up alerts for critical metrics
-5. Regular performance baseline updates
-
-This CLAUDE.md file serves as the complete developer reference for the SutazAI system. For additional technical details, refer to the README.md and documentation in the `/IMPORTANT/` directory.
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+Never save working files, text/mds and tests to the root folder.

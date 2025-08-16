@@ -45,7 +45,7 @@ class ChatResponse(BaseModel):
     model: str
     tokens_used: Optional[int] = None
 
-@router.post("/", response_model=ChatResponse)
+@router.post("/simple-chat", response_model=ChatResponse)
 async def chat(
     request: ChatRequest,
     model_manager: ConsolidatedOllamaService = Depends(get_model_manager)

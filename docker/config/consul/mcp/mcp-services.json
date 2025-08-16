@@ -1,0 +1,106 @@
+{
+  "datacenter": "mcp-cluster",
+  "data_dir": "/consul/data",
+  "log_level": "INFO",
+  "server": true,
+  "bootstrap_expect": 1,
+  "ui": true,
+  "client_addr": "0.0.0.0",
+  "bind_addr": "0.0.0.0",
+  "ports": {
+    "grpc": 8502
+  },
+  "connect": {
+    "enabled": true
+  },
+  "services": [
+    {
+      "name": "mcp-postgres",
+      "port": 11100,
+      "tags": ["mcp", "database", "sql"],
+      "check": {
+        "http": "http://mcp-postgres:11100/health",
+        "interval": "10s",
+        "timeout": "5s"
+      },
+      "meta": {
+        "version": "1.0.0",
+        "capabilities": "sql,database,query"
+      }
+    },
+    {
+      "name": "mcp-files",
+      "port": 11101,
+      "tags": ["mcp", "filesystem", "storage"],
+      "check": {
+        "http": "http://mcp-files:11101/health",
+        "interval": "10s",
+        "timeout": "5s"
+      },
+      "meta": {
+        "version": "1.0.0",
+        "capabilities": "read,write,list,delete"
+      }
+    },
+    {
+      "name": "mcp-http",
+      "port": 11102,
+      "tags": ["mcp", "network", "http"],
+      "check": {
+        "http": "http://mcp-http:11102/health",
+        "interval": "10s",
+        "timeout": "5s"
+      },
+      "meta": {
+        "version": "1.0.0",
+        "capabilities": "fetch,post,put,delete"
+      }
+    },
+    {
+      "name": "mcp-ddg",
+      "port": 11103,
+      "tags": ["mcp", "search", "web"],
+      "check": {
+        "http": "http://mcp-ddg:11103/health",
+        "interval": "10s",
+        "timeout": "5s"
+      },
+      "meta": {
+        "version": "1.0.0",
+        "capabilities": "search,news,images"
+      }
+    },
+    {
+      "name": "mcp-github",
+      "port": 11104,
+      "tags": ["mcp", "vcs", "github"],
+      "check": {
+        "http": "http://mcp-github:11104/health",
+        "interval": "10s",
+        "timeout": "5s"
+      },
+      "meta": {
+        "version": "1.0.0",
+        "capabilities": "repos,issues,pulls,actions"
+      }
+    },
+    {
+      "name": "mcp-memory",
+      "port": 11105,
+      "tags": ["mcp", "memory", "persistence"],
+      "check": {
+        "http": "http://mcp-memory:11105/health",
+        "interval": "10s",
+        "timeout": "5s"
+      },
+      "meta": {
+        "version": "1.0.0",
+        "capabilities": "store,retrieve,search,delete"
+      }
+    }
+  ],
+  "acl": {
+    "enabled": false,
+    "default_policy": "allow"
+  }
+}

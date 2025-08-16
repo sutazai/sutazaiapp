@@ -1,0 +1,139 @@
+# Development Environment Docker Compose Configuration
+# Purpose: Development overrides for local development with reduced resource requirements
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+version: '3.8'
+
+services:
+  # Development overrides with reduced resources and debug features
+
+  postgres:
+    image: postgres:16.3-alpine3.20
+    environment:
+      - POSTGRES_DB=sutazai_dev
+      - POSTGRES_USER=dev_user
+      - POSTGRES_PASSWORD=dev_password
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./sql/dev_init.sql:/docker-entrypoint-initdb.d/dev_init.sql:ro
+
+  redis:
+    image: redis:7.2.5-alpine3.20
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    command: redis-server --appendonly yes --maxmemory 256mb
+
+  backend:
+    image: sutazai-backend:latest
+    environment:
+      - DEBUG=true
+      - LOG_LEVEL=debug
+      - RELOAD=true
+      - ENVIRONMENT=development
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    volumes:
+      - ./backend:/app:rw
+      - ./logs:/app/logs:rw
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+
+  frontend:
+    image: sutazai-frontend:latest
+    environment:
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_SERVER_ENABLE_CORS=true
+      - STREAMLIT_THEME_BASE=dark
+      - DEBUG=true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    volumes:
+      - ./frontend:/app:rw
+      - ./logs:/app/logs:rw
+    command: streamlit run app.py --server.port 8501 --server.headless true
+
+  ollama:
+    image: ollama/ollama:0.3.6
+    environment:
+      - OLLAMA_DEBUG=true
+      - OLLAMA_VERBOSE=true
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    volumes:
+      - ollama_dev_data:/root/.ollama
+
+  # Lightweight monitoring for development
+  prometheus:
+    image: prom/prometheus:v2.53.2
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=7d'  # Reduced retention for dev
+      - '--web.enable-lifecycle'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  grafana:
+    image: grafana/grafana:11.1.5
+    environment:
+      - GF_SECURITY_ADMIN_USER=dev
+      - GF_SECURITY_ADMIN_PASSWORD=dev
+      - GF_INSTALL_PLUGINS=redis-datasource
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  ollama_dev_data:
+    driver: local
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazai-network

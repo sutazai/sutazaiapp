@@ -1,120 +1,117 @@
 {
   "mcpServers": {
-    "language-server": {
-      "type": "stdio",
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/language-server.sh",
-      "args": [],
-      "env": {
-        "MCP_LANGSERVER_NODE_MAX_MB": "384",
-        "MCP_LANGSERVER_MAX_INSTANCES": "4"
-      }
-    },
-    "github": {
-      "type": "stdio",
-      "command": "sh",
+    "claude-flow": {
+      "command": "npx",
       "args": [
-        "-lc",
-        "npx -y @modelcontextprotocol/server-github --repositories 'sutazai/sutazaiapp'"
+        "claude-flow@alpha",
+        "mcp",
+        "start"
       ],
-      "env": {}
+      "type": "stdio"
     },
-    "ultimatecoder": {
-      "type": "stdio",
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/ultimatecoder.sh",
-      "args": [],
-      "env": {}
-    },
-    "sequentialthinking": {
-      "type": "stdio",
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/sequentialthinking.sh",
-      "args": [],
-      "env": {}
-    },
-    "context7": {
-      "type": "stdio",
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/context7.sh",
-      "args": [],
-      "env": {}
+    "ruv-swarm": {
+      "command": "npx",
+      "args": [
+        "ruv-swarm@latest",
+        "mcp",
+        "start"
+      ],
+      "type": "stdio"
     },
     "files": {
-      "type": "stdio",
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/files.sh",
       "args": [],
-      "env": {}
+      "type": "stdio"
     },
-    "http": {
-      "type": "stdio",
+    "context7": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/context7.sh",
+      "args": [],
+      "type": "stdio"
+    },
+    "http_fetch": {
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/http_fetch.sh",
       "args": [],
-      "env": {}
+      "type": "stdio"
     },
     "ddg": {
-      "type": "stdio",
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/ddg.sh",
       "args": [],
-      "env": {}
+      "type": "stdio"
     },
-    "postgres": {
-      "type": "stdio",
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh",
+    "sequentialthinking": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/sequentialthinking.sh",
       "args": [],
-      "env": {
-        "DOCKER_NETWORK": "sutazai-network",
-        "POSTGRES_CONTAINER": "sutazai-postgres",
-        "DATABASE_URL": "postgresql://sutazai:change_me_secure@sutazai-postgres:5432/sutazai"
-      }
-    },
-    "extended-memory": {
-      "type": "stdio",
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh",
-      "args": [],
-      "env": {}
-    },
-    "mcp_ssh": {
-      "type": "stdio",
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/mcp_ssh.sh",
-      "args": [],
-      "env": {}
+      "type": "stdio"
     },
     "nx-mcp": {
-      "type": "stdio",
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/nx-mcp.sh",
       "args": [],
-      "env": {}
-    }
-    ,
-    "puppeteer-mcp": {
-      "type": "stdio",
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh",
-      "args": [],
-      "env": {}
+      "type": "stdio"
     },
-    "memory-bank-mcp": {
-      "type": "stdio",
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh",
+    "extended-memory": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh",
       "args": [],
-      "env": {}
+      "type": "stdio"
+    },
+    "mcp_ssh": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/mcp_ssh.sh",
+      "args": [],
+      "type": "stdio"
+    },
+    "ultimatecoder": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/ultimatecoder.sh",
+      "args": [],
+      "type": "stdio"
+    },
+    "postgres": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh",
+      "args": [],
+      "type": "stdio"
     },
     "playwright-mcp": {
-      "type": "stdio",
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh",
       "args": [],
-      "env": {
-        "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1",
-        "PLAYWRIGHT_BROWSERS_PATH": "/root/.cache/ms-playwright"
-      }
+      "type": "stdio"
+    },
+    "memory-bank-mcp": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh",
+      "args": [],
+      "type": "stdio"
+    },
+    "puppeteer-mcp": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh",
+      "args": [],
+      "type": "stdio"
     },
     "knowledge-graph-mcp": {
-      "type": "stdio",
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/knowledge-graph-mcp.sh",
       "args": [],
-      "env": {}
+      "type": "stdio"
     },
     "compass-mcp": {
-      "type": "stdio",
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/compass-mcp.sh",
       "args": [],
-      "env": {}
+      "type": "stdio"
+    },
+    "github": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/github.sh",
+      "args": [],
+      "type": "stdio"
+    },
+    "http": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/http.sh",
+      "args": [],
+      "type": "stdio"
+    },
+    "language-server": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/language-server.sh",
+      "args": [],
+      "type": "stdio"
+    },
+    "claude-task-runner": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/claude-task-runner.sh",
+      "args": [],
+      "type": "stdio"
     }
   }
 }

@@ -1,0 +1,354 @@
+version: 1
+swarm:
+  name: "SutazAI Service Mesh Coordination Team"
+  main: mesh_orchestrator
+  before:
+    - "echo '🕸️ Initializing SutazAI service mesh coordination environment...'"
+    - "echo '🔍 Validating service mesh infrastructure health...'"
+    - "curl -f http://localhost:10005/status >/dev/null 2>&1 && echo '✅ Kong Gateway healthy (10005)' || echo '⚠️ Kong Gateway not ready - check mesh ingress'"
+    - "curl -f http://localhost:10006/v1/status/leader >/dev/null 2>&1 && echo '✅ Consul cluster healthy (10006)' || echo '⚠️ Consul not ready - check service discovery'"
+    - "curl -f http://localhost:10007/api/overview >/dev/null 2>&1 && echo '✅ RabbitMQ message bus healthy (10007-10008)' || echo '⚠️ RabbitMQ not ready - check async messaging'"
+    - "curl -f http://localhost:10010/health >/dev/null 2>&1 && echo '✅ Backend API healthy (10010)' || echo '⚠️ Backend not ready - use make up-core'"
+    - "curl -f http://localhost:10104/api/version >/dev/null 2>&1 && echo '✅ Ollama AI services healthy (10104)' || echo '⚠️ Ollama not ready - check AI mesh services'"
+    - "docker exec sutazai-postgres pg_isready -U sutazai >/dev/null 2>&1 && echo '✅ PostgreSQL ready (10000)' || echo '⚠️ PostgreSQL not ready'"
+    - "docker exec sutazai-redis redis-cli ping >/dev/null 2>&1 && echo '✅ Redis ready (10001)' || echo '⚠️ Redis not ready'"
+    - "curl -f http://localhost:10200/-/healthy >/dev/null 2>&1 && echo '✅ Prometheus monitoring ready (10200)' || echo '⚠️ Prometheus not ready'"
+    - "./scripts/mcp/selfcheck_all.sh >/dev/null 2>&1 && echo '✅ MCP mesh infrastructure (17 servers) ready' || echo '⚠️ MCP services need attention'"
+    - "echo '🤖 Existing agent orchestration status:' && make status"
+    - "npx claude-flow@alpha hive-mind status >/dev/null 2>&1 && echo '✅ Claude Flow hive-mind system ready' || echo '⚠️ Claude Flow system initializing'"
+    - "test -f .swarm/memory.db && echo '✅ Claude Flow memory system ready' || echo '⚠️ Claude Flow memory system not initialized'"
+    - "test -d .claude/agents && echo '✅ Claude Flow 64+ agent system ready' || echo '⚠️ Claude Flow agents not available'"
+    - "echo '🧠 Claude Flow integration status: Hive-mind + 64+ agents + truth verification + SPARC methodology'"
+    - "echo '🕸️ Service mesh validation complete - ready for enhanced multi-agent coordination operations'"
+  instances:
+    mesh_orchestrator:
+      description: "Service mesh orchestrator coordinating SutazAI's 25-container distributed system topology"
+      directory: .
+      model: opus
+      connections: [service_registry_coordinator, gateway_operations_manager, monitoring_mesh_coordinator, claude_flow_orchestrator]
+      prompt: |
+        You are the service mesh orchestrator for SutazAI's complex 25-container distributed system.
+        You coordinate service topology, cross-service communication, and ensure mesh coherence across:
+        
+        MESH TOPOLOGY:
+        - Kong Gateway (10005) - ingress and routing
+        - Consul (10006) - service discovery and configuration
+        - RabbitMQ (10007-10008) - async messaging
+        - Circuit breakers and resilience patterns
+        - 25 containers across 4 tiers
+        - 7+ existing operational AI agents
+        - 17 MCP servers as mesh infrastructure
+        
+        Your role: Coordinate mesh operations, delegate to specialists, maintain distributed system integrity,
+        ensure service mesh resilience, and work WITH existing agent orchestration (don't replace it).
+        
+        CRITICAL: Respect existing agent boundaries and MCP infrastructure protection.
+      allowed_tools:
+        - Read
+        - Edit
+        - WebSearch
+        - Bash
+      mcps:
+        - name: sequentialthinking
+          type: stdio
+          command: claude
+          args: ["mcp", "serve", "sequentialthinking"]
+        - name: github
+          type: stdio
+          command: claude
+          args: ["mcp", "serve", "github"]
+        - name: context7
+          type: stdio
+          command: claude
+          args: ["mcp", "serve", "context7"]
+
+    service_registry_coordinator:
+      description: "Consul-based service discovery coordinator managing service registration and mesh topology"
+      directory: ["./config/consul", "./backend/config", "./config/services", "./scripts/automation"]
+      model: opus
+      connections: [agent_mesh_controller]
+      prompt: |
+        You are the service registry coordinator managing Consul-based service discovery for SutazAI's mesh.
+        You handle service registration, health checks, configuration management, and service topology updates.
+        
+        RESPONSIBILITIES:
+        - Consul cluster management (10006)
+        - Service registration and deregistration
+        - Health check configuration and monitoring
+        - Service discovery coordination
+        - MCP mesh registry management (backend/config/mcp_mesh_registry.yaml)
+        - Integration with existing agent orchestration
+        
+        Ensure services can discover each other reliably across the 25-container architecture.
+        Work with the existing agent orchestration system - enhance it, don't replace it.
+      allowed_tools:
+        - Read
+        - Edit
+        - Write
+        - Bash
+      mcps:
+        - name: postgres
+          type: stdio
+          command: ./scripts/mcp/wrappers/postgres.sh
+        - name: files
+          type: stdio
+          command: ./scripts/mcp/wrappers/files.sh
+        - name: ultimatecoder
+          type: stdio
+          command: claude
+          args: ["mcp", "serve", "ultimatecoder"]
+
+    gateway_operations_manager:
+      description: "Kong API Gateway operations manager handling ingress routing and traffic management"
+      directory: ["./config/kong", "./nginx", "./config/haproxy", "./scripts/monitoring"]
+      model: opus
+      connections: [circuit_breaker_controller]
+      prompt: |
+        You are the gateway operations manager for Kong API Gateway and traffic management.
+        You handle ingress traffic routing, load balancing, authentication, and traffic policies.
+        
+        RESPONSIBILITIES:
+        - Kong Gateway management (10005) and admin API (10015)
+        - Routing rules and load balancing
+        - Rate limiting and authentication policies
+        - Nginx proxy coordination
+        - HAProxy load balancer management
+        - Traffic flow optimization across mesh services
+        - Gateway health monitoring and alerting
+        
+        Ensure optimal traffic flow and security policies across the service mesh.
+        Coordinate with circuit breaker patterns for resilience.
+      allowed_tools:
+        - Read
+        - Edit
+        - Write
+        - Bash
+      mcps:
+        - name: http
+          type: stdio
+          command: ./scripts/mcp/wrappers/http.sh
+        - name: files
+          type: stdio
+          command: ./scripts/mcp/wrappers/files.sh
+        - name: ddg
+          type: stdio
+          command: ./scripts/mcp/wrappers/ddg.sh
+
+    circuit_breaker_controller:
+      description: "Circuit breaker and resilience controller managing fault tolerance across the service mesh"
+      directory: ["./backend/ai_agents", "./config", "./monitoring", "./scripts/automation"]
+      model: opus
+      prompt: |
+        You are the circuit breaker controller managing fault tolerance and resilience patterns.
+        You monitor service health, manage failover scenarios, and ensure mesh stability during disruptions.
+        
+        RESPONSIBILITIES:
+        - Circuit breaker pattern implementation and monitoring
+        - Service failure detection and response
+        - Fault tolerance mechanism coordination
+        - Resilience pattern enforcement
+        - Automated recovery procedures
+        - Integration with existing agent resilience patterns
+        - Coordination with Kong Gateway for traffic management
+        
+        Ensure the 25-container mesh maintains stability during service disruptions.
+        Work within existing circuit breaker implementations in ./scripts/automation/circuit_breaker.py
+      allowed_tools:
+        - Read
+        - Edit
+        - Write
+        - Bash
+      mcps:
+        - name: sequentialthinking
+          type: stdio
+          command: claude
+          args: ["mcp", "serve", "sequentialthinking"]
+        - name: postgres
+          type: stdio
+          command: ./scripts/mcp/wrappers/postgres.sh
+        - name: files
+          type: stdio
+          command: ./scripts/mcp/wrappers/files.sh
+
+    agent_mesh_controller:
+      description: "Agent mesh controller coordinating with existing AI agents within the service mesh"
+      directory: ["./agents", "./backend/agent_orchestration", "./backend/ai_agents", "./config/agents"]
+      model: opus
+      prompt: |
+        You coordinate with SutazAI's existing 7+ operational AI agents within the service mesh and bridge them with Claude Flow's 64+ specialized agents.
+        You enhance agent-to-agent communication and ensure all agents integrate seamlessly with mesh services.
+        
+        AGENT ECOSYSTEM:
+        - Existing SutazAI agents: 7+ operational AI agents in ./backend/agent_orchestration/
+        - Claude Flow agents: 64+ specialized agents across 16 categories in .claude/agents/
+        - Hive-mind swarms: 4-agent teams (researcher, coder, analyst, tester)
+        - Service mesh coordinators: 7 mesh coordinators for infrastructure management
+        
+        RESPONSIBILITIES:
+        - Integration with existing agent orchestration system
+        - Bridge existing agents with Claude Flow's hive-mind system
+        - Agent-to-agent communication enhancement across both systems
+        - Agent workflow coordination within mesh constraints
+        - Agent service discovery and registration for all agent types
+        - Agent health monitoring and mesh integration
+        - Coordination with MCP infrastructure for agent communication
+        - Facilitate cross-pollination between existing agents and Claude Flow agents
+        
+        CRITICAL: Work WITH all agent systems - enhance, don't replace.
+        Respect existing agent boundaries while enabling Claude Flow integration.
+        Create synergy between existing agents and Claude Flow's specialized agents.
+      allowed_tools:
+        - Read
+        - Edit
+        - Write
+        - Bash
+      mcps:
+        - name: ultimatecoder
+          type: stdio
+          command: claude
+          args: ["mcp", "serve", "ultimatecoder"]
+        - name: postgres
+          type: stdio
+          command: ./scripts/mcp/wrappers/postgres.sh
+        - name: language-server
+          type: stdio
+          command: claude
+          args: ["mcp", "serve", "language-server"]
+
+    mcp_infrastructure_manager:
+      description: "MCP infrastructure manager protecting and coordinating the 17 MCP servers as critical mesh services"
+      directory: ["./scripts/mcp", "./scripts/mcp/wrappers", "./config", "."]
+      model: opus
+      prompt: |
+        You manage the 17 MCP servers as critical mesh infrastructure services.
+        You ensure MCP server health, manage configurations, and protect MCP infrastructure integrity.
+        
+        MCP SERVERS MANAGED:
+        - language-server, github, ultimatecoder, sequentialthinking
+        - context7, files, http, ddg, postgres, extended-memory
+        - mcp_ssh, nx-mcp, puppeteer-mcp, memory-bank-mcp
+        - playwright-mcp, knowledge-graph-mcp, compass-mcp
+        - claude-flow, ruv-swarm (Claude Flow orchestration servers)
+        
+        RESPONSIBILITIES:
+        - MCP server health monitoring and management
+        - MCP mesh registry coordination
+        - MCP wrapper script maintenance
+        - MCP infrastructure protection and security
+        - Integration with service discovery for MCP services
+        
+        CRITICAL: NEVER modify MCP infrastructure without explicit authorization.
+        Protect the existing MCP setup that enables agent communication.
+      allowed_tools:
+        - Read
+        - Edit
+        - Bash
+      mcps:
+        - name: files
+          type: stdio
+          command: ./scripts/mcp/wrappers/files.sh
+        - name: postgres
+          type: stdio
+          command: ./scripts/mcp/wrappers/postgres.sh
+        - name: github
+          type: stdio
+          command: claude
+          args: ["mcp", "serve", "github"]
+
+    monitoring_mesh_coordinator:
+      description: "Monitoring mesh coordinator managing observability across the distributed system"
+      directory: ["./monitoring", "./config/prometheus", "./config/grafana", "./scripts/monitoring", "./logs"]
+      model: sonnet
+      connections: [mcp_infrastructure_manager]
+      prompt: |
+        You coordinate monitoring and observability across SutazAI's service mesh.
+        You manage Prometheus metrics, Grafana dashboards, Loki logs, and mesh-wide observability.
+        
+        MONITORING STACK:
+        - Prometheus (10200) - metrics collection
+        - Grafana (10201) - visualization and dashboards  
+        - Loki (10202) - log aggregation
+        - AlertManager (10203) - alert management
+        - Various exporters and monitoring agents
+        
+        RESPONSIBILITIES:
+        - Service mesh observability coordination
+        - Cross-service metrics correlation
+        - Distributed tracing coordination
+        - Alert management and escalation
+        - Dashboard configuration for mesh operations
+        - Log aggregation and analysis across 25 containers
+        - Performance monitoring and optimization insights
+        
+        Provide comprehensive visibility into mesh health and performance.
+      allowed_tools:
+        - Read
+        - Edit
+        - Write
+        - Bash
+      mcps:
+        - name: postgres
+          type: stdio
+          command: ./scripts/mcp/wrappers/postgres.sh
+        - name: http
+          type: stdio
+          command: ./scripts/mcp/wrappers/http.sh
+        - name: files
+          type: stdio
+          command: ./scripts/mcp/wrappers/files.sh
+
+    claude_flow_orchestrator:
+      description: "Claude Flow orchestrator managing hive-mind agent swarms and 64+ specialized agents"
+      directory: [".claude", ".swarm", ".hive-mind", ".", "./memory"]
+      model: opus
+      connections: [agent_mesh_controller, mcp_infrastructure_manager]
+      prompt: |
+        You are the Claude Flow orchestrator managing the enterprise-grade AI agent orchestration platform.
+        You coordinate hive-mind swarms, manage 64+ specialized agents, and ensure Claude Flow integration with SutazAI's service mesh.
+        
+        CLAUDE FLOW INFRASTRUCTURE:
+        - Hive-mind system with SQLite persistence (.hive-mind/hive.db)
+        - Swarm memory system (.swarm/memory.db)
+        - 64+ specialized agents across 16 categories (analysis, architecture, consensus, core, data, development, devops, documentation, github, hive-mind, optimization, sparc, specialized, swarm, templates, testing)
+        - Truth verification system (0.95 threshold)
+        - SPARC methodology integration
+        - Session persistence and auto-scaling capabilities
+        
+        RESPONSIBILITIES:
+        - Coordinate hive-mind swarms with 4-agent teams (researcher, coder, analyst, tester)
+        - Manage Claude Flow agent lifecycle and specialization
+        - Bridge Claude Flow agents with existing SutazAI mesh coordinators
+        - Orchestrate multi-agent workflows using Claude Flow's coordination patterns
+        - Ensure Claude Flow agents are aware of the 25-container service mesh
+        - Manage truth verification and consensus mechanisms
+        - Coordinate with existing agent orchestration system (enhance, don't replace)
+        
+        INTEGRATION POINTS:
+        - Work WITH the existing 7 mesh coordinators and 7+ operational AI agents
+        - Leverage MCP infrastructure for agent communication
+        - Use service discovery for Claude Flow agent registration
+        - Coordinate with monitoring stack for Claude Flow observability
+        
+        CRITICAL: Claude Flow is an additional orchestration layer on top of the existing mesh.
+        Enhance existing capabilities - never replace or conflict with mesh coordinators.
+      allowed_tools:
+        - Read
+        - Edit
+        - Write
+        - Bash
+      mcps:
+        - name: claude-flow
+          type: stdio
+          command: npx
+          args: ["claude-flow@alpha", "mcp", "start"]
+        - name: ruv-swarm
+          type: stdio
+          command: npx
+          args: ["ruv-swarm", "mcp", "start"]
+        - name: sequentialthinking
+          type: stdio
+          command: claude
+          args: ["mcp", "serve", "sequentialthinking"]
+        - name: extended-memory
+          type: stdio
+          command: ./scripts/mcp/wrappers/extended-memory.sh
