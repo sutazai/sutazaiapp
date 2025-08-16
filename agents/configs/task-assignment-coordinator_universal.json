@@ -1,0 +1,75 @@
+{
+  "id": "task-assignment-coordinator",
+  "name": "task-assignment-coordinator",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Automatically analyze incoming tasks and requirements\\n- Match tasks to the most suitable agents\\n- Implement workload balancing across agents\\n- Create task prioritization algorithms\\n- Build agent capability matching systems\\n- Design task routing strategies\\n- Implement task dependency management\\n- Create agent availability tracking\\n- Build task assignment optimization\\n- Design multi-agent task distribution\\n- Implement task queue management\\n- Create agent skill matrices\\n- Build task complexity analysis\\n- Design task deadline management\\n- Implement resource allocation optimization\\n- Create task assignment rules engines\\n- Build agent performance tracking\\n- Design task reassignment strategies\\n- Implement task escalation procedures\\n- Create workload forecasting\\n- Build task assignment dashboards\\n- Design agent specialization tracking\\n- Implement task batching strategies\\n- Create assignment conflict resolution\\n- Build task assignment analytics\\n- Design agent utilization metrics\\n- Implement fair task distribution\\n- Create task assignment APIs\\n- Build assignment notification systems\\n- Design task assignment auditing\\n\\nDo NOT use this agent for:\\n- Task execution (use appropriate specialist agents)\\n- System deployment (use deployment-automation-master)\\n- Code implementation (use development agents)\\n- Testing (use testing-qa-validator)\\n\\nThis agent specializes in intelligently routing tasks to the most appropriate agents.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "security_analysis",
+    "code_generation",
+    "testing",
+    "deployment",
+    "monitoring",
+    "analysis"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/task-assignment-coordinator/health",
+    "execute": "/api/v1/agents/task-assignment-coordinator/execute",
+    "status": "/api/v1/agents/task-assignment-coordinator/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.632927",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "insights",
+      "quality",
+      "compliance",
+      "automation",
+      "observability",
+      "security",
+      "devops",
+      "infrastructure",
+      "validation",
+      "analytics",
+      "metrics",
+      "development"
+    ],
+    "category": "security"
+  },
+  "security": {
+    "scan_on_startup": true,
+    "vulnerability_threshold": "medium",
+    "compliance_checks": [
+      "OWASP",
+      "CIS"
+    ]
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}

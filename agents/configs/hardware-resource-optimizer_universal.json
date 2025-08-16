@@ -1,0 +1,64 @@
+{
+  "id": "hardware-resource-optimizer",
+  "name": "hardware-resource-optimizer",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Optimize system performance within hardware constraints\\n- Monitor and manage CPU, GPU, and memory usage\\n- Implement resource allocation strategies\\n- Create performance profiling systems\\n- Build resource usage predictions\\n- Design capacity planning solutions\\n- Implement resource pooling mechanisms\\n- Create hardware scaling strategies\\n- Build performance bottleneck detection\\n- Design resource scheduling algorithms\\n- Implement memory optimization techniques\\n- Create GPU utilization strategies\\n- Build disk I/O optimization\\n- Design network bandwidth management\\n- Implement container resource limits\\n- Create performance benchmarking tools\\n- Build resource monitoring dashboards\\n- Design auto-scaling policies\\n- Implement resource reservation systems\\n- Create hardware failure prediction\\n- Build performance regression detection\\n- Design resource cost optimization\\n- Implement workload distribution\\n- Create hardware upgrade recommendations\\n- Build resource usage analytics\\n- Design performance SLA monitoring\\n- Implement resource cleanup automation\\n- Create hardware inventory management\\n- Build performance testing frameworks\\n- Design resource migration strategies\\n\\nDo NOT use this agent for:\\n- Software development (use appropriate development agents)\\n- System deployment (use deployment-automation-master)\\n- General infrastructure (use infrastructure-devops-manager)\\n- Application optimization (use code-generation-improver)\\n\\nThis agent specializes in maximizing system performance within available hardware resources.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "code_generation",
+    "testing",
+    "deployment",
+    "monitoring",
+    "optimization"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/hardware-resource-optimizer/health",
+    "execute": "/api/v1/agents/hardware-resource-optimizer/execute",
+    "status": "/api/v1/agents/hardware-resource-optimizer/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.631536",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "quality",
+      "automation",
+      "observability",
+      "performance",
+      "devops",
+      "efficiency",
+      "infrastructure",
+      "validation",
+      "metrics",
+      "development"
+    ],
+    "category": "testing"
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}

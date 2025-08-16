@@ -1,0 +1,58 @@
+{
+  "id": "observability-dashboard-manager-grafana",
+  "name": "observability-dashboard-manager-grafana",
+  "version": "1.0.0",
+  "description": "Agent for infrastructure operations",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "deployment",
+    "monitoring",
+    "automation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/observability-dashboard-manager-grafana/health",
+    "execute": "/api/v1/agents/observability-dashboard-manager-grafana/execute",
+    "status": "/api/v1/agents/observability-dashboard-manager-grafana/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.648087",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "automation",
+      "observability",
+      "devops",
+      "workflow",
+      "infrastructure",
+      "metrics"
+    ],
+    "category": "monitoring"
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}

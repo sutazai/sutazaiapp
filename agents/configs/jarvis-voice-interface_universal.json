@@ -1,0 +1,70 @@
+{
+  "id": "jarvis-voice-interface",
+  "name": "jarvis-voice-interface",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Create voice-controlled AI assistants\\n- Implement speech recognition systems\\n- Build text-to-speech capabilities\\n- Design natural language voice interfaces\\n- Create voice command processing\\n- Implement wake word detection\\n- Build conversational voice AI\\n- Design multi-language voice support\\n- Create voice biometric authentication\\n- Implement noise cancellation systems\\n- Build voice activity detection\\n- Design voice emotion recognition\\n- Create voice synthesis customization\\n- Implement real-time voice translation\\n- Build voice-based navigation\\n- Design voice accessibility features\\n- Create voice interaction analytics\\n- Implement voice privacy controls\\n- Build voice command shortcuts\\n- Design voice feedback systems\\n- Create voice recording management\\n- Implement voice quality optimization\\n- Build voice-based notifications\\n- Design voice integration APIs\\n- Create voice testing frameworks\\n- Implement voice fallback mechanisms\\n- Build voice command documentation\\n- Design voice UX patterns\\n- Create voice performance monitoring\\n- Implement voice security measures\\n\\nDo NOT use this agent for:\\n- Text-based interfaces (use senior-frontend-developer)\\n- Backend processing (use senior-backend-developer)\\n- Non-voice AI tasks (use appropriate AI agents)\\n- Infrastructure (use infrastructure-devops-manager)\\n\\nThis agent specializes in creating sophisticated voice-controlled AI interfaces like Jarvis.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "security_analysis",
+    "code_generation",
+    "testing",
+    "monitoring",
+    "integration",
+    "documentation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/jarvis-voice-interface/health",
+    "execute": "/api/v1/agents/jarvis-voice-interface/execute",
+    "status": "/api/v1/agents/jarvis-voice-interface/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.632024",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "integration",
+      "api",
+      "quality",
+      "compliance",
+      "automation",
+      "observability",
+      "security",
+      "knowledge",
+      "docs",
+      "validation",
+      "metrics",
+      "development"
+    ],
+    "category": "security"
+  },
+  "security": {
+    "scan_on_startup": true,
+    "vulnerability_threshold": "medium",
+    "compliance_checks": [
+      "OWASP",
+      "CIS"
+    ]
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  }
+}

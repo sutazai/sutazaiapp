@@ -1,0 +1,80 @@
+{
+  "id": "infrastructure-devops-manager",
+  "name": "infrastructure-devops-manager",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Deploy, start, stop, or restart Docker containers or services\\n- Fix broken or unhealthy containers (health check failures, startup issues)\\n- Troubleshoot container networking, port conflicts, or inter-service communication\\n- Modify docker-compose.yml files or Docker configurations\\n- Run or modify deployment scripts (deploy_complete_system.sh, start_all.sh)\\n- Configure container resource limits, volumes, or environment variables\\n- Set up or fix monitoring, logging, or alerting infrastructure\\n- Implement health checks, restart policies, or auto-recovery mechanisms\\n- Debug container logs or diagnose service failures\\n- Configure GPU access for AI workloads (Ollama, ML frameworks)\\n- Optimize Docker images or container performance\\n- Set up backup, recovery, or disaster recovery procedures\\n- Implement CI/CD pipelines or automated deployment workflows\\n- Manage secrets, environment files, or configuration management\\n- Configure Prometheus, Grafana, Loki, or other monitoring tools\\n- Handle port management and service discovery\\n- Create or modify shell scripts for automation\\n- Consolidate or organize infrastructure files (multiple docker-compose versions)\\n- Implement security hardening for containers\\n- Set up load balancing or scaling strategies\\n- Manage database migrations or initialization scripts\\n- Configure container networking policies or firewalls\\n- Implement blue-green or rolling deployments\\n- Create infrastructure documentation or runbooks\\n\\nDo NOT use this agent for:\\n- Writing application code (Python, JavaScript)\\n- Designing system architecture (use agi-system-architect)\\n- Configuring AI models or agents (use ai-agent-orchestrator)\\n- UI/UX changes (use a frontend specialist)\\n- Writing unit tests or integration tests (use testing-qa-validator)\\n\\nThis agent focuses exclusively on infrastructure, deployment, and operational concerns. It ensures the platform runs reliably and efficiently.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "security_analysis",
+    "code_generation",
+    "testing",
+    "deployment",
+    "monitoring",
+    "optimization",
+    "automation",
+    "documentation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/infrastructure-devops-manager/health",
+    "execute": "/api/v1/agents/infrastructure-devops-manager/execute",
+    "status": "/api/v1/agents/infrastructure-devops-manager/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.637808",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "quality",
+      "compliance",
+      "automation",
+      "observability",
+      "security",
+      "performance",
+      "knowledge",
+      "docs",
+      "devops",
+      "efficiency",
+      "workflow",
+      "infrastructure",
+      "validation",
+      "metrics",
+      "development"
+    ],
+    "category": "infrastructure"
+  },
+  "security": {
+    "scan_on_startup": true,
+    "vulnerability_threshold": "medium",
+    "compliance_checks": [
+      "OWASP",
+      "CIS"
+    ]
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}

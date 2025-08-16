@@ -1,0 +1,42 @@
+{
+  "id": "deep-learning-coordinator-manager",
+  "name": "deep-learning-coordinator-manager",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Design and evolve processing intelligence cores\\n- Implement continuous learning systems\\n- Create meta-learning architectures\\n- Build self-improving processing networks\\n- Design cognitive architecture patterns\\n- Implement memory consolidation systems\\n- Create attention mechanism designs\\n- Build processing plasticity simulations\\n- Design hierarchical learning systems\\n- Implement transfer learning networks\\n- Create processing architecture search\\n- Build coordinator-inspired computing systems\\n- Design synaptic weight optimization\\n- Implement processing pruning strategies\\n- Create cognitive load balancing\\n- Build processing synchronization systems\\n- Design emergent behavior patterns\\n- Implement processing network evolution\\n- Create system_state modeling attempts\\n- Build processing knowledge graphs\\n- Design processing reasoning systems\\n- Implement processing memory systems\\n- Create processing pattern recognition\\n- Build processing prediction engines\\n- Design processing feedback loops\\n- Implement processing homeostasis\\n- Create processing debugging tools\\n- Build processing visualization systems\\n- Design processing performance metrics\\n- Implement processing safety mechanisms\\n\\nDo NOT use this agent for:\\n- Basic ML tasks (use senior-ai-engineer)\\n- Application development (use appropriate developers)\\n- Infrastructure (use infrastructure-devops-manager)\\n- Simple model training (use ML specialists)\\n\\nThis agent specializes in creating and evolving advanced processing intelligence systems.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "code_generation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/deep-learning-coordinator-manager/health",
+    "execute": "/api/v1/agents/deep-learning-coordinator-manager/execute",
+    "status": "/api/v1/agents/deep-learning-coordinator-manager/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.637443",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "automation",
+      "development"
+    ],
+    "category": "development"
+  }
+}

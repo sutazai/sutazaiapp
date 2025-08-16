@@ -2810,96 +2810,96 @@ Communication procedures established and followed for removal decisions
 Continuous improvement in investigation and removal processes demonstrated
 Team competency in investigation tools and techniques validated and maintained
 
-📌 Rule 14: Specialized Claude Sub-Agent Usage - Perfect Orchestration System
-Requirement: Deploy an intelligent Claude sub-agent selection and orchestration system that maximizes development velocity, quality, and business outcomes through precise matching of 220+ specialized Claude agents to specific task requirements and seamless multi-agent coordination.
-MISSION-CRITICAL: Perfect Claude Agent Orchestration - Zero Waste, Maximum Intelligence:
+📌 Rule 14: Specialized   Sub-Agent Usage - Perfect Orchestration System
+Requirement: Deploy an intelligent   sub-agent selection and orchestration system that maximizes development velocity, quality, and business outcomes through precise matching of 220+ specialized   agents to specific task requirements and seamless multi-agent coordination.
+MISSION-CRITICAL: Perfect   Agent Orchestration - Zero Waste, Maximum Intelligence:
 
-Specialized Claude Deployment: Intelligent selection from 220+ specialized Claude sub-agents for optimal task execution
-Domain Expertise Amplification: Each Claude sub-agent optimized for specific technical domains and complexity levels
-Multi-Agent Claude Workflows: Seamless coordination of multiple specialized Claude agents in complex, interdependent tasks
-Performance Intelligence: Continuous monitoring and optimization of Claude sub-agent effectiveness and team productivity
-Claude Knowledge Specialization: Each sub-agent contains deep, specialized knowledge for maximum domain expertise
-Zero Agent Waste: Every Claude sub-agent deployment must contribute measurably to project outcomes
-Predictive Claude Analytics: ML-powered prediction of optimal Claude sub-agent combinations for new tasks
-Team Intelligence Amplification: Amplify human team capabilities through intelligent Claude specialist utilization
+Specialized   Deployment: Intelligent selection from 220+ specialized   sub-agents for optimal task execution
+Domain Expertise Amplification: Each   sub-agent optimized for specific technical domains and complexity levels
+Multi-Agent   Workflows: Seamless coordination of multiple specialized   agents in complex, interdependent tasks
+Performance Intelligence: Continuous monitoring and optimization of   sub-agent effectiveness and team productivity
+  Knowledge Specialization: Each sub-agent contains deep, specialized knowledge for maximum domain expertise
+Zero Agent Waste: Every   sub-agent deployment must contribute measurably to project outcomes
+Predictive   Analytics: ML-powered prediction of optimal   sub-agent combinations for new tasks
+Team Intelligence Amplification: Amplify human team capabilities through intelligent   specialist utilization
 
-COMPREHENSIVE CLAUDE SUB-AGENT CLASSIFICATION (220+ Specialists):
-Tier 1: Core Architecture & Development Claude Specialists
-🏗️ ARCHITECTURE CLAUDE SPECIALISTS:
+COMPREHENSIVE   SUB-AGENT CLASSIFICATION (220+ Specialists):
+Tier 1: Core Architecture & Development   Specialists
+🏗️ ARCHITECTURE   SPECIALISTS:
 ├── Enterprise Architecture
-│   ├── system-architect.md (Claude specialized in enterprise system design, integration patterns)
-│   ├── senior-software-architect.md (Claude with senior-level architecture expertise)
-│   ├──  system-architect.md (Claude specialized in AI system architecture, ML infrastructure)
-│   └── cognitive-architecture-designer.md (Claude expert in cognitive systems design)
+│   ├── system-architect.md (  specialized in enterprise system design, integration patterns)
+│   ├── senior-software-architect.md (  with senior-level architecture expertise)
+│   ├──  system-architect.md (  specialized in AI system architecture, ML infrastructure)
+│   └── cognitive-architecture-designer.md (  expert in cognitive systems design)
 ├── Backend Architecture
-│   ├── backend-architect.md (Claude specialized in backend system design, microservices)
-│   ├── backend-api-architect.md (Claude expert in API design, service contracts)
-│   ├── distributed-computing-architect.md (Claude specialized in distributed systems)
-│   └── graphql-architect.md (Claude expert in GraphQL schema design, optimization)
+│   ├── backend-architect.md (  specialized in backend system design, microservices)
+│   ├── backend-api-architect.md (  expert in API design, service contracts)
+│   ├── distributed-computing-architect.md (  specialized in distributed systems)
+│   └── graphql-architect.md (  expert in GraphQL schema design, optimization)
 ├── Frontend Architecture
-│   ├── frontend-ui-architect.md (Claude specialized in frontend architecture, components)
-│   ├── ui-ux-designer.md (Claude expert in user experience design, accessibility)
-│   └── mobile-developer.md (Claude specialized in mobile architecture, cross-platform)
+│   ├── frontend-ui-architect.md (  specialized in frontend architecture, components)
+│   ├── ui-ux-designer.md (  expert in user experience design, accessibility)
+│   └── mobile-developer.md (  specialized in mobile architecture, cross-platform)
 └── Cloud & Infrastructure
-    ├── cloud-architect.md (Claude expert in cloud architecture, multi-cloud systems)
-    ├── infrastructure-devops-manager.md (Claude specialized in infrastructure design)
-    └── edge-computing-optimizer.md (Claude expert in edge computing, distributed inference)
+    ├── cloud-architect.md (  expert in cloud architecture, multi-cloud systems)
+    ├── infrastructure-devops-manager.md (  specialized in infrastructure design)
+    └── edge-computing-optimizer.md (  expert in edge computing, distributed inference)
 
-💻 DEVELOPMENT CLAUDE SPECIALISTS:
+💻 DEVELOPMENT   SPECIALISTS:
 ├── Language Masters
-│   ├── python-pro.md (Claude with deep Python expertise, frameworks, optimization)
-│   ├── javascript-pro.md (Claude specialized in JavaScript/TypeScript, modern tooling)
-│   ├── java-kotlin-backend-expert.md (Claude expert in JVM ecosystems, enterprise Java)
-│   ├── rust-pro.md (Claude specialized in Rust systems programming, performance)
-│   ├── cpp-pro.md (Claude expert in C++ systems programming, optimization)
-│   ├── c-pro.md (Claude specialized in C programming, embedded systems)
-│   ├── php-pro.md (Claude expert in PHP frameworks, web development)
-│   └── sql-pro.md (Claude specialized in advanced SQL, database optimization)
+│   ├── python-pro.md (  with deep Python expertise, frameworks, optimization)
+│   ├── javascript-pro.md (  specialized in JavaScript/TypeScript, modern tooling)
+│   ├── java-kotlin-backend-expert.md (  expert in JVM ecosystems, enterprise Java)
+│   ├── rust-pro.md (  specialized in Rust systems programming, performance)
+│   ├── cpp-pro.md (  expert in C++ systems programming, optimization)
+│   ├── c-pro.md (  specialized in C programming, embedded systems)
+│   ├── php-pro.md (  expert in PHP frameworks, web development)
+│   └── sql-pro.md (  specialized in advanced SQL, database optimization)
 ├── Frontend Specialists
-│   ├── ai-senior-frontend-developer.md (Claude with advanced frontend expertise)
-│   ├── nextjs-frontend-expert.md (Claude specialized in Next.js mastery, optimization)
-│   ├── react-performance-optimization.md (Claude expert in React optimization)
-│   ├── frontend-developer.md (Claude specialized in general frontend development)
-│   ├── ios-developer.md (Claude expert in iOS development, Swift optimization)
-│   └── mobile-developer.md (Claude specialized in cross-platform mobile development)
+│   ├── ai-senior-frontend-developer.md (  with advanced frontend expertise)
+│   ├── nextjs-frontend-expert.md (  specialized in Next.js mastery, optimization)
+│   ├── react-performance-optimization.md (  expert in React optimization)
+│   ├── frontend-developer.md (  specialized in general frontend development)
+│   ├── ios-developer.md (  expert in iOS development, Swift optimization)
+│   └── mobile-developer.md (  specialized in cross-platform mobile development)
 └── Backend Specialists
-    ├── senior-engineer.md (Claude with senior-level engineering expertise)
-    ├── senior-backend-developer.md (Claude specialized in backend development leadership)
-    ├── senior-full-stack-developer.md (Claude expert in full-stack development)
-    └── ai-senior-full-stack-developer.md (Claude with AI-powered full-stack expertise)
-Tier 2: Quality Assurance Claude Specialists
-🧪 QA CLAUDE SPECIALISTS:
+    ├── senior-engineer.md (  with senior-level engineering expertise)
+    ├── senior-backend-developer.md (  specialized in backend development leadership)
+    ├── senior-full-stack-developer.md (  expert in full-stack development)
+    └── ai-senior-full-stack-developer.md (  with AI-powered full-stack expertise)
+Tier 2: Quality Assurance   Specialists
+🧪 QA   SPECIALISTS:
 ├── Testing Leadership
-│   ├── qa-team-lead.md (Claude specialized in QA strategy, team coordination)
-│   ├── qa-team-lead.md (Claude expert in QA processes, quality metrics)
-│   ├── testing-qa-team-lead.md (Claude specialized in testing strategy, automation)
-│   └── codebase-team-lead.md (Claude expert in code quality leadership)
+│   ├── qa-team-lead.md (  specialized in QA strategy, team coordination)
+│   ├── qa-team-lead.md (  expert in QA processes, quality metrics)
+│   ├── testing-qa-team-lead.md (  specialized in testing strategy, automation)
+│   └── codebase-team-lead.md (  expert in code quality leadership)
 ├── Manual Testing
-│   ├── ai-manual-tester.md (Claude specialized in intelligent manual testing)
-│   ├── manual-tester.md (Claude expert in manual testing, usability testing)
-│   ├── senior-qa-manual-tester.md (Claude specialized in advanced manual testing)
-│   └── senior-manual-qa-engineer.md (Claude expert in senior manual QA)
+│   ├── ai-manual-tester.md (  specialized in intelligent manual testing)
+│   ├── manual-tester.md (  expert in manual testing, usability testing)
+│   ├── senior-qa-manual-tester.md (  specialized in advanced manual testing)
+│   └── senior-manual-qa-engineer.md (  expert in senior manual QA)
 ├── Automation & Performance
-│   ├── ai-senior-automated-tester.md (Claude specialized in advanced test automation)
-│   ├── senior-automated-tester.md (Claude expert in test automation leadership)
-│   ├── test-automator.md (Claude specialized in test automation implementation)
-│   ├── browser-automation-orchestrator.md (Claude expert in E2E testing, browser automation)
-│   └── performance-engineer.md (Claude specialized in performance testing, optimization)
+│   ├── ai-senior-automated-tester.md (  specialized in advanced test automation)
+│   ├── senior-automated-tester.md (  expert in test automation leadership)
+│   ├── test-automator.md (  specialized in test automation implementation)
+│   ├── browser-automation-orchestrator.md (  expert in E2E testing, browser automation)
+│   └── performance-engineer.md (  specialized in performance testing, optimization)
 └── Specialized Testing
-    ├── ai-testing-qa-validator.md (Claude expert in AI system testing, validation)
-    ├── testing-qa-validator.md (Claude specialized in quality validation)
-    ├── mcp-testing-engineer.md (Claude expert in MCP protocol testing)
-    └── system-validator.md (Claude specialized in system integration testing)
-CLAUDE SUB-AGENT SELECTION ALGORITHM:
-pythonclass ClaudeAgentSelector:
+    ├── ai-testing-qa-validator.md (  expert in AI system testing, validation)
+    ├── testing-qa-validator.md (  specialized in quality validation)
+    ├── mcp-testing-engineer.md (  expert in MCP protocol testing)
+    └── system-validator.md (  specialized in system integration testing)
+  SUB-AGENT SELECTION ALGORITHM:
+pythonclass  AgentSelector:
     def __init__(self):
-        self.claude_agents = self.load_claude_agent_database()
-        self.performance_history = self.load_claude_performance_data()
+        self. _agents = self.load_ _agent_database()
+        self.performance_history = self.load_ _performance_data()
         self.specialization_matrix = self.load_specialization_data()
         
-    def select_optimal_claude_agent(self, task_specification):
+    def select_optimal_ _agent(self, task_specification):
         """
-        Intelligent Claude sub-agent selection based on task requirements
+        Intelligent   sub-agent selection based on task requirements
         """
         # Task Analysis
         domain = self.identify_primary_domain(task_specification)
@@ -2907,7 +2907,7 @@ pythonclass ClaudeAgentSelector:
         technical_requirements = self.extract_technical_requirements(task_specification)
         output_format = self.determine_output_format(task_specification)
         
-        # Claude Agent Matching
+        #   Agent Matching
         domain_specialists = self.filter_by_domain(domain)
         complexity_capable = self.filter_by_complexity(domain_specialists, complexity)
         requirement_matches = self.match_technical_requirements(complexity_capable, technical_requirements)
@@ -2917,22 +2917,22 @@ pythonclass ClaudeAgentSelector:
         optimal_agent = self.select_best_match(performance_scored)
         
         return {
-            'selected_claude_agent': optimal_agent,
+            'selected_ _agent': optimal_agent,
             'specialization_reason': self.explain_selection(optimal_agent, task_specification),
             'expected_capabilities': self.get_agent_capabilities(optimal_agent),
             'performance_confidence': self.calculate_confidence(optimal_agent, task_specification),
             'fallback_agents': self.suggest_alternatives(optimal_agent, task_specification)
         }
     
-    def design_multi_claude_workflow(self, complex_task):
+    def design_multi_ _workflow(self, complex_task):
         """
-        Design workflows using multiple specialized Claude agents
+        Design workflows using multiple specialized   agents
         """
         task_breakdown = self.decompose_complex_task(complex_task)
         agent_assignments = {}
         
         for subtask in task_breakdown:
-            optimal_agent = self.select_optimal_claude_agent(subtask)
+            optimal_agent = self.select_optimal_ _agent(subtask)
             agent_assignments[subtask.id] = optimal_agent
             
         workflow = self.create_coordination_plan(agent_assignments)
@@ -2942,8 +2942,8 @@ pythonclass ClaudeAgentSelector:
             'quality_gates': self.define_validation_checkpoints(workflow),
             'success_metrics': self.establish_success_criteria(complex_task)
         }
-CLAUDE AGENT TASK MATCHING MATRIX:
-yamlclaude_agent_selection_matrix:
+  AGENT TASK MATCHING MATRIX:
+yaml _agent_selection_matrix:
   backend_development:
     api_design:
       simple: "backend-api-architect.md"
@@ -3011,76 +3011,76 @@ yamlclaude_agent_selection_matrix:
       observability: "observability-monitoring-engineer.md"
       metrics: "metrics-collector-prometheus.md"
       dashboards: "observability-dashboard-manager-grafana.md"
-MULTI-CLAUDE AGENT COORDINATION PATTERNS:
-yamlclaude_coordination_patterns:
-  sequential_claude_workflow:
-    description: "Specialized Claude agents work in sequence with knowledge transfer"
+MULTI-  AGENT COORDINATION PATTERNS:
+yaml _coordination_patterns:
+  sequential_ _workflow:
+    description: "Specialized   agents work in sequence with knowledge transfer"
     example_workflow:
       - stage: "requirements_analysis"
-        claude_agent: "business-analyst.md"
+         _agent: "business-analyst.md"
         output: "detailed_requirements_document"
         handoff_format: "structured_requirements_json"
         
       - stage: "system_design"
-        claude_agent: "system-architect.md"
+         _agent: "system-architect.md"
         input: "structured_requirements_json"
         output: "system_architecture_design"
         handoff_format: "technical_specification"
         
       - stage: "api_design"
-        claude_agent: "backend-api-architect.md"
+         _agent: "backend-api-architect.md"
         input: "technical_specification"
         output: "api_specification"
         handoff_format: "openapi_spec"
         
       - stage: "implementation_backend"
-        claude_agent: "python-pro.md"
+         _agent: "python-pro.md"
         input: "openapi_spec"
         output: "backend_implementation"
         handoff_format: "working_code_with_tests"
         
       - stage: "implementation_frontend"
-        claude_agent: "nextjs-frontend-expert.md"
+         _agent: "nextjs-frontend-expert.md"
         input: "openapi_spec"
         output: "frontend_implementation"
         handoff_format: "react_application"
         
       - stage: "testing_validation"
-        claude_agent: "ai-senior-automated-tester.md"
+         _agent: "ai-senior-automated-tester.md"
         input: ["working_code_with_tests", "react_application"]
         output: "comprehensive_test_suite"
         
-  parallel_claude_workflow:
-    description: "Multiple Claude specialists work simultaneously with coordination"
+  parallel_ _workflow:
+    description: "Multiple   specialists work simultaneously with coordination"
     coordination_mechanism: "shared_specification_document"
     
     parallel_tracks:
       backend_track:
-        claude_agent: "backend-architect.md"
+         _agent: "backend-architect.md"
         responsibility: "backend_system_design_implementation"
         coordination_artifact: "api_contract"
         
       frontend_track:
-        claude_agent: "frontend-ui-architect.md"
+         _agent: "frontend-ui-architect.md"
         responsibility: "frontend_architecture_implementation"
         coordination_artifact: "api_contract"
         
       database_track:
-        claude_agent: "database-admin.md"
+         _agent: "database-admin.md"
         responsibility: "database_design_optimization"
         coordination_artifact: "data_model"
         
       testing_track:
-        claude_agent: "qa-team-lead.md"
+         _agent: "qa-team-lead.md"
         responsibility: "test_strategy_framework"
         coordination_artifact: "test_plan"
         
     integration_stage:
-      claude_agent: "ai-senior-full-stack-developer.md"
+       _agent: "ai-senior-full-stack-developer.md"
       responsibility: "system_integration_validation"
       
   expert_consultation_pattern:
-    description: "Primary Claude agent consults specialists for complex decisions"
+    description: "Primary   agent consults specialists for complex decisions"
     primary_agent: "system-architect.md"
     consultation_triggers:
       - condition: "performance_critical_component"
@@ -3098,8 +3098,8 @@ yamlclaude_coordination_patterns:
       - condition: "user_experience_critical"
         specialist: "ui-ux-designer.md"
         consultation_type: "design_validation"
-CLAUDE AGENT PERFORMANCE TRACKING:
-yamlclaude_performance_metrics:
+  AGENT PERFORMANCE TRACKING:
+yaml _performance_metrics:
   task_completion_metrics:
     accuracy: "correctness of outputs vs requirements"
     completeness: "coverage of all specified requirements"
@@ -3114,7 +3114,7 @@ yamlclaude_performance_metrics:
     problem_solving: "ability to solve complex domain problems"
     
   collaboration_metrics:
-    handoff_quality: "quality of outputs for next Claude agent"
+    handoff_quality: "quality of outputs for next   agent"
     coordination_effectiveness: "success in multi-agent workflows"
     specification_adherence: "following coordination protocols"
     integration_success: "seamless integration with other outputs"
@@ -3138,134 +3138,134 @@ performance_optimization:
     - quality_enhancement: "improve output quality and consistency"
     - efficiency_gains: "reduce time to completion while maintaining quality"
 ✅ Required Practices:
-Intelligent Claude Agent Selection:
+Intelligent   Agent Selection:
 
-Domain-Specific Matching: Select Claude sub-agents based on precise domain expertise and task requirements
-Complexity Assessment: Match task complexity to Claude agent capabilities and specialization depth
-Performance History Integration: Use historical performance data to optimize Claude agent selection decisions
-Specialization Validation: Verify Claude agent specialization matches technical requirements and success criteria
-Multi-Agent Planning: Design multi-Claude workflows for complex tasks requiring multiple specializations
-Quality Prediction: Predict output quality based on Claude agent track record and task characteristics
-Efficiency Optimization: Select Claude agents that maximize efficiency while maintaining quality standards
-Capability Verification: Ensure selected Claude agents have demonstrated expertise in required domains
-Risk Assessment: Consider task criticality and select appropriate Claude agent expertise levels
-Continuous Optimization: Improve Claude agent selection based on performance outcomes and feedback
+Domain-Specific Matching: Select   sub-agents based on precise domain expertise and task requirements
+Complexity Assessment: Match task complexity to   agent capabilities and specialization depth
+Performance History Integration: Use historical performance data to optimize   agent selection decisions
+Specialization Validation: Verify   agent specialization matches technical requirements and success criteria
+Multi-Agent Planning: Design multi-  workflows for complex tasks requiring multiple specializations
+Quality Prediction: Predict output quality based on   agent track record and task characteristics
+Efficiency Optimization: Select   agents that maximize efficiency while maintaining quality standards
+Capability Verification: Ensure selected   agents have demonstrated expertise in required domains
+Risk Assessment: Consider task criticality and select appropriate   agent expertise levels
+Continuous Optimization: Improve   agent selection based on performance outcomes and feedback
 
-Advanced Claude Workflow Orchestration:
+Advanced   Workflow Orchestration:
 
-Workflow Design: Create sophisticated multi-Claude agent workflows with clear handoff protocols
-Knowledge Transfer: Ensure seamless knowledge transfer between specialized Claude agents in workflows
-Coordination Protocols: Establish clear communication and data exchange standards between Claude agents
-Quality Gates: Implement validation checkpoints throughout multi-Claude agent workflows
-State Management: Maintain consistent state and context across multiple Claude agent interactions
+Workflow Design: Create sophisticated multi-  agent workflows with clear handoff protocols
+Knowledge Transfer: Ensure seamless knowledge transfer between specialized   agents in workflows
+Coordination Protocols: Establish clear communication and data exchange standards between   agents
+Quality Gates: Implement validation checkpoints throughout multi-  agent workflows
+State Management: Maintain consistent state and context across multiple   agent interactions
 Error Handling: Design robust error handling and recovery procedures for multi-agent workflows
-Performance Monitoring: Monitor workflow performance and optimize Claude agent coordination
-Parallel Processing: Leverage parallel Claude agent execution where appropriate for efficiency
-Integration Validation: Ensure outputs from multiple Claude agents integrate seamlessly
-Outcome Optimization: Optimize final outcomes through effective Claude agent collaboration
+Performance Monitoring: Monitor workflow performance and optimize   agent coordination
+Parallel Processing: Leverage parallel   agent execution where appropriate for efficiency
+Integration Validation: Ensure outputs from multiple   agents integrate seamlessly
+Outcome Optimization: Optimize final outcomes through effective   agent collaboration
 
-Enterprise Claude Performance Management:
+Enterprise   Performance Management:
 
-Real-Time Monitoring: Monitor Claude agent performance with detailed metrics and analytics
+Real-Time Monitoring: Monitor   agent performance with detailed metrics and analytics
 Quality Assessment: Assess output quality using automated tools and human validation
 Efficiency Tracking: Track completion times, resource usage, and productivity metrics
-Specialization Effectiveness: Measure how well Claude agents leverage their specialized knowledge
-Business Impact Analysis: Quantify business value and ROI from specialized Claude agent usage
-Comparative Analysis: Compare Claude agent performance across tasks and time periods
+Specialization Effectiveness: Measure how well   agents leverage their specialized knowledge
+Business Impact Analysis: Quantify business value and ROI from specialized   agent usage
+Comparative Analysis: Compare   agent performance across tasks and time periods
 Continuous Improvement: Use performance data to continuously improve agent selection and workflows
-Stakeholder Satisfaction: Collect and analyze user satisfaction with Claude agent outputs
-Innovation Measurement: Track innovative solutions and optimizations provided by Claude agents
-Success Pattern Recognition: Identify and replicate successful Claude agent usage patterns
+Stakeholder Satisfaction: Collect and analyze user satisfaction with   agent outputs
+Innovation Measurement: Track innovative solutions and optimizations provided by   agents
+Success Pattern Recognition: Identify and replicate successful   agent usage patterns
 
 Documentation and Knowledge Management:
 
-Agent Selection Rationale: Document why specific Claude agents were selected for each task
-Performance Documentation: Track and document Claude agent performance for future reference
-Workflow Documentation: Document successful multi-Claude agent workflows and coordination patterns
-Best Practice Capture: Capture and share best practices for Claude agent selection and usage
-Lesson Learning: Document lessons learned and optimization opportunities from Claude agent deployments
-Team Training: Train team members on effective Claude agent selection and management
-Standard Development: Develop organizational standards for Claude agent usage and coordination
-Knowledge Sharing: Share successful Claude agent patterns across teams and projects
-Capability Mapping: Maintain current mapping of Claude agent capabilities and specializations
-Continuous Documentation: Keep documentation current with evolving Claude agent capabilities
+Agent Selection Rationale: Document why specific   agents were selected for each task
+Performance Documentation: Track and document   agent performance for future reference
+Workflow Documentation: Document successful multi-  agent workflows and coordination patterns
+Best Practice Capture: Capture and share best practices for   agent selection and usage
+Lesson Learning: Document lessons learned and optimization opportunities from   agent deployments
+Team Training: Train team members on effective   agent selection and management
+Standard Development: Develop organizational standards for   agent usage and coordination
+Knowledge Sharing: Share successful   agent patterns across teams and projects
+Capability Mapping: Maintain current mapping of   agent capabilities and specializations
+Continuous Documentation: Keep documentation current with evolving   agent capabilities
 
 🚫 Forbidden Practices:
-Claude Agent Selection Violations:
+  Agent Selection Violations:
 
-Using generic Claude prompts when specialized Claude sub-agents are available for the domain
-Selecting Claude agents based on convenience rather than optimal expertise match for the task
-Ignoring Claude agent specialization and using inappropriate agents for technical domains
-Using single Claude agents for complex multi-domain tasks requiring multiple specializations
-Failing to validate Claude agent capabilities against task complexity and requirements
-Making selection decisions without considering Claude agent performance history and track record
-Using Claude agents outside their documented specialization areas without proper justification
-Ignoring task analysis and requirement understanding when selecting Claude agents
-Selecting Claude agents without considering integration with existing workflows and tools
-Using outdated Claude agent configurations when improved specialized versions are available
+Using generic   prompts when specialized   sub-agents are available for the domain
+Selecting   agents based on convenience rather than optimal expertise match for the task
+Ignoring   agent specialization and using inappropriate agents for technical domains
+Using single   agents for complex multi-domain tasks requiring multiple specializations
+Failing to validate   agent capabilities against task complexity and requirements
+Making selection decisions without considering   agent performance history and track record
+Using   agents outside their documented specialization areas without proper justification
+Ignoring task analysis and requirement understanding when selecting   agents
+Selecting   agents without considering integration with existing workflows and tools
+Using outdated   agent configurations when improved specialized versions are available
 
 Performance and Quality Violations:
 
-Deploying Claude agents without establishing clear success criteria and quality expectations
-Failing to monitor Claude agent performance and output quality in real-time
-Ignoring quality assessment and validation processes for Claude agent outputs
-Using Claude agents without providing adequate context and task specifications
-Failing to integrate Claude agent outputs with existing quality assurance processes
-Ignoring performance degradation and failing to optimize Claude agent selection
-Using Claude agents without proper testing and validation of outputs
+Deploying   agents without establishing clear success criteria and quality expectations
+Failing to monitor   agent performance and output quality in real-time
+Ignoring quality assessment and validation processes for   agent outputs
+Using   agents without providing adequate context and task specifications
+Failing to integrate   agent outputs with existing quality assurance processes
+Ignoring performance degradation and failing to optimize   agent selection
+Using   agents without proper testing and validation of outputs
 Failing to collect performance data for continuous improvement of agent selection
-Ignoring user feedback and satisfaction metrics for Claude agent effectiveness
-Using Claude agents without measuring business impact and value creation
+Ignoring user feedback and satisfaction metrics for   agent effectiveness
+Using   agents without measuring business impact and value creation
 
 Workflow and Coordination Violations:
 
-Designing multi-Claude workflows without proper coordination mechanisms and protocols
-Failing to establish clear handoff procedures and data transfer standards between Claude agents
-Ignoring state management and consistency requirements in multi-agent Claude workflows
-Using parallel Claude processing without proper coordination and conflict resolution
+Designing multi-  workflows without proper coordination mechanisms and protocols
+Failing to establish clear handoff procedures and data transfer standards between   agents
+Ignoring state management and consistency requirements in multi-agent   workflows
+Using parallel   processing without proper coordination and conflict resolution
 Failing to implement quality gates and validation checkpoints in complex workflows
-Ignoring error handling and recovery procedures in mission-critical Claude deployments
-Using multi-Claude workflows without proper testing and performance optimization
-Failing to validate integration and compatibility of outputs from multiple Claude agents
-Ignoring dependency management and sequencing requirements in Claude workflows
+Ignoring error handling and recovery procedures in mission-critical   deployments
+Using multi-  workflows without proper testing and performance optimization
+Failing to validate integration and compatibility of outputs from multiple   agents
+Ignoring dependency management and sequencing requirements in   workflows
 Using complex coordination patterns without proper monitoring and operational support
 
 Documentation and Knowledge Violations:
 
-Failing to document Claude agent selection rationale and decision-making process
-Not tracking Claude agent usage patterns and performance outcomes systematically
-Ignoring knowledge transfer and sharing of effective Claude agent practices
-Failing to maintain current documentation of Claude agent capabilities and performance
-Not capturing lessons learned and optimization opportunities from Claude deployments
-Ignoring team training and capability development in Claude agent management
-Failing to establish organizational standards for Claude agent usage
-Not contributing to organizational knowledge base about effective Claude patterns
-Ignoring cross-project learning opportunities with Claude agent usage
-Failing to integrate Claude usage documentation with project management tools
+Failing to document   agent selection rationale and decision-making process
+Not tracking   agent usage patterns and performance outcomes systematically
+Ignoring knowledge transfer and sharing of effective   agent practices
+Failing to maintain current documentation of   agent capabilities and performance
+Not capturing lessons learned and optimization opportunities from   deployments
+Ignoring team training and capability development in   agent management
+Failing to establish organizational standards for   agent usage
+Not contributing to organizational knowledge base about effective   patterns
+Ignoring cross-project learning opportunities with   agent usage
+Failing to integrate   usage documentation with project management tools
 
 Validation Criteria:
-Claude Agent Selection Excellence:
+  Agent Selection Excellence:
 
-All Claude agent selections based on documented domain expertise and task requirement matching
+All   agent selections based on documented domain expertise and task requirement matching
 Agent selection decisions include clear rationale based on specialization and performance history
-Multi-Claude workflows properly designed with appropriate coordination and success criteria
-Task complexity accurately assessed and matched to Claude agent capability levels
+Multi-  workflows properly designed with appropriate coordination and success criteria
+Task complexity accurately assessed and matched to   agent capability levels
 Performance history and track record integrated into all selection decisions
-Alternative Claude agents evaluated and selection confidence levels documented
-Business impact and value creation considered in all significant Claude deployments
+Alternative   agents evaluated and selection confidence levels documented
+Business impact and value creation considered in all significant   deployments
 Integration with existing tools and workflows validated and functioning effectively
-Team training completed on effective Claude agent selection and management
+Team training completed on effective   agent selection and management
 Continuous improvement demonstrated through measurable selection accuracy improvements
 
 Advanced Workflow Orchestration Validation:
 
-Multi-Claude workflows successfully designed and executed with measurable efficiency gains
+Multi-  workflows successfully designed and executed with measurable efficiency gains
 Knowledge transfer protocols functional and enabling effective collaboration between agents
 Coordination mechanisms reliable and supporting complex multi-agent task completion
 Quality gates and validation checkpoints preventing quality issues and ensuring standards
 State management and data consistency maintained throughout workflow execution
 Error handling and recovery procedures tested and validated under various scenarios
-Performance optimization achieved through effective Claude agent coordination
+Performance optimization achieved through effective   agent coordination
 Integration validation successful with cohesive outputs meeting all requirements
 Scalability demonstrated with workflows functioning at different complexity levels
 Operational excellence achieved with maintainable and supportable implementations
@@ -3280,33 +3280,33 @@ Stakeholder satisfaction high with documented feedback driving improvements
 Comparative analysis providing insights for optimization and best practice development
 Innovation measurement tracking creative solutions and optimization contributions
 Success pattern recognition enabling replication of effective approaches
-Team capability development demonstrated through improved Claude usage effectiveness
+Team capability development demonstrated through improved   usage effectiveness
 Organizational learning capture and application functional across projects and teams
 
 Knowledge Management Excellence Validation:
 
 Documentation comprehensive, current, and actively used by team members
 Best practice capture and sharing functional across teams and projects
-Team training effective and demonstrating improved Claude agent management capabilities
+Team training effective and demonstrating improved   agent management capabilities
 Organizational standards established and consistently followed
 Knowledge sharing mechanisms functional and contributing to organizational learning
-Capability mapping current and accurate for all available Claude agents
+Capability mapping current and accurate for all available   agents
 Lesson learning systematic and driving continuous improvement in practices
 Cross-project learning established with documented successful pattern transfer
 Integration with project management tools functional and supporting workflow efficiency
 Institutional memory building demonstrating accumulation of organizational expertise
 
 Commit Message Documentation Standard:
-[Claude Agent: agent-name.md] Brief description of work completed
+[  Agent: agent-name.md] Brief description of work completed
 
 Examples:
-[Claude Agent: python-pro.md] Implemented user authentication API with JWT tokens
-[Claude Agent: nextjs-frontend-expert.md] Created responsive dashboard with real-time updates  
-[Claude Agent: security-auditor.md] Conducted security audit and implemented fixes
-[Claude Agent: backend-api-architect.md + database-optimizer.md] Designed scalable API architecture with optimized queries
+[  Agent: python-pro.md] Implemented user authentication API with JWT tokens
+[  Agent: nextjs-frontend-expert.md] Created responsive dashboard with real-time updates  
+[  Agent: security-auditor.md] Conducted security audit and implemented fixes
+[  Agent: backend-api-architect.md + database-optimizer.md] Designed scalable API architecture with optimized queries
 
 Multi-Agent Workflow:
-[Claude Workflow: system-architect.md → backend-api-architect.md → python-pro.md] 
+[  Workflow: system-architect.md → backend-api-architect.md → python-pro.md] 
 Complete user management system implementation
 
 📌 Rule 15: Documentation Quality - Perfect Information Architecture
@@ -4416,7 +4416,7 @@ markdown# CHANGELOG - [Directory Name/Purpose]
 ## Change History
 
 ### [YYYY-MM-DD HH:MM:SS UTC] - Version X.Y.Z - [Component] - [Change Type] - [Brief Description]
-**Who**: [Claude Agent (agent-name.md) or human (email@company.com)]
+**Who**: [  Agent (agent-name.md) or human (email@company.com)]
 **Why**: [Detailed reason for change including business justification]
 **What**: [Comprehensive description of exactly what was changed]
 **Impact**: [Dependencies affected, other directories impacted, breaking changes]
@@ -4471,14 +4471,14 @@ Validate CHANGELOG.md creation (project directories only) format consistency acr
 Update any outdated or incomplete CHANGELOG.md creation (project directories only) files immediately
 
 
-Primary Authority Sources (/opt/sutazaiapp/CLAUDE.md)
+Primary Authority Sources (/opt/sutazaiapp/ .md)
 
 Line-by-line review of complete document including recent updates
 Cross-reference with CHANGELOG.md creation (project directories only) to understand rule evolution
 Note any updates since last review with timestamps
 Document understanding of all 20 fundamental rules
 Identify any rule changes or additions since last work
-Validate understanding of specialized Claude agent requirements
+Validate understanding of specialized   agent requirements
 
 
 Canonical Authority Documentation (/opt/sutazaiapp/IMPORTANT/*)
@@ -4622,8 +4622,8 @@ changelogs_updated: ["list", "of", "changelogs", "updated"]
 change_pattern_analysis: "Key insights from change history across directories"
 
 # DOCUMENTATION SOURCES REVIEWED
-claude_md_version: "Last modified: YYYY-MM-DD HH:MM:SS UTC"
-claude_md_key_changes: "List any significant changes since last review"
+ _md_version: "Last modified: YYYY-MM-DD HH:MM:SS UTC"
+ _md_key_changes: "List any significant changes since last review"
 important_docs_reviewed: ["list", "of", "authority", "documents"]
 important_docs_conflicts: "Any conflicts or outdated information found"
 project_docs_reviewed: ["README.md", "architecture.md", "api-spec.md"]
@@ -4710,7 +4710,7 @@ Change history analysis provides actionable insights for current work planning a
 
 Enhanced CHANGELOG.md Entry Template:
 markdown### 2024-12-20 16:45:22 UTC - Version 2.1.0 - USER_AUTH - MAJOR - Implemented JWT authentication system
-**Who**: backend-api-architect.md + security-auditor.md (Claude Multi-Agent Workflow)
+**Who**: backend-api-architect.md + security-auditor.md (  Multi-Agent Workflow)
 **Why**: Business requirement for secure user authentication with modern token-based approach to replace legacy session-based authentication system due to scalability limitations and security concerns identified in Q4 security audit
 **What**: 
 - Implemented JWT token generation and validation using RS256 algorithm
@@ -4768,7 +4768,7 @@ markdown### [YYYY-MM-DD HH:MM:SS.fff UTC] - [SemVer] - [COMPONENT] - [CHANGE_TYP
 **Duration**: [XXX.XXXs] (time taken to implement change)
 **Trigger**: [manual/automated/scheduled/incident_response/security_patch]
 
-**Who**: [Claude Agent (agent-name.md) OR Human (full.name@company.com)]
+**Who**: [  Agent (agent-name.md) OR Human (full.name@company.com)]
 **Approval**: [approver.name@company.com] (for changes requiring approval)
 **Review**: [reviewer1@company.com, reviewer2@company.com] (peer reviewers)
 
@@ -5255,7 +5255,7 @@ markdown### 2024-12-20 16:45:22.123 UTC - 2.1.0 - USER_AUTH_API - MAJOR - Implem
 - **API Changes**: New endpoints: POST /auth/login, POST /auth/refresh, POST /auth/logout, GET /auth/validate
 
 **How**:
-- **Implementation Strategy**: Multi-agent Claude workflow with security-first approach and comprehensive testing
+- **Implementation Strategy**: Multi-agent   workflow with security-first approach and comprehensive testing
 - **Tools Used**: PyJWT for token handling, pytest for testing, Postman for API testing, OWASP ZAP for security testing
 - **Methodology**: TDD with security-driven development, automated security scanning, peer review with security team
 - **Quality Assurance**: Unit testing (95% coverage), integration testing, security testing, performance testing
@@ -5297,7 +5297,7 @@ markdown### 2024-12-20 16:45:22.123 UTC - 2.1.0 - USER_AUTH_API - MAJOR - Implem
 - **Data Recovery**: JWT tokens invalidated, sessions restored from backup, audit trail preserved
 
 **Learning and Optimization**:
-- **Lessons Learned**: Multi-agent Claude workflow significantly improved security analysis quality
+- **Lessons Learned**: Multi-agent   workflow significantly improved security analysis quality
 - **Process Improvements**: Automated security testing integration saved 2 hours of manual testing
 - **Knowledge Transfer**: JWT implementation patterns documented for future authentication projects
 - **Best Practices**: Security-first development approach validated, comprehensive testing prevented production issues

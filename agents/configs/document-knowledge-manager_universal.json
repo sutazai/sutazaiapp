@@ -1,0 +1,58 @@
+{
+  "id": "document-knowledge-manager",
+  "name": "document-knowledge-manager",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Create and manage comprehensive documentation systems\\n- Build knowledge bases with intelligent search\\n- Implement RAG (Retrieval Augmented Generation) systems\\n- Design document indexing and categorization\\n- Create semantic search capabilities\\n- Implement document versioning systems\\n- Build knowledge graphs from documents\\n- Design FAQ generation systems\\n- Create documentation automation workflows\\n- Implement context-aware retrieval\\n- Build multi-language documentation\\n- Design documentation quality metrics\\n- Create interactive documentation portals\\n- Implement document summarization\\n- Build knowledge extraction pipelines\\n- Design documentation templates\\n- Create API documentation generators\\n- Implement code documentation tools\\n- Build user guide generation systems\\n- Design knowledge sharing platforms\\n- Create documentation search optimization\\n- Implement document analytics\\n- Build documentation feedback systems\\n- Design knowledge retention strategies\\n- Create documentation migration tools\\n- Implement compliance documentation\\n- Build technical writing guidelines\\n- Design documentation review processes\\n- Create knowledge base maintenance\\n- Implement documentation accessibility\\n\\nDo NOT use this agent for:\\n- Code implementation (use code generation agents)\\n- System deployment (use deployment-automation-master)\\n- Infrastructure management (use infrastructure-devops-manager)\\n- Testing (use testing-qa-validator)\\n\\nThis agent specializes in creating intelligent documentation and knowledge management systems.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "code_generation",
+    "testing",
+    "deployment",
+    "automation",
+    "documentation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/document-knowledge-manager/health",
+    "execute": "/api/v1/agents/document-knowledge-manager/execute",
+    "status": "/api/v1/agents/document-knowledge-manager/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.629953",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "quality",
+      "docs",
+      "automation",
+      "knowledge",
+      "devops",
+      "workflow",
+      "infrastructure",
+      "validation",
+      "development"
+    ],
+    "category": "testing"
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}

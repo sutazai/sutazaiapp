@@ -1,0 +1,44 @@
+{
+  "id": "cognitive-load-monitor",
+  "name": "cognitive-load-monitor",
+  "version": "1.0.0",
+  "description": "Agent for monitoring operations",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "observability",
+    "alerting",
+    "analysis"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/cognitive-load-monitor/health",
+    "execute": "/api/v1/agents/cognitive-load-monitor/execute",
+    "status": "/api/v1/agents/cognitive-load-monitor/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.643823",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "insights",
+      "analytics"
+    ],
+    "category": "monitoring"
+  }
+}

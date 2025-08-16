@@ -1,0 +1,59 @@
+{
+  "id": "adversarial-attack-detector",
+  "name": "adversarial-attack-detector",
+  "version": "1.0.0",
+  "description": "Agent for security operations",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "security_analysis",
+    "monitoring",
+    "alerting"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/adversarial-attack-detector/health",
+    "execute": "/api/v1/agents/adversarial-attack-detector/execute",
+    "status": "/api/v1/agents/adversarial-attack-detector/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.637945",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "compliance",
+      "metrics",
+      "observability",
+      "security"
+    ],
+    "category": "security"
+  },
+  "security": {
+    "scan_on_startup": true,
+    "vulnerability_threshold": "medium",
+    "compliance_checks": [
+      "OWASP",
+      "CIS"
+    ]
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  }
+}

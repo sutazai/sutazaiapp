@@ -261,7 +261,7 @@ services:
     volumes:
     - faiss_data:/data
   kong:
-    image: kong:3.5.0-alpine
+    image: kong:alpine
     container_name: sutazai-kong
     deploy:
       resources:
@@ -386,8 +386,6 @@ services:
         condition: service_healthy
       consul:
         condition: service_healthy
-      kong:
-        condition: service_started
       neo4j:
         condition: service_started
       ollama:
@@ -460,6 +458,7 @@ services:
     - ./data:/data
     - ./logs:/logs
     - agent_workspaces:/app/agent_workspaces
+    - /opt/sutazaiapp:/opt/sutazaiapp:rw
   frontend:
     image: sutazaiapp-frontend:v1.0.0
     command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
@@ -771,8 +770,12 @@ services:
     restart: unless-stopped
     healthcheck:
       test:
-      - CMD-SHELL
-      - pg_isready -U ${POSTGRES_USER:-postgres}
+      - CMD
+      - wget
+      - --quiet
+      - --tries=1
+      - --spider
+      - http://localhost:9187/metrics
       interval: 30s
       timeout: 5s
       retries: 5
@@ -791,7 +794,7 @@ services:
           cpus: '0.1'
           memory: 32M
     environment:
-      REDIS_ADDR: redis://redis:6379
+      REDIS_ADDR: redis://sutazai-redis:6379
     image: oliver006/redis_exporter:v1.56.0
     networks:
     - sutazai-network
@@ -915,25 +918,6 @@ services:
   # jarvis-hardware-resource-optimizer: CONSOLIDATED with hardware-resource-optimizer
   # Use hardware-resource-optimizer service which provides comprehensive optimization
   # Original jarvis functionality maintained through unified interface
-    networks:
-    - sutazai-network
-    ports:
-    - 11104:8080
-    privileged: false
-    cap_drop:
-    - ALL
-    cap_add:
-    - SYS_PTRACE
-    security_opt:
-    - no-new-privileges:true
-    - seccomp:unconfined
-    user: 1001:1001
-    restart: unless-stopped
-    volumes:
-    - ./agents/core:/app/agents/core:ro
-    - ./data:/app/data:rw,noexec
-    - ./configs:/app/configs:ro
-    - ./logs:/app/logs:rw,noexec
   jarvis-automation-agent:
     build:
       context: ./agents/jarvis-automation-agent

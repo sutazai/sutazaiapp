@@ -1,0 +1,46 @@
+{
+  "id": "ai-testing-qa-validator",
+  "name": "ai-testing-qa-validator",
+  "version": "1.0.0",
+  "description": "Agent for utility operations",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "automation",
+    "integration",
+    "support"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/ai-testing-qa-validator/health",
+    "execute": "/api/v1/agents/ai-testing-qa-validator/execute",
+    "status": "/api/v1/agents/ai-testing-qa-validator/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.643137",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "workflow",
+      "api",
+      "automation",
+      "integration"
+    ],
+    "category": "testing"
+  }
+}

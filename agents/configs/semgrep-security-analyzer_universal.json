@@ -1,0 +1,80 @@
+{
+  "id": "semgrep-security-analyzer",
+  "name": "semgrep-security-analyzer",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Scan code for security vulnerabilities before deployment\\n- Create custom security rules for your specific codebase\\n- Detect hardcoded secrets, API keys, or credentials in code\\n- Identify OWASP Top 10 vulnerabilities automatically\\n- Find SQL injection, XSS, or other injection vulnerabilities\\n- Analyze code for authentication and authorization flaws\\n- Detect insecure cryptographic implementations\\n- Enforce secure coding standards across the team\\n- Integrate security scanning into CI/CD pipelines\\n- Set up pre-commit hooks for security checks\\n- Generate security compliance reports\\n- Track and remediate security technical debt\\n- Validate code against regulatory requirements (PCI-DSS, HIPAA)\\n- Create custom rules for company-specific security policies\\n- Scan pull requests automatically for security issues\\n- Identify vulnerable dependencies in code\\n- Detect insecure configurations or hardcoded settings\\n- Analyze code for path traversal vulnerabilities\\n- Find race conditions and timing attacks\\n- Identify insecure random number generation\\n- Detect unsafe deserialization patterns\\n- Scan for XXE (XML External Entity) vulnerabilities\\n- Find command injection vulnerabilities\\n- Analyze JavaScript for DOM-based XSS\\n- Detect insecure file operations\\n- Identify missing security headers\\n- Find JWT implementation flaws\\n- Scan infrastructure-as-code for misconfigurations\\n- Create security gates in deployment pipelines\\n- Generate actionable fix recommendations\\n- Educate developers on secure coding practices\\n- Perform differential security scans between commits\\n- Analyze code changes for security impact\\n- Create security scorecards for projects\\n- Detect security anti-patterns in frameworks\\n- Validate secure API implementations\\n- Find business logic vulnerabilities through pattern matching\\n- Implement shift-left security practices\\n\\nDo NOT use this agent for:\\n- Runtime security testing (use Security Pentesting Specialist)\\n- Dynamic application testing\\n- Network vulnerability scanning\\n- Manual code review tasks\\n- Performance analysis\\n\\nThis agent specializes in finding security vulnerabilities through static code analysis using Semgrep's powerful pattern-matching engine, helping you catch security issues early in the development lifecycle.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "security_analysis",
+    "code_generation",
+    "testing",
+    "deployment",
+    "monitoring",
+    "automation",
+    "integration",
+    "analysis"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/semgrep-security-analyzer/health",
+    "execute": "/api/v1/agents/semgrep-security-analyzer/execute",
+    "status": "/api/v1/agents/semgrep-security-analyzer/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.630975",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "integration",
+      "api",
+      "quality",
+      "compliance",
+      "automation",
+      "observability",
+      "security",
+      "insights",
+      "devops",
+      "workflow",
+      "infrastructure",
+      "validation",
+      "analytics",
+      "metrics",
+      "development"
+    ],
+    "category": "security"
+  },
+  "security": {
+    "scan_on_startup": true,
+    "vulnerability_threshold": "medium",
+    "compliance_checks": [
+      "OWASP",
+      "CIS"
+    ]
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}

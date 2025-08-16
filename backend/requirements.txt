@@ -49,9 +49,9 @@ pyyaml==6.0.2
 # Background Tasks
 celery==5.4.0
 
-# Service Mesh Dependencies  
-python-consul==1.1.0
-pybreaker==1.1.0
+# Service Mesh Dependencies
+python-consul==1.1.0        # Consul client for service discovery
+pybreaker==1.2.0           # Circuit breaker pattern implementation
 pika==1.3.2
 
 # System Monitoring

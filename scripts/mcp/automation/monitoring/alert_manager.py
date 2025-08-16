@@ -291,7 +291,7 @@ class AlertManager:
         for rule in default_rules:
             self.alert_rules[rule.name] = rule
             
-    def generate_fingerlogger.info(self, alert_data: Dict[str, Any]) -> str:
+    def generate_fingerprint(self, alert_data: Dict[str, Any]) -> str:
         """Generate unique fingerprint for alert deduplication"""
         key_fields = ['name', 'component', 'severity']
         fingerprint_data = {k: alert_data.get(k, '') for k in key_fields}

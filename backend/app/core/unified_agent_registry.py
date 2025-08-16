@@ -61,8 +61,10 @@ class UnifiedAgentRegistry:
     
     def __init__(self):
         self.agents: Dict[str, UnifiedAgent] = {}
+        # Fixed paths to real, existing directories and files
         self.claude_agents_path = Path("/opt/sutazaiapp/.claude/agents")
         self.container_registry_path = Path("/opt/sutazaiapp/agents/agent_registry.json")
+        self.config_path = Path("/opt/sutazaiapp/config/agents/unified_agent_registry.json")
         self._load_all_agents()
         
     def _load_all_agents(self):
@@ -78,10 +80,28 @@ class UnifiedAgentRegistry:
     def _load_claude_agents(self):
         """Load all Claude agents from .claude/agents directory"""
         if not self.claude_agents_path.exists():
-            logger.warning(f"Claude agents path not found: {self.claude_agents_path}")
+            logger.info(f"Claude agents path does not exist yet: {self.claude_agents_path}")
+            # Create the directory if it doesn't exist
+            try:
+                self.claude_agents_path.mkdir(parents=True, exist_ok=True)
+                logger.info(f"Created Claude agents directory: {self.claude_agents_path}")
+            except Exception as e:
+                logger.error(f"Failed to create Claude agents directory: {e}")
             return
             
-        for agent_file in self.claude_agents_path.glob("*.md"):
+        # Check if directory is accessible
+        if not self.claude_agents_path.is_dir():
+            logger.error(f"Claude agents path exists but is not a directory: {self.claude_agents_path}")
+            return
+            
+        agent_files = list(self.claude_agents_path.glob("*.md"))
+        if not agent_files:
+            logger.info("No Claude agent files found in directory")
+            return
+            
+        logger.info(f"Found {len(agent_files)} Claude agent files to load")
+        
+        for agent_file in agent_files:
             try:
                 content = agent_file.read_text()
                 agent_name = agent_file.stem
@@ -90,6 +110,7 @@ class UnifiedAgentRegistry:
                 agent = self._parse_claude_agent(agent_name, content)
                 if agent:
                     self.agents[f"claude_{agent_name}"] = agent
+                    logger.debug(f"Loaded Claude agent: {agent_name}")
                     
             except Exception as e:
                 logger.error(f"Failed to load Claude agent {agent_file}: {e}")
@@ -140,7 +161,7 @@ class UnifiedAgentRegistry:
                 capabilities=capabilities or ["general"],
                 deployment_info={
                     "method": "task_tool",
-                    "agent_file": f".claude/agents/{name}.md"
+                    "agent_file": f"/opt/sutazaiapp/.claude/agents/{name}.md"  # Use absolute path
                 }
             )
         except Exception as e:
@@ -161,6 +182,23 @@ class UnifiedAgentRegistry:
                 # Skip if already loaded as Claude agent (prefer Claude version)
                 if f"claude_{agent_id}" in self.agents:
                     continue
+                
+                # Validate config_path if provided
+                config_path = agent_data.get("config_path")
+                validated_config = None
+                
+                if config_path:
+                    # Check if config file actually exists
+                    full_config_path = Path("/opt/sutazaiapp/agents") / config_path
+                    if full_config_path.exists():
+                        validated_config = str(full_config_path)
+                    else:
+                        # Check in configs directory
+                        alt_path = Path("/opt/sutazaiapp/agents/configs") / Path(config_path).name
+                        if alt_path.exists():
+                            validated_config = str(alt_path)
+                        else:
+                            logger.debug(f"Config file not found for {agent_id}: {config_path}")
                     
                 agent = UnifiedAgent(
                     id=f"container_{agent_id}",
@@ -170,8 +208,9 @@ class UnifiedAgentRegistry:
                     capabilities=agent_data.get("capabilities", []),
                     deployment_info={
                         "method": "docker",
-                        "config_path": agent_data.get("config_path"),
-                        "container_name": f"sutazai-{agent_id}"
+                        "config_path": validated_config,  # Only include if file exists
+                        "container_name": f"sutazai-{agent_id}",
+                        "original_config": config_path  # Keep original for reference
                     }
                 )
                 self.agents[agent.id] = agent
@@ -298,6 +337,76 @@ class UnifiedAgentRegistry:
             stats["types"][agent.type] = stats["types"].get(agent.type, 0) + 1
             
         return stats
+    
+    def save_registry(self) -> bool:
+        """Save the consolidated registry to a JSON file"""
+        try:
+            # Ensure config directory exists
+            self.config_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            # Convert agents to serializable format
+            registry_data = {
+                "version": "2.0",
+                "last_updated": str(Path.cwd()),  # Using cwd as timestamp placeholder
+                "agents": {}
+            }
+            
+            for agent_id, agent in self.agents.items():
+                registry_data["agents"][agent_id] = {
+                    "id": agent.id,
+                    "name": agent.name,
+                    "type": agent.type,
+                    "description": agent.description,
+                    "capabilities": agent.capabilities,
+                    "priority": agent.priority,
+                    "deployment_info": agent.deployment_info,
+                    "metadata": agent.metadata
+                }
+            
+            # Write to file
+            with open(self.config_path, 'w') as f:
+                json.dump(registry_data, f, indent=2)
+                
+            logger.info(f"Saved unified registry with {len(self.agents)} agents to {self.config_path}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to save registry: {e}")
+            return False
+    
+    def load_saved_registry(self) -> bool:
+        """Load a previously saved registry from JSON file"""
+        try:
+            if not self.config_path.exists():
+                logger.info(f"No saved registry found at {self.config_path}")
+                return False
+                
+            with open(self.config_path) as f:
+                registry_data = json.load(f)
+                
+            # Clear current agents
+            self.agents.clear()
+            
+            # Load agents from saved data
+            for agent_id, agent_data in registry_data.get("agents", {}).items():
+                agent = UnifiedAgent(
+                    id=agent_data["id"],
+                    name=agent_data["name"],
+                    type=agent_data["type"],
+                    description=agent_data["description"],
+                    capabilities=agent_data["capabilities"],
+                    priority=agent_data.get("priority", 5),
+                    deployment_info=agent_data.get("deployment_info", {}),
+                    metadata=agent_data.get("metadata", {})
+                )
+                self.agents[agent_id] = agent
+                
+            logger.info(f"Loaded {len(self.agents)} agents from saved registry")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to load saved registry: {e}")
+            return False
 
 # Singleton instance
 _registry_instance = None

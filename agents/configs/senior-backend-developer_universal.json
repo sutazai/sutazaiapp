@@ -1,0 +1,80 @@
+{
+  "id": "senior-backend-developer",
+  "name": "senior-backend-developer",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Build scalable FastAPI or Django REST APIs\\n- Design microservices architectures\\n- Implement database schemas and optimization\\n- Create GraphQL APIs and resolvers\\n- Build event-driven architectures\\n- Implement authentication and authorization\\n- Design API rate limiting and throttling\\n- Create background job processing systems\\n- Build real-time WebSocket servers\\n- Implement caching strategies (Redis, Memcached)\\n- Design message queue systems (RabbitMQ, Kafka)\\n- Create database migration strategies\\n- Build API versioning systems\\n- Implement data validation and serialization\\n- Design RESTful API best practices\\n- Create API documentation (OpenAPI/Swagger)\\n- Build database connection pooling\\n- Implement transaction management\\n- Design API security measures\\n- Create logging and monitoring systems\\n- Build API testing frameworks\\n- Implement service discovery patterns\\n- Design data access layers\\n- Create API performance optimization\\n- Build distributed tracing systems\\n- Implement circuit breaker patterns\\n- Design API gateway solutions\\n- Create backend debugging tools\\n- Build data pipeline architectures\\n- Implement CQRS and Event Sourcing\\n\\nDo NOT use this agent for:\\n- Frontend development (use senior-frontend-developer)\\n- Infrastructure management (use infrastructure-devops-manager)\\n- AI/ML implementation (use senior-ai-engineer)\\n- Database administration (use database specialists)\\n\\nThis agent specializes in building robust, scalable backend systems and APIs.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "security_analysis",
+    "code_generation",
+    "testing",
+    "deployment",
+    "monitoring",
+    "automation",
+    "integration",
+    "documentation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/senior-backend-developer/health",
+    "execute": "/api/v1/agents/senior-backend-developer/execute",
+    "status": "/api/v1/agents/senior-backend-developer/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.636792",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "integration",
+      "api",
+      "quality",
+      "compliance",
+      "automation",
+      "observability",
+      "security",
+      "knowledge",
+      "docs",
+      "devops",
+      "workflow",
+      "infrastructure",
+      "validation",
+      "metrics",
+      "development"
+    ],
+    "category": "backend"
+  },
+  "security": {
+    "scan_on_startup": true,
+    "vulnerability_threshold": "medium",
+    "compliance_checks": [
+      "OWASP",
+      "CIS"
+    ]
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}

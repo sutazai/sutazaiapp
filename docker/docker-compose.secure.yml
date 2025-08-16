@@ -218,7 +218,7 @@ services:
 
   faiss:
     build:
-      context: ./docker/faiss
+      context: ./faiss
       dockerfile: Dockerfile
     image: sutazaiapp-faiss:v1.0.0
     container_name: sutazai-faiss
@@ -398,7 +398,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ../frontend
       dockerfile: ../docker/frontend/Dockerfile
     image: sutazaiapp-frontend:v1.0.0
     container_name: sutazai-frontend

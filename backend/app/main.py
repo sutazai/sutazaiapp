@@ -133,8 +133,8 @@ async def lifespan(app: FastAPI):
     health_monitor.register_circuit_breaker('ollama', ollama_breaker)
     logger.info("Health monitoring service initialized with circuit breaker integration")
     
-    # Initialize Unified Agent Registry
-    await agent_registry.initialize()
+    # Unified Agent Registry is already initialized in __init__
+    # Just log the current state
     logger.info(f"Agent Registry initialized with {len(agent_registry.agents)} agents")
     
     # Initialize Service Mesh for distributed coordination

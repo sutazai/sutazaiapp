@@ -7,14 +7,14 @@
 # ============================================================================
 
 global:
-  scrape_interval: ${PROMETHEUS_SCRAPE_INTERVAL:-15s}
-  evaluation_interval: ${PROMETHEUS_EVAL_INTERVAL:-15s}
-  scrape_timeout: ${PROMETHEUS_SCRAPE_TIMEOUT:-10s}
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
   
   external_labels:
-    environment: ${SUTAZAI_ENV:-production}
+    environment: 'production'
     cluster: 'sutazai-cluster'
-    region: ${REGION:-us-east-1}
+    region: 'us-east-1'
 
 # ============================================================================
 # Alerting Configuration
@@ -243,24 +243,24 @@ scrape_configs:
         replacement: blackbox-exporter:9115
 
   # ========================================
-  # Service Discovery (File-based)
+  # Service Discovery (File-based) - DISABLED
   # ========================================
-  - job_name: 'file-sd'
-    file_sd_configs:
-      - files:
-          - '/etc/prometheus/file_sd/*.yml'
-        refresh_interval: 30s
+  # NOTE: Disabled due to missing file_sd directory
+  # Uncomment when properly configured
+  # - job_name: 'file-sd'
+  #   file_sd_configs:
+  #     - files:
+  #         - '/etc/prometheus/file_sd/*.yml'
+  #       refresh_interval: 30s
 
 # ============================================================================
 # Storage Configuration
 # ============================================================================
-storage:
-  tsdb:
-    path: /prometheus
-    retention:
-      time: ${PROMETHEUS_RETENTION:-30d}
-      size: ${PROMETHEUS_RETENTION_SIZE:-10GB}
-    wal_compression: true
+# Note: Storage configuration is specified via command-line flags, not in config file
+# This is configured in docker-compose.yml with:
+# --storage.tsdb.path=/prometheus
+# --storage.tsdb.retention.time=30d
+# --web.enable-lifecycle
 
 # ============================================================================
 # Remote Write (Optional)

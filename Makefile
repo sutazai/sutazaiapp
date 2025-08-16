@@ -202,23 +202,9 @@ clean-all: clean ## Clean everything including dependencies
 # Test Data Management
 test-data-setup: ## Setup test data
 	@echo "$(YELLOW)📋 Setting up test data...$(NC)"
-	$(PYTHON) -c "
-import os
-import json
-
-# Create sample test data
-test_data = {
-    'users': [{'id': 1, 'name': 'test_user', 'email': 'test@example.com'}],
-    'models': ['tinyllama'],
-    'test_messages': ['Hello', 'How are you?', 'Test message']
-}
-
-os.makedirs('tests/fixtures', exist_ok=True)
-with open('tests/fixtures/test_data.json', 'w') as f:
-    json.dump(test_data, f, indent=2)
-
-print('✅ Test data setup complete')
-"
+	@mkdir -p tests/fixtures
+	@echo '{"users": [{"id": 1, "name": "test_user", "email": "test@example.com"}], "models": ["tinyllama"], "test_messages": ["Hello", "How are you?", "Test message"]}' > tests/fixtures/test_data.json
+	@echo "$(GREEN)✅ Test data setup complete$(NC)"
 
 # Documentation
 docs-test: ## Test documentation examples
@@ -418,20 +404,20 @@ ensure-network: ## Create external docker network if missing
 
 up- : ensure-network ## Start   8-service stack
 	@echo "$(YELLOW)🐳 Starting   SutazAI stack...$(NC)"
-	$(DOCKER_COMPOSE) -f docker-compose. .yml up -d
-	$(DOCKER_COMPOSE) -f docker-compose. .yml ps
+	$(DOCKER_COMPOSE) -f docker-compose.yml up -d
+	$(DOCKER_COMPOSE) -f docker-compose.yml ps
 	@echo "$(GREEN)✅   stack started$(NC)"
 
 down- : ## Stop   stack
 	@echo "$(YELLOW)🐳 Stopping   SutazAI stack...$(NC)"
-	$(DOCKER_COMPOSE) -f docker-compose. .yml down
+	$(DOCKER_COMPOSE) -f docker-compose.yml down
 	@echo "$(GREEN)✅   stack stopped$(NC)"
 
 ps- : ## Show   stack status
-	$(DOCKER_COMPOSE) -f docker-compose. .yml ps
+	$(DOCKER_COMPOSE) -f docker-compose.yml ps
 
 logs- : ## Tail   stack logs
-	$(DOCKER_COMPOSE) -f docker-compose. .yml logs -f --tail=200
+	$(DOCKER_COMPOSE) -f docker-compose.yml logs -f --tail=200
 
 restart- : ## Restart   stack
 	$(MAKE) down- 

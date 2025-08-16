@@ -1,0 +1,58 @@
+{
+  "id": "container-orchestrator-k3s",
+  "name": "container-orchestrator-k3s",
+  "version": "1.0.0",
+  "description": "Agent for infrastructure operations",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "deployment",
+    "monitoring",
+    "automation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/container-orchestrator-k3s/health",
+    "execute": "/api/v1/agents/container-orchestrator-k3s/execute",
+    "status": "/api/v1/agents/container-orchestrator-k3s/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.638768",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "automation",
+      "observability",
+      "devops",
+      "workflow",
+      "infrastructure",
+      "metrics"
+    ],
+    "category": "orchestration"
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}

@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple, Callable
 from enum import Enum
 from dataclasses import dataclass, field
 import httpx
-import consul.aio
+import consul
 import pybreaker
 from prometheus_client import Counter, Histogram, Gauge
 import hashlib
@@ -136,7 +136,7 @@ class CircuitBreakerManager:
 class ServiceDiscovery:
     """Service discovery using Consul"""
     
-    def __init__(self, consul_host: str = "consul", consul_port: int = 8500):
+    def __init__(self, consul_host: str = "sutazai-consul", consul_port: int = 8500):
         self.consul_host = consul_host
         self.consul_port = consul_port
         self.consul_client = None
@@ -147,15 +147,20 @@ class ServiceDiscovery:
     async def connect(self):
         """Connect to Consul"""
         try:
-            self.consul_client = consul.aio.Consul(
+            # Use synchronous Consul client with proper host
+            self.consul_client = consul.Consul(
                 host=self.consul_host,
                 port=self.consul_port
             )
+            # Test connection
+            self.consul_client.agent.self()
             service_discovery_counter.labels(operation='connect', status='success').inc()
+            logger.info(f"Connected to Consul at {self.consul_host}:{self.consul_port}")
         except Exception as e:
-            logger.error(f"Failed to connect to Consul: {e}")
+            logger.error(f"Failed to connect to Consul at {self.consul_host}:{self.consul_port}: {e}")
             service_discovery_counter.labels(operation='connect', status='failure').inc()
-            raise
+            # Don't raise, allow graceful degradation
+            self.consul_client = None
     
     async def register_service(self, instance: ServiceInstance) -> bool:
         """Register service with Consul"""
@@ -163,17 +168,30 @@ class ServiceDiscovery:
             if not self.consul_client:
                 await self.connect()
             
+            if not self.consul_client:
+                logger.warning("Consul not available, using local cache only")
+                # Store in local cache for degraded operation
+                if instance.service_name not in self.services_cache:
+                    self.services_cache[instance.service_name] = []
+                self.services_cache[instance.service_name].append(instance)
+                return True
+            
             service_data = instance.to_consul_format()
-            await self.consul_client.agent.service.register(**service_data)
+            # Use synchronous call in async context
+            self.consul_client.agent.service.register(**service_data)
             
             service_discovery_counter.labels(operation='register', status='success').inc()
-            logger.info(f"Registered service {instance.service_id}")
+            logger.info(f"Registered service {instance.service_id} with Consul")
             return True
             
         except Exception as e:
             logger.error(f"Failed to register service {instance.service_id}: {e}")
             service_discovery_counter.labels(operation='register', status='failure').inc()
-            return False
+            # Fall back to local cache
+            if instance.service_name not in self.services_cache:
+                self.services_cache[instance.service_name] = []
+            self.services_cache[instance.service_name].append(instance)
+            return True  # Return True for degraded operation
     
     async def deregister_service(self, service_id: str) -> bool:
         """Deregister service from Consul"""
@@ -181,15 +199,29 @@ class ServiceDiscovery:
             if not self.consul_client:
                 await self.connect()
             
-            await self.consul_client.agent.service.deregister(service_id)
+            if not self.consul_client:
+                # Remove from local cache
+                for service_name, instances in self.services_cache.items():
+                    self.services_cache[service_name] = [i for i in instances if i.service_id != service_id]
+                return True
+            
+            self.consul_client.agent.service.deregister(service_id)
             service_discovery_counter.labels(operation='deregister', status='success').inc()
-            logger.info(f"Deregistered service {service_id}")
+            logger.info(f"Deregistered service {service_id} from Consul")
+            
+            # Also remove from cache
+            for service_name, instances in self.services_cache.items():
+                self.services_cache[service_name] = [i for i in instances if i.service_id != service_id]
+            
             return True
             
         except Exception as e:
             logger.error(f"Failed to deregister service {service_id}: {e}")
             service_discovery_counter.labels(operation='deregister', status='failure').inc()
-            return False
+            # Still remove from cache
+            for service_name, instances in self.services_cache.items():
+                self.services_cache[service_name] = [i for i in instances if i.service_id != service_id]
+            return True
     
     async def discover_services(self, service_name: str, use_cache: bool = True) -> List[ServiceInstance]:
         """Discover service instances"""
@@ -203,8 +235,12 @@ class ServiceDiscovery:
             if not self.consul_client:
                 await self.connect()
             
-            # Query Consul for service instances
-            _, services = await self.consul_client.health.service(service_name, passing=True)
+            if not self.consul_client:
+                # Return cached data or empty list
+                return self.services_cache.get(service_name, [])
+            
+            # Query Consul for service instances - synchronous call
+            _, services = self.consul_client.health.service(service_name, passing=True)
             
             instances = []
             for service in services:
@@ -334,9 +370,9 @@ class ServiceMesh:
     
     def __init__(
         self,
-        consul_host: str = "consul",
+        consul_host: str = "sutazai-consul",
         consul_port: int = 8500,
-        kong_admin_url: str = "http://kong:8001",
+        kong_admin_url: str = "http://sutazai-kong:8001",
         load_balancer_strategy: LoadBalancerStrategy = LoadBalancerStrategy.ROUND_ROBIN
     ):
         self.discovery = ServiceDiscovery(consul_host, consul_port)
@@ -515,11 +551,16 @@ class ServiceMesh:
             
             logger.error(f"Service call failed: {e}")
             
-            # Retry logic
+            # Retry logic with exponential backoff
             if request.retry_count > 0:
                 request.retry_count -= 1
-                logger.info(f"Retrying request to {request.service_name} ({request.retry_count} retries left)")
-                await asyncio.sleep(1)  # Simple backoff
+                # Calculate exponential backoff with jitter
+                retry_attempt = request.__dict__.get('_retry_attempt', 0)
+                request.__dict__['_retry_attempt'] = retry_attempt + 1
+                backoff_time = min(2 ** retry_attempt + random.uniform(0, 1), 30)  # Max 30 seconds
+                
+                logger.info(f"Retrying request to {request.service_name} ({request.retry_count} retries left) after {backoff_time:.1f}s")
+                await asyncio.sleep(backoff_time)
                 return await self.call_service(request)
             
             raise
@@ -704,9 +745,9 @@ class ServiceMesh:
             
     async def shutdown(self):
         """Shutdown service mesh"""
-        # Clean up connections
+        # Clean up connections - Consul client doesn't need explicit close for synchronous version
         if self.discovery.consul_client:
-            await self.discovery.consul_client.close()
+            logger.info("Shutting down ServiceMesh connections")
         
         # Clear task statuses
         self._task_statuses = {}

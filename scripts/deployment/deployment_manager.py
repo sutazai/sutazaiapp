@@ -740,8 +740,8 @@ def quick_deploy(services: List[str], compose_file: str = "docker-compose.yml") 
     result = manager.deploy(services, compose_file)
     return result.status == DeploymentStatus.SUCCESS
 
-def deploy_ _stack() -> bool:
-    """Deploy   SutazAI stack"""
+def deploy_stack() -> bool:
+    """Deploy SutazAI stack"""
     services = ["postgres", "redis", "ollama", "backend", "frontend"]
     return quick_deploy(services)
 

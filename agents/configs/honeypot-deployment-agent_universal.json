@@ -1,0 +1,59 @@
+{
+  "id": "honeypot-deployment-agent",
+  "name": "honeypot-deployment-agent",
+  "version": "1.0.0",
+  "description": "Agent for security operations",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "security_analysis",
+    "monitoring",
+    "alerting"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/honeypot-deployment-agent/health",
+    "execute": "/api/v1/agents/honeypot-deployment-agent/execute",
+    "status": "/api/v1/agents/honeypot-deployment-agent/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.646663",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "compliance",
+      "metrics",
+      "observability",
+      "security"
+    ],
+    "category": "infrastructure"
+  },
+  "security": {
+    "scan_on_startup": true,
+    "vulnerability_threshold": "medium",
+    "compliance_checks": [
+      "OWASP",
+      "CIS"
+    ]
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  }
+}

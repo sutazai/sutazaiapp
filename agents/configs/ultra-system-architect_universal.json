@@ -1,0 +1,70 @@
+{
+  "id": "ultra-system-architect",
+  "name": "ultra-system-architect",
+  "version": "1.0.0",
+  "description": "Ultra System Architect - The supreme coordinator for 500-agent deployments\\n\\nUse this agent when you need to:\\n\\n- Coordinate overall system architecture for 500+ agent deployments\\n- Perform ULTRATHINK multi-dimensional analysis across 10 dimensions\\n- Execute ULTRADEEPCODEBASESEARCH with quantum-level pattern recognition\\n- Make critical architectural decisions with comprehensive impact analysis\\n- Coordinate with 5 lead architects (System, Performance, Security, Data, Infrastructure)\\n- Analyze system-wide implications of architectural changes\\n- Perform deep codebase analysis with pattern correlation\\n- Optimize resource allocation across hundreds of agents\\n- Design and validate architectural blueprints\\n- Implement architectural governance and compliance\\n- Create system-wide optimization strategies\\n- Manage architectural decision records (ADRs)\\n- Perform multi-dimensional health assessments\\n- Discover and correlate system patterns\\n- Generate architectural insights and recommendations\\n- Coordinate massive agent deployments in waves\\n- Implement self-healing and auto-scaling architectures\\n- Design fault-tolerant distributed systems\\n- Create architectural roadmaps and evolution plans\\n- Perform predictive analysis for system evolution\\n\\nCapabilities:\\n- ULTRATHINK: Analyzes across Performance, Scalability, Reliability, Security, Cost, Maintainability, Compliance, Integration, Evolution, and Impact dimensions\\n- ULTRADEEPCODEBASESEARCH: Quantum-depth codebase scanning with pattern recognition and correlation\\n- Lead Architect Coordination: Manages 5 specialized lead architects\\n- 500-Agent Orchestration: Coordinates massive agent deployments\\n- Real-time Impact Analysis: Assesses system-wide implications\\n- Pattern Discovery: Identifies and correlates system patterns\\n- Decision Intelligence: Makes informed architectural decisions\\n\\nDo NOT use this agent for:\\n- Simple single-agent tasks (use specific specialist agents)\\n- Basic code implementation (use code generation agents)\\n- Routine deployments (use deployment-automation-master)\\n- Standard testing (use testing-qa-validator)\\n\\nThis agent is the supreme architectural authority, designed for ultra-scale coordination and multi-dimensional system analysis.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "architecture",
+    "multi_dimensional_analysis",
+    "codebase_search",
+    "pattern_recognition",
+    "decision_making",
+    "orchestration",
+    "optimization",
+    "monitoring",
+    "coordination",
+    "analysis",
+    "documentation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/ultra-system-architect/health",
+    "execute": "/api/v1/agents/ultra-system-architect/execute",
+    "status": "/api/v1/agents/ultra-system-architect/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.629578",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "insights",
+      "docs",
+      "knowledge",
+      "observability",
+      "performance",
+      "coordination",
+      "workflow",
+      "efficiency",
+      "analytics",
+      "metrics"
+    ],
+    "category": "orchestration"
+  },
+  "orchestration": {
+    "max_parallel_tasks": 10,
+    "coordination_protocol": "event-driven",
+    "discovery_enabled": true
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  }
+}

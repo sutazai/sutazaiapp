@@ -6,7 +6,7 @@ from __future__ import annotations
 import asyncio
 import json
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 import logging
@@ -129,15 +129,34 @@ class MeshDashboard:
         # Get trace metrics
         active_traces = len(self.tracer.collector.traces)
         
+        # Calculate real metrics from traces
+        total_requests = 0
+        failed_requests = 0
+        latencies = []
+        
+        # Analyze recent traces for metrics
+        recent_traces = self.tracer.collector.search_traces(limit=100)
+        for trace in recent_traces:
+            if 'spans' in trace:
+                for span in trace['spans']:
+                    total_requests += 1
+                    if span.get('status') == 'ERROR':
+                        failed_requests += 1
+                    if 'duration' in span:
+                        latencies.append(span['duration'])
+        
+        # Calculate average latency
+        avg_latency = sum(latencies) / len(latencies) if latencies else 0.0
+        
         mesh_metrics = MeshMetrics(
             total_services=len(topology["services"]),
             total_instances=total_instances,
             healthy_instances=healthy_instances,
             unhealthy_instances=unhealthy_instances,
             degraded_instances=degraded_instances,
-            total_requests=0,  # TODO: Get from Prometheus
-            failed_requests=0,  # TODO: Get from Prometheus
-            avg_latency=0.0,  # TODO: Calculate from traces
+            total_requests=total_requests,
+            failed_requests=failed_requests,
+            avg_latency=avg_latency * 1000,  # Convert to milliseconds
             circuit_breakers_open=circuit_breakers_open,
             active_traces=active_traces
         )
@@ -152,17 +171,56 @@ class MeshDashboard:
             healthy = service_data["healthy"]
             total = service_data["total"]
             
+            # Calculate service-specific metrics from traces
+            service_traces = self.tracer.collector.search_traces(
+                service_name=service_name,
+                limit=50
+            )
+            
+            service_requests = 0
+            service_errors = 0
+            service_latencies = []
+            
+            for trace in service_traces:
+                if 'spans' in trace:
+                    for span in trace['spans']:
+                        if span.get('service_name') == service_name:
+                            service_requests += 1
+                            if span.get('status') == 'ERROR':
+                                service_errors += 1
+                            if 'duration' in span:
+                                service_latencies.append(span['duration'] * 1000)  # Convert to ms
+            
+            # Calculate latency percentiles
+            p50_latency = 0.0
+            p95_latency = 0.0
+            p99_latency = 0.0
+            
+            if service_latencies:
+                service_latencies.sort()
+                p50_idx = int(len(service_latencies) * 0.50)
+                p95_idx = int(len(service_latencies) * 0.95)
+                p99_idx = int(len(service_latencies) * 0.99)
+                
+                p50_latency = service_latencies[min(p50_idx, len(service_latencies)-1)]
+                p95_latency = service_latencies[min(p95_idx, len(service_latencies)-1)]
+                p99_latency = service_latencies[min(p99_idx, len(service_latencies)-1)]
+            
+            # Calculate rates based on collection interval
+            request_rate = service_requests / self.collection_interval if service_requests > 0 else 0.0
+            error_rate = (service_errors / service_requests * 100) if service_requests > 0 else 0.0
+            
             service_metrics = ServiceMetrics(
                 service_name=service_name,
                 instance_count=total,
                 healthy_count=healthy,
                 unhealthy_count=sum(1 for i in service_data["instances"] if i["state"] == "unhealthy"),
                 degraded_count=sum(1 for i in service_data["instances"] if i["state"] == "degraded"),
-                request_rate=0.0,  # TODO: Calculate from metrics
-                error_rate=0.0,  # TODO: Calculate from metrics
-                p50_latency=0.0,  # TODO: Calculate from traces
-                p95_latency=0.0,  # TODO: Calculate from traces
-                p99_latency=0.0,  # TODO: Calculate from traces
+                request_rate=request_rate,
+                error_rate=error_rate,
+                p50_latency=p50_latency,
+                p95_latency=p95_latency,
+                p99_latency=p99_latency,
                 circuit_breakers_open=sum(1 for i in service_data["instances"] if i["circuit_breaker"]),
                 active_connections=sum(i["connections"] for i in service_data["instances"])
             )

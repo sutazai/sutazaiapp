@@ -1,0 +1,61 @@
+{
+  "id": "flowiseai-flow-manager",
+  "name": "flowiseai-flow-manager",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Create visual LangChain applications\\n- Build chatbots with complex logic\\n- Design RAG systems using drag-and-drop\\n- Implement conversation flows visually\\n- Create LangChain workflows without code\\n- Build document processing pipelines\\n- Design multi-model chat systems\\n- Implement memory-enabled chatbots\\n- Create API endpoints from flows\\n- Build agent chains visually\\n- Design prompt engineering workflows\\n- Implement vector search systems\\n- Create document loaders visually\\n- Build conversation summarizers\\n- Design QA systems over documents\\n- Implement tool-using agents\\n- Create workflow debugging interfaces\\n- Build visual chain monitoring\\n- Design conversation analytics\\n- Implement visual prompt testing\\n- Create flow version control\\n- Build team collaboration workflows\\n- Design visual LLM routers\\n- Implement cost optimization flows\\n- Create visual embedding pipelines\\n\\nDo NOT use this agent for:\\n- Non-LangChain implementations\\n- Real-time streaming applications\\n- Low-level performance optimization\\n- Custom model training\\n\\nThis agent manages FlowiseAI's visual LangChain builder, enabling rapid development of sophisticated LLM applications through intuitive interfaces.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "code_generation",
+    "testing",
+    "monitoring",
+    "automation",
+    "integration",
+    "documentation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/flowiseai-flow-manager/health",
+    "execute": "/api/v1/agents/flowiseai-flow-manager/execute",
+    "status": "/api/v1/agents/flowiseai-flow-manager/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.635838",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "integration",
+      "api",
+      "quality",
+      "docs",
+      "automation",
+      "observability",
+      "knowledge",
+      "workflow",
+      "validation",
+      "metrics",
+      "development"
+    ],
+    "category": "ai-ml"
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  }
+}

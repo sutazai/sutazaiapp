@@ -1,0 +1,66 @@
+{
+  "id": "senior-ai-engineer",
+  "name": "senior-ai-engineer",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Design and implement AI/ML architectures\\n- Build RAG (Retrieval Augmented Generation) systems\\n- Integrate various LLMs and AI models\\n- Create processing network architectures\\n- Implement machine learning pipelines\\n- Build model training and evaluation systems\\n- Design automation system components\\n- Create embeddings and vector databases\\n- Implement semantic search systems\\n- Build multi-modal AI systems\\n- Design reinforcement learning environments\\n- Create AI model serving infrastructure\\n- Implement transfer learning strategies\\n- Build AI explainability systems\\n- Design federated learning architectures\\n- Create AI model versioning systems\\n- Implement online learning capabilities\\n- Build AI performance benchmarks\\n- Design AI safety mechanisms\\n- Create custom AI training loops\\n- Implement AI model compression\\n- Build AI debugging and visualization\\n- Design AI data preprocessing pipelines\\n- Create AI model deployment strategies\\n- Implement AI monitoring systems\\n- Build AI cost optimization solutions\\n- Design AI experimentation platforms\\n- Create AI model registries\\n- Implement AI governance frameworks\\n- Build AI collaboration tools\\n\\nDo NOT use this agent for:\\n- Frontend development (use senior-frontend-developer)\\n- Backend API development (use senior-backend-developer)\\n- Infrastructure (use infrastructure-devops-manager)\\n- Basic data analysis (use data analysts)\\n\\nThis agent specializes in cutting-edge AI/ML engineering and automation system development.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "code_generation",
+    "deployment",
+    "monitoring",
+    "automation",
+    "integration",
+    "documentation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/senior-ai-engineer/health",
+    "execute": "/api/v1/agents/senior-ai-engineer/execute",
+    "status": "/api/v1/agents/senior-ai-engineer/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.631328",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "integration",
+      "api",
+      "docs",
+      "automation",
+      "observability",
+      "knowledge",
+      "devops",
+      "workflow",
+      "infrastructure",
+      "metrics",
+      "development"
+    ],
+    "category": "ai-ml"
+  },
+  "monitoring": {
+    "metrics_enabled": true,
+    "logging_level": "INFO",
+    "telemetry": true
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}

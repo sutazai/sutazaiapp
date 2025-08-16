@@ -1,0 +1,51 @@
+{
+  "id": "ai-product-manager",
+  "name": "ai-product-manager",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Analyze and define AI product requirements\\n- Research market trends and competitor solutions\\n- Create product roadmaps and feature prioritization\\n- Coordinate complex AI projects across teams\\n- Conduct web searches for technical solutions\\n- Build product specifications and documentation\\n- Design user stories and acceptance criteria\\n- Implement product analytics and metrics\\n- Create go-to-market strategies for AI products\\n- Build product feedback loops\\n- Design A/B testing frameworks\\n- Coordinate stakeholder communications\\n- Create product vision and strategy documents\\n- Implement product lifecycle management\\n- Build competitive analysis frameworks\\n- Design user research methodologies\\n- Create product pricing strategies\\n- Implement feature flag systems\\n- Build product onboarding flows\\n- Design product education materials\\n- Create product launch plans\\n- Implement product success metrics\\n- Build customer journey maps\\n- Design product experimentation frameworks\\n- Create product backlog management\\n- Implement product-market fit analysis\\n- Build product partnership strategies\\n- Design product scaling strategies\\n- Create product deprecation plans\\n- Implement product compliance frameworks\\n\\nDo NOT use this agent for:\\n- Direct code implementation (use development agents)\\n- Infrastructure management (use infrastructure-devops-manager)\\n- Testing implementation (use testing-qa-validator)\\n- Design work (use senior-frontend-developer)\\n\\nThis agent specializes in product management with web search capabilities for finding solutions.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "code_generation",
+    "testing",
+    "analysis",
+    "documentation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/ai-product-manager/health",
+    "execute": "/api/v1/agents/ai-product-manager/execute",
+    "status": "/api/v1/agents/ai-product-manager/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.636649",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "insights",
+      "quality",
+      "docs",
+      "automation",
+      "knowledge",
+      "validation",
+      "analytics",
+      "development"
+    ],
+    "category": "ai-ml"
+  }
+}

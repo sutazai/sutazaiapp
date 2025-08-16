@@ -1,0 +1,56 @@
+{
+  "id": "complex-problem-solver",
+  "name": "complex-problem-solver",
+  "version": "1.0.0",
+  "description": "Use this agent when you need to:\\n\\n- Solve multi-faceted problems requiring deep analysis\\n- Research and synthesize information from multiple sources\\n- Create innovative solutions to unprecedented challenges\\n- Implement creative problem-solving methodologies\\n- Build hypothesis testing frameworks\\n- Design experimental validation systems\\n- Create root cause analysis tools\\n- Implement systematic debugging approaches\\n- Build problem decomposition strategies\\n- Design solution evaluation frameworks\\n- Create decision-making algorithms\\n- Implement optimization strategies\\n- Build constraint satisfaction solvers\\n- Design heuristic search algorithms\\n- Create problem modeling systems\\n- Implement solution space exploration\\n- Build trade-off analysis tools\\n- Design multi-criteria optimization\\n- Create problem visualization tools\\n- Implement collaborative problem-solving\\n- Build knowledge synthesis systems\\n- Design pattern recognition algorithms\\n- Create analogical reasoning systems\\n- Implement lateral thinking approaches\\n- Build solution validation frameworks\\n- Design problem categorization systems\\n- Create solution documentation\\n- Implement learning from failures\\n- Build problem-solving metrics\\n- Design solution reuse strategies\\n\\nDo NOT use this agent for:\\n- Routine development tasks (use specific development agents)\\n- Standard deployment (use deployment-automation-master)\\n- Basic troubleshooting (use appropriate specialist agents)\\n- Simple implementation (use code generation agents)\\n\\nThis agent specializes in tackling complex, novel problems through research and creative synthesis.",
+  "provider": "universal",
+  "type": "system",
+  "status": "active",
+  "capabilities": [
+    "code_generation",
+    "testing",
+    "deployment",
+    "documentation"
+  ],
+  "configuration": {
+    "enabled": true,
+    "priority": 5,
+    "timeout": 300,
+    "max_retries": 3,
+    "rate_limit": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+  "resources": {
+    "cpu_limit": "1.0",
+    "memory_limit": "512Mi",
+    "gpu_required": false
+  },
+  "endpoints": {
+    "health": "/api/v1/agents/complex-problem-solver/health",
+    "execute": "/api/v1/agents/complex-problem-solver/execute",
+    "status": "/api/v1/agents/complex-problem-solver/status"
+  },
+  "dependencies": [],
+  "metadata": {
+    "created_at": "2025-08-16T07:12:23.633660",
+    "created_by": "AgentConfigurationFixer",
+    "tags": [
+      "quality",
+      "docs",
+      "automation",
+      "knowledge",
+      "devops",
+      "infrastructure",
+      "validation",
+      "development"
+    ],
+    "category": "testing"
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "health_check_interval": 30,
+    "rollback_on_failure": true
+  }
+}
