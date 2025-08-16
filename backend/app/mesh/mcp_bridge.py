@@ -1,201 +1,313 @@
 """
-MCP-Mesh Bridge Service - Orchestrates MCP server lifecycle and mesh integration
-Production-ready implementation for MCP-mesh coordination
+MCP-Mesh Integration Bridge
+Provides seamless integration between Model Context Protocol servers and the service mesh
 """
-from __future__ import annotations
-
 import asyncio
+import json
 import logging
-import yaml
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
-from datetime import datetime, timezone
+import os
+import subprocess
+from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+import hashlib
 
-from prometheus_client import Counter, Gauge, Histogram
-import uvicorn
-
-from .service_mesh import ServiceMesh, ServiceInstance, ServiceState, LoadBalancerStrategy
-from .mcp_adapter import MCPServiceAdapter, create_mcp_adapter
+from app.mesh.service_mesh import ServiceMesh, ServiceRequest, ServiceInstance, ServiceState
 
 logger = logging.getLogger(__name__)
 
-# Metrics
-mcp_bridge_operations = Counter('mcp_bridge_operations_total', 'MCP bridge operations', ['operation', 'status'])
-mcp_registered_services = Gauge('mcp_bridge_registered_services', 'Number of registered MCP services')
-mcp_active_instances = Gauge('mcp_bridge_active_instances', 'Number of active MCP instances', ['service'])
-mcp_registration_duration = Histogram('mcp_bridge_registration_duration_seconds', 'Time to register MCP service')
+@dataclass
+class MCPServiceConfig:
+    """Configuration for an MCP service"""
+    name: str
+    wrapper_script: str
+    port: int
+    health_endpoint: str = "/health"
+    capabilities: List[str] = field(default_factory=list)
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    auto_restart: bool = True
+    max_retries: int = 3
 
-class MCPMeshBridge:
-    """
-    Bridge between MCP servers and the service mesh
-    Manages lifecycle of MCP adapters and their mesh registration
-    """
+class MCPServiceAdapter:
+    """Adapter for MCP services to work with the service mesh"""
     
-    def __init__(self, 
-                 mesh: ServiceMesh,
-                 registry_path: str = "/opt/sutazaiapp/backend/config/mcp_mesh_registry.yaml"):
+    def __init__(self, config: MCPServiceConfig, mesh: ServiceMesh):
+        self.config = config
         self.mesh = mesh
-        self.registry_path = Path(registry_path)
-        self.registry: Dict[str, Any] = {}
-        self.adapters: Dict[str, MCPServiceAdapter] = {}
-        self.adapter_servers: Dict[str, Any] = {}  # Running uvicorn servers
-        self.registered_services: Set[str] = set()
-        self.running = False
-        self._load_registry()
-    
-    def _load_registry(self):
-        """Load MCP registry configuration"""
+        self.process: Optional[subprocess.Popen] = None
+        self.service_instance: Optional[ServiceInstance] = None
+        self.retry_count = 0
+        self.last_health_check = datetime.now()
+        
+    async def start(self) -> bool:
+        """Start the MCP service and register with mesh"""
         try:
-            if self.registry_path.exists():
-                with open(self.registry_path, 'r') as f:
-                    self.registry = yaml.safe_load(f)
-                logger.info(f"Loaded MCP registry with {len(self.registry.get('mcp_services', []))} services")
-            else:
-                logger.warning(f"Registry file not found: {self.registry_path}")
-                self.registry = {"mcp_services": [], "global_config": {}}
-        except Exception as e:
-            logger.error(f"Failed to load MCP registry: {e}")
-            self.registry = {"mcp_services": [], "global_config": {}}
-    
-    async def initialize(self) -> Dict[str, Any]:
-        """Initialize all MCP services in the mesh"""
-        logger.info("Initializing MCP-Mesh Bridge")
-        results = {
-            "started": [],
-            "failed": [],
-            "registered": [],
-            "errors": []
-        }
-        
-        self.running = True
-        mcp_bridge_operations.labels(operation="initialize", status="started").inc()
-        
-        # Process each MCP service configuration
-        for service_config in self.registry.get('mcp_services', []):
-            service_name = service_config.get('name')
-            if not service_name:
-                results["errors"].append("Service config missing name")
-                continue
-            
-            try:
-                # Deploy the MCP service
-                success = await self._deploy_mcp_service(service_config)
-                if success:
-                    results["started"].append(service_name)
-                    results["registered"].append(f"mcp-{service_name}")
-                else:
-                    results["failed"].append(service_name)
-                    
-            except Exception as e:
-                logger.error(f"Failed to deploy MCP service {service_name}: {e}")
-                results["failed"].append(service_name)
-                results["errors"].append(f"{service_name}: {str(e)}")
-        
-        # Update metrics
-        mcp_registered_services.set(len(results["registered"]))
-        mcp_bridge_operations.labels(
-            operation="initialize", 
-            status="completed" if not results["failed"] else "partial"
-        ).inc()
-        
-        logger.info(f"MCP-Mesh Bridge initialization complete: {len(results['started'])} started, {len(results['failed'])} failed")
-        return results
-    
-    async def _deploy_mcp_service(self, config: Dict[str, Any]) -> bool:
-        """Deploy a single MCP service with its instances"""
-        service_name = config['name']
-        mesh_service_name = config.get('service_name', f"mcp-{service_name}")
-        instances = config.get('instances', 1)
-        port_range = config.get('port_range', [11100, 11199])
-        
-        logger.info(f"Deploying MCP service {service_name} with {instances} instances")
-        
-        try:
-            # Create MCP adapter
-            adapter = create_mcp_adapter(service_name)
-            if not adapter:
-                logger.error(f"Failed to create adapter for {service_name}")
-                return False
-            
-            self.adapters[service_name] = adapter
-            
-            # Start adapter instances (MCP processes)
-            ports = await adapter.start(instances)
-            if not ports:
-                logger.error(f"No instances started for {service_name}")
-                return False
-            
-            logger.info(f"Started {len(ports)} instances of {service_name} on ports {ports}")
-            
-            # Start HTTP server for the adapter
-            # Each adapter gets one HTTP server that proxies to multiple MCP instances
-            http_port = port_range[0] - 1000  # HTTP port offset
-            
-            server_config = uvicorn.Config(
-                app=adapter.get_app(),
-                host="0.0.0.0",
-                port=http_port,
-                log_level="warning",
-                access_log=False
+            # Start MCP service process
+            self.process = subprocess.Popen(
+                [self.config.wrapper_script, "--port", str(self.config.port)],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                env={
+                    **os.environ,
+                    "MCP_SERVICE_NAME": self.config.name,
+                    "MCP_SERVICE_PORT": str(self.config.port)
+                }
             )
-            server = uvicorn.Server(server_config)
             
-            # Run server in background
-            asyncio.create_task(server.serve())
-            self.adapter_servers[service_name] = server
+            # Wait for service to be ready
+            await self._wait_for_ready()
             
             # Register with service mesh
-            for i, port in enumerate(ports):
-                instance_id = f"{mesh_service_name}-{i}"
-                
-                # Create service instance for mesh registration
-                instance = ServiceInstance(
-                    service_id=instance_id,
-                    service_name=mesh_service_name,
-                    address="localhost",
-                    port=http_port,  # All instances use same HTTP adapter port
-                    tags=config.get('tags', []),
-                    metadata={
-                        **config.get('metadata', {}),
-                        'mcp_server': service_name,
-                        'mcp_instance': i,
-                        'mcp_process_port': port,  # Actual MCP process port
-                        'adapter_port': http_port
-                    },
-                    state=ServiceState.HEALTHY,
-                    weight=100
-                )
-                
-                # Register with mesh
-                registered = await self.mesh.register_service(
-                    service_name=mesh_service_name,
-                    address=instance.address,
-                    port=instance.port,
-                    tags=instance.tags,
-                    metadata=instance.metadata
-                )
-                
-                if registered:
-                    self.registered_services.add(instance_id)
-                    logger.info(f"Registered {instance_id} with service mesh")
-                    
-                    # Configure load balancer strategy
-                    lb_strategy = config.get('load_balancer', 'ROUND_ROBIN')
-                    if hasattr(LoadBalancerStrategy, lb_strategy):
-                        self.mesh.load_balancer.set_strategy(
-                            mesh_service_name,
-                            LoadBalancerStrategy[lb_strategy]
-                        )
+            self.service_instance = await self.mesh.register_service(
+                service_name=f"mcp-{self.config.name}",
+                address="localhost",
+                port=self.config.port,
+                tags=["mcp", self.config.name] + self.config.capabilities,
+                metadata={
+                    "mcp_service": True,
+                    "wrapper_script": self.config.wrapper_script,
+                    "capabilities": self.config.capabilities,
+                    **self.config.metadata
+                }
+            )
             
-            # Update metrics
-            mcp_active_instances.labels(service=service_name).set(len(ports))
-            
+            logger.info(f"MCP service {self.config.name} started and registered with mesh")
             return True
             
         except Exception as e:
-            logger.error(f"Error deploying MCP service {service_name}: {e}")
-            mcp_bridge_operations.labels(operation="deploy", status="failed").inc()
+            logger.error(f"Failed to start MCP service {self.config.name}: {e}")
             return False
+    
+    async def stop(self) -> bool:
+        """Stop the MCP service and deregister from mesh"""
+        try:
+            # Deregister from mesh
+            if self.service_instance:
+                await self.mesh.discovery.deregister_service(self.service_instance.service_id)
+            
+            # Stop process
+            if self.process:
+                self.process.terminate()
+                try:
+                    self.process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    self.process.kill()
+                    self.process.wait()
+            
+            logger.info(f"MCP service {self.config.name} stopped")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to stop MCP service {self.config.name}: {e}")
+            return False
+    
+    async def restart(self) -> bool:
+        """Restart the MCP service"""
+        await self.stop()
+        await asyncio.sleep(2)  # Brief pause before restart
+        return await self.start()
+    
+    async def health_check(self) -> bool:
+        """Check health of the MCP service"""
+        try:
+            # Check process status
+            if self.process and self.process.poll() is not None:
+                logger.warning(f"MCP service {self.config.name} process died")
+                if self.config.auto_restart and self.retry_count < self.config.max_retries:
+                    self.retry_count += 1
+                    return await self.restart()
+                return False
+            
+            # Call health endpoint through mesh
+            request = ServiceRequest(
+                service_name=f"mcp-{self.config.name}",
+                method="GET",
+                path=self.config.health_endpoint,
+                timeout=5.0,
+                retry_count=1
+            )
+            
+            result = await self.mesh.call_service(request)
+            self.last_health_check = datetime.now()
+            return result["status_code"] == 200
+            
+        except Exception as e:
+            logger.error(f"Health check failed for MCP service {self.config.name}: {e}")
+            return False
+    
+    async def _wait_for_ready(self, timeout: int = 30) -> bool:
+        """Wait for service to be ready"""
+        start_time = datetime.now()
+        while (datetime.now() - start_time).seconds < timeout:
+            try:
+                # Simple TCP connection check
+                reader, writer = await asyncio.open_connection('localhost', self.config.port)
+                writer.close()
+                await writer.wait_closed()
+                return True
+            except:
+                await asyncio.sleep(1)
+        
+        raise TimeoutError(f"MCP service {self.config.name} failed to start within {timeout} seconds")
+
+class MCPMeshBridge:
+    """Bridge between MCP servers and the service mesh"""
+    
+    def __init__(self, mesh: ServiceMesh):
+        self.mesh = mesh
+        self.adapters: Dict[str, MCPServiceAdapter] = {}
+        self.registry: Dict[str, Any] = self._load_mcp_registry()
+        self._initialized = False
+        
+    def _load_mcp_registry(self) -> Dict[str, Any]:
+        """Load MCP service registry from configuration"""
+        return {
+            "mcp_services": [
+                {
+                    "name": "postgres",
+                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh",
+                    "port": 11100,
+                    "capabilities": ["sql", "database", "query"],
+                    "tags": ["database", "sql"],
+                    "metadata": {"database": "sutazai", "schema": "public"}
+                },
+                {
+                    "name": "files",
+                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/files.sh",
+                    "port": 11101,
+                    "capabilities": ["read", "write", "list", "delete"],
+                    "tags": ["filesystem", "storage"],
+                    "metadata": {"root": "/opt/sutazaiapp"}
+                },
+                {
+                    "name": "http",
+                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/http.sh",
+                    "port": 11102,
+                    "capabilities": ["fetch", "post", "put", "delete"],
+                    "tags": ["network", "http"],
+                    "metadata": {"timeout": 30}
+                },
+                {
+                    "name": "ddg",
+                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/ddg.sh",
+                    "port": 11103,
+                    "capabilities": ["search", "news", "images"],
+                    "tags": ["search", "web"],
+                    "metadata": {"engine": "duckduckgo"}
+                },
+                {
+                    "name": "github",
+                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/github.sh",
+                    "port": 11104,
+                    "capabilities": ["repos", "issues", "pulls", "actions"],
+                    "tags": ["vcs", "github"],
+                    "metadata": {"api_version": "v3"}
+                },
+                {
+                    "name": "extended-memory",
+                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh",
+                    "port": 11105,
+                    "capabilities": ["store", "retrieve", "search", "delete"],
+                    "tags": ["memory", "persistence"],
+                    "metadata": {"backend": "chromadb"}
+                },
+                {
+                    "name": "puppeteer-mcp",
+                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh",
+                    "port": 11106,
+                    "capabilities": ["screenshot", "pdf", "scrape", "navigate"],
+                    "tags": ["browser", "automation"],
+                    "metadata": {"headless": True}
+                },
+                {
+                    "name": "playwright-mcp",
+                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh",
+                    "port": 11107,
+                    "capabilities": ["screenshot", "pdf", "scrape", "navigate", "multi-browser"],
+                    "tags": ["browser", "automation"],
+                    "metadata": {"browsers": ["chromium", "firefox", "webkit"]}
+                }
+            ]
+        }
+    
+    async def initialize(self) -> Dict[str, Any]:
+        """Initialize all MCP services and register with mesh"""
+        if self._initialized:
+            return {"status": "already_initialized", "services": list(self.adapters.keys())}
+        
+        started = []
+        failed = []
+        
+        for service_config in self.registry.get("mcp_services", []):
+            config = MCPServiceConfig(
+                name=service_config["name"],
+                wrapper_script=service_config["wrapper"],
+                port=service_config["port"],
+                capabilities=service_config.get("capabilities", []),
+                metadata=service_config.get("metadata", {})
+            )
+            
+            adapter = MCPServiceAdapter(config, self.mesh)
+            
+            if await adapter.start():
+                self.adapters[service_config["name"]] = adapter
+                started.append(service_config["name"])
+            else:
+                failed.append(service_config["name"])
+        
+        self._initialized = True
+        
+        return {
+            "status": "initialized",
+            "started": started,
+            "failed": failed,
+            "total": len(started) + len(failed)
+        }
+    
+    async def shutdown(self) -> bool:
+        """Shutdown all MCP services"""
+        success = True
+        for adapter in self.adapters.values():
+            if not await adapter.stop():
+                success = False
+        
+        self.adapters.clear()
+        self._initialized = False
+        return success
+    
+    async def call_mcp_service(
+        self, 
+        service_name: str, 
+        method: str, 
+        params: Dict[str, Any]
+    ) -> Any:
+        """Call an MCP service through the mesh"""
+        
+        # Ensure service is registered
+        if service_name not in self.adapters:
+            raise ValueError(f"MCP service {service_name} not found")
+        
+        # Create mesh request
+        request = ServiceRequest(
+            service_name=f"mcp-{service_name}",
+            method="POST",
+            path=f"/execute",
+            body={
+                "method": method,
+                "params": params
+            },
+            timeout=30.0,
+            retry_count=3
+        )
+        
+        # Call through mesh with load balancing and circuit breaking
+        result = await self.mesh.call_service(request)
+        
+        # Extract response body
+        if result["status_code"] == 200:
+            return result["body"]
+        else:
+            raise Exception(f"MCP call failed: {result}")
     
     async def get_service_status(self, service_name: str) -> Dict[str, Any]:
         """Get status of an MCP service"""
@@ -207,169 +319,82 @@ class MCPMeshBridge:
             }
         
         adapter = self.adapters[service_name]
-        mesh_service_name = f"mcp-{service_name}"
         
-        # Get instances from mesh
-        mesh_instances = await self.mesh.discover_services(mesh_service_name)
+        # Get mesh instances
+        mesh_instances = await self.mesh.discovery.discover_services(f"mcp-{service_name}")
         
-        # Get adapter status
-        adapter_instances = []
-        for instance in adapter.instances.values():
-            adapter_instances.append({
-                "id": instance.service_id,
-                "port": instance.port,
-                "status": instance.health_status,
-                "requests": instance.request_count,
-                "errors": instance.error_count
-            })
+        # Check adapter instances
+        adapter_healthy = await adapter.health_check()
         
         return {
             "service": service_name,
-            "status": "active" if adapter.running else "stopped",
+            "status": "healthy" if adapter_healthy else "unhealthy",
             "mesh_instances": len(mesh_instances),
-            "adapter_instances": len(adapter_instances),
-            "instances": adapter_instances,
-            "mesh_registration": mesh_service_name in self.registered_services
+            "adapter_instances": 1 if adapter.process and adapter.process.poll() is None else 0,
+            "instances": [
+                {
+                    "id": inst.service_id,
+                    "address": f"{inst.address}:{inst.port}",
+                    "state": inst.state.value,
+                    "metadata": inst.metadata
+                }
+                for inst in mesh_instances
+            ],
+            "mesh_registration": adapter.service_instance is not None
         }
     
-    async def call_mcp_service(self, 
-                               service_name: str,
-                               method: str,
-                               params: Dict[str, Any]) -> Dict[str, Any]:
-        """Call an MCP service through the mesh"""
-        mesh_service_name = f"mcp-{service_name}"
+    async def restart_service(self, service_name: str) -> bool:
+        """Restart an MCP service"""
+        if service_name not in self.adapters:
+            return False
         
-        # Use mesh to discover and call service
-        from .service_mesh import ServiceRequest
+        return await self.adapters[service_name].restart()
+    
+    async def stop_service(self, service_name: str) -> bool:
+        """Stop an MCP service"""
+        if service_name not in self.adapters:
+            return False
         
-        request = ServiceRequest(
-            service_name=mesh_service_name,
-            method="POST",
-            path="/execute",
-            body={
-                "method": method,
-                "params": params
-            }
-        )
+        adapter = self.adapters[service_name]
+        success = await adapter.stop()
         
-        try:
-            result = await self.mesh.call_service(request)
-            return result
-        except Exception as e:
-            logger.error(f"Failed to call MCP service {service_name}: {e}")
-            raise
+        if success:
+            del self.adapters[service_name]
+        
+        return success
     
     async def health_check_all(self) -> Dict[str, Any]:
         """Health check all MCP services"""
         results = {}
         
-        for service_name, adapter in self.adapters.items():
-            health_status = {
-                "healthy": 0,
-                "unhealthy": 0,
-                "unknown": 0
-            }
+        for name, adapter in self.adapters.items():
+            healthy = await adapter.health_check()
+            mesh_instances = await self.mesh.discovery.discover_services(f"mcp-{name}")
             
-            for instance in adapter.instances.values():
-                status = instance.health_status
-                if status == "healthy":
-                    health_status["healthy"] += 1
-                elif status in ["unhealthy", "exited"]:
-                    health_status["unhealthy"] += 1
-                else:
-                    health_status["unknown"] += 1
-            
-            results[service_name] = {
-                "total_instances": len(adapter.instances),
-                **health_status,
-                "overall_health": "healthy" if health_status["healthy"] > 0 else "unhealthy"
+            results[name] = {
+                "total_instances": len(mesh_instances),
+                "healthy": len([i for i in mesh_instances if i.state == ServiceState.HEALTHY]),
+                "unhealthy": len([i for i in mesh_instances if i.state == ServiceState.UNHEALTHY]),
+                "unknown": len([i for i in mesh_instances if i.state == ServiceState.UNKNOWN]),
+                "overall_health": "healthy" if healthy else "unhealthy"
             }
         
         return results
-    
-    async def stop_service(self, service_name: str) -> bool:
-        """Stop a specific MCP service"""
-        if service_name not in self.adapters:
-            logger.warning(f"Service {service_name} not found")
-            return False
-        
-        try:
-            # Stop adapter instances
-            adapter = self.adapters[service_name]
-            await adapter.stop()
-            
-            # Stop HTTP server
-            if service_name in self.adapter_servers:
-                server = self.adapter_servers[service_name]
-                server.should_exit = True
-                del self.adapter_servers[service_name]
-            
-            # Deregister from mesh
-            mesh_service_name = f"mcp-{service_name}"
-            instances = await self.mesh.discover_services(mesh_service_name)
-            for instance in instances:
-                await self.mesh.deregister_service(
-                    instance['service_id'],
-                    mesh_service_name
-                )
-            
-            # Clean up
-            del self.adapters[service_name]
-            mcp_active_instances.labels(service=service_name).set(0)
-            
-            logger.info(f"Stopped MCP service {service_name}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error stopping MCP service {service_name}: {e}")
-            return False
-    
-    async def restart_service(self, service_name: str) -> bool:
-        """Restart a specific MCP service"""
-        # Find config
-        service_config = None
-        for config in self.registry.get('mcp_services', []):
-            if config.get('name') == service_name:
-                service_config = config
-                break
-        
-        if not service_config:
-            logger.error(f"No configuration found for service {service_name}")
-            return False
-        
-        # Stop if running
-        if service_name in self.adapters:
-            await self.stop_service(service_name)
-        
-        # Start again
-        return await self._deploy_mcp_service(service_config)
-    
-    async def shutdown(self):
-        """Shutdown all MCP services and clean up"""
-        logger.info("Shutting down MCP-Mesh Bridge")
-        self.running = False
-        
-        # Stop all services
-        for service_name in list(self.adapters.keys()):
-            await self.stop_service(service_name)
-        
-        # Clear registrations
-        self.registered_services.clear()
-        mcp_registered_services.set(0)
-        
-        logger.info("MCP-Mesh Bridge shutdown complete")
 
-# Singleton instance management
-_bridge_instance: Optional[MCPMeshBridge] = None
+# Global bridge instance
+_mcp_bridge: Optional[MCPMeshBridge] = None
 
 async def get_mcp_bridge(mesh: ServiceMesh) -> MCPMeshBridge:
-    """Get or create the MCP bridge singleton"""
-    global _bridge_instance
-    if _bridge_instance is None:
-        _bridge_instance = MCPMeshBridge(mesh)
-    return _bridge_instance
+    """Get or create MCP bridge instance"""
+    global _mcp_bridge
+    
+    if _mcp_bridge is None:
+        _mcp_bridge = MCPMeshBridge(mesh)
+    
+    return _mcp_bridge
 
-async def initialize_mcp_mesh_integration(mesh: ServiceMesh) -> Dict[str, Any]:
-    """Initialize MCP-mesh integration (convenience function)"""
-    bridge = await get_mcp_bridge(mesh)
-    return await bridge.initialize()
+async def get_service_mesh() -> ServiceMesh:
+    """Get service mesh instance"""
+    from app.mesh.service_mesh import get_mesh
+    return await get_mesh()
+

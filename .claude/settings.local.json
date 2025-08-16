@@ -308,7 +308,12 @@
       "Bash(PGPASSWORD=change_me_secure docker exec -it sutazai-postgres psql -U sutazai -d sutazai -c \"SELECT 1\")",
       "Bash(PGPASSWORD=change_me_secure docker exec sutazai-postgres psql -U sutazai -d sutazai -c \"SELECT 1\")",
       "Bash(/opt/sutazaiapp/scripts/mcp/selfcheck_all.sh:*)",
-      "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/language-server.sh:*)"
+      "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/language-server.sh:*)",
+      "Bash(/mcp list)",
+      "Bash(PGPASSWORD=sutazai123 psql -h localhost -p 10000 -U sutazai -d sutazai -c \"SELECT 1;\")",
+      "Bash(export PGPASSWORD=sutazai123)",
+      "Bash(psql:*)",
+      "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/files.sh:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

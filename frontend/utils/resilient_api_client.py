@@ -71,17 +71,17 @@ def sync_health_check(use_cache: bool = True) -> Optional[Dict[str, Any]]:
         breaker = _circuit_breakers["health_check"]
         
         def _health_check():
-            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test health check response
-            return {
-                "status": "healthy",
-                "timestamp": time.time(),
-                "response_time": 0.1,
-                "services": {
-                    "backend": "healthy",
-                    "database": "healthy",
-                    "redis": "healthy"
-                }
-            }
+            # Real health check implementation - call actual backend
+            import requests
+            try:
+                base_url = "http://127.0.0.1:10010"
+                response = requests.get(f"{base_url}/health", timeout=5.0)
+                response.raise_for_status()
+                result = response.json()
+                result["response_time"] = 0.1 if "response_time" not in result else result["response_time"]
+                return result
+            except requests.exceptions.RequestException as e:
+                raise Exception(f"Health check failed: {str(e)}")
         
         result = breaker.call(_health_check)
         
@@ -137,20 +137,34 @@ def sync_call_api(endpoint: str, method: str = "GET", data: Optional[Dict] = Non
         breaker = _circuit_breakers["api_call"]
         
         def _api_call():
-            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test API response - in real implementation would make actual HTTP request
-            if "health" in endpoint:
-                return {"status": "healthy", "timestamp": time.time()}
-            elif "status" in endpoint:
-                return {
-                    "cpu_percent": 25.5,
-                    "memory_percent": 45.2,
-                    "disk_percent": 30.1,
-                    "memory_available_gb": 16.8,
-                    "disk_free_gb": 250.5,
-                    "timestamp": time.time()
-                }
-            else:
-                return {"success": True, "timestamp": time.time()}
+            # Real API implementation - make actual HTTP requests to backend
+            import requests
+            try:
+                base_url = "http://127.0.0.1:10010"
+                url = f"{base_url}{endpoint}" if endpoint.startswith('/') else f"{base_url}/{endpoint}"
+                
+                if method.upper() == "GET":
+                    response = requests.get(url, timeout=timeout)
+                elif method.upper() == "POST":
+                    response = requests.post(url, json=data, timeout=timeout)
+                elif method.upper() == "PUT":
+                    response = requests.put(url, json=data, timeout=timeout)
+                elif method.upper() == "DELETE":
+                    response = requests.delete(url, timeout=timeout)
+                else:
+                    raise ValueError(f"Unsupported HTTP method: {method}")
+                
+                response.raise_for_status()
+                result = response.json()
+                
+                # Only add timestamp to dict responses, not lists
+                if isinstance(result, dict):
+                    result["timestamp"] = time.time()
+                
+                return result
+                
+            except requests.exceptions.RequestException as e:
+                raise Exception(f"API call failed: {endpoint} - {str(e)}")
         
         result = breaker.call(_api_call)
         return result

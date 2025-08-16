@@ -1,0 +1,764 @@
+openapi: "3.0.3"
+info:
+  title: "SutazAI API"
+  description: "Comprehensive API for the SutazAI Local AI Automation Platform"
+  version: "2.0.0"
+  contact:
+    name: "SutazAI Support"
+    email: "support@sutazai.local"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+
+servers:
+  - url: "http://localhost:10010/api/v1"
+    description: "Development server"
+  - url: "http://localhost:10005/api/v1"
+    description: "Kong API Gateway"
+  - url: "https://api.sutazai.local/v1"
+    description: "Production server"
+
+tags:
+  - name: "agents"
+    description: "AI Agent management and operations"
+  - name: "models"
+    description: "AI model management (Ollama)"
+  - name: "chat"
+    description: "Chat and conversation endpoints"
+  - name: "mesh"
+    description: "Service mesh operations"
+  - name: "mcp"
+    description: "Model Context Protocol server integration"
+  - name: "system"
+    description: "System health and monitoring"
+  - name: "cache"
+    description: "Cache management operations"
+  - name: "documents"
+    description: "Document processing and management"
+  - name: "hardware"
+    description: "Hardware resource monitoring"
+
+paths:
+  # Agent Endpoints
+  /agents:
+    get:
+      tags: ["agents"]
+      summary: "List all agents"
+      description: "Retrieve a list of all registered AI agents with their current status"
+      operationId: "listAgents"
+      responses:
+        "200":
+          description: "List of agents"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AgentStatus"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /agents/{agent_id}:
+    get:
+      tags: ["agents"]
+      summary: "Get agent details"
+      description: "Retrieve detailed information about a specific agent"
+      operationId: "getAgent"
+      parameters:
+        - $ref: "#/components/parameters/AgentId"
+      responses:
+        "200":
+          description: "Agent details"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentDetail"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # Model Endpoints
+  /models:
+    get:
+      tags: ["models"]
+      summary: "List available models"
+      description: "Get all available AI models from Ollama"
+      operationId: "listModels"
+      parameters:
+        - name: "use_cache"
+          in: query
+          schema:
+            type: boolean
+            default: true
+          description: "Use cached response if available"
+      responses:
+        "200":
+          description: "List of models"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModelsResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /models/pull:
+    post:
+      tags: ["models"]
+      summary: "Pull a model"
+      description: "Download and install a new model from Ollama"
+      operationId: "pullModel"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PullModelRequest"
+      responses:
+        "200":
+          description: "Model pull initiated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PullModelResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # Chat Endpoints
+  /chat:
+    post:
+      tags: ["chat"]
+      summary: "Send chat message"
+      description: "Send a message to the AI model and receive a response"
+      operationId: "sendChatMessage"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatRequest"
+      responses:
+        "200":
+          description: "Chat response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "429":
+          $ref: "#/components/responses/RateLimitExceeded"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # Service Mesh V2 Endpoints (Consolidated)
+  /mesh/v2/register:
+    post:
+      tags: ["mesh"]
+      summary: "Register service"
+      description: "Register a new service instance with the service mesh"
+      operationId: "registerService"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceRegistrationRequest"
+      responses:
+        "200":
+          description: "Service registered"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceRegistrationResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /mesh/v2/discover/{service_name}:
+    get:
+      tags: ["mesh"]
+      summary: "Discover service instances"
+      description: "Find all healthy instances of a service"
+      operationId: "discoverService"
+      parameters:
+        - name: "service_name"
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[a-z0-9-]+$"
+        - name: "use_cache"
+          in: query
+          schema:
+            type: boolean
+            default: true
+      responses:
+        "200":
+          description: "Service instances"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceDiscoveryResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /mesh/v2/call:
+    post:
+      tags: ["mesh"]
+      summary: "Call service"
+      description: "Call a service through the mesh with load balancing and circuit breaking"
+      operationId: "callService"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceCallRequest"
+      responses:
+        "200":
+          description: "Service response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceCallResponse"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /mesh/v2/topology:
+    get:
+      tags: ["mesh"]
+      summary: "Get mesh topology"
+      description: "Get current service mesh topology and health status"
+      operationId: "getMeshTopology"
+      responses:
+        "200":
+          description: "Mesh topology"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeshTopologyResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /mesh/v2/health:
+    get:
+      tags: ["mesh"]
+      summary: "Mesh health check"
+      description: "Get overall health status of the service mesh"
+      operationId: "meshHealthCheck"
+      responses:
+        "200":
+          description: "Health status"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeshHealthResponse"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  # MCP Integration Endpoints
+  /mcp/services:
+    get:
+      tags: ["mcp"]
+      summary: "List MCP services"
+      description: "Get all available Model Context Protocol services"
+      operationId: "listMcpServices"
+      responses:
+        "200":
+          description: "List of MCP services"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /mcp/services/{service_name}/execute:
+    post:
+      tags: ["mcp"]
+      summary: "Execute MCP command"
+      description: "Execute a command on an MCP service through the mesh"
+      operationId: "executeMcpCommand"
+      parameters:
+        - name: "service_name"
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MCPExecuteRequest"
+      responses:
+        "200":
+          description: "Command result"
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /mcp/initialize:
+    post:
+      tags: ["mcp"]
+      summary: "Initialize MCP services"
+      description: "Initialize and register all MCP services with the mesh"
+      operationId: "initializeMcpServices"
+      responses:
+        "200":
+          description: "Initialization result"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MCPInitializationResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # System Endpoints
+  /system/health:
+    get:
+      tags: ["system"]
+      summary: "System health check"
+      description: "Get comprehensive system health status"
+      operationId: "systemHealthCheck"
+      responses:
+        "200":
+          description: "System health"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SystemHealthResponse"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /system/metrics:
+    get:
+      tags: ["system"]
+      summary: "Get system metrics"
+      description: "Get Prometheus metrics for monitoring"
+      operationId: "getSystemMetrics"
+      responses:
+        "200":
+          description: "Prometheus metrics"
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  schemas:
+    AgentStatus:
+      type: object
+      required:
+        - id
+        - name
+        - status
+      properties:
+        id:
+          type: string
+          description: "Unique agent identifier"
+        name:
+          type: string
+          description: "Agent name"
+        status:
+          type: string
+          enum: ["active", "inactive", "error", "initializing"]
+        capabilities:
+          type: array
+          items:
+            type: string
+        last_active:
+          type: string
+          format: date-time
+
+    AgentDetail:
+      allOf:
+        - $ref: "#/components/schemas/AgentStatus"
+        - type: object
+          properties:
+            configuration:
+              type: object
+            performance_metrics:
+              type: object
+            task_history:
+              type: array
+              items:
+                type: object
+
+    ModelsResponse:
+      type: object
+      properties:
+        models:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              modified_at:
+                type: string
+              size:
+                type: integer
+              digest:
+                type: string
+
+    PullModelRequest:
+      type: object
+      required:
+        - model
+      properties:
+        model:
+          type: string
+          description: "Model name to pull"
+        insecure:
+          type: boolean
+          default: false
+
+    PullModelResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        digest:
+          type: string
+        total:
+          type: integer
+        completed:
+          type: integer
+
+    ChatRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: "User message"
+        model:
+          type: string
+          default: "tinyllama"
+        use_cache:
+          type: boolean
+          default: true
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 0.7
+        max_tokens:
+          type: integer
+          minimum: 1
+          maximum: 4096
+          default: 2048
+
+    ChatResponse:
+      type: object
+      properties:
+        response:
+          type: string
+        model:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        eval_count:
+          type: integer
+        eval_duration:
+          type: number
+        cached:
+          type: boolean
+
+    ServiceRegistrationRequest:
+      type: object
+      required:
+        - service_name
+        - address
+        - port
+      properties:
+        service_name:
+          type: string
+          pattern: "^[a-z0-9-]+$"
+        address:
+          type: string
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        tags:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+
+    ServiceRegistrationResponse:
+      type: object
+      properties:
+        service_id:
+          type: string
+        status:
+          type: string
+        message:
+          type: string
+
+    ServiceDiscoveryResponse:
+      type: object
+      properties:
+        service_name:
+          type: string
+        instances:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              address:
+                type: string
+              state:
+                type: string
+              tags:
+                type: array
+                items:
+                  type: string
+              metadata:
+                type: object
+        total:
+          type: integer
+        healthy:
+          type: integer
+
+    ServiceCallRequest:
+      type: object
+      required:
+        - service_name
+      properties:
+        service_name:
+          type: string
+        method:
+          type: string
+          default: "GET"
+        path:
+          type: string
+          default: "/"
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        body:
+          type: object
+        timeout:
+          type: number
+          minimum: 1
+          maximum: 300
+          default: 30
+        retry_count:
+          type: integer
+          minimum: 0
+          maximum: 10
+          default: 3
+
+    ServiceCallResponse:
+      type: object
+      properties:
+        status_code:
+          type: integer
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        body:
+          type: object
+        instance_id:
+          type: string
+        trace_id:
+          type: string
+        duration:
+          type: number
+
+    MeshTopologyResponse:
+      type: object
+      properties:
+        services:
+          type: object
+          additionalProperties:
+            type: object
+        total_instances:
+          type: integer
+        healthy_instances:
+          type: integer
+        circuit_breakers:
+          type: object
+          additionalProperties:
+            type: string
+
+    MeshHealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["healthy", "degraded", "unhealthy"]
+        health_score:
+          type: number
+          minimum: 0
+          maximum: 1
+        total_services:
+          type: integer
+        total_instances:
+          type: integer
+        healthy_instances:
+          type: integer
+        open_circuit_breakers:
+          type: integer
+        consul_connected:
+          type: boolean
+
+    MCPExecuteRequest:
+      type: object
+      required:
+        - method
+      properties:
+        method:
+          type: string
+        params:
+          type: object
+        timeout:
+          type: number
+          default: 30
+        retry_count:
+          type: integer
+          default: 3
+
+    MCPInitializationResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          properties:
+            started:
+              type: array
+              items:
+                type: string
+            failed:
+              type: array
+              items:
+                type: string
+
+    SystemHealthResponse:
+      type: object
+      properties:
+        overall_status:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        services:
+          type: object
+          additionalProperties:
+            type: object
+        performance_metrics:
+          type: object
+        system_resources:
+          type: object
+        alerts:
+          type: array
+          items:
+            type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+
+  parameters:
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: "Unique agent identifier"
+
+  responses:
+    BadRequest:
+      description: "Bad request"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    
+    NotFound:
+      description: "Resource not found"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    
+    RateLimitExceeded:
+      description: "Rate limit exceeded"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    
+    InternalServerError:
+      description: "Internal server error"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    
+    ServiceUnavailable:
+      description: "Service unavailable"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+security:
+  - BearerAuth: []
+  - ApiKeyAuth: []
