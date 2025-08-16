@@ -1,0 +1,39 @@
+apiVersion: mcp/v1
+kind: MCPContainer
+metadata:
+  name: mcp-files
+  labels:
+    mcp.service: files
+    mcp.tier: utility
+spec:
+  image: ghcr.io/modelcontextprotocol/files:latest
+  container_name: mcp-files
+  environment:
+    ALLOWED_PATHS: "/mcp-shared,/opt/sutazaiapp"
+    MAX_FILE_SIZE: "10MB"
+    READ_ONLY: "false"
+  ports:
+    "13002": "3000"  # MCP protocol port
+  volumes:
+    mcp_shared_data: /mcp-shared
+    /opt/sutazaiapp: /opt/sutazaiapp:ro
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 30s
+  restart_policy: unless-stopped
+  resources:
+    limits:
+      cpus: "0.5"
+      memory: 256M
+    reservations:
+      cpus: "0.1"
+      memory: 64M
+  networks:
+    - sutazai-dind-internal
+  labels:
+    mcp.managed: "true"
+    mcp.protocol: "stdio"
+    mcp.integration: "filesystem"

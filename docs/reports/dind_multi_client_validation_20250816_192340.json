@@ -1,0 +1,75 @@
+{
+  "timestamp": "20250816_192340",
+  "tests": {
+    "dind_connectivity": {
+      "status": "FAIL",
+      "details": {},
+      "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+    },
+    "container_deployment": {
+      "status": "FAIL",
+      "containers": [],
+      "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+    },
+    "mesh_routing": {
+      "status": "FAIL",
+      "routes": [],
+      "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+    },
+    "concurrent_access": {
+      "status": "PARTIAL",
+      "clients": {
+        "claude-code-1": {
+          "client_id": "claude-code-1",
+          "requests": [],
+          "metrics": {},
+          "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+        },
+        "claude-code-2": {
+          "client_id": "claude-code-2",
+          "requests": [],
+          "metrics": {},
+          "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+        },
+        "codex-1": {
+          "client_id": "codex-1",
+          "requests": [],
+          "metrics": {},
+          "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+        },
+        "codex-2": {
+          "client_id": "codex-2",
+          "requests": [],
+          "metrics": {},
+          "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+        }
+      }
+    },
+    "isolation": {
+      "status": "FAIL",
+      "isolation_tests": [],
+      "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+    },
+    "load_balancing": {
+      "status": "FAIL",
+      "distribution": {},
+      "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+    },
+    "performance": {
+      "status": "FAIL",
+      "measurements": {},
+      "error": "Error while fetching server API version: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))"
+    }
+  },
+  "metrics": {},
+  "validation": {
+    "summary": {
+      "total_tests": 7,
+      "passed": 0,
+      "failed": 6,
+      "partial": 1,
+      "success_rate": 0.0
+    },
+    "status": "FAILURE"
+  }
+}

@@ -66,5 +66,9 @@ anyio==4.7.0
 h11==0.14.0
 cffi==1.17.1
 
+# MCP Bridge and Mesh Dependencies (Critical Fix 2025-08-16)
+networkx==3.3  # Required for mcp_process_orchestrator graph operations
+docker==7.1.0  # Required for DinD bridge container management
+
 # ChromaDB - Optional, falls back to Qdrant if missing
 # chromadb==0.5.0  # Commented out due to dependency conflicts

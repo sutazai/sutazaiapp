@@ -88,7 +88,13 @@
       "Bash(dmesg:*)",
       "Bash(true)",
       "Bash(/opt/sutazaiapp/tests/mcp_sequence_conflict_test.sh:*)",
-      "Bash(./scripts/network/deploy-mcp-network.sh:*)"
+      "Bash(./scripts/network/deploy-mcp-network.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/deployment/infrastructure/deploy-dind-mcp.sh:*)",
+      "Bash(pip3 install:*)",
+      "Bash(cd:*)",
+      "Bash(apt-get:*)",
+      "Bash(apt-get install:*)",
+      "Bash(/opt/sutazaiapp/docker/dind/orchestrator/scripts/setup-dind.sh start:*)"
     ],
     "deny": [],
     "additionalDirectories": [
@@ -117,5 +123,6 @@
     "http",
     "language-server",
     "claude-task-runner"
-  ]
+  ],
+  "enableAllProjectMcpServers": false
 }

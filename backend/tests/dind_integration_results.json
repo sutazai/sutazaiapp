@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-08-16T21:12:06.165819",
+  "summary": {
+    "total": 6,
+    "passed": 0,
+    "failed": 6,
+    "success_rate": 0.0
+  },
+  "results": [
+    {
+      "test": "DinD Status Check",
+      "status": "FAILED",
+      "error": "All connection attempts failed"
+    },
+    {
+      "test": "Service Discovery",
+      "status": "FAILED",
+      "error": "All connection attempts failed"
+    },
+    {
+      "test": "Multi-Client Access",
+      "status": "FAILED"
+    },
+    {
+      "test": "Port Mapping",
+      "status": "FAILED",
+      "error": "All connection attempts failed"
+    },
+    {
+      "test": "Health Monitoring",
+      "status": "FAILED",
+      "error": "All connection attempts failed"
+    },
+    {
+      "test": "Service Isolation",
+      "status": "FAILED",
+      "error": "All connection attempts failed"
+    }
+  ]
+}

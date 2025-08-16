@@ -7,12 +7,13 @@ import asyncio
 import logging
 from typing import Optional, Dict, Any
 
-# Use the new stdio bridge instead of the broken TCP bridge
+# Import all bridge modules including new DinD bridge
 from ..mesh.mcp_stdio_bridge import get_mcp_stdio_bridge
 from ..mesh.mcp_mesh_initializer import get_mcp_mesh_initializer
-from ..mesh.service_mesh import get_mesh  # Add this import
+from ..mesh.service_mesh import get_mesh
 from ..mesh.mcp_mesh_integration import get_mcp_mesh_integration, MCPMeshIntegrationConfig
 from ..mesh.mcp_container_bridge import MCPContainerBridge, EnhancedMCPBridge
+from ..mesh.dind_mesh_bridge import get_dind_bridge
 
 logger = logging.getLogger(__name__)
 
@@ -32,11 +33,45 @@ async def initialize_mcp_on_startup():
         return {'started': [], 'failed': [], 'already_initialized': True}
     
     try:
-        logger.info("Starting enhanced MCP-Mesh integration...")
+        logger.info("Starting enhanced MCP-Mesh integration with DinD orchestration...")
         
-        # Use new integration layer that resolves conflicts
+        # First try DinD bridge for best isolation and multi-client support
         try:
-            # Configure integration with all features enabled
+            mesh = await get_mesh()
+            dind_bridge = await get_dind_bridge(mesh)
+            
+            if dind_bridge.initialized:
+                # Discover existing MCP containers in DinD
+                dind_services = await dind_bridge.discover_mcp_containers()
+                
+                if dind_services:
+                    logger.info(f"✅ DinD Bridge initialized with {len(dind_services)} MCP services")
+                    dind_status = dind_bridge.get_service_status()
+                    
+                    # Convert DinD status to standard results format
+                    results = {
+                        'started': list(dind_bridge.mcp_services.keys()),
+                        'failed': [],
+                        'skipped': []
+                    }
+                    
+                    integration_results = {
+                        'services': results,
+                        'success_rate': (dind_status['healthy'] / dind_status['total'] * 100) if dind_status['total'] > 0 else 0,
+                        'dind_enabled': True,
+                        'multi_client_enabled': True
+                    }
+                    
+                    logger.info("✅ Using DinD orchestration for MCP services (multi-client enabled)")
+                else:
+                    raise Exception("No MCP containers found in DinD")
+            else:
+                raise Exception("DinD bridge failed to initialize")
+                
+        except Exception as dind_error:
+            logger.warning(f"DinD bridge not available: {dind_error}, trying container bridge...")
+            
+            # Fall back to container bridge
             config = MCPMeshIntegrationConfig(
                 enable_protocol_translation=True,
                 enable_resource_isolation=True,
@@ -47,7 +82,7 @@ async def initialize_mcp_on_startup():
                 enable_auto_recovery=True
             )
             
-            # Try container bridge first for better isolation
+            # Try container bridge for isolation
             mesh = await get_mesh()
             container_bridge = EnhancedMCPBridge(mesh_client=mesh)
             await container_bridge.initialize()
@@ -229,6 +264,15 @@ async def shutdown_mcp_services():
             logger.info("✅ MCP services shutdown complete")
         except Exception as bridge_error:
             logger.warning(f"⚠️ Could not shutdown MCP bridge cleanly: {bridge_error}")
+        
+        # Shutdown DinD bridge if available
+        try:
+            dind_bridge = await get_dind_bridge()
+            if dind_bridge.initialized:
+                await dind_bridge.shutdown()
+                logger.info("✅ DinD bridge shutdown complete")
+        except Exception as dind_error:
+            logger.debug(f"Could not shutdown DinD bridge: {dind_error}")
         
         # Also try to deregister from mesh if available
         try:
