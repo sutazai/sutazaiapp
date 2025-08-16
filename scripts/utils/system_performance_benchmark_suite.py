@@ -5,7 +5,7 @@ SutazAI System Performance Benchmark Suite
 
 Comprehensive benchmarking framework for the entire SutazAI ecosystem including:
 - 90+ AI agents across all categories
-- Advanced AGI orchestration layer
+- Advanced  orchestration layer
 - Scalable architecture components
 - Service mesh infrastructure
 - Self-healing container systems
@@ -200,18 +200,18 @@ class SystemResourceMonitor:
             logger.error(f"Failed to get stats for container {container_name}: {e}")
             return {}
 
-class AGIOrchestrationBenchmark:
-    """Benchmark AGI orchestration layer performance"""
+class OrchestrationBenchmark:
+    """Benchmark  orchestration layer performance"""
     
     def __init__(self):
         self.orchestration_endpoints = [
-            'http://localhost:8080/agi/status',
-            'http://localhost:8080/agi/coordination',
-            'http://localhost:8080/agi/collective-intelligence'
+            'http://localhost:8080//status',
+            'http://localhost:8080//coordination',
+            'http://localhost:8080//collective-intelligence'
         ]
     
     async def test_orchestration_latency(self) -> Dict[str, float]:
-        """Test AGI orchestration response times"""
+        """Test  orchestration response times"""
         results = {}
         
         for endpoint in self.orchestration_endpoints:
@@ -221,7 +221,7 @@ class AGIOrchestrationBenchmark:
                 latency = time.time() - start_time
                 results[endpoint.split('/')[-1]] = latency
             except Exception as e:
-                logger.warning(f"AGI endpoint {endpoint} failed: {e}")
+                logger.warning(f" endpoint {endpoint} failed: {e}")
                 results[endpoint.split('/')[-1]] = float('inf')
         
         return results
@@ -461,7 +461,7 @@ class SystemPerformanceBenchmarkSuite:
         self.config_path = config_path
         self.config = self.load_config()
         self.resource_monitor = SystemResourceMonitor()
-        self.agi_benchmark = AGIOrchestrationBenchmark()
+        self._benchmark = OrchestrationBenchmark()
         self.service_mesh_benchmark = ServiceMeshBenchmark()
         self.forecasting_model = PerformanceForecastingModel("/opt/sutazaiapp/data/performance_metrics.db")
         self.agent_benchmarks = self.init_agent_benchmarks()
@@ -548,7 +548,7 @@ class SystemPerformanceBenchmarkSuite:
             'system_info': self.get_system_info(),
             'baseline_snapshot': asdict(self.resource_monitor.get_system_snapshot()),
             'agent_performance': {},
-            'agi_orchestration': {},
+            '_orchestration': {},
             'service_mesh': {},
             'resource_utilization': [],
             'performance_forecast': {},
@@ -565,10 +565,10 @@ class SystemPerformanceBenchmarkSuite:
         agent_results = await self.benchmark_all_agents()
         benchmark_results['agent_performance'] = agent_results
         
-        # 3. AGI orchestration benchmarks
-        logger.info("Benchmarking AGI orchestration layer...")
-        agi_results = await self.benchmark_agi_orchestration()
-        benchmark_results['agi_orchestration'] = agi_results
+        # 3.  orchestration benchmarks
+        logger.info("Benchmarking  orchestration layer...")
+        _results = await self.benchmark__orchestration()
+        benchmark_results['_orchestration'] = _results
         
         # 4. Service mesh benchmarks
         logger.info("Benchmarking service mesh infrastructure...")
@@ -686,16 +686,16 @@ class SystemPerformanceBenchmarkSuite:
         
         return result
     
-    async def benchmark_agi_orchestration(self) -> Dict[str, Any]:
-        """Benchmark AGI orchestration layer"""
+    async def benchmark__orchestration(self) -> Dict[str, Any]:
+        """Benchmark  orchestration layer"""
         results = {}
         
         # Test orchestration latency
-        orchestration_latency = await self.agi_benchmark.test_orchestration_latency()
+        orchestration_latency = await self._benchmark.test_orchestration_latency()
         results['orchestration_latency'] = orchestration_latency
         
         # Test multi-agent coordination
-        coordination_metrics = await self.agi_benchmark.test_multi_agent_coordination()
+        coordination_metrics = await self._benchmark.test_multi_agent_coordination()
         results['coordination_metrics'] = coordination_metrics
         
         return results
@@ -846,24 +846,24 @@ class SystemPerformanceBenchmarkSuite:
             
             if avg_cpu > 70:
                 recommendations.append(
-                    f"CPU utilization averaging {avg_cpu:.1f}% is high. "
+                    f"CPU utilization averng {avg_cpu:.1f}% is high. "
                     "Consider scaling horizontally or optimizing agent algorithms."
                 )
             
             if avg_memory > 80:
                 recommendations.append(
-                    f"Memory utilization averaging {avg_memory:.1f}% is high. "
+                    f"Memory utilization averng {avg_memory:.1f}% is high. "
                     "Consider increasing memory limits or implementing memory optimization."
                 )
         
-        # AGI orchestration recommendations
-        agi_data = benchmark_results.get('agi_orchestration', {})
-        coord_metrics = agi_data.get('coordination_metrics', {})
+        #  orchestration recommendations
+        _data = benchmark_results.get('_orchestration', {})
+        coord_metrics = _data.get('coordination_metrics', {})
         total_coord_time = coord_metrics.get('total_coordination_time', 0)
         
         if total_coord_time > 1.0:  # >1 second for coordination
             recommendations.append(
-                "AGI coordination taking >1 second. Consider optimizing consensus algorithms "
+                " coordination taking >1 second. Consider optimizing consensus algorithms "
                 "or reducing agent communication overhead."
             )
         

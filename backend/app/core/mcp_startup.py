@@ -6,9 +6,8 @@ import asyncio
 import logging
 from typing import Optional
 
-from ..mesh.service_mesh import get_service_mesh
-from ..mesh.mcp_bridge import get_mcp_bridge
-from ..mesh.mcp_initializer import MCPMeshInitializer
+# Use the new stdio bridge instead of the broken TCP bridge
+from ..mesh.mcp_stdio_bridge import get_mcp_stdio_bridge
 
 logger = logging.getLogger(__name__)
 
@@ -28,15 +27,12 @@ async def initialize_mcp_on_startup():
         return
     
     try:
-        logger.info("Starting MCP-Mesh integration on application startup...")
+        logger.info("Starting MCP stdio integration on application startup...")
         
-        # Get service mesh instance
-        mesh = await get_service_mesh()
+        # Get MCP stdio bridge (no mesh dependency needed)
+        bridge = await get_mcp_stdio_bridge()
         
-        # Get MCP bridge
-        bridge = await get_mcp_bridge(mesh)
-        
-        # Initialize all MCP services
+        # Initialize all MCP services with stdio transport
         results = await bridge.initialize()
         
         # Log results
@@ -44,7 +40,7 @@ async def initialize_mcp_on_startup():
         failed = len(results.get('failed', []))
         
         if failed == 0:
-            logger.info(f"✅ Successfully initialized all {started} MCP services")
+            logger.info(f"✅ Successfully initialized all {started} MCP services via stdio")
             _mcp_initialized = True
         else:
             logger.warning(f"⚠️ Initialized {started} MCP services, {failed} failed")
@@ -52,10 +48,10 @@ async def initialize_mcp_on_startup():
         
         # Log individual service status
         for service in results.get('started', []):
-            logger.info(f"  ✓ MCP service started: {service}")
+            logger.info(f"  ✓ MCP service started via stdio: {service}")
         
         for service in results.get('failed', []):
-            logger.error(f"  ✗ MCP service failed: {service}")
+            logger.error(f"  ✗ MCP service failed to start: {service}")
         
         return results
         
@@ -96,9 +92,8 @@ async def shutdown_mcp_services():
     try:
         logger.info("Shutting down MCP services...")
         
-        # Get service mesh and bridge
-        mesh = await get_service_mesh()
-        bridge = await get_mcp_bridge(mesh)
+        # Get stdio bridge
+        bridge = await get_mcp_stdio_bridge()
         
         # Shutdown all services
         await bridge.shutdown()

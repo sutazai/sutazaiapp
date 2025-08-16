@@ -65,19 +65,19 @@ class ServiceInstance:
         return f"http://{self.address}:{self.port}"
     
     def to_consul_format(self) -> Dict[str, Any]:
-        """Convert to Consul service format"""
+        """Convert to Consul service format - using lowercase keys for python-consul"""
         return {
-            "ID": self.service_id,
-            "Name": self.service_name,
-            "Address": self.address,
-            "Port": self.port,
-            "Tags": self.tags,
-            "Meta": self.metadata,
-            "Check": {
-                "HTTP": f"{self.url}/health",
-                "Interval": "10s",
-                "Timeout": "5s",
-                "DeregisterCriticalServiceAfter": "1m"
+            "service_id": self.service_id,
+            "name": self.service_name,
+            "address": self.address,
+            "port": self.port,
+            "tags": self.tags,
+            "meta": self.metadata,
+            "check": {
+                "http": f"{self.url}/health",
+                "interval": "10s",
+                "timeout": "5s",
+                "deregister_critical_service_after": "1m"
             }
         }
 

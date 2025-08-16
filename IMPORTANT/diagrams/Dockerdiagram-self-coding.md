@@ -1117,27 +1117,27 @@
 │   │   ├── localagi-agent/
 │   │   │   ├── Dockerfile              # Enhanced LocalAGI with self-coding and reasoning
 │   │   │   ├── training-capabilities/
-│   │   │   │   ├── agi-training.py             # Enhanced AGI training
+│   │   │   │   ├── training.py             # Enhanced training
 │   │   │   │   ├── intelligence-enhancement.py # Enhanced intelligence enhancement
 │   │   │   │   ├── reasoning-improvement.py    # Enhanced reasoning improvement
 │   │   │   │   └── creativity-training.py      # Enhanced creativity training
-│   │   │   ├── self-supervised-agi/
-│   │   │   │   ├── self-supervised-agi.py      # Enhanced self-supervised AGI
+│   │   │   ├── self-supervised/
+│   │   │   │   ├── self-supervised.py      # Enhanced self-supervised
 │   │   │   │   └── meta-cognitive-training.py  # Enhanced meta-cognitive training
-│   │   │   ├── self-coding-capabilities/       # 🔧 NEW: Self-coding AGI capabilities
-│   │   │   │   ├── agi-architecture-coding.py  # AGI architecture self-coding
+│   │   │   ├── self-coding-capabilities/       # 🔧 NEW: Self-coding capabilities
+│   │   │   │   ├── architecture-coding.py      #  architecture self-coding
 │   │   │   │   ├── intelligence-system-coding.py # Intelligence system coding
 │   │   │   │   ├── reasoning-engine-coding.py  # Reasoning engine coding
 │   │   │   │   ├── creativity-module-coding.py # Creativity module coding
 │   │   │   │   └── consciousness-simulation-coding.py # Consciousness simulation coding
 │   │   │   ├── reasoning-capabilities/         # 🔧 NEW: Advanced UltraThink reasoning
-│   │   │   │   ├── agi-level-reasoning.py      # AGI-level reasoning
+│   │   │   │   ├── level-reasoning.py          # level reasoning
 │   │   │   │   ├── consciousness-reasoning.py  # Consciousness reasoning
 │   │   │   │   ├── meta-cognitive-reasoning.py # Meta-cognitive reasoning
 │   │   │   │   ├── creative-reasoning.py       # Creative reasoning
 │   │   │   │   └── transcendent-reasoning.py   # Transcendent reasoning
-│   │   │   └── voice-chat-integration/         # 🔧 NEW: Voice/chat AGI coding
-│   │   │       ├── voice-agi-coding.py         # Voice-controlled AGI coding
+│   │   │   └── voice-chat-integration/         # 🔧 NEW: Voice/chat coding
+│   │   │       ├── voice-coding.py         # Voice-controlled coding
 │   │   │       ├── chat-intelligence-coding.py # Chat-controlled intelligence coding
 │   │   │       ├── voice-reasoning-commands.py # Voice reasoning commands
 │   │   │       └── chat-creativity-commands.py # Chat creativity commands

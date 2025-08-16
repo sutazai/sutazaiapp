@@ -1,5 +1,0 @@
-# Jarvis Automation Agent Requirements
-# Minimal requirements - base dependencies come from master image
-asyncio
-aiohttp
-httpx

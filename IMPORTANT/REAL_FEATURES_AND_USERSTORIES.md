@@ -348,7 +348,7 @@ async def ingest_document(file: UploadFile):
 
 ### What This Is NOT:
 - Not a cloud service
-- Not AGI/ASI
+- Not   /ASI
 - Not 69 agents
 - Not quantum computing
 - Not distributed across multiple nodes

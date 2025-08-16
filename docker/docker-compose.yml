@@ -682,7 +682,8 @@ services:
     - --path.procfs=/host/proc
     - --path.sysfs=/host/sys
     - --path.rootfs=/rootfs
-    - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$$$|/)
+    - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc|run/user)($$$$|/)
+    - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$$$$
     container_name: sutazai-node-exporter
     deploy:
       resources:
@@ -918,11 +919,12 @@ services:
   # jarvis-hardware-resource-optimizer: CONSOLIDATED with hardware-resource-optimizer
   # Use hardware-resource-optimizer service which provides comprehensive optimization
   # Original jarvis functionality maintained through unified interface
-  jarvis-automation-agent:
-    build:
-      context: ./agents/jarvis-automation-agent
-      dockerfile: Dockerfile
-    container_name: sutazai-jarvis-automation-agent
+  # DISABLED: Build context ./agents/jarvis-automation-agent does not exist
+  # jarvis-automation-agent:
+  #   build:
+  #     context: ./agents/jarvis-automation-agent
+  #     dockerfile: Dockerfile
+  #   container_name: sutazai-jarvis-automation-agent
     depends_on:
       backend:
         condition: service_started

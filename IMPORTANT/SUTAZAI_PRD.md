@@ -40,7 +40,7 @@ Architectural Gaps
 Documentation vs Reality Analysis
 Claimed	Reality	Status
 69 intelligent AI agents	7 Flask stubs with health endpoints	GAP
-AGI/ASI capabilities	Basic LLM text generation with TinyLlama	GAP
+ Sutazaiapp capabilities	Basic LLM text generation with TinyLlama	GAP
 Production ready	20% complete proof-of-concept	PARTIAL
 [1]
 Technical Architecture
@@ -251,7 +251,7 @@ POSTGRES_PORT=10000
 POSTGRES_DB=sutazai
 
 # Application Configuration
-ENVIRONMENT=development|staging|production
+ENVIRONMENT=development|st  ng|production
 DEBUG=true|false
 LOG_LEVEL=DEBUG|INFO|WARNING|ERROR
 
@@ -705,7 +705,7 @@ Distribution
                     <td class="py-3 px-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">GAP</span></td>
                   </tr>
                   <tr>
-                    <td class="py-3 px-4">AGI/ASI capabilities</td>
+                    <td class="py-3 px-4">  /capabilities</td>
                     <td class="py-3 px-4">Basic LLM text generation with TinyLlama</td>
                     <td class="py-3 px-4"><span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">GAP</span></td>
                   </tr>
@@ -1500,7 +1500,7 @@ POSTGRES_PORT=10000
 POSTGRES_DB=sutazai
 
 # Application Configuration
-ENVIRONMENT=development|staging|production
+ENVIRONMENT=development|st  ng|production
 DEBUG=true|false
 LOG_LEVEL=DEBUG|INFO|WARNING|ERROR
 

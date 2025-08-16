@@ -499,11 +499,11 @@
 │   │   │   ├── Dockerfile          # LocalAGI agent service
 │   │   │   ├── repository/         # repo: https://github.com/mudler/LocalAGI
 │   │   │   │   ├── localagi-core.py        # LocalAGI core system
-│   │   │   │   ├── agi-orchestration.py    # AGI orchestration
+│   │   │   │   ├── orchestration.py    # orchestration
 │   │   │   │   ├── local-intelligence.py   # Local intelligence management
 │   │   │   │   └── system-coordination.py  # System-wide coordination
 │   │   │   ├── jarvis-integration/
-│   │   │   │   ├── jarvis-agi-bridge.py    # Jarvis-LocalAGI integration
+│   │   │   │   ├── jarvis-bridge.py    # Jarvis-LocalAGI integration
 │   │   │   │   ├── intelligence-sharing.py # Intelligence sharing
 │   │   │   │   └── coordination-protocol.py # Coordination protocol
 │   │   │   ├── capabilities/
@@ -512,7 +512,7 @@
 │   │   │   │   ├── resource-coordination.py # Resource coordination
 │   │   │   │   └── emergent-behavior.py    # Emergent behavior management
 │   │   │   └── monitoring/
-│   │   │       ├── agi-metrics.py          # AGI performance metrics
+│   │   │       ├── ametrics.py          #  performance metrics
 │   │   │       ├── intelligence-tracking.py # Intelligence tracking
 │   │   │       └── system-analytics.py     # System analytics
 │   │   └── agent-zero/             # 🔧 NEW: Agent Zero

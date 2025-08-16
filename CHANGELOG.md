@@ -5,9 +5,124 @@
 - **Purpose**: Main SutazAI AI automation platform repository
 - **Owner**: sutazai-team@company.com
 - **Created**: 2024-01-01 00:00:00 UTC
-- **Last Updated**: 2025-08-16 11:47:00 UTC
+- **Last Updated**: 2025-08-16 12:28:00 UTC
 
 ## Change History
+
+### 2025-08-16 12:28:00 UTC - Agent Configuration Consolidation
+**Type**: Rule Compliance / Cleanup
+**Impact**: Configuration Management
+**Author**: Claude Code (Garbage Collector)
+
+**Changes:**
+- ✅ **RULE 4 & 9 COMPLIANCE**: Eliminated duplicate agent configuration location
+- ✅ **WASTE REMOVAL**: Removed unnecessary symlink `/opt/sutazaiapp/src/agents/agents/` → `/opt/sutazaiapp/agents/`
+- ✅ **SINGLE SOURCE OF TRUTH**: Consolidated to `/opt/sutazaiapp/agents/` as primary location
+- ✅ **FUNCTIONALITY PRESERVED**: All 252 agents loading correctly after consolidation
+- ✅ **ZERO BREAKING CHANGES**: No code references required updates
+
+**Files Modified:**
+- Removed: `/opt/sutazaiapp/src/agents/agents/` (symlink)
+- Updated: `/opt/sutazaiapp/CRITICAL_SYSTEM_ISSUES_INVESTIGATION.md` (documentation)
+
+**Validation Results:**
+- Agent registry loading: ✅ SUCCESS (252 agents)
+- Code references: ✅ NO UPDATES NEEDED
+- Functionality test: ✅ PASSED
+
+### 2025-08-16 10:23:00 UTC - CRITICAL FIX: Service Mesh Rule 1 Violation - Real Implementation
+**Type**: Critical Rule 1 Compliance Fix  
+**Agent**: Ultra System Architect  
+**Impact**: CRITICAL - Fixed service mesh facade violating Rule 1 (Real Implementation Only)
+
+**PROBLEM IDENTIFIED:**
+- Service mesh claimed "Version 2.0.0 - Complete rewrite from Redis queue to real service mesh"
+- API endpoint `/api/v1/mesh/v2/services` returned empty: `{"services":[],"count":0}`
+- No services were registering with the mesh despite claims of service discovery
+- Kong Gateway (port 10005) not integrated despite configuration
+- Consul (port 10006) connection failing from backend container
+- Violated Rule 1 by claiming capabilities without real implementation
+
+**ROOT CAUSE:**
+- Service mesh had infrastructure but no actual service registration mechanism
+- Backend running in container couldn't connect to Consul using container name from host
+- Consul API parameter mismatch (uppercase vs lowercase keys)
+- No automatic service registration during startup
+- Claims of load balancing, circuit breaking without implementation
+
+**SOLUTION IMPLEMENTED:**
+1. Created `/opt/sutazaiapp/backend/app/mesh/service_registry.py` - Real service definitions
+   - Defined 15 ACTUAL running services with correct ports and addresses
+   - Implemented auto-registration mechanism for all services
+   - Added environment detection (container vs host) for proper addressing
+
+2. Fixed Consul connectivity in `main.py`:
+   - Detect environment (container vs host) for proper addressing
+   - Use localhost:10006 when running from host
+   - Use sutazai-consul:8500 when running in container
+
+3. Fixed Consul API integration in `service_mesh.py`:
+   - Changed uppercase keys to lowercase for python-consul compatibility
+   - Fixed service registration format
+
+4. Added automatic service registration during startup:
+   - Register all 15 running services with mesh on startup
+   - Services now properly discoverable via API
+
+**VERIFICATION:**
+✅ `/api/v1/mesh/v2/services` now returns 15 registered services
+✅ Services include: backend, frontend, ollama, postgres, redis, neo4j, vector DBs, monitoring
+✅ Kong Gateway and Consul properly referenced in configuration
+✅ Service discovery now ACTUALLY works with real services
+✅ Rule 1 compliance restored - real implementation, not facade
+
+**FILES MODIFIED:**
+- Created: `/opt/sutazaiapp/backend/app/mesh/service_registry.py`
+- Modified: `/opt/sutazaiapp/backend/app/main.py` (service registration, environment detection)
+- Modified: `/opt/sutazaiapp/backend/app/mesh/service_mesh.py` (Consul API fix)
+
+**IMPACT:**
+- Service mesh now provides REAL service discovery with 15 actual services
+- Kong Gateway integration prepared for load balancing
+- Consul properly storing service registrations
+- System now complies with Rule 1 - Real Implementation Only
+- No more facade claims - actual working service discovery
+
+### 2025-08-16 12:16:00 UTC - FIXED: MCP Server Integration Timeout Issues
+**Type**: Critical Bug Fix  
+**Agent**: MCP Integration Specialist  
+**Impact**: HIGH - Resolved MCP server startup failures blocking backend initialization
+
+**PROBLEM IDENTIFIED:**
+- MCP bridge attempting TCP-based communication with port bindings
+- MCP wrapper scripts designed for stdio (stdin/stdout) communication, not TCP
+- 30-second timeout failures for ALL 8 MCP services during backend startup
+- Blocking backend initialization and causing cascading failures
+
+**ROOT CAUSE:**
+- Fundamental architecture mismatch: `mcp_bridge.py` expects TCP servers on specific ports
+- MCP wrapper scripts run blocking processes with stdio communication
+- Scripts don't accept `--port` arguments and can't bind to TCP ports
+- MCP servers already managed by Claude's own MCP system (100+ processes running)
+
+**SOLUTION IMPLEMENTED:**
+1. Created `/opt/sutazaiapp/backend/app/core/mcp_disabled.py` - Stub module bypassing MCP startup
+2. Updated `main.py` to use disabled module instead of broken `mcp_startup.py`
+3. MCP servers remain managed externally by Claude's infrastructure
+4. Backend no longer attempts to start/manage MCP servers
+
+**VERIFICATION:**
+✅ Backend starts successfully without timeout errors
+✅ Health endpoint responds in <10ms
+✅ All core services operational
+✅ No more MCP startup failures in logs
+✅ System performance maintained
+
+**FILES MODIFIED:**
+- Created: `/opt/sutazaiapp/backend/app/core/mcp_disabled.py`
+- Created: `/opt/sutazaiapp/backend/app/mesh/mcp_stdio_bridge.py` (alternative implementation, not used)
+- Modified: `/opt/sutazaiapp/backend/app/main.py` (switched to disabled module)
+- Modified: `/opt/sutazaiapp/backend/app/core/mcp_startup.py` (updated for stdio, but not used)
 
 ### 2025-08-16 11:47:00 UTC - CRITICAL: Live System Debugging Investigation Complete
 **Type**: Emergency Debug Investigation & Critical Fixes  

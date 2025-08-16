@@ -216,7 +216,7 @@ def generate():
    ```bash
    # Delete files about non-existent features
    - Quantum computing docs
-   - AGI/ASI orchestration docs
+   - orchestration docs
    - 69 agents documentation (only 6 exist)
    ```
 

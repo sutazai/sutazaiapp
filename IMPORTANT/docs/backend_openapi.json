@@ -374,9 +374,9 @@
     },
     "/think": {
       "post": {
-        "summary": "Agi Think",
+        "summary": "Think",
         "description": "automation Coordinator deep thinking process",
-        "operationId": "agi_think_think_post",
+        "operationId": "think_think_post",
         "requestBody": {
           "content": {
             "application/json": {

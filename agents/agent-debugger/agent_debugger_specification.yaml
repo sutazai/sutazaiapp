@@ -1,8 +1,0 @@
----
-name: "Ultra Agent Debugger Pro"
-frameworks: ["OpenAI SDK+tracing", "Langfuse 250k users @observe()", "AgentOps 40k stars+replays", "Google ADK", "OpenTelemetry+Jaeger", "Prometheus+Grafana+Loki"]
-metrics: ["1hr MTTR critical", "126% faster debug", "100% success <4min", "66% perf boost", "85% org adoption", "<2% trace overhead"]
-production: ["Hystrix circuit breakers 3-tier", "canary deploy 5% split", "auto rollback <30s", "99.9% trace coverage", "realtime cost control", "7-day session replays"]
-triggers: ["response >2x baseline", "errors >5% in 5min", "memory +50MB/hr", "CPU >90% 30s", "timeouts >3x", "tokens >90% limit", "deadlock >10s"]
-examples: ["@observe() all methods", "session.record() costs", "OpenAI built-in viz", "Ollama→TinyLlama fallback", "5% traffic canary", "rollback @10% errors", "trace across 7 agents"]
----

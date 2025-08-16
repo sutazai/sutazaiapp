@@ -439,7 +439,7 @@ Complete documentation overhaul to reflect actual system state as verified throu
 
 5. **conceptual Features Removed**
    - Quantum computing modules
-   - AGI/ASI orchestration
+   - orchestration
    - Complex inter-agent communication
    - Self-improvement capabilities
    - Advanced ML pipelines

@@ -867,12 +867,12 @@
 │   │   ├── localagi-agent/
 │   │   │   ├── Dockerfile              # Enhanced LocalAGI with training
 │   │   │   ├── training-capabilities/
-│   │   │   │   ├── agi-training.py             # AGI training capabilities
+│   │   │   │   ├── training.py                 # training capabilities
 │   │   │   │   ├── intelligence-enhancement.py # Intelligence enhancement
 │   │   │   │   ├── reasoning-improvement.py    # Reasoning improvement
 │   │   │   │   └── creativity-training.py      # Creativity training
-│   │   │   └── self-supervised-agi/
-│   │   │       ├── self-supervised-agi.py      # Self-supervised AGI training
+│   │   │   └── self-supervised/
+│   │   │       ├── self-supervised.py      # Self-supervised AG training
 │   │   │       └── meta-cognitive-training.py  # Meta-cognitive training
 │   │   └── agent-zero/
 │   │       ├── Dockerfile              # Enhanced Agent Zero with training

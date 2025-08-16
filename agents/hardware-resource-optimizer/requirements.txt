@@ -1,9 +1,0 @@
-# Hardware Resource Optimizer - Production Requirements
-# Inherits from base requirements
-
-# Include base requirements
--r ../../requirements-base.txt
-
-# Hardware Resource Optimizer specific additions
-structlog==24.4.0                  # Structured logging for resource monitoring
-cryptography==43.0.1                # Cryptographic operations for secure resource access
