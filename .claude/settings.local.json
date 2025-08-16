@@ -307,7 +307,8 @@
       "Bash(scripts/monitoring/live_logs.sh:*)",
       "Bash(PGPASSWORD=change_me_secure docker exec -it sutazai-postgres psql -U sutazai -d sutazai -c \"SELECT 1\")",
       "Bash(PGPASSWORD=change_me_secure docker exec sutazai-postgres psql -U sutazai -d sutazai -c \"SELECT 1\")",
-      "Bash(/opt/sutazaiapp/scripts/mcp/selfcheck_all.sh:*)"
+      "Bash(/opt/sutazaiapp/scripts/mcp/selfcheck_all.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/language-server.sh:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

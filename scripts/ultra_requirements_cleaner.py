@@ -330,7 +330,7 @@ class RequirementsAnalyzer:
             # Build tools
             'setuptools', 'wheel', 'pip', 'build',
             # Testing
-            'pytest', 'pytest-cov', 'pytest-mock', 'coverage',
+            'pytest', 'pytest-cov', 'pytest-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test', 'coverage',
             # Linting/Formatting
             'black', 'flake8', 'mypy', 'isort', 'pylint',
             # Development tools

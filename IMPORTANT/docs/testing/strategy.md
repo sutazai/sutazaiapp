@@ -164,7 +164,7 @@ markers =
 pytest>=7.0.0
 pytest-cov>=4.0.0
 pytest-asyncio>=0.21.0
-pytest-mock>=3.10.0
+pytest-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test>=3.10.0
 pytest-httpx>=0.21.0
 pytest-timeout>=2.1.0
 coverage[toml]>=6.5.0
@@ -206,13 +206,13 @@ tests/
 - **Test Methods:** `test_<method_name>_<scenario>`
 - **Fixtures:** `<resource_name>_fixture`
 
-### 3.3 Mocking and Fixtures Strategy
+### 3.3 Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing and Fixtures Strategy
 
 **Core Fixtures (conftest.py):**
 ```python
 import pytest
 import asyncio
-from unittest.mock import Mock, AsyncMock
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 from httpx import AsyncClient
 from backend.app.main import app
 
@@ -223,9 +223,9 @@ async def async_client():
         yield client
 
 @pytest.fixture
-def mock_ollama_service():
-    """Mock Ollama service responses"""
-    with responses.RequestsMock() as rsps:
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Ollama service responses"""
+    with responses.RequestsRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test() as rsps:
         rsps.add(
             responses.GET,
             "http://ollama:11434/api/tags",
@@ -235,15 +235,15 @@ def mock_ollama_service():
         rsps.add(
             responses.POST,
             "http://ollama:11434/api/generate",
-            json={"response": "Mocked response"},
+            json={"response": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested response"},
             status=200
         )
         yield rsps
 
 @pytest.fixture
-def mock_database():
-    """Mock database connections and operations"""
-    return Mock()
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_database():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test database connections and operations"""
+    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
 
 @pytest.fixture
 def sample_agent_config():
@@ -265,7 +265,7 @@ def sample_agent_config():
 ```python
 # tests/unit/agents/test_base_agent.py
 import pytest
-from unittest.mock import AsyncMock, Mock
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 from agents.core.base_agent_v2 import BaseAgentV2
 
 class TestBaseAgentV2:
@@ -293,8 +293,8 @@ class TestBaseAgentV2:
         assert "uptime" in health
     
     @pytest.mark.unit
-    async def test_process_task_with_mock_ollama(self, agent, mock_ollama_service):
-        """Test task processing with mocked Ollama service"""
+    async def test_process_task_with_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama(self, agent, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
+        """Test task processing with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested Ollama service"""
         task = {
             "id": "test-task",
             "type": "general",
@@ -315,7 +315,7 @@ class TestBaseAgentV2:
             await agent.process_task({})
     
     @pytest.mark.performance
-    async def test_response_time_performance(self, agent, mock_ollama_service):
+    async def test_response_time_performance(self, agent, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test agent response time meets performance requirements"""
         import time
         
@@ -334,13 +334,13 @@ class TestBaseAgentV2:
 # tests/unit/backend/api/test_chat_endpoints.py
 import pytest
 from httpx import AsyncClient
-from unittest.mock import patch
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch
 
 class TestChatEndpoints:
     """Test suite for chat API endpoints"""
     
     @pytest.mark.unit
-    async def test_chat_endpoint_success(self, async_client, mock_ollama_service):
+    async def test_chat_endpoint_success(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test successful chat interaction"""
         response = await async_client.post("/chat", json={
             "message": "Hello, AI!",
@@ -379,7 +379,7 @@ class TestChatEndpoints:
             assert "error" in data or "temporarily unavailable" in data["response"].lower()
     
     @pytest.mark.security
-    async def test_chat_xss_protection(self, async_client, mock_ollama_service):
+    async def test_chat_xss_protection(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test XSS protection in chat input"""
         malicious_input = "<script>alert('xss')</script>"
         
@@ -1364,7 +1364,7 @@ def clean_redis():
 # tests/fixtures/environment.py
 import os
 import pytest
-from unittest.mock import patch
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch
 
 @pytest.fixture(autouse=True)
 def test_environment():
@@ -1840,7 +1840,7 @@ if __name__ == "__main__":
 pytest==7.4.0
 pytest-asyncio==0.21.1
 pytest-cov==4.1.0
-pytest-mock==3.11.1
+pytest-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test==3.11.1
 pytest-xdist==3.3.1
 pytest-timeout==2.1.0
 pytest-html==3.2.0
@@ -1882,9 +1882,9 @@ selenium==4.11.2
 # Load testing
 k6==0.45.1
 
-# Mocking and fixtures
+# Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing and fixtures
 responses==0.23.3
-pytest-mock==3.11.1
+pytest-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test==3.11.1
 pytest-freezegun==0.4.2
 
 # Reporting and analysis
@@ -2219,9 +2219,9 @@ class CoverageAnalyzer:
         filename = Path(file_info['file']).name.lower()
         
         if 'api' in filename or 'endpoint' in filename:
-            return "Add API endpoint unit tests with mocked dependencies"
+            return "Add API endpoint unit tests with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested dependencies"
         elif 'agent' in filename:
-            return "Add agent behavior tests with mocked Ollama responses"
+            return "Add agent behavior tests with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested Ollama responses"
         elif 'database' in filename or 'db' in filename:
             return "Add database operation tests with test fixtures"
         elif 'service' in filename:
@@ -2306,7 +2306,7 @@ if __name__ == "__main__":
    □ Tests cover both happy path and error scenarios  
    □ Test names clearly describe what is being tested
    □ No hardcoded values or automated numbers in tests
-   □ Appropriate mocking of external dependencies
+   □ Appropriate Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing of external dependencies
    □ Tests are independent and can run in any order
    □ Performance assertions included for critical paths
    □ Security test cases for input validation
@@ -2377,7 +2377,7 @@ if __name__ == "__main__":
   - Set up Docker test environment
 - **Days 3-5:** Backend API unit tests (Target: 80% coverage)
   - Test all health check endpoints
-  - Test chat endpoint with mocked Ollama
+  - Test chat endpoint with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested Ollama
   - Test basic authentication/validation
   - Test error handling paths
 - **Days 6-7:** Database integration tests
@@ -2392,7 +2392,7 @@ if __name__ == "__main__":
   - Error scenarios (service down, model unavailable)
 - **Days 4-7:** Agent service testing
   - Test all 7 stub agents
-  - Mock realistic agent responses
+  - Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test realistic agent responses
   - Test agent health endpoints
   - Performance benchmarking for agents
 
@@ -2501,7 +2501,7 @@ if __name__ == "__main__":
 
 **Technical Risks:**
 - **Risk:** Ollama model inference too slow for testing
-  - **Mitigation:** Use smaller test models, implement comprehensive mocking
+  - **Mitigation:** Use smaller test models, implement comprehensive Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing
 - **Risk:** Container startup times affect test execution
   - **Mitigation:** Pre-built test containers, parallel test execution
 - **Risk:** Network flakiness in container communication
@@ -2509,7 +2509,7 @@ if __name__ == "__main__":
 
 **Timeline Risks:**
 - **Risk:** Complex integration testing takes longer than expected
-  - **Mitigation:** Prioritize P0 components, use comprehensive mocking
+  - **Mitigation:** Prioritize P0 components, use comprehensive Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing
 - **Risk:** Performance testing reveals major bottlenecks
   - **Mitigation:** Focus on testing framework first, optimize later
 - **Risk:** Security testing uncovers critical vulnerabilities

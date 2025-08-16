@@ -347,7 +347,7 @@ sys.exit(0 if get_quality_metrics() else 1)
       # Phase 1: Critical violations (Rules 13, 12, 9)
       - id: no-garbage-files
         name: "Rule 13: Block garbage/backup files"
-        entry: bash -c 'find . -type f \( -name "*.backup*" -o -name "*.tmp" -o -name "*.bak" -o -name "*~" -o -name "*.old" -o -name "*copy*" -o -name "*.agi_backup" -o -name "*.conceptual*" \) -not -path "./archive/*" -not -path "./.git/*" | grep -q . && echo "ERROR: Garbage files detected (Rule 13)" && exit 1 || exit 0'
+        entry: bash -c 'find . -type f \( -name "*.backup*" -o -name "*.tmp" -o -name "*.bak" -o -name "*~" -o -name "*.old" -o -name "*copy*" -o -name "*.backup" -o -name "*.conceptual*" \) -not -path "./archive/*" -not -path "./.git/*" | grep -q . && echo "ERROR: Garbage files detected (Rule 13)" && exit 1 || exit 0'
         language: system
         pass_filenames: false
         always_run: true

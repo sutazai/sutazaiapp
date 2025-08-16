@@ -90,7 +90,7 @@ Age distribution: < 1 week (64), 1 week - 1 month (114), 1 month - 1 year (13), 
 
 **Test Data Created:**
 - 5 cache directories with 150 total cache files
-- 73.51 MB of mock cache data
+- 73.51 MB of Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test cache data
 - Various cache types: pip, npm, browser, app, system
 
 **Results:**

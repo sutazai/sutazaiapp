@@ -24,9 +24,9 @@ logger = get_logger(__name__)
 class AgentType(Enum):
     """Enumeration of all available agent types in the SutazAI system."""
     # Core System Agents
-    AGI_SYSTEM_ARCHITECT = "agi-system-architect"
+    SYSTEM_ARCHITECT = "system-architect"
     AUTONOMOUS_SYSTEM_CONTROLLER = "autonomous-system-controller"
-    AI_AGENT_ORCHESTRATOR = "ai-agent-orchestrator"
+    AI_AGENT_ORCHESTRATOR = "agent-orchestrator"
     
     # Infrastructure & DevOps
     INFRASTRUCTURE_DEVOPS_MANAGER = "infrastructure-devops-manager"
@@ -35,7 +35,7 @@ class AgentType(Enum):
     
     # AI & ML Specialists
     OLLAMA_INTEGRATION_SPECIALIST = "ollama-integration-specialist"
-    SENIOR_AI_ENGINEER = "senior-ai-engineer"
+    SENIOR_AI_ENGINEER = "senior-engineer"
     DEEP_LEARNING_BRAIN_MANAGER = "deep-learning-coordinator-manager"
     
     # Development Specialists
@@ -304,7 +304,7 @@ class UniversalAgentClient:
         agent_configs = [
             # Core System Agents
             {
-                "id": "agi-system-architect",
+                "id": "system-architect",
                 "name": "automation System Architect",
                 "description": "Master architect for automation system design and optimization",
                 "port": 8001,

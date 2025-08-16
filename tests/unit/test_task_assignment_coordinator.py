@@ -6,7 +6,7 @@ import asyncio
 import json
 import pytest
 from datetime import datetime, timedelta
-from unittest.mock import Mock, AsyncMock, patch, MagicMock
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 import heapq
 import sys
 import os
@@ -27,26 +27,26 @@ class TestTaskAssignmentCoordinator:
     
     @pytest.fixture
     async def coordinator(self):
-        """Create coordinator instance with mocked dependencies"""
+        """Create coordinator instance with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested dependencies"""
         coord = TaskAssignmentCoordinator()
         
-        # Mock Redis client
-        coord.redis_client = AsyncMock()
-        coord.redis_client.ping = AsyncMock(return_value=True)
-        coord.redis_client.zadd = AsyncMock()
-        coord.redis_client.zrem = AsyncMock()
-        coord.redis_client.zrange = AsyncMock(return_value=[])
-        coord.redis_client.hset = AsyncMock()
-        coord.redis_client.hget = AsyncMock(return_value=None)
-        coord.redis_client.hdel = AsyncMock()
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis client
+        coord.redis_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        coord.redis_client.ping = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=True)
+        coord.redis_client.zadd = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        coord.redis_client.zrem = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        coord.redis_client.zrange = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=[])
+        coord.redis_client.hset = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        coord.redis_client.hget = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=None)
+        coord.redis_client.hdel = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
         
-        # Mock message processor
-        coord.message_processor = AsyncMock()
-        coord.message_processor.start = AsyncMock()
-        coord.message_processor.stop = AsyncMock()
-        coord.message_processor.rabbitmq_client = AsyncMock()
-        coord.message_processor.rabbitmq_client.publish_message = AsyncMock()
-        coord.message_processor.rabbitmq_client.publish_error = AsyncMock()
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test message processor
+        coord.message_processor = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        coord.message_processor.start = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        coord.message_processor.stop = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        coord.message_processor.rabbitmq_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        coord.message_processor.rabbitmq_client.publish_message = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        coord.message_processor.rabbitmq_client.publish_error = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
         
         return coord
     
@@ -85,7 +85,7 @@ class TestTaskAssignmentCoordinator:
     async def test_enqueue_task_queue_full(self, coordinator):
         """Test enqueueing when queue is full"""
         # Fill queue to max
-        coordinator.task_queue = [Mock() for _ in range(10000)]
+        coordinator.task_queue = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test() for _ in range(10000)]
         
         task_msg = TaskMessage(
             message_id="msg-002",
@@ -376,8 +376,8 @@ class TestTaskAssignmentCoordinator:
         
         # Run one iteration of timeout monitor
         async def run_once():
-            # Mock the handle_failed_task to avoid side effects
-            coordinator.handle_failed_task = AsyncMock()
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test the handle_failed_task to avoid side effects
+            coordinator.handle_failed_task = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
             
             # Run timeout check logic directly
             current_time = datetime.utcnow()
@@ -429,7 +429,7 @@ class TestTaskAssignmentCoordinator:
     @pytest.mark.asyncio
     async def test_load_queued_tasks(self, coordinator):
         """Test loading queued tasks from Redis on startup"""
-        # Mock Redis data
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis data
         coordinator.redis_client.zrange.return_value = ["task-1", "task-2"]
         
         task1_data = TaskMessage(
@@ -471,26 +471,26 @@ class TestCoordinatorIntegration:
     @pytest.mark.asyncio
     async def test_full_task_flow(self):
         """Test complete task flow through coordinator"""
-        with patch('aio_pika.connect_robust') as mock_connect:
-            # Setup mock RabbitMQ
-            mock_connection = AsyncMock()
-            mock_channel = AsyncMock()
-            mock_exchange = AsyncMock()
-            mock_queue = AsyncMock()
+        with patch('aio_pika.connect_robust') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect:
+            # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test RabbitMQ
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_exchange = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
             
-            mock_connect.return_value = mock_connection
-            mock_connection.channel.return_value = mock_channel
-            mock_channel.declare_exchange.return_value = mock_exchange
-            mock_channel.declare_queue.return_value = mock_queue
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection.channel.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel.declare_exchange.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_exchange
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel.declare_queue.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue
             
             coordinator = TaskAssignmentCoordinator()
             
-            # Mock Redis
-            with patch('redis.asyncio.from_url') as mock_redis:
-                mock_redis_client = AsyncMock()
-                mock_redis.return_value = mock_redis_client
-                mock_redis_client.ping.return_value = True
-                mock_redis_client.zrange.return_value = []
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis
+            with patch('redis.asyncio.from_url') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis:
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client.ping.return_value = True
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client.zrange.return_value = []
                 
                 # Initialize
                 await coordinator.initialize()

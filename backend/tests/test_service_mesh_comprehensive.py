@@ -13,7 +13,7 @@ import pytest
 import asyncio
 import time
 import json
-from unittest.mock import Mock, AsyncMock, patch, MagicMock, call
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, call
 from typing import Dict, Any, List
 import httpx
 
@@ -61,10 +61,10 @@ class TestServiceMeshProduction:
     
     @pytest.mark.asyncio
     @patch('consul.Consul')
-    async def test_consul_connection_failure_graceful_degradation(self, mock_consul_class):
+    async def test_consul_connection_failure_graceful_degradation(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul_class):
         """Test graceful degradation when Consul is unavailable"""
         # Simulate Consul connection failure
-        mock_consul_class.side_effect = Exception("Connection refused")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul_class.side_effect = Exception("Connection refused")
         
         discovery = ServiceDiscovery("sutazai-consul", 8500)
         await discovery.connect()
@@ -87,12 +87,12 @@ class TestServiceMeshProduction:
     
     @pytest.mark.asyncio
     @patch('consul.Consul')
-    async def test_service_registration_with_health_checks(self, mock_consul_class):
+    async def test_service_registration_with_health_checks(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul_class):
         """Test service registration with health check configuration"""
-        mock_consul = Mock()
-        mock_consul.agent.self.return_value = {"Config": {"NodeName": "test-node"}}
-        mock_consul.agent.service.register = Mock()
-        mock_consul_class.return_value = mock_consul
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul.agent.self.return_value = {"Config": {"NodeName": "test-node"}}
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul.agent.service.register = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul
         
         discovery = ServiceDiscovery()
         await discovery.connect()
@@ -109,10 +109,10 @@ class TestServiceMeshProduction:
         result = await discovery.register_service(instance)
         
         assert result is True
-        mock_consul.agent.service.register.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul.agent.service.register.assert_called_once()
         
         # Verify health check configuration
-        call_args = mock_consul.agent.service.register.call_args
+        call_args = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul.agent.service.register.call_args
         service_data = call_args[1]
         assert service_data["ID"] == "api-service-1"
         assert service_data["Name"] == "api-service"
@@ -202,11 +202,11 @@ class TestServiceMeshProduction:
     
     @pytest.mark.asyncio
     @patch('httpx.AsyncClient')
-    async def test_service_call_with_retry_policy(self, mock_client_class):
+    async def test_service_call_with_retry_policy(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class):
         """Test service call with retry on failure"""
         mesh = ServiceMesh()
         
-        # Setup mock discovery
+        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test discovery
         test_instance = ServiceInstance(
             "api-1", "api-service", "localhost", 8080,
             state=ServiceState.HEALTHY
@@ -214,23 +214,23 @@ class TestServiceMeshProduction:
         mesh.discovery.services_cache["api-service"] = [test_instance]
         mesh.discovery.last_cache_update["api-service"] = time.time()
         
-        # Setup mock HTTP client to fail then succeed
-        mock_client = AsyncMock()
-        mock_response_fail = AsyncMock()
-        mock_response_fail.status_code = 500
-        mock_response_success = AsyncMock()
-        mock_response_success.status_code = 200
-        mock_response_success.headers = {"content-type": "application/json"}
-        mock_response_success.json = Mock(return_value={"result": "success"})
+        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test HTTP client to fail then succeed
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_fail = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_fail.status_code = 500
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_success = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_success.status_code = 200
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_success.headers = {"content-type": "application/json"}
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_success.json = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value={"result": "success"})
         
         # First call fails, retry succeeds
-        mock_client.request = AsyncMock(side_effect=[
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(side_effect=[
             Exception("Connection error"),
-            mock_response_success
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_success
         ])
-        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-        mock_client.__aexit__ = AsyncMock()
-        mock_client_class.return_value = mock_client
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aenter__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aexit__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
         
         request = ServiceRequest(
             service_name="api-service",
@@ -243,7 +243,7 @@ class TestServiceMeshProduction:
         
         assert result["status_code"] == 200
         assert result["body"]["result"] == "success"
-        assert mock_client.request.call_count == 2  # Initial + 1 retry
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.request.call_count == 2  # Initial + 1 retry
     
     @pytest.mark.asyncio
     async def test_health_check_state_transitions(self):
@@ -256,14 +256,14 @@ class TestServiceMeshProduction:
         )
         
         # Test healthy response
-        with patch('httpx.AsyncClient') as mock_client_class:
-            mock_client = AsyncMock()
-            mock_response = AsyncMock()
-            mock_response.status_code = 200
-            mock_client.get = AsyncMock(return_value=mock_response)
-            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-            mock_client.__aexit__ = AsyncMock()
-            mock_client_class.return_value = mock_client
+        with patch('httpx.AsyncClient') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aenter__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aexit__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
             
             state = await discovery.health_check(instance)
             assert state == ServiceState.HEALTHY
@@ -271,26 +271,26 @@ class TestServiceMeshProduction:
             assert instance.health_check_failures == 0
         
         # Test degraded response
-        with patch('httpx.AsyncClient') as mock_client_class:
-            mock_client = AsyncMock()
-            mock_response = AsyncMock()
-            mock_response.status_code = 429  # Too many requests
-            mock_client.get = AsyncMock(return_value=mock_response)
-            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-            mock_client.__aexit__ = AsyncMock()
-            mock_client_class.return_value = mock_client
+        with patch('httpx.AsyncClient') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 429  # Too many requests
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aenter__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aexit__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
             
             state = await discovery.health_check(instance)
             assert state == ServiceState.DEGRADED
             assert instance.state == ServiceState.DEGRADED
         
         # Test unhealthy response
-        with patch('httpx.AsyncClient') as mock_client_class:
-            mock_client = AsyncMock()
-            mock_client.get = AsyncMock(side_effect=Exception("Connection refused"))
-            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-            mock_client.__aexit__ = AsyncMock()
-            mock_client_class.return_value = mock_client
+        with patch('httpx.AsyncClient') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(side_effect=Exception("Connection refused"))
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aenter__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aexit__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
             
             state = await discovery.health_check(instance)
             assert state == ServiceState.UNHEALTHY
@@ -344,7 +344,7 @@ class TestServiceMeshProduction:
         
         mesh.add_response_interceptor(add_timing_info)
         
-        # Setup mock for testing
+        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test for testing
         test_instance = ServiceInstance(
             "api-1", "api-service", "localhost", 8080,
             state=ServiceState.HEALTHY
@@ -352,16 +352,16 @@ class TestServiceMeshProduction:
         mesh.discovery.services_cache["api-service"] = [test_instance]
         mesh.discovery.last_cache_update["api-service"] = time.time()
         
-        with patch('httpx.AsyncClient') as mock_client_class:
-            mock_client = AsyncMock()
-            mock_response = AsyncMock()
-            mock_response.status_code = 200
-            mock_response.headers = {"content-type": "application/json"}
-            mock_response.json = Mock(return_value={"data": "test"})
-            mock_client.request = AsyncMock(return_value=mock_response)
-            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-            mock_client.__aexit__ = AsyncMock()
-            mock_client_class.return_value = mock_client
+        with patch('httpx.AsyncClient') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.headers = {"content-type": "application/json"}
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value={"data": "test"})
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aenter__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aexit__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
             
             request = ServiceRequest(
                 service_name="api-service",
@@ -372,33 +372,33 @@ class TestServiceMeshProduction:
             result = await mesh.call_service(request)
             
             # Verify interceptors were applied
-            call_args = mock_client.request.call_args
+            call_args = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.request.call_args
             assert call_args[1]["headers"]["Authorization"] == "Bearer test-token"
             assert "processed_at" in result
     
     @pytest.mark.asyncio
     async def test_kong_integration_configuration(self):
         """Test Kong API Gateway integration"""
-        with patch('httpx.AsyncClient') as mock_client_class:
-            mock_client = AsyncMock()
+        with patch('httpx.AsyncClient') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
             
-            # Mock Kong admin API responses
-            mock_response_services = AsyncMock()
-            mock_response_services.status_code = 200
-            mock_response_services.json = Mock(return_value={"data": []})
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Kong admin API responses
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_services = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_services.status_code = 200
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_services.json = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value={"data": []})
             
-            mock_response_upstream = AsyncMock()
-            mock_response_upstream.status_code = 201
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_upstream = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_upstream.status_code = 201
             
-            mock_response_target = AsyncMock()
-            mock_response_target.status_code = 201
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_target = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_target.status_code = 201
             
-            mock_client.get = AsyncMock(return_value=mock_response_services)
-            mock_client.put = AsyncMock(return_value=mock_response_upstream)
-            mock_client.post = AsyncMock(return_value=mock_response_target)
-            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-            mock_client.__aexit__ = AsyncMock()
-            mock_client_class.return_value = mock_client
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_services)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.put = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_upstream)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.post = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response_target)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aenter__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aexit__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
             
             mesh = ServiceMesh(kong_admin_url="http://sutazai-kong:8001")
             await mesh._configure_kong_routes()
@@ -412,8 +412,8 @@ class TestServiceMeshProduction:
             )
             
             # Verify Kong upstream configuration
-            mock_client.put.assert_called()
-            put_call = mock_client.put.call_args
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.put.assert_called()
+            put_call = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.put.call_args
             assert "api-service-upstream" in put_call[0][0]
             
             upstream_data = put_call[1]["json"]
@@ -433,16 +433,16 @@ class TestServiceMeshProduction:
         mesh.discovery.services_cache["api-service"] = [test_instance]
         mesh.discovery.last_cache_update["api-service"] = time.time()
         
-        with patch('httpx.AsyncClient') as mock_client_class:
-            mock_client = AsyncMock()
-            mock_response = AsyncMock()
-            mock_response.status_code = 200
-            mock_response.headers = {"content-type": "application/json"}
-            mock_response.json = Mock(return_value={"data": "test"})
-            mock_client.request = AsyncMock(return_value=mock_response)
-            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-            mock_client.__aexit__ = AsyncMock()
-            mock_client_class.return_value = mock_client
+        with patch('httpx.AsyncClient') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.headers = {"content-type": "application/json"}
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value={"data": "test"})
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aenter__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aexit__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
             
             request = ServiceRequest(
                 service_name="api-service",
@@ -454,7 +454,7 @@ class TestServiceMeshProduction:
             result = await mesh.call_service(request)
             
             # Verify trace headers were added
-            call_args = mock_client.request.call_args
+            call_args = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.request.call_args
             headers = call_args[1]["headers"]
             assert headers["X-Trace-Id"] == "test-trace-123"
             assert "X-Request-Start" in headers
@@ -488,17 +488,17 @@ class TestServiceMeshProduction:
                 retry_count=0
             )
             
-            # Mock the actual call
-            with patch('httpx.AsyncClient') as mock_client_class:
-                mock_client = AsyncMock()
-                mock_response = AsyncMock()
-                mock_response.status_code = 200
-                mock_response.headers = {"content-type": "application/json"}
-                mock_response.json = Mock(return_value={"data": "test"})
-                mock_client.request = AsyncMock(return_value=mock_response)
-                mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-                mock_client.__aexit__ = AsyncMock()
-                mock_client_class.return_value = mock_client
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test the actual call
+            with patch('httpx.AsyncClient') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class:
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.headers = {"content-type": "application/json"}
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value={"data": "test"})
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response)
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aenter__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.__aexit__ = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
                 
                 result = await mesh.call_service(request)
                 selected_instances.append(result.get("instance_id"))
@@ -520,11 +520,11 @@ class TestServiceMeshProduction:
             "metadata": {"version": "1.0"}
         }
         
-        with patch.object(mesh.discovery, 'register_service', return_value=True) as mock_register:
+        with patch.object(mesh.discovery, 'register_service', return_value=True) as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_register:
             result = await mesh.register_service_v2("test-id", service_info)
             assert result["id"] == "test-id"
             assert result["status"] == "registered"
-            mock_register.assert_called_once()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_register.assert_called_once()
         
         # Test discover_services compatibility
         mesh.discovery.services_cache["test-service"] = [
@@ -559,8 +559,8 @@ class TestServiceMeshProduction:
         mesh = ServiceMesh()
         
         # Register service and verify metrics
-        with patch.object(mesh.discovery, 'consul_client') as mock_consul:
-            mock_consul.agent.service.register = Mock()
+        with patch.object(mesh.discovery, 'consul_client') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_consul.agent.service.register = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
             
             instance = ServiceInstance(
                 "test-1", "test", "localhost", 8080

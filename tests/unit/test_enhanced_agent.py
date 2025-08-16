@@ -288,10 +288,10 @@ async def test_backward_compatibility():
     logger.info("Testing Backward Compatibility...")
     
     try:
-        # Create a mock legacy agent class
+        # Create a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test legacy agent class
         from agent_base import BaseAgent
         
-        class MockLegacyAgent(BaseAgent):
+        class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLegacyAgent(BaseAgent):
             def process_task(self, task):
                 return {
                     "status": "success",
@@ -300,7 +300,7 @@ async def test_backward_compatibility():
                 }
         
         # Test legacy wrapper
-        wrapper = LegacyAgentWrapper(MockLegacyAgent)
+        wrapper = LegacyAgentWrapper(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLegacyAgent)
         await wrapper._setup_async_components()
         
         test_task = {"id": "legacy_test", "data": "test"}

@@ -3,7 +3,7 @@
 Comprehensive Test Suite for Enhanced Compliance Monitor
 =======================================================
 Purpose: 100% test coverage for production-ready compliance monitoring system
-Requirements: pytest, pytest-cov, pytest-mock, psutil
+Requirements: pytest, pytest-cov, pytest-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, psutil
 
 Test Categories:
 - Unit tests for all core functionality
@@ -29,7 +29,7 @@ import sqlite3
 import pytest
 import threading
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock, call
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, call
 from datetime import datetime, timedelta
 
 # Add the monitoring directory to Python path
@@ -775,18 +775,18 @@ def process():
     
     def test_daemon_mode_shutdown(self, monitor):
         """Test service mode graceful shutdown"""
-        # Mock the service loop to run only once
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test the service loop to run only once
         original_sleep = time.sleep
         sleep_count = 0
         
-        def mock_sleep(duration):
+        def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_sleep(duration):
             nonlocal sleep_count
             sleep_count += 1
             if sleep_count >= 1:
                 monitor.shutdown_event.set()
             return original_sleep(0.1)  # Very short sleep for testing
         
-        with patch('time.sleep', side_effect=mock_sleep):
+        with patch('time.sleep', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_sleep):
             # This should exit quickly due to shutdown event
             monitor.run_daemon_mode()
         

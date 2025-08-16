@@ -2,14 +2,14 @@
 """
 Purpose: Unit tests for hygiene enforcement coordinator
 Usage: python -m pytest tests/hygiene/test_coordinator.py
-Requirements: pytest, unittest.mock
+Requirements: pytest, unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 """
 
 import unittest
 import tempfile
 import subprocess
 from pathlib import Path
-from unittest.mock import patch, MagicMock, mock_open
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open
 import sys
 import shutil
 
@@ -60,9 +60,9 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
         for script in deploy_scripts:
             (self.project_root / script).write_text("#!/bin/bash\necho 'deploy'\n")
             
-    @patch('builtins.open', new_callable=mock_open)
+    @patch('builtins.open', new_callable=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open)
     @patch('pathlib.Path.mkdir')
-    def test_log_action(self, mock_mkdir, mock_file):
+    def test_log_action(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_mkdir, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_file):
         """Test logging functionality"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
@@ -71,8 +71,8 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
             coordinator.log_action("Test message", "INFO")
             
             # Verify logging operations
-            mock_mkdir.assert_called()
-            mock_file.assert_called()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_mkdir.assert_called()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_file.assert_called()
             
         except ImportError:
             # Skip if module not available in test environment
@@ -95,16 +95,16 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
             self.skipTest("Coordinator module not available for import")
             
     @patch('subprocess.run')
-    def test_find_violations_rule_13(self, mock_subprocess):
+    def test_find_violations_rule_13(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test finding rule 13 violations (junk files)"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
             
-            # Mock find command output
-            mock_result = MagicMock()
-            mock_result.returncode = 0
-            mock_result.stdout = f"{self.project_root}/test.backup\n{self.project_root}/old_file.bak\n"
-            mock_subprocess.return_value = mock_result
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test find command output
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.returncode = 0
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.stdout = f"{self.project_root}/test.backup\n{self.project_root}/old_file.bak\n"
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result
             
             coordinator = HygieneEnforcementCoordinator(str(self.project_root))
             violations = coordinator.find_violations("rule_13")
@@ -116,15 +116,15 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
             self.skipTest("Coordinator module not available for import")
             
     @patch('subprocess.run')
-    def test_verify_file_safety(self, mock_subprocess):
+    def test_verify_file_safety(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test file safety verification"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
             
-            # Mock grep command - no references found
-            mock_result = MagicMock()
-            mock_result.returncode = 1  # grep returns 1 when no matches
-            mock_subprocess.return_value = mock_result
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test grep command - no references found
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.returncode = 1  # grep returns 1 when no matches
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result
             
             coordinator = HygieneEnforcementCoordinator(str(self.project_root))
             test_file = self.project_root / "test.backup"
@@ -139,16 +139,16 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
             self.skipTest("Coordinator module not available for import")
             
     @patch('subprocess.run')
-    def test_verify_file_safety_with_references(self, mock_subprocess):
+    def test_verify_file_safety_with_references(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test file safety verification when file has references"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
             
-            # Mock grep command - references found
-            mock_result = MagicMock()
-            mock_result.returncode = 0
-            mock_result.stdout = "/path/to/other/file.py:import test.backup\n"
-            mock_subprocess.return_value = mock_result
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test grep command - references found
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.returncode = 0
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.stdout = "/path/to/other/file.py:import test.backup\n"
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result
             
             coordinator = HygieneEnforcementCoordinator(str(self.project_root))
             test_file = self.project_root / "test.backup"
@@ -202,16 +202,16 @@ class TestCoordinatorRuleEnforcement(unittest.TestCase):
             self.skipTest("Coordinator module not available for import")
             
     @patch('subprocess.run')
-    def test_enforce_rule_13_dry_run(self, mock_subprocess):
+    def test_enforce_rule_13_dry_run(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test rule 13 enforcement in dry run mode"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
             
-            # Mock find command to return test violations
-            mock_result = MagicMock()
-            mock_result.returncode = 0
-            mock_result.stdout = f"{self.project_root}/test.backup\n"
-            mock_subprocess.return_value = mock_result
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test find command to return test violations
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.returncode = 0
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.stdout = f"{self.project_root}/test.backup\n"
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result
             
             coordinator = HygieneEnforcementCoordinator(str(self.project_root))
             coordinator.dry_run = True

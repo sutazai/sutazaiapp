@@ -1,42 +1,42 @@
 """
 Unit tests for Redis-based service mesh bus operations.
-Tests all functions in backend/app/mesh/redis_bus.py with mocked Redis.
+Tests all functions in backend/app/mesh/redis_bus.py with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested Redis.
 """
 import json
 import os
 import pytest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 from typing import Dict, Any, List, Tuple
 
 # Test data and fixtures
 @pytest.fixture
-def mock_redis():
-    """Mock Redis client for unit tests."""
-    redis_mock = Mock()
-    redis_mock.ping.return_value = True
-    redis_mock.set.return_value = True
-    redis_mock.get.return_value = None
-    redis_mock.exists.return_value = False
-    redis_mock.expire.return_value = True
-    redis_mock.xadd.return_value = "1699999999999-0"
-    redis_mock.xrevrange.return_value = []
-    redis_mock.xgroup_create.return_value = True
-    redis_mock.xreadgroup.return_value = []
-    redis_mock.xack.return_value = 1
-    redis_mock.scan.return_value = (0, [])
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis client for unit tests."""
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.ping.return_value = True
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.set.return_value = True
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get.return_value = None
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.exists.return_value = False
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.expire.return_value = True
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.xadd.return_value = "1699999999999-0"
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.xrevrange.return_value = []
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.xgroup_create.return_value = True
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.xreadgroup.return_value = []
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.xack.return_value = 1
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.scan.return_value = (0, [])
     # Set up pipeline context manager properly
-    pipeline_mock = Mock()
-    pipeline_mock.__enter__ = Mock(return_value=redis_mock)
-    pipeline_mock.__exit__ = Mock(return_value=None)
-    redis_mock.pipeline.return_value = pipeline_mock
-    redis_mock.execute.return_value = []
-    return redis_mock
+    pipeline_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+    pipeline_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.__enter__ = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test)
+    pipeline_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.__exit__ = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=None)
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.pipeline.return_value = pipeline_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.execute.return_value = []
+    return redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 
 @pytest.fixture
-def mock_redis_pool():
-    """Mock Redis connection pool."""
-    pool_mock = Mock()
-    return pool_mock
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_pool():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis connection pool."""
+    pool_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+    return pool_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 
 @pytest.fixture
 def sample_task_payload():
@@ -83,10 +83,10 @@ class TestRedisConnection:
     
     @patch('backend.app.mesh.redis_bus.redis.ConnectionPool.from_url')
     @patch('backend.app.mesh.redis_bus.redis.Redis')
-    def test_get_redis_creates_pool(self, mock_redis_class, mock_pool_from_url, mock_redis_pool):
+    def test_get_redis_creates_pool(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_class, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_from_url, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_pool):
         """Test Redis connection pool creation."""
-        mock_pool_from_url.return_value = mock_redis_pool
-        mock_redis_class.return_value = Mock()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_from_url.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_pool
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
         
         from backend.app.mesh.redis_bus import get_redis
         
@@ -96,16 +96,16 @@ class TestRedisConnection:
         
         client = get_redis()
         
-        mock_pool_from_url.assert_called_once()
-        mock_redis_class.assert_called_once_with(connection_pool=mock_redis_pool)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_from_url.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_class.assert_called_once_with(connection_pool=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_pool)
         assert client is not None
     
     @patch('backend.app.mesh.redis_bus.redis.ConnectionPool.from_url')
     @patch('backend.app.mesh.redis_bus.redis.Redis')
-    def test_get_redis_reuses_pool(self, mock_redis_class, mock_pool_from_url, mock_redis_pool):
+    def test_get_redis_reuses_pool(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_class, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_from_url, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_pool):
         """Test Redis connection pool reuse."""
-        mock_pool_from_url.return_value = mock_redis_pool
-        mock_redis_class.return_value = Mock()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_from_url.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_pool
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
         
         from backend.app.mesh.redis_bus import get_redis
         
@@ -117,8 +117,8 @@ class TestRedisConnection:
         client2 = get_redis()
         
         # Pool should only be created once
-        assert mock_pool_from_url.call_count == 1
-        assert mock_redis_class.call_count == 2  # But client created each time
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_from_url.call_count == 1
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_class.call_count == 2  # But client created each time
 
 class TestStreamKeys:
     """Test stream key generation functions."""
@@ -151,9 +151,9 @@ class TestAgentRegistry:
     """Test agent registration and management."""
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_register_agent(self, mock_get_redis, mock_redis, sample_agent_data):
+    def test_register_agent(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_agent_data):
         """Test agent registration."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
         from backend.app.mesh.redis_bus import register_agent
         
@@ -170,77 +170,77 @@ class TestAgentRegistry:
             "meta": sample_agent_data["meta"]
         }
         
-        mock_redis.set.assert_called_once_with(
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.set.assert_called_once_with(
             f"mesh:agent:{sample_agent_data['agent_id']}",
             json.dumps(expected_data),
             ex=120
         )
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_register_agent_default_ttl(self, mock_get_redis, mock_redis):
+    def test_register_agent_default_ttl(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test agent registration with default TTL."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
         from backend.app.mesh.redis_bus import register_agent
         
         register_agent("test-agent", "test-type")
         
         # Should use default TTL of 60 seconds
-        mock_redis.set.assert_called_once()
-        args, kwargs = mock_redis.set.call_args
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.set.assert_called_once()
+        args, kwargs = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.set.call_args
         assert kwargs["ex"] == 60
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_heartbeat_agent_exists(self, mock_get_redis, mock_redis):
+    def test_heartbeat_agent_exists(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test agent heartbeat when agent exists."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.exists.return_value = True
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.exists.return_value = True
         
         from backend.app.mesh.redis_bus import heartbeat_agent
         
         heartbeat_agent("test-agent", 90)
         
-        mock_redis.exists.assert_called_once_with("mesh:agent:test-agent")
-        mock_redis.expire.assert_called_once_with("mesh:agent:test-agent", 90)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.exists.assert_called_once_with("mesh:agent:test-agent")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.expire.assert_called_once_with("mesh:agent:test-agent", 90)
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_heartbeat_agent_not_exists(self, mock_get_redis, mock_redis):
+    def test_heartbeat_agent_not_exists(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test agent heartbeat when agent doesn't exist."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.exists.return_value = False
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.exists.return_value = False
         
         from backend.app.mesh.redis_bus import heartbeat_agent
         
         heartbeat_agent("test-agent", 90)
         
-        mock_redis.exists.assert_called_once_with("mesh:agent:test-agent")
-        mock_redis.expire.assert_not_called()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.exists.assert_called_once_with("mesh:agent:test-agent")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.expire.assert_not_called()
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_list_agents_empty(self, mock_get_redis, mock_redis):
+    def test_list_agents_empty(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test listing agents when none are registered."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.scan.return_value = (0, [])
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.scan.return_value = (0, [])
         
         from backend.app.mesh.redis_bus import list_agents
         
         agents = list_agents()
         
         assert agents == []
-        mock_redis.scan.assert_called_once_with(0, match="mesh:agent:*", count=100)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.scan.assert_called_once_with(0, match="mesh:agent:*", count=100)
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_list_agents_with_data(self, mock_get_redis, mock_redis, sample_agent_data):
+    def test_list_agents_with_data(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_agent_data):
         """Test listing agents with registered agents."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
-        # Mock scan to return agent keys
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test scan to return agent keys
         agent_keys = ["mesh:agent:agent-1", "mesh:agent:agent-2"]
-        mock_redis.scan.return_value = (0, agent_keys)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.scan.return_value = (0, agent_keys)
         
-        # Mock pipeline execution to return agent data
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test pipeline execution to return agent data
         agent_data = [json.dumps(sample_agent_data), json.dumps(sample_agent_data)]
-        mock_redis.execute.return_value = agent_data
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.execute.return_value = agent_data
         
         from backend.app.mesh.redis_bus import list_agents
         
@@ -250,20 +250,20 @@ class TestAgentRegistry:
         assert all(agent == sample_agent_data for agent in agents)
         
         # Verify pipeline usage for batch fetch
-        mock_redis.pipeline.assert_called_once()
-        assert mock_redis.get.call_count == 2
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.pipeline.assert_called_once()
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.get.call_count == 2
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_list_agents_with_invalid_json(self, mock_get_redis, mock_redis):
+    def test_list_agents_with_invalid_json(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test listing agents with some invalid JSON data."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
         agent_keys = ["mesh:agent:agent-1", "mesh:agent:agent-2"]
-        mock_redis.scan.return_value = (0, agent_keys)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.scan.return_value = (0, agent_keys)
         
-        # Mock one valid and one invalid JSON
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test one valid and one invalid JSON
         agent_data = ['{"valid": "json"}', 'invalid json']
-        mock_redis.execute.return_value = agent_data
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.execute.return_value = agent_data
         
         from backend.app.mesh.redis_bus import list_agents
         
@@ -277,10 +277,10 @@ class TestTaskEnqueuing:
     """Test task enqueuing functionality."""
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_enqueue_task_basic(self, mock_get_redis, mock_redis, sample_task_payload):
+    def test_enqueue_task_basic(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_task_payload):
         """Test basic task enqueuing."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.xadd.return_value = "1699999999999-0"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.return_value = "1699999999999-0"
         
         from backend.app.mesh.redis_bus import enqueue_task
         
@@ -293,12 +293,12 @@ class TestTaskEnqueuing:
         assert msg_id == "1699999999999-0"
         
         # Verify stream creation with consumer group
-        mock_redis.xgroup_create.assert_called_once_with(
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xgroup_create.assert_called_once_with(
             "stream:tasks:data_processing", "default", id="$", mkstream=True
         )
         
         # Verify task addition
-        mock_redis.xadd.assert_called_once_with(
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.assert_called_once_with(
             "stream:tasks:data_processing",
             {"json": json.dumps(sample_task_payload)},
             maxlen=10000,
@@ -306,14 +306,14 @@ class TestTaskEnqueuing:
         )
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_enqueue_task_group_exists(self, mock_get_redis, mock_redis, sample_task_payload):
+    def test_enqueue_task_group_exists(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_task_payload):
         """Test task enqueuing when consumer group already exists."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.xadd.return_value = "1699999999999-1"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.return_value = "1699999999999-1"
         
-        # Mock group already exists error
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test group already exists error
         import redis
-        mock_redis.xgroup_create.side_effect = redis.exceptions.ResponseError("BUSYGROUP")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xgroup_create.side_effect = redis.exceptions.ResponseError("BUSYGROUP")
         
         from backend.app.mesh.redis_bus import enqueue_task
         
@@ -325,13 +325,13 @@ class TestTaskEnqueuing:
         
         assert msg_id == "1699999999999-1"
         # Should still succeed despite group creation error
-        mock_redis.xadd.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.assert_called_once()
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_enqueue_task_custom_maxlen(self, mock_get_redis, mock_redis, sample_task_payload):
+    def test_enqueue_task_custom_maxlen(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_task_payload):
         """Test task enqueuing with custom maxlen."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.xadd.return_value = "1699999999999-2"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.return_value = "1699999999999-2"
         
         from backend.app.mesh.redis_bus import enqueue_task
         
@@ -342,7 +342,7 @@ class TestTaskEnqueuing:
         msg_id = enqueue_task("data_processing", sample_task_payload, maxlen=5000)
         
         # Verify custom maxlen is used
-        mock_redis.xadd.assert_called_once_with(
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.assert_called_once_with(
             "stream:tasks:data_processing",
             {"json": json.dumps(sample_task_payload)},
             maxlen=5000,
@@ -350,10 +350,10 @@ class TestTaskEnqueuing:
         )
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_enqueue_task_caching(self, mock_get_redis, mock_redis, sample_task_payload):
+    def test_enqueue_task_caching(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_task_payload):
         """Test stream caching optimization."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.xadd.return_value = "1699999999999-0"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.return_value = "1699999999999-0"
         
         from backend.app.mesh.redis_bus import enqueue_task
         
@@ -363,41 +363,41 @@ class TestTaskEnqueuing:
         
         # First call should create group
         enqueue_task("data_processing", sample_task_payload)
-        assert mock_redis.xgroup_create.call_count == 1
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xgroup_create.call_count == 1
         
         # Second call should not create group (cached)
         enqueue_task("data_processing", sample_task_payload)
-        assert mock_redis.xgroup_create.call_count == 1  # Still 1
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xgroup_create.call_count == 1  # Still 1
 
 class TestResultTailing:
     """Test result tailing functionality."""
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_tail_results_empty(self, mock_get_redis, mock_redis):
+    def test_tail_results_empty(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test tailing results when no results exist."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.execute.return_value = [[]]  # Empty pipeline result
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.execute.return_value = [[]]  # Empty pipeline result
         
         from backend.app.mesh.redis_bus import tail_results
         
         results = tail_results("data_processing")
         
         assert results == []
-        mock_redis.pipeline.assert_called_once()
-        mock_redis.xrevrange.assert_called_once_with("stream:results:data_processing", count=10)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.pipeline.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xrevrange.assert_called_once_with("stream:results:data_processing", count=10)
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_tail_results_with_data(self, mock_get_redis, mock_redis):
+    def test_tail_results_with_data(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test tailing results with actual data."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
-        # Mock result data
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test result data
         result_data = {"status": "completed", "result": "processed successfully"}
         raw_results = [
             ("1699999999999-0", {"json": json.dumps(result_data)}),
             ("1699999999999-1", {"json": json.dumps(result_data)})
         ]
-        mock_redis.execute.return_value = [raw_results]
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.execute.return_value = [raw_results]
         
         from backend.app.mesh.redis_bus import tail_results
         
@@ -407,19 +407,19 @@ class TestResultTailing:
         assert results[0] == ("1699999999999-0", result_data)
         assert results[1] == ("1699999999999-1", result_data)
         
-        mock_redis.xrevrange.assert_called_once_with("stream:results:data_processing", count=2)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xrevrange.assert_called_once_with("stream:results:data_processing", count=2)
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_tail_results_invalid_json(self, mock_get_redis, mock_redis):
+    def test_tail_results_invalid_json(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test tailing results with invalid JSON data."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
-        # Mock result with invalid JSON
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test result with invalid JSON
         raw_results = [
             ("1699999999999-0", {"json": "invalid json"}),
             ("1699999999999-1", {"field1": "value1", "field2": "value2"})  # Raw fields
         ]
-        mock_redis.execute.return_value = [raw_results]
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.execute.return_value = [raw_results]
         
         from backend.app.mesh.redis_bus import tail_results
         
@@ -435,40 +435,40 @@ class TestConsumerGroups:
     """Test consumer group management."""
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_create_consumer_group(self, mock_get_redis, mock_redis):
+    def test_create_consumer_group(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test consumer group creation."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
         from backend.app.mesh.redis_bus import create_consumer_group
         
         create_consumer_group("data_processing", "workers")
         
-        mock_redis.xgroup_create.assert_called_once_with(
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xgroup_create.assert_called_once_with(
             "stream:tasks:data_processing", "workers", id="$", mkstream=True
         )
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_create_consumer_group_already_exists(self, mock_get_redis, mock_redis):
+    def test_create_consumer_group_already_exists(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test consumer group creation when group already exists."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
         import redis
-        mock_redis.xgroup_create.side_effect = redis.exceptions.ResponseError("BUSYGROUP Consumer Group name already exists")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xgroup_create.side_effect = redis.exceptions.ResponseError("BUSYGROUP Consumer Group name already exists")
         
         from backend.app.mesh.redis_bus import create_consumer_group
         
         # Should not raise exception
         create_consumer_group("data_processing", "workers")
         
-        mock_redis.xgroup_create.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xgroup_create.assert_called_once()
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_create_consumer_group_other_error(self, mock_get_redis, mock_redis):
+    def test_create_consumer_group_other_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test consumer group creation with unexpected error."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
         import redis
-        mock_redis.xgroup_create.side_effect = redis.exceptions.ResponseError("WRONGTYPE Operation against a key holding the wrong kind of value")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xgroup_create.side_effect = redis.exceptions.ResponseError("WRONGTYPE Operation against a key holding the wrong kind of value")
         
         from backend.app.mesh.redis_bus import create_consumer_group
         
@@ -477,33 +477,33 @@ class TestConsumerGroups:
             create_consumer_group("data_processing", "workers")
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_read_group_empty(self, mock_get_redis, mock_redis):
+    def test_read_group_empty(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test reading from consumer group with no messages."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.xreadgroup.return_value = []
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xreadgroup.return_value = []
         
         from backend.app.mesh.redis_bus import read_group
         
         messages = read_group("data_processing", "workers", "worker-1")
         
         assert messages == []
-        mock_redis.xreadgroup.assert_called_once_with(
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xreadgroup.assert_called_once_with(
             "workers", "worker-1", {"stream:tasks:data_processing": ">"}, count=1, block=1000
         )
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_read_group_with_messages(self, mock_get_redis, mock_redis, sample_task_payload):
+    def test_read_group_with_messages(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_task_payload):
         """Test reading from consumer group with messages."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
-        # Mock message data
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test message data
         stream_data = [
             ("stream:tasks:data_processing", [
                 ("1699999999999-0", {"json": json.dumps(sample_task_payload)}),
                 ("1699999999999-1", {"json": json.dumps(sample_task_payload)})
             ])
         ]
-        mock_redis.xreadgroup.return_value = stream_data
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xreadgroup.return_value = stream_data
         
         from backend.app.mesh.redis_bus import read_group
         
@@ -514,18 +514,18 @@ class TestConsumerGroups:
         assert messages[1] == ("1699999999999-1", sample_task_payload)
 
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_read_group_with_invalid_json(self, mock_get_redis, mock_redis):
+    def test_read_group_with_invalid_json(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test reading from consumer group with invalid JSON messages."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
-        # Mock message data with invalid JSON
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test message data with invalid JSON
         stream_data = [
             ("stream:tasks:data_processing", [
                 ("1699999999999-0", {"json": "invalid json"}),
                 ("1699999999999-1", {"field1": "value1", "field2": "value2"})  # No json field
             ])
         ]
-        mock_redis.xreadgroup.return_value = stream_data
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xreadgroup.return_value = stream_data
         
         from backend.app.mesh.redis_bus import read_group
         
@@ -538,17 +538,17 @@ class TestConsumerGroups:
         assert messages[1] == ("1699999999999-1", {})
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_ack_message(self, mock_get_redis, mock_redis):
+    def test_ack_message(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test acknowledging processed message."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.xack.return_value = 1
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xack.return_value = 1
         
         from backend.app.mesh.redis_bus import ack
         
         result = ack("data_processing", "workers", "1699999999999-0")
         
         assert result == 1
-        mock_redis.xack.assert_called_once_with(
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xack.assert_called_once_with(
             "stream:tasks:data_processing", "workers", "1699999999999-0"
         )
 
@@ -556,10 +556,10 @@ class TestDeadLetterQueue:
     """Test dead letter queue functionality."""
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_move_to_dead(self, mock_get_redis, mock_redis, sample_task_payload):
+    def test_move_to_dead(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_task_payload):
         """Test moving failed message to dead letter queue."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.xadd.return_value = "1699999999999-dead-0"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.return_value = "1699999999999-dead-0"
         
         from backend.app.mesh.redis_bus import move_to_dead
         
@@ -572,7 +572,7 @@ class TestDeadLetterQueue:
             "payload": sample_task_payload
         }
         
-        mock_redis.xadd.assert_called_once_with(
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.assert_called_once_with(
             "stream:dead:data_processing",
             {"json": json.dumps(expected_payload)},
             maxlen=10000,
@@ -584,8 +584,8 @@ class TestPerformanceOptimizations:
     
     def test_connection_pool_settings(self):
         """Test Redis connection pool optimization settings."""
-        with patch('backend.app.mesh.redis_bus.redis.ConnectionPool.from_url') as mock_pool:
-            with patch('backend.app.mesh.redis_bus.redis.Redis') as mock_redis_class:
+        with patch('backend.app.mesh.redis_bus.redis.ConnectionPool.from_url') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool:
+            with patch('backend.app.mesh.redis_bus.redis.Redis') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_class:
                 # Reset global pool to force creation
                 import backend.app.mesh.redis_bus
                 backend.app.mesh.redis_bus._redis_pool = None
@@ -594,8 +594,8 @@ class TestPerformanceOptimizations:
                 get_redis()
                 
                 # Verify optimized pool settings
-                mock_pool.assert_called_once()
-                args, kwargs = mock_pool.call_args
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.assert_called_once()
+                args, kwargs = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.call_args
                 
                 assert kwargs['max_connections'] == 50
                 assert kwargs['socket_connect_timeout'] == 5
@@ -605,8 +605,8 @@ class TestPerformanceOptimizations:
 
     def test_get_redis_async_creates_pool(self):
         """Test async Redis connection pool creation."""
-        with patch('backend.app.mesh.redis_bus.redis_async.ConnectionPool.from_url') as mock_pool:
-            with patch('backend.app.mesh.redis_bus.redis_async.Redis') as mock_redis_class:
+        with patch('backend.app.mesh.redis_bus.redis_async.ConnectionPool.from_url') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool:
+            with patch('backend.app.mesh.redis_bus.redis_async.Redis') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_class:
                 # Reset global async pool
                 import backend.app.mesh.redis_bus
                 backend.app.mesh.redis_bus._redis_async_pool = None
@@ -615,56 +615,56 @@ class TestPerformanceOptimizations:
                 async def test_async():
                     from backend.app.mesh.redis_bus import get_redis_async
                     await get_redis_async()
-                    return mock_pool.call_args
+                    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.call_args
                 
                 # Run async test
                 call_args = asyncio.run(test_async())
                 
                 # Verify async pool settings
-                mock_pool.assert_called_once()
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.assert_called_once()
                 args, kwargs = call_args
                 assert kwargs['max_connections'] == 50
                 assert kwargs['socket_keepalive'] is True
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_pipeline_usage_in_list_agents(self, mock_get_redis, mock_redis):
+    def test_pipeline_usage_in_list_agents(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test pipeline usage for batch operations in list_agents."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.scan.return_value = (0, ["mesh:agent:1", "mesh:agent:2"])
-        mock_redis.execute.return_value = ['{"id": "1"}', '{"id": "2"}']
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.scan.return_value = (0, ["mesh:agent:1", "mesh:agent:2"])
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.execute.return_value = ['{"id": "1"}', '{"id": "2"}']
         
         from backend.app.mesh.redis_bus import list_agents
         
         list_agents()
         
         # Verify pipeline is used for batch fetching
-        mock_redis.pipeline.assert_called_once()
-        assert mock_redis.get.call_count == 2  # Batched get operations
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.pipeline.assert_called_once()
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.get.call_count == 2  # Batched get operations
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_pipeline_usage_in_tail_results(self, mock_get_redis, mock_redis):
+    def test_pipeline_usage_in_tail_results(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test pipeline usage for batch operations in tail_results."""
-        mock_get_redis.return_value = mock_redis
-        mock_redis.execute.return_value = [[]]
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.execute.return_value = [[]]
         
         from backend.app.mesh.redis_bus import tail_results
         
         tail_results("data_processing")
         
         # Verify pipeline is used
-        mock_redis.pipeline.assert_called_once()
-        mock_redis.xrevrange.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.pipeline.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xrevrange.assert_called_once()
 
 class TestErrorHandling:
     """Test error handling and edge cases."""
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_enqueue_task_redis_error(self, mock_get_redis, mock_redis, sample_task_payload):
+    def test_enqueue_task_redis_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_task_payload):
         """Test task enqueuing with Redis connection error."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
         import redis
-        mock_redis.xadd.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.xadd.side_effect = redis.exceptions.ConnectionError("Connection failed")
         
         from backend.app.mesh.redis_bus import enqueue_task
         
@@ -676,12 +676,12 @@ class TestErrorHandling:
             enqueue_task("data_processing", sample_task_payload)
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_list_agents_redis_error(self, mock_get_redis, mock_redis):
+    def test_list_agents_redis_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test listing agents with Redis connection error."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
         import redis
-        mock_redis.scan.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.scan.side_effect = redis.exceptions.ConnectionError("Connection failed")
         
         from backend.app.mesh.redis_bus import list_agents
         
@@ -689,12 +689,12 @@ class TestErrorHandling:
             list_agents()
     
     @patch('backend.app.mesh.redis_bus.get_redis')
-    def test_tail_results_redis_error(self, mock_get_redis, mock_redis):
+    def test_tail_results_redis_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
         """Test tailing results with Redis connection error."""
-        mock_get_redis.return_value = mock_redis
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
         
         import redis
-        mock_redis.pipeline.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.pipeline.side_effect = redis.exceptions.ConnectionError("Connection failed")
         
         from backend.app.mesh.redis_bus import tail_results
         

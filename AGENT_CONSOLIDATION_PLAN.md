@@ -22,7 +22,7 @@ Broken References: 50+
 DUPLICATES DETECTED:
 - "system-architect" (appears 3 times)
 - " system-architect" (with leading space)
-- "agi-system-architect" (same functionality)
+- "system-architect" (same functionality)
 - " system-architect" (another variant)
 - "qa-team-lead" (appears 3 times)
 - "senior-engineer" (appears 3 times)

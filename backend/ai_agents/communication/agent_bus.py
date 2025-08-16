@@ -124,13 +124,13 @@ class AgentCommunicationBus:
         
         # Channel names
         self.channels = {
-            'task_queue': 'agi:tasks',
-            'priority_queue': 'agi:priority_tasks',
-            'broadcast': 'agi:broadcast',
-            'agent_status': 'agi:agent_status',
-            'emergency': 'agi:emergency',
-            'dead_letter': 'agi:dead_letter',
-            'metrics': 'agi:metrics'
+            'task_queue': '  :tasks',
+            'priority_queue': '  :priority_tasks',
+            'broadcast': '  :broadcast',
+            'agent_status': '  :agent_status',
+            'emergency': '  :emergency',
+            'dead_letter': '  :dead_letter',
+            'metrics': '  :metrics'
         }
     
     async def initialize(self):
@@ -178,7 +178,7 @@ class AgentCommunicationBus:
         
         # Store in Redis for persistence
         await self.redis_client.hset(
-            "agi:agents",
+            "  :agents",
             agent_id,
             json.dumps({
                 'capabilities': list(capabilities),
@@ -205,7 +205,7 @@ class AgentCommunicationBus:
         self.agent_loads.pop(agent_id, None)
         self.agent_last_seen.pop(agent_id, None)
         
-        await self.redis_client.hdel("agi:agents", agent_id)
+        await self.redis_client.hdel("  :agents", agent_id)
         
         logger.info(f"Agent {agent_id} unregistered")
     
@@ -227,12 +227,12 @@ class AgentCommunicationBus:
             
             # Store message for tracking
             await self.redis_client.hset(
-                f"agi:messages:{message.id}",
+                f"  :messages:{message.id}",
                 mapping=message.to_dict()
             )
             
             # Set expiration for cleanup
-            await self.redis_client.expire(f"agi:messages:{message.id}", 3600)
+            await self.redis_client.expire(f"  :messages:{message.id}", 3600)
             
             return True
             
@@ -337,12 +337,12 @@ class AgentCommunicationBus:
         self.agent_last_seen[agent_id] = time.time()
         
         # Update in Redis
-        agent_data = await self.redis_client.hget("agi:agents", agent_id)
+        agent_data = await self.redis_client.hget("  :agents", agent_id)
         if agent_data:
             data = json.loads(agent_data)
             data['load'] = load
             data['last_seen'] = time.time()
-            await self.redis_client.hset("agi:agents", agent_id, json.dumps(data))
+            await self.redis_client.hset("  :agents", agent_id, json.dumps(data))
     
     async def get_system_metrics(self) -> Dict[str, Any]:
         """Get current system communication metrics"""
@@ -389,7 +389,7 @@ class AgentCommunicationBus:
         
         while time.time() - start_time < timeout:
             # Check for response message
-            response_key = f"agi:responses:{correlation_id}"
+            response_key = f"  :responses:{correlation_id}"
             response_data = await self.redis_client.get(response_key)
             
             if response_data:
@@ -518,12 +518,12 @@ class AgentCommunicationBus:
         self.agent_loads.pop(agent_id, None)
         
         # Mark as inactive in Redis
-        agent_data = await self.redis_client.hget("agi:agents", agent_id)
+        agent_data = await self.redis_client.hget("  :agents", agent_id)
         if agent_data:
             data = json.loads(agent_data)
             data['status'] = 'inactive'
             data['inactive_since'] = time.time()
-            await self.redis_client.hset("agi:agents", agent_id, json.dumps(data))
+            await self.redis_client.hset("  :agents", agent_id, json.dumps(data))
     
     def register_message_handler(self, message_type: MessageType, handler: Callable):
         """Register a message handler for specific message types"""

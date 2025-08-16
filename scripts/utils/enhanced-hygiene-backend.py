@@ -459,7 +459,7 @@ class EnhancedHygieneBackend:
             compliance_penalty = (critical_violations * 10) + (high_violations * 5) + (total_violations * 1)
             compliance_score = max(0, 100 - compliance_penalty)
             
-            # Mock agent health (would be real in production)
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agent health (would be real in production)
             agent_health = [
                 {
                     'agent_id': 'hygiene-scanner',

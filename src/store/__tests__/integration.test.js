@@ -12,8 +12,8 @@ import { useConversationStore } from '../conversationStore';
 import { useSidebarStore } from '../sidebarStore';
 import { MessageType } from '../types';
 
-// Mock WebSocket
-class MockWebSocket {
+// Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test WebSocket
+class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestWebSocket {
   constructor(url) {
     this.url = url;
     this.readyState = WebSocket.CONNECTING;
@@ -44,7 +44,7 @@ class MockWebSocket {
   }
 }
 
-global.WebSocket = MockWebSocket;
+global.WebSocket = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestWebSocket;
 global.fetch = jest.fn();
 
 describe('Store Integration Tests', () => {
@@ -63,8 +63,8 @@ describe('Store Integration Tests', () => {
     conversationStore = conversationHook.result.current;
     sidebarStore = sidebarHook.result.current;
 
-    // Reset mocks
-    jest.clearAllMocks();
+    // Reset Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
+    jest.clearAllRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests();
   });
 
   describe('Complete Voice Workflow', () => {
@@ -79,9 +79,9 @@ describe('Store Integration Tests', () => {
       expect(conversationStore.currentSession.title).toBe('Voice Test Session');
 
       // Step 2: Simulate voice recording
-      // Mock navigator.mediaDevices
+      // Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test navigator.mediaDevices
       global.navigator.mediaDevices = {
-        getUserMedia: jest.fn().mockResolvedValue({
+        getUserMedia: jest.fn().Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResolvedValue({
           getTracks: () => [{ stop: jest.fn() }]
         })
       };
@@ -99,11 +99,11 @@ describe('Store Integration Tests', () => {
       expect(voiceStore.status).toBe('processing');
 
       // Step 3: Process voice and add to conversation
-      const mockTranscript = 'Hello, this is a voice message';
-      fetch.mockResolvedValueOnce({
+      const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestTranscript = 'Hello, this is a voice message';
+      fetch.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({
-          transcript: mockTranscript,
+          transcript: Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestTranscript,
           confidence: 0.9
         })
       });
@@ -118,13 +118,13 @@ describe('Store Integration Tests', () => {
       });
 
       expect(voiceResult).toBeTruthy();
-      expect(voiceResult.transcript).toBe(mockTranscript);
+      expect(voiceResult.transcript).toBe(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestTranscript);
 
       // Step 4: Add voice message to conversation
       let messageId;
       act(() => {
         messageId = conversationStore.addMessage(
-          mockTranscript,
+          Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestTranscript,
           MessageType.VOICE,
           { 
             audioBlob: voiceStore.audioBlob,
@@ -136,7 +136,7 @@ describe('Store Integration Tests', () => {
 
       expect(conversationStore.currentSession.messages).toHaveLength(1);
       expect(conversationStore.currentSession.messages[0].type).toBe(MessageType.VOICE);
-      expect(conversationStore.currentSession.messages[0].content).toBe(mockTranscript);
+      expect(conversationStore.currentSession.messages[0].content).toBe(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestTranscript);
 
       // Step 5: Apply filters in sidebar
       act(() => {
@@ -173,7 +173,7 @@ describe('Store Integration Tests', () => {
       expect(streamingStore.isConnected()).toBe(true);
 
       // Step 4: Submit text and start streaming
-      const mockSubmit = async (text) => {
+      const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSubmit = async (text) => {
         // Add user message to conversation
         conversationStore.addMessage(text, MessageType.TEXT);
         
@@ -188,7 +188,7 @@ describe('Store Integration Tests', () => {
 
       let submitResult;
       await act(async () => {
-        submitResult = await textInputStore.submitText(mockSubmit);
+        submitResult = await textInputStore.submitText(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSubmit);
       });
 
       expect(submitResult.success).toBe(true);
@@ -314,7 +314,7 @@ describe('Store Integration Tests', () => {
   describe('Error Handling and Recovery', () => {
     test('should handle errors gracefully across stores', async () => {
       // Test streaming connection error
-      const mockWebSocketError = class extends MockWebSocket {
+      const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestWebSocketError = class extends Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestWebSocket {
         constructor(url) {
           super(url);
           setTimeout(() => {
@@ -325,7 +325,7 @@ describe('Store Integration Tests', () => {
         }
       };
 
-      global.WebSocket = mockWebSocketError;
+      global.WebSocket = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestWebSocketError;
 
       await act(async () => {
         await streamingStore.connect('ws://invalid-url');
@@ -335,7 +335,7 @@ describe('Store Integration Tests', () => {
       expect(streamingStore.error).toContain('Connection failed');
 
       // Test voice processing error
-      fetch.mockRejectedValueOnce(new Error('Voice API unavailable'));
+      fetch.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestRejectedValueOnce(new Error('Voice API unavailable'));
 
       await act(async () => {
         voiceStore.audioBlob = new Blob(['test'], { type: 'audio/webm' });
@@ -346,10 +346,10 @@ describe('Store Integration Tests', () => {
       expect(voiceStore.error).toContain('Voice API unavailable');
 
       // Test conversation persistence error
-      const mockSetItem = jest.fn(() => {
+      const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSetItem = jest.fn(() => {
         throw new Error('Storage quota exceeded');
       });
-      global.localStorage.setItem = mockSetItem;
+      global.localStorage.setItem = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSetItem;
 
       await act(async () => {
         conversationStore.createSession('Test Session');

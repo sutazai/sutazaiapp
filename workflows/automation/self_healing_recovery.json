@@ -209,7 +209,7 @@
         {
           "id": "recovery_planner",
           "type": "agent",
-          "agent_id": "agi-system-architect",
+          "agent_id": " -system-architect",
           "config": {
             "action": "plan_recovery_strategy",
             "consider_dependencies": true,

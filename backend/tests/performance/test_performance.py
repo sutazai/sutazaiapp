@@ -7,7 +7,7 @@ import pytest
 import asyncio
 import time
 import statistics
-from unittest.mock import patch, AsyncMock
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 from httpx import AsyncClient
 import concurrent.futures
 
@@ -43,7 +43,7 @@ class TestResponseTimePerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_api_endpoint_response_times(self, async_client, mock_validation):
+    async def test_api_endpoint_response_times(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test critical API endpoints meet performance requirements"""
         endpoints = [
             "/api/v1/agents",
@@ -70,7 +70,7 @@ class TestResponseTimePerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_chat_endpoint_response_time(self, async_client, mock_validation):
+    async def test_chat_endpoint_response_time(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test chat endpoint performance with AI processing"""
         chat_request = {
             "message": "Hello",
@@ -134,7 +134,7 @@ class TestThroughputPerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_mixed_api_throughput(self, async_client, mock_validation):
+    async def test_mixed_api_throughput(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test throughput with mixed API operations"""
         endpoints = [
             "/health",
@@ -169,7 +169,7 @@ class TestThroughputPerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_chat_throughput(self, async_client, mock_validation):
+    async def test_chat_throughput(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test chat endpoint throughput under concurrent load"""
         chat_request = {
             "message": "Quick test",
@@ -204,7 +204,7 @@ class TestResourceUtilizationPerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_memory_usage_under_load(self, async_client, mock_psutil):
+    async def test_memory_usage_under_load(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_psutil):
         """Test memory usage remains stable under load"""
         # Make multiple concurrent requests to stress memory
         tasks = []
@@ -369,7 +369,7 @@ class TestCachePerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_cache_hit_performance(self, async_client, mock_validation):
+    async def test_cache_hit_performance(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test cache hit performance improves response times"""
         # First request (cache miss)
         start = time.time()
@@ -385,7 +385,7 @@ class TestCachePerformance:
         
         assert response2.status_code == 200
         
-        # Cache hit should be faster (with mocked services, difference may be minimal)
+        # Cache hit should be faster (with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested services, difference may be minimal)
         # Just verify both requests complete successfully
         assert miss_time >= 0
         assert hit_time >= 0
@@ -468,8 +468,8 @@ class TestErrorHandlingPerformance:
         
         start_time = time.time()
         
-        with patch('app.utils.validation.validate_model_name') as mock_validate:
-            mock_validate.side_effect = ValueError("Invalid model name")
+        with patch('app.utils.validation.validate_model_name') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate.side_effect = ValueError("Invalid model name")
             
             tasks = []
             for request in invalid_requests:
@@ -518,7 +518,7 @@ class TestScalabilityIndicators:
 
     @pytest.mark.performance
     @pytest.mark.asyncio  
-    async def test_resource_efficiency_indicators(self, async_client, mock_psutil):
+    async def test_resource_efficiency_indicators(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_psutil):
         """Test resource efficiency under load"""
         # Make concurrent requests while monitoring resource metrics
         tasks = []

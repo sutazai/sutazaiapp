@@ -31,7 +31,7 @@ import os
 import stat
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
-from unittest.mock import AsyncMock, Mock, patch, mock_open
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open
 from dataclasses import dataclass
 import urllib.parse
 
@@ -157,7 +157,7 @@ class TestMCPPackageSecurity:
     async def test_package_checksum_validation(
         self,
         test_environment: TestEnvironment,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test package checksum validation and integrity checking."""
         config = test_environment.config
@@ -167,17 +167,17 @@ class TestMCPPackageSecurity:
         package_name = config.mcp_servers[server_name]["package"]
         version = "1.2.3"
         
-        # Mock download with checksum validation
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test download with checksum validation
         expected_checksum = "sha256:abc123def456"
         
-        async def mock_download_with_checksum(*args, **kwargs):
+        async def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_download_with_checksum(*args, **kwargs):
             # Simulate package download
             target_dir = args[2] if len(args) > 2 else kwargs.get("target_dir")
             package_dir = target_dir / f"{package_name.split('/')[-1]}-{version}"
             package_dir.mkdir(parents=True, exist_ok=True)
             
             # Create package content
-            content = f"Mock package content for {package_name} v{version}"
+            content = f"Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test package content for {package_name} v{version}"
             (package_dir / "package.json").write_text(json.dumps({
                 "name": package_name,
                 "version": version
@@ -198,7 +198,7 @@ class TestMCPPackageSecurity:
                 "download_time": 1.5
             }
         
-        with patch.object(download_manager, 'download_package', side_effect=mock_download_with_checksum):
+        with patch.object(download_manager, 'download_package', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_download_with_checksum):
             result = await download_manager.download_package(
                 package_name,
                 version,
@@ -221,7 +221,7 @@ class TestMCPPackageSecurity:
     async def test_malicious_package_detection(
         self,
         test_environment: TestEnvironment,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test detection of malicious packages and security threats."""
         config = test_environment.config
@@ -232,12 +232,12 @@ class TestMCPPackageSecurity:
         malicious_package = "@test/malicious-package"
         version = "1.0.0"
         
-        with patch.object(download_manager, '_run_command', side_effect=mock_process_runner):
-            # Mock malicious package download
+        with patch.object(download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test malicious package download
             staging_path = config.paths.staging_root / "malicious-test"
             staging_path.mkdir(parents=True, exist_ok=True)
             
-            # Create mock malicious package
+            # Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test malicious package
             (staging_path / "package.json").write_text(json.dumps({
                 "name": malicious_package,
                 "version": version,
@@ -267,7 +267,7 @@ class TestMCPPackageSecurity:
     async def test_vulnerability_scanning(
         self,
         test_environment: TestEnvironment,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test comprehensive vulnerability scanning of MCP packages."""
         config = test_environment.config
@@ -284,7 +284,7 @@ class TestMCPPackageSecurity:
             staging_path = config.paths.staging_root / package_name.replace("/", "_")
             staging_path.mkdir(parents=True, exist_ok=True)
             
-            # Create mock package
+            # Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test package
             (staging_path / "package.json").write_text(json.dumps({
                 "name": package_name,
                 "version": "1.0.0"
@@ -316,7 +316,7 @@ class TestMCPPackageSecurity:
     async def test_dependency_security_validation(
         self,
         test_environment: TestEnvironment,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test security validation of package dependencies."""
         config = test_environment.config
@@ -326,7 +326,7 @@ class TestMCPPackageSecurity:
         package_name = "@test/package-with-deps"
         version = "1.0.0"
         
-        # Mock package with dependencies
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test package with dependencies
         package_json = {
             "name": package_name,
             "version": version,
@@ -794,8 +794,8 @@ class TestMCPSecurityAuditingAndLogging:
     async def test_security_audit_trail(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner,
         tmp_path: Path
     ):
         """Test security audit trail and logging compliance."""
@@ -824,8 +824,8 @@ class TestMCPSecurityAuditingAndLogging:
             with open(audit_log_file, 'a') as f:
                 f.write(json.dumps(event) + "\n")
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Perform operations that should generate audit events
             server_name = "files"

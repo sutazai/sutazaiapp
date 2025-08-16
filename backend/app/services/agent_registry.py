@@ -84,7 +84,7 @@ class AgentRegistry:
         """Classify agent type based on name patterns"""
         name_lower = agent_name.lower()
         
-        if any(keyword in name_lower for keyword in ['opus', 'sonnet', 'ai-', 'agi']):
+        if any(keyword in name_lower for keyword in ['opus', 'sonnet', 'ai-', '  ']):
             return "opus" if "opus" in name_lower else "sonnet"
         elif any(keyword in name_lower for keyword in ['security', 'penetration', 'vulnerability', 'kali']):
             return "security"
@@ -275,7 +275,7 @@ class AgentRegistry:
             "failed_to_start": failed_count,
             "healthy_agents": healthy_count,
             "activation_duration_seconds": duration,
-            "collective_intelligence_level": "Advanced System" if healthy_count > 100 else "AGI" if healthy_count > 50 else "Multi-Agent",
+            "collective_intelligence_level": "Advanced System" if healthy_count > 100 else "  " if healthy_count > 50 else "Multi-Agent",
             "collective_active": healthy_count > 10,
             "active_agents": list(self.active_agents.keys()),
             "timestamp": datetime.utcnow().isoformat()
@@ -284,7 +284,7 @@ class AgentRegistry:
         if healthy_count > 100:
             logger.info(f"🧠 Advanced System-LEVEL COLLECTIVE INTELLIGENCE ACHIEVED! {healthy_count}/{total_agents} agents active")
         elif healthy_count > 50:
-            logger.info(f"🤖 AGI-LEVEL COLLECTIVE INTELLIGENCE ACHIEVED! {healthy_count}/{total_agents} agents active")
+            logger.info(f"🤖   -LEVEL COLLECTIVE INTELLIGENCE ACHIEVED! {healthy_count}/{total_agents} agents active")
         else:
             logger.info(f"🔧 Multi-Agent system active: {healthy_count}/{total_agents} agents healthy")
         
@@ -356,9 +356,9 @@ class AgentRegistry:
             "timestamp": datetime.utcnow().isoformat()
         }
     
-    async def activate_agi_collective(self) -> Dict[str, Any]:
-        """Activate the AGI/Advanced System collective intelligence system"""
-        logger.info("Activating AGI/Advanced System collective intelligence system...")
+    async def activate_  _collective(self) -> Dict[str, Any]:
+        """Activate the   /Advanced System collective intelligence system"""
+        logger.info("Activating   /Advanced System collective intelligence system...")
         
         # Start all agents first
         activation_result = await self.start_all_agents()
@@ -372,7 +372,7 @@ class AgentRegistry:
             "inter_agent_communication": True,
             "total_agents": activation_result["total_discovered"],
             "active_agents": activation_result["healthy_agents"],
-            "collective_intelligence_level": "Advanced System" if activation_result["healthy_agents"] > 100 else "AGI",
+            "collective_intelligence_level": "Advanced System" if activation_result["healthy_agents"] > 100 else "  ",
             "activation_timestamp": datetime.utcnow().isoformat(),
             "capabilities": [
                 "distributed_reasoning",
@@ -383,7 +383,7 @@ class AgentRegistry:
             ]
         }
         
-        logger.info(f"AGI/Advanced System collective activated with {activation_result['healthy_agents']} agents")
+        logger.info(f"  /Advanced System collective activated with {activation_result['healthy_agents']} agents")
         return collective_status
     
     async def enable_inter_agent_communication(self):

@@ -23,8 +23,8 @@ class DataQualityThresholds:
         self.max_duplicate_percentage = 0.01  # 1% maximum duplicates
         self.max_outlier_percentage = 0.05  # 5% maximum outliers
 
-class MockDataset:
-    """Mock dataset generator for testing framework"""
+class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestDataset:
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test dataset generator for testing framework"""
     
     def __init__(self, rows: int = 1000, missing_rate: float = 0.02):
         np.random.seed(42)
@@ -56,8 +56,8 @@ class DataQualityTestSuite:
     
     def __init__(self, dataset: Optional[pd.DataFrame] = None, reference_dataset: Optional[pd.DataFrame] = None):
         if dataset is None:
-            mock_data = MockDataset()
-            self.dataset = mock_data.data
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestDataset()
+            self.dataset = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data.data
         else:
             self.dataset = dataset
             
@@ -288,14 +288,14 @@ class DataQualityTestSuite:
 @pytest.fixture
 def sample_dataset():
     """Fixture providing sample dataset for testing"""
-    mock_data = MockDataset(rows=500, missing_rate=0.01)
-    return mock_data.data
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestDataset(rows=500, missing_rate=0.01)
+    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data.data
 
 @pytest.fixture
 def reference_dataset():
     """Fixture providing reference dataset for drift detection"""
-    mock_data = MockDataset(rows=500, missing_rate=0.01)
-    return mock_data.data
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestDataset(rows=500, missing_rate=0.01)
+    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data.data
 
 @pytest.fixture
 def data_quality_suite(sample_dataset, reference_dataset):

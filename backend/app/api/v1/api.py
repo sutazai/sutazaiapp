@@ -3,7 +3,7 @@ API Router for v1 endpoints
 """
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import agents, models, documents, chat, system, hardware, cache, circuit_breaker, cache_optimized, mesh, mesh_v2
+from app.api.v1.endpoints import agents, models, documents, chat, system, hardware, cache, circuit_breaker, cache_optimized, mesh, mesh_v2, mcp
 from app.api.v1 import features
 
 api_router = APIRouter()
@@ -20,4 +20,5 @@ api_router.include_router(cache_optimized.router, prefix="/cache-optimized", tag
 api_router.include_router(circuit_breaker.router, prefix="/circuit-breaker", tags=["circuit-breaker"])
 api_router.include_router(mesh.router, prefix="/mesh", tags=["mesh"])  # Legacy Redis-based mesh
 api_router.include_router(mesh_v2.router, prefix="/mesh/v2", tags=["mesh-v2"])  # Real service mesh
+api_router.include_router(mcp.router, prefix="/mcp", tags=["mcp"])  # MCP server integration
 api_router.include_router(features.router, prefix="/features", tags=["features"])

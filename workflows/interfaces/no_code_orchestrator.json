@@ -10,7 +10,7 @@
     "toolbox": {
       "agent_nodes": [
         {
-          "id": "agi-system-architect",
+          "id": " system-architect",
           "display_name": "System Architect",
           "icon": "architecture",
           "color": "#FF6B35",
@@ -19,7 +19,7 @@
           "outputs": ["architecture_plan", "recommendations"]
         },
         {
-          "id": "ai-product-manager",
+          "id": "product-manager",
           "display_name": "Product Manager",
           "icon": "management",
           "color": "#004E89",
@@ -216,7 +216,7 @@
           },
           {
             "id": "architect_review",
-            "type": "agi-system-architect",
+            "type": " -system-architect",
             "position": {"x": 200, "y": 100}
           },
           {

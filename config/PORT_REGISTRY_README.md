@@ -56,7 +56,7 @@ python3 scripts/extract_port_mappings.py
 | **10000-10199** | Infrastructure Services | 21.5% used |
 | **10200-10299** | Monitoring Stack | 21.0% used |
 | **10300-10499** | External Integrations | 25.0% used |
-| **10500-10599** | AGI System | 13.0% used |
+| **10500-10599** | System | 13.0% used |
 | **11000-11148** | AI Agents (STANDARD) | 46.3% used |
 | **10104-11436** | Ollama LLM | 100% used |
 

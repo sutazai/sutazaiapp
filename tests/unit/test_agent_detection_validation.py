@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 import pytest
 import unittest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 import json
 import subprocess
 import requests
@@ -33,7 +33,7 @@ class TestAgentDetectionCore(unittest.TestCase):
     
     def setUp(self):
         """Set up test data"""
-        self.mock_config = {
+        self.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_config = {
             "agent_monitoring": {
                 "max_agents_display": 20,
                 "timeout": 2,
@@ -47,7 +47,7 @@ class TestAgentDetectionCore(unittest.TestCase):
             }
         }
         
-        self.mock_registry = {
+        self.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_registry = {
             "agents": {
                 "ai-testing-qa-validator": {
                     "id": "ai-testing-qa-validator",
@@ -67,7 +67,7 @@ class TestAgentDetectionCore(unittest.TestCase):
         }
     
     @patch('subprocess.run')
-    def test_docker_container_name_patterns(self, mock_subprocess):
+    def test_docker_container_name_patterns(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test various Docker container naming patterns are detected"""
         test_patterns = [
             ("sutazai-ai-testing-qa-validator", "ai-testing-qa-validator"),
@@ -78,8 +78,8 @@ class TestAgentDetectionCore(unittest.TestCase):
         
         for container_name, agent_id in test_patterns:
             with self.subTest(container_name=container_name):
-                mock_subprocess.return_value.returncode = 0
-                mock_subprocess.return_value.stdout = f"{container_name}\tUp 1 hour (healthy)\t0.0.0.0:8081->8080/tcp"
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.returncode = 0
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.stdout = f"{container_name}\tUp 1 hour (healthy)\t0.0.0.0:8081->8080/tcp"
                 
                 # Test the naming pattern logic
                 name_patterns = [
@@ -137,7 +137,7 @@ class TestAgentDetectionCore(unittest.TestCase):
                 self.assertEqual(port_list, expected_ports)
     
     @patch('requests.get')
-    def test_health_check_responses(self, mock_get):
+    def test_health_check_responses(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get):
         """Test different health check response scenarios"""
         test_scenarios = [
             # (response_status, response_data, expected_health, expected_response_time)
@@ -151,17 +151,17 @@ class TestAgentDetectionCore(unittest.TestCase):
         for status_code, response_data, expected_health, should_respond in test_scenarios:
             with self.subTest(status_code=status_code):
                 if should_respond:
-                    mock_response = Mock()
-                    mock_response.status_code = status_code
-                    mock_response.json.return_value = response_data if response_data else {}
-                    mock_response.elapsed.total_seconds.return_value = 0.1
-                    mock_get.return_value = mock_response
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = status_code
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = response_data if response_data else {}
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.elapsed.total_seconds.return_value = 0.1
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
                 else:
-                    mock_get.side_effect = requests.exceptions.ConnectionError("Connection failed")
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get.side_effect = requests.exceptions.ConnectionError("Connection failed")
                 
                 # Simulate health check logic
                 try:
-                    response = mock_get("http://localhost:8080/health", timeout=2)
+                    response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get("http://localhost:8080/health", timeout=2)
                     if response.status_code == 200:
                         health = "healthy"
                     elif response.status_code >= 500:
@@ -200,28 +200,28 @@ class TestAgentStatusIntegration(unittest.TestCase):
     
     @patch('subprocess.run')
     @patch('requests.get')
-    def test_combined_status_reporting(self, mock_get, mock_subprocess):
+    def test_combined_status_reporting(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test that Docker status and health checks are combined correctly"""
-        # Mock Docker status
-        mock_subprocess.return_value.returncode = 0
-        mock_subprocess.return_value.stdout = (
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Docker status
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.returncode = 0
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.stdout = (
             "sutazai-ai-testing-qa-validator\tUp 2 hours (healthy)\t0.0.0.0:8081->8080/tcp\n"
             "sutazai-observability-monitoring-engineer\tUp 1 hour\t0.0.0.0:8083->8080/tcp\n"
         )
         
-        # Mock health check responses
-        def mock_health_response(url, **kwargs):
-            mock_response = Mock()
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test health check responses
+        def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_response(url, **kwargs):
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
             if "8081" in url:
-                mock_response.status_code = 200
-                mock_response.json.return_value = {"status": "healthy", "version": "1.0.0"}
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {"status": "healthy", "version": "1.0.0"}
             elif "8083" in url:
-                mock_response.status_code = 503
-                mock_response.json.return_value = {"status": "degraded"}
-            mock_response.elapsed.total_seconds.return_value = 0.1
-            return mock_response
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 503
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {"status": "degraded"}
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.elapsed.total_seconds.return_value = 0.1
+            return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
         
-        mock_get.side_effect = mock_health_response
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get.side_effect = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_response
         
         # Test combined status logic
         containers = [
@@ -232,7 +232,7 @@ class TestAgentStatusIntegration(unittest.TestCase):
         combined_status = []
         for container in containers:
             try:
-                response = mock_get(f"http://localhost:{container['port']}/health", timeout=2)
+                response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get(f"http://localhost:{container['port']}/health", timeout=2)
                 if response.status_code == 200:
                     health_status = "healthy"
                 else:
@@ -446,11 +446,11 @@ class TestRealSystemValidation(unittest.TestCase):
             self.skipTest("Communication config file not found")
     
     @patch('subprocess.run')
-    def test_actual_docker_integration(self, mock_subprocess):
+    def test_actual_docker_integration(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test integration with actual Docker command patterns"""
-        # Mock realistic Docker output
-        mock_subprocess.return_value.returncode = 0
-        mock_subprocess.return_value.stdout = (
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test realistic Docker output
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.returncode = 0
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.stdout = (
             "sutazai-ai-testing-qa-validator\tUp 2 minutes\t0.0.0.0:8081->8080/tcp\n"
             "sutazai-observability-monitoring-engineer\tUp 5 minutes (healthy)\t0.0.0.0:8083->8080/tcp\n"
             "sutazai-backend\tUp 10 minutes (unhealthy)\t0.0.0.0:8000->8000/tcp\n"
@@ -458,7 +458,7 @@ class TestRealSystemValidation(unittest.TestCase):
         )
         
         # Test Docker command execution
-        result = mock_subprocess.return_value
+        result = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value
         self.assertEqual(result.returncode, 0)
         
         # Parse output

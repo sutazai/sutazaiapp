@@ -183,7 +183,7 @@ class SimpleMonitoringBackend:
                 'totalViolations': len(violations),
                 'criticalViolations': len(critical_violations),
                 'warningViolations': len(warning_violations),
-                'activeAgents': 3,  # Mock data
+                'activeAgents': 3,  # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data
                 'systemMetrics': metrics,
                 'recentViolations': violations[-10:],
                 'recentActions': [

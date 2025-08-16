@@ -24,7 +24,7 @@ async def get_coordinator_status():
         return {
             "status": "active",
             "coordinator_type": "automation",
-            "capabilities": ["task_coordination", "agent_management", "workflow_execution", "agi_collective"],
+            "capabilities": ["task_coordination", "agent_management", "workflow_execution", "  _collective"],
             "active_tasks": 0,
             "total_agents": agent_status["total_agents"],
             "managed_agents": agent_status["status_breakdown"].get("healthy", 0) + agent_status["status_breakdown"].get("running", 0),
@@ -123,23 +123,23 @@ async def start_all_agents(background_tasks: BackgroundTasks):
         logger.error(f"Agent activation failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/agents/activate-agi")
-async def activate_agi_collective(background_tasks: BackgroundTasks):
-    """Activate the AGI/Advanced System collective intelligence system"""
+@router.post("/agents/activate-  ")
+async def activate_  _collective(background_tasks: BackgroundTasks):
+    """Activate the   /Advanced System collective intelligence system"""
     try:
-        logger.info("Initiating AGI/Advanced System collective activation...")
+        logger.info("Initiating   /Advanced System collective activation...")
         
         # Start the collective activation in background
-        background_tasks.add_task(agent_registry.activate_agi_collective)
+        background_tasks.add_task(agent_registry.activate_  _collective)
         
         return {
-            "status": "agi_activation_initiated",
-            "message": "AGI/Advanced System collective intelligence system activation started",
+            "status": "  _activation_initiated",
+            "message": "  /Advanced System collective intelligence system activation started",
             "collective_type": "Advanced System",  # Assuming we have 131 agents > 100
             "timestamp": datetime.utcnow().isoformat()
         }
     except Exception as e:
-        logger.error(f"AGI collective activation failed: {e}")
+        logger.error(f"   collective activation failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/agents/status")
@@ -163,7 +163,7 @@ async def stop_all_agents():
 
 @router.get("/collective/status")
 async def get_collective_status():
-    """Get AGI/Advanced System collective intelligence status"""
+    """Get   /Advanced System collective intelligence status"""
     try:
         agent_status = await agent_registry.get_agent_status()
         orchestrator = await get_orchestrator()
@@ -172,7 +172,7 @@ async def get_collective_status():
         
         return {
             "collective_active": active_count > 10,
-            "intelligence_level": "Advanced System" if active_count > 100 else "AGI" if active_count > 50 else "Multi-Agent",
+            "intelligence_level": "Advanced System" if active_count > 100 else "  " if active_count > 50 else "Multi-Agent",
             "total_agents": agent_status["total_agents"],
             "active_agents": active_count,
             "deployed_agents": orchestrator_status.get("deployed_agents", 0),
@@ -225,7 +225,7 @@ async def mass_agent_activation(background_tasks: BackgroundTasks):
 
 @router.post("/deploy/activate-collective")
 async def activate_full_collective(background_tasks: BackgroundTasks):
-    """Activate the full AGI/Advanced System collective intelligence system"""
+    """Activate the full   /Advanced System collective intelligence system"""
     try:
         logger.info("🧠 ACTIVATING FULL COLLECTIVE INTELLIGENCE SYSTEM")
         
@@ -240,7 +240,7 @@ async def activate_full_collective(background_tasks: BackgroundTasks):
         
         return {
             "status": "full_collective_activation_initiated",
-            "message": "🧠 Full AGI/Advanced System collective intelligence system activation started",
+            "message": "🧠 Full   /Advanced System collective intelligence system activation started",
             "intelligence_level": "Advanced System",
             "expected_agents": 131,
             "collective_capabilities": [
@@ -268,7 +268,7 @@ async def get_deployment_status():
             "deployment_stats": orchestrator_status.get("deployment_stats", {}),
             "ollama_ready": orchestrator_status.get("ollama_ready", False),
             "intelligence_assessment": {
-                "level": "Advanced System" if orchestrator_status.get("deployed_agents", 0) > 100 else "AGI" if orchestrator_status.get("deployed_agents", 0) > 50 else "Multi-Agent",
+                "level": "Advanced System" if orchestrator_status.get("deployed_agents", 0) > 100 else "  " if orchestrator_status.get("deployed_agents", 0) > 50 else "Multi-Agent",
                 "collective_active": orchestrator_status.get("deployed_agents", 0) > 10
             },
             "timestamp": datetime.utcnow().isoformat()

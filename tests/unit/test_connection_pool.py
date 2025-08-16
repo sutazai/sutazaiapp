@@ -10,7 +10,7 @@ import httpx
 import time
 import sys
 import os
-from unittest.mock import AsyncMock, Mock, patch, MagicMock
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 from datetime import datetime, timedelta
 
 # Add the agents directory to the path
@@ -58,17 +58,17 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_create_connection_success(self, pool):
         """Test successful connection creation"""
-        # Mock httpx client and successful health check
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 200
-        mock_client.get.return_value = mock_response
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test httpx client and successful health check
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
         
-        with patch('httpx.AsyncClient', return_value=mock_client):
+        with patch('httpx.AsyncClient', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client):
             connection = await pool._create_connection()
             
             assert isinstance(connection, PoolConnection)
-            assert connection.client == mock_client
+            assert connection.client == Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
             assert connection.state == ConnectionState.IDLE
             assert connection.error_count == 0
             assert len(pool._connections) == 1
@@ -77,24 +77,24 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_create_connection_health_check_failure(self, pool):
         """Test connection creation with health check failure"""
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 500
-        mock_client.get.return_value = mock_response
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 500
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
         
-        with patch('httpx.AsyncClient', return_value=mock_client):
+        with patch('httpx.AsyncClient', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client):
             with pytest.raises(Exception):
                 await pool._create_connection()
     
     @pytest.mark.asyncio
     async def test_test_connection_success(self, pool):
         """Test successful connection testing"""
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 200
-        mock_client.get.return_value = mock_response
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
         
-        connection = PoolConnection(client=mock_client)
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         
         await pool._test_connection(connection)
         
@@ -104,10 +104,10 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_test_connection_failure(self, pool):
         """Test connection testing failure"""
-        mock_client = AsyncMock()
-        mock_client.get.side_effect = httpx.ConnectError("Connection failed")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get.side_effect = httpx.ConnectError("Connection failed")
         
-        connection = PoolConnection(client=mock_client)
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         
         with pytest.raises(Exception):
             await pool._test_connection(connection)
@@ -118,9 +118,9 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_get_connection_idle_available(self, pool):
         """Test getting connection when idle connection is available"""
-        # Create a mock connection
-        mock_client = AsyncMock()
-        connection = PoolConnection(client=mock_client, state=ConnectionState.IDLE)
+        # Create a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test connection
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, state=ConnectionState.IDLE)
         pool._connections.append(connection)
         
         async with pool._get_connection() as conn:
@@ -133,13 +133,13 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_get_connection_create_new(self, pool):
         """Test getting connection when no idle connections available"""
-        # Mock connection creation
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 200
-        mock_client.get.return_value = mock_response
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test connection creation
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
         
-        with patch('httpx.AsyncClient', return_value=mock_client):
+        with patch('httpx.AsyncClient', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client):
             async with pool._get_connection() as conn:
                 assert isinstance(conn, PoolConnection)
                 assert conn.state == ConnectionState.BUSY
@@ -152,8 +152,8 @@ class TestOllamaConnectionPool:
         """Test getting connection when at max capacity"""
         # Fill pool to capacity with busy connections
         for _ in range(pool.max_connections):
-            mock_client = AsyncMock()
-            connection = PoolConnection(client=mock_client, state=ConnectionState.BUSY)
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, state=ConnectionState.BUSY)
             pool._connections.append(connection)
         
         # Should raise exception when no connections available
@@ -164,10 +164,10 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_refresh_available_models_success(self, pool):
         """Test successful model list refresh"""
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {
             "models": [
                 {"name": "tinyllama:latest"},
                 {"name": "tinyllama2.5-coder:7b"}
@@ -175,7 +175,7 @@ class TestOllamaConnectionPool:
         }
         
         # Create a connection to use
-        connection = PoolConnection(client=mock_client)
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         pool._connections.append(connection)
         
         await pool._refresh_available_models()
@@ -186,11 +186,11 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_refresh_available_models_failure(self, pool):
         """Test model list refresh failure"""
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 500
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 500
         
-        connection = PoolConnection(client=mock_client)
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         pool._connections.append(connection)
         
         await pool._refresh_available_models()
@@ -218,7 +218,7 @@ class TestOllamaConnectionPool:
         """Test model availability check with model in registry"""
         model_name = "tinyllama"
         
-        # Mock available models
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test available models
         pool._available_models = {"tinyllama", "other-model"}
         pool._models_last_checked = datetime.utcnow()
         
@@ -231,19 +231,19 @@ class TestOllamaConnectionPool:
         """Test model availability when model needs to be pulled"""
         model_name = "new-model"
         
-        # Mock model not in available list
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test model not in available list
         pool._available_models = {"tinyllama"}
         pool._models_last_checked = datetime.utcnow()
         
-        # Mock successful pull
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 200
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test successful pull
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
         
-        connection = PoolConnection(client=mock_client)
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         pool._connections.append(connection)
         
-        with patch.object(mock_client, 'post', return_value=mock_response):
+        with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
             result = await pool._ensure_model_available(model_name)
             assert result is True
             assert model_name in pool._available_models
@@ -254,14 +254,14 @@ class TestOllamaConnectionPool:
         """Test successful model pull"""
         model_name = "new-model"
         
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 200
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
         
-        connection = PoolConnection(client=mock_client)
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         pool._connections.append(connection)
         
-        with patch.object(mock_client, 'post', return_value=mock_response):
+        with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
             result = await pool._pull_model(model_name)
             assert result is True
     
@@ -270,14 +270,14 @@ class TestOllamaConnectionPool:
         """Test failed model pull"""
         model_name = "invalid-model"
         
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 404
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 404
         
-        connection = PoolConnection(client=mock_client)
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         pool._connections.append(connection)
         
-        with patch.object(mock_client, 'post', return_value=mock_response):
+        with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
             result = await pool._pull_model(model_name)
             assert result is False
     
@@ -286,7 +286,7 @@ class TestOllamaConnectionPool:
         """Test successful model warming"""
         model_name = "tinyllama"
         
-        # Mock model availability and generation
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test model availability and generation
         with patch.object(pool, '_ensure_model_available', return_value=True), \
              patch.object(pool, 'generate', return_value="warmup response"):
             
@@ -302,18 +302,18 @@ class TestOllamaConnectionPool:
         prompt = "Test prompt"
         model = "tinyllama"
         
-        # Mock model availability
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test model availability
         with patch.object(pool, '_ensure_model_available', return_value=True):
-            # Mock connection and response
-            mock_client = AsyncMock()
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {"response": "Generated text"}
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test connection and response
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {"response": "Generated text"}
             
-            connection = PoolConnection(client=mock_client)
+            connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
             pool._connections.append(connection)
             
-            with patch.object(mock_client, 'post', return_value=mock_response):
+            with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
                 result = await pool.generate(prompt, model)
                 
                 assert result == "Generated text"
@@ -331,15 +331,15 @@ class TestOllamaConnectionPool:
     async def test_generate_api_error(self, pool):
         """Test generation with API error"""
         with patch.object(pool, '_ensure_model_available', return_value=True):
-            mock_client = AsyncMock()
-            mock_response = Mock()
-            mock_response.status_code = 500
-            mock_response.text = "Internal Server Error"
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 500
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.text = "Internal Server Error"
             
-            connection = PoolConnection(client=mock_client)
+            connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
             pool._connections.append(connection)
             
-            with patch.object(mock_client, 'post', return_value=mock_response):
+            with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
                 result = await pool.generate("Test prompt")
                 
                 assert result is None
@@ -349,22 +349,22 @@ class TestOllamaConnectionPool:
     async def test_generate_with_system_prompt(self, pool):
         """Test generation with system prompt"""
         with patch.object(pool, '_ensure_model_available', return_value=True):
-            mock_client = AsyncMock()
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {"response": "Response with system"}
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {"response": "Response with system"}
             
-            connection = PoolConnection(client=mock_client)
+            connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
             pool._connections.append(connection)
             
-            with patch.object(mock_client, 'post', return_value=mock_response) as mock_post:
+            with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response) as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_post:
                 await pool.generate(
                     prompt="User prompt",
                     system="You are a helpful assistant"
                 )
                 
                 # Verify system prompt was included
-                call_args = mock_post.call_args
+                call_args = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_post.call_args
                 payload = call_args[1]['json']
                 assert payload['system'] == "You are a helpful assistant"
     
@@ -374,17 +374,17 @@ class TestOllamaConnectionPool:
         messages = [{"role": "user", "content": "Hello"}]
         
         with patch.object(pool, '_ensure_model_available', return_value=True):
-            mock_client = AsyncMock()
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {
                 "message": {"content": "Hello! How can I help?"}
             }
             
-            connection = PoolConnection(client=mock_client)
+            connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
             pool._connections.append(connection)
             
-            with patch.object(mock_client, 'post', return_value=mock_response):
+            with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
                 result = await pool.chat(messages)
                 
                 assert result == "Hello! How can I help?"
@@ -396,14 +396,14 @@ class TestOllamaConnectionPool:
         messages = [{"role": "user", "content": "Hello"}]
         
         with patch.object(pool, '_ensure_model_available', return_value=True):
-            mock_client = AsyncMock()
-            mock_response = Mock()
-            mock_response.status_code = 400
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 400
             
-            connection = PoolConnection(client=mock_client)
+            connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
             pool._connections.append(connection)
             
-            with patch.object(mock_client, 'post', return_value=mock_response):
+            with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
                 result = await pool.chat(messages)
                 
                 assert result is None
@@ -415,17 +415,17 @@ class TestOllamaConnectionPool:
         text = "Test text for embeddings"
         
         with patch.object(pool, '_ensure_model_available', return_value=True):
-            mock_client = AsyncMock()
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {
                 "embedding": [0.1, 0.2, 0.3, 0.4]
             }
             
-            connection = PoolConnection(client=mock_client)
+            connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
             pool._connections.append(connection)
             
-            with patch.object(mock_client, 'post', return_value=mock_response):
+            with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
                 result = await pool.embeddings(text)
                 
                 assert result == [0.1, 0.2, 0.3, 0.4]
@@ -435,14 +435,14 @@ class TestOllamaConnectionPool:
     async def test_embeddings_api_error(self, pool):
         """Test embeddings with API error"""
         with patch.object(pool, '_ensure_model_available', return_value=True):
-            mock_client = AsyncMock()
-            mock_response = Mock()
-            mock_response.status_code = 500
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 500
             
-            connection = PoolConnection(client=mock_client)
+            connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
             pool._connections.append(connection)
             
-            with patch.object(mock_client, 'post', return_value=mock_response):
+            with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
                 result = await pool.embeddings("Test text")
                 
                 assert result is None
@@ -464,23 +464,23 @@ class TestOllamaConnectionPool:
     async def test_cleanup_connections(self, pool):
         """Test connection cleanup"""
         # Add connections with different states and ages
-        mock_client1 = AsyncMock()
-        mock_client2 = AsyncMock()
-        mock_client3 = AsyncMock()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client1 = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client2 = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client3 = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
         
         # Error connection - should be removed
-        error_conn = PoolConnection(client=mock_client1, state=ConnectionState.ERROR)
+        error_conn = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client1, state=ConnectionState.ERROR)
         
         # Old idle connection - should be removed if above minimum
         old_idle_conn = PoolConnection(
-            client=mock_client2,
+            client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client2,
             state=ConnectionState.IDLE,
             last_used=datetime.utcnow() - timedelta(hours=1)
         )
         
         # Recent idle connection - should be kept
         recent_idle_conn = PoolConnection(
-            client=mock_client3,
+            client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client3,
             state=ConnectionState.IDLE
         )
         
@@ -518,24 +518,24 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_health_check_success(self, pool):
         """Test successful health check"""
-        mock_client = AsyncMock()
-        mock_response = Mock()
-        mock_response.status_code = 200
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
         
-        connection = PoolConnection(client=mock_client)
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         pool._connections.append(connection)
         
-        with patch.object(mock_client, 'get', return_value=mock_response):
+        with patch.object(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client, 'get', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
             result = await pool.health_check()
             assert result is True
     
     @pytest.mark.asyncio
     async def test_health_check_failure(self, pool):
         """Test health check failure"""
-        mock_client = AsyncMock()
-        mock_client.get.side_effect = httpx.ConnectError("Connection failed")
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.get.side_effect = httpx.ConnectError("Connection failed")
         
-        connection = PoolConnection(client=mock_client)
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         pool._connections.append(connection)
         
         result = await pool.health_check()
@@ -549,7 +549,7 @@ class TestOllamaConnectionPool:
         pool.stats.pool_hits = 80
         pool.stats.pool_misses = 20
         pool.stats.average_response_time = 1.5
-        pool._model_cache = {"model1": Mock(), "model2": Mock()}
+        pool._model_cache = {"model1": Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(), "model2": Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()}
         pool._available_models = {"model1", "model2", "model3"}
         
         stats = pool.get_stats()
@@ -577,17 +577,17 @@ class TestOllamaConnectionPool:
     async def test_close(self, pool):
         """Test pool closure"""
         # Set up some connections
-        mock_client1 = AsyncMock()
-        mock_client2 = AsyncMock()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client1 = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client2 = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
         
-        connection1 = PoolConnection(client=mock_client1)
-        connection2 = PoolConnection(client=mock_client2)
+        connection1 = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client1)
+        connection2 = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client2)
         
         pool._connections = [connection1, connection2]
         
-        # Mock background tasks
-        pool._cleanup_task = AsyncMock()
-        pool._health_task = AsyncMock()
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test background tasks
+        pool._cleanup_task = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        pool._health_task = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
         
         await pool.close()
         
@@ -596,8 +596,8 @@ class TestOllamaConnectionPool:
         pool._health_task.cancel.assert_called_once()
         
         # Should close all connections
-        mock_client1.aclose.assert_called_once()
-        mock_client2.aclose.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client1.aclose.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client2.aclose.assert_called_once()
         
         # Should clear connections list
         assert len(pool._connections) == 0
@@ -611,10 +611,10 @@ class TestPoolConnection:
     
     def test_pool_connection_creation(self):
         """Test PoolConnection creation"""
-        mock_client = AsyncMock()
-        connection = PoolConnection(client=mock_client)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        connection = PoolConnection(client=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client)
         
-        assert connection.client == mock_client
+        assert connection.client == Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
         assert connection.state == ConnectionState.IDLE
         assert connection.request_count == 0
         assert connection.error_count == 0

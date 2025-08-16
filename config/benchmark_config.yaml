@@ -20,7 +20,7 @@ sla_thresholds:
   memory_utilization_percent: 85 # Maximum memory utilization
   error_rate_percent: 5         # Maximum error rate
   throughput_min_rps: 10        # Minimum requests per second
-  agi_coordination_time_ms: 1000 # Maximum AGI coordination time
+    _coordination_time_ms: 1000 # Maximum    coordination time
 
 # Forecasting Configuration
 forecasting:
@@ -40,7 +40,7 @@ components:
       - "*-backup-*"
       - "*-test-*"
     
-  agi_orchestration:
+    _orchestration:
     test_coordination: true
     test_collective_intelligence: true
     coordination_timeout: 10    # seconds

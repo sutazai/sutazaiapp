@@ -1,13 +1,13 @@
 """
 Integration tests for API endpoints
-Testing real API integrations with mocked external dependencies
+Testing real API integrations with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested external dependencies
 """
 
 import pytest
 import asyncio
 import json
 import time
-from unittest.mock import patch, AsyncMock, MagicMock
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 from httpx import AsyncClient
 from fastapi import status
 
@@ -128,7 +128,7 @@ class TestAgentAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_get_specific_agent_integration(self, async_client, mock_validation):
+    async def test_get_specific_agent_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test getting specific agent with real health check"""
         # Test known agent
         agent_id = "jarvis-automation"
@@ -146,7 +146,7 @@ class TestAgentAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_agent_health_caching_integration(self, async_client, mock_validation):
+    async def test_agent_health_caching_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test agent health check caching behavior"""
         agent_id = "jarvis-automation"
         
@@ -176,8 +176,8 @@ class TestAgentAPIIntegration:
         ]
         
         for malicious_input in malicious_inputs:
-            with patch('app.utils.validation.validate_agent_id') as mock_validate:
-                mock_validate.side_effect = ValueError("Invalid agent ID")
+            with patch('app.utils.validation.validate_agent_id') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate:
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate.side_effect = ValueError("Invalid agent ID")
                 
                 response = await async_client.get(f"/api/v1/agents/{malicious_input}")
                 assert response.status_code == 400
@@ -191,7 +191,7 @@ class TestChatAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_chat_endpoint_integration(self, async_client, mock_validation):
+    async def test_chat_endpoint_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test chat endpoint with Ollama integration"""
         chat_request = {
             "message": "Hello, how are you?",
@@ -215,7 +215,7 @@ class TestChatAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_chat_streaming_integration(self, async_client, mock_validation):
+    async def test_chat_streaming_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test streaming chat endpoint integration"""
         chat_request = {
             "message": "Tell me a story",
@@ -231,7 +231,7 @@ class TestChatAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_batch_processing_integration(self, async_client, mock_validation):
+    async def test_batch_processing_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test batch processing integration"""
         prompts = [
             "Hello",
@@ -260,8 +260,8 @@ class TestChatAPIIntegration:
             "use_cache": True
         }
         
-        with patch('app.utils.validation.validate_model_name') as mock_validate:
-            mock_validate.side_effect = ValueError("Invalid model name")
+        with patch('app.utils.validation.validate_model_name') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate.side_effect = ValueError("Invalid model name")
             
             response = await async_client.post("/api/v1/chat", json=malicious_request)
             assert response.status_code == 400
@@ -269,7 +269,7 @@ class TestChatAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_chat_performance_integration(self, async_client, mock_validation):
+    async def test_chat_performance_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test chat endpoint performance characteristics"""
         chat_request = {
             "message": "Quick test",
@@ -317,7 +317,7 @@ class TestTaskAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_task_status_integration(self, async_client, mock_validation):
+    async def test_task_status_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test task status retrieval integration"""
         task_id = "test-task-id"
         
@@ -334,7 +334,7 @@ class TestTaskAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_task_workflow_integration(self, async_client, mock_validation):
+    async def test_task_workflow_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test complete task workflow from creation to completion"""
         # Create task
         task_request = {
@@ -379,7 +379,7 @@ class TestCacheAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_cache_clear_integration(self, async_client, mock_validation):
+    async def test_cache_clear_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test cache clearing integration"""
         # Clear all cache
         response = await async_client.post("/api/v1/cache/clear")
@@ -392,7 +392,7 @@ class TestCacheAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_cache_pattern_clear_integration(self, async_client, mock_validation):
+    async def test_cache_pattern_clear_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test cache pattern clearing integration"""
         pattern = "test:*"
         response = await async_client.post(f"/api/v1/cache/clear?pattern={pattern}")
@@ -440,7 +440,7 @@ class TestMetricsAPIIntegration:
     @pytest.mark.integration
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_metrics_endpoint_integration(self, async_client, mock_psutil):
+    async def test_metrics_endpoint_integration(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_psutil):
         """Test comprehensive metrics endpoint integration"""
         response = await async_client.get("/api/v1/metrics")
         
@@ -546,8 +546,8 @@ class TestErrorHandlingIntegration:
         ]
         
         for malicious_input in malicious_inputs:
-            with patch('app.utils.validation.validate_agent_id') as mock_validate:
-                mock_validate.side_effect = ValueError("Malicious input detected")
+            with patch('app.utils.validation.validate_agent_id') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate:
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate.side_effect = ValueError("Malicious input detected")
                 
                 response = await async_client.get(f"/api/v1/agents/{malicious_input}")
                 assert response.status_code == 400
@@ -578,7 +578,7 @@ class TestConcurrencyIntegration:
     @pytest.mark.integration
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_concurrent_api_operations(self, async_client, mock_validation):
+    async def test_concurrent_api_operations(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test concurrent mixed API operations"""
         # Create different types of concurrent requests
         health_task = async_client.get("/health")
@@ -597,7 +597,7 @@ class TestConcurrencyIntegration:
     @pytest.mark.integration
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_concurrent_chat_requests(self, async_client, mock_validation):
+    async def test_concurrent_chat_requests(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test concurrent chat requests"""
         chat_request = {
             "message": "Hello",
@@ -626,7 +626,7 @@ class TestEndToEndWorkflows:
     @pytest.mark.integration
     @pytest.mark.e2e
     @pytest.mark.asyncio
-    async def test_complete_ai_workflow(self, async_client, mock_validation):
+    async def test_complete_ai_workflow(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test complete AI workflow from request to response"""
         # 1. Check system health
         health_response = await async_client.get("/health")
@@ -652,7 +652,7 @@ class TestEndToEndWorkflows:
     @pytest.mark.integration
     @pytest.mark.e2e
     @pytest.mark.asyncio
-    async def test_task_management_workflow(self, async_client, mock_validation):
+    async def test_task_management_workflow(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test complete task management workflow"""
         # 1. Create a task
         task_request = {
@@ -675,7 +675,7 @@ class TestEndToEndWorkflows:
     @pytest.mark.integration
     @pytest.mark.e2e
     @pytest.mark.asyncio
-    async def test_cache_management_workflow(self, async_client, mock_validation):
+    async def test_cache_management_workflow(self, async_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validation):
         """Test complete cache management workflow"""
         # 1. Check initial cache stats
         initial_stats = await async_client.get("/api/v1/cache/stats")

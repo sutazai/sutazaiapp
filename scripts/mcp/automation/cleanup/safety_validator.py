@@ -303,7 +303,7 @@ class SafetyValidator:
     ) -> SafetyResult:
         """Validate safety for server-specific cleanup operations."""
         
-        # Create mock cleanup analysis for validation
+        # Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test cleanup analysis for validation
         cleanup_analysis = {
             'server_name': server_name,
             'cleanup_types': cleanup_types,
@@ -1010,7 +1010,7 @@ async def main():
         # Example: Validate cleanup safety
         logger.info("Testing safety validation...")
         
-        # Mock cleanup analysis
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test cleanup analysis
         cleanup_analysis = {
             'server_name': 'postgres',
             'total_candidates': 5,

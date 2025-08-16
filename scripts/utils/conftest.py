@@ -10,7 +10,7 @@ import os
 import sys
 import tempfile
 import json
-from unittest.mock import Mock, AsyncMock, patch
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
 from datetime import datetime
 import logging
 
@@ -53,8 +53,8 @@ def temp_config_file():
 
 
 @pytest.fixture
-def mock_environment():
-    """Mock environment variables for testing"""
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_environment():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test environment variables for testing"""
     test_env = {
         'AGENT_NAME': 'test-agent',
         'AGENT_TYPE': 'test',
@@ -68,9 +68,9 @@ def mock_environment():
 
 
 @pytest.fixture
-def mock_ollama_service():
-    """Mock Ollama service responses"""
-    class MockOllamaService:
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Ollama service responses"""
+    class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestOllamaService:
         def __init__(self):
             self.models = ["tinyllama"]
             self.responses = {}
@@ -81,58 +81,58 @@ def mock_ollama_service():
         
         def get_response(self, prompt):
             """Get response for a prompt"""
-            return self.responses.get(prompt, f"Mock response for: {prompt[:50]}...")
+            return self.responses.get(prompt, f"Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test response for: {prompt[:50]}...")
         
-        def mock_generate(self, prompt, **kwargs):
-            """Mock generate method"""
+        def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_generate(self, prompt, **kwargs):
+            """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test generate method"""
             return self.get_response(prompt)
         
-        def mock_chat(self, messages, **kwargs):
-            """Mock chat method"""
+        def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chat(self, messages, **kwargs):
+            """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test chat method"""
             if messages:
                 last_message = messages[-1].get('content', '')
                 return self.get_response(last_message)
-            return "Mock chat response"
+            return "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test chat response"
         
-        def mock_embeddings(self, text, **kwargs):
-            """Mock embeddings method"""
-            # Return mock embedding vector
-            return [0.1, 0.2, 0.3, 0.4, 0.5] * 100  # 500-dimensional mock vector
+        def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_embeddings(self, text, **kwargs):
+            """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test embeddings method"""
+            # Return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test embedding vector
+            return [0.1, 0.2, 0.3, 0.4, 0.5] * 100  # 500-dimensional Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test vector
         
-        def mock_model_list(self):
-            """Mock model list response"""
+        def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_model_list(self):
+            """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test model list response"""
             return {
                 "models": [{"name": f"{model}:latest"} for model in self.models]
             }
     
-    return MockOllamaService()
+    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestOllamaService()
 
 
 @pytest.fixture
-def mock_backend_service():
-    """Mock backend coordinator responses"""
-    class MockBackendService:
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_backend_service():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test backend coordinator responses"""
+    class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestBackendService:
         def __init__(self):
             self.agents = {}
             self.tasks = []
             self.completions = []
         
         def register_agent(self, agent_data):
-            """Mock agent registration"""
+            """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agent registration"""
             agent_name = agent_data.get('agent_name')
             self.agents[agent_name] = agent_data
-            return Mock(status_code=200)
+            return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(status_code=200)
         
         def get_next_task(self, agent_type):
-            """Mock task retrieval"""
+            """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test task retrieval"""
             if self.tasks:
                 task = self.tasks.pop(0)
-                response = Mock()
+                response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
                 response.status_code = 200
                 response.json.return_value = task
                 return response
             else:
-                response = Mock()
+                response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
                 response.status_code = 204  # No tasks available
                 return response
         
@@ -141,19 +141,19 @@ def mock_backend_service():
             self.tasks.append(task)
         
         def complete_task(self, completion_data):
-            """Mock task completion"""
+            """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test task completion"""
             self.completions.append(completion_data)
-            return Mock(status_code=200)
+            return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(status_code=200)
         
         def heartbeat(self, heartbeat_data):
-            """Mock heartbeat"""
-            return Mock(status_code=200)
+            """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test heartbeat"""
+            return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(status_code=200)
         
         def health_check(self):
-            """Mock health check"""
-            return Mock(status_code=200)
+            """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test health check"""
+            return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(status_code=200)
     
-    return MockBackendService()
+    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestBackendService()
 
 
 @pytest.fixture
@@ -206,50 +206,50 @@ def sample_task_result():
 
 
 @pytest.fixture
-def mock_circuit_breaker():
-    """Mock circuit breaker for testing"""
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test circuit breaker for testing"""
     from core.circuit_breaker import CircuitBreaker, CircuitBreakerState
     
-    mock_breaker = Mock(spec=CircuitBreaker)
-    mock_breaker.state = CircuitBreakerState.CLOSED
-    mock_breaker.call = AsyncMock(side_effect=lambda func, *args, **kwargs: func(*args, **kwargs))
-    mock_breaker.trip_count = 0
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_breaker = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=CircuitBreaker)
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_breaker.state = CircuitBreakerState.CLOSED
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_breaker.call = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(side_effect=lambda func, *args, **kwargs: func(*args, **kwargs))
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_breaker.trip_count = 0
     
-    return mock_breaker
+    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_breaker
 
 
 @pytest.fixture
-def mock_connection_pool():
-    """Mock connection pool for testing"""
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection_pool():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test connection pool for testing"""
     from core.ollama_pool import OllamaConnectionPool
     
-    mock_pool = Mock(spec=OllamaConnectionPool)
-    mock_pool.generate = AsyncMock(return_value="Mock pool response")
-    mock_pool.chat = AsyncMock(return_value="Mock chat response")
-    mock_pool.embeddings = AsyncMock(return_value=[0.1, 0.2, 0.3])
-    mock_pool.health_check = AsyncMock(return_value=True)
-    mock_pool.get_stats = Mock(return_value={
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=OllamaConnectionPool)
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.generate = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value="Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test pool response")
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.chat = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value="Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test chat response")
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.embeddings = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=[0.1, 0.2, 0.3])
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.health_check = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=True)
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.get_stats = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value={
         "total_requests": 10,
         "successful_requests": 9,
         "failed_requests": 1,
         "average_response_time": 0.5
     })
-    mock_pool.close = AsyncMock()
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.close = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
     
-    return mock_pool
+    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool
 
 
 @pytest.fixture
-def mock_request_queue():
-    """Mock request queue for testing"""
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_request_queue():
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test request queue for testing"""
     from core.request_queue import RequestQueue
     
-    mock_queue = Mock(spec=RequestQueue)
-    mock_queue.submit = AsyncMock(side_effect=lambda task: task)
-    mock_queue.close = AsyncMock()
-    mock_queue.size = Mock(return_value=0)
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=RequestQueue)
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue.submit = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(side_effect=lambda task: task)
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue.close = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue.size = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=0)
     
-    return mock_queue
+    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue
 
 
 @pytest.fixture(autouse=True)

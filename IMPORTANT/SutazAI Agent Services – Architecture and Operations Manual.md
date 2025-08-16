@@ -937,7 +937,7 @@ GitHub
 . Recovery might mean re-initializing the agent instance or resetting some state. In the code, _handle_agent_error (not fully shown above, but references indicate it marks status ERROR and increments error_count, then in a recovery thread it sees error_count < max_retries and tries a simulated recovery)
 GitHub
 GitHub
-. For example, if a MockAgent crashed, the manager might create a new one to replace it (since these are local in that mode).
+. For example, if a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent crashed, the manager might create a new one to replace it (since these are local in that mode).
 
 If the error is persistent (error_count exceeds max_retries or something fundamentally broken), the manager will mark the agent as FAILED or STOPPED. The orchestrator will then exclude that agent from selection (because its status is not healthy). In containers deployment, typically if an agent keeps erroring (e.g. failing health checks), Kubernetes will restart it automatically. So recovery often means just waiting for the restart (which orchestrator will detect as a fresh agent or via regained health).
 
@@ -1245,7 +1245,7 @@ curl -X POST http://localhost:8080/task -H "Content-Type: application/json" -d '
 
 See that you get a reasonable response (like status success and some dummy result). This is essentially unit testing the agent in isolation.
 
-Write unit tests for the agent’s internal functions if it has any complex logic. For simple ones relying on LLM, you might skip heavy mocking but at least test that the agent responds to certain inputs correctly (maybe by stubbing the LLM calls).
+Write unit tests for the agent’s internal functions if it has any complex logic. For simple ones relying on LLM, you might skip heavy Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing but at least test that the agent responds to certain inputs correctly (maybe by stubbing the LLM calls).
 
 If possible, integrate with orchestrator locally: run the orchestrator (which might require running the entire backend FastAPI). Possibly use docker-compose to spin up orchestrator, a dummy Redis/Rabbit, and your agent container to see them working together. If not, at least simulate orchestrator’s call by making sure your agent returns expected output given a typical input.
 

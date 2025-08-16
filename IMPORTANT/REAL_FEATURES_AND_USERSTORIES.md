@@ -14,7 +14,7 @@ A **LOCAL, PRIVACY-FIRST AI PLATFORM** that runs entirely on user hardware with:
 - Three core functions: Chatbot, Code Assistant, Research Tool
 - Complete data privacy (no cloud dependencies)
 
-**NOT**: A massive distributed AGI system with 69 agents
+**NOT**: A massive distributed system with 69 agents
 
 ---
 
@@ -397,4 +397,4 @@ docker exec ollama ollama list
 
 ---
 
-*This document reflects the ACTUAL purpose of SutazAI as a local AI assistant platform, not a distributed AGI system.*
+*This document reflects the ACTUAL purpose of SutazAI as a local AI assistant platform, not a distributed system.*

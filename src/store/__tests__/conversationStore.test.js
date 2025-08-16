@@ -8,8 +8,8 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { useConversationStore } from '../conversationStore';
 import { MessageType } from '../types';
 
-// Mock IndexedDB
-const mockIndexedDB = {
+// Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test IndexedDB
+const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestIndexedDB = {
   open: jest.fn(),
   result: {
     transaction: jest.fn(),
@@ -17,19 +17,19 @@ const mockIndexedDB = {
   }
 };
 
-global.indexedDB = mockIndexedDB;
+global.indexedDB = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestIndexedDB;
 
-// Mock localStorage
-const mockLocalStorage = {
+// Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test localStorage
+const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLocalStorage = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn()
 };
-global.localStorage = mockLocalStorage;
+global.localStorage = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLocalStorage;
 
 describe('useConversationStore', () => {
   let store;
-  const mockSession = {
+  const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession = {
     id: 'test-session-1',
     title: 'Test Conversation',
     messages: [
@@ -61,9 +61,9 @@ describe('useConversationStore', () => {
     const { result } = renderHook(() => useConversationStore());
     store = result.current;
     
-    // Reset mocks
-    jest.clearAllMocks();
-    mockLocalStorage.getItem.mockReturnValue(null);
+    // Reset Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
+    jest.clearAllRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests();
+    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLocalStorage.getItem.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestReturnValue(null);
   });
 
   describe('Initial State', () => {
@@ -135,17 +135,17 @@ describe('useConversationStore', () => {
   describe('setCurrentSession', () => {
     beforeEach(() => {
       act(() => {
-        store.sessions = [mockSession];
+        store.sessions = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession];
       });
     });
 
     test('should set current session correctly', () => {
       act(() => {
-        store.setCurrentSession(mockSession.id);
+        store.setCurrentSession(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
       });
 
-      expect(store.currentSessionId).toBe(mockSession.id);
-      expect(store.currentSession).toEqual(mockSession);
+      expect(store.currentSessionId).toBe(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
+      expect(store.currentSession).toEqual(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession);
       expect(store.error).toBeNull();
     });
 
@@ -305,15 +305,15 @@ describe('useConversationStore', () => {
   describe('deleteSession', () => {
     beforeEach(() => {
       act(() => {
-        store.sessions = [mockSession];
-        store.currentSessionId = mockSession.id;
-        store.currentSession = mockSession;
+        store.sessions = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession];
+        store.currentSessionId = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id;
+        store.currentSession = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession;
       });
     });
 
     test('should delete session and clear current if it was active', () => {
       act(() => {
-        store.deleteSession(mockSession.id);
+        store.deleteSession(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
       });
 
       expect(store.sessions).toHaveLength(0);
@@ -322,11 +322,11 @@ describe('useConversationStore', () => {
     });
 
     test('should set new current session if available after deletion', () => {
-      const anotherSession = { ...mockSession, id: 'session-2' };
+      const anotherSession = { ...Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession, id: 'session-2' };
       
       act(() => {
-        store.sessions = [mockSession, anotherSession];
-        store.deleteSession(mockSession.id);
+        store.sessions = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession, anotherSession];
+        store.deleteSession(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
       });
 
       expect(store.sessions).toHaveLength(1);
@@ -338,9 +338,9 @@ describe('useConversationStore', () => {
   describe('clearAllSessions', () => {
     beforeEach(() => {
       act(() => {
-        store.sessions = [mockSession];
-        store.currentSessionId = mockSession.id;
-        store.currentSession = mockSession;
+        store.sessions = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession];
+        store.currentSessionId = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id;
+        store.currentSession = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession;
       });
     });
 
@@ -359,9 +359,9 @@ describe('useConversationStore', () => {
   describe('searchSessions', () => {
     beforeEach(() => {
       const sessions = [
-        mockSession,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession,
         {
-          ...mockSession,
+          ...Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession,
           id: 'session-2',
           title: 'Another Conversation',
           messages: [
@@ -399,7 +399,7 @@ describe('useConversationStore', () => {
       });
 
       expect(results).toHaveLength(1);
-      expect(results[0].id).toBe(mockSession.id);
+      expect(results[0].id).toBe(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
     });
 
     test('should search with filters', () => {
@@ -427,18 +427,18 @@ describe('useConversationStore', () => {
   describe('tagSession', () => {
     beforeEach(() => {
       act(() => {
-        store.sessions = [mockSession];
-        store.currentSessionId = mockSession.id;
-        store.currentSession = mockSession;
+        store.sessions = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession];
+        store.currentSessionId = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id;
+        store.currentSession = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession;
       });
     });
 
     test('should add tags to session', () => {
       act(() => {
-        store.tagSession(mockSession.id, ['new-tag', 'another-tag']);
+        store.tagSession(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id, ['new-tag', 'another-tag']);
       });
 
-      const session = store.sessions.find(s => s.id === mockSession.id);
+      const session = store.sessions.find(s => s.id === Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
       expect(session.tags).toContain('new-tag');
       expect(session.tags).toContain('another-tag');
       expect(session.tags).toContain('test'); // Original tags preserved
@@ -446,10 +446,10 @@ describe('useConversationStore', () => {
 
     test('should not add duplicate tags', () => {
       act(() => {
-        store.tagSession(mockSession.id, ['test', 'new-tag']);
+        store.tagSession(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id, ['test', 'new-tag']);
       });
 
-      const session = store.sessions.find(s => s.id === mockSession.id);
+      const session = store.sessions.find(s => s.id === Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
       const testTags = session.tags.filter(tag => tag === 'test');
       expect(testTags).toHaveLength(1);
     });
@@ -458,48 +458,48 @@ describe('useConversationStore', () => {
   describe('Persistence', () => {
     test('should save to localStorage on persistSessions', async () => {
       act(() => {
-        store.sessions = [mockSession];
+        store.sessions = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession];
       });
 
       await act(async () => {
         await store.persistSessions();
       });
 
-      expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
+      expect(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLocalStorage.setItem).toHaveBeenCalledWith(
         'sutazai_conversations',
-        expect.stringContaining(mockSession.id)
+        expect.stringContaining(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id)
       );
       expect(store.lastSavedAt).toBeTruthy();
     });
 
     test('should load from localStorage', async () => {
       const storedData = JSON.stringify({
-        sessions: [mockSession],
+        sessions: [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession],
         timestamp: new Date().toISOString(),
         version: '1.0'
       });
       
-      mockLocalStorage.getItem.mockReturnValue(storedData);
+      Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLocalStorage.getItem.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestReturnValue(storedData);
 
       await act(async () => {
         await store.loadSessions();
       });
 
       expect(store.sessions).toHaveLength(1);
-      expect(store.sessions[0].id).toBe(mockSession.id);
+      expect(store.sessions[0].id).toBe(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
     });
   });
 
   describe('Utility Methods', () => {
     beforeEach(() => {
       act(() => {
-        store.sessions = [mockSession];
+        store.sessions = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession];
       });
     });
 
     test('getSessionById should return correct session', () => {
-      const session = store.getSessionById(mockSession.id);
-      expect(session).toEqual(mockSession);
+      const session = store.getSessionById(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
+      expect(session).toEqual(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession);
     });
 
     test('getSessionById should return null for non-existent session', () => {
@@ -524,20 +524,20 @@ describe('useConversationStore', () => {
   describe('Import/Export', () => {
     test('should export sessions correctly', () => {
       act(() => {
-        store.sessions = [mockSession];
+        store.sessions = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession];
       });
 
       const exported = store.exportSessions();
       const parsed = JSON.parse(exported);
 
       expect(parsed.sessions).toHaveLength(1);
-      expect(parsed.sessions[0].id).toBe(mockSession.id);
+      expect(parsed.sessions[0].id).toBe(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
       expect(parsed.version).toBe('1.0');
     });
 
     test('should import sessions correctly', () => {
       const importData = JSON.stringify({
-        sessions: [mockSession],
+        sessions: [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession],
         version: '1.0'
       });
 
@@ -548,7 +548,7 @@ describe('useConversationStore', () => {
 
       expect(result).toBe(true);
       expect(store.sessions).toHaveLength(1);
-      expect(store.sessions[0].id).toBe(mockSession.id);
+      expect(store.sessions[0].id).toBe(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSession.id);
     });
 
     test('should handle invalid import data', () => {

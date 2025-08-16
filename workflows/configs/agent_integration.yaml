@@ -3,9 +3,9 @@
 
 agent_mappings:
   # Critical System Agents
-  agi-system-architect:
+   -system-architect:
     dify_agent_id: "sutazai_architect"
-    endpoint: "http://backend:8000/api/v1/agents/agi-system-architect"
+    endpoint: "http://backend:8000/api/v1/agents/ -system-architect"
     capabilities:
       - system_design
       - architecture_optimization
@@ -17,9 +17,9 @@ agent_mappings:
       timeout: 1800
       retry_policy: "exponential_backoff"
     
-  ai-product-manager:
+  product-manager:
     dify_agent_id: "sutazai_product_manager"
-    endpoint: "http://backend:8000/api/v1/agents/ai-product-manager"
+    endpoint: "http://backend:8000/api/v1/agents/product-manager"
     capabilities:
       - requirement_analysis
       - web_search
@@ -45,14 +45,14 @@ agent_mappings:
       timeout: 600
       priority: "critical"
       
-  senior-ai-engineer:
+  senior-engineer:
     dify_agent_id: "sutazai_ai_engineer"
-    endpoint: "http://backend:8000/api/v1/agents/senior-ai-engineer"
+    endpoint: "http://backend:8000/api/v1/agents/senior-engineer"
     capabilities:
       - ml_architecture
       - model_optimization
       - rag_development
-      - agi_design
+      -  _design
     workflow_integration:
       input_format: "json"
       output_format: "json"
@@ -127,7 +127,7 @@ workflow_templates_integration:
       agent_unavailable:
         action: "route_to_fallback"
         fallback_agents:
-          "agi-system-architect": ["ai-product-manager"]
+          " -system-architect": ["ai-product-manager"]
           "ai-product-manager": ["autonomous-system-controller"]
           
       timeout:
@@ -164,7 +164,7 @@ security_integration:
     burst_limit: 20
     per_agent_limits:
       "autonomous-system-controller": 50
-      "agi-system-architect": 30
+      " -system-architect": 30
 
 monitoring_integration:
   metrics:

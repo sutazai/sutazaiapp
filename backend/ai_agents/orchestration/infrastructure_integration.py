@@ -327,8 +327,8 @@ class InfrastructureIntegration:
         
         # Define all 38 agents with their specific configurations
         agent_specs = {
-            "agi-system-architect": {
-                "image": "sutazai/agi-architect:latest",
+            "  -system-architect": {
+                "image": "sutazai/  -architect:latest",
                 "ports": {"8201": 8080},
                 "memory_limit": "2G",
                 "cpu_limit": "2"
@@ -403,16 +403,16 @@ class InfrastructureIntegration:
                 "image": "sutazai/context-optimizer:latest",
                 "ports": {"8217": 8080}
             },
-            "localagi-orchestration-manager": {
-                "image": "sutazai/localagi-manager:latest",
+            "local  -orchestration-manager": {
+                "image": "sutazai/local  -manager:latest",
                 "ports": {"8218": 8080}
             },
             "agentzero-coordinator": {
                 "image": "sutazai/agentzero:latest",
                 "ports": {"8219": 8080}
             },
-            "bigagi-system-manager": {
-                "image": "sutazai/bigagi-manager:latest",
+            "big  -system-manager": {
+                "image": "sutazai/big  -manager:latest",
                 "ports": {"8220": 8080}
             },
             "agentgpt-autonomous-executor": {

@@ -7,8 +7,8 @@
 import { act, renderHook } from '@testing-library/react';
 import { useVoiceStore } from '../voiceStore';
 
-// Mock MediaRecorder and related APIs
-global.MediaRecorder = class MockMediaRecorder {
+// Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test MediaRecorder and related APIs
+global.MediaRecorder = class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestMediaRecorder {
   constructor(stream, options) {
     this.stream = stream;
     this.options = options;
@@ -36,12 +36,12 @@ global.MediaRecorder = class MockMediaRecorder {
 };
 
 global.navigator.mediaDevices = {
-  getUserMedia: jest.fn().mockResolvedValue({
+  getUserMedia: jest.fn().Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResolvedValue({
     getTracks: () => [{ stop: jest.fn() }]
   })
 };
 
-// Mock fetch for API calls
+// Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test fetch for API calls
 global.fetch = jest.fn();
 
 describe('useVoiceStore', () => {
@@ -51,9 +51,9 @@ describe('useVoiceStore', () => {
     const { result } = renderHook(() => useVoiceStore());
     store = result.current;
     
-    // Reset mocks
-    jest.clearAllMocks();
-    navigator.mediaDevices.getUserMedia.mockResolvedValue({
+    // Reset Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
+    jest.clearAllRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests();
+    navigator.mediaDevices.getUserMedia.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResolvedValue({
       getTracks: () => [{ stop: jest.fn() }]
     });
   });
@@ -92,7 +92,7 @@ describe('useVoiceStore', () => {
     });
 
     test('should handle microphone access denied', async () => {
-      navigator.mediaDevices.getUserMedia.mockRejectedValueOnce(
+      navigator.mediaDevices.getUserMedia.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestRejectedValueOnce(
         new Error('NotAllowedError')
       );
 
@@ -110,7 +110,7 @@ describe('useVoiceStore', () => {
         await store.startRecording();
       });
 
-      const firstCallCount = navigator.mediaDevices.getUserMedia.mock.calls.length;
+      const firstCallCount = navigator.mediaDevices.getUserMedia.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.calls.length;
 
       // Try to start again
       await act(async () => {
@@ -177,14 +177,14 @@ describe('useVoiceStore', () => {
     });
 
     test('should process audio successfully', async () => {
-      const mockResponse = {
+      const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResponse = {
         transcript: 'Hello world',
         confidence: 0.95
       };
 
-      fetch.mockResolvedValueOnce({
+      fetch.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockResponse)
+        json: () => Promise.resolve(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResponse)
       });
 
       let result;
@@ -204,7 +204,7 @@ describe('useVoiceStore', () => {
     });
 
     test('should handle API error', async () => {
-      fetch.mockResolvedValueOnce({
+      fetch.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResolvedValueOnce({
         ok: false,
         status: 500
       });
@@ -220,7 +220,7 @@ describe('useVoiceStore', () => {
     });
 
     test('should handle network error', async () => {
-      fetch.mockRejectedValueOnce(new Error('Network error'));
+      fetch.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestRejectedValueOnce(new Error('Network error'));
 
       let result;
       await act(async () => {
@@ -358,17 +358,17 @@ describe('useVoiceStore', () => {
 
   describe('Advanced Features', () => {
     test('downloadAudio should create download link', () => {
-      // Mock URL.createObjectURL
+      // Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test URL.createObjectURL
       global.URL.createObjectURL = jest.fn(() => 'blob:url');
       global.URL.revokeObjectURL = jest.fn();
       
-      // Mock document methods
-      const mockLink = {
+      // Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test document methods
+      const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLink = {
         href: '',
         download: '',
         click: jest.fn()
       };
-      document.createElement = jest.fn(() => mockLink);
+      document.createElement = jest.fn(() => Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLink);
       document.body.appendChild = jest.fn();
       document.body.removeChild = jest.fn();
 
@@ -381,18 +381,18 @@ describe('useVoiceStore', () => {
       });
 
       expect(URL.createObjectURL).toHaveBeenCalledWith(store.audioBlob);
-      expect(mockLink.click).toHaveBeenCalled();
-      expect(document.body.appendChild).toHaveBeenCalledWith(mockLink);
-      expect(document.body.removeChild).toHaveBeenCalledWith(mockLink);
+      expect(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLink.click).toHaveBeenCalled();
+      expect(document.body.appendChild).toHaveBeenCalledWith(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLink);
+      expect(document.body.removeChild).toHaveBeenCalledWith(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestLink);
     });
 
     test('playAudio should create audio element', () => {
       global.URL.createObjectURL = jest.fn(() => 'blob:url');
       
-      const mockAudio = {
-        play: jest.fn().mockResolvedValue()
+      const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAudio = {
+        play: jest.fn().Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResolvedValue()
       };
-      global.Audio = jest.fn(() => mockAudio);
+      global.Audio = jest.fn(() => Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAudio);
 
       act(() => {
         store.audioBlob = new Blob(['test'], { type: 'audio/webm' });
@@ -404,8 +404,8 @@ describe('useVoiceStore', () => {
       });
 
       expect(Audio).toHaveBeenCalledWith('blob:url');
-      expect(mockAudio.play).toHaveBeenCalled();
-      expect(audioElement).toBe(mockAudio);
+      expect(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAudio.play).toHaveBeenCalled();
+      expect(audioElement).toBe(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAudio);
     });
 
     test('playAudio should return null without audio', () => {

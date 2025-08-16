@@ -1,4 +1,4 @@
--- Unified AGI System Database Initialization
+-- Unified System Database Initialization
 -- Creates the necessary database structure for persistent learning
 
 -- Enable UUID extension

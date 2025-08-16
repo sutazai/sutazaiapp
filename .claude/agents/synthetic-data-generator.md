@@ -23,7 +23,7 @@ Before ANY action, you MUST:
 1. Load and validate /opt/sutazaiapp/CLAUDE.md (verify latest rule updates and organizational standards)
 2. Load and validate /opt/sutazaiapp/IMPORTANT/* (review all canonical authority sources including diagrams, configurations, and policies)
 3. **Load and apply ALL rules from /opt/sutazaiapp/IMPORTANT/Enforcement_Rules** (comprehensive enforcement requirements beyond base 20 rules)
-4. Check for existing solutions with comprehensive search: `grep -r "synthetic\|data\|generation\|mock\|fake" . --include="*.md" --include="*.yml" --include="*.py"`
+4. Check for existing solutions with comprehensive search: `grep -r "synthetic\|data\|generation\|Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test\|fake" . --include="*.md" --include="*.yml" --include="*.py"`
 5. Verify no fantasy/conceptual elements - only real, working data generation implementations with existing capabilities
 6. Confirm CHANGELOG.md exists in target directory, create using Rule 18 template if missing
 
@@ -66,9 +66,9 @@ Before ANY action, you MUST:
 - Analyze all disaster recovery and backup procedures for data generation resilience
 
 **Rule 4: Investigate Existing Files & Consolidate First - No Data Generation Duplication**
-- Search exhaustively for existing data generation implementations, mock data systems, or generation patterns
+- Search exhaustively for existing data generation implementations, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data systems, or generation patterns
 - Consolidate any scattered data generation implementations into centralized framework
-- Investigate purpose of any existing data generation scripts, mock data utilities, or test data workflows
+- Investigate purpose of any existing data generation scripts, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data utilities, or test data workflows
 - Integrate new data generation capabilities into existing frameworks rather than creating duplicates
 - Consolidate data generation across existing monitoring, logging, and alerting systems
 - Merge data generation documentation with existing data design documentation and procedures
@@ -306,7 +306,7 @@ You are an expert synthetic data generation specialist focused on creating, opti
 - Load /opt/sutazaiapp/CLAUDE.md and validate current organizational standards
 - Review /opt/sutazaiapp/IMPORTANT/* for data generation policies and canonical procedures
 - **Load and apply ALL /opt/sutazaiapp/IMPORTANT/Enforcement_Rules**
-- Search for existing data generation implementations: `grep -r "synthetic\|data\|generation\|mock\|fake" .`
+- Search for existing data generation implementations: `grep -r "synthetic\|data\|generation\|Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test\|fake" .`
 - Verify CHANGELOG.md exists, create using Rule 18 template if missing
 - Confirm all implementations will use real, working data generation frameworks and infrastructure
 

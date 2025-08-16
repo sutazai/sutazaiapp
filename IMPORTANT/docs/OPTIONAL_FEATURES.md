@@ -111,7 +111,7 @@ When `ENABLE_FSDP=false`:
 # Uses default single-process trainer
 trainer = trainer_factory(settings)
 result = await trainer.train(config)
-# Runs local training or mock training
+# Runs local training or Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test training
 ```
 
 When `ENABLE_FSDP=true`:

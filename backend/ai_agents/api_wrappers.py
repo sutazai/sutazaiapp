@@ -71,11 +71,11 @@ class BaseAgentWrapper(ABC):
 
 # Core System Agents
 
-class AGISystemArchitectWrapper(BaseAgentWrapper):
+class   SystemArchitectWrapper(BaseAgentWrapper):
     """automation System Architect API wrapper."""
     
     def __init__(self, client: UniversalAgentClient):
-        super().__init__(client, AgentType.AGI_SYSTEM_ARCHITECT)
+        super().__init__(client, AgentType.  _SYSTEM_ARCHITECT)
     
     async def design_system_architecture(
         self,
@@ -1022,7 +1022,7 @@ class AgentWrapperFactory:
     def _get_wrapper_class(self, agent_type: AgentType) -> Optional[type]:
         """Get specific wrapper class for agent type."""
         wrapper_map = {
-            AgentType.AGI_SYSTEM_ARCHITECT: AGISystemArchitectWrapper,
+            AgentType.  _SYSTEM_ARCHITECT:   SystemArchitectWrapper,
             AgentType.AUTONOMOUS_SYSTEM_CONTROLLER: AutonomousSystemControllerWrapper,
             AgentType.AI_AGENT_ORCHESTRATOR: AIAgentOrchestratorWrapper,
             AgentType.INFRASTRUCTURE_DEVOPS_MANAGER: InfrastructureDevOpsManagerWrapper,
@@ -1085,7 +1085,7 @@ class UnifiedAgentAPI:
     def _create_agent_properties(self):
         """Create properties for easy agent access."""
         # Core System Agents
-        self.agi_architect = self.factory.get_wrapper(AgentType.AGI_SYSTEM_ARCHITECT)
+        self.  _architect = self.factory.get_wrapper(AgentType.  _SYSTEM_ARCHITECT)
         self.autonomous_controller = self.factory.get_wrapper(AgentType.AUTONOMOUS_SYSTEM_CONTROLLER)
         self.agent_orchestrator = self.factory.get_wrapper(AgentType.AI_AGENT_ORCHESTRATOR)
         
@@ -1171,7 +1171,7 @@ if __name__ == "__main__":
             api = UnifiedAgentAPI(client)
             
             # Example: Use automation System Architect
-            result = await api.agi_architect.design_system_architecture(
+            result = await api.  _architect.design_system_architecture(
                 requirements={
                     "type": "microservices",
                     "scale": "high",

@@ -55,7 +55,7 @@ TEST_TEXTS = {
         standard. Researchers at MIT and Stanford University continue to push the boundaries, 
         developing new architectures that require less computational power while delivering 
         better performance. The future of AI looks promising, with expectations of achieving 
-        AGI (Artificial General Intelligence) within the next decade.
+          (Artificial General Intelligence) within the next decade.
     """,
     
     "news_article": """

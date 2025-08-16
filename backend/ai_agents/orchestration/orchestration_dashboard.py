@@ -2,7 +2,7 @@
 SutazAI Agent Orchestration Dashboard and Management Interface
 ============================================================
 
-A comprehensive web-based dashboard for monitoring and managing the entire
+A comprehensive web-based dashboard for monitoring and man  ng the entire
 38-agent orchestration system with real-time metrics, health monitoring,
 task tracking, and system control capabilities.
 
@@ -392,10 +392,10 @@ class OrchestrationDashboard:
         
         # Add nodes for different agent types
         agent_types = {
-            "Core Intelligence": ["agi-system-architect", "autonomous-system-controller"],
+            "Core Intelligence": ["  -system-architect", "autonomous-system-controller"],
             "Development": ["senior-ai-engineer", "senior-backend-developer"],
             "Infrastructure": ["infrastructure-devops-manager", "ollama-integration-specialist"],
-            "Specialized AI": ["localagi-orchestration-manager", "agentzero-coordinator"],
+            "Specialized AI": ["local  -orchestration-manager", "agentzero-coordinator"],
             "Security": ["semgrep-security-analyzer", "security-pentesting-specialist"]
         }
         
@@ -430,7 +430,7 @@ class OrchestrationDashboard:
         
         # Add edges between related agents
         edges = [
-            ("agi-system-architect", "autonomous-system-controller"),
+            ("  -system-architect", "autonomous-system-controller"),
             ("senior-ai-engineer", "senior-backend-developer"),
             ("infrastructure-devops-manager", "ollama-integration-specialist"),
             # Add more logical connections

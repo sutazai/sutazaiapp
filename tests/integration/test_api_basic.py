@@ -5,7 +5,7 @@ Requirements: pytest, httpx, fastapi
 """
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import Mock, patch
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
 import sys
 import os
 
@@ -16,8 +16,8 @@ if backend_path not in sys.path:
 
 
 @pytest.fixture
-def mock_app():
-    """Create a mock FastAPI app for testing."""
+def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_app():
+    """Create a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test FastAPI app for testing."""
     from fastapi import FastAPI
     
     app = FastAPI()
@@ -53,9 +53,9 @@ def mock_app():
 
 
 @pytest.fixture
-def client(mock_app):
+def client(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_app):
     """Create test client."""
-    return TestClient(mock_app)
+    return TestClient(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_app)
 
 
 class TestBasicAPI:
@@ -127,11 +127,11 @@ class TestErrorHandling:
 class TestAsyncEndpoints:
     """Test async endpoint behavior."""
     
-    async def test_async_health_check(self, mock_app):
+    async def test_async_health_check(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_app):
         """Test async health check works correctly."""
         from httpx import AsyncClient
         
-        async with AsyncClient(app=mock_app, base_url="http://test") as ac:
+        async with AsyncClient(app=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_app, base_url="http://test") as ac:
             response = await ac.get("/health")
         
         assert response.status_code == 200

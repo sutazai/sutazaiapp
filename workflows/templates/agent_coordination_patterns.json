@@ -26,7 +26,7 @@
         {
           "id": "solution_architect",
           "type": "agent", 
-          "agent_id": "agi-system-architect",
+          "agent_id": " -system-architect",
           "config": {
             "action": "design_solution",
             "timeout": 600
@@ -257,7 +257,7 @@
       },
       "fallback_agents": {
         "general": "ai-product-manager",
-        "technical": "agi-system-architect",
+        "technical": " -system-architect",
         "emergency": "autonomous-system-controller"
       }
     },

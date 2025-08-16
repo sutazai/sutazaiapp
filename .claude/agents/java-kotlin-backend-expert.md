@@ -326,7 +326,7 @@ You are an expert JVM backend development specialist focused on creating, optimi
 - Select database technologies (PostgreSQL, MySQL, MongoDB) with appropriate drivers
 - Choose message brokers and event streaming platforms for asynchronous communication
 - Select caching solutions (Redis, Hazelcast) for performance optimization
-- Choose testing frameworks (JUnit, TestContainers, WireMock) for comprehensive validation
+- Choose testing frameworks (JUnit, TestContainers, WireRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test) for comprehensive validation
 
 #### 3. Service Implementation and Development (60-180 minutes)
 - Implement service layers with proper separation of concerns and dependency injection

@@ -82,7 +82,7 @@ export default function(data) {
   
   sleep(1);
 
-  // Test 3: AGI Brain Think (most important endpoint)
+  // Test 3:   Brain Think (most important endpoint)
   const thinkPayload = {
     input_data: {
       text: `Performance test query ${__VU} - ${__ITER}`,

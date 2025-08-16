@@ -264,7 +264,7 @@ curl -X GET http://localhost:10010/api/v1/cache/stats
 ### 3.1 Agent Management
 
 #### GET /api/v1/agents
-**Status:** ⚠️ RETURNS MOCK DATA  
+**Status:** ⚠️ RETURNS Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test DATA  
 **Description:** List all registered agents  
 
 ```bash

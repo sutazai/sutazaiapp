@@ -763,6 +763,10 @@ async def get_mesh() -> ServiceMesh:
         await _mesh.initialize()
     return _mesh
 
+async def get_service_mesh() -> ServiceMesh:
+    """Get or create service mesh instance - compatibility alias"""
+    return await get_mesh()
+
 # Compatibility layer for existing code
 async def enqueue_task_mesh(topic: str, payload: Dict[str, Any]) -> str:
     """Compatibility wrapper for existing enqueue_task calls"""

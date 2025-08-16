@@ -17,7 +17,7 @@ This test suite validates all aspects of the monitoring system including:
 
 import pytest
 import unittest
-from unittest.mock import Mock, patch, MagicMock, call
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, call
 import json
 import sys
 import os
@@ -38,7 +38,7 @@ sys.path.insert(0, '/opt/sutazaiapp/scripts/agents')
 try:
     from static_monitor import EnhancedMonitor
 except ImportError:
-    # Create a mock if the module can't be imported
+    # Create a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test if the module can't be imported
     class EnhancedMonitor:
         def __init__(self, config_path=None):
             self.config = {}
@@ -133,21 +133,21 @@ class TestStaticMonitorCore(TestMonitoringSystemBase):
     
     def test_monitor_initialization(self):
         """Test that the monitor initializes correctly"""
-        with patch('static_monitor.EnhancedMonitor._load_config') as mock_load_config:
-            mock_load_config.return_value = self.test_config
+        with patch('static_monitor.EnhancedMonitor._load_config') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_load_config:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_load_config.return_value = self.test_config
             
             monitor = EnhancedMonitor(self.config_file)
             
             # Verify configuration is loaded
             self.assertIsNotNone(monitor.config)
-            mock_load_config.assert_called_once()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_load_config.assert_called_once()
     
     @patch('subprocess.run')
-    def test_docker_container_detection(self, mock_subprocess):
+    def test_docker_container_detection(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test Docker container detection logic"""
-        # Mock Docker output for running containers
-        mock_subprocess.return_value.returncode = 0
-        mock_subprocess.return_value.stdout = (
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Docker output for running containers
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.returncode = 0
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.stdout = (
             "sutazai-ai-testing-qa-validator\tUp 2 hours\t0.0.0.0:8081->8080/tcp\n"
             "sutazai- system-architect\tUp 1 hour (healthy)\t0.0.0.0:8082->8080/tcp\n"
             "sutazai-observability-monitoring-engineer\tRestarting (1) 5 minutes ago\t\n"
@@ -209,8 +209,8 @@ class TestAgentRegistry(TestMonitoringSystemBase):
     def test_agent_registry_loading(self):
         """Test loading agent registry from file"""
         with patch.object(EnhancedMonitor, '_load_config', return_value=self.test_config):
-            with patch('builtins.open', create=True) as mock_open:
-                mock_open.return_value.__enter__.return_value.read.return_value = json.dumps(self.test_agent_registry)
+            with patch('builtins.open', create=True) as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open:
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open.return_value.__enter__.return_value.read.return_value = json.dumps(self.test_agent_registry)
                 
                 monitor = EnhancedMonitor()
                 registry = monitor._load_agent_registry()
@@ -254,38 +254,38 @@ class TestQuickStatusCheck(TestMonitoringSystemBase):
     """Test the quick status check functionality"""
     
     @patch('docker.from_env')
-    def test_get_system_status(self, mock_docker):
+    def test_get_system_status(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_docker):
         """Test system status retrieval"""
-        # Mock Docker client and containers
-        mock_client = Mock()
-        mock_docker.return_value = mock_client
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Docker client and containers
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_docker.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
         
-        # Mock container objects
-        mock_container1 = Mock()
-        mock_container1.name = "sutazai-ai-testing-qa-validator"
-        mock_container1.status = "running"
-        mock_container1.attrs = {
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test container objects
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container1 = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container1.name = "sutazai-ai-testing-qa-validator"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container1.status = "running"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container1.attrs = {
             "State": {"Health": {"Status": "healthy"}},
             "RestartCount": 0
         }
         
-        mock_container2 = Mock()
-        mock_container2.name = "sutazai-backend"
-        mock_container2.status = "running"
-        mock_container2.attrs = {
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container2 = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container2.name = "sutazai-backend"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container2.status = "running"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container2.attrs = {
             "State": {"Health": {"Status": "unhealthy"}},
             "RestartCount": 2
         }
         
-        mock_container3 = Mock()
-        mock_container3.name = "sutazai-redis"
-        mock_container3.attrs = {
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container3 = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container3.name = "sutazai-redis"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container3.attrs = {
             "State": {},
             "RestartCount": 0
         }
-        mock_container3.status = "exited"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container3.status = "exited"
         
-        mock_client.containers.list.return_value = [mock_container1, mock_container2, mock_container3]
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.containers.list.return_value = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container1, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container2, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_container3]
         
         # Import and test the quick status check
         try:
@@ -316,12 +316,12 @@ class TestMonitoringEdgeCases(TestMonitoringSystemBase):
     """Test edge cases and error conditions"""
     
     @patch('subprocess.run')
-    def test_docker_command_failure(self, mock_subprocess):
+    def test_docker_command_failure(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test handling of Docker command failures"""
-        # Mock Docker command failure
-        mock_subprocess.return_value.returncode = 1
-        mock_subprocess.return_value.stdout = ""
-        mock_subprocess.return_value.stderr = "Docker service not running"
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Docker command failure
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.returncode = 1
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.stdout = ""
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.stderr = "Docker service not running"
         
         with patch.object(EnhancedMonitor, '_load_config', return_value=self.test_config):
             with patch.object(EnhancedMonitor, '_load_agent_registry', return_value=self.test_agent_registry):
@@ -339,8 +339,8 @@ class TestMonitoringEdgeCases(TestMonitoringSystemBase):
         }
         
         with patch.object(EnhancedMonitor, '_load_config', return_value=self.test_config):
-            with patch('builtins.open', create=True) as mock_open:
-                mock_open.return_value.__enter__.return_value.read.return_value = json.dumps(malformed_registry)
+            with patch('builtins.open', create=True) as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open:
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open.return_value.__enter__.return_value.read.return_value = json.dumps(malformed_registry)
                 
                 monitor = EnhancedMonitor()
                 registry = monitor._load_agent_registry()
@@ -352,9 +352,9 @@ class TestMonitoringEdgeCases(TestMonitoringSystemBase):
         """Test handling of network timeouts during health checks"""
         with patch.object(EnhancedMonitor, '_load_config', return_value=self.test_config):
             with patch.object(EnhancedMonitor, '_load_agent_registry', return_value=self.test_agent_registry):
-                with patch('requests.get') as mock_get:
-                    # Mock network timeout
-                    mock_get.side_effect = TimeoutError("Connection timed out")
+                with patch('requests.get') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get:
+                    # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test network timeout
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get.side_effect = TimeoutError("Connection timed out")
                     
                     monitor = EnhancedMonitor()
                     
@@ -369,9 +369,9 @@ class TestMonitoringEdgeCases(TestMonitoringSystemBase):
     
     def test_empty_container_list(self):
         """Test handling of empty container list"""
-        with patch('subprocess.run') as mock_subprocess:
-            mock_subprocess.return_value.returncode = 0
-            mock_subprocess.return_value.stdout = ""
+        with patch('subprocess.run') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.returncode = 0
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.stdout = ""
             
             with patch.object(EnhancedMonitor, '_load_config', return_value=self.test_config):
                 with patch.object(EnhancedMonitor, '_load_agent_registry', return_value=self.test_agent_registry):
@@ -392,11 +392,11 @@ class TestMonitoringPerformance(TestMonitoringSystemBase):
             with patch.object(EnhancedMonitor, '_load_agent_registry', return_value=self.test_agent_registry):
                 monitor = EnhancedMonitor()
                 
-                # Mock ThreadPoolExecutor for concurrent execution
-                with patch('concurrent.futures.ThreadPoolExecutor') as mock_executor:
-                    mock_future = Mock()
-                    mock_future.result.return_value = ("test-agent", "healthy", 0.1)
-                    mock_executor.return_value.__enter__.return_value.submit.return_value = mock_future
+                # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test ThreadPoolExecutor for concurrent execution
+                with patch('concurrent.futures.ThreadPoolExecutor') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_executor:
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_future = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_future.result.return_value = ("test-agent", "healthy", 0.1)
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_executor.return_value.__enter__.return_value.submit.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_future
                     
                     # Test that concurrent health checks are used
                     start_time = time.time()
@@ -423,21 +423,21 @@ class TestIntegrationScenarios(TestMonitoringSystemBase):
     
     @patch('subprocess.run')
     @patch('requests.get')
-    def test_end_to_end_monitoring(self, mock_requests, mock_subprocess):
+    def test_end_to_end_monitoring(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_requests, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
         """Test complete end-to-end monitoring workflow"""
-        # Mock Docker container discovery
-        mock_subprocess.return_value.returncode = 0
-        mock_subprocess.return_value.stdout = (
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Docker container discovery
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.returncode = 0
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value.stdout = (
             "sutazai-ai-testing-qa-validator\tUp 2 hours (healthy)\t0.0.0.0:8081->8080/tcp\n"
             "sutazai- system-architect\tUp 1 hour (healthy)\t0.0.0.0:8082->8080/tcp\n"
         )
         
-        # Mock health check responses
-        mock_response = Mock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {"status": "healthy", "version": "1.0.0"}
-        mock_response.elapsed.total_seconds.return_value = 0.1
-        mock_requests.return_value = mock_response
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test health check responses
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {"status": "healthy", "version": "1.0.0"}
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.elapsed.total_seconds.return_value = 0.1
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_requests.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
         
         with patch.object(EnhancedMonitor, '_load_config', return_value=self.test_config):
             with patch.object(EnhancedMonitor, '_load_agent_registry', return_value=self.test_agent_registry):

@@ -5,7 +5,7 @@ Testing connection pools, caching, task queues, and health monitoring
 
 import pytest
 import asyncio
-from unittest.mock import AsyncMock, MagicMock, patch, call
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, call
 from datetime import datetime, timedelta
 import json
 
@@ -17,21 +17,21 @@ class TestConnectionPoolManager:
     @pytest.mark.asyncio
     async def test_connection_pool_initialization(self):
         """Test connection pool manager initialization"""
-        with patch('app.core.connection_pool.ConnectionPoolManager') as MockPoolManager:
-            mock_instance = AsyncMock()
-            MockPoolManager.return_value = mock_instance
+        with patch('app.core.connection_pool.ConnectionPoolManager') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestPoolManager:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestPoolManager.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance
             
             from app.core.connection_pool import get_pool_manager
             
             pool_manager = await get_pool_manager()
             assert pool_manager is not None
-            MockPoolManager.assert_called_once()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestPoolManager.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_connection_pool_stats(self, mock_pool_manager):
+    async def test_connection_pool_stats(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager):
         """Test connection pool statistics"""
-        stats = mock_pool_manager.get_stats()
+        stats = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager.get_stats()
         
         assert isinstance(stats, dict)
         assert "active_connections" in stats
@@ -45,18 +45,18 @@ class TestConnectionPoolManager:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_connection_pool_close(self, mock_pool_manager):
+    async def test_connection_pool_close(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager):
         """Test connection pool cleanup"""
-        await mock_pool_manager.close()
-        mock_pool_manager.close.assert_called_once()
+        await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager.close()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager.close.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_http_client_creation(self):
         """Test HTTP client creation and management"""
-        with patch('app.core.connection_pool.get_http_client') as mock_get_client:
-            mock_client = AsyncMock()
-            mock_get_client.return_value.__aenter__.return_value = mock_client
+        with patch('app.core.connection_pool.get_http_client') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_client:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_client.return_value.__aenter__.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
             
             from app.core.connection_pool import get_http_client
             
@@ -69,55 +69,55 @@ class TestCacheService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_service_initialization(self, mock_cache_service):
+    async def test_cache_service_initialization(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service):
         """Test cache service initialization"""
-        assert mock_cache_service is not None
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service is not None
         
         # Test basic cache operations are available
-        assert hasattr(mock_cache_service, 'get')
-        assert hasattr(mock_cache_service, 'set')
-        assert hasattr(mock_cache_service, 'delete')
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service, 'get')
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service, 'set')
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service, 'delete')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_get_set_operations(self, mock_cache_service):
+    async def test_cache_get_set_operations(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service):
         """Test basic cache get/set operations"""
         key = "test_key"
         value = {"test": "data"}
         
         # Test set operation
-        result = await mock_cache_service.set(key, value, ttl=60)
+        result = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.set(key, value, ttl=60)
         assert result is True
         
         # Verify set was called with correct parameters
-        mock_cache_service.set.assert_called_with(key, value, ttl=60)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.set.assert_called_with(key, value, ttl=60)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_delete_operations(self, mock_cache_service):
+    async def test_cache_delete_operations(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service):
         """Test cache deletion operations"""
         key = "test_key"
         
         # Test delete operation
-        result = await mock_cache_service.delete(key)
+        result = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.delete(key)
         assert result is True
         
-        mock_cache_service.delete.assert_called_with(key)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.delete.assert_called_with(key)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_clear_all(self, mock_cache_service):
+    async def test_cache_clear_all(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service):
         """Test cache clear all operation"""
-        result = await mock_cache_service.clear_all()
+        result = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.clear_all()
         assert result is True
         
-        mock_cache_service.clear_all.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.clear_all.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_statistics(self, mock_cache_service):
+    async def test_cache_statistics(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service):
         """Test cache statistics collection"""
-        stats = mock_cache_service.get_stats()
+        stats = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.get_stats()
         
         assert isinstance(stats, dict)
         assert "hits" in stats
@@ -133,11 +133,11 @@ class TestCacheService:
     @pytest.mark.asyncio
     async def test_cache_decorators(self):
         """Test cache decorator functionality"""
-        with patch('app.core.cache.get_cache_service') as mock_get_cache:
-            mock_cache = AsyncMock()
-            mock_get_cache.return_value = mock_cache
-            mock_cache.get.return_value = None  # Cache miss
-            mock_cache.set.return_value = True
+        with patch('app.core.cache.get_cache_service') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_cache:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_cache.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache.get.return_value = None  # Cache miss
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache.set.return_value = True
             
             from app.core.cache import cached
             
@@ -155,19 +155,19 @@ class TestTaskQueue:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_queue_initialization(self, mock_task_queue):
+    async def test_task_queue_initialization(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue):
         """Test task queue initialization"""
-        assert mock_task_queue is not None
-        assert hasattr(mock_task_queue, 'get_task_status')
-        assert hasattr(mock_task_queue, 'register_handler')
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue is not None
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue, 'get_task_status')
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue, 'register_handler')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_status_retrieval(self, mock_task_queue):
+    async def test_task_status_retrieval(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue):
         """Test task status retrieval"""
         task_id = "test-task-123"
         
-        status = await mock_task_queue.get_task_status(task_id)
+        status = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue.get_task_status(task_id)
         
         assert isinstance(status, dict)
         assert "status" in status
@@ -176,20 +176,20 @@ class TestTaskQueue:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_handler_registration(self, mock_task_queue):
+    async def test_task_handler_registration(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue):
         """Test task handler registration"""
         async def test_handler(payload):
             return {"processed": payload}
         
-        await mock_task_queue.register_handler("test_type", test_handler)
+        await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue.register_handler("test_type", test_handler)
         
-        mock_task_queue.register_handler.assert_called_with("test_type", test_handler)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue.register_handler.assert_called_with("test_type", test_handler)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_queue_statistics(self, mock_task_queue):
+    async def test_task_queue_statistics(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue):
         """Test task queue statistics"""
-        stats = mock_task_queue.get_stats()
+        stats = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue.get_stats()
         
         assert isinstance(stats, dict)
         assert "pending_tasks" in stats
@@ -203,17 +203,17 @@ class TestTaskQueue:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_queue_shutdown(self, mock_task_queue):
+    async def test_task_queue_shutdown(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue):
         """Test task queue shutdown"""
-        await mock_task_queue.stop()
-        mock_task_queue.stop.assert_called_once()
+        await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue.stop()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue.stop.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_background_task_creation(self):
         """Test background task creation"""
-        with patch('app.core.task_queue.create_background_task') as mock_create:
-            mock_create.return_value = "task-id-123"
+        with patch('app.core.task_queue.create_background_task') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_create:
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_create.return_value = "task-id-123"
             
             from app.core.task_queue import create_background_task
             
@@ -224,7 +224,7 @@ class TestTaskQueue:
             )
             
             assert task_id == "task-id-123"
-            mock_create.assert_called_once_with(
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_create.assert_called_once_with(
                 task_type="test",
                 payload={"data": "test"},
                 priority=1
@@ -236,17 +236,17 @@ class TestHealthMonitoring:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_health_monitoring_initialization(self, mock_health_monitoring):
+    async def test_health_monitoring_initialization(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring):
         """Test health monitoring service initialization"""
-        assert mock_health_monitoring is not None
-        assert hasattr(mock_health_monitoring, 'get_detailed_health')
-        assert hasattr(mock_health_monitoring, 'get_prometheus_metrics')
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring is not None
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring, 'get_detailed_health')
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring, 'get_prometheus_metrics')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_detailed_health_report(self, mock_health_monitoring):
+    async def test_detailed_health_report(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring):
         """Test detailed health report generation"""
-        health_report = await mock_health_monitoring.get_detailed_health()
+        health_report = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring.get_detailed_health()
         
         assert health_report is not None
         assert hasattr(health_report, 'overall_status')
@@ -256,9 +256,9 @@ class TestHealthMonitoring:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_prometheus_metrics_generation(self, mock_health_monitoring):
+    async def test_prometheus_metrics_generation(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring):
         """Test Prometheus metrics generation"""
-        metrics = await mock_health_monitoring.get_prometheus_metrics()
+        metrics = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring.get_prometheus_metrics()
         
         assert isinstance(metrics, str)
         assert len(metrics) > 0
@@ -267,9 +267,9 @@ class TestHealthMonitoring:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_service_health_tracking(self, mock_health_monitoring):
+    async def test_service_health_tracking(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring):
         """Test individual service health tracking"""
-        health_report = await mock_health_monitoring.get_detailed_health()
+        health_report = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_monitoring.get_detailed_health()
         
         services = health_report.services
         assert isinstance(services, dict)
@@ -286,17 +286,17 @@ class TestCircuitBreakers:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_circuit_breaker_manager_initialization(self, mock_circuit_breaker_manager):
+    async def test_circuit_breaker_manager_initialization(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker_manager):
         """Test circuit breaker manager initialization"""
-        assert mock_circuit_breaker_manager is not None
-        assert hasattr(mock_circuit_breaker_manager, 'get_all_stats')
-        assert hasattr(mock_circuit_breaker_manager, 'reset_all')
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker_manager is not None
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker_manager, 'get_all_stats')
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker_manager, 'reset_all')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_circuit_breaker_stats(self, mock_circuit_breaker_manager):
+    async def test_circuit_breaker_stats(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker_manager):
         """Test circuit breaker statistics"""
-        stats = mock_circuit_breaker_manager.get_all_stats()
+        stats = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker_manager.get_all_stats()
         
         assert isinstance(stats, dict)
         
@@ -310,22 +310,22 @@ class TestCircuitBreakers:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_circuit_breaker_reset(self, mock_circuit_breaker_manager):
+    async def test_circuit_breaker_reset(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker_manager):
         """Test circuit breaker reset functionality"""
-        await mock_circuit_breaker_manager.reset_all()
-        mock_circuit_breaker_manager.reset_all.assert_called_once()
+        await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker_manager.reset_all()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_circuit_breaker_manager.reset_all.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_individual_circuit_breakers(self):
         """Test individual circuit breaker creation"""
-        with patch('app.core.circuit_breaker_integration.get_redis_circuit_breaker') as mock_redis_breaker, \
-             patch('app.core.circuit_breaker_integration.get_database_circuit_breaker') as mock_db_breaker, \
-             patch('app.core.circuit_breaker_integration.get_ollama_circuit_breaker') as mock_ollama_breaker:
+        with patch('app.core.circuit_breaker_integration.get_redis_circuit_breaker') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_breaker, \
+             patch('app.core.circuit_breaker_integration.get_database_circuit_breaker') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_db_breaker, \
+             patch('app.core.circuit_breaker_integration.get_ollama_circuit_breaker') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_breaker:
             
-            mock_redis_breaker.return_value = AsyncMock()
-            mock_db_breaker.return_value = AsyncMock()
-            mock_ollama_breaker.return_value = AsyncMock()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_breaker.return_value = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_db_breaker.return_value = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_breaker.return_value = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
             
             from app.core.circuit_breaker_integration import (
                 get_redis_circuit_breaker,
@@ -347,21 +347,21 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_service_initialization(self, mock_ollama_service):
+    async def test_ollama_service_initialization(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test Ollama service initialization"""
-        assert mock_ollama_service is not None
-        assert hasattr(mock_ollama_service, 'generate')
-        assert hasattr(mock_ollama_service, 'generate_streaming')
-        assert hasattr(mock_ollama_service, 'batch_generate')
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service is not None
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service, 'generate')
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service, 'generate_streaming')
+        assert hasattr(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service, 'batch_generate')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_text_generation(self, mock_ollama_service):
+    async def test_ollama_text_generation(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test Ollama text generation"""
         prompt = "Hello, how are you?"
         model = "tinyllama"
         
-        result = await mock_ollama_service.generate(
+        result = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.generate(
             prompt=prompt,
             model=model,
             use_cache=True
@@ -374,13 +374,13 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_streaming_generation(self, mock_ollama_service):
+    async def test_ollama_streaming_generation(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test Ollama streaming text generation"""
         prompt = "Tell me a story"
         model = "tinyllama"
         
         chunks = []
-        async for chunk in mock_ollama_service.generate_streaming(
+        async for chunk in Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.generate_streaming(
             prompt=prompt,
             model=model
         ):
@@ -393,11 +393,11 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_batch_generation(self, mock_ollama_service):
+    async def test_ollama_batch_generation(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test Ollama batch text generation"""
         prompts = ["Hello", "How are you?"]
         
-        results = await mock_ollama_service.batch_generate(
+        results = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.batch_generate(
             prompts=prompts,
             max_concurrent=10
         )
@@ -412,9 +412,9 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_service_statistics(self, mock_ollama_service):
+    async def test_ollama_service_statistics(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test Ollama service statistics"""
-        stats = mock_ollama_service.get_stats()
+        stats = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.get_stats()
         
         assert isinstance(stats, dict)
         assert "requests_processed" in stats
@@ -428,17 +428,17 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_service_warmup(self, mock_ollama_service):
+    async def test_ollama_service_warmup(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test Ollama service warmup"""
-        await mock_ollama_service.warmup(3)
-        mock_ollama_service.warmup.assert_called_with(3)
+        await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.warmup(3)
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.warmup.assert_called_with(3)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_service_shutdown(self, mock_ollama_service):
+    async def test_ollama_service_shutdown(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test Ollama service shutdown"""
-        await mock_ollama_service.shutdown()
-        mock_ollama_service.shutdown.assert_called_once()
+        await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.shutdown()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.shutdown.assert_called_once()
 
 
 class TestCoreConfiguration:
@@ -482,18 +482,18 @@ class TestServiceIntegration:
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_service_dependency_coordination(self, 
-                                                   mock_cache_service,
-                                                   mock_pool_manager,
-                                                   mock_ollama_service,
-                                                   mock_task_queue):
+                                                   Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service,
+                                                   Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager,
+                                                   Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service,
+                                                   Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue):
         """Test that services can work together"""
         # Test cache service with connection pool
-        assert mock_cache_service is not None
-        assert mock_pool_manager is not None
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service is not None
+        assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager is not None
         
         # Test cache stats and pool stats are available
-        cache_stats = mock_cache_service.get_stats()
-        pool_stats = mock_pool_manager.get_stats()
+        cache_stats = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.get_stats()
+        pool_stats = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager.get_stats()
         
         assert isinstance(cache_stats, dict)
         assert isinstance(pool_stats, dict)
@@ -501,45 +501,45 @@ class TestServiceIntegration:
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_error_handling_across_services(self,
-                                                   mock_cache_service,
-                                                   mock_ollama_service):
+                                                   Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service,
+                                                   Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test error handling across different services"""
-        # Configure mock to raise exception
-        mock_cache_service.get.side_effect = Exception("Redis connection failed")
+        # Configure Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test to raise exception
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.get.side_effect = Exception("Redis connection failed")
         
         # Service should handle cache failures gracefully
         with pytest.raises(Exception) as exc_info:
-            await mock_cache_service.get("test_key")
+            await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.get("test_key")
         
         assert "Redis connection failed" in str(exc_info.value)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_service_lifecycle_management(self,
-                                                mock_pool_manager,
-                                                mock_task_queue,
-                                                mock_ollama_service):
+                                                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager,
+                                                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue,
+                                                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test service lifecycle (startup/shutdown)"""
         # Test shutdown sequence
-        await mock_ollama_service.shutdown()
-        await mock_task_queue.stop()
-        await mock_pool_manager.close()
+        await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.shutdown()
+        await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue.stop()
+        await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager.close()
         
         # Verify all services were shut down
-        mock_ollama_service.shutdown.assert_called_once()
-        mock_task_queue.stop.assert_called_once()
-        mock_pool_manager.close.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.shutdown.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task_queue.stop.assert_called_once()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager.close.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.performance
     @pytest.mark.asyncio
     async def test_concurrent_service_operations(self,
-                                                  mock_cache_service,
-                                                  mock_ollama_service):
+                                                  Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service,
+                                                  Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service):
         """Test concurrent operations across services"""
         # Create concurrent operations
-        cache_task = mock_cache_service.get("test_key")
-        ollama_task = mock_ollama_service.generate(
+        cache_task = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.get("test_key")
+        ollama_task = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_service.generate(
             prompt="test",
             model="tinyllama"
         )
@@ -550,7 +550,7 @@ class TestServiceIntegration:
         )
         
         # Both operations should complete
-        assert cache_result is None  # Mock returns None for cache miss
+        assert cache_result is None  # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test returns None for cache miss
         assert isinstance(ollama_result, dict)
 
 

@@ -277,7 +277,7 @@ logger.warning(f"{source} search failed: {result}")
 ## Testing
 
 ### Unit Tests
-- `test_vector_context_injector.py`: Comprehensive unit tests with mocked clients
+- `test_vector_context_injector.py`: Comprehensive unit tests with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested clients
 - Circuit breaker functionality testing
 - Query intent detection validation
 - Database client error handling

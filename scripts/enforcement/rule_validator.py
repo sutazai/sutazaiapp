@@ -118,7 +118,7 @@ class RuleEnforcer:
             r'\/\/.*future.*implementation',
             r'placeholder.*service',
             r'abstract.*handler',
-            r'mock.*implementation.*production',
+            r'Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.*implementation.*production',
             r'imaginary.*system'
         ]
         

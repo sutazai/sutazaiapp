@@ -204,7 +204,7 @@ class HealthMonitoringTestSuite:
         try:
             health_monitor = await get_health_monitoring_service()
             
-            # Mock circuit breakers for testing
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test circuit breakers for testing
             circuit_manager = await get_circuit_breaker_manager()
             redis_breaker = await circuit_manager.get_or_create_breaker("redis")
             health_monitor.register_circuit_breaker('redis', redis_breaker)

@@ -25,7 +25,7 @@ import time
 import json
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-from unittest.mock import AsyncMock, Mock, patch, call
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, call
 from dataclasses import dataclass
 
 from conftest import TestEnvironment, TestMCPServer
@@ -59,7 +59,7 @@ class TestMCPServerHealth:
     async def test_basic_health_check(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker
     ):
         """Test basic health check functionality for individual servers."""
         config = test_environment.config
@@ -67,7 +67,7 @@ class TestMCPServerHealth:
         
         server_name = "files"
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker):
             health_result = await update_manager._run_health_check(server_name, timeout=30)
             
             assert health_result["server_name"] == server_name
@@ -92,7 +92,7 @@ class TestMCPServerHealth:
         
         server_name = "slow-server"
         
-        # Mock slow health check that exceeds timeout
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test slow health check that exceeds timeout
         async def slow_health_check(name: str, timeout: int = 30):
             await asyncio.sleep(timeout + 1)  # Exceed timeout
             return {"server_name": name, "healthy": True, "response_time": timeout + 1}
@@ -132,7 +132,7 @@ class TestMCPServerHealth:
         server_name = "test-server"
         call_count = 0
         
-        # Mock health check that fails first few attempts
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test health check that fails first few attempts
         async def intermittent_health_check(name: str, timeout: int = 30):
             nonlocal call_count
             call_count += 1
@@ -179,7 +179,7 @@ class TestMCPServerHealth:
     async def test_health_metrics_collection(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker
     ):
         """Test health metrics collection and aggregation."""
         config = test_environment.config
@@ -187,7 +187,7 @@ class TestMCPServerHealth:
         
         server_names = ["files", "postgres", "test-server"]
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker):
             # Collect health metrics for multiple servers
             health_results = {}
             
@@ -221,7 +221,7 @@ class TestMCPServerHealth:
     async def test_health_status_persistence(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
         tmp_path: Path
     ):
         """Test health status persistence and historical tracking."""
@@ -231,7 +231,7 @@ class TestMCPServerHealth:
         server_name = "files"
         health_log_file = tmp_path / "health_log.json"
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker):
             # Collect health data over time
             health_history = []
             
@@ -272,7 +272,7 @@ class TestMCPSystemHealth:
     async def test_system_wide_health_check(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
         performance_monitor
     ):
         """Test system-wide health monitoring across all MCP servers."""
@@ -281,7 +281,7 @@ class TestMCPSystemHealth:
         config = test_environment.config
         update_manager = MCPUpdateManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker):
             system_status = await update_manager.get_system_status()
             
             # Verify system status structure
@@ -315,7 +315,7 @@ class TestMCPSystemHealth:
     async def test_concurrent_health_checks(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker
     ):
         """Test concurrent health checks for multiple servers."""
         config = test_environment.config
@@ -323,7 +323,7 @@ class TestMCPSystemHealth:
         
         server_names = list(config.get_all_servers())[:5]  # Test first 5 servers
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker):
             # Start concurrent health checks
             health_tasks = []
             start_time = time.time()
@@ -368,16 +368,16 @@ class TestMCPSystemHealth:
     async def test_health_monitoring_integration(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker
     ):
         """Test integration with monitoring and alerting systems."""
         config = test_environment.config
         update_manager = MCPUpdateManager(config)
         
-        # Mock monitoring endpoints
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test monitoring endpoints
         monitoring_calls = []
         
-        def mock_send_metric(metric_name: str, value: Any, tags: Dict[str, str] = None):
+        def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_send_metric(metric_name: str, value: Any, tags: Dict[str, str] = None):
             monitoring_calls.append({
                 "metric": metric_name,
                 "value": value,
@@ -385,8 +385,8 @@ class TestMCPSystemHealth:
                 "timestamp": time.time()
             })
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch('builtins.print') as mock_print:  # Mock monitoring integration
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch('builtins.print') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_print:  # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test monitoring integration
             
             # Simulate health monitoring with metrics
             server_names = ["files", "postgres"]
@@ -395,20 +395,20 @@ class TestMCPSystemHealth:
                 health_result = await update_manager._run_health_check(server_name, timeout=30)
                 
                 # Simulate metric collection
-                mock_send_metric(
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_send_metric(
                     "mcp.server.health",
                     1 if health_result["healthy"] else 0,
                     {"server": server_name}
                 )
                 
-                mock_send_metric(
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_send_metric(
                     "mcp.server.response_time",
                     health_result["response_time"],
                     {"server": server_name}
                 )
                 
                 if health_result["healthy"] and "memory_usage_mb" in health_result:
-                    mock_send_metric(
+                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_send_metric(
                         "mcp.server.memory_usage",
                         health_result["memory_usage_mb"],
                         {"server": server_name}
@@ -445,7 +445,7 @@ class TestMCPSystemHealth:
         
         alerts_triggered = []
         
-        def mock_trigger_alert(alert_type: str, severity: str, message: str, server: str = None):
+        def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_trigger_alert(alert_type: str, severity: str, message: str, server: str = None):
             alerts_triggered.append({
                 "type": alert_type,
                 "severity": severity,
@@ -454,11 +454,11 @@ class TestMCPSystemHealth:
                 "timestamp": time.time()
             })
         
-        # Mock health check with various conditions
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test health check with various conditions
         async def threshold_health_check(name: str, timeout: int = 30):
             if name == "slow-server":
                 response_time = 15.0  # Exceeds critical threshold
-                mock_trigger_alert(
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_trigger_alert(
                     "response_time",
                     "critical",
                     f"Server {name} response time {response_time}s exceeds critical threshold",
@@ -472,7 +472,7 @@ class TestMCPSystemHealth:
                 }
             elif name == "memory-heavy-server":
                 memory_usage = 250  # Exceeds critical threshold
-                mock_trigger_alert(
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_trigger_alert(
                     "memory_usage",
                     "critical",
                     f"Server {name} memory usage {memory_usage}MB exceeds critical threshold",
@@ -485,7 +485,7 @@ class TestMCPSystemHealth:
                     "memory_usage_mb": memory_usage
                 }
             elif name == "failing-server":
-                mock_trigger_alert(
+                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_trigger_alert(
                     "health_check",
                     "critical",
                     f"Server {name} health check failed",
@@ -535,7 +535,7 @@ class TestMCPSystemHealth:
     async def test_health_recovery_validation(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker
     ):
         """Test health recovery validation and status tracking."""
         config = test_environment.config
@@ -545,7 +545,7 @@ class TestMCPSystemHealth:
         server_name = "test-server"
         recovery_states = []
         
-        # Mock health check with recovery scenario
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test health check with recovery scenario
         check_count = 0
         async def recovery_health_check(name: str, timeout: int = 30):
             nonlocal check_count
@@ -613,14 +613,14 @@ class TestMCPHealthReporting:
     async def test_health_report_generation(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
         tmp_path: Path
     ):
         """Test comprehensive health report generation."""
         config = test_environment.config
         update_manager = MCPUpdateManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker):
             # Generate comprehensive health report
             system_status = await update_manager.get_system_status()
             
@@ -666,13 +666,13 @@ class TestMCPHealthReporting:
     async def test_health_dashboard_data(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker
     ):
         """Test health dashboard data preparation and formatting."""
         config = test_environment.config
         update_manager = MCPUpdateManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker):
             # Collect health data for dashboard
             dashboard_data = {
                 "timestamp": time.time(),

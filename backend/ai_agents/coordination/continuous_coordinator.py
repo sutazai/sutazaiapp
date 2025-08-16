@@ -91,7 +91,7 @@ class ContinuousCoordinator:
             ),
             # Architecture patterns
             CollaborationPattern(
-                agents=["agi-system-architect", "autonomous-system-controller", "ai-agent-creator"],
+                agents=["  -system-architect", "autonomous-system-controller", "ai-agent-creator"],
                 pattern_type="peer-to-peer",
                 success_rate=0.90
             ),

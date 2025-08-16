@@ -15,7 +15,7 @@ import time
 import json
 import subprocess
 from pathlib import Path
-from unittest.mock import patch, Mock
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 import asyncio
 from typing import Dict, Any
 
@@ -125,27 +125,27 @@ class TestSecurityHardening:
     async def test_rate_limiter_functionality(self):
         """Test that rate limiter works correctly"""
         
-        # Create mock request
-        mock_request = Mock()
-        mock_request.client.host = "127.0.0.1"
-        mock_request.headers = {}
-        mock_request.state = Mock()
-        mock_request.state.user_id = None
+        # Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test request
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_request = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_request.client.host = "127.0.0.1"
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_request.headers = {}
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_request.state = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_request.state.user_id = None
         
         # Test with in-memory rate limiter
         rate_limiter = AdvancedRateLimiter()
         
         # Test that first few requests are allowed
         for i in range(5):
-            result = await rate_limiter.check_rate_limit(mock_request, "10/minute", "test")
+            result = await rate_limiter.check_rate_limit(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_request, "10/minute", "test")
             assert result is True, f"Request {i+1} should be allowed"
         
         # Test that excessive requests are blocked
         for i in range(15):  # Try to exceed 10/minute limit
-            await rate_limiter.check_rate_limit(mock_request, "10/minute", "test")
+            await rate_limiter.check_rate_limit(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_request, "10/minute", "test")
         
         # Next request should be blocked
-        result = await rate_limiter.check_rate_limit(mock_request, "10/minute", "test")
+        result = await rate_limiter.check_rate_limit(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_request, "10/minute", "test")
     
     def test_ssl_certificate_existence(self):
         """Test that SSL certificates exist and are valid"""

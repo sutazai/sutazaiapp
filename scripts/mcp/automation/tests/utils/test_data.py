@@ -2,7 +2,7 @@
 """
 Test Data Generation Utilities
 
-Provides factories and generators for creating test data, mock MCP servers,
+Provides factories and generators for creating test data, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test MCP servers,
 and test packages for comprehensive MCP automation testing.
 
 Author: Claude AI Assistant (senior-automated-tester)
@@ -21,8 +21,8 @@ from faker import Faker
 
 
 @dataclass
-class MockMCPServer:
-    """Mock MCP server definition for testing."""
+class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestMCPServer:
+    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test MCP server definition for testing."""
     name: str
     package: str
     version: str = "1.0.0"
@@ -66,13 +66,13 @@ class TestDataFactory:
         self._server_counter = 0
         self._package_counter = 0
     
-    def create_mock_server(
+    def create_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_server(
         self,
         name: Optional[str] = None,
         healthy: bool = True,
         custom_config: Optional[Dict[str, Any]] = None
-    ) -> MockMCPServer:
-        """Create a mock MCP server with realistic data."""
+    ) -> Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestMCPServer:
+        """Create a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test MCP server with realistic data."""
         if name is None:
             self._server_counter += 1
             name = f"test-server-{self._server_counter}"
@@ -113,7 +113,7 @@ class TestDataFactory:
         if custom_config:
             configuration.update(custom_config)
         
-        return MockMCPServer(
+        return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestMCPServer(
             name=name,
             package=package_name,
             version=version,
@@ -129,14 +129,14 @@ class TestDataFactory:
         self,
         count: int = 5,
         healthy_ratio: float = 0.8
-    ) -> List[MockMCPServer]:
-        """Create a collection of mock servers with varied characteristics."""
+    ) -> List[Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestMCPServer]:
+        """Create a collection of Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test servers with varied characteristics."""
         servers = []
         healthy_count = int(count * healthy_ratio)
         
         for i in range(count):
             is_healthy = i < healthy_count
-            server = self.create_mock_server(healthy=is_healthy)
+            server = self.create_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_server(healthy=is_healthy)
             servers.append(server)
         
         return servers
@@ -490,14 +490,14 @@ def create_test_scenarios() -> List[Dict[str, Any]]:
         {
             "name": "healthy_server_baseline",
             "description": "Baseline scenario with healthy server",
-            "server": factory.create_mock_server(name="baseline-server", healthy=True),
+            "server": factory.create_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_server(name="baseline-server", healthy=True),
             "expected_outcome": "success",
             "test_categories": ["integration", "health", "performance"]
         },
         {
             "name": "failing_server_recovery",
             "description": "Server failure and recovery scenario",
-            "server": factory.create_mock_server(name="failing-server", healthy=False),
+            "server": factory.create_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_server(name="failing-server", healthy=False),
             "expected_outcome": "failure_with_recovery",
             "test_categories": ["rollback", "health"]
         },

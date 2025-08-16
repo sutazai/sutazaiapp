@@ -5,14 +5,14 @@ import logging
 logger = logging.getLogger(__name__)
 Purpose: Unit tests for hygiene monitoring system
 Usage: python -m pytest tests/hygiene/test_monitoring.py
-Requirements: pytest, unittest.mock
+Requirements: pytest, unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
 """
 
 import unittest
 import tempfile
 import subprocess
 from pathlib import Path
-from unittest.mock import patch, MagicMock, mock_open
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open
 import sys
 import shutil
 import time

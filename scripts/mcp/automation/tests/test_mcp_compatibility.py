@@ -29,7 +29,7 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
 from dataclasses import dataclass
 from packaging import version
 import semver
@@ -189,7 +189,7 @@ class TestMCPVersionCompatibility:
     async def test_mcp_server_version_compatibility(
         self,
         test_environment: TestEnvironment,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test compatibility across different MCP server versions."""
         config = test_environment.config
@@ -210,14 +210,14 @@ class TestMCPVersionCompatibility:
         
         compatibility_results = []
         
-        with patch.object(download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             for from_version, to_version, scenario_type, expected_compatible in version_scenarios:
                 # Set initial version
                 await version_manager.record_activation(server_name, from_version)
                 
                 # Test upgrade/downgrade
                 try:
-                    # Mock version compatibility check
+                    # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test version compatibility check
                     from_ver = version.parse(from_version)
                     to_ver = version.parse(to_version)
                     
@@ -279,7 +279,7 @@ class TestMCPVersionCompatibility:
     async def test_dependency_version_compatibility(
         self,
         test_environment: TestEnvironment,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test compatibility of MCP server dependencies."""
         config = test_environment.config
@@ -342,7 +342,7 @@ class TestMCPVersionCompatibility:
         
         compatibility_results = []
         
-        with patch.object(download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             for scenario in dependency_scenarios:
                 package_name = scenario["package"]
                 dependencies = scenario["dependencies"]
@@ -350,7 +350,7 @@ class TestMCPVersionCompatibility:
                 # Analyze dependency compatibility
                 issues, warnings = analyze_dependency_compatibility(dependencies)
                 
-                # Create mock package.json
+                # Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test package.json
                 staging_path = config.paths.staging_root / package_name.replace("/", "_")
                 staging_path.mkdir(parents=True, exist_ok=True)
                 
@@ -392,8 +392,8 @@ class TestMCPVersionCompatibility:
     async def test_api_compatibility_validation(
         self,
         test_environment: TestEnvironment,
-        mock_process_runner,
-        mock_health_checker
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker
     ):
         """Test API compatibility across different versions."""
         config = test_environment.config
@@ -460,7 +460,7 @@ class TestMCPVersionCompatibility:
         
         api_compatibility_results = []
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker):
             for from_ver, to_ver, expected_compatible in api_test_scenarios:
                 try:
                     is_compatible, issues, warnings = check_api_compatibility(from_ver, to_ver)
@@ -818,8 +818,8 @@ class TestMCPUpgradeCompatibility:
     async def test_seamless_upgrade_scenarios(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test seamless upgrade scenarios without service interruption."""
         config = test_environment.config
@@ -855,8 +855,8 @@ class TestMCPUpgradeCompatibility:
         
         upgrade_results = []
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             for scenario in upgrade_scenarios:
                 # Set initial version

@@ -7,7 +7,7 @@
 # - 10000-10199: Infrastructure services (databases, message queues, etc.)
 # - 10200-10299: Monitoring and observability stack
 # - 10300-10499: External integrations and tools
-# - 10500-10599: AGI system components
+# - 10500-10599: System components
 # - 11000-11148: AI Agents (standardized range)
 # - 10104-11436: Ollama instances
 # - Other ports: Legacy and special services (to be migrated)
@@ -28,10 +28,10 @@ port_ranges:
     description: "External tools and integrations"
     reserved_for: "Third-party AI tools, workflow engines"
   
-  agi_system:
+    system:
     range: [10500, 10599]
-    description: "AGI system components"
-    reserved_for: "AGI orchestration, consensus, safety monitoring"
+    description: "system components"
+    reserved_for: "orchestration, consensus, safety monitoring"
   
   agents:
     range: [11000, 11148]
@@ -464,7 +464,7 @@ agents:
   11009:
     service: ai-scrum-master
     container: sutazai-ai-scrum-master
-    description: "Scrum master and agile coach"
+    description: "Scrum master and   le coach"
     internal_port: 8080
     priority: critical
   
@@ -883,11 +883,54 @@ agents:
     internal_port: 8080
     priority: medium
 
-# Reserved for future agents (11069-11148)
+  # Active Agent Deployments (11069-11074)
+  11069:
+    service: task-assignment-coordinator
+    container: sutazai-task-assignment-coordinator
+    description: "Task assignment and coordination"
+    internal_port: 11069
+    priority: high
+  
+  11070:
+    service: resource-arbitration-agent
+    container: sutazai-resource-arbitration-agent
+    description: "Resource arbitration and allocation"
+    internal_port: 11070
+    priority: high
+  
+  11071:
+    service: ollama-integration-agent
+    container: sutazai-ollama-integration-agent
+    description: "Ollama integration and management"
+    internal_port: 11071
+    priority: high
+  
+  11102:
+    service: jarvis-automation-agent
+    container: sutazai-jarvis-automation-agent
+    description: "Jarvis automation agent"
+    internal_port: 11102
+    priority: high
+  
+  11200:
+    service: ultra-system-architect
+    container: sutazai-ultra-system-architect
+    description: "Ultra system architecture agent"
+    internal_port: 11200
+    priority: critical
+  
+  11201:
+    service: ultra-frontend-ui-architect
+    container: sutazai-ultra-frontend-ui-architect
+    description: "Ultra frontend UI architecture"
+    internal_port: 11201
+    priority: critical
+
+# Reserved for future agents (11072-11099, 11103-11199, 11202-11148)
 reserved_agent_ports:
-  range: [11069, 11148]
-  description: "Reserved for future agent deployments"
-  count: 80
+  range: [11072, 11148]
+  description: "Reserved for future agent deployments (excluding allocated ports)"
+  count: 74
 
 # Ollama LLM Instances
 ollama:
@@ -928,10 +971,35 @@ migration_required:
     target_port: 10010
     status: "Migrated to 10010"
   
-  8200-8213:
-    description: "Various agents using 8xxx range"
-    target_range: [11069, 11082]
-    status: "Migration pending"
+  8080:
+    description: "Hardware optimizer and jarvis agents"
+    migrated_to: "11019 (hardware), 11102 (jarvis)"
+    status: "Completed 2025-08-16"
+  
+  8090:
+    description: "Ollama integration agent"
+    migrated_to: "11071"
+    status: "Completed 2025-08-16"
+  
+  8551:
+    description: "Task assignment coordinator"
+    migrated_to: "11069"
+    status: "Completed 2025-08-16"
+  
+  8588:
+    description: "Resource arbitration agent"
+    migrated_to: "11070"
+    status: "Completed 2025-08-16"
+  
+  8589:
+    description: "AI agent orchestrator"
+    migrated_to: "11000"
+    status: "Completed 2025-08-16"
+  
+  8116:
+    description: "Hardware optimizer (legacy port in service_config.py)"
+    migrated_to: "11019"
+    status: "Completed 2025-08-16"
   
   8365:
     current: edge-computing-optimizer

@@ -25,7 +25,7 @@ import json
 import time
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
 
 from conftest import (
     TestEnvironment, TestMCPServer, test_mcp_server,
@@ -48,8 +48,8 @@ class TestMCPIntegration:
     async def test_complete_server_deployment_workflow(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner,
         performance_monitor
     ):
         """Test complete MCP server deployment from start to finish."""
@@ -63,9 +63,9 @@ class TestMCPIntegration:
         version_manager = MCPVersionManager(config)
         download_manager = MCPDownloadManager(config)
         
-        # Mock external dependencies
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(download_manager, '_run_command', side_effect=mock_process_runner):
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test external dependencies
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Step 1: Check initial state
             initial_status = await update_manager.get_server_status(server_name)
@@ -106,8 +106,8 @@ class TestMCPIntegration:
     async def test_concurrent_server_updates(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test updating multiple MCP servers concurrently."""
         config = test_environment.config
@@ -115,8 +115,8 @@ class TestMCPIntegration:
         
         update_manager = MCPUpdateManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Start concurrent updates
             update_tasks = []
@@ -144,8 +144,8 @@ class TestMCPIntegration:
     async def test_update_with_dependency_chain(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test updating servers with dependency relationships."""
         config = test_environment.config
@@ -159,8 +159,8 @@ class TestMCPIntegration:
         
         update_manager = MCPUpdateManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Update servers in dependency order
             for server_name, version in dependency_chain:
@@ -210,8 +210,8 @@ class TestMCPIntegration:
     async def test_error_handling_and_recovery(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test comprehensive error handling and recovery mechanisms."""
         config = test_environment.config
@@ -219,7 +219,7 @@ class TestMCPIntegration:
         
         update_manager = MCPUpdateManager(config)
         
-        # Mock failing health check
+        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test failing health check
         async def failing_health_check(name: str, timeout: int = 30):
             if name == "failing-server":
                 return {
@@ -228,10 +228,10 @@ class TestMCPIntegration:
                     "error": "Health check failed",
                     "response_time": timeout
                 }
-            return await mock_health_checker(name, timeout)
+            return await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker(name, timeout)
         
         with patch.object(update_manager, '_run_health_check', side_effect=failing_health_check), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Attempt update that should fail during health check
             result = await update_manager.update_server(server_name, target_version="1.0.0")
@@ -253,8 +253,8 @@ class TestMCPIntegration:
     async def test_monitoring_and_metrics_integration(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test monitoring and metrics collection during operations."""
         config = test_environment.config
@@ -262,8 +262,8 @@ class TestMCPIntegration:
         
         update_manager = MCPUpdateManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Track metrics during update
             start_time = time.time()
@@ -292,8 +292,8 @@ class TestMCPIntegration:
     async def test_version_management_integration(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test version management and tracking integration."""
         config = test_environment.config
@@ -302,8 +302,8 @@ class TestMCPIntegration:
         update_manager = MCPUpdateManager(config)
         version_manager = MCPVersionManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Get initial version state
             initial_versions = await version_manager.get_version_status(server_name)
@@ -334,8 +334,8 @@ class TestMCPIntegration:
     async def test_backup_and_recovery_integration(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test backup creation and recovery integration."""
         config = test_environment.config
@@ -344,8 +344,8 @@ class TestMCPIntegration:
         update_manager = MCPUpdateManager(config)
         version_manager = MCPVersionManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Simulate existing installation
             current_version = "1.0.0"
@@ -374,8 +374,8 @@ class TestMCPIntegration:
     async def test_system_load_integration(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test system behavior under load conditions."""
         config = test_environment.config
@@ -386,8 +386,8 @@ class TestMCPIntegration:
         
         update_manager = MCPUpdateManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Create multiple concurrent operations
             operations = []
@@ -428,8 +428,8 @@ class TestMCPIntegration:
         self,
         test_environment: TestEnvironment,
         security_scanner,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test security validation integration in update workflow."""
         config = test_environment.config
@@ -437,8 +437,8 @@ class TestMCPIntegration:
         
         update_manager = MCPUpdateManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner), \
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner), \
              patch.object(update_manager.download_manager, '_scan_security', side_effect=security_scanner.scan_package):
             
             # Enable security scanning
@@ -464,8 +464,8 @@ class TestMCPSystemIntegration:
     async def test_full_system_lifecycle(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner,
         performance_monitor
     ):
         """Test complete system lifecycle from initialization to shutdown."""
@@ -474,8 +474,8 @@ class TestMCPSystemIntegration:
         config = test_environment.config
         update_manager = MCPUpdateManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Phase 1: System initialization
             system_status = await update_manager.get_system_status()
@@ -506,8 +506,8 @@ class TestMCPSystemIntegration:
         self,
         test_environment: TestEnvironment,
         rollback_simulator,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test disaster recovery and system resilience."""
         config = test_environment.config
@@ -516,8 +516,8 @@ class TestMCPSystemIntegration:
         
         server_name = "files"
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Establish baseline
             await update_manager.update_server(server_name, target_version="1.0.0")
@@ -551,8 +551,8 @@ class TestMCPSystemIntegration:
     async def test_cross_component_data_flow(
         self,
         test_environment: TestEnvironment,
-        mock_health_checker,
-        mock_process_runner
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker,
+        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner
     ):
         """Test data flow between system components."""
         config = test_environment.config
@@ -563,8 +563,8 @@ class TestMCPSystemIntegration:
         version_manager = MCPVersionManager(config)
         download_manager = MCPDownloadManager(config)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
-             patch.object(download_manager, '_run_command', side_effect=mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_health_checker), \
+             patch.object(download_manager, '_run_command', side_effect=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process_runner):
             
             # Test data flow: Update Manager -> Version Manager
             await update_manager.update_server(server_name, target_version="1.2.3")

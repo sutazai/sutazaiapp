@@ -6,7 +6,7 @@ Legend of ranges:
 - 10000-10199: Infrastructure Services
 - 10200-10299: Monitoring Stack
 - 10300-10499: External Integrations
-- 10500-10599: AGI System
+- 10500-10599: System
 - 11000-11148: AI Agents (STANDARD)
 - Ollama LLM: 10104 (reserved)
 
@@ -58,7 +58,7 @@ Legend of ranges:
 - 10312: monitoring/alerting/integrations/slack-integration
 - 10313: monitoring/alerting/integrations/email-integration
 
-## AGI System (10500-10599)
+## System (10500-10599)
 
 - 10500: agent-tier-3/jarvis-core/jarvis-brain
 - 10501: agent-tier-3/jarvis-core/jarvis-memory

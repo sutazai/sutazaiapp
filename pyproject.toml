@@ -71,10 +71,10 @@ security = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/sutazai/sutazai-agi"
+Homepage = "https://github.com/sutazai/sutazai"
 Documentation = "https://docs.sutazai.com"
-Repository = "https://github.com/sutazai/sutazai-agi.git"
-"Bug Tracker" = "https://github.com/sutazai/sutazai-agi/issues"
+Repository = "https://github.com/sutazai/sutazai.git"
+"Bug Tracker" = "https://github.com/sutazai/sutazai/issues"
 
 [project.scripts]
 sutazai-test = "scripts.test_runner:main"

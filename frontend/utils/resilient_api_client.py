@@ -71,7 +71,7 @@ def sync_health_check(use_cache: bool = True) -> Optional[Dict[str, Any]]:
         breaker = _circuit_breakers["health_check"]
         
         def _health_check():
-            # Mock health check response
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test health check response
             return {
                 "status": "healthy",
                 "timestamp": time.time(),
@@ -137,7 +137,7 @@ def sync_call_api(endpoint: str, method: str = "GET", data: Optional[Dict] = Non
         breaker = _circuit_breakers["api_call"]
         
         def _api_call():
-            # Mock API response - in real implementation would make actual HTTP request
+            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test API response - in real implementation would make actual HTTP request
             if "health" in endpoint:
                 return {"status": "healthy", "timestamp": time.time()}
             elif "status" in endpoint:

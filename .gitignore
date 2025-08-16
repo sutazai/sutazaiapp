@@ -116,7 +116,7 @@ data/prometheus/
 data/qdrant/
 
 # Nested git repositories
-packages/superagi/.git/
+packages.git/
 old_sutazaiapp/
 sutazaiapp.git/
 

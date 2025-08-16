@@ -32,7 +32,7 @@
     }
   },
   "agent_profiles": {
-    "agi-system-architect": {
+    "system-architect": {
       "capabilities": [
         "system_design",
         "architecture_optimization",
@@ -82,7 +82,7 @@
         "ml_architecture",
         "model_optimization",
         "rag_development",
-        "agi_design",
+        " _design",
         "processing_networks",
         "deep_learning"
       ],
@@ -140,7 +140,7 @@
   },
   "task_categories": {
     "system_architecture": {
-      "preferred_agents": ["agi-system-architect", "senior-ai-engineer"],
+      "preferred_agents": [" -system-architect", "senior-ai-engineer"],
       "fallback_agents": ["ai-product-manager"],
       "priority": "high",
       "timeout": 1800

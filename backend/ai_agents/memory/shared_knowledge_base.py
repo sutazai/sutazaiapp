@@ -186,7 +186,7 @@ class SharedKnowledgeBase:
                 port=self.chromadb_port
             )
             self.chroma_collection = self.chroma_client.get_or_create_collection(
-                name="agi_knowledge",
+                name="  _knowledge",
                 metadata={"description": "Shared knowledge base for automation agents"}
             )
             logger.info("Connected to ChromaDB")
@@ -203,9 +203,9 @@ class SharedKnowledgeBase:
             
             # Create collection if it doesn't exist
             collections = await self.qdrant_client.get_collections()
-            if "agi_knowledge" not in [c.name for c in collections.collections]:
+            if "  _knowledge" not in [c.name for c in collections.collections]:
                 await self.qdrant_client.create_collection(
-                    collection_name="agi_knowledge",
+                    collection_name="  _knowledge",
                     vectors_config=VectorParams(
                         size=self.embedding_dim,
                         distance=Distance.COSINE
@@ -261,7 +261,7 @@ class SharedKnowledgeBase:
             
             # Store in Redis (primary store)
             await self.redis_client.hset(
-                "agi:knowledge",
+                "  :knowledge",
                 knowledge.id,
                 json.dumps(knowledge.to_dict())
             )
@@ -353,7 +353,7 @@ class SharedKnowledgeBase:
                 return False
             
             # Record validation
-            validation_key = f"agi:validations:{knowledge_id}"
+            validation_key = f"  :validations:{knowledge_id}"
             validation_data = {
                 'validator': validator_agent,
                 'result': validation_result,
@@ -392,7 +392,7 @@ class SharedKnowledgeBase:
         
         # Retrieve from Redis
         try:
-            data = await self.redis_client.hget("agi:knowledge", knowledge_id)
+            data = await self.redis_client.hget("  :knowledge", knowledge_id)
             if data:
                 knowledge = KnowledgeItem.from_dict(json.loads(data))
                 self.knowledge_cache[knowledge_id] = knowledge
@@ -411,7 +411,7 @@ class SharedKnowledgeBase:
         """Delete knowledge item from all stores"""
         try:
             # Remove from Redis
-            await self.redis_client.hdel("agi:knowledge", knowledge_id)
+            await self.redis_client.hdel("  :knowledge", knowledge_id)
             
             # Remove from vector databases
             if self.chroma_client:
@@ -423,7 +423,7 @@ class SharedKnowledgeBase:
             if self.qdrant_client:
                 try:
                     await self.qdrant_client.delete(
-                        collection_name="agi_knowledge",
+                        collection_name="  _knowledge",
                         points_selector=[knowledge_id]
                     )
                 except Exception:
@@ -453,7 +453,7 @@ class SharedKnowledgeBase:
         
         try:
             # Scan all knowledge items for this agent
-            all_knowledge = await self.redis_client.hgetall("agi:knowledge")
+            all_knowledge = await self.redis_client.hgetall("  :knowledge")
             agent_items = []
             
             for item_data in all_knowledge.values():
@@ -498,7 +498,7 @@ class SharedKnowledgeBase:
         
         try:
             # Get all knowledge items
-            all_knowledge = await self.redis_client.hgetall("agi:knowledge")
+            all_knowledge = await self.redis_client.hgetall("  :knowledge")
             items = []
             contributor_counts = defaultdict(int)
             
@@ -561,7 +561,7 @@ class SharedKnowledgeBase:
         if self.qdrant_client and knowledge.embeddings:
             try:
                 await self.qdrant_client.upsert(
-                    collection_name="agi_knowledge",
+                    collection_name="  _knowledge",
                     points=[PointStruct(
                         id=knowledge.id,
                         vector=knowledge.embeddings,
@@ -605,7 +605,7 @@ class SharedKnowledgeBase:
         if self.qdrant_client:
             try:
                 search_results = await self.qdrant_client.search(
-                    collection_name="agi_knowledge",
+                    collection_name="  _knowledge",
                     query_vector=query_embedding,
                     limit=limit
                 )
@@ -661,18 +661,18 @@ class SharedKnowledgeBase:
     async def _update_access_count(self, knowledge_id: str):
         """Update access count for knowledge item"""
         try:
-            data = await self.redis_client.hget("agi:knowledge", knowledge_id)
+            data = await self.redis_client.hget("  :knowledge", knowledge_id)
             if data:
                 item_data = json.loads(data)
                 item_data['access_count'] = item_data.get('access_count', 0) + 1
-                await self.redis_client.hset("agi:knowledge", knowledge_id, json.dumps(item_data))
+                await self.redis_client.hset("  :knowledge", knowledge_id, json.dumps(item_data))
         except Exception as e:
             logger.error(f"Failed to update access count for {knowledge_id}: {e}")
     
     async def _calculate_validation_score(self, knowledge_id: str) -> float:
         """Calculate validation score based on peer reviews"""
         try:
-            validation_key = f"agi:validations:{knowledge_id}"
+            validation_key = f"  :validations:{knowledge_id}"
             validations = await self.redis_client.lrange(validation_key, 0, -1)
             
             if not validations:
@@ -717,7 +717,7 @@ class SharedKnowledgeBase:
                 current_time = time.time()
                 threshold = current_time - (30 * 86400)  # 30 days
                 
-                all_knowledge = await self.redis_client.hgetall("agi:knowledge")
+                all_knowledge = await self.redis_client.hgetall("  :knowledge")
                 for knowledge_id, item_data in all_knowledge.items():
                     item = KnowledgeItem.from_dict(json.loads(item_data))
                     

@@ -349,7 +349,7 @@ You are an expert test automation specialist focused on creating, optimizing, an
 **Tier 2: Integration Testing Specialists**
 - API Integration Testing (Postman, Newman, REST Assured, Insomnia)
 - Database Integration Testing (TestContainers, H2, SQLite, MongoDB Memory)
-- Service Integration Testing (WireMock, MockServer, Pact Contract Testing)
+- Service Integration Testing (WireRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestServer, Pact Contract Testing)
 
 **Tier 3: End-to-End Testing Specialists**
 - Browser Automation (Playwright, Cypress, Selenium WebDriver, Puppeteer)
@@ -384,7 +384,7 @@ You are an expert test automation specialist focused on creating, optimizing, an
 
 #### Unit Testing Excellence
 - **Test Structure**: Arrange-Act-Assert pattern with clear test organization
-- **Mocking Strategy**: Intelligent mocking of dependencies with test doubles
+- **Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing Strategy**: Intelligent Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing of dependencies with test doubles
 - **Test Data**: Factory pattern for test data generation and management
 - **Coverage Analysis**: Comprehensive coverage reporting with quality metrics
 - **Performance**: Fast test execution with parallel execution capabilities
@@ -469,13 +469,13 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { UserService } from '../UserService';
 import { ApiClient } from '../ApiClient';
 
-// Mock dependencies
-jest.mock('../ApiClient');
-const mockApiClient = ApiClient as jest.Mocked<typeof ApiClient>;
+// Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test dependencies
+jest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test('../ApiClient');
+const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestApiClient = ApiClient as jest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested<typeof ApiClient>;
 
 describe('UserService', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests();
   });
 
   describe('getUserById', () => {
@@ -483,20 +483,20 @@ describe('UserService', () => {
       // Arrange
       const userId = '123';
       const expectedUser = { id: '123', name: 'John Doe', email: 'john@example.com' };
-      mockApiClient.get.mockResolvedValue({ data: expectedUser });
+      Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestApiClient.get.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestResolvedValue({ data: expectedUser });
 
       // Act
       const result = await UserService.getUserById(userId);
 
       // Assert
       expect(result).toEqual(expectedUser);
-      expect(mockApiClient.get).toHaveBeenCalledWith(`/users/${userId}`);
+      expect(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestApiClient.get).toHaveBeenCalledWith(`/users/${userId}`);
     });
 
     it('should throw error when user not found', async () => {
       // Arrange
       const userId = '999';
-      mockApiClient.get.mockRejectedValue(new Error('User not found'));
+      Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestApiClient.get.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestRejectedValue(new Error('User not found'));
 
       // Act & Assert
       await expect(UserService.getUserById(userId)).rejects.toThrow('User not found');

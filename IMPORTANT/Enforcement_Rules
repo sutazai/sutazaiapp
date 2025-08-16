@@ -88,7 +88,7 @@ Every contributor must approach this codebase as a **top-tier engineer** would a
 /interfaces/     # Interface definitions
 /validators/     # Input validation logic
 /tests/          # Test files (unit, integration, e2e)
-/fixtures/       # Test data and mock objects
+/fixtures/       # Test data and Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test objects
 /scripts/        # Organized by purpose (dev/, deploy/, utils/)
 /docs/           # Centralized documentation
 /reports/        # Analysis and reports
@@ -189,7 +189,7 @@ Placeholder comments: // TODO: add AI automation here, // magic happens
 Fictional integrations: imports from non-existent packages or "future" APIs
 Theoretical abstractions: code that assumes capabilities we don't have
 Imaginary infrastructure: references to systems that don't exist
-Mock implementations in production code paths
+Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementations in production code paths
 Hardcoded localhost or development URLs in production builds
 References to non-existent database tables or columns
 Placeholder data that doesn't represent real scenarios
@@ -1720,7 +1720,7 @@ Unit Testing Requirements:
 
 Comprehensive test coverage for all functions and methods
 Use pytest or unittest framework with proper test organization
-Implement test fixtures and mocks for external dependencies
+Implement test fixtures and Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests for external dependencies
 Use property-based testing for complex logic validation
 Implement performance regression testing for critical operations
 Use code coverage tools to ensure adequate test coverage
@@ -6015,7 +6015,7 @@ yamltesting_requirements:
     requirements:
       - api_contract_testing: "required"
       - database_integration: "required"
-      - external_service_mocking: "required"
+      - external_service_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing: "required"
     frameworks:
       api_testing: "supertest^6.3.4"
       contract_testing: "pact^12.1.0"

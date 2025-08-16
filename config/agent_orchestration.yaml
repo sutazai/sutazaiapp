@@ -153,7 +153,7 @@ agents:
       - "compliance_validation"
     
   # Advanced AI Agents
-  agi-system-architect:
+  system-architect:
     type: "architecture"
     priority: "high"
     capabilities:
@@ -196,7 +196,7 @@ task_routing:
       strategy: "parallel"
     
     - pattern: "ai.*"
-      agents: ["senior-ai-engineer", "agi-system-architect"]
+      agents: ["senior-engineer", "system-architect"]
       strategy: "collaborative"
     
     - pattern: "optimize.*"

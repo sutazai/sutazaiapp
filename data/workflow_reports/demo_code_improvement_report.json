@@ -2899,7 +2899,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agi.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/  .py",
       "line": 58,
       "type": "style",
       "severity": "medium",
@@ -2908,7 +2908,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agi.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/  .py",
       "line": 107,
       "type": "style",
       "severity": "medium",
@@ -2917,7 +2917,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agi.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/  .py",
       "line": 225,
       "type": "style",
       "severity": "medium",
@@ -2926,12 +2926,12 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agi.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/  .py",
       "line": 0,
       "type": "testing",
       "severity": "medium",
-      "description": "Missing test file for agi",
-      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_agi.py",
+      "description": "Missing test file for   ",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_  .py",
       "agent": "testing-qa-validator"
     },
     {

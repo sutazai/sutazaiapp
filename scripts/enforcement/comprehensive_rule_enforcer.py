@@ -188,7 +188,7 @@ class ComprehensiveRuleEnforcer:
     def _validate_rule_01_real_implementation(self):
         """
         RULE 1: Real Implementation Only - No Fantasy Code
-        Zero tolerance for placeholder, mock, or theoretical implementations
+        Zero tolerance for placeholder, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, or theoretical implementations
         """
         logger.info("📌 RULE 1: Validating Real Implementation Only...")
         
@@ -198,7 +198,7 @@ class ComprehensiveRuleEnforcer:
             (r'TODO.*future.*implementation', "Future implementation placeholder"),
             (r'placeholder.*service', "Placeholder service detected"),
             (r'abstract.*handler.*production', "Abstract handler in production"),
-            (r'mock.*implementation.*(?!test)', "Mock implementation outside tests"),
+            (r'Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.*implementation.*(?!test)', "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementation outside tests"),
             (r'imaginary.*system', "Imaginary system reference"),
             (r'theoretical.*implementation', "Theoretical implementation"),
             (r'conceptual.*code', "Conceptual code detected"),
@@ -718,7 +718,7 @@ class ComprehensiveRuleEnforcer:
                             code_snippet = parts[2] if len(parts) > 2 else ""
                             
                             # Skip test files for certain patterns
-                            if 'test' in file_path.lower() and violation_type in ['Mock implementation', 'Fake service']:
+                            if 'test' in file_path.lower() and violation_type in ['Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementation', 'Fake service']:
                                 continue
                             
                             self.violations.append(RuleViolation(

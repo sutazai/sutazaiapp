@@ -693,7 +693,7 @@ else:
           pip install --upgrade pip
           pip install -r requirements/base.txt || true
           pip install pytest pytest-asyncio pytest-cov pytest-xdist pytest-timeout pytest-html
-          pip install pytest-benchmark pytest-mock pytest-sugar pytest-clarity
+          pip install pytest-benchmark pytest-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test pytest-sugar pytest-clarity
           pip install httpx selenium requests psutil coverage[toml]
 
       - name: Setup Comprehensive Test Environment

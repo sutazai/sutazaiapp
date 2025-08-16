@@ -205,7 +205,7 @@ graph TD
 
 2. **Implement Repository Pattern**
    - Abstract data access
-   - Enable testing with mocks
+   - Enable testing with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
    - Support multiple data sources
 
 3. **Apply CQRS for Agent Tasks**

@@ -102,14 +102,14 @@ class ServiceConfig:
             'redis_exporter': 10208,
             'jaeger': 10210,
             
-            # AI Agents (11000+)
-            'hardware_optimizer': 8116,  # Special case for existing agent
-            'jarvis': 11001,
-            'task_coordinator': 11002,
-            'resource_arbitrator': 11003,
-            'ai_orchestrator': 11004,
-            'ollama_integration': 11005,
-            'jarvis_hardware': 11006,
+            # AI Agents (11000+) - Aligned with PortRegistry.md
+            'hardware_optimizer': 11019,  # cpu-hardware-optimizer per port-registry.yaml
+            'ai_agent_orchestrator': 11000,  # Main agent orchestrator
+            'jarvis': 11001,  # AgentZero coordinator (jarvis uses this port)
+            'task_coordinator': 11069,  # task-assignment-coordinator (new allocation)
+            'resource_arbitrator': 11070,  # resource-arbitration-agent (new allocation)
+            'ollama_integration': 11071,  # ollama-integration-agent (new allocation)
+            'jarvis_hardware': 11102,  # jarvis-automation-agent per docker-compose
             'ultra_frontend': 11007,
         }
         

@@ -829,7 +829,7 @@ services:
       API_ENDPOINT: http://backend:8000
       LOG_LEVEL: INFO
       OLLAMA_BASE_URL: http://ollama:11434
-      PORT: 8090
+      PORT: 11071
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
       REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -843,7 +843,7 @@ services:
       - CMD
       - curl
       - -f
-      - http://localhost:8090/health
+      - http://localhost:11071/health
       interval: 30s
       timeout: 3s
       retries: 3
@@ -851,7 +851,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 8090:8090
+    - 11071:11071
     restart: unless-stopped
     volumes:
     - ./agents/core:/app/agents/core:ro
@@ -883,7 +883,7 @@ services:
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_MODEL: tinyllama:1.1b-q4_0
       OLLAMA_ORIGINS: '*'
-      PORT: 8080
+      PORT: 11019
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
       REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -896,12 +896,12 @@ services:
       - CMD
       - curl
       - -f
-      - http://localhost:8080/health
+      - http://localhost:11019/health
       timeout: 30s
     networks:
     - sutazai-network
     ports:
-    - 11110:8080
+    - 11019:11019
     privileged: false
     cap_drop:
     - ALL
@@ -944,7 +944,7 @@ services:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@sutazai-postgres:5432/${POSTGRES_DB:-sutazai}
       LOG_LEVEL: INFO
       OLLAMA_BASE_URL: http://ollama:11434
-      PORT: 8080
+      PORT: 11102
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
       REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -954,7 +954,7 @@ services:
       - CMD
       - curl
       - -f
-      - http://localhost:8080/health
+      - http://localhost:11102/health
       interval: 60s
       timeout: 30s
       retries: 5
@@ -962,7 +962,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 11102:8080
+    - 11102:11102
     restart: unless-stopped
     volumes:
     - ./agents/core:/app/agents/core:ro
@@ -993,7 +993,7 @@ services:
       AGENT_TYPE: ai-agent-orchestrator
       API_ENDPOINT: http://backend:8000
       LOG_LEVEL: INFO
-      PORT: 8589
+      PORT: 11000
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
       REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -1003,7 +1003,7 @@ services:
       - CMD
       - curl
       - -f
-      - http://localhost:8589/health
+      - http://localhost:11000/health
       interval: 30s
       timeout: 10s
       retries: 5
@@ -1011,7 +1011,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 8589:8589
+    - 11000:11000
     restart: unless-stopped
     volumes:
     - ./agents/core:/app/agents/core:ro
@@ -1036,7 +1036,7 @@ services:
       AGENT_TYPE: task-assignment-coordinator
       API_ENDPOINT: http://backend:8000
       LOG_LEVEL: INFO
-      PORT: 8551
+      PORT: 11069
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
       REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -1046,7 +1046,7 @@ services:
       - CMD
       - curl
       - -f
-      - http://localhost:8551/health
+      - http://localhost:11069/health
       interval: 30s
       timeout: 10s
       retries: 5
@@ -1054,7 +1054,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 8551:8551
+    - 11069:11069
     restart: unless-stopped
     volumes:
     - ./agents/core:/app/agents/core:ro
@@ -1185,7 +1185,7 @@ services:
       AGENT_TYPE: resource-arbitration-agent
       API_ENDPOINT: http://backend:8000
       LOG_LEVEL: INFO
-      PORT: 8588
+      PORT: 11070
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
       REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -1195,7 +1195,7 @@ services:
       - CMD
       - curl
       - -f
-      - http://localhost:8588/health
+      - http://localhost:11070/health
       interval: 30s
       timeout: 10s
       retries: 5
@@ -1203,7 +1203,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 8588:8588
+    - 11070:11070
     privileged: false
     cap_drop:
     - ALL
