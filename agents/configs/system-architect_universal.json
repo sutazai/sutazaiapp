@@ -1,6 +1,6 @@
 {
-  "id": " system-architect",
-  "name": " system-architect",
+  "id": "system-architect",
+  "name": "system-architect",
   "version": "1.0.0",
   "description": "Agent for system operations",
   "provider": "universal",
@@ -27,9 +27,9 @@
     "gpu_required": false
   },
   "endpoints": {
-    "health": "/api/v1/agents/ system-architect/health",
-    "execute": "/api/v1/agents/ system-architect/execute",
-    "status": "/api/v1/agents/ system-architect/status"
+    "health": "/api/v1/agents/system-architect/health",
+    "execute": "/api/v1/agents/system-architect/execute",
+    "status": "/api/v1/agents/system-architect/status"
   },
   "dependencies": [],
   "metadata": {

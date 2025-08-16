@@ -13,7 +13,7 @@ This module provides:
 Version 2.0.0 - Complete rewrite from Redis queue to real service mesh
 """
 
-from app.mesh.service_mesh import (
+from .service_mesh import (
     ServiceMesh,
     ServiceInstance,
     ServiceState,
@@ -25,7 +25,7 @@ from app.mesh.service_mesh import (
     get_mesh
 )
 
-from app.mesh.distributed_tracing import (
+from .distributed_tracing import (
     Tracer,
     Span,
     SpanContext,
@@ -36,7 +36,7 @@ from app.mesh.distributed_tracing import (
     get_tracer
 )
 
-from app.mesh.mesh_dashboard import (
+from .mesh_dashboard import (
     MeshDashboard,
     ServiceMetrics,
     MeshMetrics,
@@ -44,7 +44,7 @@ from app.mesh.mesh_dashboard import (
 )
 
 # Backward compatibility
-from app.mesh.redis_bus import (
+from .redis_bus import (
     enqueue_task,
     tail_results,
     list_agents,

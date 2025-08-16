@@ -1,0 +1,145 @@
+{
+  "timestamp": "2025-08-16T10:30:10.748876",
+  "summary": {
+    "total_tests": 11,
+    "passed": 3,
+    "failed": 8,
+    "warnings": 0,
+    "success_rate": 27.27272727272727
+  },
+  "component_scores": {
+    "frontend": 50.0,
+    "backend": 66.66666666666666,
+    "service-mesh": 0.0,
+    "mcp": 0.0,
+    "integration": 0.0
+  },
+  "critical_violations": 5,
+  "violations": [
+    {
+      "component": "frontend",
+      "name": "Frontend Mock API Detection",
+      "message": "RULE 1 VIOLATION: Found 2 mock implementations",
+      "evidence": "Mock patterns: ['# Remove Remove Remove Mocks', 'return {\"status\": \"healthy\"']"
+    },
+    {
+      "component": "service-mesh",
+      "name": "Kong Gateway Integration",
+      "message": "FACADE CONFIRMED: Kong running but no routes configured",
+      "evidence": "Kong returns 'no Route matched' - not integrated"
+    },
+    {
+      "component": "service-mesh",
+      "name": "Consul Service Discovery",
+      "message": "FACADE CONFIRMED: Only 1 services registered (expected 10+)",
+      "evidence": "Services: ['frontend-1']"
+    },
+    {
+      "component": "mcp",
+      "name": "MCP Architecture Analysis",
+      "message": "RULE 1 VIOLATION: MCP adapter tries to bridge STDIO to HTTP (impossible)",
+      "evidence": "subprocess.Popen with STDIO pipes cannot become HTTP endpoints"
+    },
+    {
+      "component": "integration",
+      "name": "Frontend-Backend Integration",
+      "message": "RULE 1 VIOLATION: Frontend uses hardcoded responses instead of backend calls",
+      "evidence": "Found hardcoded health responses in frontend API client"
+    }
+  ],
+  "by_component": {
+    "frontend": [
+      {
+        "name": "Frontend Mock API Detection",
+        "status": "FAIL",
+        "message": "RULE 1 VIOLATION: Found 2 mock implementations",
+        "response_time": null,
+        "evidence": "Mock patterns: ['# Remove Remove Remove Mocks', 'return {\"status\": \"healthy\"']"
+      },
+      {
+        "name": "Frontend Service Availability",
+        "status": "PASS",
+        "message": "Frontend service is running",
+        "response_time": null,
+        "evidence": null
+      }
+    ],
+    "backend": [
+      {
+        "name": "Backend Health Endpoint",
+        "status": "PASS",
+        "message": "Real health endpoint working",
+        "response_time": 0.0032901763916015625,
+        "evidence": null
+      },
+      {
+        "name": "Backend Chat Performance",
+        "status": "FAIL",
+        "message": "PERFORMANCE ISSUE: Chat took 10.4s (target <2s)",
+        "response_time": 10.390554189682007,
+        "evidence": "Performance degradation confirmed"
+      },
+      {
+        "name": "Backend Agents Endpoint",
+        "status": "PASS",
+        "message": "Agents endpoint working with 252 agents",
+        "response_time": null,
+        "evidence": null
+      }
+    ],
+    "service-mesh": [
+      {
+        "name": "Kong Gateway Integration",
+        "status": "FAIL",
+        "message": "FACADE CONFIRMED: Kong running but no routes configured",
+        "response_time": null,
+        "evidence": "Kong returns 'no Route matched' - not integrated"
+      },
+      {
+        "name": "Consul Service Discovery",
+        "status": "FAIL",
+        "message": "FACADE CONFIRMED: Only 1 services registered (expected 10+)",
+        "response_time": null,
+        "evidence": "Services: ['frontend-1']"
+      },
+      {
+        "name": "RabbitMQ Message Broker",
+        "status": "FAIL",
+        "message": "RabbitMQ unreachable: ('Connection aborted.', BadStatusLine('AMQP\\x00\\x00\\t\\x01'))",
+        "response_time": null,
+        "evidence": null
+      }
+    ],
+    "mcp": [
+      {
+        "name": "MCP Architecture Analysis",
+        "status": "FAIL",
+        "message": "RULE 1 VIOLATION: MCP adapter tries to bridge STDIO to HTTP (impossible)",
+        "response_time": null,
+        "evidence": "subprocess.Popen with STDIO pipes cannot become HTTP endpoints"
+      },
+      {
+        "name": "MCP Wrapper Architecture",
+        "status": "FAIL",
+        "message": "CONFIRMED: MCP wrappers use STDIO (docker run -i), not HTTP",
+        "response_time": null,
+        "evidence": "MCP processes are command-line tools, incompatible with HTTP service mesh"
+      }
+    ],
+    "integration": [
+      {
+        "name": "Frontend-Backend Integration",
+        "status": "FAIL",
+        "message": "RULE 1 VIOLATION: Frontend uses hardcoded responses instead of backend calls",
+        "response_time": null,
+        "evidence": "Found hardcoded health responses in frontend API client"
+      }
+    ]
+  },
+  "recommendations": [
+    "CRITICAL: Rewrite frontend API client to make real HTTP calls instead of mock responses",
+    "CRITICAL: Integrate Kong, Consul, RabbitMQ properly or remove facade infrastructure",
+    "ARCHITECTURAL: Redesign MCP integration - STDIO processes cannot become HTTP services",
+    "HIGH: Optimize backend performance - implement caching, connection pooling, async processing"
+  ]
+}
