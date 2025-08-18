@@ -1,0 +1,10 @@
+version: '3.8'
+
+# MCP Fix Configuration - Mounts .mcp.json to backend container
+services:
+  backend:
+    volumes:
+      # Add mount for MCP configuration
+      - /opt/sutazaiapp/.mcp.json:/app/.mcp.json:ro
+      # Mount MCP wrapper scripts
+      - /opt/sutazaiapp/scripts/mcp:/app/scripts/mcp:ro

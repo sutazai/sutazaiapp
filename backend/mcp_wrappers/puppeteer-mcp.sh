@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "${SCRIPT_DIR}/../_common.sh"
+
+# Puppeteer MCP Server (Node)
+
+if [ "${1:-}" = "--selfcheck" ]; then
+  section "puppeteer-mcp selfcheck $(ts)"
+  if has_cmd npx; then ok_line "npx present"; else err_line "npx not found"; exit 127; fi
+  exit 0
+fi
+
+require_cmd npx
+# Try common package names; prefer official if available
+exec npx -y puppeteer-mcp-server
+

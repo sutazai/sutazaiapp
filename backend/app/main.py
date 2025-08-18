@@ -368,6 +368,36 @@ except Exception as e:
     logger.warning("MCP servers not available via mesh - direct invocation only")
     MCP_MESH_ENABLED = False
 
+# MCP STDIO Bridge endpoints - Direct STDIO communication with MCP servers
+try:
+    from app.api.v1.endpoints.mcp_stdio import router as mcp_stdio_router
+    app.include_router(mcp_stdio_router, prefix="/api/v1", tags=["MCP STDIO"])
+    logger.info("MCP STDIO Bridge router loaded successfully - Direct STDIO communication enabled")
+    MCP_STDIO_ENABLED = True
+except Exception as e:
+    logger.warning(f"MCP STDIO Bridge router not loaded: {e}")
+    MCP_STDIO_ENABLED = False
+
+# MCP Emergency Fix endpoints - Emergency initialization fallback
+try:
+    from app.api.v1.endpoints.mcp_emergency import router as mcp_emergency_router
+    app.include_router(mcp_emergency_router, prefix="/api/v1", tags=["MCP Emergency"])
+    logger.info("MCP Emergency Fix router loaded successfully - Emergency MCP initialization enabled")
+    MCP_EMERGENCY_ENABLED = True
+except Exception as e:
+    logger.warning(f"MCP Emergency Fix router not loaded: {e}")
+    MCP_EMERGENCY_ENABLED = False
+
+# MCP Direct Bridge - Works without wrapper scripts
+try:
+    from app.api.v1.endpoints.mcp_direct import router as mcp_direct_router
+    app.include_router(mcp_direct_router, prefix="/api/v1", tags=["MCP Direct"])
+    logger.info("MCP Direct Bridge router loaded successfully - Direct MCP communication without wrappers")
+    MCP_DIRECT_ENABLED = True
+except Exception as e:
+    logger.warning(f"MCP Direct Bridge router not loaded: {e}")
+    MCP_DIRECT_ENABLED = False
+
 # Initialize Unified Agent Registry for centralized agent management
 agent_registry = UnifiedAgentRegistry()
 

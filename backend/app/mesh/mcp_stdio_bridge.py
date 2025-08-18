@@ -1,426 +1,295 @@
 """
-MCP Stdio Bridge - Proper MCP Server Integration via stdin/stdout
-Replaces the broken TCP-based approach with correct stdio communication
+MCP STDIO Bridge - Real MCP server communication via stdin/stdout
+This replaces the fake HTTP endpoints with actual MCP protocol communication
 """
 import asyncio
 import json
 import logging
-import os
 import subprocess
+import uuid
 from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
 from datetime import datetime
-import hashlib
+import os
 
 logger = logging.getLogger(__name__)
 
 @dataclass
-class MCPStdioConfig:
-    """Configuration for an MCP service using stdio transport"""
+class MCPServer:
+    """Represents an MCP server instance"""
     name: str
-    wrapper_script: str
-    capabilities: List[str] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    auto_restart: bool = True
-    max_retries: int = 3
-    startup_timeout: int = 5  # Reduced from 30 since stdio is faster
+    command: str
+    args: List[str] = field(default_factory=list)
+    env: Dict[str, str] = field(default_factory=dict)
+    process: Optional[subprocess.Popen] = None
+    reader: Optional[asyncio.StreamReader] = None
+    writer: Optional[asyncio.StreamWriter] = None
 
-class MCPStdioAdapter:
-    """Adapter for MCP services using stdio transport"""
+class MCPSTDIOBridge:
+    """Manages STDIO communication with MCP servers"""
     
-    def __init__(self, config: MCPStdioConfig):
-        self.config = config
-        self.process: Optional[asyncio.subprocess.Process] = None
-        self.retry_count = 0
-        self.last_health_check = datetime.now()
-        self._reader_task: Optional[asyncio.Task] = None
-        self._running = False
+    def __init__(self, config_path: str = "/app/.mcp.json"):
+        self.config_path = config_path
+        self.servers: Dict[str, MCPServer] = {}
+        self.config: Dict[str, Any] = {}
+        self._load_config()
         
-    async def start(self) -> bool:
-        """Start the MCP service process with stdio transport"""
+    def _load_config(self):
+        """Load MCP configuration from .mcp.json file"""
         try:
-            # Start MCP service process with proper stdio setup
-            self.process = await asyncio.create_subprocess_exec(
-                self.config.wrapper_script,
+            if os.path.exists(self.config_path):
+                with open(self.config_path, 'r') as f:
+                    self.config = json.load(f)
+                    logger.info(f"Loaded MCP config from {self.config_path}")
+            else:
+                logger.warning(f"MCP config not found at {self.config_path}")
+                # Fallback to hardcoded config for testing
+                self.config = self._get_fallback_config()
+        except Exception as e:
+            logger.error(f"Failed to load MCP config: {e}")
+            self.config = self._get_fallback_config()
+    
+    def _get_fallback_config(self) -> Dict[str, Any]:
+        """Fallback configuration when .mcp.json is not available"""
+        return {
+            "mcpServers": {
+                "files": {
+                    "type": "stdio",
+                    "command": "/opt/sutazaiapp/scripts/mcp/wrappers/files.sh",
+                    "args": [],
+                    "env": {}
+                },
+                "github": {
+                    "type": "stdio", 
+                    "command": "sh",
+                    "args": ["-lc", "npx -y @modelcontextprotocol/server-github --repositories 'sutazai/sutazaiapp'"],
+                    "env": {}
+                },
+                "http": {
+                    "type": "stdio",
+                    "command": "/opt/sutazaiapp/scripts/mcp/wrappers/http_fetch.sh",
+                    "args": [],
+                    "env": {}
+                },
+                "ddg": {
+                    "type": "stdio",
+                    "command": "/opt/sutazaiapp/scripts/mcp/wrappers/ddg.sh",
+                    "args": [],
+                    "env": {}
+                }
+            }
+        }
+    
+    async def start_server(self, server_name: str) -> bool:
+        """Start an MCP server process"""
+        try:
+            if server_name in self.servers and self.servers[server_name].process:
+                logger.info(f"Server {server_name} already running")
+                return True
+            
+            server_config = self.config.get("mcpServers", {}).get(server_name)
+            if not server_config:
+                logger.error(f"No configuration found for server {server_name}")
+                return False
+            
+            # Prepare environment
+            env = os.environ.copy()
+            env.update(server_config.get("env", {}))
+            
+            # Start process with STDIO pipes
+            command = server_config["command"]
+            args = server_config.get("args", [])
+            
+            # Handle different command formats
+            if isinstance(command, str) and command == "sh" and args:
+                # Special case for shell commands
+                full_command = ["sh"] + args
+            else:
+                full_command = [command] + args
+            
+            logger.info(f"Starting MCP server {server_name}: {full_command}")
+            
+            process = await asyncio.create_subprocess_exec(
+                *full_command,
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
-                env={
-                    **os.environ,
-                    "MCP_SERVICE_NAME": self.config.name,
-                }
+                env=env
             )
             
-            self._running = True
+            # Store server info
+            self.servers[server_name] = MCPServer(
+                name=server_name,
+                command=command,
+                args=args,
+                env=server_config.get("env", {}),
+                process=process,
+                reader=process.stdout,
+                writer=process.stdin
+            )
             
-            # Start reader task for responses
-            self._reader_task = asyncio.create_task(self._read_responses())
-            
-            # Send initialize request
-            initialized = await self._initialize_mcp()
-            
-            if initialized:
-                logger.info(f"MCP service {self.config.name} started successfully via stdio")
+            # Test server by listing tools
+            test_result = await self.call_method(server_name, "tools/list", {})
+            if test_result:
+                logger.info(f"MCP server {server_name} started successfully")
                 return True
             else:
-                logger.error(f"MCP service {self.config.name} failed initialization")
-                await self.stop()
+                logger.error(f"MCP server {server_name} started but not responding")
+                await self.stop_server(server_name)
                 return False
                 
         except Exception as e:
-            logger.error(f"Failed to start MCP service {self.config.name}: {e}")
+            logger.error(f"Failed to start MCP server {server_name}: {e}")
             return False
     
-    async def stop(self) -> bool:
-        """Stop the MCP service process"""
+    async def stop_server(self, server_name: str) -> bool:
+        """Stop an MCP server process"""
         try:
-            self._running = False
+            if server_name not in self.servers:
+                return True
             
-            # Cancel reader task
-            if self._reader_task:
-                self._reader_task.cancel()
+            server = self.servers[server_name]
+            if server.process:
+                server.process.terminate()
                 try:
-                    await self._reader_task
-                except asyncio.CancelledError:
-                    pass
-            
-            # Terminate process
-            if self.process:
-                try:
-                    self.process.terminate()
-                    await asyncio.wait_for(self.process.wait(), timeout=5)
+                    await asyncio.wait_for(server.process.wait(), timeout=5)
                 except asyncio.TimeoutError:
-                    self.process.kill()
-                    await self.process.wait()
+                    server.process.kill()
+                    await server.process.wait()
             
-            logger.info(f"MCP service {self.config.name} stopped")
+            del self.servers[server_name]
+            logger.info(f"MCP server {server_name} stopped")
             return True
             
         except Exception as e:
-            logger.error(f"Failed to stop MCP service {self.config.name}: {e}")
+            logger.error(f"Failed to stop MCP server {server_name}: {e}")
             return False
     
-    async def restart(self) -> bool:
-        """Restart the MCP service"""
-        await self.stop()
-        await asyncio.sleep(1)  # Brief pause before restart
-        return await self.start()
-    
-    async def health_check(self) -> bool:
-        """Check health of the MCP service"""
+    async def call_method(self, server_name: str, method: str, params: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Call an MCP method via STDIO"""
         try:
-            # Check process status
-            if not self.process or self.process.returncode is not None:
-                logger.warning(f"MCP service {self.config.name} process died")
-                if self.config.auto_restart and self.retry_count < self.config.max_retries:
-                    self.retry_count += 1
-                    return await self.restart()
-                return False
+            # Ensure server is running
+            if server_name not in self.servers:
+                if not await self.start_server(server_name):
+                    return None
             
-            # For now, just check if process is running
-            # More sophisticated health checks can be added later
-            self.last_health_check = datetime.now()
-            return True
-            
-        except Exception as e:
-            logger.error(f"Health check failed for MCP service {self.config.name}: {e}")
-            return False
-    
-    async def _initialize_mcp(self) -> bool:
-        """Send initialization request to MCP server"""
-        try:
-            # For now, we'll skip the formal initialization as the servers
-            # might not all implement the full MCP protocol yet
-            # Just check if the process started successfully
-            await asyncio.sleep(1)  # Give process time to start
-            
-            if self.process and self.process.returncode is None:
-                logger.info(f"MCP service {self.config.name} process started")
-                return True
-            else:
-                logger.error(f"MCP service {self.config.name} process failed to start")
-                return False
-            
-        except Exception as e:
-            logger.error(f"Failed to initialize MCP service {self.config.name}: {e}")
-            return False
-    
-    async def _send_request(self, request: Dict[str, Any], timeout: float = 5.0) -> Optional[Dict[str, Any]]:
-        """Send a request to the MCP server and wait for response"""
-        if not self.process or not self.process.stdin:
-            return None
-        
-        try:
-            # Send request
-            request_str = json.dumps(request) + "\n"
-            self.process.stdin.write(request_str.encode())
-            await self.process.stdin.drain()
-            
-            # Wait for response with timeout
-            response_future = asyncio.create_future()
-            self._pending_requests[request.get("id")] = response_future
-            
-            try:
-                response = await asyncio.wait_for(response_future, timeout=timeout)
-                return response
-            except asyncio.TimeoutError:
-                logger.warning(f"Request timeout for MCP service {self.config.name}")
+            server = self.servers[server_name]
+            if not server.process or not server.writer or not server.reader:
+                logger.error(f"Server {server_name} not properly initialized")
                 return None
-            finally:
-                self._pending_requests.pop(request.get("id"), None)
+            
+            # Create JSON-RPC request
+            request = {
+                "jsonrpc": "2.0",
+                "id": str(uuid.uuid4()),
+                "method": method,
+                "params": params
+            }
+            
+            # Send request
+            request_json = json.dumps(request) + "\n"
+            server.writer.write(request_json.encode())
+            await server.writer.drain()
+            
+            # Read response with timeout
+            try:
+                response_line = await asyncio.wait_for(
+                    server.reader.readline(),
+                    timeout=30.0
+                )
+                
+                if not response_line:
+                    logger.error(f"Empty response from {server_name}")
+                    return None
+                
+                response = json.loads(response_line.decode())
+                
+                # Check for errors
+                if "error" in response:
+                    logger.error(f"MCP error from {server_name}: {response['error']}")
+                    return None
+                
+                return response.get("result")
+                
+            except asyncio.TimeoutError:
+                logger.error(f"Timeout waiting for response from {server_name}")
+                # Restart server on timeout
+                await self.stop_server(server_name)
+                return None
                 
         except Exception as e:
-            logger.error(f"Failed to send request to MCP service {self.config.name}: {e}")
+            logger.error(f"Failed to call method {method} on {server_name}: {e}")
             return None
     
-    async def _send_notification(self, notification: Dict[str, Any]) -> None:
-        """Send a notification to the MCP server (no response expected)"""
-        if not self.process or not self.process.stdin:
-            return
-        
-        try:
-            notification_str = json.dumps(notification) + "\n"
-            self.process.stdin.write(notification_str.encode())
-            await self.process.stdin.drain()
-        except Exception as e:
-            logger.error(f"Failed to send notification to MCP service {self.config.name}: {e}")
+    async def list_tools(self, server_name: str) -> List[Dict[str, Any]]:
+        """List available tools for a server"""
+        result = await self.call_method(server_name, "tools/list", {})
+        if result and "tools" in result:
+            return result["tools"]
+        return []
     
-    async def _read_responses(self) -> None:
-        """Read responses from the MCP server stdout"""
-        if not self.process or not self.process.stdout:
-            return
-        
-        buffer = ""
-        while self._running:
-            try:
-                # Read data from stdout
-                data = await self.process.stdout.read(1024)
-                if not data:
-                    break
-                
-                buffer += data.decode()
-                
-                # Process complete JSON messages
-                while "\n" in buffer:
-                    line, buffer = buffer.split("\n", 1)
-                    if line.strip():
-                        try:
-                            message = json.loads(line)
-                            await self._handle_message(message)
-                        except json.JSONDecodeError:
-                            logger.warning(f"Invalid JSON from MCP service {self.config.name}: {line}")
-                            
-            except Exception as e:
-                logger.error(f"Error reading from MCP service {self.config.name}: {e}")
-                break
+    async def execute_tool(self, server_name: str, tool_name: str, arguments: Dict[str, Any]) -> Optional[Any]:
+        """Execute a tool on an MCP server"""
+        result = await self.call_method(
+            server_name,
+            "tools/call",
+            {
+                "name": tool_name,
+                "arguments": arguments
+            }
+        )
+        return result
     
-    async def _handle_message(self, message: Dict[str, Any]) -> None:
-        """Handle a message from the MCP server"""
-        # Handle response to a request
-        if "id" in message and message["id"] in self._pending_requests:
-            future = self._pending_requests.get(message["id"])
-            if future and not future.done():
-                future.set_result(message)
-        
-        # Handle notifications/events
-        elif "method" in message and not "id" in message:
-            # This is a notification from the server
-            logger.debug(f"Notification from MCP service {self.config.name}: {message.get('method')}")
-    
-    def __init__(self, config: MCPStdioConfig):
-        self.config = config
-        self.process: Optional[asyncio.subprocess.Process] = None
-        self.retry_count = 0
-        self.last_health_check = datetime.now()
-        self._reader_task: Optional[asyncio.Task] = None
-        self._running = False
-        self._pending_requests: Dict[Any, asyncio.Future] = {}
-
-class MCPStdioBridge:
-    """Bridge for MCP servers using stdio transport"""
-    
-    def __init__(self):
-        self.adapters: Dict[str, MCPStdioAdapter] = {}
-        self.registry: Dict[str, Any] = self._load_mcp_registry()
-        self._initialized = False
-        
-    def _load_mcp_registry(self) -> Dict[str, Any]:
-        """Load MCP service registry from configuration"""
-        return {
-            "mcp_services": [
-                {
-                    "name": "postgres",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh",
-                    "capabilities": ["sql", "database", "query"],
-                    "metadata": {"database": "sutazai", "schema": "public"}
-                },
-                {
-                    "name": "files",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/files.sh",
-                    "capabilities": ["read", "write", "list", "delete"],
-                    "metadata": {"root": "/opt/sutazaiapp"}
-                },
-                {
-                    "name": "http",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/http.sh",
-                    "capabilities": ["fetch", "post", "put", "delete"],
-                    "metadata": {"timeout": 30}
-                },
-                {
-                    "name": "ddg",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/ddg.sh",
-                    "capabilities": ["search", "news", "images"],
-                    "metadata": {"engine": "duckduckgo"}
-                },
-                {
-                    "name": "github",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/github.sh",
-                    "capabilities": ["repos", "issues", "pulls", "actions"],
-                    "metadata": {"api_version": "v3"}
-                },
-                {
-                    "name": "extended-memory",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh",
-                    "capabilities": ["store", "retrieve", "search", "delete"],
-                    "metadata": {"backend": "chromadb"}
-                },
-                {
-                    "name": "puppeteer-mcp",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh",
-                    "capabilities": ["screenshot", "pdf", "scrape", "navigate"],
-                    "metadata": {"headless": True}
-                },
-                {
-                    "name": "playwright-mcp",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh",
-                    "capabilities": ["screenshot", "pdf", "scrape", "navigate", "multi-browser"],
-                    "metadata": {"browsers": ["chromium", "firefox", "webkit"]}
-                }
-            ]
+    async def get_server_info(self, server_name: str) -> Dict[str, Any]:
+        """Get information about a server"""
+        info = {
+            "name": server_name,
+            "configured": server_name in self.config.get("mcpServers", {}),
+            "running": False,
+            "tools": []
         }
+        
+        if server_name in self.servers:
+            server = self.servers[server_name]
+            info["running"] = server.process is not None and server.process.returncode is None
+            
+            if info["running"]:
+                tools = await self.list_tools(server_name)
+                info["tools"] = [tool.get("name") for tool in tools]
+        
+        return info
     
-    async def initialize(self) -> Dict[str, Any]:
-        """Initialize all MCP services"""
-        if self._initialized:
-            return {"status": "already_initialized", "services": list(self.adapters.keys())}
+    async def initialize_all(self) -> Dict[str, Any]:
+        """Initialize all configured MCP servers"""
+        results = {
+            "started": [],
+            "failed": [],
+            "total": 0
+        }
         
-        started = []
-        failed = []
-        
-        for service_config in self.registry.get("mcp_services", []):
-            config = MCPStdioConfig(
-                name=service_config["name"],
-                wrapper_script=service_config["wrapper"],
-                capabilities=service_config.get("capabilities", []),
-                metadata=service_config.get("metadata", {})
-            )
-            
-            adapter = MCPStdioAdapter(config)
-            
-            if await adapter.start():
-                self.adapters[service_config["name"]] = adapter
-                started.append(service_config["name"])
+        for server_name in self.config.get("mcpServers", {}).keys():
+            results["total"] += 1
+            if await self.start_server(server_name):
+                results["started"].append(server_name)
             else:
-                failed.append(service_config["name"])
-        
-        self._initialized = True
-        
-        return {
-            "status": "initialized",
-            "started": started,
-            "failed": failed,
-            "total": len(started) + len(failed)
-        }
-    
-    async def shutdown(self) -> bool:
-        """Shutdown all MCP services"""
-        success = True
-        for adapter in self.adapters.values():
-            if not await adapter.stop():
-                success = False
-        
-        self.adapters.clear()
-        self._initialized = False
-        return success
-    
-    async def call_mcp_service(
-        self, 
-        service_name: str, 
-        method: str, 
-        params: Dict[str, Any]
-    ) -> Any:
-        """Call an MCP service method"""
-        
-        # Ensure service is registered
-        if service_name not in self.adapters:
-            raise ValueError(f"MCP service {service_name} not found")
-        
-        adapter = self.adapters[service_name]
-        
-        # Send request to MCP server
-        request_id = f"{service_name}-{datetime.now().timestamp()}"
-        response = await adapter._send_request({
-            "jsonrpc": "2.0",
-            "method": f"tools/{method}",
-            "params": params,
-            "id": request_id
-        }, timeout=30.0)
-        
-        if response and "result" in response:
-            return response["result"]
-        elif response and "error" in response:
-            raise Exception(f"MCP call failed: {response['error']}")
-        else:
-            raise Exception(f"MCP call failed: No response")
-    
-    async def get_service_status(self, service_name: str) -> Dict[str, Any]:
-        """Get status of an MCP service"""
-        if service_name not in self.adapters:
-            return {
-                "service": service_name,
-                "status": "not_found",
-                "error": f"Service {service_name} not registered"
-            }
-        
-        adapter = self.adapters[service_name]
-        is_healthy = await adapter.health_check()
-        
-        return {
-            "service": service_name,
-            "status": "healthy" if is_healthy else "unhealthy",
-            "process_running": adapter.process is not None and adapter.process.returncode is None,
-            "last_health_check": adapter.last_health_check.isoformat()
-        }
-    
-    async def restart_service(self, service_name: str) -> bool:
-        """Restart an MCP service"""
-        if service_name not in self.adapters:
-            return False
-        
-        return await self.adapters[service_name].restart()
-    
-    async def health_check_all(self) -> Dict[str, Any]:
-        """Health check all MCP services"""
-        results = {}
-        
-        for name, adapter in self.adapters.items():
-            healthy = await adapter.health_check()
-            results[name] = {
-                "healthy": healthy,
-                "process_running": adapter.process is not None and adapter.process.returncode is None,
-                "last_check": adapter.last_health_check.isoformat()
-            }
+                results["failed"].append(server_name)
         
         return results
-
-# Global bridge instance
-_mcp_stdio_bridge: Optional[MCPStdioBridge] = None
-
-async def get_mcp_stdio_bridge() -> MCPStdioBridge:
-    """Get or create MCP stdio bridge instance"""
-    global _mcp_stdio_bridge
     
-    if _mcp_stdio_bridge is None:
-        _mcp_stdio_bridge = MCPStdioBridge()
-    
-    return _mcp_stdio_bridge
+    async def shutdown_all(self):
+        """Shutdown all MCP servers"""
+        servers = list(self.servers.keys())
+        for server_name in servers:
+            await self.stop_server(server_name)
+        
+        logger.info("All MCP servers shut down")
+
+# Singleton instance
+_mcp_bridge = None
+
+async def get_mcp_stdio_bridge() -> MCPSTDIOBridge:
+    """Get the singleton MCP STDIO bridge instance"""
+    global _mcp_bridge
+    if _mcp_bridge is None:
+        _mcp_bridge = MCPSTDIOBridge()
+    return _mcp_bridge

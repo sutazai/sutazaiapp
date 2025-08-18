@@ -320,7 +320,13 @@
       "Bash(ruby --version)",
       "Bash(claude --version)",
       "Bash(gem install:*)",
-      "Bash(claude-swarm version)"
+      "Bash(claude-swarm version)",
+      "Bash(npx playwright:*)",
+      "Bash(do echo \"Testing port $port:\")",
+      "Bash(DOCKER_HOST=tcp://localhost:12375 docker ps --filter \"name=mcp-\" --format \"table {{.Names}}\\t{{.Status}}\\t{{.Ports}}\")",
+      "Bash(DOCKER_HOST=tcp://localhost:12375 docker ps -a --filter \"name=mcp-\" --format \"table {{.Names}}\\t{{.Status}}\\t{{.Ports}}\")",
+      "Bash(pg_isready:*)",
+      "Bash(redis-cli:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
