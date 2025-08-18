@@ -1,6 +1,6 @@
 # Multi-stage build for security-hardened frontend
 # Stage 1: Build stage
-FROM python:3.12.8-slim AS builder
+FROM python:3.13.7-slim AS builder
 
 # Security: Create non-root user for build
 RUN groupadd -r appuser && useradd -r -g appuser appuser
@@ -28,7 +28,7 @@ COPY static/ static/ 2>/dev/null || true
 COPY templates/ templates/ 2>/dev/null || true
 
 # Stage 2: Runtime stage
-FROM python:3.12.8-slim AS runtime
+FROM python:3.13.7-slim AS runtime
 
 # Security: Create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser
