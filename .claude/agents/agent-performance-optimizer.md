@@ -257,13 +257,13 @@ Before ANY action, you MUST:
 *20 Years Experience: "Containers solve deployment problems but create performance observability challenges. Design for both from day one."*
 
 - Reference /opt/sutazaiapp/IMPORTANT/diagrams for performance container architecture decisions
-- **Container Architecture**: Use multi-stage builds, minimal base images, and proper layer caching
+- **Container Architecture**: Use multi-stage builds, base images, and proper layer caching
 - Centralize all performance service configurations in /docker/agent-performance/ following established patterns
 - **Configuration Management**: Use docker-compose for local development, helm charts for Kubernetes deployment
 - Follow port allocation standards from PortRegistry.md for performance services and monitoring APIs
 - **Port Management**: Document all port allocations to prevent conflicts and enable proper networking
 - Use multi-stage Dockerfiles for performance tools with production and development variants
-- **Multi-stage Strategy**: Build stage for compilation, runtime stage for minimal production image
+- **Multi-stage Strategy**: Build stage for compilation, runtime stage for production image
 - Implement non-root user execution for all performance containers with proper privilege management
 - **Security Practice**: Use specific UIDs/GIDs, not root, and implement proper file permissions
 - Use pinned base image versions with regular scanning and vulnerability assessment

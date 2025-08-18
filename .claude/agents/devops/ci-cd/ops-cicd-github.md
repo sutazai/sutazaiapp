@@ -159,6 +159,6 @@ jobs:
 
 ## Security considerations:
 - Never hardcode secrets
-- Use GITHUB_TOKEN with minimal permissions
+- Use GITHUB_TOKEN with permissions
 - Implement CODEOWNERS for workflow changes
 - Use environment protection rules

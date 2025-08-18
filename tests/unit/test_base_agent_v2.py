@@ -9,7 +9,7 @@ import asyncio
 import json
 import os
 import sys
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import AsyncMock, Mock, patch, MagicMock
 from datetime import datetime, timedelta
 import tempfile
 import httpx
@@ -131,10 +131,10 @@ class TestBaseAgentV2:
         """Test successful registration with coordinator"""
         await agent._setup_async_components()
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+        Mock_response = Mock()
+        Mock_response.status_code = 200
         
-        with patch.object(agent.http_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+        with patch.object(agent.http_client, 'post', return_value=Mock_response):
             result = await agent.register_with_coordinator()
             assert result is True
             assert agent.status == AgentStatus.REGISTERING
@@ -146,11 +146,11 @@ class TestBaseAgentV2:
         """Test failed registration with coordinator"""
         await agent._setup_async_components()
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 500
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.text = "Internal Server Error"
+        Mock_response = Mock()
+        Mock_response.status_code = 500
+        Mock_response.text = "Internal Server Error"
         
-        with patch.object(agent.http_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+        with patch.object(agent.http_client, 'post', return_value=Mock_response):
             result = await agent.register_with_coordinator()
             assert result is False
         
@@ -172,10 +172,10 @@ class TestBaseAgentV2:
         """Test successful heartbeat sending"""
         await agent._setup_async_components()
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+        Mock_response = Mock()
+        Mock_response.status_code = 200
         
-        with patch.object(agent.http_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+        with patch.object(agent.http_client, 'post', return_value=Mock_response):
             # Set shutdown event to exit heartbeat loop quickly
             agent.shutdown_event.set()
             await agent.send_heartbeat()
@@ -187,10 +187,10 @@ class TestBaseAgentV2:
         """Test heartbeat sending with failure"""
         await agent._setup_async_components()
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 500
+        Mock_response = Mock()
+        Mock_response.status_code = 500
         
-        with patch.object(agent.http_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+        with patch.object(agent.http_client, 'post', return_value=Mock_response):
             agent.shutdown_event.set()
             await agent.send_heartbeat()
         
@@ -207,11 +207,11 @@ class TestBaseAgentV2:
             "data": {"prompt": "test prompt"}
         }
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = task_data
+        Mock_response = Mock()
+        Mock_response.status_code = 200
+        Mock_response.json.return_value = task_data
         
-        with patch.object(agent.http_client, 'get', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+        with patch.object(agent.http_client, 'get', return_value=Mock_response):
             task = await agent.get_next_task()
             assert task == task_data
             assert agent.metrics.tasks_queued == 1
@@ -223,10 +223,10 @@ class TestBaseAgentV2:
         """Test task retrieval when no tasks available"""
         await agent._setup_async_components()
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 204
+        Mock_response = Mock()
+        Mock_response.status_code = 204
         
-        with patch.object(agent.http_client, 'get', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+        with patch.object(agent.http_client, 'get', return_value=Mock_response):
             task = await agent.get_next_task()
             assert task is None
         
@@ -255,10 +255,10 @@ class TestBaseAgentV2:
             processing_time=1.5
         )
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+        Mock_response = Mock()
+        Mock_response.status_code = 200
         
-        with patch.object(agent.http_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+        with patch.object(agent.http_client, 'post', return_value=Mock_response):
             await agent.report_task_complete(task_result)
         
         await agent._cleanup_async_components()
@@ -276,10 +276,10 @@ class TestBaseAgentV2:
             error="test error"
         )
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 500
+        Mock_response = Mock()
+        Mock_response.status_code = 500
         
-        with patch.object(agent.http_client, 'post', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+        with patch.object(agent.http_client, 'post', return_value=Mock_response):
             await agent.report_task_complete(task_result)
         
         await agent._cleanup_async_components()
@@ -310,9 +310,9 @@ class TestBaseAgentV2:
             "data": {"prompt": "test prompt"}
         }
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test process_task to raise exception
-        with patch.object(agent, 'process_task') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_process.side_effect = Exception("Processing error")
+        # Mock process_task to raise exception
+        with patch.object(agent, 'process_task') as Mock_process:
+            Mock_process.side_effect = Exception("Processing error")
             
             # Create new agent to test the actual exception handling
             test_agent = BaseAgent()
@@ -328,7 +328,7 @@ class TestBaseAgentV2:
         """Test successful Ollama query"""
         await agent._setup_async_components()
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test circuit breaker call
+        # Mock circuit breaker call
         with patch.object(agent.circuit_breaker, 'call', return_value="Ollama response"):
             result = await agent.query_ollama("test prompt")
             assert result == "Ollama response"
@@ -417,21 +417,21 @@ class TestBaseAgentV2:
         
         task = {"id": "test-task", "type": "test"}
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test successful processing
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result = TaskResult(
+        # Mock successful processing
+        Mock_result = TaskResult(
             task_id="test-task",
             status="completed",
             result={"output": "success"},
             processing_time=1.0
         )
         
-        with patch.object(agent, 'process_task', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result), \
-             patch.object(agent, 'report_task_complete') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_report:
+        with patch.object(agent, 'process_task', return_value=Mock_result), \
+             patch.object(agent, 'report_task_complete') as Mock_report:
             
             await agent._task_wrapper(task)
             
             # Verify task was reported
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_report.assert_called_once_with(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result)
+            Mock_report.assert_called_once_with(Mock_result)
             
             # Verify status changes
             assert agent.status == AgentStatus.ACTIVE  # Should return to active after completion
@@ -446,13 +446,13 @@ class TestBaseAgentV2:
         task = {"id": "test-task", "type": "test"}
         
         with patch.object(agent, 'process_task', side_effect=Exception("Processing error")), \
-             patch.object(agent, 'report_task_complete') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_report:
+             patch.object(agent, 'report_task_complete') as Mock_report:
             
             await agent._task_wrapper(task)
             
             # Verify error was reported
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_report.assert_called_once()
-            call_args = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_report.call_args[0][0]
+            Mock_report.assert_called_once()
+            call_args = Mock_report.call_args[0][0]
             assert call_args.status == "failed"
             assert call_args.error == "Processing error"
         
@@ -463,13 +463,13 @@ class TestBaseAgentV2:
         """Test successful health check"""
         await agent._setup_async_components()
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test healthy ollama pool
+        # Mock healthy ollama pool
         with patch.object(agent.ollama_pool, 'health_check', return_value=True):
-            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test healthy backend
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+            # Mock healthy backend
+            Mock_response = Mock()
+            Mock_response.status_code = 200
             
-            with patch.object(agent.http_client, 'get', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+            with patch.object(agent.http_client, 'get', return_value=Mock_response):
                 health_status = await agent.health_check()
                 
                 assert health_status["healthy"] is True
@@ -485,10 +485,10 @@ class TestBaseAgentV2:
         await agent._setup_async_components()
         
         with patch.object(agent.ollama_pool, 'health_check', return_value=False):
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
+            Mock_response = Mock()
+            Mock_response.status_code = 200
             
-            with patch.object(agent.http_client, 'get', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+            with patch.object(agent.http_client, 'get', return_value=Mock_response):
                 health_status = await agent.health_check()
                 
                 assert health_status["healthy"] is False
@@ -503,10 +503,10 @@ class TestBaseAgentV2:
         await agent._setup_async_components()
         
         with patch.object(agent.ollama_pool, 'health_check', return_value=True):
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 500
+            Mock_response = Mock()
+            Mock_response.status_code = 500
             
-            with patch.object(agent.http_client, 'get', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response):
+            with patch.object(agent.http_client, 'get', return_value=Mock_response):
                 health_status = await agent.health_check()
                 
                 assert health_status["healthy"] is False
@@ -537,26 +537,26 @@ class TestBaseAgentV2:
         """Test sync Ollama query when no event loop is running"""
         agent = BaseAgent()
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test asyncio.get_event_loop() to return a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test that's not running
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_loop = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_loop.is_running.return_value = False
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_loop.run_until_complete.return_value = "sync response"
+        # Mock asyncio.get_event_loop() to return a Mock that's not running
+        Mock_loop = Mock()
+        Mock_loop.is_running.return_value = False
+        Mock_loop.run_until_complete.return_value = "sync response"
         
-        with patch('asyncio.get_event_loop', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_loop):
+        with patch('asyncio.get_event_loop', return_value=Mock_loop):
             result = agent.query_ollama_sync("test prompt")
             # This should log a warning and attempt to use run_until_complete
-            # In our Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test setup, it will return None due to setup requirements
+            # In our Mock setup, it will return None due to setup requirements
             assert result is None  # Because agent components aren't set up
     
     def test_query_ollama_sync_running_loop(self):
         """Test sync Ollama query when event loop is already running"""
         agent = BaseAgent()
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test asyncio.get_event_loop() to return a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test that's running
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_loop = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_loop.is_running.return_value = True
+        # Mock asyncio.get_event_loop() to return a Mock that's running
+        Mock_loop = Mock()
+        Mock_loop.is_running.return_value = True
         
-        with patch('asyncio.get_event_loop', return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_loop):
+        with patch('asyncio.get_event_loop', return_value=Mock_loop):
             result = agent.query_ollama_sync("test prompt")
             assert result is None  # Should return None when loop is running
 

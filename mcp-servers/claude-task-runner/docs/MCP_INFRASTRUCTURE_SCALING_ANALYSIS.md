@@ -16,7 +16,7 @@ Based on process analysis, the following MCP servers are actively running:
 
 1. **mcp-server-playwright** - Browser automation and web interaction
 2. **memory-bank-mcp** - Persistent memory and context management
-3. **puppeteer-mcp-server** - Advanced browser control and scraping
+3. **puppeteer-mcp (no longer in use)-server** - Advanced browser control and scraping
 4. **mcp_ssh** - SSH operations and remote system management
 5. **extended_memory_mcp** - Extended memory patterns and neural storage
 6. **nx-mcp** - Nx monorepo management and tooling
@@ -135,7 +135,7 @@ class OptimizedMCPCoordinator:
 
 **Tier 4: Support Services (Priority 25)**
 - mcp-server-playwright
-- puppeteer-mcp-server
+- puppeteer-mcp (no longer in use)-server
 - mcp-compass
 
 #### Routing Configuration

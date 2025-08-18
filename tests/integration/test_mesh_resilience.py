@@ -4,7 +4,7 @@ Tests that the system handles missing services properly
 """
 import asyncio
 import pytest
-from unittest.mock import Mock, patch, AsyncMock
+from unittest. import , patch, Async
 import os
 import tempfile
 
@@ -23,13 +23,13 @@ class TestMeshResilience:
         # Create initializer without mesh (standalone mode)
         initializer = MCPMeshInitializer(mesh_client=None)
         
-        # Mock os.path.exists to simulate missing wrappers
-        with patch('os.path.exists') as mock_exists:
+        #  os.path.exists to simulate missing wrappers
+        with patch('os.path.exists') as _exists:
             # Only some wrappers exist
             def wrapper_exists(path):
                 return "files.sh" in path or "http.sh" in path
             
-            mock_exists.side_effect = wrapper_exists
+            _exists.side_effect = wrapper_exists
             
             # Initialize and register
             results = await initializer.initialize_and_register()
@@ -131,9 +131,9 @@ class TestMeshResilience:
     @pytest.mark.asyncio
     async def test_startup_continues_without_mcp(self):
         """Test that system startup continues even if MCP initialization fails"""
-        with patch('backend.app.mesh.mcp_stdio_bridge.get_mcp_stdio_bridge') as mock_bridge:
+        with patch('backend.app.mesh.mcp_stdio_bridge.get_mcp_stdio_bridge') as _bridge:
             # Simulate bridge initialization failure
-            mock_bridge.side_effect = Exception("Bridge initialization failed")
+            _bridge.side_effect = Exception("Bridge initialization failed")
             
             # Should not raise, returns error result
             result = await initialize_mcp_on_startup()
@@ -172,8 +172,8 @@ class TestMeshResilience:
         
         adapter = MCPServiceAdapter(config, mesh=None)
         
-        # Mock process to simulate death
-        adapter.process = Mock()
+        #  process to simulate death
+        adapter.process = ()
         adapter.process.poll.return_value = 1  # Process died
         adapter.available = True
         
@@ -253,8 +253,8 @@ class TestMeshIntegration:
     async def test_end_to_end_initialization(self):
         """Test end-to-end initialization flow"""
         # This test simulates the complete initialization flow
-        with patch('os.path.exists') as mock_exists:
-            mock_exists.return_value = False  # No wrappers exist
+        with patch('os.path.exists') as _exists:
+            _exists.return_value = False  # No wrappers exist
             
             # Should complete without errors
             result = await initialize_mcp_on_startup()
@@ -270,7 +270,7 @@ class TestMeshIntegration:
         """Test system works with partial service availability"""
         bridge = MCPMeshBridge(mesh=None)
         
-        # Mock registry with mix of available and unavailable services
+        #  registry with mix of available and unavailable services
         bridge.registry = {
             "mcp_services": [
                 {

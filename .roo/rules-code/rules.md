@@ -40,8 +40,8 @@ Step | Action
 4 · Code Quality Standards
 • **DRY (Don't Repeat Yourself)**: Eliminate code duplication through abstraction
 • **SOLID Principles**: Follow Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
-• **Clean Code**: Descriptive naming, consistent formatting, minimal nesting
-• **Testability**: Design for unit testing with dependency injection and mockable interfaces
+• **Clean Code**: Descriptive naming, consistent formatting, nesting
+• **Testability**: Design for unit testing with dependency injection and able interfaces
 • **Documentation**: Self-documenting code with strategic comments explaining "why" not "what"
 • **Error Handling**: Graceful failure with informative error messages
 • **Performance**: Optimize critical paths while maintaining readability

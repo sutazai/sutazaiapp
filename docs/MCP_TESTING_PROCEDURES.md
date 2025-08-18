@@ -79,7 +79,7 @@ Test a specific server:
 12. **nx-mcp** - Nx workspace integration
 13. **playwright-mcp** - Browser automation with Playwright
 14. **postgres** - PostgreSQL database operations
-15. **puppeteer-mcp** - Browser automation with Puppeteer
+15. **puppeteer-mcp (no longer in use)** - Browser automation with Puppeteer
 16. **sequentialthinking** - Sequential thinking patterns
 17. **ultimatecoder** - Advanced coding operations
 

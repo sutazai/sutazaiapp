@@ -22,7 +22,7 @@ try:
     from bs4 import BeautifulSoup
     SELENIUM_AVAILABLE = True
 except ImportError:
-    logger.warning("Selenium not available, running in Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test mode")
+    logger.warning("Selenium not available, running in Mock mode")
     SELENIUM_AVAILABLE = False
 
 app = FastAPI(title="Browser Use Agent Server", version="1.0.0")
@@ -85,8 +85,8 @@ class BrowserUseServer:
         try:
             if not SELENIUM_AVAILABLE:
                 return {
-                    "result": f"Browser task executed (Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test): {task}",
-                    "status": "completed_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test",
+                    "result": f"Browser task executed (Mock): {task}",
+                    "status": "completed_Mock",
                     "action": action,
                     "url": url
                 }

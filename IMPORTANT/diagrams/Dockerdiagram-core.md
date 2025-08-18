@@ -526,7 +526,7 @@
 │   │       │   └── coordination-protocol.py # Coordination protocol
 │   │       └── capabilities/
 │   │           ├── zero-coordination.py    # Zero-based coordination
-│   │           └── minimal-overhead.py     # Minimal overhead operations
+│   │           └──-overhead.py     # overhead operations
 │   ├── code-intelligence-agents/   # 💻 CODE & DEVELOPMENT AGENTS
 │   │   ├── tabbyml-agent/          # 🔧 OPTIONAL: TabbyML Code Completion
 │   │   │   ├── Dockerfile          # TabbyML service (GPU optional)

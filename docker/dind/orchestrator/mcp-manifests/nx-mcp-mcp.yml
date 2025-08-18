@@ -1,0 +1,51 @@
+apiVersion: mcp/v1
+kind: MCPContainer
+metadata:
+  name: mcp-nx-mcp
+  labels:
+    mcp.service: nx-mcp
+    mcp.tier: development
+spec:
+  image: node:18-alpine
+  container_name: mcp-nx-mcp
+  command:
+  - npx
+  - '@nx/mcp-server'
+  - --port
+  - '3008'
+  environment:
+    MCP_PORT: '3008'
+    MESH_ENABLED: 'true'
+    SERVICE_NAME: nx-mcp
+    NODE_ENV: production
+  ports:
+    '13008': '3008'
+  volumes:
+    mcp_shared_data: /mcp-shared
+    /opt/sutazaiapp: /opt/sutazaiapp:ro
+  healthcheck:
+    test:
+    - CMD
+    - wget
+    - -q
+    - --spider
+    - http://localhost:3008/health
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 45s
+  restart_policy: unless-stopped
+  resources:
+    limits:
+      cpus: '0.5'
+      memory: 512M
+    reservations:
+      cpus: '0.1'
+      memory: 64M
+  networks:
+  - sutazai-dind-internal
+  labels:
+    mcp.managed: 'true'
+    mcp.protocol: http
+    mcp.integration: nx_mcp
+    mcp.service: 'true'

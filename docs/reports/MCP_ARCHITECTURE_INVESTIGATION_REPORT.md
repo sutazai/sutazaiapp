@@ -29,7 +29,7 @@
 - mcp-server-playwright (PID 1938275)
 - context7-mcp (PID 1938276)
 - mcp-language-server (PID 1938279)
-- puppeteer-mcp-server (PID 1938283)
+- puppeteer-mcp (no longer in use)-server (PID 1938283)
 - mcp-compass (PID 1938297)
 ```
 

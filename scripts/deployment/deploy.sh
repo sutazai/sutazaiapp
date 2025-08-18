@@ -901,9 +901,9 @@ apply_performance_optimizations() {
     log_progress "Applying $level performance optimizations..."
     
     case "$level" in
-        minimal)
+       )
             # Basic optimizations
-            log_info "Applying minimal optimizations..."
+            log_info "Applying optimizations..."
             # Redis optimizations
             docker exec sutazai-redis redis-cli CONFIG SET maxmemory-policy allkeys-lru
             docker exec sutazai-redis redis-cli CONFIG SET save ""
@@ -1145,7 +1145,7 @@ EXAMPLES:
 
 HARDWARE PROFILES:
     limited        < 4 cores, < 8GB RAM   (minimal resource allocation)
-    minimal        4+ cores, 8+ GB RAM    (basic resource allocation)
+           4+ cores, 8+ GB RAM    (basic resource allocation)
     standard       8+ cores, 16+ GB RAM   (balanced resource allocation)
     high-performance 16+ cores, 32+ GB RAM (maximum resource allocation)
 

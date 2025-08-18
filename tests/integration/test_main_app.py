@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 import pytest
 import sys
 import os
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import patch, MagicMock
 
 # Add backend to path
 backend_path = os.path.join(os.path.dirname(__file__), '..')
@@ -20,8 +20,8 @@ if backend_path not in sys.path:
 
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_dependencies():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test external dependencies."""
+def Mock_dependencies():
+    """Mock external dependencies."""
     with patch.dict(os.environ, {
         'DATABASE_URL': 'sqlite:///./test.db',
         'REDIS_URL': 'redis://localhost:6379/15',
@@ -29,25 +29,25 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
         'ENVIRONMENT': 'test',
         'LOG_LEVEL': 'INFO'
     }):
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis
-        with patch('redis.asyncio.Redis') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_instance = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.from_url.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_instance
+        # Mock Redis
+        with patch('redis.asyncio.Redis') as Mock_redis:
+            Mock_redis_instance = MagicMock()
+            Mock_redis.from_url.return_value = Mock_redis_instance
             
-            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test database
-            with patch('sqlalchemy.create_engine') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_engine:
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_engine.return_value = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+            # Mock database
+            with patch('sqlalchemy.create_engine') as Mock_engine:
+                Mock_engine.return_value = MagicMock()
                 
-                # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test other dependencies as needed
+                # Mock other dependencies as needed
                 yield {
-                    'redis': Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_instance,
-                    'engine': Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_engine
+                    'redis': Mock_redis_instance,
+                    'engine': Mock_engine
                 }
 
 
 @pytest.fixture
-def app(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_dependencies):
-    """Create the FastAPI app with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested dependencies."""
+def app(Mock_dependencies):
+    """Create the FastAPI app with Mocked dependencies."""
     try:
         from app.main import app as fastapi_app
         return fastapi_app

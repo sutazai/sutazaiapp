@@ -26,7 +26,7 @@ module_name/
    - Contains pure business logic with no UI or framework dependencies
    - Functions are independently testable
    - No imports from CLI or MCP layers
-   - Minimal external dependencies
+   - external dependencies
 
 2. **CLI Layer**
    - User interface built with Typer

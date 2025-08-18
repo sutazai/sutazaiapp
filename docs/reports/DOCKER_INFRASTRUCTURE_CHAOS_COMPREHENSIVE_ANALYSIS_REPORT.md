@@ -51,7 +51,7 @@ ADDITIONAL VARIANTS:
 - secure.hardware-optimizer.yml (79 lines)
 - mcp.yml (53 lines)
 - override.yml (44 lines)
-- minimal.yml (43 lines)
+-.yml (43 lines)
 - portainer/docker-compose.yml (21 lines)
 ```
 
@@ -218,7 +218,7 @@ SECURITY Environment:
 POTENTIALLY REDUNDANT:
 1. docker-compose.standard.yml       (277 lines) - Superseded by main
 2. docker-compose.optimized.yml      (146 lines) - Overlaps with performance
-3. docker-compose.override.yml       (44 lines)  - Minimal content
+3. docker-compose.override.yml       (44 lines)  - content
 4. docker-compose.minimal.yml        (43 lines)  - Limited use case
 
 SPECIALIZED USE CASES (KEEP):
@@ -283,7 +283,7 @@ Level 5 (Agents): ultra-system-architect
 DEPLOYMENT SCENARIOS WITH UNCLEAR SELECTION:
 
 ❓ Development Setup:
-   Options: dev.yml, minimal.yml, standard.yml
+   Options: dev.yml,.yml, standard.yml
    Uncertainty: No clear guidance on selection criteria
 
 ❓ Production Deployment:  

@@ -57,6 +57,8 @@ class DinDMeshBridge:
         self.protocol_translator = None
         self.initialized = False
         self.monitor_task: Optional[asyncio.Task] = None
+        # Add registry attribute for compatibility
+        self.registry = {"mcp_services": []}
         
     async def initialize(self) -> bool:
         """
@@ -65,16 +67,48 @@ class DinDMeshBridge:
         try:
             logger.info(f"Initializing DinD-Mesh Bridge to {self.dind_host}...")
             
-            # Connect to DinD Docker daemon
-            # Use internal port 2375 which is exposed inside the container
-            self.dind_client = docker.DockerClient(
-                base_url=f"tcp://{self.dind_host}:2375",
-                timeout=30
-            )
+            # CRITICAL FIX: Try multiple connection methods for DinD
+            connection_attempts = [
+                # Method 1: Direct container network connection (preferred)
+                f"tcp://{self.dind_host}:2375",
+                # Method 2: Try alternative hostname
+                "tcp://sutazai-mcp-orchestrator-notls:2375",
+                # Method 3: Try host-mapped port (most reliable from backend container)
+                "tcp://host.docker.internal:12375",
+                # Method 4: Try localhost mapped port
+                "tcp://172.17.0.1:12375",
+                # Method 5: Use container IP if hostname resolution fails
+                "tcp://172.20.0.22:2375"
+            ]
             
-            # Test connection
-            version = self.dind_client.version()
-            logger.info(f"✅ Connected to DinD Docker v{version['Version']}")
+            last_error = None
+            for attempt, base_url in enumerate(connection_attempts, 1):
+                try:
+                    logger.info(f"DinD connection attempt {attempt}/4: {base_url}")
+                    self.dind_client = docker.DockerClient(
+                        base_url=base_url,
+                        timeout=10  # Shorter timeout for faster fallback
+                    )
+            
+                    # Test connection
+                    version = self.dind_client.version()
+                    logger.info(f"✅ Connected to DinD Docker v{version['Version']} via {base_url}")
+                    break  # Success! Exit connection loop
+                    
+                except Exception as e:
+                    last_error = e
+                    logger.warning(f"Connection attempt {attempt} failed: {e}")
+                    if self.dind_client:
+                        try:
+                            self.dind_client.close()
+                        except:
+                            pass
+                        self.dind_client = None
+                    continue
+            
+            # Check if any connection succeeded
+            if not self.dind_client:
+                raise Exception(f"All DinD connection attempts failed. Last error: {last_error}")
             
             # Initialize protocol translator for STDIO MCPs
             self.protocol_translator = await get_protocol_translator()
@@ -102,9 +136,41 @@ class DinDMeshBridge:
             return []
         
         try:
-            containers = self.dind_client.containers.list(
-                filters={"label": "mcp.service=true"}
-            )
+            # CRITICAL FIX: Use broader filter to discover MCP containers
+            # Try multiple discovery methods since container labels may vary
+            containers = []
+            
+            # Method 1: Try original filter first
+            try:
+                containers = self.dind_client.containers.list(
+                    filters={"label": "mcp.service=true"}
+                )
+                if containers:
+                    logger.info(f"Found {len(containers)} containers with mcp.service=true label")
+            except Exception as e:
+                logger.warning(f"Method 1 (mcp.service=true) failed: {e}")
+            
+            # Method 2: Try broader name filter if no labeled containers found
+            if not containers:
+                try:
+                    all_containers = self.dind_client.containers.list(all=True)
+                    containers = [c for c in all_containers if c.name.startswith('mcp-')]
+                    logger.info(f"Found {len(containers)} containers with mcp- name prefix")
+                except Exception as e:
+                    logger.warning(f"Method 2 (name prefix) failed: {e}")
+            
+            # Method 3: If still no containers, try all running containers
+            if not containers:
+                try:
+                    all_containers = self.dind_client.containers.list()
+                    logger.info(f"Total running containers in DinD: {len(all_containers)}")
+                    # Log container names for debugging
+                    for container in all_containers[:5]:  # Show first 5
+                        logger.info(f"  Container: {container.name} (labels: {container.labels})")
+                    # Use all running containers as MCP containers for now
+                    containers = all_containers
+                except Exception as e:
+                    logger.warning(f"Method 3 (all containers) failed: {e}")
             
             discovered = []
             for container in containers:
@@ -124,11 +190,18 @@ class DinDMeshBridge:
         Register a DinD container with the mesh
         """
         try:
-            # Extract MCP metadata from container labels
+            # Extract MCP metadata from container labels or infer from name
             labels = container.labels
-            mcp_name = labels.get("mcp.name", container.name)
-            mcp_protocol = labels.get("mcp.protocol", "stdio")
-            mcp_port = int(labels.get("mcp.port", "0"))
+            
+            # CRITICAL FIX: Handle containers without explicit MCP labels
+            if container.name.startswith('mcp-'):
+                # Strip 'mcp-' prefix to get service name
+                mcp_name = container.name[4:]  # Remove 'mcp-' prefix
+            else:
+                mcp_name = labels.get("mcp.name", container.name)
+            
+            mcp_protocol = labels.get("mcp.protocol", "stdio")  # Default to stdio
+            mcp_port = int(labels.get("mcp.port", "8080"))  # Default port for HTTP MCPs
             
             # Allocate mesh port
             mesh_port = self._allocate_port(mcp_name)
@@ -155,6 +228,14 @@ class DinDMeshBridge:
             
             # Store service
             self.mcp_services[mcp_name] = service
+            
+            # Update registry for compatibility (avoid duplicates)
+            if not any(s.get("name") == mcp_name for s in self.registry["mcp_services"]):
+                self.registry["mcp_services"].append({
+                    "name": mcp_name,
+                    "tags": ["mcp", mcp_protocol],
+                    "metadata": {"capabilities": [], "mesh_port": mesh_port}
+                })
             
             logger.info(f"Registered MCP service {mcp_name} on mesh port {mesh_port}")
             return service
@@ -397,6 +478,111 @@ class DinDMeshBridge:
             "dind_host": self.dind_host,
             "initialized": self.initialized
         }
+    
+    async def health_check_all(self) -> Dict[str, Any]:
+        """
+        Check health of all MCP services
+        """
+        health_report = {
+            "services": {},
+            "summary": {
+                "total": len(self.mcp_services),
+                "healthy": 0,
+                "unhealthy": 0,
+                "percentage_healthy": 0.0
+            }
+        }
+        
+        for name, service in self.mcp_services.items():
+            is_healthy = service.state == ServiceState.HEALTHY
+            health_report["services"][name] = {
+                "healthy": is_healthy,
+                "available": is_healthy,
+                "process_running": is_healthy,
+                "retry_count": 0,
+                "last_check": service.last_health_check.isoformat() if service.last_health_check else None
+            }
+            if is_healthy:
+                health_report["summary"]["healthy"] += 1
+            else:
+                health_report["summary"]["unhealthy"] += 1
+        
+        if health_report["summary"]["total"] > 0:
+            health_report["summary"]["percentage_healthy"] = (
+                health_report["summary"]["healthy"] / health_report["summary"]["total"] * 100
+            )
+        
+        return health_report
+    
+    async def get_service_status(self, service_name: str) -> Dict[str, Any]:
+        """
+        Get status of a specific MCP service
+        """
+        if service_name not in self.mcp_services:
+            return {"status": "not_found", "error": f"Service {service_name} not found"}
+        
+        service = self.mcp_services[service_name]
+        return {
+            "service": service_name,
+            "status": service.state.value,
+            "mesh_instances": 1,
+            "adapter_instances": 0,
+            "instances": [{
+                "id": service.container_id[:12],
+                "mesh_port": service.mesh_port,
+                "internal_port": service.internal_port,
+                "state": service.state.value
+            }],
+            "mesh_registration": True
+        }
+    
+    async def call_mcp_service(self, service_name: str, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Call a method on an MCP service
+        """
+        if service_name not in self.mcp_services:
+            raise Exception(f"Service {service_name} not found")
+        
+        # Route through handle_client_request for consistency
+        return await self.handle_client_request(
+            service_name=service_name,
+            client_id="api-client",
+            request={"method": method, "params": params}
+        )
+    
+    async def restart_service(self, service_name: str) -> bool:
+        """
+        Restart an MCP service
+        """
+        if service_name not in self.mcp_services or not self.dind_client:
+            return False
+        
+        try:
+            service = self.mcp_services[service_name]
+            container = self.dind_client.containers.get(service.container_id)
+            container.restart()
+            return True
+        except Exception as e:
+            logger.error(f"Failed to restart {service_name}: {e}")
+            return False
+    
+    async def stop_service(self, service_name: str) -> bool:
+        """
+        Stop an MCP service
+        """
+        if service_name not in self.mcp_services or not self.dind_client:
+            return False
+        
+        try:
+            service = self.mcp_services[service_name]
+            container = self.dind_client.containers.get(service.container_id)
+            container.stop()
+            await self._deregister_service(service_name)
+            return True
+        except Exception as e:
+            logger.error(f"Failed to stop {service_name}: {e}")
+            return False
+    
     
     async def shutdown(self):
         """

@@ -77,7 +77,7 @@ project_name/
   ```
 - **Independent Function Debugging**: Each function must be independently debuggable
   - Include clear sample inputs and expected outputs in docstrings
-  - Functions should be usable in isolation with minimal dependencies
+  - Functions should be usable in isolation with dependencies
   - Core logic should be separate from presentation concerns
 - **NO Conditional Imports**: 
   - Never use try/except blocks for imports of required packages
@@ -109,8 +109,8 @@ project_name/
 ## Validation & Testing
 - **Real Data**: Always test with actual data, never fake inputs
 - **Expected Results**: Verify outputs against concrete expected results
-- **No Mocking**: NEVER mock core functionality
-- **MagicMock Ban**: MagicMock is strictly forbidden for testing core functionality
+- **No ing**: NEVER  core functionality
+- **Magic Ban**: Magic is strictly forbidden for testing core functionality
 - **Meaningful Assertions**: Use assertions that verify specific expected values
 - **🔴 Usage Functions Before Tests**: ALL relevant usage functions MUST successfully output expected results BEFORE any creation of tests. Tests are a future-proofing step when Agents improve at test-writing capabilities.
 - **🔴 Results Before Lint**: ALL usage functionality MUST produce expected results BEFORE addressing ANY Pylint or other linter warnings. Functionality correctness ALWAYS comes before style compliance.

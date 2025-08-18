@@ -378,7 +378,7 @@ async def main():
     parser.add_argument("--base-url", default="http://localhost:10010", help="Backend base URL")
     parser.add_argument("--frontend-url", default="http://localhost:10011", help="Frontend URL")
     parser.add_argument("--output", help="Output file for CI report")
-    parser.add_argument("--quiet", action="store_true", help="Quiet mode - minimal output")
+    parser.add_argument("--quiet", action="store_true", help="Quiet mode - output")
     parser.add_argument("--json-only", action="store_true", help="Output only JSON results")
     
     args = parser.parse_args()

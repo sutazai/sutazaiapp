@@ -32,7 +32,7 @@ Template categories you excel at:
 - Build and deployment configurations
 
 Quality standards:
-- All templates must be immediately functional with minimal modification
+- All templates must be immediately functional with modification
 - Include comprehensive TypeScript types where applicable
 - Follow the project's established patterns and conventions
 - Provide clear placeholder sections for customization

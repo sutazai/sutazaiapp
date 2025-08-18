@@ -1,0 +1,10 @@
+# Unified Memory Service Dependencies
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+httpx>=0.25.2
+aiosqlite>=0.19.0
+
+# Performance and monitoring
+psutil>=5.9.6
+prometheus-client>=0.19.0

@@ -12,8 +12,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../../"))
 try:
     from ai_agents.self_improvement.feedback_loop import feedback_loop
 except ImportError:
-    # Create a simple Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test for   backend
-    class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestFeedbackLoop:
+    # Create a simple Mock for   backend
+    class MockFeedbackLoop:
         def __init__(self):
             self.is_running = False
             
@@ -33,7 +33,7 @@ except ImportError:
                 "recent_issues": []
             }
     
-    feedback_loop = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestFeedbackLoop()
+    feedback_loop = MockFeedbackLoop()
 
 logger = logging.getLogger(__name__)
 

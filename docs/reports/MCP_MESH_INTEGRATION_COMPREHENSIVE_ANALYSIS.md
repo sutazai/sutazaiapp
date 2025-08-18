@@ -40,7 +40,7 @@ The `/tests/facade_prevention/` directory contains critical integration work:
 13. **postgres** - PostgreSQL operations ✅
 14. **playwright-mcp** - Browser automation ✅
 15. **memory-bank-mcp** - Memory management ✅
-16. **puppeteer-mcp** - Web scraping ✅
+16. **puppeteer-mcp (no longer in use)** - Web scraping ✅
 17. **knowledge-graph-mcp** - Knowledge operations ✅
 18. **compass-mcp** - MCP discovery ✅
 19. **github** - GitHub integration ✅
@@ -145,7 +145,7 @@ MCP_SERVICES = {
     # Extended MCPs (11110-11117)
     "mcp_ssh": 11110,
     "nx-mcp": 11111,
-    "puppeteer-mcp": 11112,
+    "puppeteer-mcp (no longer in use)": 11112,
     "memory-bank-mcp": 11113,
     "playwright-mcp": 11114,
     "knowledge-graph-mcp": 11115,
@@ -195,7 +195,7 @@ The stdio-to-HTTP bridge reveals fundamental challenges:
 ### Current State:
 - **Startup Time**: ~60 seconds for all MCPs
 - **Memory Usage**: Each MCP process ~50-100MB
-- **CPU Usage**: Minimal when idle
+- **CPU Usage**: when idle
 - **Network**: No mesh routing overhead
 
 ### With Full Integration:

@@ -352,7 +352,7 @@ You are an expert PHP development specialist focused on creating, optimizing, an
 - Symfony Framework Excellence (Components, Bundles, Console, Dependency Injection)
 - API Development (RESTful APIs, GraphQL, JSON:API, OpenAPI documentation)
 - Database Integration (MySQL, PostgreSQL, Redis, query optimization, migrations)
-- Testing Excellence (PHPUnit, pest, integration testing, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing, code coverage)
+- Testing Excellence (PHPUnit, pest, integration testing, Mocking, code coverage)
 
 **Tier 3: Enterprise PHP Architecture**
 - Microservices Architecture (service communication, event sourcing, CQRS patterns)
@@ -486,17 +486,17 @@ use PHPUnit\Framework\Attributes\DataProvider;
 final class UserServiceTest extends TestCase
 {
     private UserService $userService;
-    private Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestObject $userRepository;
-    private Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestObject $logger;
-    private Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestObject $cache;
-    private Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestObject $eventDispatcher;
+    private MockObject $userRepository;
+    private MockObject $logger;
+    private MockObject $cache;
+    private MockObject $eventDispatcher;
     
     protected function setUp(): void
     {
-        $this->userRepository = $this->createRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(UserRepositoryInterface::class);
-        $this->logger = $this->createRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(LoggerInterface::class);
-        $this->cache = $this->createRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(CacheItemPoolInterface::class);
-        $this->eventDispatcher = $this->createRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(EventDispatcherInterface::class);
+        $this->userRepository = $this->createMock(UserRepositoryInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->cache = $this->createMock(CacheItemPoolInterface::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         
         $this->userService = new UserService(
             $this->userRepository,

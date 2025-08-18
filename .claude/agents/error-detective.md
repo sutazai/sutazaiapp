@@ -613,7 +613,7 @@ class QuantumDebugger:
     def __init__(self):
         self.observation_techniques = {
             'passive_monitoring': 'Observe without system interaction',
-            'statistical_sampling': 'Sample-based observation with minimal intrusion',
+            'statistical_sampling': 'Sample-based observation with intrusion',
             'correlation_inference': 'Infer behavior from indirect measurements',
             'production_mirroring': 'Investigate in production-identical environments'
         }
@@ -643,7 +643,7 @@ class QuantumDebugger:
         }
     
     def setup_statistical_sampling(self, context):
-        """Sample-based investigation with minimal system intrusion"""
+        """Sample-based investigation with system intrusion"""
         return {
             'error_rate_sampling': 'Sample 1% of requests for detailed analysis',
             'performance_sampling': 'Random performance measurement sampling',

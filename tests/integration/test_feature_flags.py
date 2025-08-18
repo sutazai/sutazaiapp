@@ -5,7 +5,7 @@ Tests for optional feature flags functionality
 
 import os
 import pytest
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, patch, MagicMock
 import sys
 # Path handled by pytest configuration
 
@@ -56,10 +56,10 @@ class TestCodeCompletionFactory:
         assert isinstance(client, NullCodeCompletionClient)
     
     @patch('backend.app.services.code_completion.factory.TabbyCodeCompletionClient')
-    def test_tabby_client_when_enabled(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tabby_class):
+    def test_tabby_client_when_enabled(self, Mock_tabby_class):
         """Test that TabbyCodeCompletionClient is used when TabbyML is enabled"""
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tabby_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
+        Mock_client = Mock()
+        Mock_tabby_class.return_value = Mock_client
         
         settings = Settings(
             ENABLE_TABBY=True,
@@ -69,11 +69,11 @@ class TestCodeCompletionFactory:
         
         client = code_completion_factory(settings)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tabby_class.assert_called_once_with(
+        Mock_tabby_class.assert_called_once_with(
             base_url="http://test:8080",
             api_key="key"
         )
-        assert client == Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
+        assert client == Mock_client
     
     def test_null_client_methods(self):
         """Test NullCodeCompletionClient methods return expected values"""
@@ -102,16 +102,16 @@ class TestTrainingFactory:
         assert isinstance(trainer, DefaultTrainer)
     
     @patch('backend.app.services.training.factory.FsdpTrainer')
-    def test_fsdp_trainer_when_enabled(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_fsdp_class):
+    def test_fsdp_trainer_when_enabled(self, Mock_fsdp_class):
         """Test that FsdpTrainer is used when FSDP is enabled"""
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_trainer = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_fsdp_class.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_trainer
+        Mock_trainer = Mock()
+        Mock_fsdp_class.return_value = Mock_trainer
         
         settings = Settings(ENABLE_FSDP=True)
         trainer = trainer_factory(settings)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_fsdp_class.assert_called_once()
-        assert trainer == Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_trainer
+        Mock_fsdp_class.assert_called_once()
+        assert trainer == Mock_trainer
     
     def test_default_trainer_methods(self):
         """Test DefaultTrainer methods"""
@@ -119,8 +119,8 @@ class TestTrainingFactory:
         trainer = trainer_factory(settings)
         
         # Test train method
-        model = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        data = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        model = Mock()
+        data = Mock()
         result = trainer.train(model, data)
         assert result == model  # DefaultTrainer returns model unchanged
         

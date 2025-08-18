@@ -1,0 +1,55 @@
+# Base Dockerfile for Python-based MCP servers
+# Supports: postgres, memory-bank-mcp, knowledge-graph-mcp, etc.
+
+FROM python:3.11-alpine
+
+# Install essential tools and dependencies
+RUN apk add --no-cache \
+    bash \
+    curl \
+    git \
+    gcc \
+    musl-dev \
+    libffi-dev \
+    postgresql-dev \
+    ca-certificates \
+    && rm -rf /var/cache/apk/*
+
+# Create MCP user and directories
+RUN addgroup -g 1001 mcp && \
+    adduser -D -u 1001 -G mcp mcp
+
+# Set up working directory
+WORKDIR /opt/mcp
+
+# Install common Python packages for MCP servers
+RUN pip install --no-cache-dir \
+    asyncio \
+    aiohttp \
+    psycopg2-binary \
+    sqlalchemy \
+    fastapi \
+    uvicorn \
+    pydantic \
+    requests \
+    websockets
+
+# Copy wrapper scripts
+COPY --chown=mcp:mcp scripts/mcp/wrappers/ /opt/mcp/wrappers/
+COPY --chown=mcp:mcp scripts/mcp/_common.sh /opt/mcp/
+
+# Make scripts executable
+RUN chmod +x /opt/mcp/wrappers/*.sh /opt/mcp/_common.sh
+
+# Create logs directory
+RUN mkdir -p /var/log/mcp && chown mcp:mcp /var/log/mcp
+
+# Switch to non-root user
+USER mcp
+
+# Health check endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD /opt/mcp/wrappers/${MCP_SERVICE}.sh health || exit 1
+
+# Default entrypoint - expects MCP_SERVICE environment variable
+ENTRYPOINT ["/bin/bash", "-c", "exec /opt/mcp/wrappers/${MCP_SERVICE}.sh start"]

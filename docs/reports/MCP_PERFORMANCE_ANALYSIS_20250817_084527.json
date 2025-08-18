@@ -1,0 +1,123 @@
+{
+  "report_metadata": {
+    "generated_at": "2025-08-17T08:45:27.548885+00:00",
+    "analyzer_version": "1.0.0",
+    "analysis_type": "MCP Server Performance Analysis"
+  },
+  "executive_summary": {
+    "total_mcp_services": 21,
+    "active_containers": 4,
+    "resource_efficiency": "EXCELLENT",
+    "optimization_opportunities": 1,
+    "potential_container_reduction": 3,
+    "potential_monthly_savings": "$0.0"
+  },
+  "performance_analysis": {
+    "timestamp": "2025-08-17T08:45:25.567218+00:00",
+    "services": {
+      "postgres-mcp-3799440-1755419553": {
+        "container_name": "postgres-mcp-3799440-1755419553",
+        "cpu_percent": 0.0,
+        "memory_mb": 0.0,
+        "memory_percent": 0,
+        "network_io_mb": 0.0,
+        "disk_io_mb": 0.0,
+        "resource_efficiency_score": 100.0,
+        "optimization_potential": "HIGH - Very low utilization, candidate for consolidation"
+      },
+      "sutazai-mcp-orchestrator-notls": {
+        "container_name": "sutazai-mcp-orchestrator-notls",
+        "cpu_percent": 0.08,
+        "memory_mb": 0.0,
+        "memory_percent": 0,
+        "network_io_mb": 0.0,
+        "disk_io_mb": 0.0,
+        "resource_efficiency_score": 99.52,
+        "optimization_potential": "HIGH - Very low utilization, candidate for consolidation"
+      },
+      "sutazai-postgres-exporter": {
+        "container_name": "sutazai-postgres-exporter",
+        "cpu_percent": 0.0,
+        "memory_mb": 0.0,
+        "memory_percent": 0,
+        "network_io_mb": 0.0,
+        "disk_io_mb": 0.0,
+        "resource_efficiency_score": 100.0,
+        "optimization_potential": "HIGH - Very low utilization, candidate for consolidation"
+      },
+      "sutazai-postgres": {
+        "container_name": "sutazai-postgres",
+        "cpu_percent": 0.0,
+        "memory_mb": 0.0,
+        "memory_percent": 0,
+        "network_io_mb": 0.0,
+        "disk_io_mb": 0.0,
+        "resource_efficiency_score": 100.0,
+        "optimization_potential": "HIGH - Very low utilization, candidate for consolidation"
+      }
+    },
+    "summary": {
+      "total_mcp_containers": 4,
+      "average_cpu_percent": 0.02,
+      "total_memory_mb": 0.0,
+      "average_memory_mb": 0.0,
+      "total_network_io_mb": 0.0,
+      "total_disk_io_mb": 0.0
+    },
+    "resource_totals": {
+      "total_cpu_percent": 0.08,
+      "total_memory_mb": 0.0,
+      "total_network_io_mb": 0.0,
+      "total_disk_io_mb": 0.0
+    }
+  },
+  "optimization_recommendations": [
+    {
+      "priority": "HIGH",
+      "category": "CONSOLIDATION",
+      "services": [
+        "postgres-mcp-3799440-1755419553",
+        "sutazai-mcp-orchestrator-notls",
+        "sutazai-postgres-exporter",
+        "sutazai-postgres"
+      ],
+      "recommendation": "Consider removing or consolidating 4 idle services",
+      "potential_savings": "~200MB memory, reduce container overhead",
+      "implementation": "Merge functionality into multi-purpose service containers"
+    }
+  ],
+  "cost_benefit_analysis": {
+    "current_state": {
+      "total_containers": 4,
+      "total_memory_mb": 0.0,
+      "total_cpu_percent": 0.08,
+      "monthly_cost_estimate": 0.01
+    },
+    "optimized_state": {
+      "total_containers": 1,
+      "total_memory_mb": 0,
+      "total_cpu_percent": 0.064,
+      "monthly_cost_estimate": 0.01
+    },
+    "potential_savings": {
+      "containers_reduced": 3,
+      "memory_saved_mb": 200,
+      "percentage_reduction": 75.0,
+      "monthly_cost_savings": 0.0
+    },
+    "implementation_effort": {
+      "estimated_hours": 7,
+      "risk_level": "LOW",
+      "testing_required": "Comprehensive integration testing required",
+      "rollback_plan": "Container snapshots before consolidation"
+    }
+  },
+  "implementation_roadmap": [
+    {
+      "phase": "Phase 1: Quick Wins (Week 1)",
+      "actions": "Remove/consolidate 4 idle services",
+      "expected_impact": "Immediate resource reduction, simplified architecture",
+      "risk": "LOW"
+    }
+  ]
+}

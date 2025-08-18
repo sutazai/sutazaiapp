@@ -546,7 +546,7 @@ class EndToEndWorkflowRealityTester:
             return {
                 "success": True,
                 "connectivity_test": "simulated",
-                "note": "Test service is mock - connectivity simulation passed"
+                "note": "Test service is  - connectivity simulation passed"
             }
         except Exception as e:
             return {

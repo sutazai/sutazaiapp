@@ -73,7 +73,7 @@ SyntaxError: from __future__ imports must occur at the beginning of the file
 # fastmcp module corrupted or version conflict
 
 # mcp_ssh package dependency corruption
-Not a valid package or extra name: "pytest-Remove Remove Remove Mocks..."
+Not a valid package or extra name: "pytest- s..."
 # TOML parse error in uv.lock at line 485
 ```
 
@@ -137,7 +137,7 @@ npm exec nx-mcp@latest              # PID 1938208
 npm exec memory-bank-mcp            # PID 1938211  
 npm exec mcp-knowledge-graph        # PID 1938213
 npm exec @upstash/context7-mcp@latest # PID 1938276
-npm exec puppeteer-mcp-server       # PID 1938283
+npm exec puppeteer-mcp (no longer in use)-server       # PID 1938283
 ```
 
 **Technical Details**:
@@ -146,7 +146,7 @@ npm exec puppeteer-mcp-server       # PID 1938283
 - **Event Loop Blocking**: stdio-based MCPs blocking Node.js event loops
 - **Memory Exhaustion**: Multiple Node.js processes consuming excessive memory
 
-**Affected MCPs**: nx-mcp, memory-bank-mcp, knowledge-graph-mcp, context7, puppeteer-mcp
+**Affected MCPs**: nx-mcp, memory-bank-mcp, knowledge-graph-mcp, context7, puppeteer-mcp (no longer in use)
 
 ## Resource Utilization Analysis
 
@@ -185,7 +185,7 @@ containerd[254]: cleanup warnings...failed to remove runc container
 ### 3. Package Dependency Corruption
 ```bash
 TOML parse error at line 485, column 5
-pytest-Remove Remove Remove Mocks - Only use Real Tests...
+pytest- s - Only use Real Tests...
 # Package names corrupted, indicating filesystem or memory corruption
 ```
 

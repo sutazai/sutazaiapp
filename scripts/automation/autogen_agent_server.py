@@ -18,7 +18,7 @@ try:
     from autogen.agentchat.group_chat_manager import GroupChatManager
     AUTOGEN_AVAILABLE = True
 except ImportError:
-    logger.warning("AutoGen not available, running in Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test mode")
+    logger.warning("AutoGen not available, running in Mock mode")
     AUTOGEN_AVAILABLE = False
 
 app = FastAPI(title="AutoGen Agent Server", version="1.0.0")
@@ -39,12 +39,12 @@ class AutoGenAgentServer:
         """Initialize AutoGen agents"""
         try:
             if not AUTOGEN_AVAILABLE:
-                logger.info("AutoGen not available, using Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agents")
+                logger.info("AutoGen not available, using Mock agents")
                 self.agents = {
-                    "assistant": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Assistant Agent",
-                    "user_proxy": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test User Proxy Agent",
-                    "code_executor": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Code Executor Agent",
-                    "planner": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Planner Agent"
+                    "assistant": "Mock Assistant Agent",
+                    "user_proxy": "Mock User Proxy Agent",
+                    "code_executor": "Mock Code Executor Agent",
+                    "planner": "Mock Planner Agent"
                 }
                 return
             
@@ -98,20 +98,20 @@ class AutoGenAgentServer:
             
         except Exception as e:
             logger.error(f"Failed to setup agents: {e}")
-            # Fallback to Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agents
+            # Fallback to Mock agents
             self.agents = {
-                "assistant": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Assistant Agent (Error)",
-                "user_proxy": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test User Proxy Agent (Error)",
-                "code_executor": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Code Executor Agent (Error)",
-                "planner": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Planner Agent (Error)"
+                "assistant": "Mock Assistant Agent (Error)",
+                "user_proxy": "Mock User Proxy Agent (Error)",
+                "code_executor": "Mock Code Executor Agent (Error)",
+                "planner": "Mock Planner Agent (Error)"
             }
     
     async def execute_task(self, task: str, agent_type: str = "assistant", max_rounds: int = 10) -> str:
         """Execute a task using AutoGen agents"""
         try:
             if not AUTOGEN_AVAILABLE or not isinstance(self.agents.get(agent_type), (AssistantAgent, UserProxyAgent)):
-                # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test response for testing
-                return f"AutoGen Agent ({agent_type}) processed task: {task[:100]}... [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Response]"
+                # Mock response for testing
+                return f"AutoGen Agent ({agent_type}) processed task: {task[:100]}... [Mock Response]"
             
             agent = self.agents[agent_type]
             
@@ -138,7 +138,7 @@ class AutoGenAgentServer:
         """Execute a task using group chat"""
         try:
             if not AUTOGEN_AVAILABLE or not self.group_chat:
-                return f"AutoGen Group Chat processed task: {task[:100]}... [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Response]"
+                return f"AutoGen Group Chat processed task: {task[:100]}... [Mock Response]"
             
             # Create group chat manager
             manager = GroupChatManager(

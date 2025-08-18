@@ -587,31 +587,31 @@ const ExpensiveComponent = memo(function ExpensiveComponent({
 ```typescript
 // Comprehensive component testing
 describe('UserProfile Component', () => {
-  const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestUser = {
+  const MockUser = {
     id: '1',
     name: 'John Doe',
     email: 'john@example.com',
   };
   
   it('renders user information correctly', () => {
-    render(<UserProfile user={Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestUser} />);
+    render(<UserProfile user={MockUser} />);
     
-    expect(screen.getByText(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestUser.name)).toBeInTheDocument();
-    expect(screen.getByText(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestUser.email)).toBeInTheDocument();
+    expect(screen.getByText(MockUser.name)).toBeInTheDocument();
+    expect(screen.getByText(MockUser.email)).toBeInTheDocument();
   });
   
   it('handles user interaction properly', async () => {
-    const Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestOnEdit = jest.fn();
-    render(<UserProfile user={Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestUser} onEdit={Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestOnEdit} />);
+    const MockOnEdit = jest.fn();
+    render(<UserProfile user={MockUser} onEdit={MockOnEdit} />);
     
     const editButton = screen.getByRole('button', { name: /edit/i });
     await user.click(editButton);
     
-    expect(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestOnEdit).toHaveBeenCalledWith(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestUser.id);
+    expect(MockOnEdit).toHaveBeenCalledWith(MockUser.id);
   });
   
   it('meets accessibility standards', async () => {
-    const { container } = render(<UserProfile user={Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestUser} />);
+    const { container } = render(<UserProfile user={MockUser} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

@@ -210,12 +210,6 @@ class MCPProcessOrchestrator:
             
             # Browser automation (heavy resources)
             {
-                "name": "puppeteer-mcp",
-                "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh",
-                "port": 11107,
-                "dependencies": ["files", "http"],
-                "capabilities": ["browser", "automation"],
-                "memory_limit_mb": 1024,
                 "cpu_limit_percent": 50.0,
                 "startup_delay": 2.0
             },

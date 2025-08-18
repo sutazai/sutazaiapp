@@ -490,13 +490,13 @@ class TestEnvironmentManager:
         for dir_name in mcp_dirs:
             (config.base_path / dir_name).mkdir(parents=True, exist_ok=True)
         
-        # Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test wrapper scripts for servers
+        # Create Mock wrapper scripts for servers
         wrappers_dir = config.base_path / "mcp" / "wrappers"
         for server in servers:
             wrapper_file = wrappers_dir / f"{server}.sh"
             wrapper_content = f"""#!/bin/bash
-# Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test wrapper for {server}
-echo "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test MCP server: {server}"
+# Mock wrapper for {server}
+echo "Mock MCP server: {server}"
 echo "Status: healthy"
 exit 0
 """

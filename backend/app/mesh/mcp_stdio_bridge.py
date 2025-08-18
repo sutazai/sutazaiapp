@@ -285,8 +285,6 @@ class MCPStdioBridge:
                     "metadata": {"backend": "chromadb"}
                 },
                 {
-                    "name": "puppeteer-mcp",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh",
                     "capabilities": ["screenshot", "pdf", "scrape", "navigate"],
                     "metadata": {"headless": True}
                 },

@@ -6,7 +6,7 @@ import asyncio
 import json
 import pytest
 from datetime import datetime, timedelta
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, AsyncMock, patch, MagicMock
 import sys
 import os
 
@@ -27,34 +27,34 @@ class TestResourceArbitrationAgent:
     
     @pytest.fixture
     async def arbitrator(self):
-        """Create arbitrator instance with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested dependencies"""
+        """Create arbitrator instance with Mocked dependencies"""
         arb = ResourceArbitrationAgent()
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis client
-        arb.redis_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        arb.redis_client.ping = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=True)
-        arb.redis_client.hset = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        arb.redis_client.hget = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=None)
-        arb.redis_client.hgetall = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value={})
-        arb.redis_client.hdel = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        # Mock Redis client
+        arb.redis_client = AsyncMock()
+        arb.redis_client.ping = AsyncMock(return_value=True)
+        arb.redis_client.hset = AsyncMock()
+        arb.redis_client.hget = AsyncMock(return_value=None)
+        arb.redis_client.hgetall = AsyncMock(return_value={})
+        arb.redis_client.hdel = AsyncMock()
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test message processor
-        arb.message_processor = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        arb.message_processor.start = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        arb.message_processor.stop = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        arb.message_processor.rabbitmq_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        # Mock message processor
+        arb.message_processor = AsyncMock()
+        arb.message_processor.start = AsyncMock()
+        arb.message_processor.stop = AsyncMock()
+        arb.message_processor.rabbitmq_client = AsyncMock()
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test psutil for system resources
+        # Mock psutil for system resources
         with patch('psutil.cpu_count', return_value=8):
             with patch('psutil.cpu_percent', return_value=25.0):
-                with patch('psutil.virtual_memory') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_mem:
-                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_mem.return_value = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(
+                with patch('psutil.virtual_memory') as Mock_mem:
+                    Mock_mem.return_value = MagicMock(
                         total=16 * 1024**3,  # 16 GB
                         available=12 * 1024**3,  # 12 GB available
                         percent=25.0
                     )
-                    with patch('psutil.disk_usage') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_disk:
-                        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_disk.return_value = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(
+                    with patch('psutil.disk_usage') as Mock_disk:
+                        Mock_disk.return_value = MagicMock(
                             total=500 * 1024**3,  # 500 GB
                             free=400 * 1024**3,  # 400 GB free
                             percent=20.0
@@ -421,8 +421,8 @@ class TestResourceArbitrationAgent:
         arbitrator.allocations["alloc-expired"] = expired_allocation
         arbitrator.running = True
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test release_allocation to track calls
-        arbitrator.release_allocation = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        # Mock release_allocation to track calls
+        arbitrator.release_allocation = AsyncMock()
         
         # Run cleanup once
         async def run_cleanup_once():
@@ -444,7 +444,7 @@ class TestResourceArbitrationAgent:
     @pytest.mark.asyncio
     async def test_load_allocations_from_redis(self, arbitrator):
         """Test loading existing allocations from Redis"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis data
+        # Mock Redis data
         allocation_data = {
             "alloc-1": json.dumps({
                 "allocation_id": "alloc-1",
@@ -493,38 +493,38 @@ class TestResourceArbitrationIntegration:
     @pytest.mark.asyncio
     async def test_full_resource_lifecycle(self):
         """Test complete resource allocation lifecycle"""
-        with patch('aio_pika.connect_robust') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect:
-            # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test RabbitMQ
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_exchange = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        with patch('aio_pika.connect_robust') as Mock_connect:
+            # Setup Mock RabbitMQ
+            Mock_connection = AsyncMock()
+            Mock_channel = AsyncMock()
+            Mock_exchange = AsyncMock()
+            Mock_queue = AsyncMock()
             
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection.channel.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel.declare_exchange.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_exchange
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel.declare_queue.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue
+            Mock_connect.return_value = Mock_connection
+            Mock_connection.channel.return_value = Mock_channel
+            Mock_channel.declare_exchange.return_value = Mock_exchange
+            Mock_channel.declare_queue.return_value = Mock_queue
             
             arbitrator = ResourceArbitrationAgent()
             
-            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis
-            with patch('redis.asyncio.from_url') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis:
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client.ping.return_value = True
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client.hgetall.return_value = {}
+            # Mock Redis
+            with patch('redis.asyncio.from_url') as Mock_redis:
+                Mock_redis_client = AsyncMock()
+                Mock_redis.return_value = Mock_redis_client
+                Mock_redis_client.ping.return_value = True
+                Mock_redis_client.hgetall.return_value = {}
                 
-                # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test psutil
+                # Mock psutil
                 with patch('psutil.cpu_count', return_value=8):
                     with patch('psutil.cpu_percent', return_value=25.0):
-                        with patch('psutil.virtual_memory') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_mem:
-                            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_mem.return_value = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(
+                        with patch('psutil.virtual_memory') as Mock_mem:
+                            Mock_mem.return_value = MagicMock(
                                 total=16 * 1024**3,
                                 available=12 * 1024**3,
                                 percent=25.0
                             )
-                            with patch('psutil.disk_usage') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_disk:
-                                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_disk.return_value = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(
+                            with patch('psutil.disk_usage') as Mock_disk:
+                                Mock_disk.return_value = MagicMock(
                                     total=500 * 1024**3,
                                     free=400 * 1024**3,
                                     percent=20.0

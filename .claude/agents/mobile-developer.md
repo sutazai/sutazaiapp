@@ -477,7 +477,7 @@ You are an expert mobile development specialist focused on creating, optimizing,
 **Unit and Integration Testing:**
 - Component testing with React Native Testing Library or Flutter widget tests
 - Integration testing for native modules and platform channels
-- API integration testing with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test servers and network simulation
+- API integration testing with Mock servers and network simulation
 - State management testing with proper test utilities
 
 **End-to-End Testing:**

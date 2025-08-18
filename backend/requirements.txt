@@ -1,4 +1,4 @@
-# SutazAI Backend - Minimal Production Requirements
+# SutazAI Backend - Production Requirements
 # Last updated: 2025-08-16
 # Only includes dependencies actually used by the backend service
 
@@ -45,6 +45,9 @@ prometheus-client==0.21.1
 python-dotenv==1.0.1
 orjson==3.10.12
 pyyaml==6.0.2
+
+# Docker Integration (for DinD MCP orchestration)
+docker==7.1.0
 
 # Background Tasks
 celery==5.4.0

@@ -6,7 +6,7 @@ import asyncio
 import json
 import pytest
 from datetime import datetime, timedelta
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, AsyncMock, patch, MagicMock
 import sys
 import os
 
@@ -26,22 +26,22 @@ class TestAIAgentOrchestrator:
     
     @pytest.fixture
     async def orchestrator(self):
-        """Create orchestrator instance with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested dependencies"""
+        """Create orchestrator instance with Mocked dependencies"""
         orch = AIAgentOrchestrator()
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis client
-        orch.redis_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        orch.redis_client.ping = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=True)
-        orch.redis_client.keys = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=[])
-        orch.redis_client.setex = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        orch.redis_client.get = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=None)
-        orch.redis_client.delete = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        # Mock Redis client
+        orch.redis_client = AsyncMock()
+        orch.redis_client.ping = AsyncMock(return_value=True)
+        orch.redis_client.keys = AsyncMock(return_value=[])
+        orch.redis_client.setex = AsyncMock()
+        orch.redis_client.get = AsyncMock(return_value=None)
+        orch.redis_client.delete = AsyncMock()
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test message processor
-        orch.message_processor = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        orch.message_processor.start = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        orch.message_processor.stop = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        orch.message_processor.rabbitmq_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        # Mock message processor
+        orch.message_processor = AsyncMock()
+        orch.message_processor.start = AsyncMock()
+        orch.message_processor.stop = AsyncMock()
+        orch.message_processor.rabbitmq_client = AsyncMock()
         
         return orch
     
@@ -392,28 +392,28 @@ class TestOrchestratorIntegration:
     @pytest.mark.integration
     @pytest.mark.asyncio
     async def test_full_task_lifecycle(self):
-        """Test complete task lifecycle with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested RabbitMQ"""
-        with patch('aio_pika.connect_robust') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect:
-            # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test RabbitMQ connection
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_exchange = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        """Test complete task lifecycle with Mocked RabbitMQ"""
+        with patch('aio_pika.connect_robust') as Mock_connect:
+            # Setup Mock RabbitMQ connection
+            Mock_connection = AsyncMock()
+            Mock_channel = AsyncMock()
+            Mock_exchange = AsyncMock()
+            Mock_queue = AsyncMock()
             
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection.channel.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel.declare_exchange.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_exchange
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_channel.declare_queue.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue
+            Mock_connect.return_value = Mock_connection
+            Mock_connection.channel.return_value = Mock_channel
+            Mock_channel.declare_exchange.return_value = Mock_exchange
+            Mock_channel.declare_queue.return_value = Mock_queue
             
             # Create orchestrator
             orchestrator = AIAgentOrchestrator()
             
-            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis
-            with patch('redis.asyncio.from_url') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis:
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client.ping.return_value = True
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis_client.keys.return_value = []
+            # Mock Redis
+            with patch('redis.asyncio.from_url') as Mock_redis:
+                Mock_redis_client = AsyncMock()
+                Mock_redis.return_value = Mock_redis_client
+                Mock_redis_client.ping.return_value = True
+                Mock_redis_client.keys.return_value = []
                 
                 # Initialize
                 await orchestrator.initialize()

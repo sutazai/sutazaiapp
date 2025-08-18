@@ -141,8 +141,8 @@ class CodeAIManager:
         tool_info = self.available_tools[tool_name].copy()
         tool_info["usage_stats"] = {
             "total_executions": self.stats.get(f"{tool_name}_executions", 0),
-            "success_rate": 0.95,  # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data
-            "avg_response_time": 1.2  # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data
+            "success_rate": 0.95,  # Mock data
+            "avg_response_time": 1.2  # Mock data
         }
         
         return tool_info
@@ -168,7 +168,7 @@ class CodeAIManager:
     
     async def _analyze_code_quality(self, code: str, language: Optional[str]) -> Dict[str, Any]:
         """Analyze code quality"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementation - in real scenario, this would use actual AI models
+        # Mock implementation - in real scenario, this would use actual AI models
         return {
             "score": 0.85,
             "issues": [
@@ -230,7 +230,7 @@ class CodeAIManager:
         self.stats["code_generated"] += 1
         self.stats["requests_processed"] += 1
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementation - in real scenario, this would use actual AI models
+        # Mock implementation - in real scenario, this would use actual AI models
         if language.lower() == "python":
             generated_code = f'''
 def generated_function():
@@ -259,7 +259,7 @@ if __name__ == "__main__":
         if tool_name not in self.available_tools:
             raise ValueError(f"Tool {tool_name} not available")
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test execution - in real scenario, this would execute actual tools
+        # Mock execution - in real scenario, this would execute actual tools
         return {
             "tool": tool_name,
             "status": "completed",
@@ -276,7 +276,7 @@ if __name__ == "__main__":
         """Optimize code using AI"""
         self.stats["requests_processed"] += 1
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test optimization
+        # Mock optimization
         optimized_code = f"# Optimized version\n{code}"
         return optimized_code
     
@@ -303,7 +303,7 @@ if __name__ == "__main__":
         """Refactor code using AI"""
         self.stats["requests_processed"] += 1
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test refactoring
+        # Mock refactoring
         refactored_code = f"# Refactored in {style} style\n{code}"
         return refactored_code
     

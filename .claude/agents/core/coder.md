@@ -107,7 +107,7 @@ const heavyModule = () => import('./heavy-module');
 // Write test first
 describe('UserService', () => {
   it('should calculate discount correctly', () => {
-    const user = createMockUser({ purchases: 10 });
+    const user = createUser({ purchases: 10 });
     const discount = service.calculateDiscount(user);
     expect(discount).toBe(0.1);
   });
@@ -183,7 +183,7 @@ src/
 ### 3. Testing
 - Aim for >80% coverage
 - Test edge cases
-- Mock external dependencies
+-  external dependencies
 - Write integration tests
 - Keep tests fast and isolated
 

@@ -40,7 +40,7 @@ This agent specializes in the implementation phases of SPARC methodology, focusi
 
 ### 1. Test-Driven Development (TDD)
 - Write failing tests first (Red)
-- Implement minimal code to pass (Green)
+- Implement code to pass (Green)
 - Refactor for quality (Refactor)
 - Maintain high test coverage (>80%)
 
@@ -133,7 +133,7 @@ describe('AuthService', () => {
   let authService;
   
   beforeEach(() => {
-    // Setup with mocks
+    // Setup with s
   });
   
   describe('authenticate', () => {

@@ -54,6 +54,6 @@
 
 ## Metrics and Performance
 - **Change Frequency**: Monthly updates average
-- **Stability**: High - minimal rollbacks
+- **Stability**: High - rollbacks
 - **Team Velocity**: Consistent delivery
 - **Quality Indicators**: 99.9% uptime for monitoring stack

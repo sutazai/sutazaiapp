@@ -140,7 +140,7 @@ Verified Services:
 ```json
 1. language-server     11. mcp_ssh
 2. github             12. nx-mcp
-3. ultimatecoder      13. puppeteer-mcp
+3. ultimatecoder      13. puppeteer-mcp (no longer in use)
 4. sequentialthinking 14. memory-bank-mcp
 5. context7           15. playwright-mcp
 6. files              16. knowledge-graph-mcp

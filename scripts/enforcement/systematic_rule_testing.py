@@ -56,18 +56,18 @@ class SystematicRuleTester:
         print("\n📌 TESTING RULE 1: Real Implementation Only")
         rule_violations = []
         
-        # Test 1.1: Check frontend API client for mock responses
+        # Test 1.1: Check frontend API client for  responses
         frontend_api_file = f"{self.base_path}/frontend/utils/resilient_api_client.py"
         if os.path.exists(frontend_api_file):
             with open(frontend_api_file, 'r') as f:
                 content = f.read()
-                if "mock" in content.lower() or "fake" in content.lower():
+                if "" in content.lower() or "fake" in content.lower():
                     rule_violations.append({
                         "file": frontend_api_file,
-                        "issue": "Contains mock/fake implementations",
-                        "evidence": "Contains 'mock' or 'fake' strings in API client"
+                        "issue": "Contains /fake implementations",
+                        "evidence": "Contains '' or 'fake' strings in API client"
                     })
-                    self.log_test("FAIL", "Frontend API contains mock implementations")
+                    self.log_test("FAIL", "Frontend API contains  implementations")
                 else:
                     self.log_test("PASS", "Frontend API appears to have real implementations")
         else:

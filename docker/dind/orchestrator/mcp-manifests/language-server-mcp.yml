@@ -1,0 +1,51 @@
+apiVersion: mcp/v1
+kind: MCPContainer
+metadata:
+  name: mcp-language-server
+  labels:
+    mcp.service: language-server
+    mcp.tier: development
+spec:
+  image: node:18-alpine
+  container_name: mcp-language-server
+  command:
+  - npx
+  - language-server-mcp
+  - --port
+  - '3018'
+  environment:
+    MCP_PORT: '3018'
+    MESH_ENABLED: 'true'
+    SERVICE_NAME: language-server
+    NODE_ENV: production
+  ports:
+    '13018': '3018'
+  volumes:
+    mcp_shared_data: /mcp-shared
+    /opt/sutazaiapp: /opt/sutazaiapp:ro
+  healthcheck:
+    test:
+    - CMD
+    - wget
+    - -q
+    - --spider
+    - http://localhost:3018/health
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 45s
+  restart_policy: unless-stopped
+  resources:
+    limits:
+      cpus: '0.5'
+      memory: 512M
+    reservations:
+      cpus: '0.1'
+      memory: 64M
+  networks:
+  - sutazai-dind-internal
+  labels:
+    mcp.managed: 'true'
+    mcp.protocol: lsp
+    mcp.integration: language_server
+    mcp.service: 'true'

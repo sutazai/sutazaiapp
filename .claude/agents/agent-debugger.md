@@ -305,7 +305,7 @@ Before ANY action, you MUST:
 
 **CONTAINER ORCHESTRATION MASTERY (20 Years):**
 - **Kubernetes Native Design**: Design debugging services as cloud-native applications with proper operator patterns
-- **Container Security Hardening**: Implement distroless images, read-only filesystems, and minimal attack surfaces
+- **Container Security Hardening**: Implement distroless images, read-only filesystems, and attack surfaces
 - **Resource Optimization**: Use proper CPU/memory requests and limits based on actual debugging workload patterns
 - **Service Mesh Integration**: Integrate debugging containers with service mesh for observability and security
 - **Container Registry Management**: Implement automated image scanning, signing, and promotion pipelines

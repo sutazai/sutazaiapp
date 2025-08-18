@@ -110,7 +110,7 @@ Every contributor must approach this codebase as a **top-tier engineer** would a
 /interfaces/     # Interface definitions
 /validators/     # Input validation logic
 /tests/          # Test files (unit, integration, e2e)
-/fixtures/       # Test data and Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test objects
+/fixtures/       # Test data and Mock objects
 /scripts/        # Organized by purpose (dev/, deploy/, utils/)
 /docs/           # Centralized documentation
 /reports/        # Analysis and reports
@@ -211,7 +211,7 @@ Placeholder comments: // TODO: add AI automation here, // magic happens
 Fictional integrations: imports from non-existent packages or "future" APIs
 Theoretical abstractions: code that assumes capabilities we don't have
 Imaginary infrastructure: references to systems that don't exist
-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementations in production code paths
+Mock implementations in production code paths
 Hardcoded localhost or development URLs in production builds
 References to non-existent database tables or columns
 Placeholder data that doesn't represent real scenarios
@@ -1749,7 +1749,7 @@ Unit Testing Requirements:
 
 Comprehensive test coverage for all functions and methods
 Use pytest or unittest framework with proper test organization
-Implement test fixtures and Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests for external dependencies
+Implement test fixtures and Mocks for external dependencies
 Use property-based testing for complex logic validation
 Implement performance regression testing for critical operations
 Use code coverage tools to ensure adequate test coverage
@@ -2282,7 +2282,7 @@ Connection Pool Sizing: Configure database connection pools based on CPU cores a
 Timeout Configuration: Set timeouts based on measured network latency + buffer
 Load Balancer Config: Configure nginx/HAProxy with optimal worker processes and connections
 DNS Configuration: Configure DNS caching and resolution for optimal performance
-Firewall Configuration: Configure iptables/ufw rules with minimal performance impact
+Firewall Configuration: Configure iptables/ufw rules with performance impact
 TCP Tuning: Tune TCP buffer sizes and window scaling for optimal throughput
 SSL Configuration: Configure SSL with optimal cipher suites and session management
 CDN Configuration: Configure CDN settings based on geographic deployment location
@@ -3808,7 +3808,7 @@ yamlautomated_task_classification:
       characteristics:
         - single_step_operations
         - standard_patterns
-        - minimal_context_required
+        -_context_required
         - basic_reasoning
       auto_decision: "tinyllama"
       resource_requirements: "low"
@@ -3971,7 +3971,7 @@ Cost efficiency demonstrated through measurable reduction in resource waste and 
 
 System Integration and User Experience Excellence:
 
-Seamless operation with minimal user intervention required for optimal AI model utilization
+Seamless operation with user intervention required for optimal AI model utilization
 Transparent decision-making with clear explanations for automated model selection and management
 Responsive performance with rapid adaptation to changing system conditions and requirements
 Reliable operation with consistent performance and predictable behavior across different scenarios
@@ -5238,7 +5238,7 @@ Integration with development tools seamless and supporting developer workflows
 Change validation automated and ensuring quality standards are met
 Emergency change procedures functional and maintaining documentation standards
 Change metrics collection comprehensive and enabling process optimization
-System performance optimal with minimal overhead from change tracking
+System performance optimal with overhead from change tracking
 User experience excellent with intuitive tools and workflows
 
 Change Intelligence Excellence:

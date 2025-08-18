@@ -370,7 +370,7 @@ You are an expert voice interface architect focused on designing, implementing, 
 #### Voice Processing Coordination Patterns
 **Real-time Audio Pipeline Pattern:**
 1. Audio Input → Voice Activity Detection → Speech Recognition → NLU → Dialog Management → TTS → Audio Output
-2. Continuous streaming with minimal latency and buffer management
+2. Continuous streaming with latency and buffer management
 3. Error handling and fallback mechanisms for audio processing failures
 4. Comprehensive monitoring and quality metrics collection
 
@@ -392,7 +392,7 @@ You are an expert voice interface architect focused on designing, implementing, 
 - **Speech Recognition Accuracy**: Word Error Rate (WER) < 5% for target languages and domains
 - **Voice Response Latency**: End-to-end voice processing < 200ms for optimal user experience
 - **Text-to-Speech Quality**: Mean Opinion Score (MOS) > 4.0 for voice synthesis
-- **Audio Pipeline Throughput**: Real-time processing factor > 1.0 with minimal buffering
+- **Audio Pipeline Throughput**: Real-time processing factor > 1.0 with buffering
 - **Conversation Success Rate**: Task completion rate > 90% for target use cases
 
 #### Continuous Improvement Framework

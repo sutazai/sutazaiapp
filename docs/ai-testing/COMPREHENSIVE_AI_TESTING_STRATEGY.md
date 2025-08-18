@@ -151,7 +151,7 @@ class DataQualityTestSuite:
 ```python
 # /opt/sutazaiapp/tests/ai_testing/pipeline_validation.py
 import pytest
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
+from unittest.Mock import Mock, patch
 
 class AIPipelineTestSuite:
     """AI pipeline integration testing framework"""

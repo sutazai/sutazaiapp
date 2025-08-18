@@ -384,7 +384,7 @@ chmod +x scripts/build_missing_images.sh
 ./scripts/build_missing_images.sh
 ```
 
-**CREATE MINIMAL AGENT IMPLEMENTATIONS:**
+**CREATE AGENT IMPLEMENTATIONS:**
 ```dockerfile
 # docker/agents/minimal/Dockerfile - Template for missing agents
 FROM python:3.12-alpine
@@ -394,7 +394,7 @@ WORKDIR /app
 # Install basic dependencies
 RUN pip install fastapi uvicorn httpx
 
-# Create minimal health check endpoint
+# Create health check endpoint
 COPY <<EOF /app/main.py
 from fastapi import FastAPI
 import os
@@ -657,7 +657,7 @@ Day 13-14: Standardize security policies
 
 ### Week 3: Restoration
 ```
-Day 15-17: Build missing images, create minimal implementations
+Day 15-17: Build missing images, create implementations
 Day 18-19: Standardize health checks and monitoring
 Day 20-21: Fix service dependencies and orchestration
 ```
@@ -749,7 +749,7 @@ BEFORE → AFTER
 
 ## 🎯 CONCLUSION
 
-This comprehensive cleanup strategy provides a systematic approach to resolving the Docker infrastructure chaos while maintaining operational stability. The phased implementation ensures minimal risk while achieving significant improvements in maintainability, reliability, and performance.
+This comprehensive cleanup strategy provides a systematic approach to resolving the Docker infrastructure chaos while maintaining operational stability. The phased implementation ensures risk while achieving significant improvements in maintainability, reliability, and performance.
 
 **Key Success Factors:**
 - Systematic approach with clear phases and deliverables

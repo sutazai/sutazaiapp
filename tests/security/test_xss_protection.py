@@ -7,7 +7,7 @@ import pytest
 import asyncio
 import json
 from fastapi.testclient import TestClient
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
+from unittest.Mock import Mock, patch
 
 # Common XSS payloads for testing
 XSS_PAYLOADS = [
@@ -86,9 +86,9 @@ class TestXSSProtection:
     
     def setup_method(self):
         """Setup test environment"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test the security components
-        self.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validator = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        self.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_xss_protection = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        # Mock the security components
+        self.Mock_validator = Mock()
+        self.Mock_xss_protection = Mock()
         
     @pytest.mark.asyncio
     async def test_input_validator_blocks_xss_payloads(self):
@@ -208,13 +208,13 @@ class TestXSSProtection:
             }
         }
         
-        with patch.object(middleware.validator, 'validate_input') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate.return_value = "[Content filtered for security]"
+        with patch.object(middleware.validator, 'validate_input') as Mock_validate:
+            Mock_validate.return_value = "[Content filtered for security]"
             
             sanitized = await middleware.process_request(request_data)
             
             # Check that validation was called
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate.assert_called()
+            Mock_validate.assert_called()
             assert sanitized["body"]["message"] == "[Content filtered for security]"
     
     def test_csp_header_generation(self):

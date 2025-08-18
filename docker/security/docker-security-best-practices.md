@@ -13,7 +13,7 @@ This document outlines the comprehensive Docker security hardening measures impl
 
 ### 2. Container Security
 - **Non-root users**: All services run as unprivileged users
-- **Capability dropping**: Minimal Linux capabilities assigned
+- **Capability dropping**: Linux capabilities assigned
 - **Read-only file systems**: Where applicable
 - **AppArmor/SELinux**: Security profiles enabled
 - **No new privileges**: Prevents privilege escalation
@@ -181,7 +181,7 @@ docker inspect --format='{{.HostConfig.CapAdd}}{{.HostConfig.CapDrop}}' containe
 
 ### Optimization Strategies
 - Efficient security controls
-- Minimal performance overhead
+- performance overhead
 - Resource-aware security policies
 - Adaptive security measures
 

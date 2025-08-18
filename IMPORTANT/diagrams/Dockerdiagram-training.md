@@ -878,7 +878,7 @@
 │   │       ├── Dockerfile              # Enhanced Agent Zero with training
 │   │       ├── zero-training/
 │   │       │   ├── zero-shot-learning.py       # Zero-shot learning enhancement
-│   │       │   ├── minimal-training.py         # Minimal training protocols
+│   │       │   ├──-training.py         # training protocols
 │   │       │   └── efficient-learning.py       # Efficient learning
 │   │       └── meta-learning/
 │   │           ├── meta-zero-learning.py       # Meta-learning for zero-shot

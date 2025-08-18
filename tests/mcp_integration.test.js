@@ -34,8 +34,8 @@ describe('MCPIntegration', () => {
         });
 
         test('should handle initialization errors', async () => {
-            // Mock createConnection to throw error
-            jest.spyOn(mcp, 'createConnection').mockRejectedValue(new Error('Connection failed'));
+            //  createConnection to throw error
+            jest.spyOn(mcp, 'createConnection').RejectedValue(new Error('Connection failed'));
             
             const result = await mcp.initializeServer('failing-server', {});
             
@@ -87,7 +87,7 @@ describe('MCPIntegration', () => {
     describe('retry mechanism', () => {
         test('should retry on failure', async () => {
             let attempts = 0;
-            const operation = jest.fn().mockImplementation(() => {
+            const operation = jest.fn().Implementation(() => {
                 attempts++;
                 if (attempts < 3) {
                     throw new Error('Temporary failure');
@@ -102,7 +102,7 @@ describe('MCPIntegration', () => {
         });
 
         test('should fail after max retries', async () => {
-            const operation = jest.fn().mockRejectedValue(new Error('Persistent failure'));
+            const operation = jest.fn().RejectedValue(new Error('Persistent failure'));
 
             await expect(mcp.withRetry(operation))
                 .rejects.toThrow('Persistent failure');

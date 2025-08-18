@@ -171,7 +171,7 @@ Event types: `START`, `REUSE`, `CONNECT`, `CLEANUP`, `ERROR`
 ### Resource Improvements
 - **Container Count**: Eliminated unbounded accumulation
 - **Memory Usage**: Reduced by removing orphaned containers
-- **CPU Overhead**: Minimal - daemon runs every 5 minutes
+- **CPU Overhead**: - daemon runs every 5 minutes
 - **Storage**: Automatic cleanup of unused container layers
 
 ### Benchmarks
@@ -240,7 +240,7 @@ less /opt/sutazaiapp/logs/mcp/container-lifecycle.log
 1. **Backward Compatibility**: No breaking changes to existing MCP usage
 2. **Resource Safety**: Fail-safe cleanup mechanisms
 3. **Operational Excellence**: Comprehensive logging and monitoring
-4. **Security First**: Minimal privileges and secure defaults
+4. **Security First**: privileges and secure defaults
 5. **Testability**: Full test coverage with automated validation
 
 ### Future Enhancements

@@ -100,7 +100,7 @@
 - postgres (spawning duplicate containers)
 - playwright-mcp (integration issues)
 - memory-bank-mcp (service discovery failures)
-- puppeteer-mcp (mesh registration problems)
+- puppeteer-mcp (no longer in use) (mesh registration problems)
 - knowledge-graph-mcp (connectivity issues)
 - compass-mcp (service mesh incompatibility)
 

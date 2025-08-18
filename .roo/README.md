@@ -27,7 +27,7 @@ Roo offers specialized modes for different aspects of the development process:
 
 ### 🧪 Tester (TDD)
 - **Role**: Implements Test-Driven Development (TDD, London School)
-- **Focus**: Writes failing tests first, implements minimal code to pass, then refactors
+- **Focus**: Writes failing tests first, implements code to pass, then refactors
 - **Best For**: Ensuring code quality and test coverage
 
 ### 🪲 Debugger
@@ -122,7 +122,7 @@ The MCP Integration Mode (♾️) in Roo is designed specifically for connecting
 
 ## Overview
 
-This guide provides detailed information on Management Control Panel (MCP) integration capabilities. MCP enables seamless agent workflows by connecting to more than 80 servers, covering development, AI, data management, productivity, cloud storage, e-commerce, finance, communication, and design. Each server offers specialized tools, allowing agents to securely access, automate, and manage external services through a unified and modular system. This approach supports building dynamic, scalable, and intelligent workflows with minimal setup and maximum flexibility.
+This guide provides detailed information on Management Control Panel (MCP) integration capabilities. MCP enables seamless agent workflows by connecting to more than 80 servers, covering development, AI, data management, productivity, cloud storage, e-commerce, finance, communication, and design. Each server offers specialized tools, allowing agents to securely access, automate, and manage external services through a unified and modular system. This approach supports building dynamic, scalable, and intelligent workflows with setup and maximum flexibility.
 
 ## Install via NPM
 ```

@@ -67,7 +67,7 @@ npx claude-flow swarm init --topology star --github --memory
 
 - Central coordinator with satellite agents
 - Best for: Simple tasks, centralized control
-- Communication: Minimal overhead, clear coordination
+- Communication: overhead, clear coordination
 
 ## Integration with Claude Code
 

@@ -8,13 +8,13 @@ Test the caching system logic without Streamlit dependencies
 
 import hashlib
 import time
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import MagicMock
 import sys
 
-# Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test streamlit for testing
-sys.modules['streamlit'] = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+# Mock streamlit for testing
+sys.modules['streamlit'] = MagicMock()
 
-class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSessionState:
+class MockSessionState:
     def __init__(self):
         self._storage = {}
     
@@ -30,9 +30,9 @@ class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - O
     def __contains__(self, key):
         return key in self._storage
 
-# Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test st.session_state
-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_session_state = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSessionState()
-sys.modules['streamlit'].session_state = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_session_state
+# Create Mock st.session_state
+Mock_session_state = MockSessionState()
+sys.modules['streamlit'].session_state = Mock_session_state
 
 def test_caching_system():
     """Test the caching system functionality"""
@@ -67,7 +67,7 @@ def test_caching_system():
     def test_ttl_logic():
         """Test TTL expiration logic"""
         
-        class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestCache:
+        class MockCache:
             def __init__(self):
                 self.cache = {}
                 self.metadata = {}
@@ -103,7 +103,7 @@ def test_caching_system():
                 
                 return self.cache[key]
         
-        cache = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestCache()
+        cache = MockCache()
         
         # Test setting and getting within TTL
         cache.set("test_key", "test_value", ttl=2)  # 2 second TTL
@@ -124,7 +124,7 @@ def test_caching_system():
     def test_cache_size_management():
         """Test cache size limits"""
         
-        class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSizedCache:
+        class MockSizedCache:
             def __init__(self, max_size=3):
                 self.cache = {}
                 self.metadata = {}
@@ -154,7 +154,7 @@ def test_caching_system():
                     'cached_time': time.time(),
                 }
         
-        cache = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestSizedCache(max_size=2)
+        cache = MockSizedCache(max_size=2)
         
         # Fill cache to limit
         cache.set("key1", "value1")

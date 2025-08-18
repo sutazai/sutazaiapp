@@ -14,7 +14,8 @@ from datetime import datetime, timedelta
 from functools import wraps
 from collections import OrderedDict
 
-from app.core.connection_pool import get_redis
+# EMERGENCY FIX: Use redis_connection to break circular dependency
+from app.core.redis_connection import get_redis
 
 logger = logging.getLogger(__name__)
 

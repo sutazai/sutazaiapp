@@ -32,7 +32,7 @@ MCP_SERVERS=(
     "postgres"
     "playwright-mcp"
     "memory-bank-mcp"
-    "puppeteer-mcp"
+    "puppeteer-mcp (no longer in use)"
     "knowledge-graph-mcp"
     "compass-mcp"
     "github"
@@ -63,7 +63,7 @@ cleanup_mcps() {
     pkill -f "extended_memory" 2>/dev/null || true
     pkill -f "memory-bank-mcp" 2>/dev/null || true
     pkill -f "knowledge-graph" 2>/dev/null || true
-    pkill -f "puppeteer-mcp" 2>/dev/null || true
+    pkill -f "puppeteer-mcp (no longer in use)" 2>/dev/null || true
     pkill -f "context7-mcp" 2>/dev/null || true
     
     # Stop any docker containers

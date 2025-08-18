@@ -98,7 +98,7 @@
 10. **postgres** - Database operations
 11. **playwright-mcp** - Browser automation (Playwright)
 12. **memory-bank-mcp** - Memory bank management
-13. **puppeteer-mcp** - Browser automation (Puppeteer)
+13. **puppeteer-mcp (no longer in use)** - Browser automation (Puppeteer)
 14. **knowledge-graph-mcp** - Knowledge graph operations
 15. **compass-mcp** - MCP discovery
 16. **language-server** - Language server protocol

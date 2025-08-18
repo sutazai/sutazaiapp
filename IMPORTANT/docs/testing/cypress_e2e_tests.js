@@ -326,7 +326,7 @@ describe('Jarvis Interface E2E Tests', () => {
 
   describe('Error Handling Tests', () => {
     it('should handle API errors gracefully', () => {
-      // Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test API failure
+      // Mock API failure
       cy.intercept('POST', `${API_URL}/chat`, {
         statusCode: 500,
         body: { error: 'Internal Server Error' }

@@ -1028,14 +1028,14 @@ import { ThemeProvider } from '@/providers/ThemeProvider';
 // Extend Jest matchers
 expect.extend(toHaveNoViolations);
 
-// Mock performance monitoring
-const mockTrackInteraction = vi.fn();
-const mockTrackError = vi.fn();
+//  performance monitoring
+const TrackInteraction = vi.fn();
+const TrackError = vi.fn();
 
-vi.mock('@/hooks/usePerformanceMonitor', () => ({
+vi.('@/hooks/usePerformanceMonitor', () => ({
   usePerformanceMonitor: () => ({
-    trackInteraction: mockTrackInteraction,
-    trackError: mockTrackError,
+    trackInteraction: TrackInteraction,
+    trackError: TrackError,
   }),
 }));
 
@@ -1057,15 +1057,15 @@ const renderComponent = (props = {}) => {
 
 describe('Component', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    // Mock intersection observer
-    const mockIntersectionObserver = vi.fn();
-    mockIntersectionObserver.mockReturnValue({
+    vi.clearAlls();
+    //  intersection observer
+    const IntersectionObserver = vi.fn();
+    IntersectionObserver.ReturnValue({
       observe: () => null,
       unobserve: () => null,
       disconnect: () => null
     });
-    window.IntersectionObserver = mockIntersectionObserver;
+    window.IntersectionObserver = IntersectionObserver;
   });
 
   afterEach(() => {
@@ -1104,12 +1104,12 @@ describe('Component', () => {
       
       await user.click(screen.getByRole('button'));
       expect(handleClick).toHaveBeenCalledTimes(1);
-      expect(mockTrackInteraction).toHaveBeenCalledWith('click', expect.any(Object));
+      expect(TrackInteraction).toHaveBeenCalledWith('click', expect.any(Object));
     });
 
     it('handles async click events', async () => {
       const user = userEvent.setup();
-      const handleClick = vi.fn().mockResolvedValue(undefined);
+      const handleClick = vi.fn().ResolvedValue(undefined);
       
       renderComponent({ onClick: handleClick, asyncAction: true });
       
@@ -1123,7 +1123,7 @@ describe('Component', () => {
     it('handles async errors correctly', async () => {
       const user = userEvent.setup();
       const error = new Error('Test error');
-      const handleClick = vi.fn().mockRejectedValue(error);
+      const handleClick = vi.fn().RejectedValue(error);
       const handleError = vi.fn();
       
       renderComponent({ 
@@ -1136,7 +1136,7 @@ describe('Component', () => {
       
       await waitFor(() => {
         expect(handleError).toHaveBeenCalledWith(error);
-        expect(mockTrackError).toHaveBeenCalledWith(error, expect.any(Object));
+        expect(TrackError).toHaveBeenCalledWith(error, expect.any(Object));
       });
     });
   });
@@ -1170,7 +1170,7 @@ describe('Component', () => {
 
     it('supports Escape key for async cancellation', async () => {
       const user = userEvent.setup();
-      const handleClick = vi.fn().mockImplementation(() => new Promise(() => {})); // Never resolves
+      const handleClick = vi.fn().Implementation(() => new Promise(() => {})); // Never resolves
       
       renderComponent({ onClick: handleClick, asyncAction: true });
       
@@ -1221,7 +1221,7 @@ describe('Component', () => {
 
     it('announces loading states to screen readers', async () => {
       const user = userEvent.setup();
-      const handleClick = vi.fn().mockImplementation(() => new Promise(() => {}));
+      const handleClick = vi.fn().Implementation(() => new Promise(() => {}));
       
       renderComponent({ onClick: handleClick, asyncAction: true });
       
@@ -1233,7 +1233,7 @@ describe('Component', () => {
 
     it('announces error states to screen readers', async () => {
       const user = userEvent.setup();
-      const handleClick = vi.fn().mockRejectedValue(new Error('Test error'));
+      const handleClick = vi.fn().RejectedValue(new Error('Test error'));
       
       renderComponent({ onClick: handleClick, asyncAction: true });
       
@@ -1308,7 +1308,7 @@ describe('Component', () => {
       
       await user.click(screen.getByRole('button'));
       
-      expect(mockTrackInteraction).toHaveBeenCalledWith('click', {
+      expect(TrackInteraction).toHaveBeenCalledWith('click', {
         duration: expect.any(Number),
         variant: 'primary',
         size: 'md'
@@ -1318,7 +1318,7 @@ describe('Component', () => {
     it('tracks errors with context', async () => {
       const user = userEvent.setup();
       const error = new Error('Test error');
-      const handleClick = vi.fn().mockRejectedValue(error);
+      const handleClick = vi.fn().RejectedValue(error);
       
       renderComponent({ 
         onClick: handleClick, 
@@ -1330,7 +1330,7 @@ describe('Component', () => {
       await user.click(screen.getByRole('button'));
       
       await waitFor(() => {
-        expect(mockTrackError).toHaveBeenCalledWith(error, {
+        expect(TrackError).toHaveBeenCalledWith(error, {
           variant: 'secondary',
           size: 'lg',
           interactionCount: expect.any(Number)
@@ -1371,7 +1371,7 @@ describe('Component', () => {
     it('auto-recovers from error state', async () => {
       vi.useFakeTimers();
       const user = userEvent.setup();
-      const handleClick = vi.fn().mockRejectedValue(new Error('Test error'));
+      const handleClick = vi.fn().RejectedValue(new Error('Test error'));
       
       renderComponent({ onClick: handleClick, asyncAction: true });
       

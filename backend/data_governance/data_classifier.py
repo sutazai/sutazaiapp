@@ -308,8 +308,8 @@ class DataClassifier:
             columns = table_info.get('columns', {})
             
             for column_name, column_info in columns.items():
-                # Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data based on column name and type for classification
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data = self._generate_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data_for_column(column_name, column_info)
+                # Create Mock data based on column name and type for classification
+                Mock_data = self._generate_Mock_data_for_column(column_name, column_info)
                 
                 metadata = {
                     'source': 'database_schema',
@@ -319,16 +319,16 @@ class DataClassifier:
                     'schema': schema_info
                 }
                 
-                result = self.classify_data(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data, metadata)
+                result = self.classify_data(Mock_data, metadata)
                 classifications[f"{table_name}.{column_name}"] = result
         
         return classifications
     
-    def _generate_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data_for_column(self, column_name: str, column_info: Dict[str, Any]) -> str:
-        """Generate Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data for column classification based on name patterns"""
+    def _generate_Mock_data_for_column(self, column_name: str, column_info: Dict[str, Any]) -> str:
+        """Generate Mock data for column classification based on name patterns"""
         column_name_lower = column_name.lower()
         
-        # Generate Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data based on common column name patterns
+        # Generate Mock data based on common column name patterns
         if 'email' in column_name_lower:
             return "user@example.com"
         elif 'phone' in column_name_lower:

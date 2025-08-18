@@ -215,7 +215,7 @@ export async function manageImplicitCheckpoints() {
     if (shouldCreateCheckpoint) {
       // Get active context data
       // In a real implementation, this would come from ActiveContextManager
-      // Since that's not available, we'll create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data to demonstrate the function
+      // Since that's not available, we'll create Mock data to demonstrate the function
       const activeContextData = {
         activeEntities: [], // This would be populated with actual entity IDs
         activeFocus: null, // This would be the current focus area
@@ -242,7 +242,7 @@ export async function manageImplicitCheckpoints() {
           "Could not retrieve data from ActiveContextManager:",
           error.message
         );
-        // Continue with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data
+        // Continue with Mock data
       }
 
       // Generate checkpoint name and description

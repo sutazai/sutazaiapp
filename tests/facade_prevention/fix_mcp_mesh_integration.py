@@ -90,7 +90,7 @@ class MCPMeshInitializer:
         "extended-memory": {"port": 11109, "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh"},
         "mcp_ssh": {"port": 11110, "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/mcp_ssh.sh"},
         "nx-mcp": {"port": 11111, "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/nx-mcp.sh"},
-        "puppeteer-mcp": {"port": 11112, "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh"},
+        "puppeteer-mcp (no longer in use)": {"port": 11112, "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp (no longer in use).sh"},
         "memory-bank-mcp": {"port": 11113, "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh"},
         "playwright-mcp": {"port": 11114, "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh"},
         "knowledge-graph-mcp": {"port": 11115, "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/knowledge-graph-mcp.sh"},

@@ -574,7 +574,7 @@ class DeploymentIntelligence:
         Strategy recommendation based on risk assessment.
         """
         if risk_score < 0.2:
-            return "fast_track_deployment"  # Automated, minimal gates
+            return "fast_track_deployment"  # Automated, gates
         elif risk_score < 0.5:
             return "standard_deployment"    # Normal pipeline
         elif risk_score < 0.8:

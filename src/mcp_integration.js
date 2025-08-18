@@ -117,11 +117,11 @@ class MCPIntegration {
             serverName,
             status: 'connected',
             callTool: async (toolName, params) => {
-                // Mock implementation
+                //  implementation
                 return { success: true, toolName, params };
             },
             readResource: async (uri) => {
-                // Mock implementation  
+                //  implementation  
                 return { uri, data: 'resource_data' };
             }
         };

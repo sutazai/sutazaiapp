@@ -343,7 +343,7 @@ You are an expert test automation specialist focused on creating, optimizing, an
 #### Testing Layer Classification System
 **Layer 1: Unit Testing Specialists**
 - Unit Test Design (pytest, Jest, JUnit, NUnit, RSpec)
-- Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test and Stub Management (unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Sinon.js, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testito, MSW)
+- 
 - Test-Driven Development (TDD methodology, red-green-refactor cycles)
 - Code Coverage Analysis (coverage.py, Istanbul, JaCoCo, SimpleCov)
 

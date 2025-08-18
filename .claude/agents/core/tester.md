@@ -54,26 +54,26 @@ You are a QA specialist focused on ensuring code quality through comprehensive t
 ```typescript
 describe('UserService', () => {
   let service: UserService;
-  let mockRepository: jest.Mocked<UserRepository>;
+  let Repository: jest.ed<UserRepository>;
 
   beforeEach(() => {
-    mockRepository = createMockRepository();
-    service = new UserService(mockRepository);
+    Repository = createRepository();
+    service = new UserService(Repository);
   });
 
   describe('createUser', () => {
     it('should create user with valid data', async () => {
       const userData = { name: 'John', email: 'john@example.com' };
-      mockRepository.save.mockResolvedValue({ id: '123', ...userData });
+      Repository.save.ResolvedValue({ id: '123', ...userData });
 
       const result = await service.createUser(userData);
 
       expect(result).toHaveProperty('id');
-      expect(mockRepository.save).toHaveBeenCalledWith(userData);
+      expect(Repository.save).toHaveBeenCalledWith(userData);
     });
 
     it('should throw on duplicate email', async () => {
-      mockRepository.save.mockRejectedValue(new DuplicateError());
+      Repository.save.RejectedValue(new DuplicateError());
 
       await expect(service.createUser(userData))
         .rejects.toThrow('Email already exists');
@@ -147,7 +147,7 @@ describe('Edge Cases', () => {
   // Error conditions
   it('should recover from network timeout', async () => {
     jest.setTimeout(10000);
-    mockApi.get.mockImplementation(() => 
+    Api.get.Implementation(() => 
       new Promise(resolve => setTimeout(resolve, 5000))
     );
 
@@ -243,7 +243,7 @@ describe('Security', () => {
  * @description Validates the complete user registration flow
  * @prerequisites 
  *   - Database is empty
- *   - Email service is mocked
+ *   - Email service is ed
  * @steps
  *   1. Submit registration form with valid data
  *   2. Verify user is created in database
@@ -259,7 +259,7 @@ describe('Security', () => {
 2. **One Assertion**: Each test should verify one behavior
 3. **Descriptive Names**: Test names should explain what and why
 4. **Arrange-Act-Assert**: Structure tests clearly
-5. **Mock External Dependencies**: Keep tests isolated
+5. ** External Dependencies**: Keep tests isolated
 6. **Test Data Builders**: Use factories for test data
 7. **Avoid Test Interdependence**: Each test should be independent
 

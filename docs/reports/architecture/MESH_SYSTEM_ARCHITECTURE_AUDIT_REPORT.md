@@ -102,7 +102,7 @@ The current implementation in `/backend/app/mesh/redis_bus.py` provides:
 | **Tracing** | None | Distributed tracing (Jaeger/Zipkin) | CRITICAL |
 | **Security** | None | mTLS, RBAC, policies | CRITICAL |
 | **Traffic Management** | None | Canary, blue-green, mirroring | HIGH |
-| **Observability** | Minimal | Full metrics, logs, traces | CRITICAL |
+| **Observability** | | Full metrics, logs, traces | CRITICAL |
 | **Protocol Support** | Redis only | HTTP/2, gRPC, TCP, WebSocket | HIGH |
 
 ---
@@ -250,7 +250,7 @@ The `/backend/app/orchestration/coordination.py` file (816 lines) contains:
 
 1. **Implement True Service Mesh**
    - Option A: Integrate Istio/Linkerd
-   - Option B: Build minimal mesh with Envoy proxy
+   - Option B: Build mesh with Envoy proxy
    - Option C: Use Consul Connect
 
 2. **Add Observability**

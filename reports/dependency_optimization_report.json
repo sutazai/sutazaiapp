@@ -1,0 +1,5519 @@
+{
+  "summary": {
+    "total_files": 16946,
+    "total_imports": 10739,
+    "unused_imports": 2051,
+    "files_with_issues": 594
+  },
+  "top_offenders": [
+    {
+      "file": "/opt/sutazaiapp/scripts/mcp/automation/orchestration/__init__.py",
+      "unused_count": 46,
+      "total_imports": 46,
+      "percentage": 100.0
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/edge_inference/__init__.py",
+      "unused_count": 34,
+      "total_imports": 43,
+      "percentage": 79.06976744186046
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/monitoring/__init___1.py",
+      "unused_count": 32,
+      "total_imports": 38,
+      "percentage": 84.21052631578947
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/core/__init__.py",
+      "unused_count": 28,
+      "total_imports": 39,
+      "percentage": 71.7948717948718
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/mcp/automation/__init__.py",
+      "unused_count": 27,
+      "total_imports": 29,
+      "percentage": 93.10344827586206
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/mcp/automation/monitoring/__init__.py",
+      "unused_count": 26,
+      "total_imports": 26,
+      "percentage": 100.0
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/mesh/__init__.py",
+      "unused_count": 26,
+      "total_imports": 26,
+      "percentage": 100.0
+    },
+    {
+      "file": "/opt/sutazaiapp/tests/integration/test_runner.py",
+      "unused_count": 16,
+      "total_imports": 35,
+      "percentage": 45.714285714285715
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/testing/hardware_optimizer_ultra_test_suite.py",
+      "unused_count": 15,
+      "total_imports": 44,
+      "percentage": 34.090909090909086
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/mcp/automation/cleanup/__init__.py",
+      "unused_count": 15,
+      "total_imports": 15,
+      "percentage": 100.0
+    }
+  ],
+  "optimization_opportunities": {
+    "files_with_unused_imports": 565,
+    "total_unused_imports": 2051,
+    "files_with_heavy_imports": 79,
+    "files_needing_reorganization": 182
+  },
+  "file_details": {
+    "/opt/sutazaiapp/scripts/batch_print_converter.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/validate_service_mesh.py": {
+      "unused_imports": 2,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/fix_agent_configurations.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/consolidate_agent_configs.py": {
+      "unused_imports": 3,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/comprehensive_mcp_validation.py": {
+      "unused_imports": 2,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/schemas/queue_config.py": {
+      "unused_imports": 1,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/frontend/agent_health_dashboard.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: pandas, plotly.graph_objects, plotly.express"
+      ],
+      "heavy_imports": [
+        "pandas",
+        "plotly.graph_objects",
+        "plotly.express"
+      ]
+    },
+    "/opt/sutazaiapp/frontend/app.py": {
+      "unused_imports": 6,
+      "total_imports": 29,
+      "suggestions": [
+        "Remove 6 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/ultra_load_test_1000.py": {
+      "unused_imports": 4,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/phase5_completion_test.py": {
+      "unused_imports": 2,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/ultra_integration_test.py": {
+      "unused_imports": 4,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/test_mcp_orchestration.py": {
+      "unused_imports": 1,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/dind_direct_test.py": {
+      "unused_imports": 3,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/run_all_tests.py": {
+      "unused_imports": 4,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/ultra_security_validation.py": {
+      "unused_imports": 8,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/dind_multi_client_validation.py": {
+      "unused_imports": 4,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 4 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/final_comprehensive_validation.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tools/split_docker_diagram.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/monitoring/static_monitor.py": {
+      "unused_imports": 3,
+      "total_imports": 38,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/test_unified_registry.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/validate_service_mesh.py": {
+      "unused_imports": 6,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/minimal_app.py": {
+      "unused_imports": 2,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/demonstrate_agent_consolidation.py": {
+      "unused_imports": 2,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/fix_backend_issues.py": {
+      "unused_imports": 4,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/comprehensive_mcp_validation.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/config_migrator.py": {
+      "unused_imports": 2,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/safe_import_cleanup.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/critical_function_refactorer.py": {
+      "unused_imports": 3,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/validate_cleanup.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/complexity_analyzer.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/hygiene_orchestrator.py": {
+      "unused_imports": 5,
+      "total_imports": 41,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, sklearn.ensemble, sklearn.preprocessing",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "sklearn.ensemble",
+        "sklearn.preprocessing"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/maintenance/ULTRA_DOCKERFILE_ANALYSIS.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/manual_setup_routes_refactor.py": {
+      "unused_imports": 2,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/function_refactorer.py": {
+      "unused_imports": 4,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/test_deployed.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/deploy_phase5_production.py": {
+      "unused_imports": 1,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/optimization_orchestrator.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/deployment_manager.py": {
+      "unused_imports": 12,
+      "total_imports": 36,
+      "suggestions": [
+        "Remove 12 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/deployment.py": {
+      "unused_imports": 3,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/test_deployment_validation.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/fix_docker_compose_v2.py": {
+      "unused_imports": 1,
+      "total_imports": 2,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/__init__.py": {
+      "unused_imports": 7,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 7 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/fix_docker_compose.py": {
+      "unused_imports": 1,
+      "total_imports": 2,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/deployment/model_cache_manager.py": {
+      "unused_imports": 1,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/lib/ultraorganize_master.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/lib/security_utils.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/lib/__init__.py": {
+      "unused_imports": 3,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/lib/master_health_controller.py": {
+      "unused_imports": 2,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/lib/logging_utils.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/automation/autonomous_coordination_protocols.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/automation/collaborative_problem_solver.py": {
+      "unused_imports": 4,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/automation/autogen_agent_server.py": {
+      "unused_imports": 1,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/docker/fix_all_docker_violations.py": {
+      "unused_imports": 5,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/debugging/rule1_prevention_framework.py": {
+      "unused_imports": 1,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/debugging/comprehensive_reality_check.py": {
+      "unused_imports": 3,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/dockerfile_security_validator.py": {
+      "unused_imports": 4,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/secrets_manager.py": {
+      "unused_imports": 3,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/jwt_security_enhanced.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/security_headers.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/security_orchestrator.py": {
+      "unused_imports": 1,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/comprehensive_security_audit.py": {
+      "unused_imports": 4,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/validate_no_hardcoded_credentials.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/validate_security_fixes.py": {
+      "unused_imports": 3,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/comprehensive_security_scanner.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/security_scan_workflow.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/cors_security.py": {
+      "unused_imports": 1,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/security/network_security.py": {
+      "unused_imports": 9,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 9 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/ultratest_security_validation.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/ultratest_response_times.py": {
+      "unused_imports": 2,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/ultratest_quick_response_times.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/ultratest_memory_optimization.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/performance_test_suite.py": {
+      "unused_imports": 1,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/load_test_runner.py": {
+      "unused_imports": 1,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/manual_test_procedures.py": {
+      "unused_imports": 6,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/bulletproof_test_suite.py": {
+      "unused_imports": 6,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/ultra_comprehensive_system_test_suite.py": {
+      "unused_imports": 2,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/comprehensive_e2e_test_framework.py": {
+      "unused_imports": 12,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 12 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/ultratest_redis_performance.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/__init__.py": {
+      "unused_imports": 11,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 11 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/security_test_suite.py": {
+      "unused_imports": 3,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/verify_exception_handling.py": {
+      "unused_imports": 3,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/comprehensive_test_report_final.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/ai_powered_test_suite.py": {
+      "unused_imports": 6,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, transformers"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "transformers"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/testing/ultra_migration_test_suite.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/hardware_optimizer_ultra_test_suite.py": {
+      "unused_imports": 15,
+      "total_imports": 44,
+      "suggestions": [
+        "Remove 15 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: matplotlib, matplotlib.pyplot, numpy",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "matplotlib",
+        "matplotlib.pyplot",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/monitoring/database_monitoring_dashboard.py": {
+      "unused_imports": 3,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/claude_rule_enforcement_monitor.py": {
+      "unused_imports": 2,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/fusion_visualizer.py": {
+      "unused_imports": 12,
+      "total_imports": 39,
+      "suggestions": [
+        "Remove 12 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: plotly.express, plotly.graph_objects, plotly.subplots",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "plotly.express",
+        "plotly.graph_objects",
+        "plotly.subplots",
+        "pandas",
+        "numpy",
+        "seaborn",
+        "matplotlib.pyplot",
+        "sklearn.manifold",
+        "sklearn.decomposition"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/monitoring/__init___1.py": {
+      "unused_imports": 32,
+      "total_imports": 38,
+      "suggestions": [
+        "Remove 32 unused imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/test_enhanced_health_system.py": {
+      "unused_imports": 2,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/monitor.py": {
+      "unused_imports": 4,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/memory_leak_detector.py": {
+      "unused_imports": 2,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/ollama_performance_monitor.py": {
+      "unused_imports": 4,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/service_monitor.py": {
+      "unused_imports": 3,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/sutazai_realtime_monitor.py": {
+      "unused_imports": 3,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/main.py": {
+      "unused_imports": 2,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/continuous_performance_monitor.py": {
+      "unused_imports": 4,
+      "total_imports": 33,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/quality_monitor.py": {
+      "unused_imports": 2,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health_monitoring.py": {
+      "unused_imports": 2,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/redis_ultra_performance_monitor.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/ollama_agent_monitor.py": {
+      "unused_imports": 3,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/api_health_monitor.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/test_service_health.py": {
+      "unused_imports": 4,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/database-health-monitor.py": {
+      "unused_imports": 6,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/test-monitoring-integration.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/facade_detection_monitor.py": {
+      "unused_imports": 3,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/run_monitoring_validation.py": {
+      "unused_imports": 2,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/system_monitor.py": {
+      "unused_imports": 5,
+      "total_imports": 29,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/monitoring-master.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/realtime_fusion_pipeline.py": {
+      "unused_imports": 4,
+      "total_imports": 39,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/enforcement/rule_validator.py": {
+      "unused_imports": 1,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/enforcement/continuous_rule_monitor.py": {
+      "unused_imports": 3,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/enforcement/pre_commit_hook.py": {
+      "unused_imports": 3,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/enforcement/systematic_rule_testing.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/enforcement/rule_validator_simple.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/enforcement/comprehensive_rule_enforcer.py": {
+      "unused_imports": 5,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/enforcement/auto_remediation.py": {
+      "unused_imports": 5,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/performance/mcp_performance_analyzer.py": {
+      "unused_imports": 4,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/performance/mcp_comprehensive_analysis.py": {
+      "unused_imports": 6,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 6 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/compliance/enforce_claude_rules.py": {
+      "unused_imports": 2,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/docs/gen_doc_inventory.py": {
+      "unused_imports": 3,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/secure_agent_comm.py": {
+      "unused_imports": 12,
+      "total_imports": 41,
+      "suggestions": [
+        "Remove 12 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/performance_validation_simple.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/test-ollama-high-concurrency.py": {
+      "unused_imports": 1,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/code_improvement_workflow.py": {
+      "unused_imports": 0,
+      "total_imports": 17,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/execute_ultra_testing_strategy.py": {
+      "unused_imports": 2,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/task_planner.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/main_2.py": {
+      "unused_imports": 5,
+      "total_imports": 35,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/freeze_prevention.py": {
+      "unused_imports": 0,
+      "total_imports": 16,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/xss_protection.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/unified_ai_client.py": {
+      "unused_imports": 0,
+      "total_imports": 13,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/emergency-shutdown-coordinator.py": {
+      "unused_imports": 5,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/rule_validator.py": {
+      "unused_imports": 1,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/system_performance_benchmark_suite.py": {
+      "unused_imports": 5,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, pandas, matplotlib.pyplot",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "pandas",
+        "matplotlib.pyplot",
+        "seaborn"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/run_hardware_optimizer_tests.py": {
+      "unused_imports": 4,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 4 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/specialized_tests.py": {
+      "unused_imports": 3,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/bulletproof_quick_test.py": {
+      "unused_imports": 6,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/performance_cache.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/incident_response.py": {
+      "unused_imports": 4,
+      "total_imports": 37,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/validate-disaster-recovery.py": {
+      "unused_imports": 2,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/test-authentication.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/swarm-autoscaler.py": {
+      "unused_imports": 3,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/voice_interface_minimal.py": {
+      "unused_imports": 5,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/privategpt_service.py": {
+      "unused_imports": 1,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: sentence_transformers"
+      ],
+      "heavy_imports": [
+        "sentence_transformers"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/simple_performance_test.py": {
+      "unused_imports": 2,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/ultraperformance_load_test.py": {
+      "unused_imports": 3,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/hardware_api_validation_test.py": {
+      "unused_imports": 3,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/test-all-rule-combinations.py": {
+      "unused_imports": 9,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 9 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/logger.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/common_utils.py": {
+      "unused_imports": 0,
+      "total_imports": 21,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/logging-infrastructure.py": {
+      "unused_imports": 5,
+      "total_imports": 29,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/generate-agent-tests.py": {
+      "unused_imports": 1,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/web_interface.py": {
+      "unused_imports": 0,
+      "total_imports": 11,
+      "suggestions": [
+        "Consider lazy loading for heavy modules: jax.numpy"
+      ],
+      "heavy_imports": [
+        "jax.numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/external-service-registry.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/hardware_optimizer_load_runner.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/main.py": {
+      "unused_imports": 1,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/uuid_migration_corrected_test.py": {
+      "unused_imports": 4,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 4 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/performance_baseline_test.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/final_bulletproof_test.py": {
+      "unused_imports": 5,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/performance_validation.py": {
+      "unused_imports": 3,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/agent-orchestrator.py": {
+      "unused_imports": 5,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/dockerfile_performance_validator.py": {
+      "unused_imports": 4,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/simplified_load_test.py": {
+      "unused_imports": 4,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/agentgpt_service.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/test-dashboard-fix.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/performance_forecasting_models.py": {
+      "unused_imports": 10,
+      "total_imports": 33,
+      "suggestions": [
+        "Remove 10 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, pandas, matplotlib.pyplot",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "pandas",
+        "matplotlib.pyplot",
+        "seaborn",
+        "sklearn.preprocessing",
+        "sklearn.metrics",
+        "sklearn.metrics",
+        "sklearn.ensemble",
+        "tensorflow",
+        "tensorflow.keras.models",
+        "tensorflow.keras.layers",
+        "tensorflow.keras.layers",
+        "tensorflow.keras.layers",
+        "tensorflow.keras.optimizers",
+        "sklearn.ensemble"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/performance_stress_tests.py": {
+      "unused_imports": 8,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, matplotlib.pyplot"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "matplotlib.pyplot"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/main_1.py": {
+      "unused_imports": 1,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/optimized_api_client.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/fsdp_service.py": {
+      "unused_imports": 0,
+      "total_imports": 15,
+      "suggestions": [
+        "Consider lazy loading for heavy modules: torch, torch.distributed, torch.distributed.fsdp"
+      ],
+      "heavy_imports": [
+        "torch",
+        "torch.distributed",
+        "torch.distributed.fsdp",
+        "transformers",
+        "transformers",
+        "transformers",
+        "transformers",
+        "transformers",
+        "transformers"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/master_dockerfile_validator.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/load_test.py": {
+      "unused_imports": 5,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider lazy loading for heavy modules: matplotlib.pyplot, pandas"
+      ],
+      "heavy_imports": [
+        "matplotlib.pyplot",
+        "pandas"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/test-neo4j-integration.py": {
+      "unused_imports": 3,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/ab_testing.py": {
+      "unused_imports": 11,
+      "total_imports": 30,
+      "suggestions": [
+        "Remove 11 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: torch, numpy, scipy"
+      ],
+      "heavy_imports": [
+        "torch",
+        "numpy",
+        "scipy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/run_all_tests.py": {
+      "unused_imports": 2,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/rules_compliance_validator.py": {
+      "unused_imports": 3,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/simple-hygiene-backend.py": {
+      "unused_imports": 3,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/orchestrator.py": {
+      "unused_imports": 1,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/configuration_unification_master.py": {
+      "unused_imports": 3,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/runtime_protection.py": {
+      "unused_imports": 11,
+      "total_imports": 36,
+      "suggestions": [
+        "Remove 11 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/quick_verification_test.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/agent.py": {
+      "unused_imports": 3,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/__init__.py": {
+      "unused_imports": 3,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/browser_use_server.py": {
+      "unused_imports": 1,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/swarm_coordinator.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/cross_modal_learning.py": {
+      "unused_imports": 5,
+      "total_imports": 33,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, torch, torch.nn",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "torch",
+        "torch.nn",
+        "torch.nn.functional",
+        "torch.optim",
+        "torch.utils.data",
+        "torch.utils.data"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/plugin_manager.py": {
+      "unused_imports": 4,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/api_client_optimized.py": {
+      "unused_imports": 2,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/app.py": {
+      "unused_imports": 2,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/system_baseline_test.py": {
+      "unused_imports": 2,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/automated_continuous_tests.py": {
+      "unused_imports": 3,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/voice_interface.py": {
+      "unused_imports": 6,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, scipy, transformers"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "scipy",
+        "transformers",
+        "torch"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/simplified-load-test.py": {
+      "unused_imports": 0,
+      "total_imports": 13,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/system_validator.py": {
+      "unused_imports": 8,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/ai_metrics_exporter.py": {
+      "unused_imports": 9,
+      "total_imports": 30,
+      "suggestions": [
+        "Remove 9 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/test-ollama-integration.py": {
+      "unused_imports": 2,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/uuid_migration_test.py": {
+      "unused_imports": 2,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/directory_perfection_master.py": {
+      "unused_imports": 2,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/memory_manager.py": {
+      "unused_imports": 3,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, sentence_transformers"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "sentence_transformers"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/manual_debug_test.py": {
+      "unused_imports": 3,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/intrusion_detection.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/realtime_dashboard.py": {
+      "unused_imports": 2,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/advanced_detection.py": {
+      "unused_imports": 9,
+      "total_imports": 39,
+      "suggestions": [
+        "Remove 9 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, pandas, sklearn.ensemble",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "pandas",
+        "sklearn.ensemble",
+        "sklearn.ensemble",
+        "sklearn.preprocessing",
+        "sklearn.preprocessing",
+        "sklearn.model_selection",
+        "sklearn.metrics",
+        "sklearn.metrics"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/distributed_tracing.py": {
+      "unused_imports": 6,
+      "total_imports": 32,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/simple_endpoint_test.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/logging_setup.py": {
+      "unused_imports": 8,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/docker_consolidation_master.py": {
+      "unused_imports": 2,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/production-load-test.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/compliance_automation.py": {
+      "unused_imports": 4,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/locustfile.py": {
+      "unused_imports": 2,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/network_utils.py": {
+      "unused_imports": 2,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/frontend_stress_ultra_validation.py": {
+      "unused_imports": 4,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/quick_performance_test.py": {
+      "unused_imports": 2,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/hardware/monitoring/memory_optimization_monitor.py": {
+      "unused_imports": 0,
+      "total_imports": 11,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/database/test_database_performance.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/database/database.py": {
+      "unused_imports": 6,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 6 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/database/main_basic.py": {
+      "unused_imports": 5,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/database/knowledge_manager.py": {
+      "unused_imports": 6,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, sklearn.metrics.pairwise, transformers",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "sklearn.metrics.pairwise",
+        "transformers"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/maintenance/hygiene/detectors.py": {
+      "unused_imports": 2,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/hygiene/fixers.py": {
+      "unused_imports": 3,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/hygiene/orchestrator.py": {
+      "unused_imports": 4,
+      "total_imports": 26,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/hygiene/__init__.py": {
+      "unused_imports": 7,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 7 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/hygiene/core.py": {
+      "unused_imports": 7,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 7 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/cleanup/deduplicate.py": {
+      "unused_imports": 3,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/ultratest_integration_validation.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/performance_benchmark.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, matplotlib.pyplot, matplotlib"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "matplotlib.pyplot",
+        "matplotlib"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/ultra_import_analyzer.py": {
+      "unused_imports": 4,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/ultra_cleanup_architect.py": {
+      "unused_imports": 2,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/batch_processing_optimizer.py": {
+      "unused_imports": 2,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/self_improving_workflow_engine.py": {
+      "unused_imports": 4,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/neural_architecture_optimizer.py": {
+      "unused_imports": 6,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/ultra_hardware_optimization.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/dependency_optimizer.py": {
+      "unused_imports": 6,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/ultra_requirements_cleaner.py": {
+      "unused_imports": 5,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/ultra_system_optimizer.py": {
+      "unused_imports": 0,
+      "total_imports": 14,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/optimization/quantization_pipeline.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/maintenance/backup/backup-retention-policy.py": {
+      "unused_imports": 1,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/database/knowledge/api.py": {
+      "unused_imports": 3,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/database/knowledge/models.py": {
+      "unused_imports": 0,
+      "total_imports": 12,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/maintenance/database/knowledge/graph_operations.py": {
+      "unused_imports": 4,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider lazy loading for heavy modules: numpy, sklearn.metrics.pairwise"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "sklearn.metrics.pairwise"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/deployment/mcp/orchestrator.py": {
+      "unused_imports": 2,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/automation/ci-cd/decision_engine.py": {
+      "unused_imports": 3,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/version_manager.py": {
+      "unused_imports": 1,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/config.py": {
+      "unused_imports": 0,
+      "total_imports": 11,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/mcp_update_manager.py": {
+      "unused_imports": 5,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/download_manager.py": {
+      "unused_imports": 0,
+      "total_imports": 21,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/e2e_production_validation.py": {
+      "unused_imports": 14,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 14 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/__init__.py": {
+      "unused_imports": 27,
+      "total_imports": 29,
+      "suggestions": [
+        "Remove 27 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/example_usage.py": {
+      "unused_imports": 6,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 6 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/error_handling.py": {
+      "unused_imports": 1,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/orchestration/event_manager.py": {
+      "unused_imports": 4,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/orchestration/state_manager.py": {
+      "unused_imports": 1,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/orchestration/service_registry.py": {
+      "unused_imports": 1,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/orchestration/policy_engine.py": {
+      "unused_imports": 1,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/orchestration/api_gateway.py": {
+      "unused_imports": 8,
+      "total_imports": 35,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/orchestration/orchestrator.py": {
+      "unused_imports": 7,
+      "total_imports": 46,
+      "suggestions": [
+        "Remove 7 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/orchestration/__init__.py": {
+      "unused_imports": 46,
+      "total_imports": 46,
+      "suggestions": [
+        "Remove 46 unused imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/orchestration/workflow_engine.py": {
+      "unused_imports": 1,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/cleanup/cleanup_manager.py": {
+      "unused_imports": 7,
+      "total_imports": 37,
+      "suggestions": [
+        "Remove 7 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/cleanup/retention_policies.py": {
+      "unused_imports": 2,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/cleanup/cleanup_scheduler.py": {
+      "unused_imports": 3,
+      "total_imports": 35,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/cleanup/audit_logger.py": {
+      "unused_imports": 1,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/cleanup/__init__.py": {
+      "unused_imports": 15,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 15 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/cleanup/artifact_cleanup.py": {
+      "unused_imports": 3,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/cleanup/safety_validator.py": {
+      "unused_imports": 1,
+      "total_imports": 26,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/cleanup/version_cleanup.py": {
+      "unused_imports": 4,
+      "total_imports": 33,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/tests/comprehensive_security_audit.py": {
+      "unused_imports": 4,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/tests/advanced_load_test.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/tests/test_monitoring_performance.py": {
+      "unused_imports": 5,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/tests/__init__.py": {
+      "unused_imports": 2,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/tests/quick_performance_test.py": {
+      "unused_imports": 2,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/monitoring/health_monitor.py": {
+      "unused_imports": 1,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/monitoring/metrics_collector.py": {
+      "unused_imports": 5,
+      "total_imports": 30,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/monitoring/sla_monitor.py": {
+      "unused_imports": 0,
+      "total_imports": 18,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/monitoring/dashboard_config.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/monitoring/monitoring_server.py": {
+      "unused_imports": 5,
+      "total_imports": 36,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/monitoring/alert_manager.py": {
+      "unused_imports": 0,
+      "total_imports": 24,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/monitoring/log_aggregator.py": {
+      "unused_imports": 2,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/monitoring/__init__.py": {
+      "unused_imports": 26,
+      "total_imports": 26,
+      "suggestions": [
+        "Remove 26 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/tests/utils/environment.py": {
+      "unused_imports": 0,
+      "total_imports": 17,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/tests/utils/reporting.py": {
+      "unused_imports": 1,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/mcp/automation/tests/utils/assertions.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/qa/simple-quality-demo.py": {
+      "unused_imports": 6,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 6 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/qa/pre-commit-hooks.py": {
+      "unused_imports": 3,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/qa/ai-testing-quality-gates.py": {
+      "unused_imports": 0,
+      "total_imports": 12,
+      "suggestions": [
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/testing/integration/test_service_mesh.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/integration/test_mesh_comprehensive.py": {
+      "unused_imports": 2,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/integration/test_ollama_performance.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/testing/integration/test_consolidation.py": {
+      "unused_imports": 1,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/network/monitor/monitor.py": {
+      "unused_imports": 2,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/logging/api_server.py": {
+      "unused_imports": 5,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/logging/autonomous_goal_achievement_system.py": {
+      "unused_imports": 0,
+      "total_imports": 12,
+      "suggestions": [
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/monitoring/logging/main_simple.py": {
+      "unused_imports": 5,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/logging/main.py": {
+      "unused_imports": 2,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/logging/postgres_adapter.py": {
+      "unused_imports": 1,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/logging/adapter.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/logging/service_scaler.py": {
+      "unused_imports": 3,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/logging/main_1.py": {
+      "unused_imports": 3,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/monitoring/logging/circuit_breaker.py": {
+      "unused_imports": 0,
+      "total_imports": 20,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/performance/profile_system.py": {
+      "unused_imports": 3,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/monitoring/performance/hardware_performance_monitor.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/performance/optimize_ollama_performance.py": {
+      "unused_imports": 2,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/gpt_engineer_service.py": {
+      "unused_imports": 4,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 4 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/pytorch_service.py": {
+      "unused_imports": 1,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: torch, torch"
+      ],
+      "heavy_imports": [
+        "torch",
+        "torch"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/skyvern_service.py": {
+      "unused_imports": 2,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/aider_service.py": {
+      "unused_imports": 1,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/health_check_1.py": {
+      "unused_imports": 2,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/health_check.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/tensorflow_service.py": {
+      "unused_imports": 1,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: tensorflow, tensorflow"
+      ],
+      "heavy_imports": [
+        "tensorflow",
+        "tensorflow"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/jax_service.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: jax.numpy, jax.numpy"
+      ],
+      "heavy_imports": [
+        "jax.numpy",
+        "jax.numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/ultratest_load_testing.py": {
+      "unused_imports": 3,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/monitoring/health-checks/browser_use_service.py": {
+      "unused_imports": 1,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/archive/duplicate_apps/app_20.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/archive/duplicate_apps/app_16.py": {
+      "unused_imports": 2,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/archive/duplicate_apps/app_9.py": {
+      "unused_imports": 5,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/archive/duplicate_apps/app_8.py": {
+      "unused_imports": 2,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/archive/duplicate_apps/app_3.py": {
+      "unused_imports": 2,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/archive/duplicate_apps/app_11.py": {
+      "unused_imports": 1,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/helpers/langchain_agent_server.py": {
+      "unused_imports": 3,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/analysis/script_consolidation_analysis.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/scripts/utils/analysis/task_decomposer.py": {
+      "unused_imports": 3,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/scripts/utils/analysis/ULTRA_DUPLICATE_ANALYSIS.py": {
+      "unused_imports": 2,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/frontend/components/navigation.py": {
+      "unused_imports": 2,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/frontend/components/enhanced_ui.py": {
+      "unused_imports": 6,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: plotly.graph_objects, plotly.express, plotly.subplots"
+      ],
+      "heavy_imports": [
+        "plotly.graph_objects",
+        "plotly.express",
+        "plotly.subplots",
+        "pandas",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/frontend/components/resilient_ui.py": {
+      "unused_imports": 6,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider lazy loading for heavy modules: plotly.graph_objects"
+      ],
+      "heavy_imports": [
+        "plotly.graph_objects"
+      ]
+    },
+    "/opt/sutazaiapp/frontend/archive/app_secure.py": {
+      "unused_imports": 8,
+      "total_imports": 35,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/frontend/utils/formatters.py": {
+      "unused_imports": 2,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/frontend/pages/system/hardware_optimization.py": {
+      "unused_imports": 12,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 12 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: plotly.graph_objects, plotly.express, plotly.subplots"
+      ],
+      "heavy_imports": [
+        "plotly.graph_objects",
+        "plotly.express",
+        "plotly.subplots",
+        "pandas",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/frontend/pages/dashboard/main_dashboard.py": {
+      "unused_imports": 12,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 12 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: pandas, plotly.express, plotly.graph_objects"
+      ],
+      "heavy_imports": [
+        "pandas",
+        "plotly.express",
+        "plotly.graph_objects"
+      ]
+    },
+    "/opt/sutazaiapp/frontend/pages/ai_services/ai_chat.py": {
+      "unused_imports": 1,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/frontend/utils/archive/api_client.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/workflows/scripts/workflow_manager.py": {
+      "unused_imports": 1,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/workflows/scripts/deploy_dify_workflows.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/docker/faiss/faiss_service.py": {
+      "unused_imports": 0,
+      "total_imports": 9,
+      "suggestions": [
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/docker/faiss/simple_faiss.py": {
+      "unused_imports": 0,
+      "total_imports": 7,
+      "suggestions": [
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/docker/dind/orchestrator/manager/app/manager.py": {
+      "unused_imports": 3,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/docker/mcp-services/base/mcp_http_server.py": {
+      "unused_imports": 2,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/docker/mcp-services/base/health_check.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/docker/mcp-services/unified-memory/unified-memory-service.py": {
+      "unused_imports": 6,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp_ssh/tests/test_e2e_qa.py": {
+      "unused_imports": 2,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp_ssh/src/mcp_ssh/server.py": {
+      "unused_imports": 1,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp_ssh/src/mcp_ssh/ssh.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp_ssh/src/mcp_ssh/__init__.py": {
+      "unused_imports": 5,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_ollama_integration.py": {
+      "unused_imports": 5,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_cache_cleanup.py": {
+      "unused_imports": 3,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_circuit_breaker.py": {
+      "unused_imports": 2,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_messaging_integration.py": {
+      "unused_imports": 5,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_database_connections.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_execution_orchestrator.py": {
+      "unused_imports": 6,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_agent_hygiene_compliance.py": {
+      "unused_imports": 2,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_live_agent.py": {
+      "unused_imports": 3,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_storage_analysis.py": {
+      "unused_imports": 2,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/unit/test_compression.py": {
+      "unused_imports": 3,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/ai_testing/ai_testing_orchestrator.py": {
+      "unused_imports": 1,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/ai_testing/comprehensive_ai_system_validation.py": {
+      "unused_imports": 7,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 7 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/ai_testing/ai_performance_stress_testing.py": {
+      "unused_imports": 4,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/tests/ai_testing/__init__.py": {
+      "unused_imports": 4,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 4 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/ai_testing/ai_security_penetration_testing.py": {
+      "unused_imports": 8,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/ai_testing/intelligent_failure_detection.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, pandas, sklearn.ensemble"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "pandas",
+        "sklearn.ensemble",
+        "sklearn.cluster",
+        "sklearn.preprocessing"
+      ]
+    },
+    "/opt/sutazaiapp/tests/security/test_cors_security.py": {
+      "unused_imports": 1,
+      "total_imports": 2,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/security/test_comprehensive_xss_protection.py": {
+      "unused_imports": 5,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/security/test_jwt_vulnerability_fix.py": {
+      "unused_imports": 1,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/security/test_ultra_security.py": {
+      "unused_imports": 8,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/monitoring/test_dry_run_safety.py": {
+      "unused_imports": 2,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/facade_prevention/mcp_mesh_integration_fix.py": {
+      "unused_imports": 5,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/facade_prevention/test_api_functionality_reality.py": {
+      "unused_imports": 4,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/facade_prevention/test_port_registry_reality.py": {
+      "unused_imports": 0,
+      "total_imports": 16,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/facade_prevention/test_mcp_reality.py": {
+      "unused_imports": 2,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/facade_prevention/test_container_health_reality.py": {
+      "unused_imports": 4,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/facade_prevention/test_end_to_end_workflows.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/facade_prevention/facade_prevention_runner.py": {
+      "unused_imports": 2,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/facade_prevention/fix_mcp_mesh_integration.py": {
+      "unused_imports": 2,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/facade_prevention/test_service_mesh_reality.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/performance/test_mesh_concurrency.py": {
+      "unused_imports": 2,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/performance/test_runtime_issues.py": {
+      "unused_imports": 2,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/performance/ultra_performance_load_test.py": {
+      "unused_imports": 1,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/performance/test_load_performance.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/performance/test_mesh_load_testing.py": {
+      "unused_imports": 3,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/performance/test_large_files.py": {
+      "unused_imports": 2,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/performance/ultratest_redis_performance.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/performance/ultratest_quick_load_test.py": {
+      "unused_imports": 2,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/performance/ultratest_comprehensive_load_test.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_phase5_complete_integration.py": {
+      "unused_imports": 5,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_hardware_integration.py": {
+      "unused_imports": 7,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 7 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_comprehensive_report.py": {
+      "unused_imports": 2,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/unified_representation.py": {
+      "unused_imports": 1,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, torch, torch.nn"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "torch",
+        "torch.nn",
+        "torch.nn.functional"
+      ]
+    },
+    "/opt/sutazaiapp/tests/integration/awesome_code_service.py": {
+      "unused_imports": 6,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 6 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_coordinator_integration.py": {
+      "unused_imports": 6,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 6 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/enhanced_model_service.py": {
+      "unused_imports": 5,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_api_comprehensive.py": {
+      "unused_imports": 4,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_performance.py": {
+      "unused_imports": 2,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_analyze_duplicates.py": {
+      "unused_imports": 1,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_path_validation.py": {
+      "unused_imports": 2,
+      "total_imports": 2,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_cognitive_architecture.py": {
+      "unused_imports": 3,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_requirements_compatibility.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_runner.py": {
+      "unused_imports": 16,
+      "total_imports": 35,
+      "suggestions": [
+        "Remove 16 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_optimization_debug.py": {
+      "unused_imports": 3,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/multi_modal_fusion_coordinator.py": {
+      "unused_imports": 2,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, torch, torch.nn"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "torch",
+        "torch.nn",
+        "torch.nn.functional"
+      ]
+    },
+    "/opt/sutazaiapp/tests/integration/code_ai_manager.py": {
+      "unused_imports": 3,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_containers.py": {
+      "unused_imports": 5,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/integration/test_alerting_pipeline.py": {
+      "unused_imports": 4,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/e2e/test_accessibility.py": {
+      "unused_imports": 1,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/e2e/test_user_workflows.py": {
+      "unused_imports": 3,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/e2e/test_optimizations.py": {
+      "unused_imports": 3,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/tests/regression/test_fixes.py": {
+      "unused_imports": 5,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/models/optimization/automated_model_selection.py": {
+      "unused_imports": 9,
+      "total_imports": 29,
+      "suggestions": [
+        "Remove 9 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: torch, numpy"
+      ],
+      "heavy_imports": [
+        "torch",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/models/optimization/model_compression.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: torch, torch.nn, torch.nn.functional"
+      ],
+      "heavy_imports": [
+        "torch",
+        "torch.nn",
+        "torch.nn.functional",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/models/optimization/quantization.py": {
+      "unused_imports": 8,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: torch, torch.nn, torch.nn.functional"
+      ],
+      "heavy_imports": [
+        "torch",
+        "torch.nn",
+        "torch.nn.functional",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/models/optimization/performance_benchmarking.py": {
+      "unused_imports": 13,
+      "total_imports": 36,
+      "suggestions": [
+        "Remove 13 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: torch, numpy, matplotlib.pyplot",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "torch",
+        "numpy",
+        "matplotlib.pyplot",
+        "seaborn",
+        "pandas"
+      ]
+    },
+    "/opt/sutazaiapp/models/optimization/ensemble_optimization.py": {
+      "unused_imports": 9,
+      "total_imports": 29,
+      "suggestions": [
+        "Remove 9 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: torch, torch.nn, torch.nn.functional"
+      ],
+      "heavy_imports": [
+        "torch",
+        "torch.nn",
+        "torch.nn.functional",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/models/optimization/continuous_learning.py": {
+      "unused_imports": 8,
+      "total_imports": 30,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: torch, torch.nn, torch.nn.functional"
+      ],
+      "heavy_imports": [
+        "torch",
+        "torch.nn",
+        "torch.nn.functional",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/models/optimization/knowledge_distillation.py": {
+      "unused_imports": 10,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 10 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: torch, torch.nn, torch.nn.functional"
+      ],
+      "heavy_imports": [
+        "torch",
+        "torch.nn",
+        "torch.nn.functional",
+        "torch.optim",
+        "torch.utils.data",
+        "torch.utils.data",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/mcp-servers/claude-task-runner/tests/task_runner/core/test_task_manager.py": {
+      "unused_imports": 1,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp-servers/claude-task-runner/src/task_runner/__init__.py": {
+      "unused_imports": 1,
+      "total_imports": 1,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp-servers/claude-task-runner/src/task_runner/core/claude_streamer.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp-servers/claude-task-runner/src/task_runner/core/task_manager.py": {
+      "unused_imports": 3,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp-servers/claude-task-runner/src/task_runner/mcp/wrapper.py": {
+      "unused_imports": 1,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp-servers/claude-task-runner/src/task_runner/mcp/mcp_server.py": {
+      "unused_imports": 1,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp-servers/claude-task-runner/src/task_runner/cli/formatters.py": {
+      "unused_imports": 6,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp-servers/claude-task-runner/src/task_runner/cli/__init__.py": {
+      "unused_imports": 1,
+      "total_imports": 1,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/mcp-servers/claude-task-runner/src/task_runner/cli/schemas.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/.mcp/UltimateCoderMCP/main.py": {
+      "unused_imports": 3,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/.mcp/chroma/src/chroma/server.py": {
+      "unused_imports": 5,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/discovery_service.py": {
+      "unused_imports": 7,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 7 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/universal_client.py": {
+      "unused_imports": 4,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/workflow_orchestrator.py": {
+      "unused_imports": 6,
+      "total_imports": 29,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/agent_status.py": {
+      "unused_imports": 1,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/universal_agent_adapter.py": {
+      "unused_imports": 3,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/communication_protocols.py": {
+      "unused_imports": 5,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/agent_manager.py": {
+      "unused_imports": 0,
+      "total_imports": 29,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/api_wrappers.py": {
+      "unused_imports": 3,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/processing_engine/reasoning_engine.py": {
+      "unused_imports": 3,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/edge_inference/telemetry.py": {
+      "unused_imports": 3,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/edge_inference/api.py": {
+      "unused_imports": 3,
+      "total_imports": 38,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/edge_inference/model_cache.py": {
+      "unused_imports": 3,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/edge_inference/quantization.py": {
+      "unused_imports": 4,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/edge_inference/failover.py": {
+      "unused_imports": 4,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/edge_inference/intelligent_router.py": {
+      "unused_imports": 3,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/edge_inference/proxy.py": {
+      "unused_imports": 3,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/edge_inference/batch_processor.py": {
+      "unused_imports": 4,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/edge_inference/__init__.py": {
+      "unused_imports": 34,
+      "total_imports": 43,
+      "suggestions": [
+        "Remove 34 unused imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/edge_inference/memory_manager.py": {
+      "unused_imports": 3,
+      "total_imports": 26,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/oversight/alert_notification_system.py": {
+      "unused_imports": 5,
+      "total_imports": 26,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/oversight/compliance_reporter.py": {
+      "unused_imports": 2,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: pandas, matplotlib.pyplot, seaborn"
+      ],
+      "heavy_imports": [
+        "pandas",
+        "matplotlib.pyplot",
+        "seaborn"
+      ]
+    },
+    "/opt/sutazaiapp/backend/tests/test_mcp_api_fix.py": {
+      "unused_imports": 2,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/tests/test_mcp_health.py": {
+      "unused_imports": 1,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/tests/test_dind_mesh_integration.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/tests/test_agent_orchestration.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/main.py": {
+      "unused_imports": 3,
+      "total_imports": 72,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/agent_orchestrator.py": {
+      "unused_imports": 1,
+      "total_imports": 1,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/unified_service_controller.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/self_improvement.py": {
+      "unused_imports": 1,
+      "total_imports": 1,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/knowledge_manager.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/real_time_updater.py": {
+      "unused_imports": 8,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/api.py": {
+      "unused_imports": 2,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/reasoning_engine.py": {
+      "unused_imports": 5,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/schema.py": {
+      "unused_imports": 2,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/manager.py": {
+      "unused_imports": 2,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/neo4j_manager.py": {
+      "unused_imports": 6,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/query_engine.py": {
+      "unused_imports": 3,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/visualization.py": {
+      "unused_imports": 4,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/__init__.py": {
+      "unused_imports": 14,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 14 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/knowledge_graph/graph_builder.py": {
+      "unused_imports": 4,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/agent_orchestration/orchestrator.py": {
+      "unused_imports": 6,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/data_governance/lineage_tracker.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/data_governance/governance_api.py": {
+      "unused_imports": 11,
+      "total_imports": 29,
+      "suggestions": [
+        "Remove 11 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/data_governance/data_catalog.py": {
+      "unused_imports": 4,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/data_governance/data_versioning.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/data_governance/audit_logger.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/data_governance/__init__.py": {
+      "unused_imports": 10,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 10 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/data_governance/governance_framework.py": {
+      "unused_imports": 4,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/data_governance/lifecycle_manager.py": {
+      "unused_imports": 3,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/orchestration/unified_orchestration_api.py": {
+      "unused_imports": 7,
+      "total_imports": 36,
+      "suggestions": [
+        "Remove 7 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/orchestration/advanced_message_bus.py": {
+      "unused_imports": 4,
+      "total_imports": 27,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/orchestration/infrastructure_integration.py": {
+      "unused_imports": 5,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/orchestration/agent_registry_service.py": {
+      "unused_imports": 3,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/orchestration/enhanced_multi_agent_coordinator.py": {
+      "unused_imports": 4,
+      "total_imports": 36,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/ai_agents/orchestration/intelligent_task_router.py": {
+      "unused_imports": 8,
+      "total_imports": 30,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/ai_agents/orchestration/orchestration_dashboard.py": {
+      "unused_imports": 5,
+      "total_imports": 26,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: plotly.graph_objects, plotly.express, pandas"
+      ],
+      "heavy_imports": [
+        "plotly.graph_objects",
+        "plotly.express",
+        "pandas",
+        "numpy",
+        "matplotlib.pyplot"
+      ]
+    },
+    "/opt/sutazaiapp/backend/ai_agents/specialized/generic_agent.py": {
+      "unused_imports": 3,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/specialized/code_generator.py": {
+      "unused_imports": 6,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 6 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/core/agent_message_bus.py": {
+      "unused_imports": 5,
+      "total_imports": 24,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/core/orchestration_controller.py": {
+      "unused_imports": 4,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/core/__init__.py": {
+      "unused_imports": 28,
+      "total_imports": 39,
+      "suggestions": [
+        "Remove 28 unused imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/core/agent_registry.py": {
+      "unused_imports": 5,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/core/universal_agent_factory.py": {
+      "unused_imports": 4,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/memory/shared_knowledge_base.py": {
+      "unused_imports": 5,
+      "total_imports": 26,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy, sentence_transformers"
+      ],
+      "heavy_imports": [
+        "numpy",
+        "sentence_transformers"
+      ]
+    },
+    "/opt/sutazaiapp/backend/ai_agents/protocols/message_protocol.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/communication/agent_bus.py": {
+      "unused_imports": 4,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/orchestrator/workflow_engine.py": {
+      "unused_imports": 0,
+      "total_imports": 11,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/reasoning/advanced_reasoning_engine.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/ai_agents/reasoning/self_improvement.py": {
+      "unused_imports": 3,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/ai_agents/reasoning/__init__.py": {
+      "unused_imports": 8,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 8 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/ai_agents/interaction/human_interaction.py": {
+      "unused_imports": 0,
+      "total_imports": 11,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/orchestration/task_router.py": {
+      "unused_imports": 0,
+      "total_imports": 17,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/orchestration/message_bus.py": {
+      "unused_imports": 1,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/orchestration/workflow_engine.py": {
+      "unused_imports": 0,
+      "total_imports": 19,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/orchestration/coordination.py": {
+      "unused_imports": 0,
+      "total_imports": 12,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/schemas/message_types.py": {
+      "unused_imports": 1,
+      "total_imports": 2,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/schemas/message_adapters.py": {
+      "unused_imports": 1,
+      "total_imports": 6,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/schemas/agent_protocol.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/schemas/message_model.py": {
+      "unused_imports": 2,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/connection_pool_ultra.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/performance_optimizer.py": {
+      "unused_imports": 2,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/connection_pool.py": {
+      "unused_imports": 3,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/config.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/performance_ultrafix.py": {
+      "unused_imports": 5,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/mcp_startup.py": {
+      "unused_imports": 1,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/health_monitoring.py": {
+      "unused_imports": 2,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/ollama_cache.py": {
+      "unused_imports": 3,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/app/core/performance_tuning.py": {
+      "unused_imports": 1,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/logging_config.py": {
+      "unused_imports": 2,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/middleware.py": {
+      "unused_imports": 1,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/performance.py": {
+      "unused_imports": 3,
+      "total_imports": 23,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/app/core/task_queue.py": {
+      "unused_imports": 0,
+      "total_imports": 14,
+      "suggestions": [
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/unified_agent_registry.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/cache.py": {
+      "unused_imports": 1,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/legacy_logging.py": {
+      "unused_imports": 1,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/circuit_breaker.py": {
+      "unused_imports": 2,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/dependencies.py": {
+      "unused_imports": 3,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/cache_ultrafix.py": {
+      "unused_imports": 1,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/claude_agent_executor.py": {
+      "unused_imports": 3,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/core/metrics.py": {
+      "unused_imports": 4,
+      "total_imports": 26,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/middleware/security_headers.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/middleware/__init__.py": {
+      "unused_imports": 3,
+      "total_imports": 3,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/auth/router.py": {
+      "unused_imports": 3,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/auth/rate_limiter.py": {
+      "unused_imports": 3,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/auth/models.py": {
+      "unused_imports": 5,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 5 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/auth/__init__.py": {
+      "unused_imports": 14,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 14 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/auth/dependencies.py": {
+      "unused_imports": 3,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/auth/service.py": {
+      "unused_imports": 2,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/auth/jwt_handler.py": {
+      "unused_imports": 4,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/models/__init__.py": {
+      "unused_imports": 1,
+      "total_imports": 1,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/vector_db.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/text_analysis_endpoint.py": {
+      "unused_imports": 3,
+      "total_imports": 16,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/agents/validate_text_agent.py": {
+      "unused_imports": 2,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/agents/text_analysis_agent.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/agents/__init__.py": {
+      "unused_imports": 1,
+      "total_imports": 1,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/agents/registry_facade.py": {
+      "unused_imports": 1,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/archive/main_minimal.py": {
+      "unused_imports": 1,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/archive/main_original.py": {
+      "unused_imports": 1,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_stdio_bridge.py": {
+      "unused_imports": 1,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_adapter.py": {
+      "unused_imports": 7,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 7 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_load_balancer.py": {
+      "unused_imports": 2,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_initializer.py": {
+      "unused_imports": 2,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/dind_mesh_bridge.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_mesh_integration.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_mesh_initializer.py": {
+      "unused_imports": 3,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_protocol_translator.py": {
+      "unused_imports": 3,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_container_bridge.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_request_router.py": {
+      "unused_imports": 1,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_resource_isolation.py": {
+      "unused_imports": 5,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_bridge.py": {
+      "unused_imports": 3,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/__init__.py": {
+      "unused_imports": 26,
+      "total_imports": 26,
+      "suggestions": [
+        "Remove 26 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/service_mesh.py": {
+      "unused_imports": 4,
+      "total_imports": 29,
+      "suggestions": [
+        "Remove 4 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/redis_bus.py": {
+      "unused_imports": 2,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/unified_dev_adapter.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mcp_process_orchestrator.py": {
+      "unused_imports": 3,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/distributed_tracing.py": {
+      "unused_imports": 5,
+      "total_imports": 19,
+      "suggestions": [
+        "Remove 5 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/mesh/mesh_dashboard.py": {
+      "unused_imports": 6,
+      "total_imports": 18,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/services/mcp_service_discovery.py": {
+      "unused_imports": 1,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/services/vector_db_manager.py": {
+      "unused_imports": 3,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/app/services/vector_context_injector.py": {
+      "unused_imports": 7,
+      "total_imports": 22,
+      "suggestions": [
+        "Remove 7 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/app/services/rate_limiter.py": {
+      "unused_imports": 1,
+      "total_imports": 5,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/services/consolidated_ollama_service.py": {
+      "unused_imports": 2,
+      "total_imports": 28,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: torch, numpy"
+      ],
+      "heavy_imports": [
+        "torch",
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/app/services/faiss_manager.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports",
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/app/services/memory_migration.py": {
+      "unused_imports": 2,
+      "total_imports": 12,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/services/self_improvement.py": {
+      "unused_imports": 3,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/utils/validation.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/utils/__init__.py": {
+      "unused_imports": 7,
+      "total_imports": 7,
+      "suggestions": [
+        "Remove 7 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/orchestration.py": {
+      "unused_imports": 8,
+      "total_imports": 31,
+      "suggestions": [
+        "Remove 8 unused imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/jarvis.py": {
+      "unused_imports": 4,
+      "total_imports": 17,
+      "suggestions": [
+        "Remove 4 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/vectors.py": {
+      "unused_imports": 1,
+      "total_imports": 9,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/agents.py": {
+      "unused_imports": 2,
+      "total_imports": 15,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/mesh.py": {
+      "unused_imports": 2,
+      "total_imports": 20,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/performance_ultrafix.py": {
+      "unused_imports": 1,
+      "total_imports": 11,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py": {
+      "unused_imports": 6,
+      "total_imports": 34,
+      "suggestions": [
+        "Remove 6 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/governance.py": {
+      "unused_imports": 2,
+      "total_imports": 13,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/performance.py": {
+      "unused_imports": 7,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 7 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/mesh_v2.py": {
+      "unused_imports": 1,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/hardware.py": {
+      "unused_imports": 10,
+      "total_imports": 43,
+      "suggestions": [
+        "Remove 10 unused imports",
+        "Consider grouping standard library imports",
+        "File has many imports, consider breaking into smaller modules"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/streaming.py": {
+      "unused_imports": 3,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/cache.py": {
+      "unused_imports": 3,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/circuit_breaker.py": {
+      "unused_imports": 1,
+      "total_imports": 8,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/migration.py": {
+      "unused_imports": 2,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/cache_optimized.py": {
+      "unused_imports": 6,
+      "total_imports": 21,
+      "suggestions": [
+        "Remove 6 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/api/v1/endpoints/mcp.py": {
+      "unused_imports": 3,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 3 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/services/training/default_trainer.py": {
+      "unused_imports": 2,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 2 unused imports",
+        "Consider lazy loading for heavy modules: torch, transformers"
+      ],
+      "heavy_imports": [
+        "torch",
+        "transformers"
+      ]
+    },
+    "/opt/sutazaiapp/backend/app/services/training/__init__.py": {
+      "unused_imports": 4,
+      "total_imports": 4,
+      "suggestions": [
+        "Remove 4 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/services/code_completion/__init__.py": {
+      "unused_imports": 2,
+      "total_imports": 2,
+      "suggestions": [
+        "Remove 2 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/services/archive/model_manager.py": {
+      "unused_imports": 1,
+      "total_imports": 10,
+      "suggestions": [
+        "Remove 1 unused imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/services/archive/ollama_async.py": {
+      "unused_imports": 3,
+      "total_imports": 14,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports"
+      ],
+      "heavy_imports": []
+    },
+    "/opt/sutazaiapp/backend/app/services/archive/ollama_embedding.py": {
+      "unused_imports": 0,
+      "total_imports": 8,
+      "suggestions": [
+        "Consider lazy loading for heavy modules: numpy"
+      ],
+      "heavy_imports": [
+        "numpy"
+      ]
+    },
+    "/opt/sutazaiapp/backend/app/services/archive/advanced_model_manager.py": {
+      "unused_imports": 3,
+      "total_imports": 25,
+      "suggestions": [
+        "Remove 3 unused imports",
+        "Consider grouping standard library imports",
+        "Consider lazy loading for heavy modules: torch, torch"
+      ],
+      "heavy_imports": [
+        "torch",
+        "torch"
+      ]
+    }
+  }
+}

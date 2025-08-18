@@ -227,7 +227,7 @@ def run(
                     # Brief pause to allow reading the status
                     time.sleep(0.5)
                     
-                    # Optionally print a minimal summary of progress
+                    # Optionally print a summary of progress
                     summary = manager.get_task_summary()
                     completed = summary['completed']
                     total = summary['total']

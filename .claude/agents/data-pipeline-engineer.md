@@ -750,7 +750,7 @@ class OptimizedSparkPipeline:
 Data Pipeline Testing Framework
 python# Example: Comprehensive Data Pipeline Testing
 import pytest
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
+from unittest.Mock import Mock, patch
 from great_expectations import DataContext
 from pyspark.sql import SparkSession
 from pipeline.processors import DataProcessor
@@ -792,8 +792,8 @@ class TestDataPipeline:
         """Test data quality validation"""
         validator = DataQualityValidator("/path/to/ge_config")
         
-        with patch.object(validator, 'validate_batch_data') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate.return_value = True
+        with patch.object(validator, 'validate_batch_data') as Mock_validate:
+            Mock_validate.return_value = True
             
             result = validator.validate_batch_data(
                 "test_datasource",
@@ -802,7 +802,7 @@ class TestDataPipeline:
             )
             
             assert result is True
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_validate.assert_called_once()
+            Mock_validate.assert_called_once()
     
     def test_pipeline_error_handling(self, spark_session):
         """Test pipeline error handling"""

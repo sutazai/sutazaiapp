@@ -1,0 +1,430 @@
+version: '3.8'
+
+# Real MCP Services Deployment for Docker-in-Docker Environment
+# Replaces fake 'sleep infinity' containers with functional MCP servers
+# Created: 2025-08-17 UTC
+
+services:
+  # Node.js based MCP services
+  mcp-claude-flow:
+    image: sutazai-mcp-nodejs:latest
+    container_name: mcp-claude-flow
+    environment:
+      - MCP_SERVICE=claude-flow
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=3001
+    ports:
+      - "3001:3001"
+    volumes:
+      - mcp-claude-flow-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/claude-flow.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-ruv-swarm:
+    image: sutazai-mcp-nodejs:latest
+    container_name: mcp-ruv-swarm
+    environment:
+      - MCP_SERVICE=ruv-swarm
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=3002
+    ports:
+      - "3002:3002"
+    volumes:
+      - mcp-ruv-swarm-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/ruv-swarm.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-files:
+    image: sutazai-mcp-nodejs:latest
+    container_name: mcp-files
+    environment:
+      - MCP_SERVICE=files
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=3003
+    ports:
+      - "3003:3003"
+    volumes:
+      - mcp-files-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+      - mcp-shared:/opt/shared:ro
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/files.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-context7:
+    image: sutazai-mcp-nodejs:latest
+    container_name: mcp-context7
+    environment:
+      - MCP_SERVICE=context7
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=3004
+    ports:
+      - "3004:3004"
+    volumes:
+      - mcp-context7-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/context7.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-ddg:
+    image: sutazai-mcp-nodejs:latest
+    container_name: mcp-ddg
+    environment:
+      - MCP_SERVICE=ddg
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=3006
+    ports:
+      - "3006:3006"
+    volumes:
+      - mcp-ddg-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/ddg.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # CONSOLIDATED into mcp-unified-dev above (sequentialthinking)
+
+  mcp-nx-mcp:
+    image: sutazai-mcp-nodejs:latest
+    container_name: mcp-nx-mcp
+    environment:
+      - MCP_SERVICE=nx-mcp
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=3008
+    ports:
+      - "3008:3008"
+    volumes:
+      - mcp-nx-mcp-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/nx-mcp.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-extended-memory:
+    image: sutazai-mcp-nodejs:latest
+    container_name: mcp-extended-memory
+    environment:
+      - MCP_SERVICE=extended-memory
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=3009
+    ports:
+      - "3009:3009"
+    volumes:
+      - mcp-extended-memory-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/extended-memory.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-claude-task-runner:
+    image: sutazai-mcp-nodejs:latest
+    container_name: mcp-claude-task-runner
+    environment:
+      - MCP_SERVICE=claude-task-runner
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=3010
+    ports:
+      - "3010:3010"
+    volumes:
+      - mcp-claude-task-runner-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/claude-task-runner.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Python based MCP services
+  mcp-postgres:
+    image: sutazai-mcp-python:latest
+    container_name: mcp-postgres
+    environment:
+      - MCP_SERVICE=postgres
+      - PYTHONPATH=/opt/mcp
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=4001
+    ports:
+      - "4001:4001"
+    volumes:
+      - mcp-postgres-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/postgres.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-memory-bank-mcp:
+    image: sutazai-mcp-python:latest
+    container_name: mcp-memory-bank-mcp
+    environment:
+      - MCP_SERVICE=memory-bank-mcp
+      - PYTHONPATH=/opt/mcp
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=4002
+    ports:
+      - "4002:4002"
+    volumes:
+      - mcp-memory-bank-mcp-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/memory-bank-mcp.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-knowledge-graph-mcp:
+    image: sutazai-mcp-python:latest
+    container_name: mcp-knowledge-graph-mcp
+    environment:
+      - MCP_SERVICE=knowledge-graph-mcp
+      - PYTHONPATH=/opt/mcp
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=4003
+    ports:
+      - "4003:4003"
+    volumes:
+      - mcp-knowledge-graph-mcp-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/knowledge-graph-mcp.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # CONSOLIDATED into mcp-unified-dev above (ultimatecoder)
+
+  mcp-mcp-ssh:
+    image: sutazai-mcp-python:latest
+    container_name: mcp-mcp-ssh
+    environment:
+      - MCP_SERVICE=mcp_ssh
+      - PYTHONPATH=/opt/mcp
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=4005
+    ports:
+      - "4005:4005"
+    volumes:
+      - mcp-mcp-ssh-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/mcp_ssh.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Specialized browser and automation services
+  mcp-playwright-mcp:
+    image: sutazai-mcp-specialized:latest
+    container_name: mcp-playwright-mcp
+    environment:
+      - MCP_SERVICE=playwright-mcp
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=5001
+    ports:
+      - "5001:5001"
+    volumes:
+      - mcp-playwright-mcp-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/playwright-mcp.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-github:
+    image: sutazai-mcp-specialized:latest
+    container_name: mcp-github
+    environment:
+      - MCP_SERVICE=github
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=5003
+    ports:
+      - "5003:5003"
+    volumes:
+      - mcp-github-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/github.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  mcp-compass-mcp:
+    image: sutazai-mcp-specialized:latest
+    container_name: mcp-compass-mcp
+    environment:
+      - MCP_SERVICE=compass-mcp
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=5004
+    ports:
+      - "5004:5004"
+    volumes:
+      - mcp-compass-mcp-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/compass-mcp.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Unified Development Service (consolidates ultimatecoder, language-server, sequentialthinking)
+  mcp-unified-dev:
+    image: sutazai-mcp-unified:latest
+    container_name: mcp-unified-dev
+    environment:
+      - MCP_SERVICE=unified-dev
+      - NODE_ENV=production
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=4000
+      - NODE_OPTIONS=--max-old-space-size=512
+      - PYTHON_PATH=/opt/mcp/python
+      - GO_PATH=/opt/mcp/go
+      - MAX_INSTANCES=3
+    ports:
+      - "4000:4000"
+    volumes:
+      - mcp-unified-dev-data:/var/lib/mcp
+      - mcp-logs:/var/log/mcp
+    networks:
+      - mcp-bridge
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "/opt/mcp/wrappers/unified-dev.sh", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  mcp-bridge:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.21.0.0/16
+
+volumes:
+  # Node.js services data volumes
+  mcp-claude-flow-data:
+  mcp-ruv-swarm-data:
+  mcp-files-data:
+  mcp-context7-data:
+  mcp-ddg-data:
+  mcp-nx-mcp-data:
+  mcp-extended-memory-data:
+  mcp-claude-task-runner-data:
+  
+  # Python services data volumes
+  mcp-postgres-data:
+  mcp-memory-bank-mcp-data:
+  mcp-knowledge-graph-mcp-data:
+  mcp-mcp-ssh-data:
+  
+  # Specialized services data volumes
+  mcp-playwright-mcp-data:
+  mcp-github-data:
+  mcp-compass-mcp-data:
+  
+  # Unified services data volumes
+  mcp-unified-dev-data:
+  
+  # Shared volumes
+  mcp-logs:
+  mcp-shared:

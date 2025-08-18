@@ -72,15 +72,15 @@ class DefaultTrainer(Trainer):
                 result.logs.append("Training completed successfully")
                 
             except ImportError:
-                # PyTorch not available - return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test result
-                logger.warning("PyTorch not available - returning Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test training result")
+                # PyTorch not available - return Mock result
+                logger.warning("PyTorch not available - returning Mock training result")
                 result.status = TrainingStatus.COMPLETED
                 result.model_path = f"{config.output_dir}/{config.model_name}"
                 result.metrics = {
                     "train_loss": 0.0,
-                    "message": "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test training (PyTorch not installed)"
+                    "message": "Mock training (PyTorch not installed)"
                 }
-                result.logs.append("Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test training completed (install PyTorch for real training)")
+                result.logs.append("Mock training completed (install PyTorch for real training)")
             
         except Exception as e:
             logger.error(f"Training failed: {e}")

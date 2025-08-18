@@ -931,7 +931,7 @@ Simple Tasks (Auto-Route):
   Characteristics:
     - Single-step operations
     - Standard patterns
-    - Minimal context required
+    - context required
   Default Route: Domain-specific specialist
   Resource Requirements: Low
   

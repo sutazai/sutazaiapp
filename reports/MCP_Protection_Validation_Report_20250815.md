@@ -57,7 +57,7 @@
 | postgres | ✅ PASSED | Database operations (container verified) |
 | playwright-mcp | ✅ PASSED | Browser automation |
 | memory-bank-mcp | ✅ PASSED | Memory management (module warning noted) |
-| puppeteer-mcp | ✅ PASSED | Alternative browser automation |
+| puppeteer-mcp (no longer in use) | ✅ PASSED | Alternative browser automation |
 | knowledge-graph-mcp | ✅ PASSED | Graph operations |
 | compass-mcp | ✅ PASSED | Navigation assistance |
 | github | ✅ OPERATIONAL | Direct npx execution (no wrapper) |
@@ -88,7 +88,7 @@ fd002a67453a3882a3aeb0451d81b15cb2edf3c3e34c6a8e927e3deaec03261d  memory-bank-mc
 7fd471e72ca84022cedb7a332984c3e53aa08f5bd7e7e0a2a3b70deadf779725  nx-mcp.sh
 f504aee3609f28db9dd1aad17ef5a908be1027b2ea83e82a9884f275e0b801c5  playwright-mcp.sh
 0a805e27e47a0a8be374eb12cef331939b7adfc8250ec143d44d240d99a40290  postgres.sh
-e41d8970bff7489c183129e9a9c5fd50ea8888fa04737aa43c9d999cc4c85686  puppeteer-mcp.sh
+e41d8970bff7489c183129e9a9c5fd50ea8888fa04737aa43c9d999cc4c85686  puppeteer-mcp (no longer in use).sh
 e29dd8e2105e145fbda1a4224029b9e078575f6a858a1f55933060eae9bb93e7  sequentialthinking.sh
 c1ef0308d94127d7b3616f22d26eb627c4d397af7029d5ddcf2ecf428d2a28f4  ultimatecoder.sh
 ```

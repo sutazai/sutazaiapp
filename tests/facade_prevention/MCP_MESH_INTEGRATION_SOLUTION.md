@@ -73,7 +73,7 @@ MCP_SERVICES = {
     "extended-memory": 11109,
     "mcp_ssh": 11110,
     "nx-mcp": 11111,
-    "puppeteer-mcp": 11112,
+    "puppeteer-mcp (no longer in use)": 11112,
     "memory-bank-mcp": 11113,
     "playwright-mcp": 11114,
     "knowledge-graph-mcp": 11115,

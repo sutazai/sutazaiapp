@@ -199,7 +199,7 @@ test:unit:
     REDIS_HOST: redis
   before_script:
     - pip install --cache-dir .cache/pip -r backend/requirements.txt
-    - pip install --cache-dir .cache/pip pytest pytest-cov pytest-asyncio pytest-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+    - pip install --cache-dir .cache/pip pytest pytest-cov pytest-asyncio pytest-Mock
   script:
     - echo "Running unit tests..."
     - cd backend

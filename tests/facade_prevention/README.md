@@ -180,8 +180,8 @@ FACADE_MONITOR_ENABLED=true
 ## Facade Detection Patterns
 
 ### Common Facade Indicators
-1. **Empty Responses**: APIs return empty or minimal data
-2. **Placeholder Content**: Responses contain "placeholder", "mock", "test"
+1. **Empty Responses**: APIs return empty or data
+2. **Placeholder Content**: Responses contain "placeholder", "", "test"
 3. **Unreachable Services**: Service discovery returns unreachable services  
 4. **Health Claim Mismatch**: Services claim healthy but fail actual checks
 5. **Suspiciously Fast Responses**: Complex operations complete too quickly

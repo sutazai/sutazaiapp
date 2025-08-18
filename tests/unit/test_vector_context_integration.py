@@ -1,12 +1,12 @@
 """
 Integration tests for Vector Context Injection System
-Tests the full end-to-end flow with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested dependencies
+Tests the full end-to-end flow with Mocked dependencies
 """
 
 import pytest
 import asyncio
 import json
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime
 from fastapi.testclient import TestClient
 
@@ -23,8 +23,8 @@ class TestVectorContextIntegration:
         return TestClient(app)
     
     @pytest.fixture
-    def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vector_context(self):
-        """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test vector context injector with sample data"""
+    def Mock_vector_context(self):
+        """Mock vector context injector with sample data"""
         sample_results = [
             VectorSearchResult(
                 content="Docker is a containerization platform that allows developers to package applications",
@@ -76,15 +76,15 @@ Use this knowledge context to provide accurate, informed responses.
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_chat_endpoint_with_vector_context(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci, client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vector_context):
+    async def test_chat_endpoint_with_vector_context(self, Mock_query_ollama, Mock_get_models, Mock_vci, client, Mock_vector_context):
         """Test chat endpoint with vector context integration"""
-        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models.return_value = ["tinyllama"]
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama.return_value = "Docker is a containerization platform that allows you to package applications with their dependencies into lightweight containers."
+        # Setup Mocks
+        Mock_get_models.return_value = ["tinyllama"]
+        Mock_query_ollama.return_value = "Docker is a containerization platform that allows you to package applications with their dependencies into lightweight containers."
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test vector context injector
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.analyze_user_request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=(True, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vector_context))
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.inject_context_into_prompt = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value="""
+        # Mock vector context injector
+        Mock_vci.analyze_user_request = AsyncMock(return_value=(True, Mock_vector_context))
+        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="""
 KNOWLEDGE CONTEXT FOR: What is Docker?
 [Context content here...]
 
@@ -115,21 +115,21 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
         assert data["vector_context_info"]["query_time_ms"] == 245.0
         
         # Verify the context injection was called
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.analyze_user_request.assert_called_once_with("What is Docker?")
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.inject_context_into_prompt.assert_called_once()
+        Mock_vci.analyze_user_request.assert_called_once_with("What is Docker?")
+        Mock_vci.inject_context_into_prompt.assert_called_once()
     
     @pytest.mark.asyncio
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_chat_endpoint_without_vector_context(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci, client):
+    async def test_chat_endpoint_without_vector_context(self, Mock_query_ollama, Mock_get_models, Mock_vci, client):
         """Test chat endpoint when no vector context is needed"""
-        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models.return_value = ["tinyllama"]
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama.return_value = "Hello! How can I help you today?"
+        # Setup Mocks
+        Mock_get_models.return_value = ["tinyllama"]
+        Mock_query_ollama.return_value = "Hello! How can I help you today?"
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test vector context injector to return no context needed
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.analyze_user_request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=(False, None))
+        # Mock vector context injector to return no context needed
+        Mock_vci.analyze_user_request = AsyncMock(return_value=(False, None))
         
         # Make request with non-knowledge query
         response = client.post("/chat", json={
@@ -145,21 +145,21 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
         assert data["vector_context_info"] is None
         
         # Verify the analysis was still called
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.analyze_user_request.assert_called_once_with("Hello there!")
+        Mock_vci.analyze_user_request.assert_called_once_with("Hello there!")
     
     @pytest.mark.asyncio
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_think_endpoint_with_vector_context(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci, client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vector_context):
+    async def test_think_endpoint_with_vector_context(self, Mock_query_ollama, Mock_get_models, Mock_vci, client, Mock_vector_context):
         """Test think endpoint with vector context integration"""
-        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models.return_value = ["tinyllama"]
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama.return_value = "Based on the provided knowledge context, Docker is a containerization platform..."
+        # Setup Mocks
+        Mock_get_models.return_value = ["tinyllama"]
+        Mock_query_ollama.return_value = "Based on the provided knowledge context, Docker is a containerization platform..."
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test vector context injector
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.analyze_user_request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=(True, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vector_context))
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.inject_context_into_prompt = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value="Enhanced prompt with context")
+        # Mock vector context injector
+        Mock_vci.analyze_user_request = AsyncMock(return_value=(True, Mock_vector_context))
+        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="Enhanced prompt with context")
         
         # Make request to think endpoint
         response = client.post("/think", json={
@@ -185,15 +185,15 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models') 
     @patch('app.main.query_ollama')
-    async def test_public_think_endpoint_with_vector_context(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci, client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vector_context):
+    async def test_public_think_endpoint_with_vector_context(self, Mock_query_ollama, Mock_get_models, Mock_vci, client, Mock_vector_context):
         """Test public think endpoint with vector context"""
-        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models.return_value = ["tinyllama"]
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama.return_value = "Comprehensive analysis of Docker technology..."
+        # Setup Mocks
+        Mock_get_models.return_value = ["tinyllama"]
+        Mock_query_ollama.return_value = "Comprehensive analysis of Docker technology..."
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test vector context injector
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.analyze_user_request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=(True, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vector_context))
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.inject_context_into_prompt = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value="Enhanced reasoning prompt")
+        # Mock vector context injector
+        Mock_vci.analyze_user_request = AsyncMock(return_value=(True, Mock_vector_context))
+        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="Enhanced reasoning prompt")
         
         # Make request to public think endpoint
         response = client.post("/public/think", json={
@@ -214,10 +214,10 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     
     @pytest.mark.asyncio
     @patch('app.main.vector_context_injector')
-    async def test_vector_context_error_handling(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci, client):
+    async def test_vector_context_error_handling(self, Mock_vci, client):
         """Test error handling in vector context injection"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test vector context injector to raise an exception
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.analyze_user_request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(side_effect=Exception("Database connection failed"))
+        # Mock vector context injector to raise an exception
+        Mock_vci.analyze_user_request = AsyncMock(side_effect=Exception("Database connection failed"))
         
         with patch('app.main.get_ollama_models', return_value=["tinyllama"]):
             with patch('app.main.query_ollama', return_value="Response without context"):
@@ -238,10 +238,10 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     @patch('app.main.VECTOR_CONTEXT_AVAILABLE', False)
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_fallback_when_vector_context_unavailable(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models, client):
+    async def test_fallback_when_vector_context_unavailable(self, Mock_query_ollama, Mock_get_models, client):
         """Test fallback behavior when vector context system is unavailable"""
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models.return_value = ["tinyllama"]
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama.return_value = "Response without vector context"
+        Mock_get_models.return_value = ["tinyllama"]
+        Mock_query_ollama.return_value = "Response without vector context"
         
         response = client.post("/chat", json={
             "message": "What is machine learning?",
@@ -260,13 +260,13 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_performance_under_load(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci, client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vector_context):
+    async def test_performance_under_load(self, Mock_query_ollama, Mock_get_models, Mock_vci, client, Mock_vector_context):
         """Test system performance with multiple concurrent requests"""
-        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_models.return_value = ["tinyllama"]
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_query_ollama.return_value = "Quick response"
+        # Setup Mocks
+        Mock_get_models.return_value = ["tinyllama"]
+        Mock_query_ollama.return_value = "Quick response"
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test fast vector context response
+        # Mock fast vector context response
         fast_context = KnowledgeContext(
             results=[VectorSearchResult("Quick result", {}, 0.9, "chromadb")],
             query_time_ms=50.0,  # Fast response
@@ -274,8 +274,8 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
             total_results=1,
             enriched_context="Quick context"
         )
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.analyze_user_request = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=(True, fast_context))
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.inject_context_into_prompt = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value="Quick prompt")
+        Mock_vci.analyze_user_request = AsyncMock(return_value=(True, fast_context))
+        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="Quick prompt")
         
         # Make multiple concurrent requests
         import concurrent.futures
@@ -310,12 +310,12 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     
     @pytest.mark.asyncio
     @patch('app.main.vector_context_injector')
-    async def test_vector_context_caching(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci, client):
+    async def test_vector_context_caching(self, Mock_vci, client):
         """Test that vector context results are cached appropriately"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test vector context with cache behavior
+        # Mock vector context with cache behavior
         call_count = 0
         
-        async def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_analyze(query):
+        async def Mock_analyze(query):
             nonlocal call_count
             call_count += 1
             if call_count == 1:
@@ -339,8 +339,8 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
                 )
                 return True, context
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.analyze_user_request = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_analyze
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_vci.inject_context_into_prompt = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value="Cached prompt")
+        Mock_vci.analyze_user_request = Mock_analyze
+        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="Cached prompt")
         
         with patch('app.main.get_ollama_models', return_value=["tinyllama"]):
             with patch('app.main.query_ollama', return_value="Cached response"):
@@ -378,10 +378,10 @@ class TestVectorContextHealthChecks:
     @pytest.mark.asyncio
     @patch('app.main.check_chromadb')
     @patch('app.main.check_qdrant')
-    async def test_health_endpoint_shows_vector_db_status(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_check_qdrant, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_check_chromadb, client):
+    async def test_health_endpoint_shows_vector_db_status(self, Mock_check_qdrant, Mock_check_chromadb, client):
         """Test that health endpoint includes vector database status"""
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_check_chromadb.return_value = True
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_check_qdrant.return_value = False  # Simulate Qdrant being down
+        Mock_check_chromadb.return_value = True
+        Mock_check_qdrant.return_value = False  # Simulate Qdrant being down
         
         response = client.get("/health")
         assert response.status_code == 200

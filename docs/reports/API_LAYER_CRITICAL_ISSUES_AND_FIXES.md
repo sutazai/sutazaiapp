@@ -240,7 +240,7 @@ docker stop sutazai-backend
 # 2. Remove container
 docker rm sutazai-backend
 
-# 3. Rebuild with minimal dependencies
+# 3. Rebuild with dependencies
 cd /opt/sutazaiapp
 echo "fastapi==0.115.6
 uvicorn[standard]==0.32.1
@@ -249,7 +249,7 @@ httpx==0.27.2
 psycopg2-binary==2.9.10
 prometheus-client==0.21.1" > backend/requirements-minimal.txt
 
-# 4. Update Dockerfile to use minimal requirements
+# 4. Update Dockerfile to use requirements
 sed -i 's/requirements.txt/requirements-minimal.txt/' docker/backend/Dockerfile
 
 # 5. Rebuild and start

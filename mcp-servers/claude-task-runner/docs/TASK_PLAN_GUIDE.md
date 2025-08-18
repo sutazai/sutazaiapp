@@ -39,7 +39,7 @@ Brief contextual information about the task, explaining why it's needed and its 
 
 **Implementation Steps**:
 - [ ] Step 1.1 (Create function skeleton with detailed docstring)
-- [ ] Step 1.2 (Implement core functionality with minimal complexity)
+- [ ] Step 1.2 (Implement core functionality with complexity)
 - [ ] Step 1.3 (Add verification output - rich table, JSON, etc.)
 - [ ] Step 1.4 (Verify function works as expected with example inputs)
 - [ ] Step 1.5 (Git commit working function)
@@ -167,7 +167,7 @@ Use these standard status indicators in your task documentation:
 - Make steps extremely granular and detailed
 - Always follow this pattern for function development:
   1. Create function skeleton with detailed docstring
-  2. Implement core functionality with minimal complexity
+  2. Implement core functionality with complexity
   3. Add verification output (rich table, JSON, etc.)
   4. Verify function works with example inputs
   5. Git commit the working function
@@ -187,7 +187,7 @@ Every function must include a clear, concrete verification method that produces 
 
 **Critical Verification Requirements**:
 
-1. **No Mocking Core Functionality**: Never mock the core functionality being tested
+1. **No ing Core Functionality**: Never  the core functionality being tested
 2. **Concrete Examples**: Use real data and show actual outputs, not hypothetical ones
 3. **Comparison Against Expected Results**: Always compare actual outputs against expected results
 4. **Detailed Failure Information**: Report exactly what failed and how
@@ -218,7 +218,7 @@ Every task plan must include a usage table that clearly documents CLI functions:
 
 ## Best Practices
 
-1. **Extreme Clarity**: Write tasks assuming the executor has minimal context
+1. **Extreme Clarity**: Write tasks assuming the executor has context
 2. **Step-by-Step Instructions**: Provide precise, unambiguous implementation steps
 3. **Iterative Development**: Build and verify one small piece at a time
 4. **Continuous Verification**: Always include verification steps for each function

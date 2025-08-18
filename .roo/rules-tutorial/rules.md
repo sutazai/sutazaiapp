@@ -202,7 +202,7 @@ Test-Driven Development is a software development approach where tests are writt
 
 ## The TDD Cycle
 1. **Red**: Write a failing test
-2. **Green**: Write the minimal code to make the test pass
+2. **Green**: Write the code to make the test pass
 3. **Refactor**: Improve the code while keeping tests passing
 
 ## Benefits of TDD

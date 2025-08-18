@@ -8,7 +8,7 @@ import pytest
 import asyncio
 import os
 import sys
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime, timedelta
 import json
 import uuid
@@ -60,26 +60,26 @@ class TestCacheService:
     @pytest.mark.asyncio
     async def test_cache_service_initialization(self):
         """Test cache service initializes correctly"""
-        with patch('app.core.cache.Redis') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.return_value.ping = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=True)
+        with patch('app.core.cache.Redis') as Mock_redis:
+            Mock_redis.return_value.ping = AsyncMock(return_value=True)
             cache_service = await get_cache_service()
             assert cache_service is not None
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.assert_called_once()
+            Mock_redis.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_cache_set_get_operations(self):
         """Test basic cache set and get operations"""
-        with patch('app.core.cache.Redis') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance.set = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=True)
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance.get = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=b'test_value')
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance
+        with patch('app.core.cache.Redis') as Mock_redis:
+            Mock_instance = AsyncMock()
+            Mock_instance.set = AsyncMock(return_value=True)
+            Mock_instance.get = AsyncMock(return_value=b'test_value')
+            Mock_redis.return_value = Mock_instance
             
             cache_service = await get_cache_service()
             
             # Test set operation
             await cache_service.set('test_key', 'test_value')
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance.set.assert_called_once()
+            Mock_instance.set.assert_called_once()
             
             # Test get operation
             value = await cache_service.get('test_key')
@@ -96,29 +96,29 @@ class TestCacheService:
             call_count += 1
             return f"{arg1}_{arg2}"
         
-        with patch('app.core.cache.get_cache_service') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_cache:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache.get = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=None)  # Cache miss
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache.set = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_cache.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache
+        with patch('app.core.cache.get_cache_service') as Mock_get_cache:
+            Mock_cache = AsyncMock()
+            Mock_cache.get = AsyncMock(return_value=None)  # Cache miss
+            Mock_cache.set = AsyncMock()
+            Mock_get_cache.return_value = Mock_cache
             
             # First call should execute function
             result1 = await test_function('hello', 'world')
             assert result1 == 'hello_world'
             assert call_count == 1
             
-            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test cache hit for second call
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache.get = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=b'"cached_result"')
+            # Mock cache hit for second call
+            Mock_cache.get = AsyncMock(return_value=b'"cached_result"')
             result2 = await test_function('hello', 'world')
             assert call_count == 1  # Function not called again
     
     @pytest.mark.asyncio
     async def test_cache_error_handling(self):
         """Test cache service handles Redis errors gracefully"""
-        with patch('app.core.cache.Redis') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance.set = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(side_effect=Exception('Redis error'))
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_instance
+        with patch('app.core.cache.Redis') as Mock_redis:
+            Mock_instance = AsyncMock()
+            Mock_instance.set = AsyncMock(side_effect=Exception('Redis error'))
+            Mock_redis.return_value = Mock_instance
             
             cache_service = await get_cache_service()
             
@@ -134,18 +134,18 @@ class TestConnectionPool:
     @pytest.mark.asyncio
     async def test_pool_manager_initialization(self):
         """Test connection pool manager initializes correctly"""
-        with patch('app.core.connection_pool.aiohttp.TCPConnector') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connector:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connector.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        with patch('app.core.connection_pool.aiohttp.TCPConnector') as Mock_connector:
+            Mock_connector.return_value = Mock()
             pool_manager = await get_pool_manager()
             assert pool_manager is not None
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connector.assert_called_once()
+            Mock_connector.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_http_client_connection_reuse(self):
         """Test HTTP client reuses connections"""
-        with patch('app.core.connection_pool.aiohttp.ClientSession') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_session:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_session_instance = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_session.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_session_instance
+        with patch('app.core.connection_pool.aiohttp.ClientSession') as Mock_session:
+            Mock_session_instance = AsyncMock()
+            Mock_session.return_value = Mock_session_instance
             
             from app.core.connection_pool import get_http_client
             client1 = await get_http_client()
@@ -157,11 +157,11 @@ class TestConnectionPool:
     @pytest.mark.asyncio
     async def test_pool_connection_limits(self):
         """Test connection pool respects connection limits"""
-        with patch('app.core.connection_pool.aiohttp.TCPConnector') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connector:
+        with patch('app.core.connection_pool.aiohttp.TCPConnector') as Mock_connector:
             await get_pool_manager()
             
             # Verify connector called with proper limits
-            call_args = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connector.call_args
+            call_args = Mock_connector.call_args
             assert 'limit' in call_args.kwargs
             assert 'limit_per_host' in call_args.kwargs
 
@@ -173,10 +173,10 @@ class TestTaskQueue:
     @pytest.mark.asyncio
     async def test_task_queue_initialization(self):
         """Test task queue initializes correctly"""
-        with patch('app.core.task_queue.asyncio.Queue') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue:
+        with patch('app.core.task_queue.asyncio.Queue') as Mock_queue:
             task_queue = await get_task_queue()
             assert task_queue is not None
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_queue.assert_called_once()
+            Mock_queue.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_background_task_creation(self):
@@ -184,18 +184,18 @@ class TestTaskQueue:
         async def sample_task(arg1, arg2):
             return f"{arg1}_{arg2}"
         
-        with patch('app.core.task_queue.asyncio.create_task') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_create_task:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_create_task.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_task
+        with patch('app.core.task_queue.asyncio.create_task') as Mock_create_task:
+            Mock_task = AsyncMock()
+            Mock_create_task.return_value = Mock_task
             
             task = create_background_task(sample_task, 'hello', 'world')
             assert task is not None
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_create_task.assert_called_once()
+            Mock_create_task.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_task_queue_priority_handling(self):
         """Test task queue handles priority correctly"""
-        with patch('app.core.task_queue.heapq') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_heapq:
+        with patch('app.core.task_queue.heapq') as Mock_heapq:
             from app.core.task_queue import PriorityTaskQueue
             
             queue = PriorityTaskQueue()
@@ -214,36 +214,36 @@ class TestDatabaseConnection:
     @pytest.mark.asyncio
     async def test_database_connection_success(self):
         """Test successful database connection"""
-        with patch('app.core.database.asyncpg.connect') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connection
+        with patch('app.core.database.asyncpg.connect') as Mock_connect:
+            Mock_connection = AsyncMock()
+            Mock_connect.return_value = Mock_connection
             
             connection = await get_database_connection()
             assert connection is not None
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect.assert_called_once()
+            Mock_connect.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_database_connection_retry_logic(self):
         """Test database connection retry on failure"""
-        with patch('app.core.database.asyncpg.connect') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect:
+        with patch('app.core.database.asyncpg.connect') as Mock_connect:
             # First two calls fail, third succeeds
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect.side_effect = [
+            Mock_connect.side_effect = [
                 Exception('Connection failed'),
                 Exception('Connection failed'),
-                AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+                AsyncMock()
             ]
             
             connection = await get_database_connection(max_retries=3)
             assert connection is not None
-            assert Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_connect.call_count == 3
+            assert Mock_connect.call_count == 3
     
     @pytest.mark.asyncio
     async def test_database_connection_pool_exhaustion(self):
         """Test handling of connection pool exhaustion"""
-        with patch('app.core.database.asyncpg.create_pool') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_create_pool:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.acquire.side_effect = Exception('Pool exhausted')
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_create_pool.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool
+        with patch('app.core.database.asyncpg.create_pool') as Mock_create_pool:
+            Mock_pool = AsyncMock()
+            Mock_pool.acquire.side_effect = Exception('Pool exhausted')
+            Mock_create_pool.return_value = Mock_pool
             
             from app.core.database import DatabasePool
             pool = DatabasePool()
@@ -292,8 +292,8 @@ class TestSecurityManager:
         
         # Create expired token
         expired_time = datetime.utcnow() - timedelta(hours=1)
-        with patch('app.core.security.datetime') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_datetime:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_datetime.utcnow.return_value = expired_time
+        with patch('app.core.security.datetime') as Mock_datetime:
+            Mock_datetime.utcnow.return_value = expired_time
             expired_token = security_manager.create_jwt_token(payload)
         
         # Should raise exception when decoding expired token
@@ -383,8 +383,8 @@ class TestErrorHandling:
     @pytest.mark.asyncio
     async def test_graceful_service_degradation(self):
         """Test system handles service failures gracefully"""
-        with patch('app.core.cache.get_cache_service') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache.side_effect = Exception('Cache service unavailable')
+        with patch('app.core.cache.get_cache_service') as Mock_cache:
+            Mock_cache.side_effect = Exception('Cache service unavailable')
             
             # System should continue without cache
             from app.core.cache import cached_with_fallback
@@ -398,7 +398,7 @@ class TestErrorHandling:
     
     def test_exception_logging_and_metrics(self):
         """Test exceptions are properly logged and tracked in metrics"""
-        with patch('app.core.metrics.logger') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_logger:
+        with patch('app.core.metrics.logger') as Mock_logger:
             metrics = MetricsCollector()
             
             try:
@@ -408,7 +408,7 @@ class TestErrorHandling:
                 metrics.increment('errors_total')
             
             assert metrics.get_metric('errors_total') == 1
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_logger.error.assert_called_once()
+            Mock_logger.error.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_timeout_handling(self):

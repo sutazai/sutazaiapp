@@ -224,7 +224,7 @@ EXPOSED_PORTS=$(docker-compose -f docker/docker-compose.security.yml config | gr
 log "${BLUE}Exposed ports: $EXPOSED_PORTS${NC}"
 
 if [ "$EXPOSED_PORTS" -lt 20 ]; then
-    log "${GREEN}✓ Minimal port exposure (good security practice)${NC}"
+    log "${GREEN}✓ port exposure (good security practice)${NC}"
 else
     log "${YELLOW}△ Many ports exposed - review if all are necessary${NC}"
 fi
@@ -284,7 +284,7 @@ if [ ${#FAILED_SERVICES[@]} -eq 0 ]; then
     log "• Comprehensive health checks"
     log "• Secure password authentication"
     log "• Network isolation"
-    log "• Minimal attack surface"
+    log "• attack surface"
     
     log "${YELLOW}Security Recommendations:${NC}"
     log "1. Regularly update all container images"

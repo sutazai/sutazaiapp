@@ -166,10 +166,9 @@ async def initialize_mcp_on_startup():
             logger.warning(f"⚠️ Could not integrate with service mesh: {e}")
             # Non-fatal - MCPs can still work without mesh
         
-        else:
-            if started == 0 and failed == 0 and skipped == 0:
-                logger.warning("⚠️ No MCP services initialized, but system will continue")
-                _mcp_initialized = False  # Mark as not initialized if nothing started
+        if started == 0 and failed == 0 and skipped == 0:
+            logger.warning("⚠️ No MCP services initialized, but system will continue")
+            _mcp_initialized = False  # Mark as not initialized if nothing started
         
         # Log individual service status
         for service in results.get('started', []):

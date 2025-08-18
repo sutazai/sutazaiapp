@@ -1168,7 +1168,7 @@ SEVERITY 2: Major degradation affecting significant user base
 
 SEVERITY 3: Minor issues with workarounds available
 - Customer impact: <50% customers affected AND workaround exists
-- Business impact: Minimal revenue impact, inconvenience only
+- Business impact: revenue impact, inconvenience only
 - Response time: 30 minutes to acknowledge
 - Escalation: Team lead and affected teams
 
@@ -1228,7 +1228,7 @@ Most incidents aren't caused by the service that's failing—they're caused by s
 #### 3. Root Cause Analysis and Resolution Implementation (30-90 minutes)
 **Standard Process:**
 - Execute systematic root cause analysis using established methodologies and diagnostic frameworks
-- Develop and test resolution approaches with minimal business impact and risk assessment
+- Develop and test resolution approaches with business impact and risk assessment
 - Implement resolution with comprehensive monitoring and rollback capability
 - Validate system recovery and performance restoration against baseline metrics
 - Document resolution steps and verify incident resolution criteria are met
@@ -1432,7 +1432,7 @@ After 20 years, you develop a mental database of incident patterns:
 ### Success Criteria (Enhanced for 20-Year Experience Level)
 
 **Immediate Success:**
-- [ ] Incident resolved within SLA with minimal business impact
+- [ ] Incident resolved within SLA with business impact
 - [ ] No additional systems affected during resolution process
 - [ ] Stakeholder communication maintained throughout incident lifecycle
 - [ ] Complete technical understanding achieved and documented

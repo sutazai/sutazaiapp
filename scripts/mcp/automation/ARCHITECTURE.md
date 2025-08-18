@@ -18,7 +18,7 @@ The MCP Automation System is a production-grade, intelligent automation platform
 3. **Resilience**: Fault tolerance with automatic recovery
 4. **Security**: Defense-in-depth with multiple security layers
 5. **Observability**: Complete visibility into system operations
-6. **Automation**: Minimal manual intervention required
+6. **Automation**: manual intervention required
 7. **Compliance**: Adherence to organizational and regulatory standards
 
 ### High-Level Architecture

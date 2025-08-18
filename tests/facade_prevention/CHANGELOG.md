@@ -135,7 +135,7 @@ When implementing new facade detection:
 - **Verify data completeness and accuracy**
 - **Check response times for suspicious patterns**
 - **Validate end-to-end workflows**
-- **Monitor for placeholder or mock content**
+- **Monitor for placeholder or  content**
 
 ### Contributing
 1. All facade tests must be async-compatible

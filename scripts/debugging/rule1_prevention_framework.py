@@ -4,7 +4,7 @@ RULE 1 PREVENTION FRAMEWORK - Elite Anti-Fantasy Code System
 Prevents fantasy implementations and ensures real functionality
 
 This framework provides:
-1. Static analysis to detect mock/fantasy code patterns
+1. Static analysis to detect /fantasy code patterns
 2. CI/CD hooks to prevent Rule 1 violations
 3. Runtime validation of real functionality
 4. Automated testing for fantasy code detection
@@ -59,7 +59,7 @@ class FantasyCodeDetector:
     def _load_fantasy_patterns(self) -> List[FantasyPattern]:
         """Load all known fantasy code patterns"""
         return [
-            # Mock/Hardcoded Response Patterns
+            # /Hardcoded Response Patterns
             FantasyPattern(
                 name="hardcoded_health_response",
                 pattern=r'return\s*{\s*["\']status["\']\s*:\s*["\']healthy["\']',
@@ -68,9 +68,9 @@ class FantasyCodeDetector:
                 regex=True
             ),
             FantasyPattern(
-                name="mock_api_response",
+                name="_api_response",
                 pattern=r'#.*[Mm]ock.*response|#.*[Ff]ake.*response',
-                description="Comment indicating mock or fake response",
+                description="Comment indicating  or fake response",
                 severity="CRITICAL",
                 regex=True
             ),
@@ -82,9 +82,9 @@ class FantasyCodeDetector:
                 regex=True
             ),
             FantasyPattern(
-                name="mock_todo_comment",
-                pattern="# Remove Remove Remove Mocks",
-                description="Explicit mock TODO comment indicating fake implementation",
+                name="_todo_comment",
+                pattern="#  s",
+                description="Explicit  TODO comment indicating fake implementation",
                 severity="CRITICAL",
                 regex=False
             ),
@@ -236,9 +236,9 @@ class FantasyCodeDetector:
         """Get specific fix suggestion for pattern"""
         fixes = {
             "hardcoded_health_response": "Replace with real HTTP call to backend health endpoint",
-            "mock_api_response": "Implement real API call using httpx or requests",
+            "_api_response": "Implement real API call using httpx or requests",
             "hardcoded_status_data": "Implement real system metrics collection using psutil",
-            "mock_todo_comment": "Remove mock implementation and implement real functionality",
+            "_todo_comment": "Remove  implementation and implement real functionality",
             "subprocess_http_bridge": "Use proper HTTP service architecture instead of STDIO bridge",
             "unused_service_config": "Either implement integration or remove unused configuration",
             "fantasy_connection": "Implement real client connection initialization",

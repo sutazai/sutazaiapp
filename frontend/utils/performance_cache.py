@@ -143,7 +143,7 @@ class SmartPreloader:
     @staticmethod
     def preload_for_page() -> None:
         """Preload components based on current page context"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementation - would preload relevant components
+        # Mock implementation - would preload relevant components
         current_time = time.time()
         SmartPreloader._preload_cache["last_preload"] = current_time
         

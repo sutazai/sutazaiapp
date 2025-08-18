@@ -3,7 +3,7 @@ Tests for optional feature flags and service abstractions
 """
 import os
 import pytest
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, patch, AsyncMock
 import sys
 # Path handled by pytest configuration
 
@@ -45,7 +45,7 @@ class TestCodeCompletionFactory:
     
     def test_null_client_when_disabled(self):
         """Test that null client is returned when feature is disabled"""
-        settings = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=Settings)
+        settings = Mock(spec=Settings)
         settings.ENABLE_TABBY = False
         
         client = code_completion_factory(settings)
@@ -54,7 +54,7 @@ class TestCodeCompletionFactory:
     
     def test_tabby_client_when_enabled(self):
         """Test that TabbyML client is returned when feature is enabled"""
-        settings = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=Settings)
+        settings = Mock(spec=Settings)
         settings.ENABLE_TABBY = True
         settings.TABBY_URL = 'http://tabby:8080'
         settings.TABBY_API_KEY = os.getenv('TEST_API_KEY', 'test-api-key-placeholder')
@@ -65,7 +65,7 @@ class TestCodeCompletionFactory:
     @pytest.mark.asyncio
     async def test_null_client_returns_disabled_message(self):
         """Test that null client returns appropriate disabled message"""
-        settings = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=Settings)
+        settings = Mock(spec=Settings)
         settings.ENABLE_TABBY = False
         
         client = code_completion_factory(settings)
@@ -79,7 +79,7 @@ class TestCodeCompletionFactory:
     @pytest.mark.asyncio
     async def test_null_client_health_check(self):
         """Test null client health check always returns True"""
-        settings = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=Settings)
+        settings = Mock(spec=Settings)
         settings.ENABLE_TABBY = False
         
         client = code_completion_factory(settings)
@@ -95,7 +95,7 @@ class TestTrainingFactory:
     
     def test_default_trainer_when_disabled(self):
         """Test that default trainer is returned when FSDP is disabled"""
-        settings = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=Settings)
+        settings = Mock(spec=Settings)
         settings.ENABLE_FSDP = False
         
         trainer = trainer_factory(settings)
@@ -104,7 +104,7 @@ class TestTrainingFactory:
     
     def test_fsdp_trainer_when_enabled(self):
         """Test that FSDP trainer is returned when feature is enabled"""
-        settings = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=Settings)
+        settings = Mock(spec=Settings)
         settings.ENABLE_FSDP = True
         
         trainer = trainer_factory(settings)
@@ -113,7 +113,7 @@ class TestTrainingFactory:
     @pytest.mark.asyncio
     async def test_default_trainer_train(self):
         """Test default trainer can execute training"""
-        settings = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=Settings)
+        settings = Mock(spec=Settings)
         settings.ENABLE_FSDP = False
         
         trainer = trainer_factory(settings)
@@ -126,7 +126,7 @@ class TestTrainingFactory:
     @pytest.mark.asyncio
     async def test_default_trainer_health_check(self):
         """Test default trainer health check"""
-        settings = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=Settings)
+        settings = Mock(spec=Settings)
         settings.ENABLE_FSDP = False
         
         trainer = trainer_factory(settings)
@@ -141,14 +141,14 @@ class TestFeatureEndpoint:
         """Test that features endpoint returns correct structure"""
         from backend.app.api.v1.features import get_feature_flags
         
-        with patch('backend.app.api.v1.features.get_settings') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_settings:
-            settings = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(spec=Settings)
+        with patch('backend.app.api.v1.features.get_settings') as Mock_get_settings:
+            settings = Mock(spec=Settings)
             settings.ENABLE_FSDP = True
             settings.ENABLE_TABBY = False
             settings.TABBY_URL = 'http://tabby:8080'
             settings.ENABLE_GPU = False
             settings.ENABLE_MONITORING = True
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_settings.return_value = settings
+            Mock_get_settings.return_value = settings
             
             response = await get_feature_flags(settings)
             

@@ -55,7 +55,7 @@ ERROR - ✗ MCP service failed to start: http
 ERROR - ✗ MCP service failed to start: ddg
 ERROR - ✗ MCP service failed to start: github
 ERROR - ✗ MCP service failed to start: extended-memory
-ERROR - ✗ MCP service failed to start: puppeteer-mcp
+ERROR - ✗ MCP service failed to start: puppeteer-mcp (no longer in use)
 ERROR - ✗ MCP service failed to start: playwright-mcp
 ```
 

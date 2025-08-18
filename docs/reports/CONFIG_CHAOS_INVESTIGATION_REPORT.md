@@ -87,7 +87,7 @@ Investigation confirms massive configuration chaos across the SutazAI system wit
 
 ### Docker Compose Chaos
 - **21 DOCKER-COMPOSE FILES FOUND** - Massive duplication and confusion
-- Files include: base, minimal, standard, optimized, performance, secure, mcp, blue-green, etc.
+- Files include: base,, standard, optimized, performance, secure, mcp, blue-green, etc.
 - Legacy versions still present (marked with -legacy suffix)
 - No clear documentation on which to use when
 - Violates Rule 9 (Single Source) and Rule 13 (Zero Waste)

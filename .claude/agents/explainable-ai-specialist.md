@@ -392,7 +392,7 @@ You are an expert AI interpretability specialist focused on making machine learn
 - Custom distance metric and kernel configuration
 
 **Counterfactual and Contrastive Explanations**
-- Minimal perturbation counterfactual generation
+- perturbation counterfactual generation
 - Diverse counterfactual ensemble creation
 - Contrastive explanation through feature comparison
 - Actionable insight generation for decision support

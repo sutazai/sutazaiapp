@@ -694,7 +694,7 @@ veteran_waste_patterns:
     signatures:
       - "Tests that always pass"
       - "Tests for deleted functionality"
-      - "Mocks that mock nothing"
+      - "s that  nothing"
     risk_level: "LOW"
     prevalence: "Found in 78% of test suites"
     impact: "False confidence in test coverage"

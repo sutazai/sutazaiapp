@@ -36,11 +36,11 @@ rules:
       subcategory: cryptography
       cwe: "CWE-326: Inadequate Encryption Strength"
 
-  - id: sutazai-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test-token-validation
+  - id: sutazai-Mock-token-validation
     pattern: |
       if $TOKEN == "valid_token":
           return ...
-    message: "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test token validation allows authentication bypass"
+    message: "Mock token validation allows authentication bypass"
     severity: ERROR
     languages: [python]
     metadata:

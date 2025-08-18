@@ -1,0 +1,1999 @@
+{
+  "validation_timestamp": "2025-08-17T10:12:04.415594",
+  "total_duration_seconds": 0.15722131729125977,
+  "mcp_protocol_validation": {
+    "services_tested": [
+      {
+        "service_name": "files",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.01113128662109375,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      {
+        "service_name": "http-fetch",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0024805068969726562,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      {
+        "service_name": "knowledge-graph-mcp",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.002153158187866211,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      {
+        "service_name": "nx-mcp",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.002190828323364258,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      {
+        "service_name": "http",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0017848014831542969,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      {
+        "service_name": "ruv-swarm",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001753091812133789,
+        "error_details": [
+          "MCP protocol returned 429"
+        ]
+      },
+      {
+        "service_name": "ddg",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001382589340209961,
+        "error_details": [
+          "MCP protocol returned 429"
+        ]
+      },
+      {
+        "service_name": "claude-flow",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001325368881225586,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "compass-mcp",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0016963481903076172,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "memory-bank-mcp",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0014581680297851562,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "ultimatecoder",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.00404810905456543,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "context7",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0014214515686035156,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "playwright-mcp",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0012063980102539062,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "mcp-ssh",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0012624263763427734,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "extended-memory",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0011823177337646484,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "sequentialthinking",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0013725757598876953,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "puppeteer-mcp (no longer in use)",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0012776851654052734,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "language-server",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0013186931610107422,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "github",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001291036605834961,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "postgres",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001363992691040039,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      {
+        "service_name": "claude-task-runner",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0012247562408447266,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      }
+    ],
+    "functional_services": [],
+    "non_functional_services": [
+      "files",
+      "http-fetch",
+      "knowledge-graph-mcp",
+      "nx-mcp",
+      "http",
+      "ruv-swarm",
+      "ddg",
+      "claude-flow",
+      "compass-mcp",
+      "memory-bank-mcp",
+      "ultimatecoder",
+      "context7",
+      "playwright-mcp",
+      "mcp-ssh",
+      "extended-memory",
+      "sequentialthinking",
+      "puppeteer-mcp (no longer in use)",
+      "language-server",
+      "github",
+      "postgres",
+      "claude-task-runner"
+    ],
+    "protocol_compliance": {
+      "files": {
+        "service_name": "files",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.01113128662109375,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      "http-fetch": {
+        "service_name": "http-fetch",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0024805068969726562,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      "knowledge-graph-mcp": {
+        "service_name": "knowledge-graph-mcp",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.002153158187866211,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      "nx-mcp": {
+        "service_name": "nx-mcp",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.002190828323364258,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      "http": {
+        "service_name": "http",
+        "basic_connectivity": true,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0017848014831542969,
+        "error_details": [
+          "MCP protocol returned 404"
+        ]
+      },
+      "ruv-swarm": {
+        "service_name": "ruv-swarm",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001753091812133789,
+        "error_details": [
+          "MCP protocol returned 429"
+        ]
+      },
+      "ddg": {
+        "service_name": "ddg",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001382589340209961,
+        "error_details": [
+          "MCP protocol returned 429"
+        ]
+      },
+      "claude-flow": {
+        "service_name": "claude-flow",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001325368881225586,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "compass-mcp": {
+        "service_name": "compass-mcp",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0016963481903076172,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "memory-bank-mcp": {
+        "service_name": "memory-bank-mcp",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0014581680297851562,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "ultimatecoder": {
+        "service_name": "ultimatecoder",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.00404810905456543,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "context7": {
+        "service_name": "context7",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0014214515686035156,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "playwright-mcp": {
+        "service_name": "playwright-mcp",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0012063980102539062,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "mcp-ssh": {
+        "service_name": "mcp-ssh",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0012624263763427734,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "extended-memory": {
+        "service_name": "extended-memory",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0011823177337646484,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "sequentialthinking": {
+        "service_name": "sequentialthinking",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0013725757598876953,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "puppeteer-mcp (no longer in use)": {
+        "service_name": "puppeteer-mcp (no longer in use)",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0012776851654052734,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "language-server": {
+        "service_name": "language-server",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0013186931610107422,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "github": {
+        "service_name": "github",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001291036605834961,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "postgres": {
+        "service_name": "postgres",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.001363992691040039,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      },
+      "claude-task-runner": {
+        "service_name": "claude-task-runner",
+        "basic_connectivity": false,
+        "mcp_protocol_response": false,
+        "tools_list_available": false,
+        "response_time": 0.0012247562408447266,
+        "error_details": [
+          "MCP protocol returned 403"
+        ]
+      }
+    },
+    "response_analysis": {},
+    "summary": {
+      "total_services_tested": 21,
+      "functional_services_count": 0,
+      "non_functional_services_count": 21,
+      "functionality_percentage": 0.0,
+      "avg_response_time": 0.002110742387317476
+    }
+  },
+  "ai_functionality_validation": {
+    "note": "Basic functionality tested via MCP protocol"
+  },
+  "performance_validation": {
+    "note": "Performance assessed via response times"
+  },
+  "security_validation": {
+    "note": "Basic security assessed via error handling"
+  },
+  "fault_tolerance_validation": {
+    "note": "Fault tolerance assessed via timeout handling"
+  },
+  "system_truth_analysis": {
+    "analysis_timestamp": "2025-08-17T10:12:04.415475",
+    "claimed_vs_actual": {
+      "claimed_status": "FULLY OPERATIONAL - 21/21 MCP servers operational, 100% functional",
+      "actual_status": "CRITICAL FAILURE",
+      "severity_score": 10
+    },
+    "functionality_reality": {
+      "mcp_services_functionality": 0.0,
+      "endpoint_functionality": 0.0,
+      "overall_functionality": 0.0
+    },
+    "discrepancies_found": [
+      "MCP functionality is 0.0%, not 100% as claimed",
+      "Critical endpoint functionality is 0.0%, not 100% as claimed",
+      "Non-functional services found: ['files', 'http-fetch', 'knowledge-graph-mcp', 'nx-mcp', 'http', 'ruv-swarm', 'ddg', 'claude-flow', 'compass-mcp', 'memory-bank-mcp', 'ultimatecoder', 'context7', 'playwright-mcp', 'mcp-ssh', 'extended-memory', 'sequentialthinking', 'puppeteer-mcp (no longer in use)', 'language-server', 'github', 'postgres', 'claude-task-runner']",
+      "Non-functional endpoints found: ['/health', '/api/v1/mcp/services', '/api/v1/mcp/claude-flow/tools', '/api/v1/mcp/ruv-swarm/tools', '/api/v1/mcp/memory-bank-mcp/tools', '/docs', '/metrics']"
+    ],
+    "final_verdict": {
+      "verdict": "CRITICAL SYSTEM FAILURE - Manual QA findings confirmed",
+      "recommendation": "Immediate system shutdown and complete infrastructure rebuild required",
+      "confidence_level": "HIGH",
+      "evidence_quality": "COMPREHENSIVE"
+    },
+    "evidence_summary": {
+      "total_services_tested": 21,
+      "functional_services": 0,
+      "total_endpoints_tested": 7,
+      "functional_endpoints": 0,
+      "containers_running": 24
+    }
+  },
+  "final_verdict": {
+    "verdict": "CRITICAL SYSTEM FAILURE - Manual QA findings confirmed",
+    "recommendation": "Immediate system shutdown and complete infrastructure rebuild required",
+    "confidence_level": "HIGH",
+    "evidence_quality": "COMPREHENSIVE"
+  },
+  "detailed_evidence": {
+    "mcp_validation": {
+      "services_tested": [
+        {
+          "service_name": "files",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.01113128662109375,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        {
+          "service_name": "http-fetch",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0024805068969726562,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        {
+          "service_name": "knowledge-graph-mcp",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.002153158187866211,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        {
+          "service_name": "nx-mcp",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.002190828323364258,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        {
+          "service_name": "http",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0017848014831542969,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        {
+          "service_name": "ruv-swarm",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001753091812133789,
+          "error_details": [
+            "MCP protocol returned 429"
+          ]
+        },
+        {
+          "service_name": "ddg",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001382589340209961,
+          "error_details": [
+            "MCP protocol returned 429"
+          ]
+        },
+        {
+          "service_name": "claude-flow",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001325368881225586,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "compass-mcp",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0016963481903076172,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "memory-bank-mcp",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0014581680297851562,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "ultimatecoder",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.00404810905456543,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "context7",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0014214515686035156,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "playwright-mcp",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0012063980102539062,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "mcp-ssh",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0012624263763427734,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "extended-memory",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0011823177337646484,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "sequentialthinking",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0013725757598876953,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "puppeteer-mcp (no longer in use)",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0012776851654052734,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "language-server",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0013186931610107422,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "github",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001291036605834961,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "postgres",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001363992691040039,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        {
+          "service_name": "claude-task-runner",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0012247562408447266,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        }
+      ],
+      "functional_services": [],
+      "non_functional_services": [
+        "files",
+        "http-fetch",
+        "knowledge-graph-mcp",
+        "nx-mcp",
+        "http",
+        "ruv-swarm",
+        "ddg",
+        "claude-flow",
+        "compass-mcp",
+        "memory-bank-mcp",
+        "ultimatecoder",
+        "context7",
+        "playwright-mcp",
+        "mcp-ssh",
+        "extended-memory",
+        "sequentialthinking",
+        "puppeteer-mcp (no longer in use)",
+        "language-server",
+        "github",
+        "postgres",
+        "claude-task-runner"
+      ],
+      "protocol_compliance": {
+        "files": {
+          "service_name": "files",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.01113128662109375,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        "http-fetch": {
+          "service_name": "http-fetch",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0024805068969726562,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        "knowledge-graph-mcp": {
+          "service_name": "knowledge-graph-mcp",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.002153158187866211,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        "nx-mcp": {
+          "service_name": "nx-mcp",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.002190828323364258,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        "http": {
+          "service_name": "http",
+          "basic_connectivity": true,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0017848014831542969,
+          "error_details": [
+            "MCP protocol returned 404"
+          ]
+        },
+        "ruv-swarm": {
+          "service_name": "ruv-swarm",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001753091812133789,
+          "error_details": [
+            "MCP protocol returned 429"
+          ]
+        },
+        "ddg": {
+          "service_name": "ddg",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001382589340209961,
+          "error_details": [
+            "MCP protocol returned 429"
+          ]
+        },
+        "claude-flow": {
+          "service_name": "claude-flow",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001325368881225586,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "compass-mcp": {
+          "service_name": "compass-mcp",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0016963481903076172,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "memory-bank-mcp": {
+          "service_name": "memory-bank-mcp",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0014581680297851562,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "ultimatecoder": {
+          "service_name": "ultimatecoder",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.00404810905456543,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "context7": {
+          "service_name": "context7",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0014214515686035156,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "playwright-mcp": {
+          "service_name": "playwright-mcp",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0012063980102539062,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "mcp-ssh": {
+          "service_name": "mcp-ssh",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0012624263763427734,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "extended-memory": {
+          "service_name": "extended-memory",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0011823177337646484,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "sequentialthinking": {
+          "service_name": "sequentialthinking",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0013725757598876953,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "puppeteer-mcp (no longer in use)": {
+          "service_name": "puppeteer-mcp (no longer in use)",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0012776851654052734,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "language-server": {
+          "service_name": "language-server",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0013186931610107422,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "github": {
+          "service_name": "github",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001291036605834961,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "postgres": {
+          "service_name": "postgres",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.001363992691040039,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        },
+        "claude-task-runner": {
+          "service_name": "claude-task-runner",
+          "basic_connectivity": false,
+          "mcp_protocol_response": false,
+          "tools_list_available": false,
+          "response_time": 0.0012247562408447266,
+          "error_details": [
+            "MCP protocol returned 403"
+          ]
+        }
+      },
+      "response_analysis": {},
+      "summary": {
+        "total_services_tested": 21,
+        "functional_services_count": 0,
+        "non_functional_services_count": 21,
+        "functionality_percentage": 0.0,
+        "avg_response_time": 0.002110742387317476
+      }
+    },
+    "resource_analysis": {
+      "timestamp": "2025-08-17T10:12:04.377166",
+      "container_status": {
+        "total_containers": 24,
+        "containers": [
+          {
+            "Command": "\"dockerd-entrypoint.\u2026\"",
+            "CreatedAt": "2025-08-17 00:11:12 +0200 CEST",
+            "ID": "a7bbb77f5fe2",
+            "Image": "docker:25.0.5-dind-alpine3.19",
+            "Labels": "",
+            "LocalVolumes": "1",
+            "Mounts": "4a699901b260b4\u2026",
+            "Names": "sutazai-mcp-orchestrator-notls",
+            "Networks": "sutazai-network",
+            "Ports": "2376/tcp, 0.0.0.0:12377->2375/tcp, [::]:12377->2375/tcp",
+            "RunningFor": "10 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 10 hours"
+          },
+          {
+            "Command": "\"docker-entrypoint.s\u2026\"",
+            "CreatedAt": "2025-08-16 12:39:01 +0200 CEST",
+            "ID": "9c5335f0238a",
+            "Image": "hashicorp/consul:1.17.1",
+            "Labels": "org.opencontainers.image.source=https://github.com/hashicorp/consul,com.docker.compose.container-number=1,com.docker.compose.project.working_dir=/opt/sutazaiapp,org.opencontainers.image.description=Consul is a datacenter runtime that provides service discovery, configuration, and orchestration.,org.opencontainers.image.version=1.17.1,com.docker.compose.config-hash=4e5257de547687d367fc0e84a7753cdc35f49fa0bf55cfd2c72761a0775ce723,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,org.opencontainers.image.authors=Consul Team <consul@hashicorp.com>,org.opencontainers.image.title=consul,org.opencontainers.image.url=https://www.consul.io/,org.opencontainers.image.vendor=HashiCorp,version=1.17.1,com.docker.compose.oneoff=False,com.docker.compose.service=consul,com.docker.compose.version=1.29.2,org.opencontainers.image.documentation=https://www.consul.io/docs",
+            "LocalVolumes": "1",
+            "Mounts": "/opt/sutazaiap\u2026,sutazaiapp_con\u2026",
+            "Names": "sutazai-consul",
+            "Networks": "sutazai-network",
+            "Ports": "8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:10006->8500/tcp, [::]:10006->8500/tcp",
+            "RunningFor": "22 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 22 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/node_exporter \u2026\"",
+            "CreatedAt": "2025-08-16 12:38:14 +0200 CEST",
+            "ID": "78fadb519c0b",
+            "Image": "prom/node-exporter:v1.7.0",
+            "Labels": "com.docker.compose.oneoff=False,com.docker.compose.version=1.29.2,maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>,com.docker.compose.container-number=1,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=node-exporter,com.docker.compose.config-hash=0a213fc4ec2a1ded7db8fae0516ded00f8b1313ce3af6e6a5376b395ce19a574",
+            "LocalVolumes": "0",
+            "Mounts": "/proc,/sys,/",
+            "Names": "sutazai-node-exporter",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10205->9100/tcp, [::]:10205->9100/tcp",
+            "RunningFor": "22 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 22 hours"
+          },
+          {
+            "Command": "\"uvicorn app.main:ap\u2026\"",
+            "CreatedAt": "2025-08-16 08:23:14 +0200 CEST",
+            "ID": "88950d59f8a8",
+            "Image": "sutazaiapp-backend:v1.0.0",
+            "Labels": "com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=backend,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=f85a75ba5206006c73c022d51b86317cd16055e54c1c3d0c2f31a71184c5f488,com.docker.compose.container-number=1,com.docker.compose.oneoff=False",
+            "LocalVolumes": "1",
+            "Mounts": "/opt/sutazaiap\u2026,sutazaiapp_age\u2026,/opt/sutazaiap\u2026,/opt/sutazaiap\u2026,/opt/sutazaiapp",
+            "Names": "sutazai-backend",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10010->8000/tcp, [::]:10010->8000/tcp",
+            "RunningFor": "26 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up About an hour (healthy)"
+          },
+          {
+            "Command": "\"/bin/postgres_expor\u2026\"",
+            "CreatedAt": "2025-08-16 08:01:59 +0200 CEST",
+            "ID": "24d4bf87f99d",
+            "Image": "prometheuscommunity/postgres-exporter:v0.15.0",
+            "Labels": "maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>",
+            "LocalVolumes": "0",
+            "Mounts": "",
+            "Names": "sutazai-postgres-exporter",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10207->9187/tcp, [::]:10207->9187/tcp",
+            "RunningFor": "26 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 26 hours"
+          },
+          {
+            "Command": "\"./entrypoint.sh\"",
+            "CreatedAt": "2025-08-16 07:16:51 +0200 CEST",
+            "ID": "46ece25e73f4",
+            "Image": "qdrant/qdrant:v1.9.7",
+            "Labels": "com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,org.opencontainers.image.documentation=https://qdrant.com/docs,org.opencontainers.image.url=https://qdrant.com/,com.docker.compose.service=qdrant,org.opencontainers.image.source=https://github.com/qdrant/qdrant,org.opencontainers.image.title=Qdrant,com.docker.compose.container-number=1,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=ac49454aef94735ffc4306dc7a3a0afaecfd7e496c981605a4b8ebf89d7ea986,com.docker.compose.oneoff=False,org.opencontainers.image.description=Official Qdrant image,org.opencontainers.image.vendor=Qdrant,org.opencontainers.image.version=v1.9.7",
+            "LocalVolumes": "1",
+            "Mounts": "sutazaiapp_qdr\u2026",
+            "Names": "sutazai-qdrant",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10101->6333/tcp, [::]:10101->6333/tcp, 0.0.0.0:10102->6334/tcp, [::]:10102->6334/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/alertmanager -\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "7169052ffcec",
+            "Image": "prom/alertmanager:v0.27.0",
+            "Labels": "com.docker.compose.project=sutazaiapp,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=alertmanager,maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>,com.docker.compose.config-hash=8a9c24578221e5851349c88830b512f5ca6126e54f57819ddc196eb8a0816ac6,com.docker.compose.oneoff=False,com.docker.compose.version=1.29.2,com.docker.compose.container-number=1,com.docker.compose.project.config_files=docker-compose.yml",
+            "LocalVolumes": "1",
+            "Mounts": "sutazaiapp_ale\u2026,/opt/sutazaiap\u2026",
+            "Names": "sutazai-alertmanager",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10203->9093/tcp, [::]:10203->9093/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/prometheus --c\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "a0f147ffd5f9",
+            "Image": "prom/prometheus:v2.48.1",
+            "Labels": "com.docker.compose.config-hash=ded85e728a719f3787693fe0ca592552d7461d813e6c4d37527cc65f7b9d4708,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.service=prometheus,com.docker.compose.version=1.29.2",
+            "LocalVolumes": "1",
+            "Mounts": "/opt/sutazaiap\u2026,sutazaiapp_pro\u2026",
+            "Names": "sutazai-prometheus",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10200->9090/tcp, [::]:10200->9090/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 26 hours (healthy)"
+          },
+          {
+            "Command": "\"/usr/bin/cadvisor -\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "abde9fbc8d13",
+            "Image": "gcr.io/cadvisor/cadvisor:v0.47.2",
+            "Labels": "com.docker.compose.version=1.29.2,com.docker.compose.config-hash=d7c3642c999cd42219d489a77f9c20a6ba370998fa4c1fdc2b0a84c4a10969b8,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=cadvisor",
+            "LocalVolumes": "0",
+            "Mounts": "/sys,/var/lib/docker,/var/run,/dev/disk,/",
+            "Names": "sutazai-cadvisor",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10206->8080/tcp, [::]:10206->8080/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/go/bin/all-in-one-\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "ed87ed393c96",
+            "Image": "jaegertracing/all-in-one:1.53",
+            "Labels": "com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=jaeger,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=737b7ce13d4f93ef50875fd100f7df3c84bdc56e83bf34194c1e2409e4890970,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp",
+            "LocalVolumes": "1",
+            "Mounts": "73f1c1bcef8045\u2026",
+            "Names": "sutazai-jaeger",
+            "Networks": "sutazai-network",
+            "Ports": "5775/udp, 6831-6832/udp, 5778/tcp, 0.0.0.0:10214->4317/tcp, [::]:10214->4317/tcp, 0.0.0.0:10215->4318/tcp, [::]:10215->4318/tcp, 0.0.0.0:10213->9411/tcp, [::]:10213->9411/tcp, 0.0.0.0:10212->14250/tcp, [::]:10212->14250/tcp, 0.0.0.0:10211->14268/tcp, [::]:10211->14268/tcp, 0.0.0.0:10210->16686/tcp, [::]:10210->16686/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/docker-entrypoint.\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "4b8e1b2e18ee",
+            "Image": "kong:alpine",
+            "Labels": "com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.version=1.29.2,maintainer=Kong Docker Maintainers <docker@konghq.com> (@team-gateway-bot),com.docker.compose.config-hash=b4af11040110bf09d84271e3f8232db4b022dc4d544b01bdc7a1abd2f23d0a16,com.docker.compose.container-number=1,com.docker.compose.service=kong",
+            "LocalVolumes": "0",
+            "Mounts": "/opt/sutazaiap\u2026",
+            "Names": "sutazai-kong",
+            "Networks": "sutazai-network",
+            "Ports": "8443-8444/tcp, 0.0.0.0:10005->8000/tcp, [::]:10005->8000/tcp, 0.0.0.0:10015->8001/tcp, [::]:10015->8001/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/blackbox_expor\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "54e2b9b83ab4",
+            "Image": "prom/blackbox-exporter:v0.24.0",
+            "Labels": "com.docker.compose.config-hash=25a6df96e0e4ee10bacb4fafde41a92bc2fedaa015685e6e5eeb25e3a95cd7f3,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.service=blackbox-exporter,com.docker.compose.version=1.29.2,maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.working_dir=/opt/sutazaiapp",
+            "LocalVolumes": "0",
+            "Mounts": "/opt/sutazaiap\u2026",
+            "Names": "sutazai-blackbox-exporter",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10204->9115/tcp, [::]:10204->9115/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/docker_entrypoint.\u2026\"",
+            "CreatedAt": "2025-08-16 07:02:20 +0200 CEST",
+            "ID": "4ba83641e15a",
+            "Image": "chromadb/chroma:0.5.0",
+            "Labels": "com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=chromadb,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=8d81648a19cb1a7089e09a48aa2175bc5ad802620d96573221f3c3d07097c9df,com.docker.compose.container-number=1,com.docker.compose.oneoff=False",
+            "LocalVolumes": "1",
+            "Mounts": "sutazaiapp_chr\u2026",
+            "Names": "sutazai-chromadb",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10100->8000/tcp, [::]:10100->8000/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/ollama serve\"",
+            "CreatedAt": "2025-08-16 07:02:20 +0200 CEST",
+            "ID": "6666dc26cbe8",
+            "Image": "ollama/ollama:0.3.13",
+            "Labels": "com.docker.compose.container-number=1,org.opencontainers.image.ref.name=ubuntu,org.opencontainers.image.version=22.04,com.docker.compose.config-hash=79753053d2505c11fd573f030f5edbc8a5a5670fe4a75d854187bd621514969b,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=ollama,com.docker.compose.version=1.29.2",
+            "LocalVolumes": "2",
+            "Mounts": "/opt/sutazaiap\u2026,/opt/sutazaiap\u2026,sutazaiapp_oll\u2026,sutazaiapp_mod\u2026",
+            "Names": "sutazai-ollama",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10104->11434/tcp, [::]:10104->11434/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"tini -g -- /startup\u2026\"",
+            "CreatedAt": "2025-08-16 07:02:14 +0200 CEST",
+            "ID": "681be0889dad",
+            "Image": "neo4j:5.15.0-community",
+            "Labels": "com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=neo4j,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=f60c5335434ecef62d211578005a364266ecd34c522fa582d8fded6d075517a9",
+            "LocalVolumes": "2",
+            "Mounts": "681c038163e033\u2026,sutazaiapp_neo\u2026",
+            "Names": "sutazai-neo4j",
+            "Networks": "sutazai-network",
+            "Ports": "7473/tcp, 0.0.0.0:10002->7474/tcp, [::]:10002->7474/tcp, 0.0.0.0:10003->7687/tcp, [::]:10003->7687/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"docker-entrypoint.s\u2026\"",
+            "CreatedAt": "2025-08-16 07:02:10 +0200 CEST",
+            "ID": "a6d814bf7918",
+            "Image": "postgres:16.3-alpine3.20",
+            "Labels": "com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=postgres,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=3635e712f4e3cad621904de8530bb59bbb030cf07faeb67043ed4a7c114ac6d4,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp",
+            "LocalVolumes": "1",
+            "Mounts": "/opt/sutazaiap\u2026,sutazaiapp_pos\u2026",
+            "Names": "sutazai-postgres",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10000->5432/tcp, [::]:10000->5432/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"docker-entrypoint.s\u2026\"",
+            "CreatedAt": "2025-08-16 06:43:31 +0200 CEST",
+            "ID": "0ee478b214f8",
+            "Image": "redis:7.2.5-alpine",
+            "Labels": "",
+            "LocalVolumes": "1",
+            "Mounts": "1150f33877a7ef\u2026",
+            "Names": "sutazai-redis",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10001->6379/tcp, [::]:10001->6379/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours"
+          },
+          {
+            "Command": "\"/portainer\"",
+            "CreatedAt": "2025-08-16 01:15:33 +0200 CEST",
+            "ID": "2445ed69f50e",
+            "Image": "portainer/portainer-ce:2.19.4",
+            "Labels": "com.docker.compose.oneoff=False,com.docker.desktop.extension.api.version=>= 0.2.2,com.docker.extension.publisher-url=https://www.portainer.io,com.docker.extension.screenshots=[{\"alt\": \"screenshot one\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-1.png\"},{\"alt\": \"screenshot two\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-2.png\"},{\"alt\": \"screenshot three\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-3.png\"},{\"alt\": \"screenshot four\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-4.png\"},{\"alt\": \"screenshot five\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-5.png\"},{\"alt\": \"screenshot six\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-6.png\"},{\"alt\": \"screenshot seven\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-7.png\"},{\"alt\": \"screenshot eight\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-8.png\"},{\"alt\": \"screenshot nine\", \"url\": \"https://portainer-io-assets.sfo2.digitaloceanspaces.com/screenshots/docker-extension-9.png\"}],com.docker.compose.project=portainer,com.docker.compose.version=1.29.2,com.docker.extension.detailed-description=<p data-renderer-start-pos=\"226\">Portainer&rsquo;s Docker Desktop extension gives you access to all of Portainer&rsquo;s rich management functionality within your docker desktop experience.</p><h2 data-renderer-start-pos=\"374\">With Portainer you can:</h2><ul><li>See all your running containers</li><li>Easily view all of your container logs</li><li>Console into containers</li><li>Easily deploy your code into containers using a simple form</li><li>Turn your YAML into custom templates for easy reuse</li></ul><h2 data-renderer-start-pos=\"660\">About Portainer&nbsp;</h2><p data-renderer-start-pos=\"680\">Portainer is the worlds&rsquo; most popular universal container management platform with more than 650,000 active monthly users. Portainer can be used to manage Docker Standalone, Kubernetes, Docker Swarm and Nomad environments through a single common interface. It includes a simple GitOps automation engine and a Kube API.&nbsp;</p><p data-renderer-start-pos=\"1006\">Portainer Business Edition is our fully supported commercial grade product for business-wide use. It includes all the functionality that businesses need to manage containers at scale. Visit <a class=\"sc-jKJlTe dPfAtb\" href=\"http://portainer.io/\" title=\"http://Portainer.io\" data-renderer-mark=\"true\">Portainer.io</a> to learn more about Portainer Business and <a class=\"sc-jKJlTe dPfAtb\" href=\"http://portainer.io/take-3?utm_campaign=DockerCon&amp;utm_source=Docker%20Desktop\" title=\"http://portainer.io/take-3?utm_campaign=DockerCon&amp;utm_source=Docker%20Desktop\" data-renderer-mark=\"true\">get 3 free nodes.</a></p>,io.portainer.server=true,org.opencontainers.image.title=Portainer,org.opencontainers.image.vendor=Portainer.io,com.docker.compose.project.working_dir=/opt/sutazaiapp/docker/portainer,com.docker.extension.additional-urls=[{\"title\":\"Website\",\"url\":\"https://www.portainer.io?utm_campaign=DockerCon&utm_source=DockerDesktop\"},{\"title\":\"Documentation\",\"url\":\"https://docs.portainer.io\"},{\"title\":\"Support\",\"url\":\"https://join.slack.com/t/portainer/shared_invite/zt-txh3ljab-52QHTyjCqbe5RibC2lcjKA\"}],org.opencontainers.image.description=Docker container management made simple, with the world\u2019s most popular GUI-based container management platform.,com.docker.compose.config-hash=cc66539ad39e40238e03b87fbbc720bf9e7c1141a5678a9b5e923c91ae838e34,com.docker.compose.container-number=1,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.service=portainer,com.docker.desktop.extension.icon=https://portainer-io-assets.sfo2.cdn.digitaloceanspaces.com/logos/portainer.png",
+            "LocalVolumes": "1",
+            "Mounts": "portainer_data,/var/run/docke\u2026",
+            "Names": "portainer",
+            "Networks": "portainer_default",
+            "Ports": "8000/tcp, 9000/tcp, 0.0.0.0:10314->9443/tcp, [::]:10314->9443/tcp",
+            "RunningFor": "33 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 33 hours"
+          },
+          {
+            "Command": "\"/usr/bin/promtail -\u2026\"",
+            "CreatedAt": "2025-08-15 13:40:03 +0200 CEST",
+            "ID": "54f11f1562c9",
+            "Image": "grafana/promtail:2.9.0",
+            "Labels": "org.opencontainers.image.created=2023-09-07T18:04:18Z,org.opencontainers.image.revision=2feb64f69589717f8262a8a9bcbb363277200367,org.opencontainers.image.source=https://github.com/grafana/loki.git,org.opencontainers.image.url=https://github.com/grafana/loki",
+            "LocalVolumes": "0",
+            "Mounts": "/var/log,/var/run/docke\u2026,/var/lib/docke\u2026",
+            "Names": "sutazai-promtail",
+            "Networks": "sutazai-network",
+            "Ports": "",
+            "RunningFor": "45 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 45 hours"
+          },
+          {
+            "Command": "\"streamlit run app.p\u2026\"",
+            "CreatedAt": "2025-08-15 12:41:13 +0200 CEST",
+            "ID": "257198970f26",
+            "Image": "sutazaiapp-frontend:latest",
+            "Labels": "",
+            "LocalVolumes": "0",
+            "Mounts": "/opt/sutazaiap\u2026",
+            "Names": "sutazai-frontend",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10011->8501/tcp, [::]:10011->8501/tcp",
+            "RunningFor": "46 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"python app.py\"",
+            "CreatedAt": "2025-08-15 03:14:35 +0200 CEST",
+            "ID": "957014660d63",
+            "Image": "sutazaiapp-ultra-system-architect:latest",
+            "Labels": "",
+            "LocalVolumes": "0",
+            "Mounts": "/opt/sutazaiap\u2026,/opt/sutazaiapp",
+            "Names": "sutazai-ultra-system-architect",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:11200->11200/tcp, :::11200->11200/tcp",
+            "RunningFor": "2 days ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 2 days (healthy)"
+          },
+          {
+            "Command": "\"docker-entrypoint.s\u2026\"",
+            "CreatedAt": "2025-08-14 21:09:10 +0200 CEST",
+            "ID": "4e4665d2267e",
+            "Image": "rabbitmq:3-management",
+            "Labels": "org.opencontainers.image.ref.name=ubuntu,org.opencontainers.image.version=24.04",
+            "LocalVolumes": "1",
+            "Mounts": "ee935d7f28d62f\u2026",
+            "Names": "sutazai-rabbitmq",
+            "Networks": "sutazai-network",
+            "Ports": "4369/tcp, 5671/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:10008->5672/tcp, [::]:10008->5672/tcp, 0.0.0.0:10007->15672/tcp, [::]:10007->15672/tcp",
+            "RunningFor": "2 days ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 2 days"
+          },
+          {
+            "Command": "\"/usr/bin/loki -conf\u2026\"",
+            "CreatedAt": "2025-08-14 10:27:22 +0200 CEST",
+            "ID": "914ee16736f1",
+            "Image": "grafana/loki:2.9.0",
+            "Labels": "org.opencontainers.image.created=2023-09-07T18:04:17Z,org.opencontainers.image.revision=2feb64f69589717f8262a8a9bcbb363277200367,org.opencontainers.image.source=https://github.com/grafana/loki.git,org.opencontainers.image.url=https://github.com/grafana/loki",
+            "LocalVolumes": "0",
+            "Mounts": "",
+            "Names": "sutazai-loki",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10202->3100/tcp, [::]:10202->3100/tcp",
+            "RunningFor": "3 days ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 2 days"
+          },
+          {
+            "Command": "\"/run.sh\"",
+            "CreatedAt": "2025-08-14 10:27:21 +0200 CEST",
+            "ID": "caa73e2cc528",
+            "Image": "grafana/grafana:latest",
+            "Labels": "maintainer=Grafana Labs <hello@grafana.com>,org.opencontainers.image.source=https://github.com/grafana/grafana",
+            "LocalVolumes": "0",
+            "Mounts": "",
+            "Names": "sutazai-grafana",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10201->3000/tcp, [::]:10201->3000/tcp",
+            "RunningFor": "3 days ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 2 days"
+          }
+        ],
+        "mcp_containers": [
+          {
+            "Command": "\"dockerd-entrypoint.\u2026\"",
+            "CreatedAt": "2025-08-17 00:11:12 +0200 CEST",
+            "ID": "a7bbb77f5fe2",
+            "Image": "docker:25.0.5-dind-alpine3.19",
+            "Labels": "",
+            "LocalVolumes": "1",
+            "Mounts": "4a699901b260b4\u2026",
+            "Names": "sutazai-mcp-orchestrator-notls",
+            "Networks": "sutazai-network",
+            "Ports": "2376/tcp, 0.0.0.0:12377->2375/tcp, [::]:12377->2375/tcp",
+            "RunningFor": "10 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 10 hours"
+          }
+        ],
+        "sutazai_containers": [
+          {
+            "Command": "\"dockerd-entrypoint.\u2026\"",
+            "CreatedAt": "2025-08-17 00:11:12 +0200 CEST",
+            "ID": "a7bbb77f5fe2",
+            "Image": "docker:25.0.5-dind-alpine3.19",
+            "Labels": "",
+            "LocalVolumes": "1",
+            "Mounts": "4a699901b260b4\u2026",
+            "Names": "sutazai-mcp-orchestrator-notls",
+            "Networks": "sutazai-network",
+            "Ports": "2376/tcp, 0.0.0.0:12377->2375/tcp, [::]:12377->2375/tcp",
+            "RunningFor": "10 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 10 hours"
+          },
+          {
+            "Command": "\"docker-entrypoint.s\u2026\"",
+            "CreatedAt": "2025-08-16 12:39:01 +0200 CEST",
+            "ID": "9c5335f0238a",
+            "Image": "hashicorp/consul:1.17.1",
+            "Labels": "org.opencontainers.image.source=https://github.com/hashicorp/consul,com.docker.compose.container-number=1,com.docker.compose.project.working_dir=/opt/sutazaiapp,org.opencontainers.image.description=Consul is a datacenter runtime that provides service discovery, configuration, and orchestration.,org.opencontainers.image.version=1.17.1,com.docker.compose.config-hash=4e5257de547687d367fc0e84a7753cdc35f49fa0bf55cfd2c72761a0775ce723,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,org.opencontainers.image.authors=Consul Team <consul@hashicorp.com>,org.opencontainers.image.title=consul,org.opencontainers.image.url=https://www.consul.io/,org.opencontainers.image.vendor=HashiCorp,version=1.17.1,com.docker.compose.oneoff=False,com.docker.compose.service=consul,com.docker.compose.version=1.29.2,org.opencontainers.image.documentation=https://www.consul.io/docs",
+            "LocalVolumes": "1",
+            "Mounts": "/opt/sutazaiap\u2026,sutazaiapp_con\u2026",
+            "Names": "sutazai-consul",
+            "Networks": "sutazai-network",
+            "Ports": "8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:10006->8500/tcp, [::]:10006->8500/tcp",
+            "RunningFor": "22 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 22 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/node_exporter \u2026\"",
+            "CreatedAt": "2025-08-16 12:38:14 +0200 CEST",
+            "ID": "78fadb519c0b",
+            "Image": "prom/node-exporter:v1.7.0",
+            "Labels": "com.docker.compose.oneoff=False,com.docker.compose.version=1.29.2,maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>,com.docker.compose.container-number=1,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=node-exporter,com.docker.compose.config-hash=0a213fc4ec2a1ded7db8fae0516ded00f8b1313ce3af6e6a5376b395ce19a574",
+            "LocalVolumes": "0",
+            "Mounts": "/proc,/sys,/",
+            "Names": "sutazai-node-exporter",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10205->9100/tcp, [::]:10205->9100/tcp",
+            "RunningFor": "22 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 22 hours"
+          },
+          {
+            "Command": "\"uvicorn app.main:ap\u2026\"",
+            "CreatedAt": "2025-08-16 08:23:14 +0200 CEST",
+            "ID": "88950d59f8a8",
+            "Image": "sutazaiapp-backend:v1.0.0",
+            "Labels": "com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=backend,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=f85a75ba5206006c73c022d51b86317cd16055e54c1c3d0c2f31a71184c5f488,com.docker.compose.container-number=1,com.docker.compose.oneoff=False",
+            "LocalVolumes": "1",
+            "Mounts": "/opt/sutazaiap\u2026,sutazaiapp_age\u2026,/opt/sutazaiap\u2026,/opt/sutazaiap\u2026,/opt/sutazaiapp",
+            "Names": "sutazai-backend",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10010->8000/tcp, [::]:10010->8000/tcp",
+            "RunningFor": "26 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up About an hour (healthy)"
+          },
+          {
+            "Command": "\"/bin/postgres_expor\u2026\"",
+            "CreatedAt": "2025-08-16 08:01:59 +0200 CEST",
+            "ID": "24d4bf87f99d",
+            "Image": "prometheuscommunity/postgres-exporter:v0.15.0",
+            "Labels": "maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>",
+            "LocalVolumes": "0",
+            "Mounts": "",
+            "Names": "sutazai-postgres-exporter",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10207->9187/tcp, [::]:10207->9187/tcp",
+            "RunningFor": "26 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 26 hours"
+          },
+          {
+            "Command": "\"./entrypoint.sh\"",
+            "CreatedAt": "2025-08-16 07:16:51 +0200 CEST",
+            "ID": "46ece25e73f4",
+            "Image": "qdrant/qdrant:v1.9.7",
+            "Labels": "com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,org.opencontainers.image.documentation=https://qdrant.com/docs,org.opencontainers.image.url=https://qdrant.com/,com.docker.compose.service=qdrant,org.opencontainers.image.source=https://github.com/qdrant/qdrant,org.opencontainers.image.title=Qdrant,com.docker.compose.container-number=1,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=ac49454aef94735ffc4306dc7a3a0afaecfd7e496c981605a4b8ebf89d7ea986,com.docker.compose.oneoff=False,org.opencontainers.image.description=Official Qdrant image,org.opencontainers.image.vendor=Qdrant,org.opencontainers.image.version=v1.9.7",
+            "LocalVolumes": "1",
+            "Mounts": "sutazaiapp_qdr\u2026",
+            "Names": "sutazai-qdrant",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10101->6333/tcp, [::]:10101->6333/tcp, 0.0.0.0:10102->6334/tcp, [::]:10102->6334/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/alertmanager -\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "7169052ffcec",
+            "Image": "prom/alertmanager:v0.27.0",
+            "Labels": "com.docker.compose.project=sutazaiapp,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=alertmanager,maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>,com.docker.compose.config-hash=8a9c24578221e5851349c88830b512f5ca6126e54f57819ddc196eb8a0816ac6,com.docker.compose.oneoff=False,com.docker.compose.version=1.29.2,com.docker.compose.container-number=1,com.docker.compose.project.config_files=docker-compose.yml",
+            "LocalVolumes": "1",
+            "Mounts": "sutazaiapp_ale\u2026,/opt/sutazaiap\u2026",
+            "Names": "sutazai-alertmanager",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10203->9093/tcp, [::]:10203->9093/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/prometheus --c\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "a0f147ffd5f9",
+            "Image": "prom/prometheus:v2.48.1",
+            "Labels": "com.docker.compose.config-hash=ded85e728a719f3787693fe0ca592552d7461d813e6c4d37527cc65f7b9d4708,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.service=prometheus,com.docker.compose.version=1.29.2",
+            "LocalVolumes": "1",
+            "Mounts": "/opt/sutazaiap\u2026,sutazaiapp_pro\u2026",
+            "Names": "sutazai-prometheus",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10200->9090/tcp, [::]:10200->9090/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 26 hours (healthy)"
+          },
+          {
+            "Command": "\"/usr/bin/cadvisor -\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "abde9fbc8d13",
+            "Image": "gcr.io/cadvisor/cadvisor:v0.47.2",
+            "Labels": "com.docker.compose.version=1.29.2,com.docker.compose.config-hash=d7c3642c999cd42219d489a77f9c20a6ba370998fa4c1fdc2b0a84c4a10969b8,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=cadvisor",
+            "LocalVolumes": "0",
+            "Mounts": "/sys,/var/lib/docker,/var/run,/dev/disk,/",
+            "Names": "sutazai-cadvisor",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10206->8080/tcp, [::]:10206->8080/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/go/bin/all-in-one-\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "ed87ed393c96",
+            "Image": "jaegertracing/all-in-one:1.53",
+            "Labels": "com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=jaeger,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=737b7ce13d4f93ef50875fd100f7df3c84bdc56e83bf34194c1e2409e4890970,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp",
+            "LocalVolumes": "1",
+            "Mounts": "73f1c1bcef8045\u2026",
+            "Names": "sutazai-jaeger",
+            "Networks": "sutazai-network",
+            "Ports": "5775/udp, 6831-6832/udp, 5778/tcp, 0.0.0.0:10214->4317/tcp, [::]:10214->4317/tcp, 0.0.0.0:10215->4318/tcp, [::]:10215->4318/tcp, 0.0.0.0:10213->9411/tcp, [::]:10213->9411/tcp, 0.0.0.0:10212->14250/tcp, [::]:10212->14250/tcp, 0.0.0.0:10211->14268/tcp, [::]:10211->14268/tcp, 0.0.0.0:10210->16686/tcp, [::]:10210->16686/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/docker-entrypoint.\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "4b8e1b2e18ee",
+            "Image": "kong:alpine",
+            "Labels": "com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.version=1.29.2,maintainer=Kong Docker Maintainers <docker@konghq.com> (@team-gateway-bot),com.docker.compose.config-hash=b4af11040110bf09d84271e3f8232db4b022dc4d544b01bdc7a1abd2f23d0a16,com.docker.compose.container-number=1,com.docker.compose.service=kong",
+            "LocalVolumes": "0",
+            "Mounts": "/opt/sutazaiap\u2026",
+            "Names": "sutazai-kong",
+            "Networks": "sutazai-network",
+            "Ports": "8443-8444/tcp, 0.0.0.0:10005->8000/tcp, [::]:10005->8000/tcp, 0.0.0.0:10015->8001/tcp, [::]:10015->8001/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/blackbox_expor\u2026\"",
+            "CreatedAt": "2025-08-16 07:04:45 +0200 CEST",
+            "ID": "54e2b9b83ab4",
+            "Image": "prom/blackbox-exporter:v0.24.0",
+            "Labels": "com.docker.compose.config-hash=25a6df96e0e4ee10bacb4fafde41a92bc2fedaa015685e6e5eeb25e3a95cd7f3,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.service=blackbox-exporter,com.docker.compose.version=1.29.2,maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.working_dir=/opt/sutazaiapp",
+            "LocalVolumes": "0",
+            "Mounts": "/opt/sutazaiap\u2026",
+            "Names": "sutazai-blackbox-exporter",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10204->9115/tcp, [::]:10204->9115/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 27 hours (healthy)"
+          },
+          {
+            "Command": "\"/docker_entrypoint.\u2026\"",
+            "CreatedAt": "2025-08-16 07:02:20 +0200 CEST",
+            "ID": "4ba83641e15a",
+            "Image": "chromadb/chroma:0.5.0",
+            "Labels": "com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=chromadb,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=8d81648a19cb1a7089e09a48aa2175bc5ad802620d96573221f3c3d07097c9df,com.docker.compose.container-number=1,com.docker.compose.oneoff=False",
+            "LocalVolumes": "1",
+            "Mounts": "sutazaiapp_chr\u2026",
+            "Names": "sutazai-chromadb",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10100->8000/tcp, [::]:10100->8000/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"/bin/ollama serve\"",
+            "CreatedAt": "2025-08-16 07:02:20 +0200 CEST",
+            "ID": "6666dc26cbe8",
+            "Image": "ollama/ollama:0.3.13",
+            "Labels": "com.docker.compose.container-number=1,org.opencontainers.image.ref.name=ubuntu,org.opencontainers.image.version=22.04,com.docker.compose.config-hash=79753053d2505c11fd573f030f5edbc8a5a5670fe4a75d854187bd621514969b,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=ollama,com.docker.compose.version=1.29.2",
+            "LocalVolumes": "2",
+            "Mounts": "/opt/sutazaiap\u2026,/opt/sutazaiap\u2026,sutazaiapp_oll\u2026,sutazaiapp_mod\u2026",
+            "Names": "sutazai-ollama",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10104->11434/tcp, [::]:10104->11434/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"tini -g -- /startup\u2026\"",
+            "CreatedAt": "2025-08-16 07:02:14 +0200 CEST",
+            "ID": "681be0889dad",
+            "Image": "neo4j:5.15.0-community",
+            "Labels": "com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp,com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=neo4j,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=f60c5335434ecef62d211578005a364266ecd34c522fa582d8fded6d075517a9",
+            "LocalVolumes": "2",
+            "Mounts": "681c038163e033\u2026,sutazaiapp_neo\u2026",
+            "Names": "sutazai-neo4j",
+            "Networks": "sutazai-network",
+            "Ports": "7473/tcp, 0.0.0.0:10002->7474/tcp, [::]:10002->7474/tcp, 0.0.0.0:10003->7687/tcp, [::]:10003->7687/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"docker-entrypoint.s\u2026\"",
+            "CreatedAt": "2025-08-16 07:02:10 +0200 CEST",
+            "ID": "a6d814bf7918",
+            "Image": "postgres:16.3-alpine3.20",
+            "Labels": "com.docker.compose.project.config_files=docker-compose.yml,com.docker.compose.project.working_dir=/opt/sutazaiapp,com.docker.compose.service=postgres,com.docker.compose.version=1.29.2,com.docker.compose.config-hash=3635e712f4e3cad621904de8530bb59bbb030cf07faeb67043ed4a7c114ac6d4,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=sutazaiapp",
+            "LocalVolumes": "1",
+            "Mounts": "/opt/sutazaiap\u2026,sutazaiapp_pos\u2026",
+            "Names": "sutazai-postgres",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10000->5432/tcp, [::]:10000->5432/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"docker-entrypoint.s\u2026\"",
+            "CreatedAt": "2025-08-16 06:43:31 +0200 CEST",
+            "ID": "0ee478b214f8",
+            "Image": "redis:7.2.5-alpine",
+            "Labels": "",
+            "LocalVolumes": "1",
+            "Mounts": "1150f33877a7ef\u2026",
+            "Names": "sutazai-redis",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10001->6379/tcp, [::]:10001->6379/tcp",
+            "RunningFor": "27 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours"
+          },
+          {
+            "Command": "\"/usr/bin/promtail -\u2026\"",
+            "CreatedAt": "2025-08-15 13:40:03 +0200 CEST",
+            "ID": "54f11f1562c9",
+            "Image": "grafana/promtail:2.9.0",
+            "Labels": "org.opencontainers.image.created=2023-09-07T18:04:18Z,org.opencontainers.image.revision=2feb64f69589717f8262a8a9bcbb363277200367,org.opencontainers.image.source=https://github.com/grafana/loki.git,org.opencontainers.image.url=https://github.com/grafana/loki",
+            "LocalVolumes": "0",
+            "Mounts": "/var/log,/var/run/docke\u2026,/var/lib/docke\u2026",
+            "Names": "sutazai-promtail",
+            "Networks": "sutazai-network",
+            "Ports": "",
+            "RunningFor": "45 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 45 hours"
+          },
+          {
+            "Command": "\"streamlit run app.p\u2026\"",
+            "CreatedAt": "2025-08-15 12:41:13 +0200 CEST",
+            "ID": "257198970f26",
+            "Image": "sutazaiapp-frontend:latest",
+            "Labels": "",
+            "LocalVolumes": "0",
+            "Mounts": "/opt/sutazaiap\u2026",
+            "Names": "sutazai-frontend",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10011->8501/tcp, [::]:10011->8501/tcp",
+            "RunningFor": "46 hours ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 17 hours (healthy)"
+          },
+          {
+            "Command": "\"python app.py\"",
+            "CreatedAt": "2025-08-15 03:14:35 +0200 CEST",
+            "ID": "957014660d63",
+            "Image": "sutazaiapp-ultra-system-architect:latest",
+            "Labels": "",
+            "LocalVolumes": "0",
+            "Mounts": "/opt/sutazaiap\u2026,/opt/sutazaiapp",
+            "Names": "sutazai-ultra-system-architect",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:11200->11200/tcp, :::11200->11200/tcp",
+            "RunningFor": "2 days ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 2 days (healthy)"
+          },
+          {
+            "Command": "\"docker-entrypoint.s\u2026\"",
+            "CreatedAt": "2025-08-14 21:09:10 +0200 CEST",
+            "ID": "4e4665d2267e",
+            "Image": "rabbitmq:3-management",
+            "Labels": "org.opencontainers.image.ref.name=ubuntu,org.opencontainers.image.version=24.04",
+            "LocalVolumes": "1",
+            "Mounts": "ee935d7f28d62f\u2026",
+            "Names": "sutazai-rabbitmq",
+            "Networks": "sutazai-network",
+            "Ports": "4369/tcp, 5671/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:10008->5672/tcp, [::]:10008->5672/tcp, 0.0.0.0:10007->15672/tcp, [::]:10007->15672/tcp",
+            "RunningFor": "2 days ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 2 days"
+          },
+          {
+            "Command": "\"/usr/bin/loki -conf\u2026\"",
+            "CreatedAt": "2025-08-14 10:27:22 +0200 CEST",
+            "ID": "914ee16736f1",
+            "Image": "grafana/loki:2.9.0",
+            "Labels": "org.opencontainers.image.created=2023-09-07T18:04:17Z,org.opencontainers.image.revision=2feb64f69589717f8262a8a9bcbb363277200367,org.opencontainers.image.source=https://github.com/grafana/loki.git,org.opencontainers.image.url=https://github.com/grafana/loki",
+            "LocalVolumes": "0",
+            "Mounts": "",
+            "Names": "sutazai-loki",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10202->3100/tcp, [::]:10202->3100/tcp",
+            "RunningFor": "3 days ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 2 days"
+          },
+          {
+            "Command": "\"/run.sh\"",
+            "CreatedAt": "2025-08-14 10:27:21 +0200 CEST",
+            "ID": "caa73e2cc528",
+            "Image": "grafana/grafana:latest",
+            "Labels": "maintainer=Grafana Labs <hello@grafana.com>,org.opencontainers.image.source=https://github.com/grafana/grafana",
+            "LocalVolumes": "0",
+            "Mounts": "",
+            "Names": "sutazai-grafana",
+            "Networks": "sutazai-network",
+            "Ports": "0.0.0.0:10201->3000/tcp, [::]:10201->3000/tcp",
+            "RunningFor": "3 days ago",
+            "Size": "0B",
+            "State": "running",
+            "Status": "Up 2 days"
+          }
+        ]
+      },
+      "process_analysis": {},
+      "network_connectivity": {
+        "Backend API": true,
+        "Frontend": true,
+        "PostgreSQL": true,
+        "Redis": true,
+        "DinD Orchestrator": true
+      },
+      "system_health": {
+        "load_average_1m": 1.0283203125,
+        "load_average_5m": 1.181640625,
+        "load_average_15m": 1.78125,
+        "system_responsive": true
+      }
+    },
+    "endpoint_validation": {
+      "timestamp": "2025-08-17T10:12:04.402447",
+      "endpoints_tested": [
+        {
+          "endpoint": "/health",
+          "method": "GET",
+          "critical": true,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.002978801727294922,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        {
+          "endpoint": "/api/v1/mcp/services",
+          "method": "GET",
+          "critical": true,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0017249584197998047,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        {
+          "endpoint": "/api/v1/mcp/claude-flow/tools",
+          "method": "POST",
+          "critical": true,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0019664764404296875,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        {
+          "endpoint": "/api/v1/mcp/ruv-swarm/tools",
+          "method": "POST",
+          "critical": false,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0015420913696289062,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        {
+          "endpoint": "/api/v1/mcp/memory-bank-mcp/tools",
+          "method": "POST",
+          "critical": false,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.00147247314453125,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        {
+          "endpoint": "/docs",
+          "method": "GET",
+          "critical": false,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0012888908386230469,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        {
+          "endpoint": "/metrics",
+          "method": "GET",
+          "critical": false,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0015559196472167969,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        }
+      ],
+      "functional_endpoints": [],
+      "non_functional_endpoints": [
+        "/health",
+        "/api/v1/mcp/services",
+        "/api/v1/mcp/claude-flow/tools",
+        "/api/v1/mcp/ruv-swarm/tools",
+        "/api/v1/mcp/memory-bank-mcp/tools",
+        "/docs",
+        "/metrics"
+      ],
+      "response_analysis": {
+        "/health": {
+          "endpoint": "/health",
+          "method": "GET",
+          "critical": true,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.002978801727294922,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        "/api/v1/mcp/services": {
+          "endpoint": "/api/v1/mcp/services",
+          "method": "GET",
+          "critical": true,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0017249584197998047,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        "/api/v1/mcp/claude-flow/tools": {
+          "endpoint": "/api/v1/mcp/claude-flow/tools",
+          "method": "POST",
+          "critical": true,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0019664764404296875,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        "/api/v1/mcp/ruv-swarm/tools": {
+          "endpoint": "/api/v1/mcp/ruv-swarm/tools",
+          "method": "POST",
+          "critical": false,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0015420913696289062,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        "/api/v1/mcp/memory-bank-mcp/tools": {
+          "endpoint": "/api/v1/mcp/memory-bank-mcp/tools",
+          "method": "POST",
+          "critical": false,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.00147247314453125,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        "/docs": {
+          "endpoint": "/docs",
+          "method": "GET",
+          "critical": false,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0012888908386230469,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        },
+        "/metrics": {
+          "endpoint": "/metrics",
+          "method": "GET",
+          "critical": false,
+          "functional": false,
+          "status_code": 403,
+          "response_time": 0.0015559196472167969,
+          "error_details": [
+            "Unexpected status code: 403"
+          ]
+        }
+      },
+      "summary": {
+        "total_endpoints_tested": 7,
+        "functional_endpoints_count": 0,
+        "endpoint_functionality_percentage": 0.0,
+        "critical_endpoints_functional": 0,
+        "critical_endpoints_total": 3,
+        "critical_functionality_percentage": 0.0
+      }
+    },
+    "truth_analysis": {
+      "analysis_timestamp": "2025-08-17T10:12:04.415475",
+      "claimed_vs_actual": {
+        "claimed_status": "FULLY OPERATIONAL - 21/21 MCP servers operational, 100% functional",
+        "actual_status": "CRITICAL FAILURE",
+        "severity_score": 10
+      },
+      "functionality_reality": {
+        "mcp_services_functionality": 0.0,
+        "endpoint_functionality": 0.0,
+        "overall_functionality": 0.0
+      },
+      "discrepancies_found": [
+        "MCP functionality is 0.0%, not 100% as claimed",
+        "Critical endpoint functionality is 0.0%, not 100% as claimed",
+        "Non-functional services found: ['files', 'http-fetch', 'knowledge-graph-mcp', 'nx-mcp', 'http', 'ruv-swarm', 'ddg', 'claude-flow', 'compass-mcp', 'memory-bank-mcp', 'ultimatecoder', 'context7', 'playwright-mcp', 'mcp-ssh', 'extended-memory', 'sequentialthinking', 'puppeteer-mcp (no longer in use)', 'language-server', 'github', 'postgres', 'claude-task-runner']",
+        "Non-functional endpoints found: ['/health', '/api/v1/mcp/services', '/api/v1/mcp/claude-flow/tools', '/api/v1/mcp/ruv-swarm/tools', '/api/v1/mcp/memory-bank-mcp/tools', '/docs', '/metrics']"
+      ],
+      "final_verdict": {
+        "verdict": "CRITICAL SYSTEM FAILURE - Manual QA findings confirmed",
+        "recommendation": "Immediate system shutdown and complete infrastructure rebuild required",
+        "confidence_level": "HIGH",
+        "evidence_quality": "COMPREHENSIVE"
+      },
+      "evidence_summary": {
+        "total_services_tested": 21,
+        "functional_services": 0,
+        "total_endpoints_tested": 7,
+        "functional_endpoints": 0,
+        "containers_running": 24
+      }
+    }
+  },
+  "discrepancies_found": [
+    "MCP functionality is 0.0%, not 100% as claimed",
+    "Critical endpoint functionality is 0.0%, not 100% as claimed",
+    "Non-functional services found: ['files', 'http-fetch', 'knowledge-graph-mcp', 'nx-mcp', 'http', 'ruv-swarm', 'ddg', 'claude-flow', 'compass-mcp', 'memory-bank-mcp', 'ultimatecoder', 'context7', 'playwright-mcp', 'mcp-ssh', 'extended-memory', 'sequentialthinking', 'puppeteer-mcp (no longer in use)', 'language-server', 'github', 'postgres', 'claude-task-runner']",
+    "Non-functional endpoints found: ['/health', '/api/v1/mcp/services', '/api/v1/mcp/claude-flow/tools', '/api/v1/mcp/ruv-swarm/tools', '/api/v1/mcp/memory-bank-mcp/tools', '/docs', '/metrics']"
+  ],
+  "immediate_actions": [
+    "STOP all production traffic to the system immediately",
+    "Investigate critical system failures",
+    "Notify stakeholders of system status",
+    "Initiate emergency incident response"
+  ],
+  "remediation_plan": [
+    "1. Detailed investigation of all identified discrepancies",
+    "2. Root cause analysis for each non-functional component",
+    "3. Develop specific fixes for each identified issue",
+    "4. Test fixes in isolated environment",
+    "5. Implement fixes with proper rollback procedures",
+    "6. Re-validate system functionality post-fixes",
+    "7. Update documentation to reflect actual system state",
+    "8. Implement monitoring to prevent future discrepancies"
+  ]
+}

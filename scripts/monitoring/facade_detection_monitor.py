@@ -149,7 +149,7 @@ class FacadeDetectionMonitor:
                     try:
                         data = response.json()
                         
-                        # Check for empty or minimal responses
+                        # Check for empty or responses
                         if not data or len(str(data)) < 10:
                             facade_indicators["empty_responses"] += 1
                             endpoint_analysis["facade_indicators"].append("empty_response")
@@ -159,7 +159,7 @@ class FacadeDetectionMonitor:
                             if data.get("status") == "ok" and len(data) == 1:
                                 endpoint_analysis["facade_indicators"].append("minimal_ok_response")
                             
-                            if "placeholder" in str(data).lower() or "mock" in str(data).lower():
+                            if "placeholder" in str(data).lower() or "" in str(data).lower():
                                 endpoint_analysis["facade_indicators"].append("placeholder_content")
                         
                         # Check for suspiciously fast responses that should take time

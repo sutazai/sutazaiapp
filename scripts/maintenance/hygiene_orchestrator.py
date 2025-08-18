@@ -654,7 +654,7 @@ class IntegrationManager:
     
     def get_ci_status(self) -> str:
         """Get CI/CD pipeline status"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementation - integrate with your CI system
+        # Mock implementation - integrate with your CI system
         try:
             # Example: Check GitHub Actions status
             if 'github_token' in self.config:
@@ -667,7 +667,7 @@ class IntegrationManager:
     def trigger_ci_pipeline(self) -> bool:
         """Trigger CI/CD pipeline after fixes"""
         try:
-            # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementation - integrate with your CI system
+            # Mock implementation - integrate with your CI system
             logging.info("CI pipeline triggered")
             return True
         except Exception as e:

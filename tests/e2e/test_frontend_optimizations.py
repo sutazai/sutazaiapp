@@ -11,7 +11,7 @@ import sys
 import os
 import time
 import unittest
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
+from unittest.Mock import Mock, patch
 import asyncio
 
 # Add frontend to path
@@ -68,19 +68,19 @@ class TestFrontendOptimizations(unittest.TestCase):
         logger.info("✅ Smart refresh logic verified")
     
     @patch('httpx.AsyncClient')
-    def test_api_client_optimization(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client):
+    def test_api_client_optimization(self, Mock_client):
         """Test optimized API client functionality"""
         logger.info("🧪 Testing API client optimization...")
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test successful response
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {"status": "healthy"}
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.raise_for_status = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        # Mock successful response
+        Mock_response = Mock()
+        Mock_response.status_code = 200
+        Mock_response.json.return_value = {"status": "healthy"}
+        Mock_response.raise_for_status = Mock()
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_instance = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_instance.get.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.return_value.__aenter__.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client_instance
+        Mock_client_instance = Mock()
+        Mock_client_instance.get.return_value = Mock_response
+        Mock_client.return_value.__aenter__.return_value = Mock_client_instance
         
         # Test health check caching
         result1 = optimized_client.sync_health_check()

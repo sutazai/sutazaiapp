@@ -127,13 +127,13 @@ make security-scan    # Vulnerability scanning
 
 ## Test Data Management
 
-### Fixtures and Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tests
+### Fixtures and Mocks
 **Location**: `tests/conftest.py`
-**Features**: Async support, database Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing, service stubs
+**Features**: Async support, database Mocking, service stubs
 
 ### Test Data
 **Location**: `tests/fixtures/`
-**Contents**: Sample data, configuration files, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test responses
+**Contents**: Sample data, configuration files, Mock responses
 
 ## Continuous Integration
 
@@ -222,7 +222,7 @@ LOG_LEVEL=WARNING                       # Reduce test noise
 1. **Follow AAA Pattern**: Arrange, Act, Assert
 2. **Use Descriptive Names**: `test_health_endpoint_returns_valid_json`
 3. **Test Edge Cases**: Error conditions, boundary values
-4. **Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test External Dependencies**: Database, external APIs
+4. **Mock External Dependencies**: Database, external APIs
 5. **Async Support**: Use `pytest-asyncio` for async tests
 
 ### Test Organization

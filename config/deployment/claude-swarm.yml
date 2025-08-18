@@ -226,7 +226,7 @@ swarm:
         MCP SERVERS MANAGED:
         - language-server, github, ultimatecoder, sequentialthinking
         - context7, files, http, ddg, postgres, extended-memory
-        - mcp_ssh, nx-mcp, puppeteer-mcp, memory-bank-mcp
+        - mcp_ssh, nx-mcp, puppeteer-mcp (no longer in use), memory-bank-mcp
         - playwright-mcp, knowledge-graph-mcp, compass-mcp
         - claude-flow, ruv-swarm (Claude Flow orchestration servers)
         

@@ -31,7 +31,7 @@ User assessment CONFIRMED: MCPs are "not configured correctly" and "half aren't 
 13. **postgres** - Wrapper exists ✅
 14. **playwright-mcp** - Wrapper exists ✅
 15. **memory-bank-mcp** - Wrapper exists ⚠️ (module warning)
-16. **puppeteer-mcp** - Wrapper exists ✅
+16. **puppeteer-mcp (no longer in use)** - Wrapper exists ✅
 17. **knowledge-graph-mcp** - Wrapper exists ✅
 18. **compass-mcp** - Wrapper exists ✅
 19. **github** - NEW, wrapper exists ✅
@@ -65,7 +65,7 @@ User assessment CONFIRMED: MCPs are "not configured correctly" and "half aren't 
 - mcp-server-playwright (node)
 - context7-mcp (npm exec)
 - mcp-language-server (go binary)
-- puppeteer-mcp-server (npm exec)
+- puppeteer-mcp (no longer in use)-server (npm exec)
 - mcp-compass (node)
 - mcp-server-github (node)
 - Multiple Docker containers (fetch, duckduckgo, sequentialthinking)

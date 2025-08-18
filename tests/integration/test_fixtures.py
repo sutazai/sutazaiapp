@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Purpose: Test fixtures and Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test violation creation for hygiene system testing
+Purpose: Test fixtures and Mock violation creation for hygiene system testing
 Usage: python -m pytest tests/hygiene/test_fixtures.py
 Requirements: pytest, tempfile
 """
@@ -336,8 +336,8 @@ services:
             elif filename.startswith("docker-compose"):
                 self.assertIn("version:", content, f"{filename} should have version")
 
-class TestRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestViolationDetection(unittest.TestCase):
-    """Test Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test violation detection with fixtures"""
+class TestMockViolationDetection(unittest.TestCase):
+    """Test Mock violation detection with fixtures"""
     
     def setUp(self):
         """Setup test environment with fixtures"""

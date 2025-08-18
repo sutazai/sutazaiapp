@@ -41,7 +41,7 @@
 | docker-compose.security-hardening.yml | 2.0K | Security hardening | HIGH |
 | docker-compose.mcp.yml | 1.3K | MCP configuration | MEDIUM |
 | docker-compose.security.yml | 1.2K | Security config | HIGH |
-| docker-compose.minimal.yml | 844B | Minimal deployment | LOW |
+| docker-compose.minimal.yml | 844B | deployment | LOW |
 | docker-compose.mcp.override.yml | 811B | MCP overrides | LOW |
 | docker-compose.override.yml | 667B | Environment overrides | MEDIUM |
 | docker-compose.skyvern.yml | 463B | Skyvern integration | LOW |

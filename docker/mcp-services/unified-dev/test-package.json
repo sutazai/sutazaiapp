@@ -1,0 +1,55 @@
+{
+  "name": "unified-dev-service",
+  "version": "1.0.0",
+  "description": "Unified Development Service - Consolidates ultimatecoder, language-server, and sequentialthinking",
+  "main": "src/unified-dev-server.js",
+  "scripts": {
+    "start": "node src/unified-dev-server.js",
+    "dev": "NODE_ENV=development DEBUG=1 node src/unified-dev-server.js",
+    "test": "mocha tests/**/*.test.js --timeout 10000 --exit",
+    "test:watch": "mocha tests/**/*.test.js --watch --timeout 10000",
+    "test:coverage": "nyc mocha tests/**/*.test.js --timeout 10000 --exit",
+    "test:unit": "mocha tests/**/*.test.js --grep 'Unit Tests' --timeout 10000",
+    "test:integration": "mocha tests/**/*.test.js --grep 'Integration' --timeout 10000",
+    "health": "curl -f http://localhost:4000/health || exit 1"
+  },
+  "keywords": ["mcp", "unified", "development", "ultimatecoder", "language-server", "sequentialthinking"],
+  "author": "SutazAI Infrastructure Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "chai": "^4.3.7",
+    "sinon": "^15.2.0",
+    "supertest": "^6.3.3",
+    "proxyquire": "^2.1.3",
+    "nyc": "^15.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sutazai/unified-dev-service"
+  },
+  "nyc": {
+    "reporter": ["text", "html", "lcov"],
+    "exclude": [
+      "tests/**",
+      "coverage/**",
+      "node_modules/**"
+    ],
+    "check-coverage": true,
+    "lines": 80,
+    "functions": 80,
+    "branches": 80,
+    "statements": 80
+  },
+  "mocha": {
+    "reporter": "spec",
+    "recursive": true,
+    "timeout": 10000
+  }
+}

@@ -108,7 +108,7 @@ from app.core.mcp_disabled import initialize_mcp_background   # USING STUB ❌
 "claude-flow", "ruv-swarm", "files", "context7", "http_fetch", 
 "ddg", "sequentialthinking", "nx-mcp", "extended-memory", 
 "mcp_ssh", "ultimatecoder", "postgres", "playwright-mcp", 
-"memory-bank-mcp", "puppeteer-mcp", "knowledge-graph-mcp", 
+"memory-bank-mcp", "puppeteer-mcp (no longer in use)", "knowledge-graph-mcp", 
 "compass-mcp", "github", "http", "language-server"
 ```
 

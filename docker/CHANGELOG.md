@@ -9,6 +9,32 @@
 
 ## Change History
 
+### 2025-08-17 09:21:00 UTC - Version 2.0.0 - DOCKER - MAJOR - TRUE Docker Consolidation to Single File
+**Who**: codebase-team-lead (Docker Excellence & Rule 11 Enforcement)
+**Why**: User exposed previous "consolidation" was a lie - still had 23+ docker-compose files creating confusion
+**What**: 
+- DISCOVERED truth: 26 total docker-compose files found across codebase (not the 1 file claimed)
+- ANALYZED file distribution: 22 already archived, 2 active files, 1 backup, 1 broken symlink
+- CREATED single authoritative /opt/sutazaiapp/docker-compose.yml with 30 core services
+- MERGED services from backup (31 services) and current consolidated file (10 services)
+- ARCHIVED incomplete docker-compose.consolidated.yml to archived_configs_20250817_final/
+- FIXED broken symlink at /config/docker-compose.yml to point to root docker-compose.yml
+- PRESERVED /docker/dind/mcp-containers/docker-compose.mcp-services.yml for DinD-specific deployments
+- VALIDATED consolidated configuration passes docker-compose config successfully
+- CONFIRMED deploy.sh and other scripts now reference correct file location
+**Impact**: Reduced from 26 files to 1 primary + 1 DinD-specific file (92% reduction)
+**Validation**: 
+- ✅ Main docker-compose.yml validates successfully with 30 services
+- ✅ All 22 legacy files properly archived
+- ✅ Symlink fixed and pointing to correct location
+- ✅ Configuration tested and operational
+**Related Changes**: 
+- Main consolidated file at /opt/sutazaiapp/docker-compose.yml (17.7KB)
+- DinD MCP services remain at /docker/dind/mcp-containers/docker-compose.mcp-services.yml
+- Fixed broken symlink at /config/docker-compose.yml
+- All legacy configurations archived to prevent confusion
+**Rollback**: Previous configurations archived in archived_configs_20250817_final/ if needed
+
 ### 2025-08-16 15:45:00 UTC - Version 1.9.0 - INFRASTRUCTURE - INVESTIGATION - Docker Chaos and Port Registry Violations Documented
 **Who**: infrastructure-devops-manager (Docker Excellence & Rule Enforcement)
 **Why**: User-identified "extensive amounts of dockers not configured correctly" and other architects found 22 containers vs expected
@@ -106,7 +132,7 @@
   * docker-compose.blue-green.yml (875 lines) - DEPLOYMENT: Blue-green strategy
   * docker-compose.mcp.yml (53 lines) - MCP: Model Context Protocol services
   * docker-compose.override.yml (44 lines) - DEV: Development overrides
-  * docker-compose.minimal.yml (43 lines) - TESTING: Minimal Kong service
+  * docker-compose.minimal.yml (43 lines) - TESTING: Kong service
   * docker-compose.public-images.override.yml (213 lines) - PUBLIC: Uses public images instead of custom
   * docker-compose.optimized.yml (146 lines) - OPTIMIZED: Resource optimization
   * docker-compose.standard.yml (277 lines) - STANDARD: Standard deployment

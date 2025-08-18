@@ -164,7 +164,7 @@ jobs:
           
           # Create a comprehensive rule validation script if not exists
           if [ ! -f "scripts/enforcement/rule_validator_simple.py" ]; then
-            echo "⚠️ Rule validator not found, creating minimal validator..."
+            echo "⚠️ Rule validator not found, creating validator..."
             mkdir -p scripts/enforcement
             cat > scripts/enforcement/rule_validator_simple.py << 'EOF'
 #!/usr/bin/env python3
@@ -693,7 +693,7 @@ else:
           pip install --upgrade pip
           pip install -r requirements/base.txt || true
           pip install pytest pytest-asyncio pytest-cov pytest-xdist pytest-timeout pytest-html
-          pip install pytest-benchmark pytest-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test pytest-sugar pytest-clarity
+          pip install pytest-benchmark pytest-Mock pytest-sugar pytest-clarity
           pip install httpx selenium requests psutil coverage[toml]
 
       - name: Setup Comprehensive Test Environment

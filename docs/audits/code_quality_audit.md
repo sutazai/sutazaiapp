@@ -119,7 +119,7 @@ from backend.ai_agents.orchestration.advanced_message_bus import AdvancedBus
 
 #### Testing Coverage:
 - **Unit Test Coverage**: 35% (target: 80%)
-- **Integration Tests**: Minimal coverage
+- **Integration Tests**: coverage
 - **E2E Tests**: Not comprehensive
 - **Performance Tests**: Ad-hoc only
 

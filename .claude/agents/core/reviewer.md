@@ -190,7 +190,7 @@ function processOrder() {
 
 // ✅ TESTABLE:
 function processOrder(date: Date, config: Config) {
-  // Dependencies injected, easy to mock in tests
+  // Dependencies injected, easy to  in tests
 }
 ```
 

@@ -105,15 +105,15 @@ POTENTIAL DUPLICATES (REQUIRES INVESTIGATION):
 
 ---
 
-## 🎯 CATEGORY 4: MOCK AND FAKE IMPLEMENTATIONS
+## 🎯 CATEGORY 4:  AND FAKE IMPLEMENTATIONS
 
-### 4.1 Mock/Test Artifacts Requiring Review
+### 4.1 /Test Artifacts Requiring Review
 ```
-MOCK IMPLEMENTATIONS (INVESTIGATION REQUIRED):
-├── /tests/fixtures/           → Test mocks (validate not in production)
-├── /tests/*mock*              → Mock implementations  
-├── /backend/ai_agents/*mock*  → Agent mock implementations
-└── Configuration files with "test" or "mock" patterns
+ IMPLEMENTATIONS (INVESTIGATION REQUIRED):
+├── /tests/fixtures/           → Test s (validate not in production)
+├── /tests/**              →  implementations  
+├── /backend/ai_agents/**  → Agent  implementations
+└── Configuration files with "test" or "" patterns
 ```
 
 ### 4.2 Obsolete Investigation Documents

@@ -11,7 +11,7 @@ Successfully consolidated multiple configuration files across the SutazAI codeba
 **Before**: 7+ separate requirements.txt files with significant duplication  
 **After**: 
 - Single base file: `/opt/sutazaiapp/requirements-base.txt`
-- Agent-specific files inherit from base with minimal additions
+- Agent-specific files inherit from base with additions
 - Eliminated ~80% duplication
 
 **Files Consolidated**:

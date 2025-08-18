@@ -7,7 +7,7 @@ import aiohttp
 import logging
 import os
 from typing import Generator, AsyncGenerator
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
+from unittest.mock import Mock, AsyncMock, patch
 
 # Configure test logging
 logging.basicConfig(level=logging.WARNING)
@@ -34,8 +34,8 @@ async def aiohttp_session() -> AsyncGenerator[aiohttp.ClientSession, None]:
         yield session
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_ollama_response():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Ollama API response for unit tests."""
+def Mock_ollama_response():
+    """Mock Ollama API response for unit tests."""
     return {
         "model": "tinyllama",
         "created_at": "2024-01-01T00:00:00Z",
@@ -51,25 +51,25 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
     }
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_database():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test database connection for unit tests."""
-    db_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    db_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.execute = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    db_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.fetch = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=[])
-    db_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.fetchrow = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=None)
-    db_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.fetchval = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=None)
-    return db_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+def Mock_database():
+    """Mock database connection for unit tests."""
+    db_Mock = Mock()
+    db_Mock.execute = AsyncMock()
+    db_Mock.fetch = AsyncMock(return_value=[])
+    db_Mock.fetchrow = AsyncMock(return_value=None)
+    db_Mock.fetchval = AsyncMock(return_value=None)
+    return db_Mock
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis connection for unit tests."""
-    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=None)
-    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.set = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=True)
-    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.delete = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=1)
-    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.exists = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=False)
-    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.expire = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=True)
-    return redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+def Mock_redis():
+    """Mock Redis connection for unit tests."""
+    redis_Mock = Mock()
+    redis_Mock.get = AsyncMock(return_value=None)
+    redis_Mock.set = AsyncMock(return_value=True)
+    redis_Mock.delete = AsyncMock(return_value=1)
+    redis_Mock.exists = AsyncMock(return_value=False)
+    redis_Mock.expire = AsyncMock(return_value=True)
+    return redis_Mock
 
 @pytest.fixture
 def sample_chat_message():
@@ -98,14 +98,14 @@ def sample_agent_config():
     }
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agent_registry():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agent registry for unit tests."""
-    registry_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    registry_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get_agent = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    registry_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.register_agent = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    registry_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.list_agents = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=[])
-    registry_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.remove_agent = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    return registry_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+def Mock_agent_registry():
+    """Mock agent registry for unit tests."""
+    registry_Mock = Mock()
+    registry_Mock.get_agent = AsyncMock()
+    registry_Mock.register_agent = AsyncMock()
+    registry_Mock.list_agents = AsyncMock(return_value=[])
+    registry_Mock.remove_agent = AsyncMock()
+    return registry_Mock
 
 @pytest.fixture
 def health_check_response():
@@ -175,8 +175,8 @@ async def test_database():
             yield db
             break
     except ImportError:
-        # Fallback Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test for unit tests
-        yield Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_database()
+        # Fallback Mock for unit tests
+        yield Mock_database()
 
 # Integration test markers
 def pytest_configure(config):

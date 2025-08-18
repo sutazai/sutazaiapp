@@ -8,6 +8,6 @@ Create example unit tests for a Python function that:
 
 Include examples of:
 - Test setup
-- Mocking dependencies
+- ing dependencies
 - Testing edge cases
 - Assertion strategies

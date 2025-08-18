@@ -119,7 +119,7 @@ All remaining files serve distinct, non-overlapping purposes:
 - 2 security extensions  
 - 1 development override
 - 1 public images override
-- 1 minimal testing variant
+- 1 testing variant
 - 1 management UI
 
 ## Conclusion

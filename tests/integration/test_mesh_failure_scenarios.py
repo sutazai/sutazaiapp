@@ -7,7 +7,7 @@ import time
 import threading
 import pytest
 from typing import Dict, Any, List, Optional
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, patch, MagicMock
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import redis
 
@@ -192,8 +192,8 @@ class TestConnectionFailures:
         assert msg_id is not None
         
         # Simulate connection failure
-        with patch.object(redis_client, 'xadd') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_xadd:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_xadd.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        with patch.object(redis_client, 'xadd') as Mock_xadd:
+            Mock_xadd.side_effect = redis.exceptions.ConnectionError("Connection failed")
             
             # Should raise exception during connection failure
             with pytest.raises(redis.exceptions.ConnectionError):
@@ -218,8 +218,8 @@ class TestConnectionFailures:
         assert len(results) == 3
         
         # Simulate connection failure
-        with patch.object(redis_client, 'pipeline') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipeline:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipeline.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        with patch.object(redis_client, 'pipeline') as Mock_pipeline:
+            Mock_pipeline.side_effect = redis.exceptions.ConnectionError("Connection failed")
             
             # Should raise exception during connection failure
             with pytest.raises(redis.exceptions.ConnectionError):
@@ -242,16 +242,16 @@ class TestConnectionFailures:
         assert len(test_agents) == 1
         
         # Simulate connection failure for registration
-        with patch.object(redis_client, 'set') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_set:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_set.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        with patch.object(redis_client, 'set') as Mock_set:
+            Mock_set.side_effect = redis.exceptions.ConnectionError("Connection failed")
             
             # Should raise exception during connection failure
             with pytest.raises(redis.exceptions.ConnectionError):
                 register_agent(f"failing_agent_{int(time.time())}", "test_agent", 30)
         
         # Simulate connection failure for listing
-        with patch.object(redis_client, 'scan') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_scan:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_scan.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        with patch.object(redis_client, 'scan') as Mock_scan:
+            Mock_scan.side_effect = redis.exceptions.ConnectionError("Connection failed")
             
             # Should raise exception during connection failure
             with pytest.raises(redis.exceptions.ConnectionError):
@@ -272,8 +272,8 @@ class TestTimeoutScenarios:
             enqueue_task._stream_cache = {}
         
         # Simulate timeout
-        with patch.object(redis_client, 'xadd') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_xadd:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_xadd.side_effect = redis.exceptions.TimeoutError("Operation timed out")
+        with patch.object(redis_client, 'xadd') as Mock_xadd:
+            Mock_xadd.side_effect = redis.exceptions.TimeoutError("Operation timed out")
             
             # Should raise timeout exception
             with pytest.raises(redis.exceptions.TimeoutError):
@@ -304,8 +304,8 @@ class TestTimeoutScenarios:
         assert len(messages) <= 1  # Might get the message or timeout
         
         # Simulate timeout on read
-        with patch.object(redis_client, 'xreadgroup') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_read:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_read.side_effect = redis.exceptions.TimeoutError("Read timed out")
+        with patch.object(redis_client, 'xreadgroup') as Mock_read:
+            Mock_read.side_effect = redis.exceptions.TimeoutError("Read timed out")
             
             # Should raise timeout exception
             with pytest.raises(redis.exceptions.TimeoutError):
@@ -328,14 +328,14 @@ class TestTimeoutScenarios:
             )
         
         # Simulate timeout during retrieval
-        with patch.object(redis_client, 'pipeline') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipeline:
-            # Create a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test pipeline that times out
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipe = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipe.__enter__ = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipe)
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipe.__exit__ = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=None)
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipe.xrevrange = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipe.execute.side_effect = redis.exceptions.TimeoutError("Pipeline timed out")
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipeline.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pipe
+        with patch.object(redis_client, 'pipeline') as Mock_pipeline:
+            # Create a Mock pipeline that times out
+            Mock_pipe = Mock()
+            Mock_pipe.__enter__ = Mock(return_value=Mock_pipe)
+            Mock_pipe.__exit__ = Mock(return_value=None)
+            Mock_pipe.xrevrange = Mock()
+            Mock_pipe.execute.side_effect = redis.exceptions.TimeoutError("Pipeline timed out")
+            Mock_pipeline.return_value = Mock_pipe
             
             # Should raise timeout exception
             with pytest.raises(redis.exceptions.TimeoutError):
@@ -361,8 +361,8 @@ class TestMemoryPressureScenarios:
         assert msg_id is not None
         
         # Simulate memory pressure
-        with patch.object(redis_client, 'xadd') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_xadd:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_xadd.side_effect = redis.exceptions.ResponseError(
+        with patch.object(redis_client, 'xadd') as Mock_xadd:
+            Mock_xadd.side_effect = redis.exceptions.ResponseError(
                 "OOM command not allowed when used memory > 'maxmemory'"
             )
             
@@ -382,8 +382,8 @@ class TestMemoryPressureScenarios:
         register_agent(agent_id, "memory_test", 30, {"test": True})
         
         # Simulate memory pressure
-        with patch.object(redis_client, 'set') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_set:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_set.side_effect = redis.exceptions.ResponseError(
+        with patch.object(redis_client, 'set') as Mock_set:
+            Mock_set.side_effect = redis.exceptions.ResponseError(
                 "OOM command not allowed when used memory > 'maxmemory'"
             )
             
@@ -630,8 +630,8 @@ class TestRecoveryScenarios:
         assert msg_id1 is not None
         
         # Simulate failure in one operation but not others
-        with patch.object(redis_client, 'set') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_set:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_set.side_effect = redis.exceptions.ConnectionError("Agent ops failing")
+        with patch.object(redis_client, 'set') as Mock_set:
+            Mock_set.side_effect = redis.exceptions.ConnectionError("Agent ops failing")
             
             # Agent operations should fail
             with pytest.raises(redis.exceptions.ConnectionError):
@@ -679,7 +679,7 @@ class TestRecoveryScenarios:
                 failure_count[0] += 1
                 client = original_get_redis()
                 # Patch the client to fail
-                client.ping = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(side_effect=redis.exceptions.ConnectionError("Pool failure"))
+                client.ping = Mock(side_effect=redis.exceptions.ConnectionError("Pool failure"))
                 return client
             return original_get_redis()  # Normal operation after failures
         

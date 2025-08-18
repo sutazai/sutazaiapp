@@ -13,7 +13,7 @@ npx claude-flow auto agent [options]
 - `--task, -t <description>` - Task description for agent analysis
 - `--max-agents, -m <number>` - Maximum agents to spawn (default: auto)
 - `--min-agents <number>` - Minimum agents required (default: 1)
-- `--strategy, -s <type>` - Selection strategy: optimal, minimal, balanced
+- `--strategy, -s <type>` - Selection strategy: optimal,, balanced
 - `--no-spawn` - Analyze only, don't spawn agents
 
 ## Examples
@@ -36,10 +36,10 @@ npx claude-flow auto agent -t "Debug performance issue" --max-agents 3
 npx claude-flow auto agent -t "Refactor codebase" --no-spawn
 ```
 
-### Minimal strategy
+### strategy
 
 ```bash
-npx claude-flow auto agent -t "Fix bug in login" -s minimal
+npx claude-flow auto agent -t "Fix bug in login" -s
 ```
 
 ## How It Works
@@ -89,7 +89,7 @@ npx claude-flow auto agent -t "Fix bug in login" -s minimal
 - Best for complex tasks
 - Highest resource usage
 
-### Minimal
+###
 
 - Minimum viable agents
 - Conservative approach

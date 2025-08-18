@@ -25,7 +25,7 @@ MCP_SERVERS=(
     "postgres"
     "playwright-mcp"
     "memory-bank-mcp"
-    "puppeteer-mcp"
+    "puppeteer-mcp (no longer in use)"
     "knowledge-graph-mcp"
     "compass-mcp"
     "github"

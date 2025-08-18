@@ -206,7 +206,7 @@ MCPServiceConfig(
 ## Performance Considerations
 
 ### Resource Usage
-- Minimal overhead for health checks (10-second intervals)
+- overhead for health checks (10-second intervals)
 - Efficient metrics collection with exponential moving averages
 - Lazy initialization of services
 

@@ -22,7 +22,7 @@ class AgentFactory:
             "general": self._create_general_agent
         }
         
-    def create_agent(self, agent_type: str, **kwargs) -> "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent":
+    def create_agent(self, agent_type: str, **kwargs) -> "MockAgent":
         """Create an agent of the specified type"""
         if agent_type not in self.agent_types:
             raise ValueError(f"Unknown agent type: {agent_type}")
@@ -30,48 +30,48 @@ class AgentFactory:
         agent_creator = self.agent_types[agent_type]
         return agent_creator(**kwargs)
         
-    def _create_reasoning_agent(self, **kwargs) -> "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent":
+    def _create_reasoning_agent(self, **kwargs) -> "MockAgent":
         """Create a reasoning-focused agent"""
-        return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent(
+        return MockAgent(
             agent_type="reasoning",
             capabilities=["logical_reasoning", "problem_solving", "analysis"],
             **kwargs
         )
         
-    def _create_coding_agent(self, **kwargs) -> "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent":
+    def _create_coding_agent(self, **kwargs) -> "MockAgent":
         """Create a coding-focused agent"""
-        return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent(
+        return MockAgent(
             agent_type="coding",
             capabilities=["code_generation", "debugging", "testing", "refactoring"],
             **kwargs
         )
         
-    def _create_research_agent(self, **kwargs) -> "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent":
+    def _create_research_agent(self, **kwargs) -> "MockAgent":
         """Create a research-focused agent"""
-        return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent(
+        return MockAgent(
             agent_type="research",
             capabilities=["information_gathering", "analysis", "summarization"],
             **kwargs
         )
         
-    def _create_orchestration_agent(self, **kwargs) -> "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent":
+    def _create_orchestration_agent(self, **kwargs) -> "MockAgent":
         """Create an orchestration-focused agent"""
-        return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent(
+        return MockAgent(
             agent_type="orchestration",
             capabilities=["task_coordination", "workflow_management", "agent_communication"],
             **kwargs
         )
         
-    def _create_general_agent(self, **kwargs) -> "Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent":
+    def _create_general_agent(self, **kwargs) -> "MockAgent":
         """Create a general-purpose agent"""
-        return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent(
+        return MockAgent(
             agent_type="general",
             capabilities=["conversation", "basic_reasoning", "task_execution"],
             **kwargs
         )
 
-class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent:
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agent implementation for enterprise compatibility"""
+class MockAgent:
+    """Mock agent implementation for enterprise compatibility"""
     
     def __init__(self, agent_type: str, capabilities: list, name: Optional[str] = None, **kwargs):
         self.agent_type = agent_type

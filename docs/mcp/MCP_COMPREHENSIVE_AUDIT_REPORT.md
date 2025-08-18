@@ -23,7 +23,7 @@ This comprehensive audit reveals the current state of MCP (Model Context Protoco
 | postgres | ✅ OK | `/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh` | PASS | Port 11108 |
 | playwright-mcp | ✅ OK | `/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh` | PASS | Port 11114 |
 | memory-bank-mcp | ✅ OK | `/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh` | PASS (with warning) | Port 11113 |
-| puppeteer-mcp | ✅ OK | `/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh` | PASS | Port 11112 |
+| puppeteer-mcp (no longer in use) | ✅ OK | `/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp (no longer in use).sh` | PASS | Port 11112 |
 | knowledge-graph-mcp | ✅ OK | `/opt/sutazaiapp/scripts/mcp/wrappers/knowledge-graph-mcp.sh` | PASS | Port 11115 |
 | compass-mcp | ✅ OK | `/opt/sutazaiapp/scripts/mcp/wrappers/compass-mcp.sh` | PASS | Port 11116 |
 | github | ✅ OK | `/opt/sutazaiapp/scripts/mcp/wrappers/github.sh` | PASS | Port 11101 |

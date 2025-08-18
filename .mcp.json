@@ -63,11 +63,6 @@
       "args": [],
       "type": "stdio"
     },
-    "postgres": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh",
-      "args": [],
-      "type": "stdio"
-    },
     "playwright-mcp": {
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh",
       "args": [],
@@ -75,11 +70,6 @@
     },
     "memory-bank-mcp": {
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "puppeteer-mcp": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh",
       "args": [],
       "type": "stdio"
     },

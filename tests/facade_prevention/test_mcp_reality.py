@@ -39,7 +39,7 @@ class MCPRealityTester:
         self.expected_servers = [
             "files", "context7", "http_fetch", "ddg", "sequentialthinking",
             "nx-mcp", "extended-memory", "mcp_ssh", "ultimatecoder", "postgres",
-            "playwright-mcp", "memory-bank-mcp", "puppeteer-mcp", 
+            "playwright-mcp", "memory-bank-mcp", "puppeteer-mcp (no longer in use)", 
             "knowledge-graph-mcp", "compass-mcp"
         ]
     
@@ -133,7 +133,7 @@ class MCPRealityTester:
                 return await self._test_memory_operations()
             elif server_name == "playwright-mcp":
                 return await self._test_playwright_operations()
-            elif server_name == "puppeteer-mcp":
+            elif server_name == "puppeteer-mcp (no longer in use)":
                 return await self._test_puppeteer_operations()
             else:
                 # For other servers, test basic connectivity

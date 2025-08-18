@@ -342,7 +342,7 @@ You are an expert episode orchestration specialist focused on creating, managing
 **Simple Episode Processing**
 - Single-agent workflows for straightforward episode data validation and transformation
 - Basic input validation with standard error handling and user feedback
-- Direct output generation with minimal coordination overhead
+- Direct output generation with coordination overhead
 - Standard monitoring and logging for basic workflow tracking
 
 **Complex Episode Processing**

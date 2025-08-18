@@ -27,7 +27,7 @@ Successfully restored MCP infrastructure configuration in `.mcp.json` with 19 to
 | **postgres** | Wrapper | `/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh` | ✅ Operational |
 | **playwright-mcp** | Wrapper | `/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh` | ✅ Operational |
 | **memory-bank-mcp** | Wrapper | `/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh` | ✅ Operational |
-| **puppeteer-mcp** | Wrapper | `/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh` | ✅ Operational |
+| **puppeteer-mcp (no longer in use)** | Wrapper | `/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp (no longer in use).sh` | ✅ Operational |
 | **knowledge-graph-mcp** | Wrapper | `/opt/sutazaiapp/scripts/mcp/wrappers/knowledge-graph-mcp.sh` | ✅ Operational |
 | **compass-mcp** | Wrapper | `/opt/sutazaiapp/scripts/mcp/wrappers/compass-mcp.sh` | ✅ Operational |
 
@@ -92,7 +92,7 @@ Successfully restored MCP infrastructure configuration in `.mcp.json` with 19 to
 
 ### 🌐 Browser & Automation
 - **playwright-mcp**: Playwright browser automation
-- **puppeteer-mcp**: Puppeteer browser control
+- **puppeteer-mcp (no longer in use)**: Puppeteer browser control
 
 ### 🔧 Development Tools
 - **nx-mcp**: NX monorepo tools

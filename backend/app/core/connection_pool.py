@@ -106,7 +106,7 @@ class ConnectionPoolManager:
         try:
             # Initialize Redis pool with optional authentication
             redis_config = {
-                'host': config.get('redis_host', '172.20.0.2'),
+                'host': config.get('redis_host', 'sutazai-redis'),
                 'port': config.get('redis_port', 6379),
                 'db': 0,
                 'max_connections': 50,
@@ -134,7 +134,7 @@ class ConnectionPoolManager:
             # Based on formula: pool_size = (num_workers * 2) + max_overflow
             # For 28 containers with avg 2 connections each = 56 + 20 = 76
             self._db_cfg = {
-                'host': config.get('db_host', '172.20.0.5'),
+                'host': config.get('db_host', 'sutazai-postgres'),
                 'port': config.get('db_port', 5432),
                 'user': config.get('db_user', 'sutazai'),
                 'password': config.get('db_password', 'sutazai123'),
@@ -552,12 +552,17 @@ class ConnectionPoolManager:
                     logger.warning(f"Error closing HTTP client {service_name}: {e}")
             
             # Reinitialize HTTP clients with current config
+            # EMERGENCY FIX: Use environment-aware hostnames, not hardcoded IPs
+            is_container = os.path.exists("/.dockerenv")
             config = {
-                'ollama_url': 'http://172.20.0.8:11434',
-                'redis_host': '172.20.0.2',
-                'redis_port': 6379,
-                'db_host': '172.20.0.5',
-                'db_port': 5432
+                'ollama_url': os.getenv('OLLAMA_URL', 
+                                       'http://sutazai-ollama:11434' if is_container else 'http://localhost:10104'),
+                'redis_host': os.getenv('REDIS_HOST',
+                                       'sutazai-redis' if is_container else 'localhost'),
+                'redis_port': int(os.getenv('REDIS_PORT', '6379' if is_container else '10001')),
+                'db_host': os.getenv('DB_HOST',
+                                    'sutazai-postgres' if is_container else 'localhost'),
+                'db_port': int(os.getenv('DB_PORT', '5432' if is_container else '10000'))
             }
             self._initialize_http_clients(config)
             
@@ -608,16 +613,17 @@ async def get_pool_manager() -> ConnectionPoolManager:
                 _pool_manager = ConnectionPoolManager()
                 # Initialize with default config
                 await _pool_manager.initialize({
-                    'redis_host': os.getenv('REDIS_HOST', '172.20.0.2'),
+                    'redis_host': os.getenv('REDIS_HOST', 'sutazai-redis'),
                     'redis_port': int(os.getenv('REDIS_PORT', '6379')),
                     'redis_password': os.getenv('REDIS_PASSWORD'),  # Optional Redis password
-                    'db_host': os.getenv('POSTGRES_HOST', '172.20.0.5'),
+                    'db_host': os.getenv('POSTGRES_HOST', 'sutazai-postgres'),
                     'db_port': int(os.getenv('POSTGRES_PORT', '5432')),
                     'db_user': os.getenv('POSTGRES_USER', 'sutazai'),
                     # Using correct password for PostgreSQL
                     'db_password': os.getenv('POSTGRES_PASSWORD', 'sutazai123'),
                     'db_name': os.getenv('POSTGRES_DB', 'sutazai'),
-                    'ollama_url': os.getenv('OLLAMA_URL', 'http://172.20.0.8:11434')
+                    'ollama_url': os.getenv('OLLAMA_URL', 
+                                           'http://sutazai-ollama:11434' if os.path.exists("/.dockerenv") else 'http://localhost:10104')
                 })
                 
     return _pool_manager
@@ -631,9 +637,10 @@ async def get_http_client(service: str = 'default'):
 
 
 async def get_redis() -> redis.Redis:
-    """Quick access to Redis client"""
-    manager = await get_pool_manager()
-    return manager.get_redis_client()
+    """Quick access to Redis client - EMERGENCY FIX: Use redis_connection module"""
+    # Breaking circular dependency by using redis_connection module
+    from app.core.redis_connection import get_redis_connection
+    return await get_redis_connection()
 
 
 async def execute_query(query: str, *args, fetch_one: bool = False):

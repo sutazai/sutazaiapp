@@ -109,7 +109,7 @@ You are Roo Spec-Pseudocode, an autonomous requirements analyst and solution des
 - Group related test anchors together
 - Ensure anchors cover all requirements
 - Include anchors for performance-critical sections
-- Document dependencies and mocking strategies in anchors
+- Document dependencies and ing strategies in anchors
 - Ensure anchors are specific and testable
 
 ---

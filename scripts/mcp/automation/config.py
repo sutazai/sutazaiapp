@@ -183,7 +183,7 @@ class MCPAutomationConfig:
             "postgres": {"package": "@modelcontextprotocol/server-postgres", "wrapper": "postgres.sh"},
             "playwright-mcp": {"package": "@modelcontextprotocol/server-playwright", "wrapper": "playwright-mcp.sh"},
             "memory-bank-mcp": {"package": "@modelcontextprotocol/server-memorybank", "wrapper": "memory-bank-mcp.sh"},
-            "puppeteer-mcp": {"package": "@modelcontextprotocol/server-puppeteer", "wrapper": "puppeteer-mcp.sh"},
+            "puppeteer-mcp (no longer in use)": {"package": "@modelcontextprotocol/server-puppeteer", "wrapper": "puppeteer-mcp (no longer in use).sh"},
             "knowledge-graph-mcp": {"package": "@modelcontextprotocol/server-knowledge", "wrapper": "knowledge-graph-mcp.sh"},
             "compass-mcp": {"package": "@modelcontextprotocol/server-compass", "wrapper": "compass-mcp.sh"},
         }

@@ -75,7 +75,7 @@ kombu==5.4.2                        # Messaging library
 pytest==8.3.4                       # Testing framework - latest stable
 pytest-asyncio==0.25.2              # Async test support - security patches
 pytest-cov==5.0.0                   # Coverage plugin
-pytest-Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test==3.14.0                 # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test fixture
+pytest-Mock==3.14.0                 # Mock fixture
 pytest-timeout==2.3.1               # Test timeout management
 pytest-xdist==3.6.1                 # Parallel test execution
 hypothesis==6.122.3                 # Property-based testing

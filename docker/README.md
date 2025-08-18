@@ -12,7 +12,7 @@ Docker Compose files have been reorganized from 19 files into a logical hierarch
 - `docker-compose.override.yml` - Local development overrides
 
 ### Environment-Specific
-- `docker-compose.minimal.yml` - Minimal setup for testing
+- `docker-compose.minimal.yml` - setup for testing
 - `docker-compose.standard.yml` - Standard deployment
 - `docker-compose.optimized.yml` - Optimized production deployment
 

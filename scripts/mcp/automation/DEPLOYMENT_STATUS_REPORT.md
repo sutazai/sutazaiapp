@@ -244,7 +244,7 @@ open http://localhost:10250
 - **Startup Time**: < 5 seconds for all components
 - **Memory Usage**: ~50MB total for automation system
 - **CPU Usage**: < 1% during normal operations
-- **Network Usage**: Minimal (health checks and npm queries only)
+- **Network Usage**: (health checks and npm queries only)
 - **Storage**: ~100MB including virtual environment and dependencies
 
 ### Reliability Metrics

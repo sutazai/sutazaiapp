@@ -158,7 +158,7 @@ docker restart sutazai-backend
 
 ### Problem
 8 out of 17 MCP services failing to start:
-- postgres, files, http, ddg, github, extended-memory, puppeteer-mcp, playwright-mcp
+- postgres, files, http, ddg, github, extended-memory, puppeteer-mcp (no longer in use), playwright-mcp
 
 ### Root Cause
 Service registration failures cascade to prevent MCP startup.

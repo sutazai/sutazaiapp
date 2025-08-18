@@ -48,9 +48,9 @@
       "status": "operational",
       "wrapper": "nx-mcp.sh"
     },
-    "puppeteer-mcp": {
+    "puppeteer-mcp (no longer in use)": {
       "status": "operational",
-      "wrapper": "puppeteer-mcp.sh"
+      "wrapper": "puppeteer-mcp (no longer in use).sh"
     },
     "memory-bank-mcp": {
       "status": "operational",
@@ -84,7 +84,7 @@
       "extended-memory",
       "mcp_ssh",
       "nx-mcp",
-      "puppeteer-mcp",
+      "puppeteer-mcp (no longer in use)",
       "memory-bank-mcp",
       "playwright-mcp",
       "knowledge-graph-mcp",
@@ -100,7 +100,7 @@
       "ddg.sh",
       "files.sh",
       "ultimatecoder.sh",
-      "puppeteer-mcp.sh",
+      "puppeteer-mcp (no longer in use).sh",
       "mcp_ssh.sh",
       "http_fetch.sh",
       "nx-mcp.sh",

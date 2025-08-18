@@ -58,7 +58,7 @@ if self.metadata:
 
 ### Immediate Results Validated via Live Logs
 ```
-✅ Registered MCP puppeteer-mcp with mesh on port 11112
+✅ Registered MCP puppeteer-mcp (no longer in use) with mesh on port 11112
 ✅ Registered MCP memory-bank-mcp with mesh on port 11113  
 ✅ Registered MCP playwright-mcp with mesh on port 11114
 ✅ Registered MCP knowledge-graph-mcp with mesh on port 11115

@@ -8,7 +8,7 @@ import asyncio
 import threading
 import pytest
 from typing import Dict, Any, List, Optional
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
+from unittest.Mock import Mock, patch
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Import mesh components
@@ -18,8 +18,8 @@ from backend.app.mesh.redis_bus import (
     read_group, ack, move_to_dead, task_stream, result_stream
 )
 
-class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent:
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agent for testing communication patterns."""
+class MockAgent:
+    """Mock agent for testing communication patterns."""
     
     def __init__(self, agent_id: str, agent_type: str, capabilities: List[str]):
         self.agent_id = agent_id
@@ -31,7 +31,7 @@ class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - O
         self.redis_client = None
         
     def start(self):
-        """Start the Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agent."""
+        """Start the Mock agent."""
         self.is_running = True
         self.redis_client = get_redis()
         
@@ -48,7 +48,7 @@ class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - O
         )
     
     def stop(self):
-        """Stop the Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agent."""
+        """Stop the Mock agent."""
         self.is_running = False
         
     def process_task(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -169,13 +169,13 @@ def test_group():
     return "test_agents"
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents():
-    """Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agents for testing."""
+def Mock_agents():
+    """Create Mock agents for testing."""
     timestamp = int(time.time())
     agents = [
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent(f"echo_agent_{timestamp}", "echo", ["echo", "transform"]),
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent(f"transform_agent_{timestamp}", "transform", ["transform"]),
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAgent(f"slow_agent_{timestamp}", "slow", ["slow_processing"])
+        MockAgent(f"echo_agent_{timestamp}", "echo", ["echo", "transform"]),
+        MockAgent(f"transform_agent_{timestamp}", "transform", ["transform"]),
+        MockAgent(f"slow_agent_{timestamp}", "slow", ["slow_processing"])
     ]
     return agents
 
@@ -207,9 +207,9 @@ def cleanup_test_data(redis_client, test_topic):
 class TestBasicAgentCommunication:
     """Test basic agent communication patterns."""
     
-    def test_single_agent_task_processing(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_single_agent_task_processing(self, redis_client, test_topic, test_group, Mock_agents):
         """Test single agent processing tasks."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]  # echo_agent
+        agent = Mock_agents[0]  # echo_agent
         agent.start()
         
         try:
@@ -254,10 +254,10 @@ class TestBasicAgentCommunication:
         finally:
             agent.stop()
     
-    def test_multiple_agents_task_distribution(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_multiple_agents_task_distribution(self, redis_client, test_topic, test_group, Mock_agents):
         """Test task distribution among multiple agents."""
         # Start multiple agents
-        active_agents = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[:2]  # echo_agent and transform_agent
+        active_agents = Mock_agents[:2]  # echo_agent and transform_agent
         
         for agent in active_agents:
             agent.start()
@@ -305,9 +305,9 @@ class TestBasicAgentCommunication:
             for agent in active_agents:
                 agent.stop()
     
-    def test_agent_heartbeat_and_registry(self, redis_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_agent_heartbeat_and_registry(self, redis_client, Mock_agents):
         """Test agent heartbeat and registry functionality."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]
+        agent = Mock_agents[0]
         agent.start()
         
         try:
@@ -336,9 +336,9 @@ class TestBasicAgentCommunication:
 class TestErrorHandlingAndRecovery:
     """Test error handling and recovery scenarios."""
     
-    def test_task_processing_errors(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_task_processing_errors(self, redis_client, test_topic, test_group, Mock_agents):
         """Test handling of task processing errors."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]
+        agent = Mock_agents[0]
         agent.start()
         
         try:
@@ -376,9 +376,9 @@ class TestErrorHandlingAndRecovery:
         finally:
             agent.stop()
     
-    def test_dead_letter_queue_usage(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_dead_letter_queue_usage(self, redis_client, test_topic, test_group, Mock_agents):
         """Test moving failed messages to dead letter queue."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]
+        agent = Mock_agents[0]
         agent.start()
         
         try:
@@ -407,9 +407,9 @@ class TestErrorHandlingAndRecovery:
         finally:
             agent.stop()
     
-    def test_agent_recovery_after_failure(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_agent_recovery_after_failure(self, redis_client, test_topic, test_group, Mock_agents):
         """Test agent recovery after simulated failure."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]
+        agent = Mock_agents[0]
         agent.start()
         
         try:
@@ -444,9 +444,9 @@ class TestErrorHandlingAndRecovery:
 class TestPerformanceAndScalability:
     """Test performance and scalability scenarios."""
     
-    def test_high_throughput_processing(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_high_throughput_processing(self, redis_client, test_topic, test_group, Mock_agents):
         """Test high-throughput task processing."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]
+        agent = Mock_agents[0]
         agent.start()
         
         try:
@@ -487,10 +487,10 @@ class TestPerformanceAndScalability:
         finally:
             agent.stop()
     
-    def test_concurrent_agent_processing(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_concurrent_agent_processing(self, redis_client, test_topic, test_group, Mock_agents):
         """Test concurrent processing by multiple agents."""
         # Use multiple agents
-        active_agents = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[:3]
+        active_agents = Mock_agents[:3]
         
         for agent in active_agents:
             agent.start()
@@ -547,9 +547,9 @@ class TestPerformanceAndScalability:
             for agent in active_agents:
                 agent.stop()
     
-    def test_slow_task_handling(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_slow_task_handling(self, redis_client, test_topic, test_group, Mock_agents):
         """Test handling of slow/long-running tasks."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[2]  # slow_agent
+        agent = Mock_agents[2]  # slow_agent
         agent.start()
         
         try:
@@ -593,9 +593,9 @@ class TestPerformanceAndScalability:
 class TestMessageReliability:
     """Test message delivery reliability."""
     
-    def test_message_acknowledgment(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_message_acknowledgment(self, redis_client, test_topic, test_group, Mock_agents):
         """Test proper message acknowledgment."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]
+        agent = Mock_agents[0]
         agent.start()
         
         try:
@@ -627,9 +627,9 @@ class TestMessageReliability:
         finally:
             agent.stop()
     
-    def test_unacknowledged_message_recovery(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_unacknowledged_message_recovery(self, redis_client, test_topic, test_group, Mock_agents):
         """Test recovery of unacknowledged messages."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]
+        agent = Mock_agents[0]
         
         try:
             # Create consumer group
@@ -675,9 +675,9 @@ class TestMessageReliability:
 class TestAgentLifecycle:
     """Test complete agent lifecycle scenarios."""
     
-    def test_agent_registration_expiration(self, redis_client, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_agent_registration_expiration(self, redis_client, Mock_agents):
         """Test agent registration and expiration."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]
+        agent = Mock_agents[0]
         
         # Register with short TTL
         register_agent(agent.agent_id, agent.agent_type, ttl_seconds=2, meta={"test": True})
@@ -695,9 +695,9 @@ class TestAgentLifecycle:
         test_agents = [a for a in agents if a.get("agent_id") == agent.agent_id]
         assert len(test_agents) == 0
     
-    def test_agent_graceful_shutdown(self, redis_client, test_topic, test_group, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents):
+    def test_agent_graceful_shutdown(self, redis_client, test_topic, test_group, Mock_agents):
         """Test graceful agent shutdown."""
-        agent = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_agents[0]
+        agent = Mock_agents[0]
         agent.start()
         
         try:

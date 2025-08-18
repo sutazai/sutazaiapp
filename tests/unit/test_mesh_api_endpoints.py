@@ -1,10 +1,10 @@
 """
 Unit tests for mesh API endpoints.
-Tests all endpoints in backend/app/api/v1/endpoints/mesh.py with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested dependencies.
+Tests all endpoints in backend/app/api/v1/endpoints/mesh.py with Mocked dependencies.
 """
 import json
 import pytest
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, patch, AsyncMock
 from fastapi.testclient import TestClient
 from fastapi import HTTPException
 from typing import Dict, Any, List
@@ -82,17 +82,17 @@ def sample_agents_data():
     }
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test Redis client."""
-    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.ping.return_value = True
-    return redis_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+def Mock_redis():
+    """Mock Redis client."""
+    redis_Mock = Mock()
+    redis_Mock.ping.return_value = True
+    return redis_Mock
 
 class TestEnqueueEndpoint:
     """Test the /enqueue endpoint."""
     
     @patch('backend.app.api.v1.endpoints.mesh.enqueue_task')
-    def test_enqueue_success(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_enqueue_task, sample_enqueue_request):
+    def test_enqueue_success(self, Mock_enqueue_task, sample_enqueue_request):
         """Test successful task enqueuing."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -101,20 +101,20 @@ class TestEnqueueEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_enqueue_task.return_value = "1699999999999-0"
+        Mock_enqueue_task.return_value = "1699999999999-0"
         
         response = client.post("/mesh/enqueue", json=sample_enqueue_request)
         
         assert response.status_code == 200
         assert response.json() == {"id": "1699999999999-0"}
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_enqueue_task.assert_called_once_with(
+        Mock_enqueue_task.assert_called_once_with(
             sample_enqueue_request["topic"],
             sample_enqueue_request["task"]
         )
     
     @patch('backend.app.api.v1.endpoints.mesh.enqueue_task')
-    def test_enqueue_redis_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_enqueue_task, sample_enqueue_request):
+    def test_enqueue_redis_error(self, Mock_enqueue_task, sample_enqueue_request):
         """Test enqueue with Redis connection error."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -123,7 +123,7 @@ class TestEnqueueEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_enqueue_task.side_effect = Exception("Redis connection failed")
+        Mock_enqueue_task.side_effect = Exception("Redis connection failed")
         
         response = client.post("/mesh/enqueue", json=sample_enqueue_request)
         
@@ -220,8 +220,8 @@ class TestEnqueueEndpoint:
             "data123"
         ]
         
-        with patch('backend.app.api.v1.endpoints.mesh.enqueue_task') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_enqueue:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_enqueue.return_value = "test-id"
+        with patch('backend.app.api.v1.endpoints.mesh.enqueue_task') as Mock_enqueue:
+            Mock_enqueue.return_value = "test-id"
             
             for topic in valid_topics:
                 request = {"topic": topic, "task": {"test": "data"}}
@@ -232,7 +232,7 @@ class TestResultsEndpoint:
     """Test the /results endpoint."""
     
     @patch('backend.app.api.v1.endpoints.mesh.tail_results')
-    def test_get_results_success(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail_results, sample_results_data):
+    def test_get_results_success(self, Mock_tail_results, sample_results_data):
         """Test successful results retrieval."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -241,22 +241,22 @@ class TestResultsEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test tail_results to return tuples (id, data)
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data = [
+        # Mock tail_results to return tuples (id, data)
+        Mock_data = [
             ("1699999999999-0", sample_results_data[0]["data"]),
             ("1699999999999-1", sample_results_data[1]["data"])
         ]
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail_results.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_data
+        Mock_tail_results.return_value = Mock_data
         
         response = client.get("/mesh/results?topic=data_processing&count=2")
         
         assert response.status_code == 200
         assert response.json() == sample_results_data
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail_results.assert_called_once_with("data_processing", 2)
+        Mock_tail_results.assert_called_once_with("data_processing", 2)
     
     @patch('backend.app.api.v1.endpoints.mesh.tail_results')
-    def test_get_results_empty(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail_results):
+    def test_get_results_empty(self, Mock_tail_results):
         """Test results retrieval with no results."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -265,17 +265,17 @@ class TestResultsEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail_results.return_value = []
+        Mock_tail_results.return_value = []
         
         response = client.get("/mesh/results?topic=data_processing")
         
         assert response.status_code == 200
         assert response.json() == []
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail_results.assert_called_once_with("data_processing", 10)  # Default count
+        Mock_tail_results.assert_called_once_with("data_processing", 10)  # Default count
     
     @patch('backend.app.api.v1.endpoints.mesh.tail_results')
-    def test_get_results_redis_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail_results):
+    def test_get_results_redis_error(self, Mock_tail_results):
         """Test results retrieval with Redis error."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -284,7 +284,7 @@ class TestResultsEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail_results.side_effect = Exception("Redis connection failed")
+        Mock_tail_results.side_effect = Exception("Redis connection failed")
         
         response = client.get("/mesh/results?topic=data_processing")
         
@@ -335,8 +335,8 @@ class TestResultsEndpoint:
         assert response.status_code == 422
         
         # Test valid count
-        with patch('backend.app.api.v1.endpoints.mesh.tail_results') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail.return_value = []
+        with patch('backend.app.api.v1.endpoints.mesh.tail_results') as Mock_tail:
+            Mock_tail.return_value = []
             response = client.get("/mesh/results?topic=data_processing&count=50")
             assert response.status_code == 200
     
@@ -349,18 +349,18 @@ class TestResultsEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        with patch('backend.app.api.v1.endpoints.mesh.tail_results') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail.return_value = []
+        with patch('backend.app.api.v1.endpoints.mesh.tail_results') as Mock_tail:
+            Mock_tail.return_value = []
             response = client.get("/mesh/results?topic=data_processing")
             
             assert response.status_code == 200
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail.assert_called_once_with("data_processing", 10)  # Default count
+            Mock_tail.assert_called_once_with("data_processing", 10)  # Default count
 
 class TestAgentsEndpoint:
     """Test the /agents endpoint."""
     
     @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_get_agents_success(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents, sample_agents_data):
+    def test_get_agents_success(self, Mock_list_agents, sample_agents_data):
         """Test successful agents listing."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -369,17 +369,17 @@ class TestAgentsEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents.return_value = sample_agents_data["agents"]
+        Mock_list_agents.return_value = sample_agents_data["agents"]
         
         response = client.get("/mesh/agents")
         
         assert response.status_code == 200
         assert response.json() == sample_agents_data
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents.assert_called_once()
+        Mock_list_agents.assert_called_once()
     
     @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_get_agents_empty(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents):
+    def test_get_agents_empty(self, Mock_list_agents):
         """Test agents listing with no agents."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -388,7 +388,7 @@ class TestAgentsEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents.return_value = []
+        Mock_list_agents.return_value = []
         
         response = client.get("/mesh/agents")
         
@@ -396,7 +396,7 @@ class TestAgentsEndpoint:
         assert response.json() == {"count": 0, "agents": []}
     
     @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_get_agents_redis_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents):
+    def test_get_agents_redis_error(self, Mock_list_agents):
         """Test agents listing with Redis error."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -405,7 +405,7 @@ class TestAgentsEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents.side_effect = Exception("Redis connection failed")
+        Mock_list_agents.side_effect = Exception("Redis connection failed")
         
         response = client.get("/mesh/agents")
         
@@ -417,7 +417,7 @@ class TestHealthEndpoint:
     
     @patch('backend.app.api.v1.endpoints.mesh.get_redis')
     @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_health_success(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis, sample_agents_data):
+    def test_health_success(self, Mock_list_agents, Mock_get_redis, Mock_redis, sample_agents_data):
         """Test successful health check."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -426,9 +426,9 @@ class TestHealthEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.ping.return_value = True
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents.return_value = sample_agents_data["agents"]
+        Mock_get_redis.return_value = Mock_redis
+        Mock_redis.ping.return_value = True
+        Mock_list_agents.return_value = sample_agents_data["agents"]
         
         response = client.get("/mesh/health")
         
@@ -440,7 +440,7 @@ class TestHealthEndpoint:
     
     @patch('backend.app.api.v1.endpoints.mesh.get_redis')
     @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_health_redis_degraded(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
+    def test_health_redis_degraded(self, Mock_list_agents, Mock_get_redis, Mock_redis):
         """Test health check with degraded Redis."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -449,9 +449,9 @@ class TestHealthEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.ping.return_value = False
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list_agents.return_value = []
+        Mock_get_redis.return_value = Mock_redis
+        Mock_redis.ping.return_value = False
+        Mock_list_agents.return_value = []
         
         response = client.get("/mesh/health")
         
@@ -462,7 +462,7 @@ class TestHealthEndpoint:
         assert result["agents_count"] == 0
     
     @patch('backend.app.api.v1.endpoints.mesh.get_redis')
-    def test_health_redis_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis):
+    def test_health_redis_error(self, Mock_get_redis, Mock_redis):
         """Test health check with Redis connection error."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -471,8 +471,8 @@ class TestHealthEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_get_redis.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_redis.ping.side_effect = Exception("Connection failed")
+        Mock_get_redis.return_value = Mock_redis
+        Mock_redis.ping.side_effect = Exception("Connection failed")
         
         response = client.get("/mesh/health")
         
@@ -515,8 +515,8 @@ class TestOllamaGenerateEndpoint:
     @patch('backend.app.api.v1.endpoints.mesh.default_ollama_bucket')
     @patch('backend.app.api.v1.endpoints.mesh.get_cache_service')
     @patch('backend.app.api.v1.endpoints.mesh.get_pool_manager')
-    def test_ollama_generate_success(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service, 
-                                   Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_bucket, sample_generate_request, sample_ollama_response):
+    def test_ollama_generate_success(self, Mock_pool_manager, Mock_cache_service, 
+                                   Mock_bucket, sample_generate_request, sample_ollama_response):
         """Test successful Ollama generation."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -526,28 +526,28 @@ class TestOllamaGenerateEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test rate limiter
-        bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.try_acquire.return_value = (True, 0)
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_bucket.return_value = bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Mock rate limiter
+        bucket_Mock = Mock()
+        bucket_Mock.try_acquire.return_value = (True, 0)
+        Mock_bucket.return_value = bucket_Mock
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test cache service
-        cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get.return_value = None  # Cache miss
-        cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.set.return_value = None
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.return_value = cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Mock cache service
+        cache_Mock = AsyncMock()
+        cache_Mock.get.return_value = None  # Cache miss
+        cache_Mock.set.return_value = None
+        Mock_cache_service.return_value = cache_Mock
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test HTTP client and pool manager
-        http_client_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        response_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        response_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.json.return_value = sample_ollama_response
-        response_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.raise_for_status.return_value = None
-        http_client_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.post.return_value = response_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Mock HTTP client and pool manager
+        http_client_Mock = AsyncMock()
+        response_Mock = Mock()
+        response_Mock.json.return_value = sample_ollama_response
+        response_Mock.raise_for_status.return_value = None
+        http_client_Mock.post.return_value = response_Mock
         
-        pool_manager_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        pool_manager_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get_http_client.return_value.__aenter__.return_value = http_client_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
-        pool_manager_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get_http_client.return_value.__aexit__.return_value = None
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool_manager.return_value = pool_manager_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        pool_manager_Mock = AsyncMock()
+        pool_manager_Mock.get_http_client.return_value.__aenter__.return_value = http_client_Mock
+        pool_manager_Mock.get_http_client.return_value.__aexit__.return_value = None
+        Mock_pool_manager.return_value = pool_manager_Mock
         
         response = client.post("/mesh/ollama/generate", json=sample_generate_request)
         
@@ -575,7 +575,7 @@ class TestOllamaGenerateEndpoint:
         assert "prompt too large" in response.json()["detail"]
     
     @patch('backend.app.api.v1.endpoints.mesh.default_ollama_bucket')
-    def test_ollama_generate_rate_limited(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_bucket, sample_generate_request):
+    def test_ollama_generate_rate_limited(self, Mock_bucket, sample_generate_request):
         """Test Ollama generation with rate limiting."""
         from backend.app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
@@ -584,10 +584,10 @@ class TestOllamaGenerateEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test rate limiter to deny request
-        bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.try_acquire.return_value = (False, 5000)  # Denied with 5s wait
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_bucket.return_value = bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Mock rate limiter to deny request
+        bucket_Mock = Mock()
+        bucket_Mock.try_acquire.return_value = (False, 5000)  # Denied with 5s wait
+        Mock_bucket.return_value = bucket_Mock
         
         response = client.post("/mesh/ollama/generate", json=sample_generate_request)
         
@@ -596,7 +596,7 @@ class TestOllamaGenerateEndpoint:
     
     @patch('backend.app.api.v1.endpoints.mesh.default_ollama_bucket')
     @patch('backend.app.api.v1.endpoints.mesh.get_cache_service')
-    def test_ollama_generate_cache_hit(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_bucket, 
+    def test_ollama_generate_cache_hit(self, Mock_cache_service, Mock_bucket, 
                                      sample_generate_request, sample_ollama_response):
         """Test Ollama generation with cache hit."""
         from backend.app.api.v1.endpoints.mesh import router
@@ -606,15 +606,15 @@ class TestOllamaGenerateEndpoint:
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test rate limiter
-        bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.try_acquire.return_value = (True, 0)
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_bucket.return_value = bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Mock rate limiter
+        bucket_Mock = Mock()
+        bucket_Mock.try_acquire.return_value = (True, 0)
+        Mock_bucket.return_value = bucket_Mock
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test cache service with cache hit
-        cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get.return_value = sample_ollama_response
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache_service.return_value = cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Mock cache service with cache hit
+        cache_Mock = AsyncMock()
+        cache_Mock.get.return_value = sample_ollama_response
+        Mock_cache_service.return_value = cache_Mock
         
         response = client.post("/mesh/ollama/generate", json=sample_generate_request)
         
@@ -622,7 +622,7 @@ class TestOllamaGenerateEndpoint:
         assert response.json() == sample_ollama_response
         
         # Should not call cache.set since it was a cache hit
-        cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.set.assert_not_called()
+        cache_Mock.set.assert_not_called()
     
     def test_ollama_generate_default_model(self):
         """Test Ollama generation with default model."""
@@ -639,32 +639,32 @@ class TestOllamaGenerateEndpoint:
         }
         
         with patch.dict('os.environ', {'OLLAMA_DEFAULT_MODEL': 'test-model'}):
-            with patch('backend.app.api.v1.endpoints.mesh.default_ollama_bucket') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_bucket:
-                bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-                bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.try_acquire.return_value = (True, 0)
-                Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_bucket.return_value = bucket_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+            with patch('backend.app.api.v1.endpoints.mesh.default_ollama_bucket') as Mock_bucket:
+                bucket_Mock = Mock()
+                bucket_Mock.try_acquire.return_value = (True, 0)
+                Mock_bucket.return_value = bucket_Mock
                 
-                with patch('backend.app.api.v1.endpoints.mesh.get_cache_service') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache:
-                    cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-                    cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get.return_value = None
-                    Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_cache.return_value = cache_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+                with patch('backend.app.api.v1.endpoints.mesh.get_cache_service') as Mock_cache:
+                    cache_Mock = AsyncMock()
+                    cache_Mock.get.return_value = None
+                    Mock_cache.return_value = cache_Mock
                     
-                    with patch('backend.app.api.v1.endpoints.mesh.get_pool_manager') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool:
-                        http_client_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-                        response_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-                        response_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.json.return_value = {"response": "test"}
-                        response_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.raise_for_status.return_value = None
-                        http_client_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.post.return_value = response_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+                    with patch('backend.app.api.v1.endpoints.mesh.get_pool_manager') as Mock_pool:
+                        http_client_Mock = AsyncMock()
+                        response_Mock = Mock()
+                        response_Mock.json.return_value = {"response": "test"}
+                        response_Mock.raise_for_status.return_value = None
+                        http_client_Mock.post.return_value = response_Mock
                         
-                        pool_manager_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-                        pool_manager_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get_http_client.return_value.__aenter__.return_value = http_client_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
-                        pool_manager_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.get_http_client.return_value.__aexit__.return_value = None
-                        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_pool.return_value = pool_manager_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+                        pool_manager_Mock = AsyncMock()
+                        pool_manager_Mock.get_http_client.return_value.__aenter__.return_value = http_client_Mock
+                        pool_manager_Mock.get_http_client.return_value.__aexit__.return_value = None
+                        Mock_pool.return_value = pool_manager_Mock
                         
                         response = client.post("/mesh/ollama/generate", json=request_no_model)
                         
                         # Should use default model
-                        call_args = http_client_Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test.post.call_args[1]['json']
+                        call_args = http_client_Mock.post.call_args[1]['json']
                         assert call_args['model'] == 'test-model'
 
 class TestRequestValidation:
@@ -741,18 +741,18 @@ class TestErrorHandling:
         client = TestClient(app)
         
         # Test various error scenarios
-        with patch('backend.app.api.v1.endpoints.mesh.enqueue_task') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_enqueue:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_enqueue.side_effect = RuntimeError("Internal error")
+        with patch('backend.app.api.v1.endpoints.mesh.enqueue_task') as Mock_enqueue:
+            Mock_enqueue.side_effect = RuntimeError("Internal error")
             response = client.post("/mesh/enqueue", json={"topic": "test", "task": {}})
             assert response.status_code == 500
         
-        with patch('backend.app.api.v1.endpoints.mesh.tail_results') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_tail.side_effect = RuntimeError("Internal error")
+        with patch('backend.app.api.v1.endpoints.mesh.tail_results') as Mock_tail:
+            Mock_tail.side_effect = RuntimeError("Internal error")
             response = client.get("/mesh/results?topic=test")
             assert response.status_code == 500
         
-        with patch('backend.app.api.v1.endpoints.mesh.list_agents') as Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list:
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_list.side_effect = RuntimeError("Internal error")
+        with patch('backend.app.api.v1.endpoints.mesh.list_agents') as Mock_list:
+            Mock_list.side_effect = RuntimeError("Internal error")
             response = client.get("/mesh/agents")
             assert response.status_code == 500
 

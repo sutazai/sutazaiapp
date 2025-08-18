@@ -12,7 +12,7 @@
 ### Files Moved to Centralized Location
 1. **Root Docker Compose Files** (17 files)
    - All docker-compose*.yml files moved from root to `/docker/`
-   - Files include: base, minimal, secure, performance, optimized, mcp, skyvern, etc.
+   - Files include: base,, secure, performance, optimized, mcp, skyvern, etc.
 
 2. **Agent Dockerfiles** (20 files across 14 agents)
    - Moved from `/agents/*/Dockerfile*` to `/docker/agents/[agent-name]/`

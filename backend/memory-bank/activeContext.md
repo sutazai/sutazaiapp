@@ -244,7 +244,7 @@
 - knowledge_graph/schema.py
 - knowledge_graph/visualization.py
 - mcp_validation_report.json
-- minimal_app.py
+-_app.py
 - oversight/alert_config.json
 - oversight/alert_notification_system.py
 - oversight/compliance_reporter.py

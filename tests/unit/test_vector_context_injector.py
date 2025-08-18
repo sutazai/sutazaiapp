@@ -1,12 +1,12 @@
 """
 Unit tests for Vector Context Injection System
-Tests all components with Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Tested vector database clients
+Tests all components with Mocked vector database clients
 """
 
 import pytest
 import asyncio
 import json
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime
 
 # Import the system under test
@@ -36,10 +36,10 @@ class TestCircuitBreaker:
         cb = CircuitBreaker(failure_threshold=2)
         
         @cb.call
-        async def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_func():
+        async def Mock_func():
             return "success"
         
-        result = await Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_func()
+        result = await Mock_func()
         assert result == "success"
         assert cb.state == "CLOSED"
         assert cb.failure_count == 0
@@ -94,17 +94,17 @@ class TestChromaDBClient:
     @pytest.mark.asyncio
     async def test_chromadb_search_success(self, chroma_client):
         """Test successful ChromaDB search"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test the ChromaDB client
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_collection = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_collection.query.return_value = {
+        # Mock the ChromaDB client
+        Mock_collection = Mock()
+        Mock_collection.query.return_value = {
             "documents": [["Document 1", "Document 2"]],
             "metadatas": [[{"id": 1}, {"id": 2}]],
             "distances": [[0.1, 0.2]]
         }
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chromadb_client = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chromadb_client.get_collection.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_collection
-        chroma_client.client = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chromadb_client
+        Mock_chromadb_client = Mock()
+        Mock_chromadb_client.get_collection.return_value = Mock_collection
+        chroma_client.client = Mock_chromadb_client
         
         results = await chroma_client.search("test query")
         
@@ -125,9 +125,9 @@ class TestChromaDBClient:
     @pytest.mark.asyncio
     async def test_chromadb_search_exception(self, chroma_client):
         """Test ChromaDB search handles exceptions gracefully"""
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chromadb_client = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chromadb_client.get_collection.side_effect = Exception("Connection failed")
-        chroma_client.client = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chromadb_client
+        Mock_chromadb_client = Mock()
+        Mock_chromadb_client.get_collection.side_effect = Exception("Connection failed")
+        chroma_client.client = Mock_chromadb_client
         
         results = await chroma_client.search("test query")
         assert results == []
@@ -143,14 +143,14 @@ class TestQdrantDBClient:
     @pytest.mark.asyncio
     async def test_qdrant_search_success(self, qdrant_client):
         """Test successful Qdrant search"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test search results
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_point = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_point.payload = {"content": "Test document", "metadata": {"id": 1}}
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_point.score = 0.85
+        # Mock search results
+        Mock_point = Mock()
+        Mock_point.payload = {"content": "Test document", "metadata": {"id": 1}}
+        Mock_point.score = 0.85
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_qdrant_client = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_qdrant_client.search.return_value = [Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_point]
-        qdrant_client.client = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_qdrant_client
+        Mock_qdrant_client = Mock()
+        Mock_qdrant_client.search.return_value = [Mock_point]
+        qdrant_client.client = Mock_qdrant_client
         
         results = await qdrant_client.search("test query")
         
@@ -185,21 +185,21 @@ class TestFAISSClient:
     
     @pytest.mark.asyncio
     @patch('httpx.AsyncClient')
-    async def test_faiss_search_success(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_httpx, faiss_client):
+    async def test_faiss_search_success(self, Mock_httpx, faiss_client):
         """Test successful FAISS search"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test HTTP response
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 200
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.json.return_value = {
+        # Mock HTTP response
+        Mock_response = Mock()
+        Mock_response.status_code = 200
+        Mock_response.json.return_value = {
             "results": [
                 {"content": "FAISS doc 1", "metadata": {"id": 1}, "score": 0.9},
                 {"content": "FAISS doc 2", "metadata": {"id": 2}, "score": 0.8}
             ]
         }
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.post.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_httpx.return_value.__aenter__.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
+        Mock_client = AsyncMock()
+        Mock_client.post.return_value = Mock_response
+        Mock_httpx.return_value.__aenter__.return_value = Mock_client
         
         results = await faiss_client.search("test query")
         
@@ -210,25 +210,25 @@ class TestFAISSClient:
     
     @pytest.mark.asyncio
     @patch('httpx.AsyncClient')
-    async def test_faiss_search_http_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_httpx, faiss_client):
+    async def test_faiss_search_http_error(self, Mock_httpx, faiss_client):
         """Test FAISS search with HTTP error"""
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response.status_code = 500
+        Mock_response = Mock()
+        Mock_response.status_code = 500
         
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.post.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_response
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_httpx.return_value.__aenter__.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
+        Mock_client = AsyncMock()
+        Mock_client.post.return_value = Mock_response
+        Mock_httpx.return_value.__aenter__.return_value = Mock_client
         
         results = await faiss_client.search("test query")
         assert results == []
     
     @pytest.mark.asyncio
     @patch('httpx.AsyncClient')
-    async def test_faiss_search_connection_error(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_httpx, faiss_client):
+    async def test_faiss_search_connection_error(self, Mock_httpx, faiss_client):
         """Test FAISS search with connection error"""
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client.post.side_effect = Exception("Connection failed")
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_httpx.return_value.__aenter__.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_client
+        Mock_client = AsyncMock()
+        Mock_client.post.side_effect = Exception("Connection failed")
+        Mock_httpx.return_value.__aenter__.return_value = Mock_client
         
         results = await faiss_client.search("test query")
         assert results == []
@@ -259,8 +259,8 @@ class TestVectorContextInjector:
     @pytest.mark.asyncio
     async def test_analyze_user_request_knowledge_query(self, injector):
         """Test analyze_user_request with knowledge query"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test the search method
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_context = KnowledgeContext(
+        # Mock the search method
+        Mock_context = KnowledgeContext(
             results=[
                 VectorSearchResult("Test doc", {"id": 1}, 0.9, "chromadb")
             ],
@@ -270,7 +270,7 @@ class TestVectorContextInjector:
             enriched_context="Test context"
         )
         
-        injector.search_all_databases = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_context)
+        injector.search_all_databases = AsyncMock(return_value=Mock_context)
         
         needs_context, context = await injector.analyze_user_request("What is Docker?")
         
@@ -290,14 +290,14 @@ class TestVectorContextInjector:
     @pytest.mark.asyncio
     async def test_search_all_databases_concurrent(self, injector):
         """Test concurrent search across all databases"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test all database clients
+        # Mock all database clients
         chromadb_result = [VectorSearchResult("ChromaDB doc", {}, 0.9, "chromadb")]
         qdrant_result = [VectorSearchResult("Qdrant doc", {}, 0.8, "qdrant")]
         faiss_result = [VectorSearchResult("FAISS doc", {}, 0.85, "faiss")]
         
-        injector.chromadb_client.search = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=chromadb_result)
-        injector.qdrant_client.search = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=qdrant_result)
-        injector.faiss_client.search = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=faiss_result)
+        injector.chromadb_client.search = AsyncMock(return_value=chromadb_result)
+        injector.qdrant_client.search = AsyncMock(return_value=qdrant_result)
+        injector.faiss_client.search = AsyncMock(return_value=faiss_result)
         
         context = await injector.search_all_databases("test query")
         
@@ -314,12 +314,12 @@ class TestVectorContextInjector:
     @pytest.mark.asyncio
     async def test_search_all_databases_with_failures(self, injector):
         """Test search continues with partial failures"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test one success and two failures
+        # Mock one success and two failures
         chromadb_result = [VectorSearchResult("ChromaDB doc", {}, 0.9, "chromadb")]
         
-        injector.chromadb_client.search = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=chromadb_result)
-        injector.qdrant_client.search = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(side_effect=Exception("Qdrant failed"))
-        injector.faiss_client.search = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=[])
+        injector.chromadb_client.search = AsyncMock(return_value=chromadb_result)
+        injector.qdrant_client.search = AsyncMock(side_effect=Exception("Qdrant failed"))
+        injector.faiss_client.search = AsyncMock(return_value=[])
         
         context = await injector.search_all_databases("test query")
         
@@ -330,7 +330,7 @@ class TestVectorContextInjector:
     @pytest.mark.asyncio
     async def test_search_timeout_handling(self, injector):
         """Test search timeout handling"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test slow responses
+        # Mock slow responses
         async def slow_search(query):
             await asyncio.sleep(1.0)  # Longer than 500ms timeout
             return []
@@ -411,8 +411,8 @@ class TestVectorContextInjector:
     @pytest.mark.asyncio
     async def test_caching_functionality(self, injector):
         """Test result caching functionality"""
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test successful search
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_context = KnowledgeContext(
+        # Mock successful search
+        Mock_context = KnowledgeContext(
             results=[VectorSearchResult("Test doc", {}, 0.9, "chromadb")],
             query_time_ms=100.0,
             sources_used=["chromadb"],
@@ -420,9 +420,9 @@ class TestVectorContextInjector:
             enriched_context="Test context"
         )
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test the search method to track calls
+        # Mock the search method to track calls
         original_search = injector.search_all_databases
-        injector.search_all_databases = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_context)
+        injector.search_all_databases = AsyncMock(return_value=Mock_context)
         
         # First call should perform search
         context1 = await injector.search_all_databases("test query")

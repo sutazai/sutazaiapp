@@ -372,7 +372,7 @@ class MicroserviceCoordinationValidator:
     async def _run_load_test(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """Stub: Run load test and return metrics"""
         logger.info(f"[STUB] Running load test with config: {config}")
-        # Return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test metrics
+        # Return Mock metrics
         return {
             "success_count": int(config["total_requests"] * 0.98),
             "failure_count": int(config["total_requests"] * 0.02),
@@ -384,7 +384,7 @@ class MicroserviceCoordinationValidator:
     def _get_workers(self, queue: str) -> List[Any]:
         """Stub: Get list of workers for a queue"""
         logger.info(f"[STUB] Getting workers for queue: {queue}")
-        # Return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test worker list
+        # Return Mock worker list
         return [{"id": f"worker-{i}", "queue": queue} for i in range(3)]
     
     def _publish_to_queue(self, queue: str, message: Dict[str, Any]):

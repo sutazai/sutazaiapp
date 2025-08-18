@@ -45,13 +45,13 @@ The Refinement phase ensures code quality through:
 // Step 1: Write test that defines desired behavior
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
-  let mockUserRepo: jest.Mocked<UserRepository>;
-  let mockCache: jest.Mocked<CacheService>;
+  let UserRepo: jest.ed<UserRepository>;
+  let Cache: jest.ed<CacheService>;
 
   beforeEach(() => {
-    mockUserRepo = createMockRepository();
-    mockCache = createMockCache();
-    service = new AuthenticationService(mockUserRepo, mockCache);
+    UserRepo = createRepository();
+    Cache = createCache();
+    service = new AuthenticationService(UserRepo, Cache);
   });
 
   describe('login', () => {
@@ -61,13 +61,13 @@ describe('AuthenticationService', () => {
         email: 'user@example.com',
         password: 'SecurePass123!'
       };
-      const mockUser = {
+      const User = {
         id: 'user-123',
         email: credentials.email,
         passwordHash: await hash(credentials.password)
       };
       
-      mockUserRepo.findByEmail.mockResolvedValue(mockUser);
+      UserRepo.findByEmail.ResolvedValue(User);
 
       // Act
       const result = await service.login(credentials);
@@ -75,8 +75,8 @@ describe('AuthenticationService', () => {
       // Assert
       expect(result).toHaveProperty('user');
       expect(result).toHaveProperty('token');
-      expect(result.user.id).toBe(mockUser.id);
-      expect(mockCache.set).toHaveBeenCalledWith(
+      expect(result.user.id).toBe(User.id);
+      expect(Cache.set).toHaveBeenCalledWith(
         `session:${result.token}`,
         expect.any(Object),
         expect.any(Number)

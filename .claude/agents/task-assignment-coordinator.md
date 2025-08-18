@@ -468,7 +468,7 @@ assignment_complexity_matrix:
     characteristics:
       - single_person_executable
       - well_defined_requirements
-      - minimal_dependencies
+      -_dependencies
       - standard_skill_requirements
     assignment_strategy: "direct_assignment"
     monitoring_level: "basic"

@@ -88,6 +88,41 @@ Legend of ranges:
 **Load Balancer**: HAProxy with health checks and failover
 **Service Discovery**: Consul with automatic registration
 
+## MCP Server Complete Registry
+
+### STDIO MCP Servers (Direct Protocol)
+| MCP Server | Protocol | Status | Purpose |
+|------------|----------|--------|---------|
+| claude-flow | STDIO | ✅ Active | SPARC workflow orchestration |
+| ruv-swarm | STDIO | ✅ Active | Multi-agent swarm coordination |
+| files | STDIO | ✅ Active | File system operations |
+| context7 | STDIO | ✅ Active | Documentation context retrieval |
+| http_fetch | STDIO | ✅ Active | HTTP requests and web fetching |
+| ddg | STDIO | ✅ Active | DuckDuckGo search integration |
+| sequentialthinking | STDIO | ✅ Active | Multi-step reasoning |
+| nx-mcp | STDIO | ✅ Active | Nx workspace management |
+| extended-memory | STDIO | ✅ Active | Persistent memory storage |
+| mcp_ssh | STDIO | ✅ Active | SSH operations |
+| postgres | STDIO | ✅ Active | PostgreSQL operations |
+| playwright-mcp | STDIO | ✅ Active | Browser automation |
+| memory-bank-mcp | STDIO | ✅ Active | Advanced memory management |
+| puppeteer-mcp (no longer in use) | STDIO | ✅ Active | Web scraping |
+| knowledge-graph-mcp | STDIO | ✅ Active | Knowledge graph operations |
+| compass-mcp | STDIO | ✅ Active | Navigation and exploration |
+| github | STDIO | ✅ Active | GitHub API integration |
+| http | STDIO | ✅ Active | HTTP protocol operations |
+| language-server | STDIO | ✅ Active | Language server protocol |
+| ultimatecoder | STDIO | ❌ Failed | Advanced coding (missing deps) |
+| claude-task-runner | STDIO | ✅ Active | Task isolation and execution |
+
+### HTTP MCP Bridge Services (Ports 11100-11199)
+- 11100: MCP Postgres Service (sutazai-mcp-postgres)
+- 11101: MCP Files Service (sutazai-mcp-files)
+- 11102: MCP HTTP Service (sutazai-mcp-http)
+- 11103: MCP DuckDuckGo Service (sutazai-mcp-ddg)
+- 11104: MCP GitHub Service (sutazai-mcp-github)
+- 11105: MCP Memory Service (sutazai-mcp-memory)
+
 ## Notes
 
 - Port assignments must match docker-compose.yml external port mappings exactly
@@ -96,4 +131,5 @@ Legend of ranges:
 - Services marked as **[DEFINED BUT NOT RUNNING]** may need investigation
 - Ollama port 10104 is critical and reserved - never modify
 - MCP services (11090-11199) provide HTTP interfaces for STDIO MCP tools
+- STDIO MCP servers communicate directly via process streams, not network ports
 

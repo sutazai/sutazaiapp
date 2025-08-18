@@ -701,7 +701,7 @@ agents:
       Build web monitoring and alerting\n- Design parallel browser automation\n- Create
       browser session management\n- Implement cookie and storage handling\n- Build
       authentication automation\n- Design web performance testing\n- Create browser
-      API Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Testing\n- Implement browser debugging tools\n- Build visual testing frameworks\n-
+      API Mocking\n- Implement browser debugging tools\n- Build visual testing frameworks\n-
       Design accessibility testing automation\n- Create browser network interception\n-
       Implement browser profile management\n- Build headless browser optimization\n-
       Design browser farm management\n- Create web crawling strategies\n- Implement
@@ -2957,7 +2957,7 @@ agents:
     metadata: {}
   claude_minimal-task-executor:
     id: claude_minimal-task-executor
-    name: minimal-task-executor
+    name:-task-executor
     type: claude
     description: '---'
     capabilities:

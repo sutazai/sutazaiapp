@@ -406,14 +406,7 @@ def create_mcp_adapter(server_name: str) -> Optional[MCPServiceAdapter]:
             tags=["mcp", "search", "web"],
             metadata={"version": "1.0.0", "capabilities": ["search", "suggestions"]}
         ),
-        "extended-memory": MCPServerConfig(
-            name="extended-memory",
-            server_type=MCPServerType.NPX,
-            wrapper_path="/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh",
-            instances=1,
-            tags=["mcp", "memory", "persistence"],
-            metadata={"version": "1.0.0", "capabilities": ["store", "retrieve", "search"]}
-        ),
+        # "extended-memory": DEPRECATED - Use unified-memory instead
         "mcp_ssh": MCPServerConfig(
             name="mcp_ssh",
             server_type=MCPServerType.NODE,
@@ -454,21 +447,13 @@ def create_mcp_adapter(server_name: str) -> Optional[MCPServiceAdapter]:
             tags=["mcp", "nx", "monorepo"],
             metadata={"version": "1.0.0", "capabilities": ["workspace", "generators"]}
         ),
-        "puppeteer-mcp": MCPServerConfig(
-            name="puppeteer-mcp",
-            server_type=MCPServerType.NODE,
-            wrapper_path="/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh",
-            instances=2,
-            tags=["mcp", "browser", "automation"],
-            metadata={"version": "1.0.0", "capabilities": ["scrape", "interact"]}
-        ),
-        "memory-bank-mcp": MCPServerConfig(
-            name="memory-bank-mcp",
-            server_type=MCPServerType.NPX,
-            wrapper_path="/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh",
+        "unified-memory": MCPServerConfig(
+            name="unified-memory",
+            server_type=MCPServerType.DOCKER,
+            wrapper_path="/opt/sutazaiapp/docker/mcp-services/unified-memory/unified-memory-wrapper.sh",
             instances=1,
-            tags=["mcp", "memory", "bank"],
-            metadata={"version": "1.0.0", "capabilities": ["store", "query"]}
+            tags=["mcp", "memory", "unified", "consolidated"],
+            metadata={"version": "1.0.0", "capabilities": ["store", "retrieve", "search", "delete", "stats"], "port": 3009}
         ),
         "playwright-mcp": MCPServerConfig(
             name="playwright-mcp",

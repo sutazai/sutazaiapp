@@ -80,7 +80,7 @@ docker-compose --profile core --profile monitoring --profile agents up -d
 
 ### Specific Configurations
 ```bash
-# Minimal setup
+# setup
 docker-compose --profile core up
 
 # With monitoring

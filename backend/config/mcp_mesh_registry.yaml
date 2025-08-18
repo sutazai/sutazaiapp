@@ -4,20 +4,7 @@
 
 mcp_services:
   # Database and Storage Services
-  - name: postgres
-    service_name: mcp-postgres
-    instances: 3
-    port_range: [11100, 11102]
-    health_check: /health
-    tags: ["mcp", "database", "postgres", "sql"]
-    load_balancer: LEAST_CONNECTIONS
-    circuit_breaker:
-      failure_threshold: 5
-      recovery_timeout: 30
-      expected_exception: ConnectionError
-    metadata:
-      version: "1.0.0"
-      capabilities: ["query", "transaction", "migration"]
+  # postgres removed - service failed and causing instability
       
   # File System Services
   - name: files
@@ -92,20 +79,6 @@ mcp_services:
       capabilities: ["docs", "examples", "references"]
       
   # Web and Network Services
-  - name: http
-    service_name: mcp-http
-    instances: 2
-    port_range: [11114, 11115]
-    health_check: /health
-    tags: ["mcp", "http", "web", "fetch"]
-    load_balancer: ROUND_ROBIN
-    circuit_breaker:
-      failure_threshold: 5
-      recovery_timeout: 20
-    metadata:
-      version: "1.0.0"
-      capabilities: ["fetch", "post", "scrape", "download"]
-      
   - name: ddg
     service_name: mcp-ddg
     instances: 2
@@ -180,20 +153,6 @@ mcp_services:
       capabilities: ["workspace", "generators", "executors", "graph"]
       
   # Browser Automation Services
-  - name: puppeteer-mcp
-    service_name: mcp-puppeteer
-    instances: 2
-    port_range: [11123, 11124]
-    health_check: /health
-    tags: ["mcp", "browser", "automation", "puppeteer"]
-    load_balancer: LEAST_CONNECTIONS
-    circuit_breaker:
-      failure_threshold: 3
-      recovery_timeout: 60
-    metadata:
-      version: "1.0.0"
-      capabilities: ["scrape", "interact", "screenshot", "pdf"]
-      
   - name: playwright-mcp
     service_name: mcp-playwright
     instances: 2

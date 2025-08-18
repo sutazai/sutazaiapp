@@ -35,7 +35,7 @@
 | postgres | Wrapper script | ✅ Configured | ⚠️ Partial mesh |
 | playwright-mcp | Wrapper script | ✅ Running | ⚠️ Partial mesh |
 | memory-bank-mcp | Wrapper script | ✅ Running | ⚠️ Partial mesh |
-| puppeteer-mcp | Wrapper script | ✅ Running | ⚠️ Partial mesh |
+| puppeteer-mcp (no longer in use) | Wrapper script | ✅ Running | ⚠️ Partial mesh |
 | knowledge-graph-mcp | Wrapper script | ✅ Running | ⚠️ Partial mesh |
 | compass-mcp | Wrapper script | ✅ Running | ⚠️ Partial mesh |
 | github | Wrapper script | ✅ Configured | ❌ Special config |
@@ -51,7 +51,7 @@
 - playwright (PID 1938275)
 - context7-mcp (PID 1938276)
 - mcp-language-server (PID 1938279)
-- puppeteer-mcp-server (PID 1938283)
+- puppeteer-mcp (no longer in use)-server (PID 1938283)
 - mcp-compass (PID 1938297)
 - MCP cleanup daemon (PID 847049)
 ```

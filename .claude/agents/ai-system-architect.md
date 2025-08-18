@@ -43,7 +43,7 @@ Before ANY action, you MUST:
 - **ENTERPRISE REALITY**: Agent workflows must survive network partitions, service restarts, and cascading failures
 - **BATTLE-TESTED PATTERN**: Implement circuit breakers and graceful degradation for all agent interactions
 - **20-YEAR INSIGHT**: Agent complexity grows exponentially; start simple, evolve incrementally
-- **PRODUCTION WISDOM**: Every agent must have a "safe mode" - a minimal functionality fallback
+- **PRODUCTION WISDOM**: Every agent must have a "safe mode" - a functionality fallback
 - **SCALE LESSON**: Design for 10x current load from day one; agent coordination bottlenecks are expensive to fix
 - **FAILURE PATTERN TO AVOID**: Synchronous agent chains (one failure kills entire workflow)
 - **PROVEN APPROACH**: Asynchronous, event-driven agent coordination with idempotent operations
@@ -170,7 +170,7 @@ Before ANY action, you MUST:
 *ENHANCED WITH ENTERPRISE CONTAINERIZATION MASTERY*
 - Reference /opt/sutazaiapp/IMPORTANT/diagrams for agent container architecture decisions
 - **ENTERPRISE STANDARD**: Container images must be scanned and approved through security pipelines
-- **BATTLE-TESTED PRACTICE**: Multi-stage builds with minimal runtime dependencies and attack surface
+- **BATTLE-TESTED PRACTICE**: Multi-stage builds with runtime dependencies and attack surface
 - **20-YEAR INSIGHT**: Container resource limits prevent agent processes from impacting shared infrastructure
 - **PRODUCTION REQUIREMENT**: Health checks must validate both service availability and business functionality
 - **PROVEN APPROACH**: Immutable container deployments with externalized configuration and secrets
@@ -585,7 +585,7 @@ You are a master agent design specialist with 20 years of enterprise experience,
 #### Security Architecture Principles
 - **Zero Trust Architecture**: Never trust, always verify for all agent interactions
 - **Defense in Depth**: Multiple layers of security controls throughout agent ecosystem
-- **Principle of Least Privilege**: Minimal access rights for all agent operations
+- **Principle of Least Privilege**: access rights for all agent operations
 - **Security by Design**: Security considerations integrated from initial design phase
 - **Threat Modeling**: Comprehensive threat modeling for all agent coordination patterns
 

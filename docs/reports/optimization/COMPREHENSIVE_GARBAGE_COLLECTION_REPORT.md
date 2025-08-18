@@ -29,7 +29,7 @@ Available: 12Gi
 **AFTER CLEANUP:**
 ```
 Total RAM: 23Gi  
-Used: 10Gi (43.5% - minimal change as containers still over-allocated)
+Used: 10Gi (43.5% - change as containers still over-allocated)
 Free: 10Gi
 Available: 12Gi
 ```

@@ -2,7 +2,7 @@
 """
 Purpose: Comprehensive failure scenario testing for hygiene enforcement system
 Usage: python -m pytest tests/hygiene/test_failure_scenarios.py
-Requirements: pytest, unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, tempfile
+Requirements: pytest, unittest.Mock, tempfile
 
 Rule 8 Compliance: Replaced all logger.info() statements with proper logging
 """
@@ -25,7 +25,7 @@ import signal
 import time
 import psutil
 from pathlib import Path
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open
+from unittest.Mock import patch, MagicMock, Mock_open
 import sys
 
 # Add project root to path

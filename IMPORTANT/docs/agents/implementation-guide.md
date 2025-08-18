@@ -429,14 +429,14 @@ class RedisMessaging:
 
 ```python
 import pytest
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import AsyncMock, MagicMock
 
 class TestHardwareResourceOptimizer:
     
     @pytest.fixture
     async def agent(self):
         agent = HardwareResourceOptimizer()
-        agent.redis_client = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+        agent.redis_client = AsyncMock()
         agent.status = "healthy"
         return agent
     

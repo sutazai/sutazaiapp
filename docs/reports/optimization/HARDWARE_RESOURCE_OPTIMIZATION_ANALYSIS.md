@@ -184,7 +184,7 @@ docker-compose stop kong consul rabbitmq
 # Ollama settings optimized but preserved
 ollama:
   environment:
-    OLLAMA_MAX_LOADED_MODELS: "1"        # Keep minimal model count
+    OLLAMA_MAX_LOADED_MODELS: "1"        # Keep model count
     OLLAMA_NUM_PARALLEL: "1"            # Reduce parallelism 
     OLLAMA_KEEP_ALIVE: "5m"             # Quick model unload
   deploy.resources:
@@ -223,7 +223,7 @@ ollama:
 
 ### Low Risk Operations (Phase 2)  
 - **Container Limit Reduction**: Based on 20x over-allocation
-- **Impact**: Minimal - containers using <5% of allocation
+- **Impact**: - containers using <5% of allocation
 - **Rollback**: Simple docker-compose.yml revert
 - **Validation**: Monitor container memory usage post-change
 

@@ -2,7 +2,7 @@
 """
 Purpose: Unit tests for hygiene agent orchestrator
 Usage: python -m pytest tests/hygiene/test_orchestrator.py
-Requirements: pytest, unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+Requirements: pytest, unittest.Mock
 """
 
 import unittest
@@ -10,7 +10,7 @@ import json
 import tempfile
 import subprocess
 from pathlib import Path
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open
+from unittest.Mock import patch, MagicMock, Mock_open
 import sys
 import os
 
@@ -35,9 +35,9 @@ class TestAgentOrchestrator(unittest.TestCase):
         if self.project_root.exists():
             shutil.rmtree(self.project_root)
     
-    @patch('builtins.open', new_callable=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open)
+    @patch('builtins.open', new_callable=Mock_open)
     @patch('pathlib.Path.mkdir')
-    def test_log_action(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_mkdir, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_file):
+    def test_log_action(self, Mock_mkdir, Mock_file):
         """Test logging functionality"""
         # Import here to avoid issues with path setup
         from scripts.agents.hygiene_agent_orchestrator import AgentOrchestrator
@@ -46,8 +46,8 @@ class TestAgentOrchestrator(unittest.TestCase):
         orchestrator.log_action("Test message", "INFO")
         
         # Verify file operations
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_mkdir.assert_called()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_file.assert_called()
+        Mock_mkdir.assert_called()
+        Mock_file.assert_called()
         
     def test_agent_registry_structure(self):
         """Test agent registry has required structure"""
@@ -111,17 +111,17 @@ class TestAgentOrchestrator(unittest.TestCase):
         self.assertTrue(task["dry_run"])
         
     @patch('subprocess.run')
-    @patch('builtins.open', new_callable=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_open)
-    def test_execute_agent_task_success(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_file, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
+    @patch('builtins.open', new_callable=Mock_open)
+    def test_execute_agent_task_success(self, Mock_file, Mock_subprocess):
         """Test successful agent task execution"""
         from scripts.agents.hygiene_agent_orchestrator import AgentOrchestrator
         
-        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test subprocess result
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.returncode = 0
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.stdout = "Success output"
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.stderr = ""
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result
+        # Setup Mock subprocess result
+        Mock_result = MagicMock()
+        Mock_result.returncode = 0
+        Mock_result.stdout = "Success output"
+        Mock_result.stderr = ""
+        Mock_subprocess.return_value = Mock_result
         
         orchestrator = AgentOrchestrator(str(self.project_root))
         
@@ -140,16 +140,16 @@ class TestAgentOrchestrator(unittest.TestCase):
         self.assertEqual(result["return_code"], 0)
         
     @patch('subprocess.run')
-    def test_execute_agent_task_failure(self, Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess):
+    def test_execute_agent_task_failure(self, Mock_subprocess):
         """Test failed agent task execution"""
         from scripts.agents.hygiene_agent_orchestrator import AgentOrchestrator
         
-        # Setup Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test subprocess result for failure
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result = MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.returncode = 1
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.stdout = ""
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result.stderr = "Error occurred"
-        Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_subprocess.return_value = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_result
+        # Setup Mock subprocess result for failure
+        Mock_result = MagicMock()
+        Mock_result.returncode = 1
+        Mock_result.stdout = ""
+        Mock_result.stderr = "Error occurred"
+        Mock_subprocess.return_value = Mock_result
         
         orchestrator = AgentOrchestrator(str(self.project_root))
         

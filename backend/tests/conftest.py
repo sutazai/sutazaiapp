@@ -8,7 +8,7 @@ import os
 import pytest
 import logging
 from typing import AsyncGenerator, Dict, Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest. import Async, Magic, patch
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 import tempfile
@@ -38,89 +38,89 @@ def event_loop():
 
 
 @pytest.fixture
-async def mock_cache_service():
-    """Mock cache service for testing"""
-    cache_mock = AsyncMock()
-    cache_mock.get.return_value = None
-    cache_mock.set.return_value = True
-    cache_mock.delete.return_value = True
-    cache_mock.clear_all.return_value = True
-    cache_mock.get_stats.return_value = {
+async def _cache_service():
+    """ cache service for testing"""
+    cache_ = Async()
+    cache_.get.return_value = None
+    cache_.set.return_value = True
+    cache_.delete.return_value = True
+    cache_.clear_all.return_value = True
+    cache_.get_stats.return_value = {
         "hits": 100,
         "misses": 20,
         "hit_rate": 0.83,
         "total_operations": 120
     }
-    return cache_mock
+    return cache_
 
 
 @pytest.fixture
-async def mock_pool_manager():
-    """Mock connection pool manager for testing"""
-    pool_mock = AsyncMock()
-    pool_mock.get_stats.return_value = {
+async def _pool_manager():
+    """ connection pool manager for testing"""
+    pool_ = Async()
+    pool_.get_stats.return_value = {
         "active_connections": 5,
         "idle_connections": 10,
         "total_connections": 15
     }
-    pool_mock.close.return_value = None
-    return pool_mock
+    pool_.close.return_value = None
+    return pool_
 
 
 @pytest.fixture
-async def mock_ollama_service():
-    """Mock Ollama service for testing"""
-    ollama_mock = AsyncMock()
-    ollama_mock.generate.return_value = {
+async def _ollama_service():
+    """ Ollama service for testing"""
+    ollama_ = Async()
+    ollama_.generate.return_value = {
         "response": "Test response from Ollama",
         "model": "tinyllama",
         "duration": 0.5
     }
-    ollama_mock.generate_streaming.return_value = asyncio.iterate([
+    ollama_.generate_streaming.return_value = asyncio.iterate([
         {"chunk": "Test streaming response"}
     ])
-    ollama_mock.batch_generate.return_value = [
+    ollama_.batch_generate.return_value = [
         {"response": "Batch response 1"},
         {"response": "Batch response 2"}
     ]
-    ollama_mock.get_stats.return_value = {
+    ollama_.get_stats.return_value = {
         "requests_processed": 100,
         "average_response_time": 0.5,
         "cache_hit_rate": 0.7
     }
-    ollama_mock.warmup.return_value = None
-    ollama_mock.shutdown.return_value = None
-    return ollama_mock
+    ollama_.warmup.return_value = None
+    ollama_.shutdown.return_value = None
+    return ollama_
 
 
 @pytest.fixture
-async def mock_task_queue():
-    """Mock task queue for testing"""
-    queue_mock = AsyncMock()
-    queue_mock.get_task_status.return_value = {
+async def _task_queue():
+    """ task queue for testing"""
+    queue_ = Async()
+    queue_.get_task_status.return_value = {
         "status": "completed",
         "result": {"test": "result"}
     }
-    queue_mock.get_stats.return_value = {
+    queue_.get_stats.return_value = {
         "queued": 5,
         "processing": 2,
         "completed": 100
     }
-    queue_mock.register_handler.return_value = None
-    queue_mock.stop.return_value = None
-    return queue_mock
+    queue_.register_handler.return_value = None
+    queue_.stop.return_value = None
+    return queue_
 
 
 @pytest.fixture
-async def mock_health_monitoring():
-    """Mock health monitoring service for testing"""
-    health_mock = AsyncMock()
-    health_mock.get_detailed_health.return_value = MagicMock(
-        overall_status=MagicMock(value="healthy"),
-        timestamp=MagicMock(),
+async def _health_monitoring():
+    """ health monitoring service for testing"""
+    health_ = Async()
+    health_.get_detailed_health.return_value = Magic(
+        overall_status=Magic(value="healthy"),
+        timestamp=Magic(),
         services={
-            "redis": MagicMock(
-                status=MagicMock(value="healthy"),
+            "redis": Magic(
+                status=Magic(value="healthy"),
                 response_time_ms=5,
                 details={"ping": "pong"}
             )
@@ -138,15 +138,15 @@ async def mock_health_monitoring():
         alerts=[],
         recommendations=[]
     )
-    health_mock.get_prometheus_metrics.return_value = "# Prometheus metrics test data"
-    return health_mock
+    health_.get_prometheus_metrics.return_value = "# Prometheus metrics test data"
+    return health_
 
 
 @pytest.fixture
-async def mock_circuit_breaker_manager():
-    """Mock circuit breaker manager for testing"""
-    breaker_mock = AsyncMock()
-    breaker_mock.get_all_stats.return_value = {
+async def _circuit_breaker_manager():
+    """ circuit breaker manager for testing"""
+    breaker_ = Async()
+    breaker_.get_all_stats.return_value = {
         "redis": {
             "state": "closed",
             "success_count": 100,
@@ -155,51 +155,51 @@ async def mock_circuit_breaker_manager():
             "reset_timeout": 60
         }
     }
-    breaker_mock.reset_all.return_value = None
-    return breaker_mock
+    breaker_.reset_all.return_value = None
+    return breaker_
 
 
 @pytest.fixture
-async def app_with_mocks(
-    mock_cache_service,
-    mock_pool_manager,
-    mock_ollama_service,
-    mock_task_queue,
-    mock_health_monitoring,
-    mock_circuit_breaker_manager
+async def app_with_s(
+    _cache_service,
+    _pool_manager,
+    _ollama_service,
+    _task_queue,
+    _health_monitoring,
+    _circuit_breaker_manager
 ):
-    """Create FastAPI app with all dependencies mocked"""
+    """Create FastAPI app with all dependencies ed"""
     
     # Patch all dependencies before importing app
-    with patch('app.core.cache.get_cache_service', AsyncMock(return_value=mock_cache_service)), \
-         patch('app.core.cache._cache_service', mock_cache_service), \
-         patch('app.core.connection_pool.get_pool_manager', AsyncMock(return_value=mock_pool_manager)), \
-         patch('app.core.connection_pool.get_http_client', AsyncMock()), \
-         patch('app.services.consolidated_ollama_service.get_ollama_service', AsyncMock(return_value=mock_ollama_service)), \
-         patch('app.core.task_queue.get_task_queue', AsyncMock(return_value=mock_task_queue)), \
-         patch('app.core.task_queue.create_background_task', AsyncMock(return_value="test-task-id")), \
-         patch('app.core.health_monitoring.get_health_monitoring_service', AsyncMock(return_value=mock_health_monitoring)), \
-         patch('app.core.circuit_breaker_integration.get_circuit_breaker_manager', AsyncMock(return_value=mock_circuit_breaker_manager)), \
-         patch('app.core.circuit_breaker_integration.get_redis_circuit_breaker', AsyncMock()), \
-         patch('app.core.circuit_breaker_integration.get_database_circuit_breaker', AsyncMock()), \
-         patch('app.core.circuit_breaker_integration.get_ollama_circuit_breaker', AsyncMock()):
+    with patch('app.core.cache.get_cache_service', Async(return_value=_cache_service)), \
+         patch('app.core.cache._cache_service', _cache_service), \
+         patch('app.core.connection_pool.get_pool_manager', Async(return_value=_pool_manager)), \
+         patch('app.core.connection_pool.get_http_client', Async()), \
+         patch('app.services.consolidated_ollama_service.get_ollama_service', Async(return_value=_ollama_service)), \
+         patch('app.core.task_queue.get_task_queue', Async(return_value=_task_queue)), \
+         patch('app.core.task_queue.create_background_task', Async(return_value="test-task-id")), \
+         patch('app.core.health_monitoring.get_health_monitoring_service', Async(return_value=_health_monitoring)), \
+         patch('app.core.circuit_breaker_integration.get_circuit_breaker_manager', Async(return_value=_circuit_breaker_manager)), \
+         patch('app.core.circuit_breaker_integration.get_redis_circuit_breaker', Async()), \
+         patch('app.core.circuit_breaker_integration.get_database_circuit_breaker', Async()), \
+         patch('app.core.circuit_breaker_integration.get_ollama_circuit_breaker', Async()):
         
-        # Import after patching to ensure mocks are in place
+        # Import after patching to ensure s are in place
         from app.main import app
         yield app
 
 
 @pytest.fixture
-async def async_client(app_with_mocks) -> AsyncGenerator[AsyncClient, None]:
+async def async_client(app_with_s) -> AsyncGenerator[AsyncClient, None]:
     """Create async HTTP client for testing"""
-    async with AsyncClient(app=app_with_mocks, base_url="http://test") as client:
+    async with AsyncClient(app=app_with_s, base_url="http://test") as client:
         yield client
 
 
 @pytest.fixture
-def sync_client(app_with_mocks) -> TestClient:
+def sync_client(app_with_s) -> TestClient:
     """Create sync HTTP client for testing"""
-    return TestClient(app_with_mocks)
+    return TestClient(app_with_s)
 
 
 @pytest.fixture
@@ -256,21 +256,21 @@ def temp_test_files():
 
 
 @pytest.fixture
-def mock_psutil():
-    """Mock psutil for system metrics testing"""
-    with patch('psutil.cpu_percent') as mock_cpu, \
-         patch('psutil.virtual_memory') as mock_memory, \
-         patch('psutil.disk_usage') as mock_disk, \
-         patch('psutil.net_io_counters') as mock_net:
+def _psutil():
+    """ psutil for system metrics testing"""
+    with patch('psutil.cpu_percent') as _cpu, \
+         patch('psutil.virtual_memory') as _memory, \
+         patch('psutil.disk_usage') as _disk, \
+         patch('psutil.net_io_counters') as _net:
         
-        mock_cpu.return_value = 25.5
-        mock_memory.return_value = MagicMock(
+        _cpu.return_value = 25.5
+        _memory.return_value = Magic(
             percent=65.2,
             available=4000000000,
             total=16000000000
         )
-        mock_disk.return_value = MagicMock(percent=45.8)
-        mock_net.return_value = MagicMock(
+        _disk.return_value = Magic(percent=45.8)
+        _net.return_value = Magic(
             bytes_sent=1000000,
             bytes_recv=2000000
         )
@@ -279,24 +279,24 @@ def mock_psutil():
 
 
 @pytest.fixture
-def mock_validation():
-    """Mock validation utilities"""
-    return MagicMock(
-        validate_model_name=MagicMock(return_value="tinyllama"),
-        validate_agent_id=MagicMock(side_effect=lambda x: x),
-        validate_task_id=MagicMock(side_effect=lambda x: x),
-        validate_cache_pattern=MagicMock(side_effect=lambda x: x),
-        sanitize_user_input=MagicMock(side_effect=lambda x, max_length=None: x)
+def _validation():
+    """ validation utilities"""
+    return Magic(
+        validate_model_name=Magic(return_value="tinyllama"),
+        validate_agent_id=Magic(side_effect=lambda x: x),
+        validate_task_id=Magic(side_effect=lambda x: x),
+        validate_cache_pattern=Magic(side_effect=lambda x: x),
+        sanitize_user_input=Magic(side_effect=lambda x, max_length=None: x)
     )
 
 
 @pytest.fixture
-def mock_jwt_auth():
-    """Mock JWT authentication for testing"""
-    with patch('app.auth.router.get_current_user') as mock_user:
-        mock_user.return_value = {
+def _jwt_auth():
+    """ JWT authentication for testing"""
+    with patch('app.auth.router.get_current_user') as _user:
+        _user.return_value = {
             "username": "testuser",
             "email": "test@example.com",
             "is_active": True
         }
-        yield mock_user
+        yield _user

@@ -59,7 +59,7 @@ if self.metadata:
 
 ### Immediate Results
 ```
-✅ Registered MCP puppeteer-mcp with mesh on port 11112
+✅ Registered MCP puppeteer-mcp (no longer in use) with mesh on port 11112
 ✅ Registered MCP memory-bank-mcp with mesh on port 11113  
 ✅ Registered MCP playwright-mcp with mesh on port 11114
 ✅ Registered MCP knowledge-graph-mcp with mesh on port 11115
@@ -96,7 +96,7 @@ mcp-memory-bank-mcp           ✅ Memory Banking
 mcp-nx-mcp                    ✅ Workspace Management
 mcp-playwright-mcp            ✅ Browser Automation
 mcp-postgres                  ✅ Database Operations
-mcp-puppeteer-mcp             ✅ Web Scraping
+mcp-puppeteer-mcp (no longer in use)             ✅ Web Scraping
 mcp-sequentialthinking        ✅ Reasoning
 mcp-ultimatecoder             ✅ Code Generation
 neo4j-graph                   ✅ Graph Database

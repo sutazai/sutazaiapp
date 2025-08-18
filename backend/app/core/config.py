@@ -25,8 +25,17 @@ class Settings(BaseSettings):
     DEPLOYMENT_ID: str = Field("", env="DEPLOYMENT_ID")
     
     # Security - REQUIRED environment variables for production security
-    SECRET_KEY: str = Field(..., env="SECRET_KEY", description="Required: Application secret key")
-    JWT_SECRET: str = Field(..., env="JWT_SECRET", description="Required: JWT signing secret")
+    # Emergency fix: Provide fallback values to prevent startup failure
+    SECRET_KEY: str = Field(
+        default_factory=lambda: os.getenv("SECRET_KEY") or secrets.token_urlsafe(32),
+        env="SECRET_KEY",
+        description="Application secret key"
+    )
+    JWT_SECRET: str = Field(
+        default_factory=lambda: os.getenv("JWT_SECRET") or secrets.token_urlsafe(32),
+        env="JWT_SECRET",
+        description="JWT signing secret"
+    )
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     

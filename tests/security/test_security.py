@@ -2,12 +2,12 @@
 Unit tests for security module
 """
 import pytest
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch
+from unittest.Mock import Mock, patch
 import jwt
 from datetime import datetime, timedelta, timezone
 
-# Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test security components
-class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestEncryptionManager:
+# Mock security components
+class MockEncryptionManager:
     def encrypt_data(self, data):
         return f"encrypted_{data}"
     
@@ -22,7 +22,7 @@ class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - O
     def verify_password(self, password, hashed, salt):
         return password == "correct_password"
 
-class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAuthenticationManager:
+class MockAuthenticationManager:
     def __init__(self):
         self.secret_key = "test_secret"
         self.algorithm = "HS256"
@@ -55,7 +55,7 @@ class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - O
             }
         return None
 
-class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestInputValidator:
+class MockInputValidator:
     def validate_input(self, input_data, input_type="text"):
         if "<script>" in input_data:
             raise ValueError("Potentially malicious content detected")
@@ -65,15 +65,15 @@ class Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - O
 
 @pytest.fixture
 def encryption_manager():
-    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestEncryptionManager()
+    return MockEncryptionManager()
 
 @pytest.fixture
 def auth_manager():
-    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestAuthenticationManager()
+    return MockAuthenticationManager()
 
 @pytest.fixture
 def input_validator():
-    return Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real TestInputValidator()
+    return MockInputValidator()
 
 def test_encryption_basic(encryption_manager):
     """Test basic encryption/decryption"""

@@ -31,7 +31,7 @@ class ClaudeRuleEnforcer:
     def check_rule_1_fantasy_code(self) -> Dict:
         """Rule 1: Detect fantasy/placeholder implementations"""
         violations = []
-        fantasy_patterns = ["TODO", "FIXME", "placeholder", "mock", "fake", "dummy", "stub"]
+        fantasy_patterns = ["TODO", "FIXME", "placeholder", "", "fake", "dummy", "stub"]
         
         try:
             for pattern in fantasy_patterns:

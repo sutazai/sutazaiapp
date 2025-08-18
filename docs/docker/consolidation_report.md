@@ -120,7 +120,7 @@
 - Non-root user execution
 - Read-only filesystems where possible
 - Security options (no-new-privileges)
-- Minimal attack surface
+- attack surface
 - Secure defaults
 
 ## Migration Actions Performed

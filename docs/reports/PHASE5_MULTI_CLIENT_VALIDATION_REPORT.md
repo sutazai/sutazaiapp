@@ -32,7 +32,7 @@ The Docker-in-Docker (DinD) multi-client access architecture has been successful
 
 #### 4. **Resource Management** - PASS
 - 4 containers running simultaneously
-- Minimal CPU usage (< 1% average)
+- CPU usage (< 1% average)
 - Controlled memory consumption
 - No resource exhaustion detected
 
@@ -117,7 +117,7 @@ Status: ISOLATED ✓
 
 2. **Performance Acceptable**
    - Sub-second response times for all operations
-   - Minimal resource overhead
+   - resource overhead
    - Scalable architecture
 
 3. **Stability Demonstrated**

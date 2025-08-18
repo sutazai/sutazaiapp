@@ -34,7 +34,7 @@ The user's demand for "100% delivery with no mistakes" revealed a system in **ar
 
 4. **Rule Compliance Emergency** (25/100 Score)
    - Violations across ALL 20 CLAUDE.md rules
-   - 50+ files with placeholder/mock/stub code
+   - 50+ files with placeholder//stub code
    - 465 hours estimated to fix all violations
    - No enforcement mechanism in place
 
@@ -180,7 +180,7 @@ async def detailed_health():
 **Goal**: Remove fantasy code, consolidate architecture
 
 #### 3.1 Fantasy Code Elimination
-- Identify all TODO/FIXME/mock/stub patterns
+- Identify all TODO/FIXME//stub patterns
 - Replace with real implementations or remove
 - Update tests to validate real functionality
 

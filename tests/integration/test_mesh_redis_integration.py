@@ -8,7 +8,7 @@ import time
 import pytest
 import asyncio
 from typing import Dict, Any, List, Tuple
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import patch
+from unittest.Mock import patch
 
 # Import mesh components
 from backend.app.mesh.redis_bus import (

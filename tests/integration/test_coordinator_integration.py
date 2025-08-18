@@ -33,7 +33,7 @@ class CoordinatorIntegrationTest:
         self.test_agents = []
         
     async def setup_test_agents(self):
-        """Create Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test agents for testing"""
+        """Create Mock agents for testing"""
         # Create 3 test agents with different capabilities
         agent_configs = [
             {

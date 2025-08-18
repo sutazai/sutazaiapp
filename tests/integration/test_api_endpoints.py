@@ -6,35 +6,35 @@ import pytest
 import os
 import json
 import tempfile
-from unittest.Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test import Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, patch, AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test, MagicRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+from unittest.Mock import Mock, patch, AsyncMock, MagicMock
 from fastapi.testclient import TestClient
 from fastapi import FastAPI
 from datetime import datetime
 from pathlib import Path
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_workflow():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test workflow for testing"""
-    workflow = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    workflow.initialize = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
-    workflow.analyze_directory = AsyncRemove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(return_value=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(
+def Mock_workflow():
+    """Mock workflow for testing"""
+    workflow = Mock()
+    workflow.initialize = AsyncMock()
+    workflow.analyze_directory = AsyncMock(return_value=Mock(
         issues=[
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(severity='critical', description='Critical issue'),
-            Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(severity='warning', description='Warning issue')
+            Mock(severity='critical', description='Critical issue'),
+            Mock(severity='warning', description='Warning issue')
         ],
         improvements=['Improvement 1', 'Improvement 2'],
-        metrics=Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test(
+        metrics=Mock(
             lines_of_code=1000,
             complexity_score=7.5,
             security_issues=2,
             performance_issues=3
         )
     ))
-    workflow.save_report = Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test()
+    workflow.save_report = Mock()
     return workflow
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_app_with_agents():
+def Mock_app_with_agents():
     """Create FastAPI app with agent endpoints"""
     app = FastAPI()
     
@@ -45,7 +45,7 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
         from app.api.v1.endpoints.agents import router as agents_router
         app.include_router(agents_router, prefix="/api/v1/agents")
     except ImportError:
-        # Fallback to Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test implementation
+        # Fallback to Mock implementation
         from fastapi import APIRouter
         router = APIRouter()
         
@@ -130,9 +130,9 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
     return app
 
 @pytest.fixture
-def client_agents(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_app_with_agents):
+def client_agents(Mock_app_with_agents):
     """Test client for agent endpoints"""
-    return TestClient(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_app_with_agents)
+    return TestClient(Mock_app_with_agents)
 
 class TestAgentsEndpoints:
     """Test agent management endpoints"""
@@ -283,7 +283,7 @@ class TestWorkflowEndpoints:
         """Test getting status of nonexistent workflow"""
         workflow_id = "nonexistent_workflow"
         
-        # Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test the workflow_results to be empty
+        # Mock the workflow_results to be empty
         with patch('backend.app.api.v1.endpoints.agents.workflow_results', {}):
             response = client_agents.get(f"/api/v1/agents/workflows/{workflow_id}")
             assert response.status_code == 404
@@ -314,8 +314,8 @@ class TestWorkflowEndpoints:
 # Test other endpoint files
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chat_app():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test app for chat endpoints"""
+def Mock_chat_app():
+    """Mock app for chat endpoints"""
     app = FastAPI()
     
     try:
@@ -324,7 +324,7 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
         from app.api.v1.endpoints.chat import router as chat_router
         app.include_router(chat_router, prefix="/api/v1/chat")
     except ImportError:
-        # Fallback Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Fallback Mock
         from fastapi import APIRouter
         router = APIRouter()
         
@@ -348,9 +348,9 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
     return app
 
 @pytest.fixture
-def client_chat(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chat_app):
+def client_chat(Mock_chat_app):
     """Test client for chat endpoints"""
-    return TestClient(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_chat_app)
+    return TestClient(Mock_chat_app)
 
 class TestChatEndpoints:
     """Test chat-related endpoints"""
@@ -383,8 +383,8 @@ class TestChatEndpoints:
         assert "response" in data
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_documents_app():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test app for document endpoints"""
+def Mock_documents_app():
+    """Mock app for document endpoints"""
     app = FastAPI()
     
     try:
@@ -393,7 +393,7 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
         from app.api.v1.endpoints.documents import router as docs_router
         app.include_router(docs_router, prefix="/api/v1/documents")
     except ImportError:
-        # Fallback Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Fallback Mock
         from fastapi import APIRouter
         router = APIRouter()
         
@@ -437,9 +437,9 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
     return app
 
 @pytest.fixture
-def client_documents(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_documents_app):
+def client_documents(Mock_documents_app):
     """Test client for document endpoints"""
-    return TestClient(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_documents_app)
+    return TestClient(Mock_documents_app)
 
 class TestDocumentEndpoints:
     """Test document management endpoints"""
@@ -491,8 +491,8 @@ class TestDocumentEndpoints:
         assert data["status"] == "deleted"
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_models_app():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test app for model endpoints"""
+def Mock_models_app():
+    """Mock app for model endpoints"""
     app = FastAPI()
     
     try:
@@ -501,7 +501,7 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
         from app.api.v1.endpoints.models import router as models_router
         app.include_router(models_router, prefix="/api/v1/models")
     except ImportError:
-        # Fallback Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Fallback Mock
         from fastapi import APIRouter
         router = APIRouter()
         
@@ -536,9 +536,9 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
     return app
 
 @pytest.fixture
-def client_models(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_models_app):
+def client_models(Mock_models_app):
     """Test client for model endpoints"""
-    return TestClient(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_models_app)
+    return TestClient(Mock_models_app)
 
 class TestModelEndpoints:
     """Test AI model management endpoints"""
@@ -581,8 +581,8 @@ class TestModelEndpoints:
         assert data["status"] == "unloaded"
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_system_app():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test app for system endpoints"""
+def Mock_system_app():
+    """Mock app for system endpoints"""
     app = FastAPI()
     
     try:
@@ -591,7 +591,7 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
         from app.api.v1.endpoints.system import router as system_router
         app.include_router(system_router, prefix="/api/v1/system")
     except ImportError:
-        # Fallback Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Fallback Mock
         from fastapi import APIRouter
         router = APIRouter()
         
@@ -629,9 +629,9 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
     return app
 
 @pytest.fixture
-def client_system(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_system_app):
+def client_system(Mock_system_app):
     """Test client for system endpoints"""
-    return TestClient(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_system_app)
+    return TestClient(Mock_system_app)
 
 class TestSystemEndpoints:
     """Test system management endpoints"""
@@ -664,8 +664,8 @@ class TestSystemEndpoints:
         assert data["status"] == "restarting"
 
 @pytest.fixture
-def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_monitoring_app():
-    """Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test app for monitoring endpoints"""
+def Mock_monitoring_app():
+    """Mock app for monitoring endpoints"""
     app = FastAPI()
     
     try:
@@ -674,7 +674,7 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
         from app.api.v1.endpoints.monitoring import router as monitoring_router
         app.include_router(monitoring_router, prefix="/api/v1/monitoring")
     except ImportError:
-        # Fallback Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test
+        # Fallback Mock
         from fastapi import APIRouter
         router = APIRouter()
         
@@ -714,9 +714,9 @@ def Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Onl
     return app
 
 @pytest.fixture
-def client_monitoring(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_monitoring_app):
+def client_monitoring(Mock_monitoring_app):
     """Test client for monitoring endpoints"""
-    return TestClient(Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test_monitoring_app)
+    return TestClient(Mock_monitoring_app)
 
 class TestMonitoringEndpoints:
     """Test monitoring and observability endpoints"""

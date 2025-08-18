@@ -106,7 +106,7 @@ class ArtifactInfo:
                 is_directory=path.is_dir()
             )
         except Exception as e:
-            # Return minimal info if stat fails
+            # Return info if stat fails
             return cls(
                 path=path,
                 artifact_type=artifact_type,

@@ -62,7 +62,7 @@ class MCPMeshBridge:
                            ["remote-execution"]),
         MCPServiceDefinition("nx-mcp", "/opt/sutazaiapp/scripts/mcp/wrappers/nx-mcp.sh", 11111, 
                            ["monorepo", "workspace"]),
-        MCPServiceDefinition("puppeteer-mcp", "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp.sh", 11112, 
+        MCPServiceDefinition("puppeteer-mcp (no longer in use)", "/opt/sutazaiapp/scripts/mcp/wrappers/puppeteer-mcp (no longer in use).sh", 11112, 
                            ["browser-automation"]),
         MCPServiceDefinition("memory-bank-mcp", "/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh", 11113, 
                            ["memory-management"]),

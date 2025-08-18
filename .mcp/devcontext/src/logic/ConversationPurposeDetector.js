@@ -1191,7 +1191,7 @@ export async function getPurposeCorrelatedPatterns(purposeType) {
  */
 export async function detectInitialPurpose(conversationId, initialQuery) {
   try {
-    // Create a Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test message from the initial query
+    // Create a Mock message from the initial query
     const message = {
       content: initialQuery,
       role: "user",

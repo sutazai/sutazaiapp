@@ -1,0 +1,52 @@
+apiVersion: mcp/v1
+kind: MCPContainer
+metadata:
+  name: mcp-memory-bank-mcp
+  labels:
+    mcp.service: memory-bank-mcp
+    mcp.tier: storage
+spec:
+  image: python:3.11-slim
+  container_name: mcp-memory-bank-mcp
+  command:
+  - python
+  - -m
+  - memory_bank.server
+  - --port
+  - '3013'
+  environment:
+    MCP_PORT: '3013'
+    MESH_ENABLED: 'true'
+    SERVICE_NAME: memory-bank-mcp
+    PYTHONUNBUFFERED: '1'
+  ports:
+    '13013': '3013'
+  volumes:
+    mcp_shared_data: /mcp-shared
+    /opt/sutazaiapp: /opt/sutazaiapp:ro
+  healthcheck:
+    test:
+    - CMD
+    - wget
+    - -q
+    - --spider
+    - http://localhost:3013/health
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 45s
+  restart_policy: unless-stopped
+  resources:
+    limits:
+      cpus: '0.5'
+      memory: 512M
+    reservations:
+      cpus: '0.1'
+      memory: 64M
+  networks:
+  - sutazai-dind-internal
+  labels:
+    mcp.managed: 'true'
+    mcp.protocol: http
+    mcp.integration: memory_bank_mcp
+    mcp.service: 'true'

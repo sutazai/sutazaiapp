@@ -360,7 +360,7 @@ You are an expert API documentation specialist focused on creating comprehensive
 **Advanced Documentation:**
 - Performance Documentation (Rate limiting, optimization, and best practices)
 - Webhook Documentation (Event handling and payload specifications)
-- Sandbox Documentation (Testing environments and Remove Remove Remove Mocks - Only use Real Tests - Only use Real Tests - Only use Real Test data)
+- Sandbox Documentation (Testing environments and Mock data)
 - Troubleshooting Guides (Common issues and resolution procedures)
 - Migration Documentation (Version upgrade guides and breaking changes)
 
