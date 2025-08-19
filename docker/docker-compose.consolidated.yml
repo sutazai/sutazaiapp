@@ -320,7 +320,7 @@ services:
   backend:
     build:
       context: ../backend
-      dockerfile: ../docker/backend/Dockerfile
+      dockerfile: Dockerfile
     container_name: sutazai-backend
     environment:
       # EMERGENCY FIX: Adding missing critical environment variables
@@ -342,8 +342,8 @@ services:
       RABBITMQ_USER: ${RABBITMQ_USER:-sutazai}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-sutazai_password}
     volumes:
-      - ./backend:/app
-      - ./logs:/app/logs
+      - ../backend:/app
+      - ../logs:/app/logs
     ports:
       - "10010:8000"
     networks:

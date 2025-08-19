@@ -1,0 +1,146 @@
+# Comprehensive System Index
+
+- Root: `/opt/sutazaiapp`
+- Docker config files: 89
+
+## Docker Files
+- `docker/agents/agent-debugger/Dockerfile`
+- `docker/agents/ai-agent-orchestrator/Dockerfile`
+- `docker/agents/ai_agent_orchestrator/Dockerfile`
+- `docker/agents/ai_agent_orchestrator/Dockerfile.optimized`
+- `docker/agents/ai_agent_orchestrator/Dockerfile.secure`
+- `docker/agents/hardware-resource-optimizer/Dockerfile`
+- `docker/agents/hardware-resource-optimizer/Dockerfile.optimized`
+- `docker/agents/hardware-resource-optimizer/Dockerfile.standalone`
+- `docker/agents/jarvis-automation-agent/Dockerfile`
+- `docker/agents/jarvis-hardware-resource-optimizer/Dockerfile`
+- `docker/agents/jarvis-hardware-resource-optimizer/Dockerfile.standalone`
+- `docker/agents/jarvis-voice-interface/Dockerfile`
+- `docker/agents/ollama_integration/Dockerfile`
+- `docker/agents/ollama_integration/Dockerfile.standalone`
+- `docker/agents/resource_arbitration_agent/Dockerfile`
+- `docker/agents/resource_arbitration_agent/Dockerfile.standalone`
+- `docker/agents/task_assignment_coordinator/Dockerfile`
+- `docker/agents/task_assignment_coordinator/Dockerfile.standalone`
+- `docker/agents/ultra-frontend-ui-architect/Dockerfile`
+- `docker/agents/ultra-system-architect/Dockerfile`
+- `docker/backend/Dockerfile`
+- `docker/backend/Dockerfile.production`
+- `docker/base/Dockerfile.chromadb-secure`
+- `docker/base/Dockerfile.jaeger-secure`
+- `docker/base/Dockerfile.neo4j-secure`
+- `docker/base/Dockerfile.ollama-secure`
+- `docker/base/Dockerfile.postgres-secure`
+- `docker/base/Dockerfile.promtail-secure`
+- `docker/base/Dockerfile.python-agent-master`
+- `docker/base/Dockerfile.python-base-secure`
+- `docker/base/Dockerfile.qdrant-secure`
+- `docker/base/Dockerfile.rabbitmq-secure`
+- `docker/base/Dockerfile.redis-exporter-secure`
+- `docker/base/Dockerfile.redis-secure`
+- `docker/base/Dockerfile.simple-base`
+- `docker/dind/docker-compose.dind.yml`
+- `docker/dind/docker-compose.dind.yml`
+- `docker/dind/mcp-containers/Dockerfile.nodejs-mcp`
+- `docker/dind/mcp-containers/Dockerfile.python-mcp`
+- `docker/dind/mcp-containers/Dockerfile.specialized-mcp`
+- `docker/dind/mcp-containers/Dockerfile.unified-mcp`
+- `docker/dind/mcp-containers/docker-compose.mcp-services.yml`
+- `docker/dind/mcp-containers/docker-compose.mcp-services.yml`
+- `docker/dind/mcp-real/Dockerfile`
+- `docker/dind/orchestrator/manager/Dockerfile`
+- `docker/dind/orchestrator/mcp-manifests/claude-flow-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/claude-task-runner-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/compass-mcp-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/context7-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/ddg-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/extended-memory-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/files-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/github-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/http-fetch-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/http-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/knowledge-graph-mcp-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/language-server-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/mcp-ssh-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/memory-bank-mcp-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/nx-mcp-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/playwright-mcp-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/postgres-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/ruv-swarm-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/sequentialthinking-mcp.yml`
+- `docker/dind/orchestrator/mcp-manifests/ultimatecoder-mcp.yml`
+- `docker/docker-compose.consolidated.yml`
+- `docker/docker-compose.consolidated.yml`
+- `docker/docker-compose.yml`
+- `docker/docker-compose.yml`
+- `docker/faiss/Dockerfile`
+- `docker/faiss/Dockerfile.optimized`
+- `docker/faiss/Dockerfile.simple`
+- `docker/faiss/Dockerfile.standalone`
+- `docker/frontend/Dockerfile`
+- `docker/frontend/Dockerfile.secure`
+- `docker/mcp-services/base/Dockerfile`
+- `docker/mcp-services/files/Dockerfile`
+- `docker/mcp-services/postgres/Dockerfile`
+- `docker/mcp-services/unified-dev/Dockerfile`
+- `docker/mcp-services/unified-memory/Dockerfile`
+- `docker/mcp-services/unified-memory/docker-compose.unified-memory.yml`
+- `docker/mcp-services/unified-memory/docker-compose.unified-memory.yml`
+- `docker/mcp/UltimateCoderMCP/Dockerfile`
+- `docker/monitoring-secure/blackbox-exporter/Dockerfile`
+- `docker/monitoring-secure/cadvisor/Dockerfile`
+- `docker/monitoring-secure/consul/Dockerfile`
+- `docker/monitoring/promtail/config.yml`
+- `docker/security/resource-optimization.yml`
+- `docker/security/security-hardening.yml`
+
+## MCP Servers (.mcp.json)
+- claude-flow: type=stdio, command=`npx`
+- claude-task-runner: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/claude-task-runner.sh`
+- compass-mcp: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/compass-mcp.sh`
+- context7: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/context7.sh`
+- ddg: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/ddg.sh`
+- extended-memory: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh`
+- files: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/files.sh`
+- github: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/github.sh`
+- http: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/http.sh`
+- http_fetch: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/http_fetch.sh`
+- knowledge-graph-mcp: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/knowledge-graph-mcp.sh`
+- language-server: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/language-server.sh`
+- mcp_ssh: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/mcp_ssh.sh`
+- memory-bank-mcp: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh`
+- nx-mcp: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/nx-mcp.sh`
+- playwright-mcp: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh`
+- ruv-swarm: type=stdio, command=`npx`
+- sequentialthinking: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/sequentialthinking.sh`
+- ultimatecoder: type=stdio, command=`/opt/sutazaiapp/scripts/mcp/wrappers/ultimatecoder.sh`
+
+## MCP Wrapper Scripts
+- `scripts/mcp/wrappers/claude-flow.sh`
+- `scripts/mcp/wrappers/claude-task-runner.sh`
+- `scripts/mcp/wrappers/compass-mcp.sh`
+- `scripts/mcp/wrappers/context7.sh`
+- `scripts/mcp/wrappers/ddg.sh`
+- `scripts/mcp/wrappers/extended-memory.sh`
+- `scripts/mcp/wrappers/files.sh`
+- `scripts/mcp/wrappers/github.sh`
+- `scripts/mcp/wrappers/http_fetch.sh`
+- `scripts/mcp/wrappers/knowledge-graph-mcp.sh`
+- `scripts/mcp/wrappers/language-server.sh`
+- `scripts/mcp/wrappers/mcp_ssh.sh`
+- `scripts/mcp/wrappers/memory-bank-mcp.sh`
+- `scripts/mcp/wrappers/nx-mcp.sh`
+- `scripts/mcp/wrappers/playwright-mcp.sh`
+- `scripts/mcp/wrappers/ruv-swarm.sh`
+- `scripts/mcp/wrappers/sequentialthinking.sh`
+- `scripts/mcp/wrappers/ultimatecoder.sh`
+- `scripts/mcp/wrappers/unified-dev.sh`
+- `scripts/mcp/wrappers/unified-memory.sh`
+
+## Agents Directories
+- Canonical roles: `.claude/agents/`
+- Codex/OpenAI entrypoint: `.codex/agents/`
+
+## Canonical Registries
+- Ports: `config/port-registry.yaml` (system-level)
+- Ports (observed): `config/port-registry-actual.yaml`

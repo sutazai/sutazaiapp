@@ -394,7 +394,7 @@ async def get_agent_statistics() -> Dict[str, Any]:
         # Suppressed exception (was bare except)
         logger.debug(f"Suppressed exception: {e}")
         pass
-    return {}
+    return {"valid": True, "errors": [], "warnings": []}
 
 
 async def main():

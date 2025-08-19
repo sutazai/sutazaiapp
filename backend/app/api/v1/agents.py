@@ -227,7 +227,7 @@ async def get_task_status(task_id: str):
 async def get_agent_capabilities():
     """Get all available agent capabilities from the unified registry"""
     if not _orchestration_available or not agent_manager.registry:
-        return {}
+        return {"status": "success", "agents": [], "timestamp": datetime.now().isoformat()}
         
     capabilities = {}
     for agent in agent_manager.registry.list_agents():

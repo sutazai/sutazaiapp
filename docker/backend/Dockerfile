@@ -35,7 +35,7 @@ RUN pip install --no-cache-dir -r /tmp/backend-requirements.txt && \
 USER appuser
 
 # Copy application code with proper ownership
-COPY --chown=appuser:appgroup . .
+COPY --chown=appuser:appgroup . /app/
 
 # Override base environment variables for backend service
 ENV SERVICE_PORT=8000
@@ -53,5 +53,11 @@ EXPOSE 8000
 # Ensure we're running as non-root user (already set above, but explicit for clarity)
 USER appuser
 
+# Set PYTHONPATH to ensure app module can be found
+ENV PYTHONPATH="/app:$PYTHONPATH"
+
+# Set working directory
+WORKDIR /app
+
 # Start backend service
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

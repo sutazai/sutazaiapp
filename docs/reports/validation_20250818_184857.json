@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-08-18T18:48:57.919444",
+  "passed": 0,
+  "violations": 6,
+  "warnings": 2,
+  "details": {
+    "passed": [],
+    "violations": [
+      "Rule 4: Found 24 docker-compose files (should be 1)",
+      "Rule 5: 5 files in root folder",
+      "Rule 6: Missing 4 required doc directories",
+      "Rule 11: 2 unhealthy containers",
+      "Security: 4 .env files in repository",
+      "Naming: 6 containers with improper names"
+    ],
+    "warnings": [
+      "Duplicates: 8 main/app files found",
+      "Duplicates: 10 requirements files found"
+    ]
+  }
+}

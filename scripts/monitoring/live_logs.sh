@@ -5,6 +5,31 @@
 
 set -euo pipefail
 
+# Optional: test-friendly dry-run mode and non-interactive env guards
+# - LIVE_LOGS_DRY_RUN=true      -> intercepts docker/systemctl/journalctl/sudo/pkill/dockerd
+# - LIVE_LOGS_SKIP_NUMLOCK=true -> skips numlock manipulation for CI/containers
+
+# DRY-RUN command shims (functions override binaries within this script scope)
+if [[ "${LIVE_LOGS_DRY_RUN:-}" == "true" ]]; then
+    docker() { echo "[DRY_RUN] docker $*"; return 0; }
+    sudo() { echo "[DRY_RUN] sudo $*"; return 0; }
+    systemctl() { echo "[DRY_RUN] systemctl $*"; return 0; }
+    journalctl() { echo "[DRY_RUN] journalctl $*"; return 0; }
+    pkill() { echo "[DRY_RUN] pkill $*"; return 0; }
+    dockerd() { echo "[DRY_RUN] dockerd $*"; return 0; }
+fi
+
+# Non-interactive helper: replace read prompts during CI/dry tests
+maybe_read_pause() {
+    local prompt_msg="${1:-Press Enter to continue...}"
+    if [[ "${LIVE_LOGS_NONINTERACTIVE:-}" == "true" ]]; then
+        # Skip pauses in non-interactive mode
+        echo "[NONINTERACTIVE] ${prompt_msg} (skipped)" > /dev/null
+        return 0
+    fi
+    read -p "$prompt_msg"
+}
+
 PROJECT_ROOT="/opt/sutazaiapp"
 LOG_DIR="${PROJECT_ROOT}/logs"
 CONFIG_FILE="${PROJECT_ROOT}/.logs_config"
@@ -45,8 +70,10 @@ check_numlock_status() {
     fi
 }
 
-# Enable numlock at script start
-enable_numlock
+# Enable numlock at script start (skippable for CI)
+if [[ "${LIVE_LOGS_SKIP_NUMLOCK:-}" != "true" ]]; then
+    enable_numlock
+fi
 
 # Colors for output
 RED='\033[0;31m'
@@ -1624,6 +1651,12 @@ show_live_logs() {
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
+    # In dry-run mode, do not spawn background tailers
+    if [[ "${LIVE_LOGS_DRY_RUN:-}" == "true" ]]; then
+        echo "[DRY_RUN] Would stream logs from SutazAI containers"
+        return 0
+    fi
+    
     # Automatically discover and monitor all SutazAI containers
     log_pids=()
     container_colors=("$GREEN" "$BLUE" "$YELLOW" "$PURPLE" "$CYAN" "$RED" "$GREEN" "$BLUE" "$YELLOW" "$PURPLE" "$CYAN" "$RED")
@@ -1663,9 +1696,18 @@ show_live_logs() {
         log_pids+=($!)
     done
     
-    # Wait for interrupt and kill all background processes
-    trap "kill ${log_pids[*]} 2>/dev/null; exit 0" INT TERM
-    wait
+    # Wait for interrupt and kill all background processes, then return to menu
+    cleanup_live_logs() {
+        kill ${log_pids[*]} 2>/dev/null || true
+        if [[ "${LIVE_LOGS_NONINTERACTIVE:-}" != "true" ]]; then
+            echo ""
+            echo -e "${GREEN}✓ Exited live logs${NC}"
+            maybe_read_pause "Press Enter to return to menu..."
+            show_menu
+        fi
+    }
+    trap cleanup_live_logs INT TERM
+    wait || true
 }
 
 # Function to test API endpoints
@@ -1932,12 +1974,22 @@ show_unified_live_logs() {
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
+    # In dry-run mode, skip streaming
+    if [[ "${LIVE_LOGS_DRY_RUN:-}" == "true" ]]; then
+        echo "[DRY_RUN] Would stream unified logs from docker compose"
+        return 0
+    fi
+    
     # Check Docker daemon first
     if ! check_docker_daemon; then
         echo -e "${RED}Docker daemon is not accessible. Cannot show unified logs.${NC}"
         echo ""
         echo -e "${YELLOW}Would you like to attempt Docker recovery? (y/N)${NC}"
-        read -r -n 1 recovery_choice
+        if [[ "${LIVE_LOGS_NONINTERACTIVE:-}" == "true" ]]; then
+            recovery_choice="N"
+        else
+            read -r -n 1 recovery_choice
+        fi
         echo ""
         if [[ $recovery_choice =~ ^[Yy]$ ]]; then
             if attempt_docker_recovery; then
@@ -1947,13 +1999,13 @@ show_unified_live_logs() {
                 return
             else
                 echo -e "${RED}Docker recovery failed. Use option 11 for advanced troubleshooting.${NC}"
-                read -p "Press Enter to return to menu..."
-                show_menu
+                maybe_read_pause "Press Enter to return to menu..."
+                if [[ "${LIVE_LOGS_NONINTERACTIVE:-}" != "true" ]]; then show_menu; fi
                 return
             fi
         else
-            read -p "Press Enter to return to menu..."
-            show_menu
+            maybe_read_pause "Press Enter to return to menu..."
+            if [[ "${LIVE_LOGS_NONINTERACTIVE:-}" != "true" ]]; then show_menu; fi
             return
         fi
     fi
@@ -1964,8 +2016,8 @@ show_unified_live_logs() {
     if [ ${#running_containers[@]} -eq 0 ]; then
         echo -e "${RED}No SutazAI containers found for log monitoring.${NC}"
         echo -e "${YELLOW}Tip: Start your containers first with: ${CYAN}cd /opt/sutazaiapp && docker-compose up -d${NC}"
-        read -p "Press Enter to return to menu..."
-        show_menu
+        maybe_read_pause "Press Enter to return to menu..."
+        if [[ "${LIVE_LOGS_NONINTERACTIVE:-}" != "true" ]]; then show_menu; fi
         return
     fi
     
@@ -1993,7 +2045,7 @@ show_unified_live_logs() {
     echo -e "${CYAN}════════════════════════════════════════════════════════════════${NC}"
     
     # Use docker compose logs with follow for real unified streaming
-    if command -v docker &> /dev/null && [ -f "/opt/sutazaiapp/docker-compose.yml" ]; then
+    if command -v docker &> /dev/null && [ -f "/opt/sutazaiapp/docker/docker-compose.yml" ]; then
         # Use docker compose logs for true unified streaming
         cd /opt/sutazaiapp
         docker compose logs -f --tail=5 2>/dev/null || {
@@ -2149,8 +2201,8 @@ redeploy_all_containers() {
     }
     
     # Check if docker-compose file exists
-    if [[ ! -f "docker-compose.yml" ]]; then
-        echo -e "${RED}Error: docker-compose.yml not found in $PROJECT_ROOT${NC}"
+    if [[ ! -f "docker/docker-compose.yml" ]]; then
+        echo -e "${RED}Error: docker-compose.yml not found in $PROJECT_ROOT/docker${NC}"
         return 1
     fi
     
@@ -2533,16 +2585,16 @@ init_database() {
     
     # Create database
     echo "Creating sutazai database..."
-    docker exec sutazai-postgres psql -U postgres -c "CREATE DATABASE sutazai;" 2>/dev/null || echo "Database may already exist"
+    docker exec sutazai-postgres psql -U postgres -c "CREATE DATABASE sutazai;" >/dev/null 2>&1 || echo "Database may already exist"
     
     # Create user
     echo "Creating sutazai user..."
-    docker exec sutazai-postgres psql -U postgres -c "CREATE USER sutazai WITH PASSWORD 'sutazai_password';" 2>/dev/null || echo "User may already exist"
+    docker exec sutazai-postgres psql -U postgres -c "CREATE USER sutazai WITH PASSWORD 'sutazai_password';" >/dev/null 2>&1 || echo "User may already exist"
     
     # Grant permissions
     echo "Granting permissions..."
-    docker exec sutazai-postgres psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE sutazai TO sutazai;" 2>/dev/null
-    docker exec sutazai-postgres psql -U postgres -c "ALTER USER sutazai CREATEDB;" 2>/dev/null
+    docker exec sutazai-postgres psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE sutazai TO sutazai;" >/dev/null 2>&1 || true
+    docker exec sutazai-postgres psql -U postgres -c "ALTER USER sutazai CREATEDB;" >/dev/null 2>&1 || true
     
     echo -e "${GREEN}Database initialization completed!${NC}"
 }
@@ -2573,7 +2625,8 @@ repair_system() {
     echo -e "${GREEN}System repair completed!${NC}"
 }
 
-# Start the monitoring system
+# Start the monitoring system (can be disabled for tests via LIVE_LOGS_NO_AUTORUN=true)
+if [[ "${LIVE_LOGS_NO_AUTORUN:-}" != "true" ]]; then
 case "${1:-}" in
     "--overview")
         show_system_overview
@@ -2601,3 +2654,4 @@ case "${1:-}" in
         main "$@"
         ;;
 esac
+fi

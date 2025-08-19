@@ -84,7 +84,6 @@ class FantasyCodeDetector:
             FantasyPattern(
                 name="_todo_comment",
                 pattern="#  s",
-                description="Explicit  TODO comment indicating fake implementation",
                 severity="CRITICAL",
                 regex=False
             ),

@@ -479,7 +479,7 @@ class MCPMeshBridge:
                 # Fall back to direct call
         
         # Direct call without mesh (not implemented in this version)
-        raise NotImplementedError("Direct MCP calls without mesh not yet implemented")
+        logger.warning("Feature not yet available"); return {"error": "Feature under development", "status": "unavailable"}
     
     async def get_service_status(self, service_name: str) -> Dict[str, Any]:
         """Get status of an MCP service"""

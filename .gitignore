@@ -225,3 +225,6 @@ claude-flow
 claude-flow.bat
 claude-flow.ps1
 hive-mind-prompt-*.txt
+
+# Ignore large generated context files
+memory-bank/activeContext.md

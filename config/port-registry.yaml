@@ -28,10 +28,10 @@ port_ranges:
     description: "External tools and integrations"
     reserved_for: "Third-party AI tools, workflow engines"
   
-    system:
+  system:
     range: [10500, 10599]
-    description: "system components"
-    reserved_for: "orchestration, consensus, safety monitoring"
+    description: "System components"
+    reserved_for: "Orchestration, consensus, safety monitoring"
   
   agents:
     range: [11000, 11148]

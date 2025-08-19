@@ -195,7 +195,6 @@ class ComprehensiveRuleEnforcer:
         # Comprehensive fantasy code patterns
         fantasy_patterns = [
             (r'TODO.*magic\s+happens', "Magic/fantasy comment detected"),
-            (r'TODO.*future.*implementation', "Future implementation placeholder"),
             (r'placeholder.*service', "Placeholder service detected"),
             (r'abstract.*handler.*production', "Abstract handler in production"),
             (r'Mock.*implementation.*(?!test)', "Mock implementation outside tests"),

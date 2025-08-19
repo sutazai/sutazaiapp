@@ -1,40 +1,46 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `backend/`: FastAPI service (`backend/app/main.py`), routers, models, `requirements.txt`.
-- `frontend/`: Streamlit UI (`frontend/app.py`), `components/`, `pages/`, `utils/`.
-- `src/`: JS integration and client stores (e.g., `src/store/voiceStore.js`).
-- `tests/`: Pytest suites, integration/e2e, Playwright; shared config in `tests/pytest.ini`.
-- `docker/`: Primary Compose files (use `docker/docker-compose.yml`).
-- `IMPORTANT/docs/testing/`: Canonical Newman, Cypress, and k6 test assets.
-- `scripts/`: Ops/deployment/testing helpers (see `scripts/testing/*`).
+- Root services: `backend/`, `frontend/`, `docker/`, `scripts/`, `docs/`, `tests/`.
+- MCP wrappers: `scripts/mcp/wrappers/*.sh` (each server supports `--selfcheck`).
+- Python MCP module: `mcp_ssh/` (`src/mcp_ssh/`, tests in `mcp_ssh/tests/`).
+- Data/config: `.mcp.json`, `.env`, `config/`, `database/`, `docker-compose*` under `docker/`.
 
 ## Build, Test, and Development Commands
-- Backend (Python): `python -m venv .venv && source .venv/bin/activate && pip install -r backend/requirements.txt`
-- Run API locally: `uvicorn backend.app.main:app --host 0.0.0.0 --port 10010`
-- Frontend (Streamlit): `streamlit run frontend/app.py --server.port 10011 --server.address 0.0.0.0`
-- Docker (from repo root): `cd docker && docker network create sutazai-network || true && docker-compose up -d`
-- JS tooling: `npm ci` then:
-  - API tests (Newman): `node IMPORTANT/docs/testing/newman_ci_integration.js`
-  - E2E: `npx cypress run --spec IMPORTANT/docs/testing/cypress_e2e_tests.js`
-  - Unit (Jest): `npm run test:unit`
+- Services (Docker): `npm run docker:up` | `npm run docker:down` | `npm run docker:logs`
+- API tests (Postman/Newman): `npm run test:api`
+- E2E tests (Cypress): `npm run test:e2e` (headless) | `npm run test:e2e:open`
+- Health check: `npm run test:health`
+- Full test sweep: `npm run test:all`
+- Python (mcp_ssh) tests: from `mcp_ssh/` run `uv run pytest -q` (or `pytest`)
+- Verify MCP servers locally: `scripts/mcp/wrappers/<name>.sh --selfcheck`
 
 ## Coding Style & Naming Conventions
-- Python: PEP8, 4-space indent, snake_case files; prefer type hints. Recommended formatters: Black + isort (see `docs/pyproject.toml`).
-- JavaScript: ES modules, camelCase for vars/functions, PascalCase for components; keep store names aligned with `src/store/*.js` patterns.
-- Keep diffs minimal; run formatters locally before PRs (Ruff/Black for Python, Prettier for JS if configured).
+- Python: Black (88 cols), isort (profile=black), Ruff, MyPy (strict) configured in `mcp_ssh/pyproject.toml`.
+  - Prefer `snake_case` for functions/vars, `PascalCase` for classes.
+- JS/TS: Jest/Cypress tests present; linting is minimal here—follow existing patterns; format with Prettier if configured in editor.
+- Shell: Wrapper scripts live in `scripts/mcp/wrappers/` and are executable; name as `<server>.sh`.
 
 ## Testing Guidelines
-- Pytest: use `pytest` from repo root (config in `tests/pytest.ini`); name tests `test_*.py`. Example: `pytest -m "not slow"`.
-- Coverage: `.coveragerc` provided; recommended target ≥80%. Example: `coverage run -m pytest && coverage report`.
-- JS tests: Jest uses `tests/**/*.test.js|*.spec.js`. Cypress base URL is `http://localhost:10011`.
-- Health checks: Backend `GET /health` at `http://localhost:10010/health`.
+- Python: Pytest with markers (`unit`, `integration`, `slow`); tests under `mcp_ssh/tests/` (patterns `test_*.py`).
+  - Coverage configured for `mcp_ssh` (`tool.coverage.*` in `pyproject.toml`).
+- Node: Jest unit tests (`tests/**/*.test.js|spec.js`), Cypress for E2E, Newman for API suites.
+- Add targeted tests alongside the module you change and ensure `npm run test:health` passes before CI runs.
 
 ## Commit & Pull Request Guidelines
-- Commits: Prefer Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`). History commonly uses `chore: sync ...`; keep scopes clear.
-- PRs: Provide summary, linked issues, test evidence (pytest/Jest/Cypress), and screenshots for UI. Ensure local tests pass and note coverage changes.
+- Commit style: short, imperative subject; common types seen: `chore:`, version sync notes. Prefer Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`) where possible.
+- PRs should include: concise description, motivation/links to issues, test evidence (logs/screenshots for Cypress), and any ops notes (migrations, env keys).
 
 ## Security & Configuration Tips
-- Never commit secrets. Base local env on `.env.example`; production uses `.env.master` (symlinked by `.env.production`).
-- Default ports (via Compose): Backend `10010` → `backend:8000`; Frontend `10011` → `frontend:8501`.
-- Compose expects external network `sutazai-network`; create it once with `docker network create sutazai-network`.
+- Never commit secrets. Use `.env` (see `.env.example`) and Docker secrets.
+- Core services: Postgres/Redis/Ollama via Docker; ensure network `sutazai-network` exists.
+- Quick MCP validation: e.g., `scripts/mcp/wrappers/postgres.sh --selfcheck` or `puppeteer-mcp.sh --selfcheck`.
+
+## Architecture Overview
+- Control Plane: MCP layer via `scripts/mcp/wrappers/*` orchestrates tools (e.g., postgres, ssh, memory-bank, playwright) and exposes `--selfcheck` for diagnostics.
+- App Plane: `backend/` (API/services) and `frontend/` (UI) interact with MCP tools and data services.
+- Data Plane: Dockerized Postgres/Redis/Ollama connected on `sutazai-network` (see `docker/` compose files).
+- Config: `.mcp.json` (MCP servers), `.env` (secrets), `config/` (runtime tuning).
+
+Flow (simplified):
+`Client → MCP Wrapper (scripts/mcp/wrappers/<name>.sh) → Target Service (e.g., Postgres via docker) → Results to client`
