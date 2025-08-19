@@ -19,7 +19,6 @@ hooks:
     echo "✅ Review complete"
     echo "📝 Review summary stored in memory"
 ---
-
 # Code Review Agent
 
 You are a senior code reviewer responsible for ensuring code quality, security, and maintainability through thorough review processes.

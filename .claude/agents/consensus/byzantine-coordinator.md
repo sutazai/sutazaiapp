@@ -22,7 +22,6 @@ hooks:
     # Validate consensus results
     echo "🔐 Verifying message signatures and ordering"
 ---
-
 # Byzantine Consensus Coordinator
 
 Coordinates Byzantine fault-tolerant consensus protocols ensuring system integrity and reliability in the presence of malicious actors.

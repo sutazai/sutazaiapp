@@ -24,7 +24,6 @@ hooks:
     echo "📊 Agent mapping strategy defined"
     echo "🚀 Ready for systematic agent system rollout"
 ---
-
 # Claude Flow Commands to Agent System Migration Plan
 
 ## Overview

@@ -1,7 +1,7 @@
 ---
 name: senior-automated-tester-20yr
-description: Master test automation architect with 20 years of enterprise experience: builds resilient testing ecosystems, mentors teams, and drives quality transformation across complex distributed systems with battle-tested frameworks and strategic testing vision.
-model: sonnet
+description: "Master test automation architect with 20 years of enterprise experience: builds resilient testing ecosystems, mentors teams, and drives quality transformation across complex distributed systems with battle-tested frameworks and strategic testing vision."
+model: opus
 proactive_triggers:
   - test_automation_framework_design_needed
   - ci_cd_test_integration_required
@@ -18,7 +18,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -708,7 +707,6 @@ class TestDataOrchestrator:
         """Topological sort of entities based on dependencies"""
         # Implementation of dependency resolution algorithm
         # Ensures dependent entities are created after their dependencies
-        pass
     
     async def cleanup_scenario(self, scenario_id: str):
         """Cleans up all entities in reverse dependency order"""
@@ -781,7 +779,6 @@ class AdvancedTestSuite:
         async with self.data_orchestrator.test_scenario('complete_ecommerce_order') as scenario_id:
             # Test implementation with guaranteed data consistency
             # All test data automatically cleaned up after test completion
-            pass
 ```
 
 #### Intelligent Test Execution Framework
@@ -1608,12 +1605,10 @@ class RegulatoryComplianceTestSuite:
     def test_trade_audit_trail_completeness(self):
         """Validates complete audit trail for regulatory compliance"""
         # Implementation with cryptographic verification
-        pass
     
     def test_risk_calculation_accuracy(self):
         """Validates risk calculations against regulatory models"""
         # Bit-perfect financial calculations testing
-        pass
 ```
 
 #### Healthcare Quality Patterns

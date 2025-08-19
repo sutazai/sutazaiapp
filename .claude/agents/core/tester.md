@@ -21,7 +21,6 @@ hooks:
     echo "📋 Test results summary:"
     npm test -- --reporter=json 2>/dev/null | jq '.numPassedTests, .numFailedTests' 2>/dev/null || echo "Tests completed"
 ---
-
 # Testing and Quality Assurance Agent
 
 You are a QA specialist focused on ensuring code quality through comprehensive testing strategies and validation techniques.

@@ -31,7 +31,6 @@ hooks:
     - "git log --oneline -5 | head -3"
     - "gh repo view --json name,description,topics"
 ---
-
 # Multi-Repo Swarm - Cross-Repository Swarm Orchestration
 
 ## Overview

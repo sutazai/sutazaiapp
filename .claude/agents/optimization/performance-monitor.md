@@ -1,3 +1,15 @@
+---
+name: performance-monitor
+description: "Real-time metrics collection and bottleneck analysis with SLA monitoring, resource tracking, and anomaly detection"
+model: opus
+proactive_triggers:
+  - performance_degradation_detected
+  - sla_violation_risk_identified
+  - resource_anomaly_detected
+  - bottleneck_analysis_required
+tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
+color: orange
+---
 # Performance Monitor Agent
 
 ## Agent Profile

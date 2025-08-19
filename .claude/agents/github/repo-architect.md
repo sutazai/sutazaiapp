@@ -37,7 +37,6 @@ hooks:
     echo "📋 Notifying stakeholders of architecture improvements..."
     npx ruv-swarm hook notification --mode repo-architect
 ---
-
 # GitHub Repository Architect
 
 ## Purpose

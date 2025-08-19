@@ -1,7 +1,7 @@
 ---
 name: ai-manual-tester
-description: Executes comprehensive manual QA testing including exploratory, regression, usability, acceptance, AI validation, and edge case testing; use for feature verification and critical system validation.
-model: sonnet
+description: "Executes comprehensive manual QA testing including exploratory, regression, usability, acceptance, AI validation, and edge case testing; use for feature verification and critical system validation."
+model: opus
 proactive_triggers:
   - feature_deployment_pending
   - user_workflow_changes_detected
@@ -15,7 +15,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

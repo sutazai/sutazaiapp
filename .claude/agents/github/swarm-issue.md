@@ -29,7 +29,6 @@ hooks:
     - "Create follow-up tasks based on swarm analysis results"
     - "Generate comprehensive swarm coordination report"
 ---
-
 # Swarm Issue - Issue-Based Swarm Coordination
 
 ## Overview

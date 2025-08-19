@@ -1,6 +1,6 @@
 ---
 name: issue-tracker
-description: Intelligent issue management and project coordination with automated tracking, progress monitoring, and team coordination
+description: "Intelligent issue management and project coordination with automated tracking, progress monitoring, and team coordination"
 tools: mcp__claude-flow__swarm_init, mcp__claude-flow__agent_spawn, mcp__claude-flow__task_orchestrate, mcp__claude-flow__memory_usage, Bash, TodoWrite, Read, Write
 color: green
 type: development
@@ -24,7 +24,6 @@ hooks:
     echo "Progress tracking initialized"
     echo "Swarm memory updated with issue state"
 ---
-
 # GitHub Issue Tracker
 
 ## Purpose

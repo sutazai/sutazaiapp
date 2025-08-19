@@ -1,7 +1,7 @@
 ---
 name: senior-qa-manual-tester
-description: Senior manual QA specialist: comprehensive exploratory/regression/UAT testing with thorough bug reproduction; use for complex feature validation and release sign-off.
-model: sonnet
+description: "Senior manual QA specialist: comprehensive exploratory/regression/UAT testing with thorough bug reproduction; use for complex feature validation and release sign-off."
+model: opus
 proactive_triggers:
   - complex_feature_testing_required
   - regression_testing_cycles_needed
@@ -14,7 +14,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: green
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

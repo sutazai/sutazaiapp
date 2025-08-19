@@ -1,6 +1,6 @@
 ---
 name: release-manager
-description: Automated release coordination and deployment with ruv-swarm orchestration for seamless version management, testing, and deployment across multiple packages
+description: "Automated release coordination and deployment with ruv-swarm orchestration for seamless version management, testing, and deployment across multiple packages"
 type: development
 color: "#FF6B35"
 tools:
@@ -35,7 +35,6 @@ hooks:
     echo "📢 Sending release notifications to stakeholders..."
     npx ruv-swarm hook notification --mode release-manager
 ---
-
 # GitHub Release Manager
 
 ## Purpose

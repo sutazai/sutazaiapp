@@ -1,0 +1,232 @@
+{
+  "documented_ports": 46,
+  "actual_ports": 44,
+  "documented_but_unused": 10,
+  "documented_but_unused_list": [
+    11104,
+    11110,
+    8588,
+    8589,
+    10099,
+    10199,
+    8090,
+    10299,
+    11102,
+    10207
+  ],
+  "undocumented_but_used": 8,
+  "undocumented_but_used_list": [
+    33081,
+    10314,
+    9323,
+    33871,
+    8081,
+    53,
+    22,
+    61209
+  ],
+  "mismatched_services": 0,
+  "mismatched_services_list": [],
+  "port_conflicts": {
+    "19090": {
+      "issue": "outside_expected_ranges",
+      "port": 19090,
+      "expected_ranges": {
+        "infrastructure": [
+          10000,
+          10099
+        ],
+        "vector_ai": [
+          10100,
+          10199
+        ],
+        "monitoring": [
+          10200,
+          10299
+        ],
+        "agents": [
+          11000,
+          11999
+        ]
+      }
+    },
+    "61209": {
+      "issue": "outside_expected_ranges",
+      "port": 61209,
+      "expected_ranges": {
+        "infrastructure": [
+          10000,
+          10099
+        ],
+        "vector_ai": [
+          10100,
+          10199
+        ],
+        "monitoring": [
+          10200,
+          10299
+        ],
+        "agents": [
+          11000,
+          11999
+        ]
+      }
+    },
+    "18080": {
+      "issue": "outside_expected_ranges",
+      "port": 18080,
+      "expected_ranges": {
+        "infrastructure": [
+          10000,
+          10099
+        ],
+        "vector_ai": [
+          10100,
+          10199
+        ],
+        "monitoring": [
+          10200,
+          10299
+        ],
+        "agents": [
+          11000,
+          11999
+        ]
+      }
+    },
+    "18081": {
+      "issue": "outside_expected_ranges",
+      "port": 18081,
+      "expected_ranges": {
+        "infrastructure": [
+          10000,
+          10099
+        ],
+        "vector_ai": [
+          10100,
+          10199
+        ],
+        "monitoring": [
+          10200,
+          10299
+        ],
+        "agents": [
+          11000,
+          11999
+        ]
+      }
+    },
+    "33081": {
+      "issue": "outside_expected_ranges",
+      "port": 33081,
+      "expected_ranges": {
+        "infrastructure": [
+          10000,
+          10099
+        ],
+        "vector_ai": [
+          10100,
+          10199
+        ],
+        "monitoring": [
+          10200,
+          10299
+        ],
+        "agents": [
+          11000,
+          11999
+        ]
+      }
+    },
+    "10314": {
+      "issue": "outside_expected_ranges",
+      "port": 10314,
+      "expected_ranges": {
+        "infrastructure": [
+          10000,
+          10099
+        ],
+        "vector_ai": [
+          10100,
+          10199
+        ],
+        "monitoring": [
+          10200,
+          10299
+        ],
+        "agents": [
+          11000,
+          11999
+        ]
+      }
+    },
+    "33871": {
+      "issue": "outside_expected_ranges",
+      "port": 33871,
+      "expected_ranges": {
+        "infrastructure": [
+          10000,
+          10099
+        ],
+        "vector_ai": [
+          10100,
+          10199
+        ],
+        "monitoring": [
+          10200,
+          10299
+        ],
+        "agents": [
+          11000,
+          11999
+        ]
+      }
+    },
+    "12375": {
+      "issue": "outside_expected_ranges",
+      "port": 12375,
+      "expected_ranges": {
+        "infrastructure": [
+          10000,
+          10099
+        ],
+        "vector_ai": [
+          10100,
+          10199
+        ],
+        "monitoring": [
+          10200,
+          10299
+        ],
+        "agents": [
+          11000,
+          11999
+        ]
+      }
+    },
+    "12376": {
+      "issue": "outside_expected_ranges",
+      "port": 12376,
+      "expected_ranges": {
+        "infrastructure": [
+          10000,
+          10099
+        ],
+        "vector_ai": [
+          10100,
+          10199
+        ],
+        "monitoring": [
+          10200,
+          10299
+        ],
+        "agents": [
+          11000,
+          11999
+        ]
+      }
+    }
+  },
+  "accuracy_score": 0.6666666666666666,
+  "test_passed": false
+}

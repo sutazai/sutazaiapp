@@ -172,7 +172,12 @@ async def initialize_remaining_services(app):
         if not app.state.emergency_mode:
             try:
                 from app.core.mcp_startup import initialize_mcp_background
-                await initialize_mcp_background(None)
+                # Initialize MCP with direct mesh integration for accurate registration
+                try:
+                    await initialize_mcp_background(service_mesh)
+                except Exception:
+                    # Fallback to standalone init if mesh injection fails
+                    await initialize_mcp_background(None)
                 logger.info("MCP services initialized in background")
             except Exception as e:
                 logger.error(f"MCP initialization failed: {e}")
@@ -301,7 +306,7 @@ except Exception as e:
 try:
     from app.api.v1.endpoints.mcp import router as mcp_router
     app.include_router(mcp_router, prefix="/api/v1", tags=["MCP Integration"])
-    logger.info("MCP-Mesh Integration router loaded successfully - All 21 MCP servers available via mesh")
+    logger.info("MCP-Mesh Integration router loaded successfully")
     MCP_MESH_ENABLED = True
 except ImportError as e:
     logger.error(f"MCP-Mesh Integration router IMPORT FAILED: {e}")

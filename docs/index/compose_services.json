@@ -1,0 +1,347 @@
+{
+  "postgres": {
+    "image": "postgres:15-alpine",
+    "build": null,
+    "ports": [
+      "10000:5432"
+    ],
+    "depends_on": null
+  },
+  "redis": {
+    "image": "redis:7-alpine",
+    "build": null,
+    "ports": [
+      "10001:6379"
+    ],
+    "depends_on": null
+  },
+  "neo4j": {
+    "image": "neo4j:5",
+    "build": null,
+    "ports": [
+      "10002:7474",
+      "10003:7687"
+    ],
+    "depends_on": null
+  },
+  "ollama": {
+    "image": "ollama/ollama:latest",
+    "build": null,
+    "ports": [
+      "10104:11434"
+    ],
+    "depends_on": null
+  },
+  "chromadb": {
+    "image": "chromadb/chroma:latest",
+    "build": null,
+    "ports": [
+      "10100:8000"
+    ],
+    "depends_on": null
+  },
+  "qdrant": {
+    "image": "qdrant/qdrant:latest",
+    "build": null,
+    "ports": [
+      "10101:6333",
+      "10102:6334"
+    ],
+    "depends_on": null
+  },
+  "faiss": {
+    "image": "sutazaiapp-faiss:latest",
+    "build": {
+      "context": "./docker/faiss",
+      "dockerfile": "./docker/faiss/Dockerfile"
+    },
+    "ports": [
+      "10103:8000"
+    ],
+    "depends_on": null
+  },
+  "kong": {
+    "image": "kong:3.5",
+    "build": null,
+    "ports": [
+      "10005:8000",
+      "10015:8001"
+    ],
+    "depends_on": null
+  },
+  "consul": {
+    "image": "consul:latest",
+    "build": null,
+    "ports": [
+      "10006:8500"
+    ],
+    "depends_on": null
+  },
+  "rabbitmq": {
+    "image": "rabbitmq:3.12-management-alpine",
+    "build": null,
+    "ports": [
+      "10007:5672",
+      "10008:15672"
+    ],
+    "depends_on": null
+  },
+  "backend": {
+    "image": "sutazaiapp-backend:latest",
+    "build": {
+      "context": "./backend",
+      "dockerfile": "./docker/backend/Dockerfile"
+    },
+    "ports": [
+      "10010:8000"
+    ],
+    "depends_on": {
+      "chromadb": {
+        "condition": "service_healthy"
+      },
+      "neo4j": {
+        "condition": "service_started"
+      },
+      "ollama": {
+        "condition": "service_healthy"
+      },
+      "postgres": {
+        "condition": "service_healthy"
+      },
+      "qdrant": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "frontend": {
+    "image": "sutazaiapp-frontend:latest",
+    "build": {
+      "context": "./frontend",
+      "dockerfile": "./docker/frontend/Dockerfile"
+    },
+    "ports": [
+      "10011:8501"
+    ],
+    "depends_on": {
+      "backend": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "prometheus": {
+    "image": "prom/prometheus:latest",
+    "build": null,
+    "ports": [
+      "10200:9090"
+    ],
+    "depends_on": null
+  },
+  "grafana": {
+    "image": "grafana/grafana:latest",
+    "build": null,
+    "ports": [
+      "10201:3000"
+    ],
+    "depends_on": [
+      "prometheus",
+      "loki"
+    ]
+  },
+  "loki": {
+    "image": "grafana/loki:2.9.0",
+    "build": null,
+    "ports": [
+      "10202:3100"
+    ],
+    "depends_on": null
+  },
+  "alertmanager": {
+    "image": "prom/alertmanager:latest",
+    "build": null,
+    "ports": [
+      "10203:9093"
+    ],
+    "depends_on": null
+  },
+  "blackbox-exporter": {
+    "image": "prom/blackbox-exporter:latest",
+    "build": null,
+    "ports": [
+      "10204:9115"
+    ],
+    "depends_on": null
+  },
+  "node-exporter": {
+    "image": "prom/node-exporter:latest",
+    "build": null,
+    "ports": [
+      "10205:9100"
+    ],
+    "depends_on": null
+  },
+  "cadvisor": {
+    "image": "gcr.io/cadvisor/cadvisor:latest",
+    "build": null,
+    "ports": [
+      "10206:8080"
+    ],
+    "depends_on": null
+  },
+  "postgres-exporter": {
+    "image": "prometheuscommunity/postgres-exporter:latest",
+    "build": null,
+    "ports": [
+      "10207:9187"
+    ],
+    "depends_on": {
+      "postgres": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "redis-exporter": {
+    "image": "oliver006/redis_exporter:latest",
+    "build": null,
+    "ports": [
+      "10208:9121"
+    ],
+    "depends_on": {
+      "redis": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "ollama-integration": {
+    "image": "sutazai-mcp-unified-dev:latest",
+    "build": null,
+    "ports": [
+      "8589:8589"
+    ],
+    "depends_on": {
+      "ollama": {
+        "condition": "service_healthy"
+      },
+      "redis": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "hardware-resource-optimizer": {
+    "image": "sutazai-mcp-unified-dev:latest",
+    "build": null,
+    "ports": [
+      "11110:8080"
+    ],
+    "depends_on": {
+      "backend": {
+        "condition": "service_started"
+      },
+      "ollama": {
+        "condition": "service_started"
+      },
+      "redis": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "jarvis-hardware-resource-optimizer": {
+    "image": "sutazaiapp-jarvis-hardware-resource-optimizer:latest",
+    "build": null,
+    "ports": [
+      "11104:8080"
+    ],
+    "depends_on": {
+      "backend": {
+        "condition": "service_started"
+      },
+      "rabbitmq": {
+        "condition": "service_healthy"
+      },
+      "redis": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "jarvis-automation-agent": {
+    "image": "sutazaiapp-jarvis-hardware-resource-optimizer:latest",
+    "build": null,
+    "ports": [
+      "11102:8080"
+    ],
+    "depends_on": {
+      "backend": {
+        "condition": "service_started"
+      },
+      "rabbitmq": {
+        "condition": "service_healthy"
+      },
+      "redis": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "ai-agent-orchestrator": {
+    "image": "sutazai-mcp-unified-dev:latest",
+    "build": null,
+    "ports": null,
+    "depends_on": {
+      "rabbitmq": {
+        "condition": "service_healthy"
+      },
+      "redis": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "task-assignment-coordinator": {
+    "image": "sutazai-mcp-unified-dev:latest",
+    "build": null,
+    "ports": [
+      "8551:4000"
+    ],
+    "depends_on": {
+      "rabbitmq": {
+        "condition": "service_healthy"
+      },
+      "redis": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "resource-arbitration-agent": {
+    "image": "sutazai-mcp-unified-dev:latest",
+    "build": null,
+    "ports": [
+      "8588:8588"
+    ],
+    "depends_on": {
+      "rabbitmq": {
+        "condition": "service_healthy"
+      },
+      "redis": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "jaeger": {
+    "image": "jaegertracing/all-in-one:latest",
+    "build": null,
+    "ports": [
+      "10210:16686",
+      "10211:14268",
+      "10212:14250",
+      "10213:9411",
+      "10214:4317",
+      "10215:4318"
+    ],
+    "depends_on": null
+  },
+  "promtail": {
+    "image": "grafana/promtail:latest",
+    "build": null,
+    "ports": null,
+    "depends_on": [
+      "loki"
+    ]
+  }
+}

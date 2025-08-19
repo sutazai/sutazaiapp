@@ -1,0 +1,37 @@
+8059d439fa78	docker:25.0.5-dind-alpine3.19	sutazai-mcp-orchestrator	Up 4 minutes (unhealthy)	0.0.0.0:12375->2375/tcp, [::]:12375->2375/tcp, 0.0.0.0:12376->2376/tcp, [::]:12376->2376/tcp, 0.0.0.0:18080->8080/tcp, [::]:18080->8080/tcp, 0.0.0.0:19090->9090/tcp, [::]:19090->9090/tcp
+a2051296be22	mcp/sequentialthinking	boring_chandrasekhar	Up 6 minutes	
+ad300f9b6015	mcp/fetch	youthful_rosalind	Up 6 minutes	
+f6bf6cbde8a8	mcp/duckduckgo	eloquent_lumiere	Up 6 minutes	
+6b409ad2f023	mcp/duckduckgo	eloquent_feistel	Up 37 minutes	
+cafcf75c52bf	mcp/fetch	tender_dijkstra	Up 37 minutes	
+b4a636dbd621	mcp/sequentialthinking	elated_curran	Up 37 minutes	
+6de99a9a0e2f	mcp/duckduckgo	nervous_clarke	Up 39 minutes	
+3a198e77078c	mcp/fetch	trusting_chaum	Up 39 minutes	
+305f78f2de37	mcp/sequentialthinking	great_volhard	Up 39 minutes	
+12929f35203b	mcp/fetch	cranky_sinoussi	Up 2 hours	
+2eb3332f3ffb	mcp/duckduckgo	xenodochial_chatterjee	Up 2 hours	
+5c7b561fb6c1	mcp/sequentialthinking	angry_elgamal	Up 2 hours	
+00ad7bfca3e1	sutazai-mcp-unified-dev:latest	sutazai-task-assignment-coordinator-fixed	Up 4 hours (healthy)	0.0.0.0:8551->4000/tcp, [::]:8551->4000/tcp
+42889ed961c0	python:3.11-slim	sutazai-backend	Up 4 hours	0.0.0.0:10010->8000/tcp, [::]:10010->8000/tcp
+cb9885497fb1	sutazaiapp-frontend:latest	sutazai-frontend	Up 7 hours (healthy)	0.0.0.0:10011->8501/tcp, [::]:10011->8501/tcp
+18d3a61e23f8	sutazai-mcp-manager:v1.0.0	sutazai-mcp-manager	Up 8 hours (unhealthy)	0.0.0.0:18081->8081/tcp, [::]:18081->8081/tcp
+f7b62d7953f5	postgres:15-alpine	sutazai-postgres	Up 8 hours (healthy)	0.0.0.0:10000->5432/tcp, [::]:10000->5432/tcp
+50fe8f746af8	grafana/grafana:latest	sutazai-grafana	Up 8 hours (healthy)	0.0.0.0:10201->3000/tcp, [::]:10201->3000/tcp
+4d3eb04e1c75	oliver006/redis_exporter:latest	sutazai-redis-exporter	Up 8 hours	0.0.0.0:10208->9121/tcp, [::]:10208->9121/tcp
+dcd62ef9b98c	qdrant/qdrant:latest	sutazai-qdrant	Up 8 hours (healthy)	0.0.0.0:10101->6333/tcp, [::]:10101->6333/tcp, 0.0.0.0:10102->6334/tcp, [::]:10102->6334/tcp
+8e905badd608	consul:latest	sutazai-consul	Up 8 hours (healthy)	8300-8302/tcp, 8301-8302/udp, 8600/tcp, 8600/udp, 0.0.0.0:10006->8500/tcp, [::]:10006->8500/tcp
+155bea6f5038	grafana/loki:2.9.0	sutazai-loki	Up 8 hours (healthy)	0.0.0.0:10202->3100/tcp, [::]:10202->3100/tcp
+baf144555970	kong:3.5	sutazai-kong	Up 8 hours (healthy)	8443-8444/tcp, 0.0.0.0:10005->8000/tcp, [::]:10005->8000/tcp, 0.0.0.0:10015->8001/tcp, [::]:10015->8001/tcp
+b50952b27fe4	chromadb/chroma:latest	sutazai-chromadb	Up 8 hours (unhealthy)	0.0.0.0:10100->8000/tcp, [::]:10100->8000/tcp
+b3f1d8adb496	sutazaiapp-faiss:latest	sutazai-faiss	Up 8 hours (healthy)	0.0.0.0:10103->8000/tcp, [::]:10103->8000/tcp
+0bdd7c5e0e29	prom/alertmanager:latest	sutazai-alertmanager	Up 8 hours (healthy)	0.0.0.0:10203->9093/tcp, [::]:10203->9093/tcp
+3b25c222b38a	ollama/ollama:latest	sutazai-ollama	Up 8 hours (healthy)	0.0.0.0:10104->11434/tcp, [::]:10104->11434/tcp
+f3cff1661e08	gcr.io/cadvisor/cadvisor:latest	sutazai-cadvisor	Up 8 hours (healthy)	0.0.0.0:10206->8080/tcp, [::]:10206->8080/tcp
+dde21b4e6365	prom/node-exporter:latest	sutazai-node-exporter	Up 8 hours	0.0.0.0:10205->9100/tcp, [::]:10205->9100/tcp
+697cb6ed1e74	prom/blackbox-exporter:latest	sutazai-blackbox-exporter	Up 8 hours (healthy)	0.0.0.0:10204->9115/tcp, [::]:10204->9115/tcp
+96bb7b234e14	rabbitmq:3.12-management-alpine	sutazai-rabbitmq	Up 8 hours (healthy)	4369/tcp, 5671/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:10007->5672/tcp, [::]:10007->5672/tcp, 0.0.0.0:10008->15672/tcp, [::]:10008->15672/tcp
+e06ddbfde0a2	prom/prometheus:latest	sutazai-prometheus	Up 4 hours (healthy)	0.0.0.0:10200->9090/tcp, [::]:10200->9090/tcp
+ff37e44cc463	jaegertracing/all-in-one:latest	sutazai-jaeger	Up 8 hours (healthy)	0.0.0.0:10214->4317/tcp, [::]:10214->4317/tcp, 0.0.0.0:10215->4318/tcp, [::]:10215->4318/tcp, 0.0.0.0:10213->9411/tcp, [::]:10213->9411/tcp, 0.0.0.0:10212->14250/tcp, [::]:10212->14250/tcp, 0.0.0.0:10211->14268/tcp, [::]:10211->14268/tcp, 0.0.0.0:10210->16686/tcp, [::]:10210->16686/tcp
+0e257aa2efb6	redis:7-alpine	sutazai-redis	Up 8 hours (healthy)	0.0.0.0:10001->6379/tcp, [::]:10001->6379/tcp
+a1e00313f752	neo4j:5	sutazai-neo4j	Up 8 hours (healthy)	7473/tcp, 0.0.0.0:10002->7474/tcp, [::]:10002->7474/tcp, 0.0.0.0:10003->7687/tcp, [::]:10003->7687/tcp
+2445ed69f50e	portainer/portainer-ce:2.19.4	portainer	Up 27 hours	8000/tcp, 9000/tcp, 0.0.0.0:10314->9443/tcp, [::]:10314->9443/tcp

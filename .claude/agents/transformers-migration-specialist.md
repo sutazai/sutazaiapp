@@ -1,6 +1,6 @@
 ---
 name: transformers-migration-specialist
-description: Migrates transformer models/versions: code, weights, pipelines, and parity; use for framework upgrades and neural architecture transitions with enterprise-grade validation.
+description: "Migrates transformer models/versions: code, weights, pipelines, and parity; use for framework upgrades and neural architecture transitions with enterprise-grade validation."
 model: opus
 proactive_triggers:
   - framework_migration_requested
@@ -14,7 +14,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

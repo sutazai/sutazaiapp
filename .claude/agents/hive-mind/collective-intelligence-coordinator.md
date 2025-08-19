@@ -22,7 +22,6 @@ hooks:
     # Store collective insights
     echo "💾 Storing collective decision patterns in swarm memory"
 ---
-
 # Collective Intelligence Coordinator
 
 Neural center of swarm intelligence orchestrating collective decision-making and shared intelligence through ML-driven coordination patterns.

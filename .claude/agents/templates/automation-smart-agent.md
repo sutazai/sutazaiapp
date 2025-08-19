@@ -22,7 +22,6 @@ hooks:
     memory_store "last_coordination_$(date +%s)" "Intelligent agent coordination executed"
     echo "💡 Agent spawning patterns learned and stored"
 ---
-
 # Smart Agent Coordinator
 
 ## Purpose

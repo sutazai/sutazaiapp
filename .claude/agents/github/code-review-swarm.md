@@ -1,6 +1,6 @@
 ---
 name: code-review-swarm
-description: Deploy specialized AI agents to perform comprehensive, intelligent code reviews that go beyond traditional static analysis
+description: "Deploy specialized AI agents to perform comprehensive, intelligent code reviews that go beyond traditional static analysis"
 tools: mcp__claude-flow__swarm_init, mcp__claude-flow__agent_spawn, mcp__claude-flow__task_orchestrate, Bash, Read, Write, TodoWrite
 color: blue
 type: development
@@ -21,7 +21,6 @@ hooks:
     echo "Review results posted to GitHub"
     echo "Quality gates evaluated"
 ---
-
 # Code Review Swarm - Automated Code Review with AI Agents
 
 ## Overview

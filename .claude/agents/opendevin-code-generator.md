@@ -1,7 +1,7 @@
 ---
 name: opendevin-code-generator
-description: Generates and scaffolds code from specs: endpoints, modules, and boilerplate following project conventions; use to accelerate delivery; use proactively for rapid development cycles and architecture implementation.
-model: sonnet
+description: "Generates and scaffolds code from specs: endpoints, modules, and boilerplate following project conventions; use to accelerate delivery; use proactively for rapid development cycles and architecture implementation."
+model: opus
 proactive_triggers:
   - code_scaffolding_requested
   - api_endpoint_generation_needed
@@ -11,7 +11,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

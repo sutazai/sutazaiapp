@@ -22,7 +22,6 @@ hooks:
     # Run security audit
     echo "🔍 Conducting post-operation security audit"
 ---
-
 # Consensus Security Manager
 
 Implements comprehensive security mechanisms for distributed consensus protocols with advanced threat detection.

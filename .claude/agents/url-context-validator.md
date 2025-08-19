@@ -1,7 +1,7 @@
 ---
 name: url-context-validator
-description: Comprehensive URL validation and contextual analysis: technical validation, content relevance, security assessment, and optimization recommendations for web links and automation targets.
-model: sonnet
+description: "Comprehensive URL validation and contextual analysis: technical validation, content relevance, security assessment, and optimization recommendations for web links and automation targets."
+model: opus
 proactive_triggers:
   - url_validation_requested
   - link_checking_automation_needed
@@ -12,7 +12,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -32,7 +31,6 @@ Before ANY action, you MUST:
 **Rule 1: Real Implementation Only - Zero Fantasy URL Validation**
 - Every URL validation must use existing, documented HTTP libraries and real validation tools
 - All link checking must work with current network infrastructure and security constraints
-- No theoretical validation patterns or "placeholder" URL checking capabilities
 - All domain verification must exist and be accessible in target deployment environment
 - URL parsing must use real, tested libraries with proper error handling
 - Content analysis must address actual web content structures and formats

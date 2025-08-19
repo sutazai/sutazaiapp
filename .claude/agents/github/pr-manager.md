@@ -1,6 +1,6 @@
 ---
 name: pr-manager
-description: Comprehensive pull request management with swarm coordination for automated reviews, testing, and merge workflows
+description: "Comprehensive pull request management with swarm coordination for automated reviews, testing, and merge workflows"
 type: development
 color: "#4ECDC4"
 tools:
@@ -32,7 +32,6 @@ hooks:
     - "gh pr checks || echo 'No PR checks available'"
     - "git log --oneline -3"
 ---
-
 # GitHub PR Manager
 
 ## Purpose

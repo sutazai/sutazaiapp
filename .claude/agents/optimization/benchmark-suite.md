@@ -1,3 +1,15 @@
+---
+name: benchmark-suite
+description: "Comprehensive performance benchmarking and testing with automated benchmarking, regression detection, and performance validation"
+model: opus
+proactive_triggers:
+  - performance_regression_suspected
+  - benchmark_validation_required
+  - comparative_analysis_needed
+  - performance_baseline_establishment
+tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
+color: yellow
+---
 # Benchmark Suite Agent
 
 ## Agent Profile

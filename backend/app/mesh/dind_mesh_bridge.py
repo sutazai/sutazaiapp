@@ -69,45 +69,55 @@ class DinDMeshBridge:
             
             # CRITICAL FIX: Try multiple connection methods for DinD
             connection_attempts = [
-                # Method 1: Direct container network connection (preferred)
-                f"tcp://{self.dind_host}:2375",
-                # Method 2: Try alternative hostname
-                "tcp://sutazai-mcp-orchestrator-notls:2375",
-                # Method 3: Try host-mapped port (most reliable from backend container)
-                "tcp://host.docker.internal:12375",
-                # Method 4: Try localhost mapped port
+                # Method 1: Host-mapped port (most reliable from backend container on Linux)
                 "tcp://172.17.0.1:12375",
-                # Method 5: Use container IP if hostname resolution fails
-                "tcp://172.20.0.22:2375"
+                # Method 2: Direct container network connection (if dockerd listens on bridge)
+                f"tcp://{self.dind_host}:2375",
+                # Method 3: Known orchestrator container name on same network
+                "tcp://sutazai-mcp-orchestrator:2375",
+                # Method 4: Alternative hostname
+                "tcp://sutazai-mcp-orchestrator-notls:2375",
+                # Method 5: Host-mapped port via host.docker.internal (Docker Desktop)
+                "tcp://host.docker.internal:12375"
             ]
-            
+
             last_error = None
             for attempt, base_url in enumerate(connection_attempts, 1):
                 try:
-                    logger.info(f"DinD connection attempt {attempt}/4: {base_url}")
+                    logger.info(f"DinD connection attempt {attempt}/{len(connection_attempts)}: {base_url}")
                     self.dind_client = docker.DockerClient(
                         base_url=base_url,
                         timeout=10  # Shorter timeout for faster fallback
                     )
-            
+
                     # Test connection
                     version = self.dind_client.version()
-                    logger.info(f"✅ Connected to DinD Docker v{version['Version']} via {base_url}")
+                    logger.info(f"✅ Connected to DinD Docker v{version.get('Version','?')} via {base_url}")
                     break  # Success! Exit connection loop
-                    
+
                 except Exception as e:
                     last_error = e
-                    logger.warning(f"Connection attempt {attempt} failed: {e}")
+                    # Detailed diagnostics for failure
+                    explanation = getattr(e, 'explanation', None)
+                    err_cls = e.__class__.__name__
+                    logger.warning(
+                        f"DinD connection attempt {attempt} failed: class={err_cls} repr={e!r} "
+                        f"explanation={explanation} base_url={base_url}"
+                    )
                     if self.dind_client:
                         try:
                             self.dind_client.close()
-                        except:
-                            pass
+                        except Exception as ce:
+                            logger.debug(f"Error closing failed DockerClient: {ce!r}")
                         self.dind_client = None
                     continue
-            
+
             # Check if any connection succeeded
             if not self.dind_client:
+                logger.error(
+                    f"All DinD connection attempts failed. last_error_class={getattr(last_error,'__class__',type(last_error)).__name__} "
+                    f"last_error_repr={last_error!r}"
+                )
                 raise Exception(f"All DinD connection attempts failed. Last error: {last_error}")
             
             # Initialize protocol translator for STDIO MCPs

@@ -113,7 +113,6 @@ examples:
   - trigger: "document REST API endpoints"
     response: "I'll analyze your REST API endpoints and create detailed OpenAPI documentation with request/response examples..."
 ---
-
 # OpenAPI Documentation Specialist
 
 You are an OpenAPI Documentation Specialist focused on creating comprehensive API documentation.

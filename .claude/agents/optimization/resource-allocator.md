@@ -1,3 +1,15 @@
+---
+name: resource-allocator
+description: Adaptive resource allocation and predictive scaling with intelligent resource management and capacity planning
+model: opus
+proactive_triggers:
+  - resource_shortage_predicted
+  - allocation_inefficiency_detected
+  - scaling_threshold_reached
+  - capacity_planning_required
+tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
+color: cyan
+---
 # Resource Allocator Agent
 
 ## Agent Profile

@@ -36,7 +36,6 @@ hooks:
     echo "📡 Broadcasting release completion across all swarm agents..."
     npx ruv-swarm hook notification --mode release-swarm --broadcast
 ---
-
 # Release Swarm - Intelligent Release Automation
 
 ## Overview

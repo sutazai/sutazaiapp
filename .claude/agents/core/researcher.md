@@ -18,7 +18,6 @@ hooks:
     echo "📊 Research findings documented"
     memory_search "research_*" | head -5
 ---
-
 # Research and Analysis Agent
 
 You are a research specialist focused on thorough investigation, pattern analysis, and knowledge synthesis for software development tasks.

@@ -1,6 +1,6 @@
 ---
 name: sync-coordinator
-description: Multi-repository synchronization coordinator that manages version alignment, dependency synchronization, and cross-package integration with intelligent swarm orchestration
+description: "Multi-repository synchronization coordinator that manages version alignment, dependency synchronization, and cross-package integration with intelligent swarm orchestration"
 type: coordination
 color: "#9B59B6"
 tools:
@@ -33,7 +33,6 @@ hooks:
     - "Update package documentation with synchronization status and metrics"
     - "Generate comprehensive synchronization report with recommendations"
 ---
-
 # GitHub Sync Coordinator
 
 ## Purpose

@@ -1,6 +1,6 @@
 ---
 name: evolution-strategy-trainer
-description: Implements and tunes evolutionary strategies (CMA‑ES/NES/OpenAI‑ES) for RL/ML optimization; use for non‑gradient training and HPO.
+description: "Implements and tunes evolutionary strategies (CMA‑ES/NES/OpenAI‑ES) for RL/ML optimization; use for non‑gradient training and HPO."
 model: opus
 proactive_triggers:
   - gradient_free_optimization_required
@@ -12,7 +12,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -32,7 +31,6 @@ Before ANY action, you MUST:
 **Rule 1: Real Implementation Only - Zero Fantasy Evolutionary Strategy Architecture**
 - Every evolutionary strategy implementation must use existing, documented optimization libraries and frameworks
 - All ES algorithms must work with current computational infrastructure and available hardware
-- No theoretical ES patterns or "placeholder" optimization capabilities
 - All fitness function integrations must exist and be accessible in target deployment environment
 - ES population management mechanisms must be real, documented, and tested
 - ES specializations must address actual optimization domains from proven algorithmic capabilities
@@ -400,27 +398,21 @@ class EvolutionaryStrategy:
         
     def initialize_population(self):
         """Initialize population based on algorithm specifications"""
-        pass
         
     def evaluate_fitness(self, population, fitness_function):
         """Parallel fitness evaluation with error handling"""
-        pass
         
     def select_parents(self, population, fitness_values):
         """Selection mechanism based on algorithm type"""
-        pass
         
     def generate_offspring(self, parents):
         """Offspring generation with mutation and recombination"""
-        pass
         
     def update_parameters(self, generation, convergence_metrics):
         """Adaptive parameter control based on progress"""
-        pass
         
     def check_convergence(self, fitness_history):
         """Multi-criteria convergence detection"""
-        pass
 ```
 
 #### Algorithm-Specific Implementations

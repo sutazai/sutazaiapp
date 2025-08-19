@@ -138,7 +138,13 @@ async def get_mcp_status(bridge = Depends(get_bridge)):
     try:
         # Get bridge status
         bridge_type = type(bridge).__name__
-        bridge_initialized = hasattr(bridge, 'initialized') and bridge.initialized
+        # Handle both DinD/container bridges (initialized) and stdio bridge (_initialized)
+        if hasattr(bridge, 'initialized'):
+            bridge_initialized = bool(getattr(bridge, 'initialized'))
+        elif hasattr(bridge, '_initialized'):
+            bridge_initialized = bool(getattr(bridge, '_initialized'))
+        else:
+            bridge_initialized = False
         
         # Get service count
         services = bridge.registry.get('mcp_services', [])

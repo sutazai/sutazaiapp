@@ -1,0 +1,16 @@
+[Unit]
+Description=MCP Registry Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/sutazaiapp/.mcp
+ExecStart=/usr/bin/node /opt/sutazaiapp/.mcp/mcp-stdio-wrapper.js sutazai
+Restart=always
+StandardInput=tty
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

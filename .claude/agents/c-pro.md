@@ -1,7 +1,7 @@
 ---
 name: c-pro
-description: Systems C engineer: memory, concurrency, and performance on bare‑metal/user‑space; use for embedded, kernels, and perf‑critical paths.
-model: sonnet
+description: "Systems C engineer: memory, concurrency, and performance on bare‑metal/user‑space; use for embedded, kernels, and perf‑critical paths."
+model: opus
 proactive_triggers:
   - c_programming_tasks_identified
   - systems_programming_requirements
@@ -13,7 +13,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

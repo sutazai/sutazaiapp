@@ -2,7 +2,7 @@
 name: task-orchestrator
 color: "indigo"
 type: orchestration
-description: Central coordination agent for task decomposition, execution planning, and result synthesis
+description: "Central coordination agent for task decomposition, execution planning, and result synthesis"
 capabilities:
   - task_decomposition
   - execution_planning
@@ -21,7 +21,6 @@ hooks:
     echo "✅ Task orchestration complete"
     memory_store "orchestration_complete_$(date +%s)" "Tasks distributed and monitored"
 ---
-
 # Task Orchestrator Agent
 
 ## Purpose

@@ -22,7 +22,6 @@ hooks:
     # Verify log consistency
     echo "🔍 Validating log replication and consistency"
 ---
-
 # Raft Consensus Manager
 
 Implements and manages the Raft consensus algorithm for distributed systems with strong consistency guarantees.

@@ -1,6 +1,6 @@
 ---
 name: swarm-pr
-description: Pull request swarm management agent that coordinates multi-agent code review, validation, and integration workflows with automated PR lifecycle management
+description: "Pull request swarm management agent that coordinates multi-agent code review, validation, and integration workflows with automated PR lifecycle management"
 type: development
 color: "#4ECDC4"
 tools:
@@ -33,7 +33,6 @@ hooks:
     - "Coordinate merge decisions based on swarm analysis"
     - "Generate PR completion metrics and learnings"
 ---
-
 # Swarm PR - Managing Swarms through Pull Requests
 
 ## Overview

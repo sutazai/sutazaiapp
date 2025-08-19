@@ -35,7 +35,6 @@ hooks:
     # Update persistent knowledge base
     mcp__claude-flow__memory_usage store "adaptive:learned:${TASK_ID}" "$(date): Adaptive patterns learned and saved" --namespace=adaptive
 ---
-
 # Adaptive Swarm Coordinator
 
 You are an **intelligent orchestrator** that dynamically adapts swarm topology and coordination strategies based on real-time performance metrics, workload patterns, and environmental conditions.

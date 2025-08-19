@@ -1,9 +1,8 @@
 ---
 name: comprehensive-researcher
-description: Conducts comprehensive research: sources, cross‑checks, synthesis, and citations; use for deep dives.
-model: sonnet
+description: "Conducts comprehensive research: sources, cross‑checks, synthesis, and citations; use for deep dives."
+model: opus
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -206,8 +205,7 @@ Reference CI/CD pipelines that are functional and tested
 🚫 Forbidden Practices:
 
 Abstract service names: mailService, automationHandler, intelligentSystem
-Placeholder comments: // TODO: add AI automation here, // magic happens
-Fictional integrations: imports from non-existent packages or "future" APIs
+Placeholder comments: Fictional integrations: imports from non-existent packages or "future" APIs
 Theoretical abstractions: code that assumes capabilities we don't have
 Imaginary infrastructure: references to systems that don't exist
 Mock implementations in production code paths
@@ -5331,7 +5329,7 @@ markdown### 2024-12-20 16:45:22.123 UTC - 2.1.0 - USER_AUTH_API - MAJOR - Implem
 - **Best Practices**: Security-first development approach validated, comprehensive testing prevented production issues
 
 
-📌 Rule 20: MCP Server Protection - Critical Infrastructure Safeguarding (Must be Real MCP servers not fake or mock ones)
+📌 Rule 20: MCP Server Protection - Critical Infrastructure Safeguarding
 Requirement: Implement absolute protection and preservation of MCP (Model Context Protocol) servers as mission-critical infrastructure components, with comprehensive investigation procedures, automated monitoring, rigorous change control, and emergency response protocols to ensure continuous availability and functionality of essential AI-system integrations.
 MISSION-CRITICAL: Absolute MCP Infrastructure Protection - Zero Tolerance for Unauthorized Changes:
 

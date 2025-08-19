@@ -133,18 +133,26 @@ class CircuitBreakerManager:
     def record_success(self, service_id: str):
         """Record successful request"""
         breaker = self.get_breaker(service_id)
-        breaker._success()
+        # Use call() with a lambda that returns success
+        try:
+            breaker.call(lambda: True)
+        except Exception:
+            pass  # Success already recorded
     
     def record_failure(self, service_id: str):
         """Record failed request"""
         breaker = self.get_breaker(service_id)
-        breaker._failure()
+        # Force a failure by calling with an exception
+        try:
+            breaker.call(lambda: (_ for _ in ()).throw(Exception("Simulated failure")))
+        except Exception:
+            pass  # Failure recorded
         circuit_breaker_counter.labels(service=service_id, state='open').inc()
 
 class ServiceDiscovery:
     """Service discovery using Consul"""
     
-    def __init__(self, consul_host: str = "sutazai-consul", consul_port: int = 8500):
+    def __init__(self, consul_host: str = "localhost", consul_port: int = 10006):
         self.consul_host = consul_host
         self.consul_port = consul_port
         self.consul_client = None
@@ -388,9 +396,9 @@ class ServiceMesh:
     
     def __init__(
         self,
-        consul_host: str = "sutazai-consul",
-        consul_port: int = 8500,
-        kong_admin_url: str = "http://sutazai-kong:8001",
+        consul_host: str = "localhost",
+        consul_port: int = 10006,
+        kong_admin_url: str = "http://localhost:10015",
         load_balancer_strategy: LoadBalancerStrategy = LoadBalancerStrategy.ROUND_ROBIN
     ):
         self.discovery = ServiceDiscovery(consul_host, consul_port)

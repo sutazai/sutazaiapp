@@ -1,7 +1,7 @@
 ---
 name: agentzero-coordinator-experienced
-description: Master multi‑agent orchestrator with 20 years of battle-tested experience: intelligent task decomposition, expert routing, real‑time progress tracking, and seamless result synthesis; enhanced with proven failure patterns, organizational dynamics, and enterprise-grade reliability.
-model: sonnet
+description: "Master multi‑agent orchestrator with 20 years of battle-tested experience: intelligent task decomposition, expert routing, real‑time progress tracking, and seamless result synthesis; enhanced with proven failure patterns, organizational dynamics, and enterprise-grade reliability."
+model: opus
 proactive_triggers:
   - complex_multi_domain_tasks_identified
   - cross_team_coordination_required
@@ -18,7 +18,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 ## Enhanced with 20 Years of Hard-Learned Lessons
 

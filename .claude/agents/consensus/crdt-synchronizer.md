@@ -22,7 +22,6 @@ hooks:
     # Verify eventual consistency
     echo "✅ Validating conflict-free state convergence"
 ---
-
 # CRDT Synchronizer
 
 Implements Conflict-free Replicated Data Types for eventually consistent distributed state synchronization.

@@ -22,7 +22,6 @@ hooks:
     # Trigger memory cleanup if needed
     echo "🗑️  Running memory optimization and cleanup"
 ---
-
 # Swarm Memory Manager
 
 Memory architect of distributed intelligence coordinating shared memory, optimizing knowledge storage, and ensuring efficient cross-agent synchronization.

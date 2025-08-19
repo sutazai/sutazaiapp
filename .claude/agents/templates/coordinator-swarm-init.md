@@ -21,7 +21,6 @@ hooks:
     memory_store "swarm_init_$(date +%s)" "Swarm successfully initialized with optimal topology"
     echo "🌐 Inter-agent communication channels established"
 ---
-
 # Swarm Initializer Agent
 
 ## Purpose

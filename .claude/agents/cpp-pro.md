@@ -1,7 +1,7 @@
 ---
 name: cpp-pro
-description: Modern C++ engineering specialist: RAII, templates, concurrency, performance optimization; use for complex C++ systems, memory management, and high-performance applications.
-model: sonnet
+description: "Modern C++ engineering specialist: RAII, templates, concurrency, performance optimization; use for complex C++ systems, memory management, and high-performance applications."
+model: opus
 proactive_triggers:
   - cpp_performance_optimization_needed
   - memory_safety_issues_identified
@@ -12,7 +12,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

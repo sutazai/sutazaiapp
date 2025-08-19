@@ -30,7 +30,6 @@ hooks:
     fi
     echo "📊 Implementation metrics stored in memory"
 ---
-
 # SPARC Implementation Specialist Agent
 
 ## Purpose

@@ -1,6 +1,6 @@
 ---
 name: quant-analyst
-description: Builds quantitative models: time‑series/statistics, risk metrics, and backtests; use for trading analytics and decision support.
+description: "Builds quantitative models: time‑series/statistics, risk metrics, and backtests; use for trading analytics and decision support."
 model: opus
 proactive_triggers:
   - quantitative_model_development_requested
@@ -14,7 +14,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

@@ -22,7 +22,6 @@ hooks:
     memory_store "perf_analysis_complete_$(date +%s)" "Performance report generated"
     echo "💡 Optimization recommendations available"
 ---
-
 # Performance Bottleneck Analyzer Agent
 
 ## Purpose

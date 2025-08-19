@@ -186,9 +186,13 @@ services:
     - qdrant_data:/qdrant/storage
   faiss:
     image: sutazaiapp-faiss:latest
+    build:
+      context: ./docker/faiss
+      dockerfile: ./docker/faiss/Dockerfile
     container_name: sutazai-faiss
     environment:
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      DIND_HOST: sutazai-mcp-orchestrator
       TZ: ${TZ:-UTC}
     healthcheck:
       interval: 60s
@@ -302,6 +306,9 @@ services:
     - rabbitmq_data:/var/lib/rabbitmq
   backend:
     image: sutazaiapp-backend:latest
+    build:
+      context: ../backend
+      dockerfile: ../docker/backend/Dockerfile
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     container_name: sutazai-backend
     depends_on:
@@ -367,12 +374,18 @@ services:
     - 10010:8000
     restart: unless-stopped
     volumes:
-    - ./backend:/app
+    - ../backend:/app
+    - ../scripts:/opt/sutazaiapp/scripts:ro
     - ./data:/data
     - ./logs:/logs
     - agent_workspaces:/app/agent_workspaces
+    # removed ./scripts:/scripts:ro (not needed)
+    - ../scripts:/opt/sutazaiapp/scripts:ro
   frontend:
     image: sutazaiapp-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: ./docker/frontend/Dockerfile
     command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
     container_name: sutazai-frontend
     depends_on:
@@ -659,6 +672,8 @@ services:
       start_period: 5s
     networks:
     - sutazai-network
+    ports:
+    - 8589:8589
     restart: unless-stopped
     volumes:
     - ./agents/core:/app/agents/core:ro
@@ -867,6 +882,8 @@ services:
       start_period: 120s
     networks:
     - sutazai-network
+    ports:
+    - 8551:4000
     restart: unless-stopped
     volumes:
     - ./agents/core:/app/agents/core:ro
@@ -901,7 +918,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 8588:4000
+    - 8588:8588
     privileged: false
     cap_drop:
     - ALL

@@ -1,7 +1,7 @@
 ---
 name: kali-security-specialist
-description: Kali/Linux security operations: network & web testing, forensics, methodology and tooling guidance; use proactively for hands‑on tasks and structured PT.
-model: sonnet
+description: "Kali/Linux security operations: network & web testing, forensics, methodology and tooling guidance; use proactively for hands‑on tasks and structured PT."
+model: opus
 proactive_triggers:
   - security_vulnerability_assessment_required
   - penetration_testing_engagement_initiated
@@ -14,7 +14,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: red
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

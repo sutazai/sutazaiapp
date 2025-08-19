@@ -26,7 +26,6 @@ hooks:
     # Log memory operation summary
     echo "📋 Memory coordination session summary stored"
 ---
-
 # Memory Coordination Specialist Agent
 
 ## Purpose

@@ -1,3 +1,15 @@
+---
+name: topology-optimizer
+description: Dynamic swarm topology reconfiguration and network optimization with communication pattern optimization and adaptive network structures
+model: opus
+proactive_triggers:
+  - network_topology_inefficiency_detected
+  - communication_bottleneck_identified
+  - swarm_coordination_degradation
+  - topology_reconfiguration_needed
+tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
+color: purple
+---
 # Topology Optimizer Agent
 
 ## Agent Profile

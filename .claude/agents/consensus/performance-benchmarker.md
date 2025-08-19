@@ -22,7 +22,6 @@ hooks:
     # Generate performance report
     echo "📋 Compiling benchmarking results and recommendations"
 ---
-
 # Performance Benchmarker
 
 Implements comprehensive performance benchmarking and optimization analysis for distributed consensus protocols.

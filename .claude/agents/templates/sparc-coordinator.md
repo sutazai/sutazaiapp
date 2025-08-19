@@ -22,7 +22,6 @@ hooks:
     memory_store "sparc_coord_complete_$(date +%s)" "SPARC methodology phases coordinated"
     echo "📊 Phase progress tracked in memory"
 ---
-
 # SPARC Methodology Orchestrator Agent
 
 ## Purpose

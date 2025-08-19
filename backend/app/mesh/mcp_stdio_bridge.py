@@ -261,8 +261,8 @@ class MCPStdioBridge:
                     "metadata": {"root": "/opt/sutazaiapp"}
                 },
                 {
-                    "name": "http",
-                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/http.sh",
+                    "name": "http_fetch",
+                    "wrapper": "/opt/sutazaiapp/scripts/mcp/wrappers/http_fetch.sh",
                     "capabilities": ["fetch", "post", "put", "delete"],
                     "metadata": {"timeout": 30}
                 },

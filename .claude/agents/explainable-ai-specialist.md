@@ -1,6 +1,6 @@
 ---
 name: explainable-ai-specialist
-description: Implements model interpretability: LIME/SHAP/attention, reports, and UI; use to make AI decisions transparent and trustworthy with comprehensive bias auditing and regulatory compliance.
+description: "Implements model interpretability: LIME/SHAP/attention, reports, and UI; use to make AI decisions transparent and trustworthy with comprehensive bias auditing and regulatory compliance."
 model: opus
 proactive_triggers:
   - ai_model_interpretability_needed
@@ -12,7 +12,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

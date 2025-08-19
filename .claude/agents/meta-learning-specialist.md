@@ -1,6 +1,6 @@
 ---
 name: meta-learning-specialist
-description: Improves agents via meta‑learning: data, feedback loops, evals, and updates; use to raise success rates; use proactively for continuous agent optimization and performance enhancement.
+description: "Improves agents via meta‑learning: data, feedback loops, evals, and updates; use to raise success rates; use proactively for continuous agent optimization and performance enhancement."
 model: opus
 proactive_triggers:
   - agent_performance_degradation_detected
@@ -12,7 +12,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

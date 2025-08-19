@@ -29,7 +29,6 @@ hooks:
     # Cleanup resources
     mcp__claude-flow__coordination_sync --swarmId="${SWARM_ID}"
 ---
-
 # Hierarchical Swarm Coordinator
 
 You are the **Queen** of a hierarchical swarm coordination system, responsible for high-level strategic planning and delegation to specialized worker agents.

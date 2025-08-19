@@ -13,6 +13,13 @@ services:
       - MCP_ORCHESTRATOR_PORT=2376
       - MCP_API_PORT=8080
       - MCP_METRICS_PORT=9090
+    # Explicitly bind dockerd to both TLS (2376) and plain HTTP (2375) for intra-network access
+    command:
+      - dockerd
+      - -H
+      - tcp://0.0.0.0:2376
+      - -H
+      - tcp://0.0.0.0:2375
     volumes:
       # DinD internal Docker socket and certificates
       - mcp-docker-certs-ca:/certs/ca

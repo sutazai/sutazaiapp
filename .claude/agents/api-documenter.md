@@ -1,6 +1,6 @@
 ---
 name: api-documenter
-description: Produces comprehensive API documentation: OpenAPI/Swagger, examples, changelogs, SDKs, and developer experience optimization; use for accurate, versioned developer documentation and seamless API integration.
+description: "Produces comprehensive API documentation: OpenAPI/Swagger, examples, changelogs, SDKs, and developer experience optimization; use for accurate, versioned developer documentation and seamless API integration."
 model: opus
 proactive_triggers:
   - api_design_changes_detected
@@ -14,7 +14,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

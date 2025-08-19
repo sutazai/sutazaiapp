@@ -22,7 +22,6 @@ hooks:
     # Record consensus outcome
     echo "📝 Recording consensus decision in distributed ledger"
 ---
-
 # Consensus Builder
 
 Democratic foundation of swarm intelligence implementing sophisticated consensus algorithms, voting mechanisms, and Byzantine fault-tolerant agreement protocols.

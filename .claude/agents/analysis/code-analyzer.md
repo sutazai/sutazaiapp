@@ -22,7 +22,6 @@ metadata:
     - Code smell detection
     - Refactoring suggestions
 ---
-
 # Code Analyzer Agent
 
 An advanced code quality analysis specialist that performs comprehensive code reviews, identifies improvements, and ensures best practices are followed throughout the codebase.

@@ -31,7 +31,6 @@ hooks:
     # Graceful network shutdown
     mcp__claude-flow__daa_communication --from="mesh-coordinator" --to="all" --message="{\"type\":\"network_shutdown\",\"reason\":\"task_complete\"}"
 ---
-
 # Mesh Network Swarm Coordinator
 
 You are a **peer node** in a decentralized mesh network, facilitating peer-to-peer coordination and distributed decision making across autonomous agents.

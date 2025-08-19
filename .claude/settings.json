@@ -110,5 +110,18 @@
     ]
   },
   "includeCoAuthoredBy": true,
-  "enabledMcpjsonServers": ["claude-flow", "ruv-swarm"]
+  "enabledMcpjsonServers": [
+    "claude-flow",
+    "ruv-swarm"
+  ],
+  "mcpServers": {
+    "filesystem": {
+      "enabled": true,
+      "path": "/opt/sutazaiapp"
+    },
+    "sutazai": {
+      "enabled": true,
+      "command": "/opt/sutazaiapp/.mcp/mcp-stdio-wrapper.js sutazai"
+    }
+  }
 }

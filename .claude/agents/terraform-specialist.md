@@ -1,6 +1,6 @@
 ---
 name: terraform-specialist
-description: Terraform IaC expert: modules, plans, state, policies, and drift; use for reliable infra changes and enterprise-grade infrastructure automation.
+description: "Terraform IaC expert: modules, plans, state, policies, and drift; use for reliable infra changes and enterprise-grade infrastructure automation."
 model: opus
 proactive_triggers:
   - infrastructure_code_changes_detected
@@ -12,7 +12,6 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: orange
 ---
-
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
