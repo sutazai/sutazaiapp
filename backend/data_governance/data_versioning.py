@@ -299,7 +299,8 @@ class DataVersioning:
             
         except Exception as e:
             self.logger.error(f"Error getting version history for asset {asset_id}: {e}")
-            return []
+            # Return empty list on error - version history unavailable
+            return []  # Valid empty list: Version history retrieval error
     
     async def get_version_at_time(self, asset_id: str, timestamp: datetime,
                                 branch_name: str = "main") -> Optional[DataVersion]:

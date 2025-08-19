@@ -634,7 +634,8 @@ class EdgeTelemetrySystem:
                     threshold_value=90.0,
                     current_value=cpu_usage
                 )]
-            return []
+            # Return empty list when CPU is within normal limits
+            return []  # Valid empty list: CPU usage normal, no alerts
         
         def high_memory_alert(metrics: MetricsCollector) -> List[Alert]:
             memory_usage = metrics.get_gauge("system_memory_usage")
@@ -649,7 +650,8 @@ class EdgeTelemetrySystem:
                     threshold_value=95.0,
                     current_value=memory_usage
                 )]
-            return []
+            # Return empty list when memory is within normal limits
+            return []  # Valid empty list: Memory usage normal, no alerts
         
         def high_error_rate_alert(metrics: MetricsCollector) -> List[Alert]:
             # Calculate error rate from inference metrics
@@ -669,7 +671,8 @@ class EdgeTelemetrySystem:
                         threshold_value=0.1,
                         current_value=error_rate
                     )]
-            return []
+            # Return empty list when error rate is within normal limits
+            return []  # Valid empty list: Error rate normal, no alerts
         
         self.alert_manager.add_alert_rule(high_cpu_alert)
         self.alert_manager.add_alert_rule(high_memory_alert)

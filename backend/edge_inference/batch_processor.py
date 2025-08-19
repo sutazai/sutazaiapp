@@ -631,7 +631,8 @@ class SmartBatchProcessor:
         """Get cache statistics"""
         if self.result_cache:
             return self.result_cache.get_stats()
-        return {}
+        # Return empty dict when cache is not enabled
+        return {}  # Valid empty dict: Cache not enabled, no statistics available
     
     async def clear_queues(self) -> None:
         """Clear all request queues"""

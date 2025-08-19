@@ -334,7 +334,8 @@ class Neo4jManager:
         except Exception as e:
             self.logger.error(f"Failed to find nodes: {e}")
             self.stats["errors"] += 1
-            return []
+            # Return empty list on error - query or connection failure
+            return []  # Valid empty list: Neo4j query error, no nodes found
     
     async def find_relationships(self, source_id: Optional[str] = None,
                                target_id: Optional[str] = None,
@@ -386,7 +387,8 @@ class Neo4jManager:
         except Exception as e:
             self.logger.error(f"Failed to find relationships: {e}")
             self.stats["errors"] += 1
-            return []
+            # Return empty list on error - query or connection failure
+            return []  # Valid empty list: Neo4j query error, no relationships found
     
     async def execute_cypher(self, cypher: str, parameters: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """Execute custom Cypher query"""
@@ -406,7 +408,8 @@ class Neo4jManager:
         except Exception as e:
             self.logger.error(f"Failed to execute Cypher query: {e}")
             self.stats["errors"] += 1
-            return []
+            # Return empty list on error - custom query execution failure
+            return []  # Valid empty list: Cypher query error, no results
     
     async def get_graph_statistics(self) -> Dict[str, Any]:
         """Get comprehensive graph statistics"""

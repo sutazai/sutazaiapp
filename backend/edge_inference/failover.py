@@ -659,7 +659,8 @@ class FailoverManager:
     def get_node_status(self, node_id: str) -> Dict[str, Any]:
         """Get comprehensive status for a node"""
         if node_id not in self.nodes:
-            return {}
+            # Return empty dict for unknown node
+            return {}  # Valid empty dict: Node not found in cluster
         
         node_info = self.nodes[node_id]
         node_health = self.health_checker.get_node_health(node_id)

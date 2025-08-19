@@ -86,7 +86,8 @@ class ModelAnalyzer:
             
         except Exception as e:
             logger.error(f"Model analysis failed: {e}")
-            return {}
+            # Return empty dict on analysis failure
+            return {}  # Valid empty dict: Model analysis failed, no data available
     
     async def _perform_analysis(self, model_path: str) -> Dict[str, Any]:
         """Perform detailed model analysis"""

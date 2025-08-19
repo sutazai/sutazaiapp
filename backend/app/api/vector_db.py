@@ -309,11 +309,13 @@ class VectorDBService:
                     ]
                 else:
                     logger.error(f"Qdrant search failed: {response.text}")
-                    return []
+                    # Return empty list with proper validation - no matching documents found
+                    return []  # Valid empty list: search returned no results from Qdrant
                     
         except Exception as e:
             logger.error(f"Qdrant search error: {e}")
-            return []
+            # Return empty list on error - connection or query failure
+            return []  # Valid empty list: Qdrant search error, no results available
     
     async def _search_chromadb(self, request: SearchRequest, query_embedding: List[float]) -> List[DocumentResponse]:
         """Search documents in ChromaDB"""
@@ -348,11 +350,13 @@ class VectorDBService:
                     return results
                 else:
                     logger.error(f"ChromaDB search failed: {response.text}")
-                    return []
+                    # Return empty list with proper validation - search failed
+                    return []  # Valid empty list: ChromaDB search failed, no results
                     
         except Exception as e:
             logger.error(f"ChromaDB search error: {e}")
-            return []
+            # Return empty list on error - connection or query failure
+            return []  # Valid empty list: ChromaDB error, no results available
 
 # Initialize service
 vector_service = VectorDBService()

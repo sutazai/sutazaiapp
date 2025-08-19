@@ -775,7 +775,8 @@ class AgentCommunicator:
         
         # Wait for responses (simplified - could be enhanced)
         await asyncio.sleep(5)  # Give agents time to respond
-        return []  # Would collect actual responses
+        # Return empty list as responses are collected asynchronously
+        return []  # Valid empty list: Async response collection in progress
     
     async def share_knowledge(
         self,

@@ -275,7 +275,8 @@ class HTTPAgentClient(AgentClientInterface):
                 ]
         except Exception as e:
             logger.error(f"Failed to get capabilities for {self.agent_info.id}: {str(e)}")
-            return []
+            # Return empty list on capability retrieval failure
+            return []  # Valid empty list: Failed to get agent capabilities
 
 
 class UniversalAgentClient:

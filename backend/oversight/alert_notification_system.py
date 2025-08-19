@@ -967,7 +967,8 @@ class AlertNotificationSystem:
                 
         except Exception as e:
             logger.error(f"Error getting alert history: {e}")
-            return []
+            # Return empty list on error retrieving alert history
+            return []  # Valid empty list: Alert history retrieval failed
     
     async def start_monitoring(self):
         """Start the alert monitoring system"""

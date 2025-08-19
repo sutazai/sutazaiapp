@@ -441,7 +441,8 @@ class OversightOrchestrator:
             }
         except Exception as e:
             logger.error(f"Error collecting system metrics: {e}")
-            return {}
+            # Return empty dict on metrics collection failure
+            return {}  # Valid empty dict: System metrics collection failed
     
     async def _collect_agent_status(self) -> Dict[str, Dict[str, Any]]:
         """Collect agent status information"""
@@ -452,10 +453,12 @@ class OversightOrchestrator:
                     data = json.load(f)
                     return data.get('active_agents', {})
             else:
-                return {}
+                # Return empty dict when no active agents found
+                return {}  # Valid empty dict: No agent status file found
         except Exception as e:
             logger.error(f"Error collecting agent status: {e}")
-            return {}
+            # Return empty dict on agent status collection failure
+            return {}  # Valid empty dict: Agent status collection failed
     
     async def _collect_response_metrics(self) -> Dict[str, float]:
         """Collect agent response time metrics"""
@@ -473,7 +476,8 @@ class OversightOrchestrator:
             return response_metrics
         except Exception as e:
             logger.error(f"Error collecting response metrics: {e}")
-            return {}
+            # Return empty dict on response metrics collection failure
+            return {}  # Valid empty dict: Response metrics collection failed
     
     def setup_signal_handlers(self):
         """Setup signal handlers for graceful shutdown"""

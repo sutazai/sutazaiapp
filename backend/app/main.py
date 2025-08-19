@@ -236,7 +236,7 @@ try:
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY") or os.getenv("JWT_SECRET")
     if not JWT_SECRET_KEY or JWT_SECRET_KEY == "your_secret_key_here" or len(JWT_SECRET_KEY) < 32:
         # EMERGENCY FIX: Use fallback in emergency mode
-        if app.state.emergency_mode:
+        if hasattr(app.state, 'emergency_mode') and app.state.emergency_mode:
             logger.warning("⚠️ Running in EMERGENCY MODE - using temporary JWT secret")
             JWT_SECRET_KEY = secrets.token_urlsafe(32)
             os.environ["JWT_SECRET_KEY"] = JWT_SECRET_KEY
@@ -250,7 +250,7 @@ try:
     AUTHENTICATION_ENABLED = True
     
 except Exception as e:
-    if app.state.emergency_mode:
+    if hasattr(app.state, 'emergency_mode') and app.state.emergency_mode:
         logger.error(f"Authentication initialization failed in emergency mode: {e}")
         logger.warning("⚠️ Running WITHOUT authentication - EMERGENCY MODE ONLY")
         AUTHENTICATION_ENABLED = False

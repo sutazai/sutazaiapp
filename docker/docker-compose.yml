@@ -659,8 +659,6 @@ services:
       start_period: 5s
     networks:
     - sutazai-network
-    ports:
-    - 8090:8090
     restart: unless-stopped
     volumes:
     - ./agents/core:/app/agents/core:ro
@@ -836,8 +834,6 @@ services:
       start_period: 120s
     networks:
     - sutazai-network
-    ports:
-    - 8589:8589
     restart: unless-stopped
     volumes:
     - ./agents/core:/app/agents/core:ro
@@ -854,7 +850,7 @@ services:
       AGENT_TYPE: task-assignment-coordinator
       API_ENDPOINT: http://backend:8000
       LOG_LEVEL: INFO
-      PORT: 8551
+      PORT: 4000
       RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:-sutazai}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
       REDIS_URL: redis://sutazai-redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -864,15 +860,13 @@ services:
       - CMD
       - curl
       - -f
-      - http://localhost:8551/health
+      - http://localhost:4000/health
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 120s
     networks:
     - sutazai-network
-    ports:
-    - 8551:8551
     restart: unless-stopped
     volumes:
     - ./agents/core:/app/agents/core:ro
@@ -907,7 +901,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 8588:8588
+    - 8588:4000
     privileged: false
     cap_drop:
     - ALL

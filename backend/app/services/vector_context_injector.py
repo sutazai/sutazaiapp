@@ -130,7 +130,8 @@ class ChromaDBClient:
     async def search(self, query: str, collection_name: str = "knowledge", limit: int = 3) -> List[VectorSearchResult]:
         """Search ChromaDB for relevant documents"""
         if not self.client:
-            return []
+            # Return empty list when ChromaDB client not initialized
+            return []  # Valid empty list: ChromaDB client not available
         
         # Apply circuit breaker manually
         if self.circuit_breaker.state == "OPEN":

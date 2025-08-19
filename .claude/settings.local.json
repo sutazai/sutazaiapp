@@ -157,7 +157,9 @@
       "Bash(dind/mcp-real/Dockerfile)",
       "Bash(/opt/sutazaiapp/scripts/enforcement/deploy_real_mcp_phase2.sh:*)",
       "Bash(/opt/sutazaiapp/scripts/enforcement/fix_backend_mocks.sh:*)",
-      "Bash(/opt/sutazaiapp/scripts/enforcement/create_changelogs.sh:*)"
+      "Bash(/opt/sutazaiapp/scripts/enforcement/create_changelogs.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/deployment/deploy_real_mcp_servers.sh:*)",
+      "Bash(rabbitmq:*)"
     ],
     "deny": [],
     "additionalDirectories": [

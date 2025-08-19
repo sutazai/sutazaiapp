@@ -719,7 +719,8 @@ class ModelMemoryManager:
     async def _allocate_model_memory(self, model_id: str, model_path: str) -> Dict[MemoryPool, int]:
         """Allocate memory blocks for model"""
         if not self.enable_memory_pools:
-            return {}
+            # Return empty dict when memory pools are disabled
+            return {}  # Valid empty dict: Memory pools disabled, no allocation needed
         
         model_size = os.path.getsize(model_path)
         allocations = {}
@@ -783,7 +784,8 @@ class ModelMemoryManager:
     def get_pool_stats(self) -> Dict[str, Any]:
         """Get memory pool statistics"""
         if not self.memory_pools:
-            return {}
+            # Return empty dict when no memory pools exist
+            return {}  # Valid empty dict: No memory pools initialized
         
         return {
             pool_type.value: pool.get_stats()

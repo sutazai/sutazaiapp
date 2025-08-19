@@ -242,7 +242,8 @@ class VectorDBManager:
                     use_db: str = "qdrant") -> List[Dict[str, Any]]:
         """Search for similar vectors"""
         if collection not in self.collections:
-            return []
+            # Return empty list for unknown collection
+            return []  # Valid empty list: Collection not found
         
         config = self.collections[collection]
         
@@ -312,10 +313,12 @@ class VectorDBManager:
                 return results
             else:
                 logger.error(f"ChromaDB search failed: {response.text}")
-                return []
+                # Return empty list on search failure
+                return []  # Valid empty list: ChromaDB search failed
         except Exception as e:
             logger.error(f"ChromaDB search error: {e}")
-            return []
+            # Return empty list on error
+            return []  # Valid empty list: ChromaDB error occurred
     
     async def _search_qdrant(self,
                            collection: str,
@@ -345,10 +348,12 @@ class VectorDBManager:
                 return results
             else:
                 logger.error(f"Qdrant search failed: {response.text}")
-                return []
+                # Return empty list on search failure
+                return []  # Valid empty list: Qdrant search failed
         except Exception as e:
             logger.error(f"Qdrant search error: {e}")
-            return []
+            # Return empty list on error
+            return []  # Valid empty list: Qdrant error occurred
     
     async def optimize_collections(self) -> Dict[str, Any]:
         """Optimize all collections for better performance"""

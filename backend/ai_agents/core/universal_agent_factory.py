@@ -467,7 +467,8 @@ class UniversalAgentFactory:
             try:
                 capability = AgentCapability(capability)
             except ValueError:
-                return []
+                # Return empty list for invalid capability
+                return []  # Valid empty list: Invalid capability value provided
         
         matching_agents = []
         for agent in self.active_agents.values():

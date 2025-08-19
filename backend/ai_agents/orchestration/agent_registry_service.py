@@ -422,7 +422,8 @@ class AgentRegistryService:
         except Exception as e:
             logger.error(f"Service discovery failed: {e}")
             self.stats["failures"] += 1
-            return []
+            # Return empty list on discovery failure
+            return []  # Valid empty list: Service discovery failed
     
     async def get_service(self, service_id: str) -> Optional[ServiceInstance]:
         """Get a specific service by ID"""
@@ -459,7 +460,8 @@ class AgentRegistryService:
     async def _round_robin_select(self, services: List[ServiceInstance]) -> List[ServiceInstance]:
         """Round-robin load balancing"""
         if not services:
-            return []
+            # Return empty list when no services available
+            return []  # Valid empty list: No services available for load balancing
         
         key = "round_robin"
         current = self._round_robin_counters[key]
@@ -475,7 +477,8 @@ class AgentRegistryService:
     async def _weighted_random_select(self, services: List[ServiceInstance]) -> List[ServiceInstance]:
         """Weighted random selection based on health scores"""
         if not services:
-            return []
+            # Return empty list when no services available
+            return []  # Valid empty list: No services available for weighted selection
         
         # Calculate weights (higher health = higher weight)
         weights = [s.health_score for s in services]

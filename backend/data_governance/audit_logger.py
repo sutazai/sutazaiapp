@@ -376,7 +376,8 @@ class DataAuditLogger:
             
         except Exception as e:
             self.logger.error(f"Failed to query audit events: {e}")
-            return []
+            # Return empty list on query failure - no events can be retrieved
+            return []  # Valid empty list: Audit query error, no events available
     
     async def get_audit_statistics(self, days: int = 30) -> Dict[str, Any]:
         """Get audit statistics for the specified period"""

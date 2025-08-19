@@ -249,7 +249,8 @@ class ConsolidatedOllamaService:
                     return models
         except Exception as e:
             logger.error(f"Failed to discover models: {e}")
-        return []
+        # Return empty list when model discovery fails
+        return []  # Valid empty list: Model discovery failed, no models available
     
     async def _warmup_cache(self):
         """Warm up cache with priority models"""
@@ -994,7 +995,8 @@ class ConsolidatedOllamaService:
             List of embeddings (or None for failed ones)
         """
         if not texts:
-            return []
+            # Return empty list when no texts provided
+            return []  # Valid empty list: No texts to generate embeddings for
         
         # Process in parallel with semaphore to limit concurrent requests
         semaphore = asyncio.Semaphore(5)  # Max 5 concurrent requests
@@ -1082,10 +1084,12 @@ class ConsolidatedOllamaService:
                     
                     logger.info(f"Found {len(models)} models in Ollama")
                     return models
-                return []
+                # Return empty list when no models found
+                return []  # Valid empty list: No models found in Ollama
         except Exception as e:
             logger.error(f"Failed to list models: {e}")
-            return []
+            # Return empty list on error
+            return []  # Valid empty list: Failed to list models from Ollama
     
     async def pull_model(self, model_name: str) -> bool:
         """Pull a model from Ollama registry"""

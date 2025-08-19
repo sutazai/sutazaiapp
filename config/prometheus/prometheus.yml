@@ -50,10 +50,10 @@ scrape_configs:
   - job_name: 'agents'
     static_configs:
       - targets:
-          - 'ollama-integration:8090'
-          - 'task-assignment-coordinator:8551'
-          - 'resource-arbitration-agent:8588'
-          - 'ai-agent-orchestrator:8589'
+          - 'ollama-integration:4000'
+          - 'task-assignment-coordinator:4000'
+          - 'resource-arbitration-agent:4000'
+          - 'ai-agent-orchestrator:4000'
           - 'hardware-resource-optimizer:8002'
           - 'multi-agent-coordinator:8587'
         labels:

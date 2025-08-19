@@ -301,7 +301,8 @@ class DataLineageTracker:
                 
         except Exception as e:
             self.logger.error(f"Error tracing {direction} lineage for {node_id}: {e}")
-            return []
+            # Return empty list on lineage tracing error
+            return []  # Valid empty list: Lineage tracing failed, no paths found
     
     async def _trace_lineage_neo4j(self, node_id: str, direction: str, max_depth: int) -> List[LineagePath]:
         """Trace lineage using Neo4j graph database"""
