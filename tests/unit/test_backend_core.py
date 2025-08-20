@@ -8,7 +8,7 @@ import pytest
 import asyncio
 import os
 import sys
-from unittest.Mock import Mock, AsyncMock, patch, MagicMock
+from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime, timedelta
 import json
 import uuid
@@ -60,26 +60,26 @@ class TestCacheService:
     @pytest.mark.asyncio
     async def test_cache_service_initialization(self):
         """Test cache service initializes correctly"""
-        with patch('app.core.cache.Redis') as Mock_redis:
-            Mock_redis.return_value.ping = AsyncMock(return_value=True)
+        with patch('app.core.cache.Redis') as mock_redis:
+            mock_redis.return_value.ping = AsyncMock(return_value=True)
             cache_service = await get_cache_service()
             assert cache_service is not None
-            Mock_redis.assert_called_once()
+            mock_redis.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_cache_set_get_operations(self):
         """Test basic cache set and get operations"""
-        with patch('app.core.cache.Redis') as Mock_redis:
-            Mock_instance = AsyncMock()
-            Mock_instance.set = AsyncMock(return_value=True)
-            Mock_instance.get = AsyncMock(return_value=b'test_value')
-            Mock_redis.return_value = Mock_instance
+        with patch('app.core.cache.Redis') as mock_redis:
+            mock_instance = AsyncMock()
+            mock_instance.set = AsyncMock(return_value=True)
+            mock_instance.get = AsyncMock(return_value=b'test_value')
+            mock_redis.return_value = mock_instance
             
             cache_service = await get_cache_service()
             
             # Test set operation
             await cache_service.set('test_key', 'test_value')
-            Mock_instance.set.assert_called_once()
+            mock_instance.set.assert_called_once()
             
             # Test get operation
             value = await cache_service.get('test_key')
@@ -96,11 +96,11 @@ class TestCacheService:
             call_count += 1
             return f"{arg1}_{arg2}"
         
-        with patch('app.core.cache.get_cache_service') as Mock_get_cache:
-            Mock_cache = AsyncMock()
-            Mock_cache.get = AsyncMock(return_value=None)  # Cache miss
-            Mock_cache.set = AsyncMock()
-            Mock_get_cache.return_value = Mock_cache
+        with patch('app.core.cache.get_cache_service') as mock_get_cache:
+            mock_cache = AsyncMock()
+            mock_cache.get = AsyncMock(return_value=None)  # Cache miss
+            mock_cache.set = AsyncMock()
+            mock_get_cache.return_value = mock_cache
             
             # First call should execute function
             result1 = await test_function('hello', 'world')
@@ -108,17 +108,17 @@ class TestCacheService:
             assert call_count == 1
             
             # Mock cache hit for second call
-            Mock_cache.get = AsyncMock(return_value=b'"cached_result"')
+            mock_cache.get = AsyncMock(return_value=b'"cached_result"')
             result2 = await test_function('hello', 'world')
             assert call_count == 1  # Function not called again
     
     @pytest.mark.asyncio
     async def test_cache_error_handling(self):
         """Test cache service handles Redis errors gracefully"""
-        with patch('app.core.cache.Redis') as Mock_redis:
-            Mock_instance = AsyncMock()
-            Mock_instance.set = AsyncMock(side_effect=Exception('Redis error'))
-            Mock_redis.return_value = Mock_instance
+        with patch('app.core.cache.Redis') as mock_redis:
+            mock_instance = AsyncMock()
+            mock_instance.set = AsyncMock(side_effect=Exception('Redis error'))
+            mock_redis.return_value = mock_instance
             
             cache_service = await get_cache_service()
             
@@ -134,18 +134,18 @@ class TestConnectionPool:
     @pytest.mark.asyncio
     async def test_pool_manager_initialization(self):
         """Test connection pool manager initializes correctly"""
-        with patch('app.core.connection_pool.aiohttp.TCPConnector') as Mock_connector:
-            Mock_connector.return_value = Mock()
+        with patch('app.core.connection_pool.aiohttp.TCPConnector') as mock_connector:
+            mock_connector.return_value = Mock()
             pool_manager = await get_pool_manager()
             assert pool_manager is not None
-            Mock_connector.assert_called_once()
+            mock_connector.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_http_client_connection_reuse(self):
         """Test HTTP client reuses connections"""
-        with patch('app.core.connection_pool.aiohttp.ClientSession') as Mock_session:
-            Mock_session_instance = AsyncMock()
-            Mock_session.return_value = Mock_session_instance
+        with patch('app.core.connection_pool.aiohttp.ClientSession') as mock_session:
+            mock_session_instance = AsyncMock()
+            mock_session.return_value = mock_session_instance
             
             from app.core.connection_pool import get_http_client
             client1 = await get_http_client()
@@ -157,11 +157,11 @@ class TestConnectionPool:
     @pytest.mark.asyncio
     async def test_pool_connection_limits(self):
         """Test connection pool respects connection limits"""
-        with patch('app.core.connection_pool.aiohttp.TCPConnector') as Mock_connector:
+        with patch('app.core.connection_pool.aiohttp.TCPConnector') as mock_connector:
             await get_pool_manager()
             
             # Verify connector called with proper limits
-            call_args = Mock_connector.call_args
+            call_args = mock_connector.call_args
             assert 'limit' in call_args.kwargs
             assert 'limit_per_host' in call_args.kwargs
 
@@ -173,10 +173,10 @@ class TestTaskQueue:
     @pytest.mark.asyncio
     async def test_task_queue_initialization(self):
         """Test task queue initializes correctly"""
-        with patch('app.core.task_queue.asyncio.Queue') as Mock_queue:
+        with patch('app.core.task_queue.asyncio.Queue') as mock_queue:
             task_queue = await get_task_queue()
             assert task_queue is not None
-            Mock_queue.assert_called_once()
+            mock_queue.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_background_task_creation(self):
@@ -184,18 +184,18 @@ class TestTaskQueue:
         async def sample_task(arg1, arg2):
             return f"{arg1}_{arg2}"
         
-        with patch('app.core.task_queue.asyncio.create_task') as Mock_create_task:
-            Mock_task = AsyncMock()
-            Mock_create_task.return_value = Mock_task
+        with patch('app.core.task_queue.asyncio.create_task') as mock_create_task:
+            mock_task = AsyncMock()
+            mock_create_task.return_value = mock_task
             
             task = create_background_task(sample_task, 'hello', 'world')
             assert task is not None
-            Mock_create_task.assert_called_once()
+            mock_create_task.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_task_queue_priority_handling(self):
         """Test task queue handles priority correctly"""
-        with patch('app.core.task_queue.heapq') as Mock_heapq:
+        with patch('app.core.task_queue.heapq') as mock_heapq:
             from app.core.task_queue import PriorityTaskQueue
             
             queue = PriorityTaskQueue()
@@ -214,20 +214,20 @@ class TestDatabaseConnection:
     @pytest.mark.asyncio
     async def test_database_connection_success(self):
         """Test successful database connection"""
-        with patch('app.core.database.asyncpg.connect') as Mock_connect:
-            Mock_connection = AsyncMock()
-            Mock_connect.return_value = Mock_connection
+        with patch('app.core.database.asyncpg.connect') as mock_connect:
+            mock_connection = AsyncMock()
+            mock_connect.return_value = mock_connection
             
             connection = await get_database_connection()
             assert connection is not None
-            Mock_connect.assert_called_once()
+            mock_connect.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_database_connection_retry_logic(self):
         """Test database connection retry on failure"""
-        with patch('app.core.database.asyncpg.connect') as Mock_connect:
+        with patch('app.core.database.asyncpg.connect') as mock_connect:
             # First two calls fail, third succeeds
-            Mock_connect.side_effect = [
+            mock_connect.side_effect = [
                 Exception('Connection failed'),
                 Exception('Connection failed'),
                 AsyncMock()
@@ -235,15 +235,15 @@ class TestDatabaseConnection:
             
             connection = await get_database_connection(max_retries=3)
             assert connection is not None
-            assert Mock_connect.call_count == 3
+            assert mock_connect.call_count == 3
     
     @pytest.mark.asyncio
     async def test_database_connection_pool_exhaustion(self):
         """Test handling of connection pool exhaustion"""
-        with patch('app.core.database.asyncpg.create_pool') as Mock_create_pool:
-            Mock_pool = AsyncMock()
-            Mock_pool.acquire.side_effect = Exception('Pool exhausted')
-            Mock_create_pool.return_value = Mock_pool
+        with patch('app.core.database.asyncpg.create_pool') as mock_create_pool:
+            mock_pool = AsyncMock()
+            mock_pool.acquire.side_effect = Exception('Pool exhausted')
+            mock_create_pool.return_value = mock_pool
             
             from app.core.database import DatabasePool
             pool = DatabasePool()
@@ -292,8 +292,8 @@ class TestSecurityManager:
         
         # Create expired token
         expired_time = datetime.utcnow() - timedelta(hours=1)
-        with patch('app.core.security.datetime') as Mock_datetime:
-            Mock_datetime.utcnow.return_value = expired_time
+        with patch('app.core.security.datetime') as mock_datetime:
+            mock_datetime.utcnow.return_value = expired_time
             expired_token = security_manager.create_jwt_token(payload)
         
         # Should raise exception when decoding expired token
@@ -383,8 +383,8 @@ class TestErrorHandling:
     @pytest.mark.asyncio
     async def test_graceful_service_degradation(self):
         """Test system handles service failures gracefully"""
-        with patch('app.core.cache.get_cache_service') as Mock_cache:
-            Mock_cache.side_effect = Exception('Cache service unavailable')
+        with patch('app.core.cache.get_cache_service') as mock_cache:
+            mock_cache.side_effect = Exception('Cache service unavailable')
             
             # System should continue without cache
             from app.core.cache import cached_with_fallback
@@ -398,7 +398,7 @@ class TestErrorHandling:
     
     def test_exception_logging_and_metrics(self):
         """Test exceptions are properly logged and tracked in metrics"""
-        with patch('app.core.metrics.logger') as Mock_logger:
+        with patch('app.core.metrics.logger') as mock_logger:
             metrics = MetricsCollector()
             
             try:
@@ -408,7 +408,7 @@ class TestErrorHandling:
                 metrics.increment('errors_total')
             
             assert metrics.get_metric('errors_total') == 1
-            Mock_logger.error.assert_called_once()
+            mock_logger.error.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_timeout_handling(self):

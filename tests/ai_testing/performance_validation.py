@@ -9,7 +9,7 @@ import psutil
 import numpy as np
 import logging
 from typing import Dict, List, Any, Optional, Callable
-from unittest.Mock import Mock, patch
+from unittest.mock import Mock, patch
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import threading
 

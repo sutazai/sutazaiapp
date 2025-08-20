@@ -28,7 +28,7 @@ import time
 import shutil
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
-from unittest.Mock import AsyncMock, Mock, patch
+from unittest.mock import AsyncMock, Mock, patch
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -167,7 +167,7 @@ class TestMCPAutomaticRollback:
         self,
         test_environment: TestEnvironment,
         rollback_simulator,
-        Mock_process_runner
+        mock_process_runner
     ):
         """Test automatic rollback when health checks fail after update."""
         config = test_environment.config
@@ -211,7 +211,7 @@ class TestMCPAutomaticRollback:
                 }
         
         with patch.object(update_manager, '_run_health_check', side_effect=failing_health_check), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             rollback_start_time = time.time()
             
@@ -252,7 +252,7 @@ class TestMCPAutomaticRollback:
     async def test_startup_timeout_rollback(
         self,
         test_environment: TestEnvironment,
-        Mock_process_runner
+        mock_process_runner
     ):
         """Test rollback when server fails to start within timeout."""
         config = test_environment.config
@@ -286,7 +286,7 @@ class TestMCPAutomaticRollback:
             }
         
         with patch.object(update_manager, '_run_health_check', side_effect=timeout_health_check), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Configure shorter timeout for testing
             original_timeout = config.performance.health_check_timeout_seconds
@@ -323,7 +323,7 @@ class TestMCPAutomaticRollback:
     async def test_dependency_failure_rollback(
         self,
         test_environment: TestEnvironment,
-        Mock_process_runner
+        mock_process_runner
     ):
         """Test rollback when server dependencies fail."""
         config = test_environment.config
@@ -355,7 +355,7 @@ class TestMCPAutomaticRollback:
             }
         
         with patch.object(update_manager, '_run_health_check', side_effect=dependency_failure_check), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Attempt update with dependency issues
             update_result = await update_manager.update_server(server_name, target_version=dependency_breaking_version)
@@ -381,8 +381,8 @@ class TestMCPManualRollback:
     async def test_manual_rollback_to_specific_version(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner
+        mock_health_checker,
+        mock_process_runner
     ):
         """Test manual rollback to a specific version."""
         config = test_environment.config
@@ -398,8 +398,8 @@ class TestMCPManualRollback:
             await version_manager.record_activation(server_name, version)
             await asyncio.sleep(0.1)  # Simulate time between versions
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Get initial state
             initial_status = await version_manager.get_version_status(server_name)
@@ -425,8 +425,8 @@ class TestMCPManualRollback:
     async def test_rollback_with_data_preservation(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner,
+        mock_health_checker,
+        mock_process_runner,
         tmp_path: Path
     ):
         """Test rollback while preserving critical data."""
@@ -455,8 +455,8 @@ class TestMCPManualRollback:
         # Record initial version
         await version_manager.record_activation(server_name, original_version)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Update to new version
             await update_manager.update_server(server_name, target_version=updated_version)
@@ -505,8 +505,8 @@ class TestMCPManualRollback:
     async def test_partial_rollback_recovery(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner
+        mock_health_checker,
+        mock_process_runner
     ):
         """Test recovery from partial rollback failures."""
         config = test_environment.config
@@ -545,7 +545,7 @@ class TestMCPManualRollback:
                 }
         
         with patch.object(update_manager, '_run_health_check', side_effect=partial_failure_health_check), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Attempt rollback that partially fails
             try:
@@ -585,8 +585,8 @@ class TestMCPMultiServerRollback:
     async def test_coordinated_multi_server_rollback(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner
+        mock_health_checker,
+        mock_process_runner
     ):
         """Test coordinated rollback across multiple servers."""
         config = test_environment.config
@@ -603,8 +603,8 @@ class TestMCPMultiServerRollback:
             await version_manager.record_activation(server_name, stable_versions[server_name])
             await version_manager.record_activation(server_name, current_versions[server_name])
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Perform coordinated rollback
             rollback_tasks = []
@@ -655,8 +655,8 @@ class TestMCPMultiServerRollback:
     async def test_dependency_aware_rollback_ordering(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner
+        mock_health_checker,
+        mock_process_runner
     ):
         """Test rollback ordering based on server dependencies."""
         config = test_environment.config
@@ -675,8 +675,8 @@ class TestMCPMultiServerRollback:
             await version_manager.record_activation(server_name, stable_version)
             await version_manager.record_activation(server_name, current_version)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Perform dependency-aware rollback (reverse order)
             rollback_order = []
@@ -720,8 +720,8 @@ class TestMCPRollbackPerformance:
     async def test_rollback_time_constraints(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner,
+        mock_health_checker,
+        mock_process_runner,
         performance_monitor
     ):
         """Test that rollbacks complete within acceptable time constraints."""
@@ -744,8 +744,8 @@ class TestMCPRollbackPerformance:
             "activation_timeout": 15.0  # 15 seconds for activation
         }
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             performance_monitor.start_operation("rollback_performance")
             
@@ -774,8 +774,8 @@ class TestMCPRollbackPerformance:
     async def test_rollback_under_load(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner
+        mock_health_checker,
+        mock_process_runner
     ):
         """Test rollback performance under system load."""
         config = test_environment.config
@@ -796,8 +796,8 @@ class TestMCPRollbackPerformance:
             await version_manager.record_activation(server_name, "1.0.0")
             await version_manager.record_activation(server_name, "1.1.0")
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Create background load with health checks
             background_tasks = []
@@ -830,8 +830,8 @@ class TestMCPRollbackPerformance:
     async def test_rollback_resource_cleanup(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner,
+        mock_health_checker,
+        mock_process_runner,
         tmp_path: Path
     ):
         """Test proper resource cleanup during rollback."""
@@ -865,8 +865,8 @@ class TestMCPRollbackPerformance:
             "staging_size": sum(f.stat().st_size for f in temp_staging_dir.glob("*") if f.is_file())
         }
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Perform rollback
             rollback_result = await version_manager.rollback_server(server_name)

@@ -21,8 +21,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'backend'))
 # Import XSS protection modules
 from frontend.utils.xss_protection import XSSProtection, xss_protection
 from frontend.utils.secure_components import SecureStreamlit, get_csp_header
-from backend.app.utils.validation import validate_model_name, sanitize_string_input
-from backend.app.core.xss_tester import SimpleXSSValidator
+from app.utils.validation import validate_model_name, sanitize_string_input
+from app.core.xss_tester import SimpleXSSValidator
 
 class TestXSSProtection:
     """Comprehensive XSS protection test suite"""

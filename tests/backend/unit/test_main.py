@@ -91,7 +91,7 @@ class TestHealthEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_detailed_health_endpoint(self, async_client, Mock_health_monitoring):
+    async def test_detailed_health_endpoint(self, async_client, mock_health_monitoring):
         """Test detailed health endpoint"""
         response = await async_client.get("/api/v1/health/detailed")
         
@@ -110,7 +110,7 @@ class TestHealthEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_circuit_breaker_status_endpoint(self, async_client, Mock_circuit_breaker_manager):
+    async def test_circuit_breaker_status_endpoint(self, async_client, mock_circuit_breaker_manager):
         """Test circuit breaker status endpoint"""
         response = await async_client.get("/api/v1/health/circuit-breakers")
         
@@ -127,7 +127,7 @@ class TestHealthEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_circuit_breaker_reset_endpoint(self, async_client, Mock_circuit_breaker_manager):
+    async def test_circuit_breaker_reset_endpoint(self, async_client, mock_circuit_breaker_manager):
         """Test circuit breaker reset endpoint"""
         response = await async_client.post("/api/v1/health/circuit-breakers/reset")
         
@@ -168,7 +168,7 @@ class TestRootAndStatusEndpoints:
 
     @pytest.mark.unit
     @pytest.mark.api
-    def test_status_endpoint_with_system_metrics(self, sync_client, Mock_psutil):
+    def test_status_endpoint_with_system_metrics(self, sync_client, mock_psutil):
         """Test status endpoint with system metrics"""
         response = sync_client.get("/api/v1/status")
         
@@ -214,7 +214,7 @@ class TestAgentEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_get_specific_agent(self, async_client, Mock_validation):
+    async def test_get_specific_agent(self, async_client, mock_validation):
         """Test getting specific agent details"""
         agent_id = "jarvis-automation"
         response = await async_client.get(f"/api/v1/agents/{agent_id}")
@@ -231,7 +231,7 @@ class TestAgentEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_get_nonexistent_agent(self, async_client, Mock_validation):
+    async def test_get_nonexistent_agent(self, async_client, mock_validation):
         """Test getting non-existent agent returns 404"""
         response = await async_client.get("/api/v1/agents/nonexistent-agent")
         
@@ -247,8 +247,8 @@ class TestAgentEndpoints:
         # Test with malicious input
         malicious_agent_id = "'; DROP TABLE agents; --"
         
-        with patch('app.utils.validation.validate_agent_id') as Mock_validate:
-            Mock_validate.side_effect = ValueError("Invalid agent ID")
+        with patch('app.utils.validation.validate_agent_id') as mock_validate:
+            mock_validate.side_effect = ValueError("Invalid agent ID")
             
             response = await async_client.get(f"/api/v1/agents/{malicious_agent_id}")
             assert response.status_code == 400
@@ -275,7 +275,7 @@ class TestTaskEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_get_task_status(self, async_client, Mock_validation):
+    async def test_get_task_status(self, async_client, mock_validation):
         """Test getting task status"""
         task_id = "test-task-id"
         response = await async_client.get(f"/api/v1/tasks/{task_id}")
@@ -295,8 +295,8 @@ class TestTaskEndpoints:
         """Test task endpoint input validation"""
         malicious_task_id = "../../../etc/passwd"
         
-        with patch('app.utils.validation.validate_task_id') as Mock_validate:
-            Mock_validate.side_effect = ValueError("Invalid task ID")
+        with patch('app.utils.validation.validate_task_id') as mock_validate:
+            mock_validate.side_effect = ValueError("Invalid task ID")
             
             response = await async_client.get(f"/api/v1/tasks/{malicious_task_id}")
             assert response.status_code == 400
@@ -308,7 +308,7 @@ class TestChatEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_chat_endpoint(self, async_client, sample_chat_request, Mock_validation):
+    async def test_chat_endpoint(self, async_client, sample_chat_request, mock_validation):
         """Test chat endpoint functionality"""
         response = await async_client.post("/api/v1/chat", json=sample_chat_request)
         
@@ -332,8 +332,8 @@ class TestChatEndpoints:
             "use_cache": True
         }
         
-        with patch('app.utils.validation.validate_model_name') as Mock_validate:
-            Mock_validate.side_effect = ValueError("Invalid model name")
+        with patch('app.utils.validation.validate_model_name') as mock_validate:
+            mock_validate.side_effect = ValueError("Invalid model name")
             
             response = await async_client.post("/api/v1/chat", json=malicious_request)
             assert response.status_code == 400
@@ -341,7 +341,7 @@ class TestChatEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_batch_process_endpoint(self, async_client, Mock_validation):
+    async def test_batch_process_endpoint(self, async_client, mock_validation):
         """Test batch processing endpoint"""
         prompts = ["Hello", "How are you?", "What's the weather?"]
         
@@ -371,7 +371,7 @@ class TestChatEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_chat_stream_endpoint(self, async_client, sample_chat_request, Mock_validation):
+    async def test_chat_stream_endpoint(self, async_client, sample_chat_request, mock_validation):
         """Test streaming chat endpoint"""
         response = await async_client.post("/api/v1/chat/stream", json=sample_chat_request)
         
@@ -385,7 +385,7 @@ class TestCacheEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_cache_clear_endpoint(self, async_client, Mock_validation):
+    async def test_cache_clear_endpoint(self, async_client, mock_validation):
         """Test cache clearing functionality"""
         response = await async_client.post("/api/v1/cache/clear")
         
@@ -399,7 +399,7 @@ class TestCacheEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_cache_clear_with_pattern(self, async_client, Mock_validation):
+    async def test_cache_clear_with_pattern(self, async_client, mock_validation):
         """Test cache clearing with pattern"""
         response = await async_client.post("/api/v1/cache/clear?pattern=test:*")
         
@@ -463,7 +463,7 @@ class TestMetricsEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_metrics_endpoint(self, async_client, Mock_psutil):
+    async def test_metrics_endpoint(self, async_client, mock_psutil):
         """Test comprehensive metrics endpoint"""
         response = await async_client.get("/api/v1/metrics")
         
@@ -484,7 +484,7 @@ class TestMetricsEndpoints:
     @pytest.mark.unit
     @pytest.mark.api
     @pytest.mark.asyncio
-    async def test_prometheus_metrics_endpoint(self, async_client, Mock_health_monitoring):
+    async def test_prometheus_metrics_endpoint(self, async_client, mock_health_monitoring):
         """Test Prometheus metrics endpoint"""
         response = await async_client.get("/metrics")
         
@@ -574,8 +574,8 @@ class TestSecurityFeatures:
         ]
         
         for malicious_input in malicious_inputs:
-            with patch('app.utils.validation.sanitize_user_input') as Mock_sanitize:
-                Mock_sanitize.side_effect = ValueError("Malicious input detected")
+            with patch('app.utils.validation.sanitize_user_input') as mock_sanitize:
+                mock_sanitize.side_effect = ValueError("Malicious input detected")
                 
                 response = await async_client.post("/api/v1/batch", json=[malicious_input])
                 assert response.status_code == 400

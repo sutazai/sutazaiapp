@@ -205,7 +205,17 @@
       "Bash(do echo \"Checking: $dir\")",
       "Bash(test:*)",
       "Bash(export SUTAZAI_ENV=test)",
-      "Bash(md5sum:*)"
+      "Bash(md5sum:*)",
+      "Bash(PYTHONPATH=/opt/sutazaiapp/backend python3 -m pytest tests/unit/test_mesh_redis_bus.py::TestRedisConnection::test_redis_url_from_env -v)",
+      "Bash(PYTHONPATH=/opt/sutazaiapp/backend python3 -m pytest tests/unit/test_mesh_redis_bus.py -v)",
+      "Bash(export DOCKER_HOST=\"tcp://localhost:12375\")",
+      "Bash(unset DOCKER_HOST)",
+      "Bash(/opt/sutazaiapp/scripts/monitoring/diagnose_resource_usage.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/monitoring/fix_resource_issues.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/monitoring/aggressive_cleanup.sh:*)",
+      "Bash(sqlite3:*)",
+      "Bash(./run_migration.sh:*)",
+      "Bash(rg:*)"
     ],
     "deny": [],
     "additionalDirectories": [

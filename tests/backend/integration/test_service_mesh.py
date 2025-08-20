@@ -4,7 +4,7 @@ Comprehensive tests for the real service mesh implementation
 import pytest
 import asyncio
 import time
-from unittest.Mock import Mock, AsyncMock, patch, MagicMock
+from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from typing import Dict, Any, List
 
 from app.mesh.service_mesh import (
@@ -110,23 +110,23 @@ class TestServiceDiscovery:
         assert len(discovery.services_cache) == 0
     
     @patch('consul.aio.Consul')
-    async def test_connect_to_consul(self, Mock_consul_class):
+    async def test_connect_to_consul(self, mock_consul_class):
         """Test connecting to Consul"""
-        Mock_consul = AsyncMock()
-        Mock_consul_class.return_value = Mock_consul
+        mock_consul = AsyncMock()
+        mock_consul_class.return_value = mock_consul
         
         discovery = ServiceDiscovery()
         await discovery.connect()
         
         assert discovery.consul_client is not None
-        Mock_consul_class.assert_called_once_with(host="consul", port=8500)
+        mock_consul_class.assert_called_once_with(host="consul", port=8500)
     
     @patch('consul.aio.Consul')
-    async def test_register_service(self, Mock_consul_class):
+    async def test_register_service(self, mock_consul_class):
         """Test registering a service with Consul"""
-        Mock_consul = AsyncMock()
-        Mock_consul.agent.service.register = AsyncMock()
-        Mock_consul_class.return_value = Mock_consul
+        mock_consul = AsyncMock()
+        mock_consul.agent.service.register = AsyncMock()
+        mock_consul_class.return_value = mock_consul
         
         discovery = ServiceDiscovery()
         
@@ -140,13 +140,13 @@ class TestServiceDiscovery:
         result = await discovery.register_service(instance)
         
         assert result is True
-        Mock_consul.agent.service.register.assert_called_once()
+        mock_consul.agent.service.register.assert_called_once()
     
     @patch('consul.aio.Consul')
-    async def test_discover_services_with_cache(self, Mock_consul_class):
+    async def test_discover_services_with_cache(self, mock_consul_class):
         """Test discovering services with caching"""
-        Mock_consul = AsyncMock()
-        Mock_consul.health.service = AsyncMock(return_value=(
+        mock_consul = AsyncMock()
+        mock_consul.health.service = AsyncMock(return_value=(
             None,
             [
                 {
@@ -162,7 +162,7 @@ class TestServiceDiscovery:
                 }
             ]
         ))
-        Mock_consul_class.return_value = Mock_consul
+        mock_consul_class.return_value = mock_consul
         
         discovery = ServiceDiscovery()
         
@@ -176,7 +176,7 @@ class TestServiceDiscovery:
         assert len(instances2) == 1
         
         # Consul should only be called once due to caching
-        Mock_consul.health.service.assert_called_once()
+        mock_consul.health.service.assert_called_once()
 
 
 class TestLoadBalancer:
@@ -262,10 +262,10 @@ class TestServiceMesh:
     """Test ServiceMesh class"""
     
     @patch('app.mesh.service_mesh.ServiceDiscovery')
-    async def test_service_mesh_initialization(self, Mock_discovery_class):
+    async def test_service_mesh_initialization(self, mock_discovery_class):
         """Test service mesh initialization"""
-        Mock_discovery = AsyncMock()
-        Mock_discovery_class.return_value = Mock_discovery
+        mock_discovery = AsyncMock()
+        mock_discovery_class.return_value = mock_discovery
         
         mesh = ServiceMesh(consul_host="localhost", kong_admin_url="http://kong:8001")
         await mesh.initialize()
@@ -273,27 +273,27 @@ class TestServiceMesh:
         assert mesh.discovery is not None
         assert mesh.load_balancer is not None
         assert mesh.circuit_breaker is not None
-        Mock_discovery.connect.assert_called_once()
+        mock_discovery.connect.assert_called_once()
     
     @patch('app.mesh.service_mesh.ServiceDiscovery')
     @patch('httpx.AsyncClient')
-    async def test_register_service(self, Mock_client_class, Mock_discovery_class):
+    async def test_register_service(self, mock_client_class, mock_discovery_class):
         """Test registering a service with the mesh"""
-        Mock_discovery = AsyncMock()
-        Mock_discovery.register_service = AsyncMock(return_value=True)
-        Mock_discovery_class.return_value = Mock_discovery
+        mock_discovery = AsyncMock()
+        mock_discovery.register_service = AsyncMock(return_value=True)
+        mock_discovery_class.return_value = mock_discovery
         
-        Mock_client = AsyncMock()
-        Mock_response = AsyncMock()
-        Mock_response.status_code = 201
-        Mock_client.put = AsyncMock(return_value=Mock_response)
-        Mock_client.post = AsyncMock(return_value=Mock_response)
-        Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-        Mock_client.__aexit__ = AsyncMock()
-        Mock_client_class.return_value = Mock_client
+        mock_client = AsyncMock()
+        mock_response = AsyncMock()
+        mock_response.status_code = 201
+        mock_client.put = AsyncMock(return_value=mock_response)
+        mock_client.post = AsyncMock(return_value=mock_response)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock()
+        mock_client_class.return_value = mock_client
         
         mesh = ServiceMesh()
-        mesh.discovery = Mock_discovery
+        mesh.discovery = mock_discovery
         
         instance = await mesh.register_service(
             service_name="test-service",
@@ -306,34 +306,34 @@ class TestServiceMesh:
         assert instance.service_name == "test-service"
         assert instance.address == "localhost"
         assert instance.port == 8080
-        Mock_discovery.register_service.assert_called_once()
+        mock_discovery.register_service.assert_called_once()
     
     @patch('app.mesh.service_mesh.ServiceDiscovery')
     @patch('httpx.AsyncClient')
-    async def test_call_service_success(self, Mock_client_class, Mock_discovery_class):
+    async def test_call_service_success(self, mock_client_class, mock_discovery_class):
         """Test successful service call through mesh"""
         # Setup Mock discovery
-        Mock_discovery = AsyncMock()
+        mock_discovery = AsyncMock()
         test_instance = ServiceInstance(
             "test-1", "test-service", "localhost", 8080,
             state=ServiceState.HEALTHY
         )
-        Mock_discovery.discover_services = AsyncMock(return_value=[test_instance])
-        Mock_discovery_class.return_value = Mock_discovery
+        mock_discovery.discover_services = AsyncMock(return_value=[test_instance])
+        mock_discovery_class.return_value = mock_discovery
         
         # Setup Mock HTTP client
-        Mock_client = AsyncMock()
-        Mock_response = AsyncMock()
-        Mock_response.status_code = 200
-        Mock_response.headers = {"content-type": "application/json"}
-        Mock_response.json = Mock(return_value={"result": "success"})
-        Mock_client.request = AsyncMock(return_value=Mock_response)
-        Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-        Mock_client.__aexit__ = AsyncMock()
-        Mock_client_class.return_value = Mock_client
+        mock_client = AsyncMock()
+        mock_response = AsyncMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"content-type": "application/json"}
+        mock_response.json = Mock(return_value={"result": "success"})
+        mock_client.request = AsyncMock(return_value=mock_response)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock()
+        mock_client_class.return_value = mock_client
         
         mesh = ServiceMesh()
-        mesh.discovery = Mock_discovery
+        mesh.discovery = mock_discovery
         
         request = ServiceRequest(
             service_name="test-service",
@@ -349,14 +349,14 @@ class TestServiceMesh:
         assert "duration" in result
     
     @patch('app.mesh.service_mesh.ServiceDiscovery')
-    async def test_call_service_no_instances(self, Mock_discovery_class):
+    async def test_call_service_no_instances(self, mock_discovery_class):
         """Test service call when no instances available"""
-        Mock_discovery = AsyncMock()
-        Mock_discovery.discover_services = AsyncMock(return_value=[])
-        Mock_discovery_class.return_value = Mock_discovery
+        mock_discovery = AsyncMock()
+        mock_discovery.discover_services = AsyncMock(return_value=[])
+        mock_discovery_class.return_value = mock_discovery
         
         mesh = ServiceMesh()
-        mesh.discovery = Mock_discovery
+        mesh.discovery = mock_discovery
         
         request = ServiceRequest(
             service_name="test-service",
@@ -369,10 +369,10 @@ class TestServiceMesh:
             await mesh.call_service(request)
     
     @patch('app.mesh.service_mesh.ServiceDiscovery')
-    async def test_get_service_topology(self, Mock_discovery_class):
+    async def test_get_service_topology(self, mock_discovery_class):
         """Test getting service mesh topology"""
-        Mock_discovery = AsyncMock()
-        Mock_discovery.services_cache = {
+        mock_discovery = AsyncMock()
+        mock_discovery.services_cache = {
             "service1": [
                 ServiceInstance("s1-1", "service1", "host1", 8080, state=ServiceState.HEALTHY),
                 ServiceInstance("s1-2", "service1", "host2", 8080, state=ServiceState.UNHEALTHY)
@@ -381,10 +381,10 @@ class TestServiceMesh:
                 ServiceInstance("s2-1", "service2", "host3", 8080, state=ServiceState.HEALTHY)
             ]
         }
-        Mock_discovery_class.return_value = Mock_discovery
+        mock_discovery_class.return_value = mock_discovery
         
         mesh = ServiceMesh()
-        mesh.discovery = Mock_discovery
+        mesh.discovery = mock_discovery
         
         topology = await mesh.get_service_topology()
         
@@ -515,10 +515,10 @@ class TestMeshDashboard:
     """Test mesh dashboard functionality"""
     
     @patch('app.mesh.mesh_dashboard.get_mesh')
-    async def test_dashboard_initialization(self, Mock_get_mesh):
+    async def test_dashboard_initialization(self, mock_get_mesh):
         """Test dashboard initialization"""
-        Mock_mesh = AsyncMock()
-        Mock_get_mesh.return_value = Mock_mesh
+        mock_mesh = AsyncMock()
+        mock_get_mesh.return_value = mock_mesh
         
         dashboard = MeshDashboard()
         await dashboard.initialize()

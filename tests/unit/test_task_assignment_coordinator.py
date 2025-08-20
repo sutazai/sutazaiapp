@@ -6,7 +6,7 @@ import asyncio
 import json
 import pytest
 from datetime import datetime, timedelta
-from unittest.Mock import Mock, AsyncMock, patch, MagicMock
+from unittest.mock import Mock, AsyncMock, patch, MagicMock
 import heapq
 import sys
 import os
@@ -471,26 +471,26 @@ class TestCoordinatorIntegration:
     @pytest.mark.asyncio
     async def test_full_task_flow(self):
         """Test complete task flow through coordinator"""
-        with patch('aio_pika.connect_robust') as Mock_connect:
+        with patch('aio_pika.connect_robust') as mock_connect:
             # Setup Mock RabbitMQ
-            Mock_connection = AsyncMock()
-            Mock_channel = AsyncMock()
-            Mock_exchange = AsyncMock()
-            Mock_queue = AsyncMock()
+            mock_connection = AsyncMock()
+            mock_channel = AsyncMock()
+            mock_exchange = AsyncMock()
+            mock_queue = AsyncMock()
             
-            Mock_connect.return_value = Mock_connection
-            Mock_connection.channel.return_value = Mock_channel
-            Mock_channel.declare_exchange.return_value = Mock_exchange
-            Mock_channel.declare_queue.return_value = Mock_queue
+            mock_connect.return_value = mock_connection
+            mock_connection.channel.return_value = mock_channel
+            mock_channel.declare_exchange.return_value = mock_exchange
+            mock_channel.declare_queue.return_value = mock_queue
             
             coordinator = TaskAssignmentCoordinator()
             
             # Mock Redis
-            with patch('redis.asyncio.from_url') as Mock_redis:
-                Mock_redis_client = AsyncMock()
-                Mock_redis.return_value = Mock_redis_client
-                Mock_redis_client.ping.return_value = True
-                Mock_redis_client.zrange.return_value = []
+            with patch('redis.asyncio.from_url') as mock_redis:
+                mock_redis_client = AsyncMock()
+                mock_redis.return_value = mock_redis_client
+                mock_redis_client.ping.return_value = True
+                mock_redis_client.zrange.return_value = []
                 
                 # Initialize
                 await coordinator.initialize()

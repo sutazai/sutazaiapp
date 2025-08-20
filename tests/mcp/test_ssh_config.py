@@ -5,7 +5,7 @@ This module tests the SSH configuration file parsing, including
 various syntax formats, host filtering, and error handling.
 """
 
-from unittest.Mock import Mock_open, patch
+from unittest.mock import mock_open, patch
 
 import pytest
 
@@ -28,7 +28,7 @@ class TestSSHConfig:
             patch("os.path.exists", return_value=True),
             patch(
                 "builtins.open",
-                Mock_open(read_data=TestConstants.SAMPLE_SSH_CONFIG_CONTENT),
+                mock_open(read_data=TestConstants.SAMPLE_SSH_CONFIG_CONTENT),
             ),
         ):
             result = parse_ssh_config()
@@ -63,7 +63,7 @@ Port=3333
 
         with (
             patch("os.path.exists", return_value=True),
-            patch("builtins.open", Mock_open(read_data=config_content)),
+            patch("builtins.open", mock_open(read_data=config_content)),
         ):
             result = parse_ssh_config()
 
@@ -86,7 +86,7 @@ Host clean-host
 
         with (
             patch("os.path.exists", return_value=True),
-            patch("builtins.open", Mock_open(read_data=config_content)),
+            patch("builtins.open", mock_open(read_data=config_content)),
         ):
             result = parse_ssh_config()
 
@@ -126,7 +126,7 @@ Host clean-host
 
         with (
             patch("os.path.exists", return_value=True),
-            patch("builtins.open", Mock_open(read_data=config_content)),
+            patch("builtins.open", mock_open(read_data=config_content)),
         ):
             result = parse_ssh_config()
 
@@ -147,7 +147,7 @@ Host clean-host
 
         with (
             patch("os.path.exists", return_value=True),
-            patch("builtins.open", Mock_open(read_data=config_content)),
+            patch("builtins.open", mock_open(read_data=config_content)),
         ):
             result = parse_ssh_config()
 

@@ -18,7 +18,7 @@ import sys
 import os
 from datetime import datetime
 import unittest
-from unittest.Mock import patch
+from unittest.mock import patch
 
 
 class LiveMonitoringValidator:

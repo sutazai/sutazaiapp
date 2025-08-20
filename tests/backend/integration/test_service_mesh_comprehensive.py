@@ -13,7 +13,7 @@ import pytest
 import asyncio
 import time
 import json
-from unittest.Mock import Mock, AsyncMock, patch, MagicMock, call
+from unittest.mock import Mock, AsyncMock, patch, MagicMock, call
 from typing import Dict, Any, List
 import httpx
 
@@ -61,10 +61,10 @@ class TestServiceMeshProduction:
     
     @pytest.mark.asyncio
     @patch('consul.Consul')
-    async def test_consul_connection_failure_graceful_degradation(self, Mock_consul_class):
+    async def test_consul_connection_failure_graceful_degradation(self, mock_consul_class):
         """Test graceful degradation when Consul is unavailable"""
         # Simulate Consul connection failure
-        Mock_consul_class.side_effect = Exception("Connection refused")
+        mock_consul_class.side_effect = Exception("Connection refused")
         
         discovery = ServiceDiscovery("sutazai-consul", 8500)
         await discovery.connect()
@@ -87,12 +87,12 @@ class TestServiceMeshProduction:
     
     @pytest.mark.asyncio
     @patch('consul.Consul')
-    async def test_service_registration_with_health_checks(self, Mock_consul_class):
+    async def test_service_registration_with_health_checks(self, mock_consul_class):
         """Test service registration with health check configuration"""
-        Mock_consul = Mock()
-        Mock_consul.agent.self.return_value = {"Config": {"NodeName": "test-node"}}
-        Mock_consul.agent.service.register = Mock()
-        Mock_consul_class.return_value = Mock_consul
+        mock_consul = Mock()
+        mock_consul.agent.self.return_value = {"Config": {"NodeName": "test-node"}}
+        mock_consul.agent.service.register = Mock()
+        mock_consul_class.return_value = mock_consul
         
         discovery = ServiceDiscovery()
         await discovery.connect()
@@ -109,10 +109,10 @@ class TestServiceMeshProduction:
         result = await discovery.register_service(instance)
         
         assert result is True
-        Mock_consul.agent.service.register.assert_called_once()
+        mock_consul.agent.service.register.assert_called_once()
         
         # Verify health check configuration
-        call_args = Mock_consul.agent.service.register.call_args
+        call_args = mock_consul.agent.service.register.call_args
         service_data = call_args[1]
         assert service_data["ID"] == "api-service-1"
         assert service_data["Name"] == "api-service"
@@ -202,7 +202,7 @@ class TestServiceMeshProduction:
     
     @pytest.mark.asyncio
     @patch('httpx.AsyncClient')
-    async def test_service_call_with_retry_policy(self, Mock_client_class):
+    async def test_service_call_with_retry_policy(self, mock_client_class):
         """Test service call with retry on failure"""
         mesh = ServiceMesh()
         
@@ -215,22 +215,22 @@ class TestServiceMeshProduction:
         mesh.discovery.last_cache_update["api-service"] = time.time()
         
         # Setup Mock HTTP client to fail then succeed
-        Mock_client = AsyncMock()
-        Mock_response_fail = AsyncMock()
-        Mock_response_fail.status_code = 500
-        Mock_response_success = AsyncMock()
-        Mock_response_success.status_code = 200
-        Mock_response_success.headers = {"content-type": "application/json"}
-        Mock_response_success.json = Mock(return_value={"result": "success"})
+        mock_client = AsyncMock()
+        mock_response_fail = AsyncMock()
+        mock_response_fail.status_code = 500
+        mock_response_success = AsyncMock()
+        mock_response_success.status_code = 200
+        mock_response_success.headers = {"content-type": "application/json"}
+        mock_response_success.json = Mock(return_value={"result": "success"})
         
         # First call fails, retry succeeds
-        Mock_client.request = AsyncMock(side_effect=[
+        mock_client.request = AsyncMock(side_effect=[
             Exception("Connection error"),
-            Mock_response_success
+            mock_response_success
         ])
-        Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-        Mock_client.__aexit__ = AsyncMock()
-        Mock_client_class.return_value = Mock_client
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock()
+        mock_client_class.return_value = mock_client
         
         request = ServiceRequest(
             service_name="api-service",
@@ -243,7 +243,7 @@ class TestServiceMeshProduction:
         
         assert result["status_code"] == 200
         assert result["body"]["result"] == "success"
-        assert Mock_client.request.call_count == 2  # Initial + 1 retry
+        assert mock_client.request.call_count == 2  # Initial + 1 retry
     
     @pytest.mark.asyncio
     async def test_health_check_state_transitions(self):
@@ -256,14 +256,14 @@ class TestServiceMeshProduction:
         )
         
         # Test healthy response
-        with patch('httpx.AsyncClient') as Mock_client_class:
-            Mock_client = AsyncMock()
-            Mock_response = AsyncMock()
-            Mock_response.status_code = 200
-            Mock_client.get = AsyncMock(return_value=Mock_response)
-            Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-            Mock_client.__aexit__ = AsyncMock()
-            Mock_client_class.return_value = Mock_client
+        with patch('httpx.AsyncClient') as mock_client_class:
+            mock_client = AsyncMock()
+            mock_response = AsyncMock()
+            mock_response.status_code = 200
+            mock_client.get = AsyncMock(return_value=mock_response)
+            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+            mock_client.__aexit__ = AsyncMock()
+            mock_client_class.return_value = mock_client
             
             state = await discovery.health_check(instance)
             assert state == ServiceState.HEALTHY
@@ -271,26 +271,26 @@ class TestServiceMeshProduction:
             assert instance.health_check_failures == 0
         
         # Test degraded response
-        with patch('httpx.AsyncClient') as Mock_client_class:
-            Mock_client = AsyncMock()
-            Mock_response = AsyncMock()
-            Mock_response.status_code = 429  # Too many requests
-            Mock_client.get = AsyncMock(return_value=Mock_response)
-            Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-            Mock_client.__aexit__ = AsyncMock()
-            Mock_client_class.return_value = Mock_client
+        with patch('httpx.AsyncClient') as mock_client_class:
+            mock_client = AsyncMock()
+            mock_response = AsyncMock()
+            mock_response.status_code = 429  # Too many requests
+            mock_client.get = AsyncMock(return_value=mock_response)
+            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+            mock_client.__aexit__ = AsyncMock()
+            mock_client_class.return_value = mock_client
             
             state = await discovery.health_check(instance)
             assert state == ServiceState.DEGRADED
             assert instance.state == ServiceState.DEGRADED
         
         # Test unhealthy response
-        with patch('httpx.AsyncClient') as Mock_client_class:
-            Mock_client = AsyncMock()
-            Mock_client.get = AsyncMock(side_effect=Exception("Connection refused"))
-            Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-            Mock_client.__aexit__ = AsyncMock()
-            Mock_client_class.return_value = Mock_client
+        with patch('httpx.AsyncClient') as mock_client_class:
+            mock_client = AsyncMock()
+            mock_client.get = AsyncMock(side_effect=Exception("Connection refused"))
+            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+            mock_client.__aexit__ = AsyncMock()
+            mock_client_class.return_value = mock_client
             
             state = await discovery.health_check(instance)
             assert state == ServiceState.UNHEALTHY
@@ -352,16 +352,16 @@ class TestServiceMeshProduction:
         mesh.discovery.services_cache["api-service"] = [test_instance]
         mesh.discovery.last_cache_update["api-service"] = time.time()
         
-        with patch('httpx.AsyncClient') as Mock_client_class:
-            Mock_client = AsyncMock()
-            Mock_response = AsyncMock()
-            Mock_response.status_code = 200
-            Mock_response.headers = {"content-type": "application/json"}
-            Mock_response.json = Mock(return_value={"data": "test"})
-            Mock_client.request = AsyncMock(return_value=Mock_response)
-            Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-            Mock_client.__aexit__ = AsyncMock()
-            Mock_client_class.return_value = Mock_client
+        with patch('httpx.AsyncClient') as mock_client_class:
+            mock_client = AsyncMock()
+            mock_response = AsyncMock()
+            mock_response.status_code = 200
+            mock_response.headers = {"content-type": "application/json"}
+            mock_response.json = Mock(return_value={"data": "test"})
+            mock_client.request = AsyncMock(return_value=mock_response)
+            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+            mock_client.__aexit__ = AsyncMock()
+            mock_client_class.return_value = mock_client
             
             request = ServiceRequest(
                 service_name="api-service",
@@ -372,33 +372,33 @@ class TestServiceMeshProduction:
             result = await mesh.call_service(request)
             
             # Verify interceptors were applied
-            call_args = Mock_client.request.call_args
+            call_args = mock_client.request.call_args
             assert call_args[1]["headers"]["Authorization"] == "Bearer test-token"
             assert "processed_at" in result
     
     @pytest.mark.asyncio
     async def test_kong_integration_configuration(self):
         """Test Kong API Gateway integration"""
-        with patch('httpx.AsyncClient') as Mock_client_class:
-            Mock_client = AsyncMock()
+        with patch('httpx.AsyncClient') as mock_client_class:
+            mock_client = AsyncMock()
             
             # Mock Kong admin API responses
-            Mock_response_services = AsyncMock()
-            Mock_response_services.status_code = 200
-            Mock_response_services.json = Mock(return_value={"data": []})
+            mock_response_services = AsyncMock()
+            mock_response_services.status_code = 200
+            mock_response_services.json = Mock(return_value={"data": []})
             
-            Mock_response_upstream = AsyncMock()
-            Mock_response_upstream.status_code = 201
+            mock_response_upstream = AsyncMock()
+            mock_response_upstream.status_code = 201
             
-            Mock_response_target = AsyncMock()
-            Mock_response_target.status_code = 201
+            mock_response_target = AsyncMock()
+            mock_response_target.status_code = 201
             
-            Mock_client.get = AsyncMock(return_value=Mock_response_services)
-            Mock_client.put = AsyncMock(return_value=Mock_response_upstream)
-            Mock_client.post = AsyncMock(return_value=Mock_response_target)
-            Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-            Mock_client.__aexit__ = AsyncMock()
-            Mock_client_class.return_value = Mock_client
+            mock_client.get = AsyncMock(return_value=mock_response_services)
+            mock_client.put = AsyncMock(return_value=mock_response_upstream)
+            mock_client.post = AsyncMock(return_value=mock_response_target)
+            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+            mock_client.__aexit__ = AsyncMock()
+            mock_client_class.return_value = mock_client
             
             mesh = ServiceMesh(kong_admin_url="http://sutazai-kong:8001")
             await mesh._configure_kong_routes()
@@ -412,8 +412,8 @@ class TestServiceMeshProduction:
             )
             
             # Verify Kong upstream configuration
-            Mock_client.put.assert_called()
-            put_call = Mock_client.put.call_args
+            mock_client.put.assert_called()
+            put_call = mock_client.put.call_args
             assert "api-service-upstream" in put_call[0][0]
             
             upstream_data = put_call[1]["json"]
@@ -433,16 +433,16 @@ class TestServiceMeshProduction:
         mesh.discovery.services_cache["api-service"] = [test_instance]
         mesh.discovery.last_cache_update["api-service"] = time.time()
         
-        with patch('httpx.AsyncClient') as Mock_client_class:
-            Mock_client = AsyncMock()
-            Mock_response = AsyncMock()
-            Mock_response.status_code = 200
-            Mock_response.headers = {"content-type": "application/json"}
-            Mock_response.json = Mock(return_value={"data": "test"})
-            Mock_client.request = AsyncMock(return_value=Mock_response)
-            Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-            Mock_client.__aexit__ = AsyncMock()
-            Mock_client_class.return_value = Mock_client
+        with patch('httpx.AsyncClient') as mock_client_class:
+            mock_client = AsyncMock()
+            mock_response = AsyncMock()
+            mock_response.status_code = 200
+            mock_response.headers = {"content-type": "application/json"}
+            mock_response.json = Mock(return_value={"data": "test"})
+            mock_client.request = AsyncMock(return_value=mock_response)
+            mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+            mock_client.__aexit__ = AsyncMock()
+            mock_client_class.return_value = mock_client
             
             request = ServiceRequest(
                 service_name="api-service",
@@ -454,7 +454,7 @@ class TestServiceMeshProduction:
             result = await mesh.call_service(request)
             
             # Verify trace headers were added
-            call_args = Mock_client.request.call_args
+            call_args = mock_client.request.call_args
             headers = call_args[1]["headers"]
             assert headers["X-Trace-Id"] == "test-trace-123"
             assert "X-Request-Start" in headers
@@ -489,16 +489,16 @@ class TestServiceMeshProduction:
             )
             
             # Mock the actual call
-            with patch('httpx.AsyncClient') as Mock_client_class:
-                Mock_client = AsyncMock()
-                Mock_response = AsyncMock()
-                Mock_response.status_code = 200
-                Mock_response.headers = {"content-type": "application/json"}
-                Mock_response.json = Mock(return_value={"data": "test"})
-                Mock_client.request = AsyncMock(return_value=Mock_response)
-                Mock_client.__aenter__ = AsyncMock(return_value=Mock_client)
-                Mock_client.__aexit__ = AsyncMock()
-                Mock_client_class.return_value = Mock_client
+            with patch('httpx.AsyncClient') as mock_client_class:
+                mock_client = AsyncMock()
+                mock_response = AsyncMock()
+                mock_response.status_code = 200
+                mock_response.headers = {"content-type": "application/json"}
+                mock_response.json = Mock(return_value={"data": "test"})
+                mock_client.request = AsyncMock(return_value=mock_response)
+                mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+                mock_client.__aexit__ = AsyncMock()
+                mock_client_class.return_value = mock_client
                 
                 result = await mesh.call_service(request)
                 selected_instances.append(result.get("instance_id"))
@@ -520,11 +520,11 @@ class TestServiceMeshProduction:
             "metadata": {"version": "1.0"}
         }
         
-        with patch.object(mesh.discovery, 'register_service', return_value=True) as Mock_register:
+        with patch.object(mesh.discovery, 'register_service', return_value=True) as mock_register:
             result = await mesh.register_service_v2("test-id", service_info)
             assert result["id"] == "test-id"
             assert result["status"] == "registered"
-            Mock_register.assert_called_once()
+            mock_register.assert_called_once()
         
         # Test discover_services compatibility
         mesh.discovery.services_cache["test-service"] = [
@@ -559,8 +559,8 @@ class TestServiceMeshProduction:
         mesh = ServiceMesh()
         
         # Register service and verify metrics
-        with patch.object(mesh.discovery, 'consul_client') as Mock_consul:
-            Mock_consul.agent.service.register = Mock()
+        with patch.object(mesh.discovery, 'consul_client') as mock_consul:
+            mock_consul.agent.service.register = Mock()
             
             instance = ServiceInstance(
                 "test-1", "test", "localhost", 8080

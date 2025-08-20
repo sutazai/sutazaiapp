@@ -10,7 +10,7 @@ import base64
 import json
 import logging
 from typing import Dict, List, Any, Optional, Tuple
-from unittest.Mock import Mock, patch
+from unittest.mock import Mock, patch
 import re
 
 logger = logging.getLogger(__name__)

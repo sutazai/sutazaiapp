@@ -9,7 +9,7 @@ import unittest
 import tempfile
 import subprocess
 from pathlib import Path
-from unittest.Mock import patch, MagicMock, Mock_open
+from unittest.mock import patch, MagicMock, mock_open
 import sys
 import shutil
 
@@ -60,9 +60,9 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
         for script in deploy_scripts:
             (self.project_root / script).write_text("#!/bin/bash\necho 'deploy'\n")
             
-    @patch('builtins.open', new_callable=Mock_open)
+    @patch('builtins.open', new_callable=mock_open)
     @patch('pathlib.Path.mkdir')
-    def test_log_action(self, Mock_mkdir, Mock_file):
+    def test_log_action(self, mock_mkdir, mock_file):
         """Test logging functionality"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
@@ -71,8 +71,8 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
             coordinator.log_action("Test message", "INFO")
             
             # Verify logging operations
-            Mock_mkdir.assert_called()
-            Mock_file.assert_called()
+            mock_mkdir.assert_called()
+            mock_file.assert_called()
             
         except ImportError:
             # Skip if module not available in test environment
@@ -95,16 +95,16 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
             self.skipTest("Coordinator module not available for import")
             
     @patch('subprocess.run')
-    def test_find_violations_rule_13(self, Mock_subprocess):
+    def test_find_violations_rule_13(self, mock_subprocess):
         """Test finding rule 13 violations (junk files)"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
             
             # Mock find command output
-            Mock_result = MagicMock()
-            Mock_result.returncode = 0
-            Mock_result.stdout = f"{self.project_root}/test.backup\n{self.project_root}/old_file.bak\n"
-            Mock_subprocess.return_value = Mock_result
+            mock_result = MagicMock()
+            mock_result.returncode = 0
+            mock_result.stdout = f"{self.project_root}/test.backup\n{self.project_root}/old_file.bak\n"
+            mock_subprocess.return_value = mock_result
             
             coordinator = HygieneEnforcementCoordinator(str(self.project_root))
             violations = coordinator.find_violations("rule_13")
@@ -116,15 +116,15 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
             self.skipTest("Coordinator module not available for import")
             
     @patch('subprocess.run')
-    def test_verify_file_safety(self, Mock_subprocess):
+    def test_verify_file_safety(self, mock_subprocess):
         """Test file safety verification"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
             
             # Mock grep command - no references found
-            Mock_result = MagicMock()
-            Mock_result.returncode = 1  # grep returns 1 when no matches
-            Mock_subprocess.return_value = Mock_result
+            mock_result = MagicMock()
+            mock_result.returncode = 1  # grep returns 1 when no matches
+            mock_subprocess.return_value = mock_result
             
             coordinator = HygieneEnforcementCoordinator(str(self.project_root))
             test_file = self.project_root / "test.backup"
@@ -139,16 +139,16 @@ class TestHygieneEnforcementCoordinator(unittest.TestCase):
             self.skipTest("Coordinator module not available for import")
             
     @patch('subprocess.run')
-    def test_verify_file_safety_with_references(self, Mock_subprocess):
+    def test_verify_file_safety_with_references(self, mock_subprocess):
         """Test file safety verification when file has references"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
             
             # Mock grep command - references found
-            Mock_result = MagicMock()
-            Mock_result.returncode = 0
-            Mock_result.stdout = "/path/to/other/file.py:import test.backup\n"
-            Mock_subprocess.return_value = Mock_result
+            mock_result = MagicMock()
+            mock_result.returncode = 0
+            mock_result.stdout = "/path/to/other/file.py:import test.backup\n"
+            mock_subprocess.return_value = mock_result
             
             coordinator = HygieneEnforcementCoordinator(str(self.project_root))
             test_file = self.project_root / "test.backup"
@@ -202,16 +202,16 @@ class TestCoordinatorRuleEnforcement(unittest.TestCase):
             self.skipTest("Coordinator module not available for import")
             
     @patch('subprocess.run')
-    def test_enforce_rule_13_dry_run(self, Mock_subprocess):
+    def test_enforce_rule_13_dry_run(self, mock_subprocess):
         """Test rule 13 enforcement in dry run mode"""
         try:
             from scripts.hygiene_enforcement_coordinator import HygieneEnforcementCoordinator
             
             # Mock find command to return test violations
-            Mock_result = MagicMock()
-            Mock_result.returncode = 0
-            Mock_result.stdout = f"{self.project_root}/test.backup\n"
-            Mock_subprocess.return_value = Mock_result
+            mock_result = MagicMock()
+            mock_result.returncode = 0
+            mock_result.stdout = f"{self.project_root}/test.backup\n"
+            mock_subprocess.return_value = mock_result
             
             coordinator = HygieneEnforcementCoordinator(str(self.project_root))
             coordinator.dry_run = True

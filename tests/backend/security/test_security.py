@@ -5,7 +5,7 @@ Testing input validation, authentication, authorization, and security controls
 
 import pytest
 import json
-from unittest.Mock import patch, AsyncMock, MagicMock
+from unittest.mock import patch, AsyncMock, MagicMock
 from httpx import AsyncClient
 
 
@@ -25,8 +25,8 @@ class TestInputValidationSecurity:
         ]
         
         for payload in sql_injection_payloads:
-            with patch('app.utils.validation.validate_agent_id') as Mock_validate:
-                Mock_validate.side_effect = ValueError("Invalid agent ID")
+            with patch('app.utils.validation.validate_agent_id') as mock_validate:
+                mock_validate.side_effect = ValueError("Invalid agent ID")
                 
                 response = await async_client.get(f"/api/v1/agents/{payload}")
                 assert response.status_code == 400, f"SQL injection payload not blocked: {payload}"
@@ -44,8 +44,8 @@ class TestInputValidationSecurity:
         ]
         
         for payload in xss_payloads:
-            with patch('app.utils.validation.sanitize_user_input') as Mock_sanitize:
-                Mock_sanitize.side_effect = ValueError("Malicious input detected")
+            with patch('app.utils.validation.sanitize_user_input') as mock_sanitize:
+                mock_sanitize.side_effect = ValueError("Malicious input detected")
                 
                 response = await async_client.post("/api/v1/batch", json=[payload])
                 assert response.status_code == 400, f"XSS payload not blocked: {payload}"
@@ -63,8 +63,8 @@ class TestInputValidationSecurity:
         ]
         
         for payload in path_traversal_payloads:
-            with patch('app.utils.validation.validate_agent_id') as Mock_validate:
-                Mock_validate.side_effect = ValueError("Invalid agent ID")
+            with patch('app.utils.validation.validate_agent_id') as mock_validate:
+                mock_validate.side_effect = ValueError("Invalid agent ID")
                 
                 response = await async_client.get(f"/api/v1/agents/{payload}")
                 assert response.status_code == 400, f"Path traversal payload not blocked: {payload}"
@@ -82,8 +82,8 @@ class TestInputValidationSecurity:
         ]
         
         for payload in command_injection_payloads:
-            with patch('app.utils.validation.validate_cache_pattern') as Mock_validate:
-                Mock_validate.side_effect = ValueError("Invalid cache pattern")
+            with patch('app.utils.validation.validate_cache_pattern') as mock_validate:
+                mock_validate.side_effect = ValueError("Invalid cache pattern")
                 
                 response = await async_client.post(f"/api/v1/cache/clear?pattern={payload}")
                 assert response.status_code == 400, f"Command injection payload not blocked: {payload}"
@@ -101,8 +101,8 @@ class TestInputValidationSecurity:
         ]
         
         for payload in ldap_injection_payloads:
-            with patch('app.utils.validation.sanitize_user_input') as Mock_sanitize:
-                Mock_sanitize.side_effect = ValueError("Malicious input detected")
+            with patch('app.utils.validation.sanitize_user_input') as mock_sanitize:
+                mock_sanitize.side_effect = ValueError("Malicious input detected")
                 
                 chat_request = {"message": payload, "model": "tinyllama"}
                 response = await async_client.post("/api/v1/chat", json=chat_request)
@@ -121,8 +121,8 @@ class TestInputValidationSecurity:
         ]
         
         for payload in template_injection_payloads:
-            with patch('app.utils.validation.sanitize_user_input') as Mock_sanitize:
-                Mock_sanitize.side_effect = ValueError("Malicious input detected")
+            with patch('app.utils.validation.sanitize_user_input') as mock_sanitize:
+                mock_sanitize.side_effect = ValueError("Malicious input detected")
                 
                 response = await async_client.post("/api/v1/batch", json=[payload])
                 assert response.status_code == 400, f"Template injection payload not blocked: {payload}"
@@ -156,8 +156,8 @@ class TestAuthenticationSecurity:
     async def test_authentication_required_endpoints(self, async_client):
         """Test that protected endpoints require authentication"""
         # Test with authentication router Mocked
-        with patch('app.auth.router.get_current_user') as Mock_get_user:
-            Mock_get_user.side_effect = Exception("No authentication token")
+        with patch('app.auth.router.get_current_user') as mock_get_user:
+            mock_get_user.side_effect = Exception("No authentication token")
             
             # These endpoints should be protected (if auth is enabled)
             protected_endpoints = [
@@ -241,9 +241,9 @@ class TestAuthorizationSecurity:
     async def test_role_based_access_control(self, async_client):
         """Test role-based access control mechanisms"""
         # Simulate different user roles
-        with patch('app.auth.router.get_current_user') as Mock_get_user:
+        with patch('app.auth.router.get_current_user') as mock_get_user:
             # Test admin user
-            Mock_get_user.return_value = {
+            mock_get_user.return_value = {
                 "id": "admin-user",
                 "username": "admin",
                 "role": "admin"
@@ -280,7 +280,7 @@ class TestAuthorizationSecurity:
 
     @pytest.mark.security
     @pytest.mark.asyncio
-    async def test_resource_access_control(self, async_client, Mock_validation):
+    async def test_resource_access_control(self, async_client, mock_validation):
         """Test that users can only access authorized resources"""
         # Test accessing other users' resources
         unauthorized_resource_ids = [
@@ -291,8 +291,8 @@ class TestAuthorizationSecurity:
         ]
         
         for resource_id in unauthorized_resource_ids:
-            with patch('app.utils.validation.validate_task_id') as Mock_validate:
-                Mock_validate.side_effect = ValueError("Unauthorized access")
+            with patch('app.utils.validation.validate_task_id') as mock_validate:
+                mock_validate.side_effect = ValueError("Unauthorized access")
                 
                 response = await async_client.get(f"/api/v1/tasks/{resource_id}")
                 assert response.status_code == 400, f"Unauthorized access not prevented: {resource_id}"
@@ -359,8 +359,8 @@ class TestDataProtectionSecurity:
             "use_cache": True
         }
         
-        with patch('app.utils.validation.sanitize_user_input') as Mock_sanitize:
-            Mock_sanitize.side_effect = ValueError("Input too large")
+        with patch('app.utils.validation.sanitize_user_input') as mock_sanitize:
+            mock_sanitize.side_effect = ValueError("Input too large")
             
             response = await async_client.post("/api/v1/chat", json=chat_request)
             # Should limit input size
@@ -551,15 +551,15 @@ class TestAuditLogging:
     async def test_security_event_logging(self, async_client):
         """Test that security events are properly logged"""
         # Test that failed authentication attempts are logged
-        with patch('app.utils.validation.validate_agent_id') as Mock_validate:
-            Mock_validate.side_effect = ValueError("Invalid agent ID")
+        with patch('app.utils.validation.validate_agent_id') as mock_validate:
+            mock_validate.side_effect = ValueError("Invalid agent ID")
             
             # This should trigger security logging
             response = await async_client.get("/api/v1/agents/malicious-input")
             assert response.status_code == 400
             
             # Verify that validation was called (indicating logging occurred)
-            Mock_validate.assert_called_once()
+            mock_validate.assert_called_once()
 
     @pytest.mark.security
     @pytest.mark.asyncio

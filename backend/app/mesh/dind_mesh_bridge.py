@@ -59,6 +59,9 @@ class DinDMeshBridge:
         self.monitor_task: Optional[asyncio.Task] = None
         # Add registry attribute for compatibility
         self.registry = {"mcp_services": []}
+        # Persistent port allocation file
+        self._port_allocation_file = "/tmp/mcp_port_allocations.json"
+        self._load_port_allocations()
         
     async def initialize(self) -> bool:
         """
@@ -122,6 +125,9 @@ class DinDMeshBridge:
             
             # Initialize protocol translator for STDIO MCPs
             self.protocol_translator = await get_protocol_translator()
+            
+            # Load persistent port allocations
+            self._load_port_allocations()
             
             # Discover existing MCP containers
             await self.discover_mcp_containers()
@@ -210,6 +216,14 @@ class DinDMeshBridge:
             else:
                 mcp_name = labels.get("mcp.name", container.name)
             
+            # Check if this service is already registered
+            if mcp_name in self.mcp_services:
+                existing_service = self.mcp_services[mcp_name]
+                # Update state if needed
+                existing_service.state = ServiceState.HEALTHY if container.status == "running" else ServiceState.UNHEALTHY
+                logger.debug(f"Service {mcp_name} already registered on port {existing_service.mesh_port}")
+                return existing_service
+            
             mcp_protocol = labels.get("mcp.protocol", "stdio")  # Default to stdio
             mcp_port = int(labels.get("mcp.port", "8080"))  # Default port for HTTP MCPs
             
@@ -262,16 +276,70 @@ class DinDMeshBridge:
         if service_name in self.mcp_services:
             return self.mcp_services[service_name].mesh_port
         
+        # Check if we've already allocated a port for this service name
+        for port, allocated_service in self.port_allocations.items():
+            if allocated_service == service_name:
+                logger.debug(f"Reusing existing port {port} for service {service_name}")
+                return port
+        
+        # Reset port counter if we've reached the limit
+        if self.next_port >= DIND_BASE_PORT + DIND_PORT_RANGE:
+            logger.warning(f"Port counter reached limit, resetting to {DIND_BASE_PORT}")
+            self.next_port = DIND_BASE_PORT
+            # Clean up stale allocations
+            active_services = set(self.mcp_services.keys())
+            stale_ports = [port for port, svc in self.port_allocations.items() if svc not in active_services]
+            for port in stale_ports:
+                del self.port_allocations[port]
+                logger.debug(f"Freed stale port {port}")
+        
         # Find next available port
-        while self.next_port < DIND_BASE_PORT + DIND_PORT_RANGE:
+        attempts = 0
+        while attempts < DIND_PORT_RANGE:
             if self.next_port not in self.port_allocations:
                 self.port_allocations[self.next_port] = service_name
                 allocated = self.next_port
                 self.next_port += 1
+                if self.next_port >= DIND_BASE_PORT + DIND_PORT_RANGE:
+                    self.next_port = DIND_BASE_PORT  # Wrap around
+                logger.info(f"Allocated port {allocated} for service {service_name}")
+                self._save_port_allocations()  # Persist allocations
                 return allocated
             self.next_port += 1
+            if self.next_port >= DIND_BASE_PORT + DIND_PORT_RANGE:
+                self.next_port = DIND_BASE_PORT  # Wrap around
+            attempts += 1
         
-        raise ValueError(f"No available ports for MCP service {service_name}")
+        raise ValueError(f"No available ports for MCP service {service_name} after {attempts} attempts")
+    
+    def _save_port_allocations(self):
+        """Save port allocations to persistent storage"""
+        try:
+            import json
+            data = {
+                "port_allocations": self.port_allocations,
+                "next_port": self.next_port,
+                "services": {name: svc.mesh_port for name, svc in self.mcp_services.items()}
+            }
+            with open(self._port_allocation_file, 'w') as f:
+                json.dump(data, f)
+            logger.debug(f"Saved port allocations to {self._port_allocation_file}")
+        except Exception as e:
+            logger.warning(f"Failed to save port allocations: {e}")
+    
+    def _load_port_allocations(self):
+        """Load port allocations from persistent storage"""
+        try:
+            import json
+            if os.path.exists(self._port_allocation_file):
+                with open(self._port_allocation_file, 'r') as f:
+                    data = json.load(f)
+                self.port_allocations = {int(k): v for k, v in data.get("port_allocations", {}).items()}
+                self.next_port = data.get("next_port", DIND_BASE_PORT)
+                logger.info(f"Loaded {len(self.port_allocations)} port allocations from {self._port_allocation_file}")
+                logger.debug(f"Port allocations: {self.port_allocations}")
+        except Exception as e:
+            logger.warning(f"Failed to load port allocations: {e}")
     
     async def _register_with_mesh(self, service: DinDMCPService) -> bool:
         """

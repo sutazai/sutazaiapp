@@ -5,7 +5,7 @@ Testing connection pools, caching, task queues, and health monitoring
 
 import pytest
 import asyncio
-from unittest.Mock import AsyncMock, MagicMock, patch, call
+from unittest.mock import AsyncMock, MagicMock, patch, call
 from datetime import datetime, timedelta
 import json
 
@@ -18,8 +18,8 @@ class TestConnectionPoolManager:
     async def test_connection_pool_initialization(self):
         """Test connection pool manager initialization"""
         with patch('app.core.connection_pool.ConnectionPoolManager') as MockPoolManager:
-            Mock_instance = AsyncMock()
-            MockPoolManager.return_value = Mock_instance
+            mock_instance = AsyncMock()
+            MockPoolManager.return_value = mock_instance
             
             from app.core.connection_pool import get_pool_manager
             
@@ -29,9 +29,9 @@ class TestConnectionPoolManager:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_connection_pool_stats(self, Mock_pool_manager):
+    async def test_connection_pool_stats(self, mock_pool_manager):
         """Test connection pool statistics"""
-        stats = Mock_pool_manager.get_stats()
+        stats = mock_pool_manager.get_stats()
         
         assert isinstance(stats, dict)
         assert "active_connections" in stats
@@ -45,18 +45,18 @@ class TestConnectionPoolManager:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_connection_pool_close(self, Mock_pool_manager):
+    async def test_connection_pool_close(self, mock_pool_manager):
         """Test connection pool cleanup"""
-        await Mock_pool_manager.close()
-        Mock_pool_manager.close.assert_called_once()
+        await mock_pool_manager.close()
+        mock_pool_manager.close.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_http_client_creation(self):
         """Test HTTP client creation and management"""
-        with patch('app.core.connection_pool.get_http_client') as Mock_get_client:
-            Mock_client = AsyncMock()
-            Mock_get_client.return_value.__aenter__.return_value = Mock_client
+        with patch('app.core.connection_pool.get_http_client') as mock_get_client:
+            mock_client = AsyncMock()
+            mock_get_client.return_value.__aenter__.return_value = mock_client
             
             from app.core.connection_pool import get_http_client
             
@@ -69,55 +69,55 @@ class TestCacheService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_service_initialization(self, Mock_cache_service):
+    async def test_cache_service_initialization(self, mock_cache_service):
         """Test cache service initialization"""
-        assert Mock_cache_service is not None
+        assert mock_cache_service is not None
         
         # Test basic cache operations are available
-        assert hasattr(Mock_cache_service, 'get')
-        assert hasattr(Mock_cache_service, 'set')
-        assert hasattr(Mock_cache_service, 'delete')
+        assert hasattr(mock_cache_service, 'get')
+        assert hasattr(mock_cache_service, 'set')
+        assert hasattr(mock_cache_service, 'delete')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_get_set_operations(self, Mock_cache_service):
+    async def test_cache_get_set_operations(self, mock_cache_service):
         """Test basic cache get/set operations"""
         key = "test_key"
         value = {"test": "data"}
         
         # Test set operation
-        result = await Mock_cache_service.set(key, value, ttl=60)
+        result = await mock_cache_service.set(key, value, ttl=60)
         assert result is True
         
         # Verify set was called with correct parameters
-        Mock_cache_service.set.assert_called_with(key, value, ttl=60)
+        mock_cache_service.set.assert_called_with(key, value, ttl=60)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_delete_operations(self, Mock_cache_service):
+    async def test_cache_delete_operations(self, mock_cache_service):
         """Test cache deletion operations"""
         key = "test_key"
         
         # Test delete operation
-        result = await Mock_cache_service.delete(key)
+        result = await mock_cache_service.delete(key)
         assert result is True
         
-        Mock_cache_service.delete.assert_called_with(key)
+        mock_cache_service.delete.assert_called_with(key)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_clear_all(self, Mock_cache_service):
+    async def test_cache_clear_all(self, mock_cache_service):
         """Test cache clear all operation"""
-        result = await Mock_cache_service.clear_all()
+        result = await mock_cache_service.clear_all()
         assert result is True
         
-        Mock_cache_service.clear_all.assert_called_once()
+        mock_cache_service.clear_all.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_cache_statistics(self, Mock_cache_service):
+    async def test_cache_statistics(self, mock_cache_service):
         """Test cache statistics collection"""
-        stats = Mock_cache_service.get_stats()
+        stats = mock_cache_service.get_stats()
         
         assert isinstance(stats, dict)
         assert "hits" in stats
@@ -133,11 +133,11 @@ class TestCacheService:
     @pytest.mark.asyncio
     async def test_cache_decorators(self):
         """Test cache decorator functionality"""
-        with patch('app.core.cache.get_cache_service') as Mock_get_cache:
-            Mock_cache = AsyncMock()
-            Mock_get_cache.return_value = Mock_cache
-            Mock_cache.get.return_value = None  # Cache miss
-            Mock_cache.set.return_value = True
+        with patch('app.core.cache.get_cache_service') as mock_get_cache:
+            mock_cache = AsyncMock()
+            mock_get_cache.return_value = mock_cache
+            mock_cache.get.return_value = None  # Cache miss
+            mock_cache.set.return_value = True
             
             from app.core.cache import cached
             
@@ -155,19 +155,19 @@ class TestTaskQueue:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_queue_initialization(self, Mock_task_queue):
+    async def test_task_queue_initialization(self, mock_task_queue):
         """Test task queue initialization"""
-        assert Mock_task_queue is not None
-        assert hasattr(Mock_task_queue, 'get_task_status')
-        assert hasattr(Mock_task_queue, 'register_handler')
+        assert mock_task_queue is not None
+        assert hasattr(mock_task_queue, 'get_task_status')
+        assert hasattr(mock_task_queue, 'register_handler')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_status_retrieval(self, Mock_task_queue):
+    async def test_task_status_retrieval(self, mock_task_queue):
         """Test task status retrieval"""
         task_id = "test-task-123"
         
-        status = await Mock_task_queue.get_task_status(task_id)
+        status = await mock_task_queue.get_task_status(task_id)
         
         assert isinstance(status, dict)
         assert "status" in status
@@ -176,20 +176,20 @@ class TestTaskQueue:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_handler_registration(self, Mock_task_queue):
+    async def test_task_handler_registration(self, mock_task_queue):
         """Test task handler registration"""
         async def test_handler(payload):
             return {"processed": payload}
         
-        await Mock_task_queue.register_handler("test_type", test_handler)
+        await mock_task_queue.register_handler("test_type", test_handler)
         
-        Mock_task_queue.register_handler.assert_called_with("test_type", test_handler)
+        mock_task_queue.register_handler.assert_called_with("test_type", test_handler)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_queue_statistics(self, Mock_task_queue):
+    async def test_task_queue_statistics(self, mock_task_queue):
         """Test task queue statistics"""
-        stats = Mock_task_queue.get_stats()
+        stats = mock_task_queue.get_stats()
         
         assert isinstance(stats, dict)
         assert "pending_tasks" in stats
@@ -203,17 +203,17 @@ class TestTaskQueue:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_task_queue_shutdown(self, Mock_task_queue):
+    async def test_task_queue_shutdown(self, mock_task_queue):
         """Test task queue shutdown"""
-        await Mock_task_queue.stop()
-        Mock_task_queue.stop.assert_called_once()
+        await mock_task_queue.stop()
+        mock_task_queue.stop.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_background_task_creation(self):
         """Test background task creation"""
-        with patch('app.core.task_queue.create_background_task') as Mock_create:
-            Mock_create.return_value = "task-id-123"
+        with patch('app.core.task_queue.create_background_task') as mock_create:
+            mock_create.return_value = "task-id-123"
             
             from app.core.task_queue import create_background_task
             
@@ -224,7 +224,7 @@ class TestTaskQueue:
             )
             
             assert task_id == "task-id-123"
-            Mock_create.assert_called_once_with(
+            mock_create.assert_called_once_with(
                 task_type="test",
                 payload={"data": "test"},
                 priority=1
@@ -236,17 +236,17 @@ class TestHealthMonitoring:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_health_monitoring_initialization(self, Mock_health_monitoring):
+    async def test_health_monitoring_initialization(self, mock_health_monitoring):
         """Test health monitoring service initialization"""
-        assert Mock_health_monitoring is not None
-        assert hasattr(Mock_health_monitoring, 'get_detailed_health')
-        assert hasattr(Mock_health_monitoring, 'get_prometheus_metrics')
+        assert mock_health_monitoring is not None
+        assert hasattr(mock_health_monitoring, 'get_detailed_health')
+        assert hasattr(mock_health_monitoring, 'get_prometheus_metrics')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_detailed_health_report(self, Mock_health_monitoring):
+    async def test_detailed_health_report(self, mock_health_monitoring):
         """Test detailed health report generation"""
-        health_report = await Mock_health_monitoring.get_detailed_health()
+        health_report = await mock_health_monitoring.get_detailed_health()
         
         assert health_report is not None
         assert hasattr(health_report, 'overall_status')
@@ -256,9 +256,9 @@ class TestHealthMonitoring:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_prometheus_metrics_generation(self, Mock_health_monitoring):
+    async def test_prometheus_metrics_generation(self, mock_health_monitoring):
         """Test Prometheus metrics generation"""
-        metrics = await Mock_health_monitoring.get_prometheus_metrics()
+        metrics = await mock_health_monitoring.get_prometheus_metrics()
         
         assert isinstance(metrics, str)
         assert len(metrics) > 0
@@ -267,9 +267,9 @@ class TestHealthMonitoring:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_service_health_tracking(self, Mock_health_monitoring):
+    async def test_service_health_tracking(self, mock_health_monitoring):
         """Test individual service health tracking"""
-        health_report = await Mock_health_monitoring.get_detailed_health()
+        health_report = await mock_health_monitoring.get_detailed_health()
         
         services = health_report.services
         assert isinstance(services, dict)
@@ -286,17 +286,17 @@ class TestCircuitBreakers:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_circuit_breaker_manager_initialization(self, Mock_circuit_breaker_manager):
+    async def test_circuit_breaker_manager_initialization(self, mock_circuit_breaker_manager):
         """Test circuit breaker manager initialization"""
-        assert Mock_circuit_breaker_manager is not None
-        assert hasattr(Mock_circuit_breaker_manager, 'get_all_stats')
-        assert hasattr(Mock_circuit_breaker_manager, 'reset_all')
+        assert mock_circuit_breaker_manager is not None
+        assert hasattr(mock_circuit_breaker_manager, 'get_all_stats')
+        assert hasattr(mock_circuit_breaker_manager, 'reset_all')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_circuit_breaker_stats(self, Mock_circuit_breaker_manager):
+    async def test_circuit_breaker_stats(self, mock_circuit_breaker_manager):
         """Test circuit breaker statistics"""
-        stats = Mock_circuit_breaker_manager.get_all_stats()
+        stats = mock_circuit_breaker_manager.get_all_stats()
         
         assert isinstance(stats, dict)
         
@@ -310,22 +310,22 @@ class TestCircuitBreakers:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_circuit_breaker_reset(self, Mock_circuit_breaker_manager):
+    async def test_circuit_breaker_reset(self, mock_circuit_breaker_manager):
         """Test circuit breaker reset functionality"""
-        await Mock_circuit_breaker_manager.reset_all()
-        Mock_circuit_breaker_manager.reset_all.assert_called_once()
+        await mock_circuit_breaker_manager.reset_all()
+        mock_circuit_breaker_manager.reset_all.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_individual_circuit_breakers(self):
         """Test individual circuit breaker creation"""
-        with patch('app.core.circuit_breaker_integration.get_redis_circuit_breaker') as Mock_redis_breaker, \
-             patch('app.core.circuit_breaker_integration.get_database_circuit_breaker') as Mock_db_breaker, \
-             patch('app.core.circuit_breaker_integration.get_ollama_circuit_breaker') as Mock_ollama_breaker:
+        with patch('app.core.circuit_breaker_integration.get_redis_circuit_breaker') as mock_redis_breaker, \
+             patch('app.core.circuit_breaker_integration.get_database_circuit_breaker') as mock_db_breaker, \
+             patch('app.core.circuit_breaker_integration.get_ollama_circuit_breaker') as mock_ollama_breaker:
             
-            Mock_redis_breaker.return_value = AsyncMock()
-            Mock_db_breaker.return_value = AsyncMock()
-            Mock_ollama_breaker.return_value = AsyncMock()
+            mock_redis_breaker.return_value = AsyncMock()
+            mock_db_breaker.return_value = AsyncMock()
+            mock_ollama_breaker.return_value = AsyncMock()
             
             from app.core.circuit_breaker_integration import (
                 get_redis_circuit_breaker,
@@ -347,21 +347,21 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_service_initialization(self, Mock_ollama_service):
+    async def test_ollama_service_initialization(self, mock_ollama_service):
         """Test Ollama service initialization"""
-        assert Mock_ollama_service is not None
-        assert hasattr(Mock_ollama_service, 'generate')
-        assert hasattr(Mock_ollama_service, 'generate_streaming')
-        assert hasattr(Mock_ollama_service, 'batch_generate')
+        assert mock_ollama_service is not None
+        assert hasattr(mock_ollama_service, 'generate')
+        assert hasattr(mock_ollama_service, 'generate_streaming')
+        assert hasattr(mock_ollama_service, 'batch_generate')
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_text_generation(self, Mock_ollama_service):
+    async def test_ollama_text_generation(self, mock_ollama_service):
         """Test Ollama text generation"""
         prompt = "Hello, how are you?"
         model = "tinyllama"
         
-        result = await Mock_ollama_service.generate(
+        result = await mock_ollama_service.generate(
             prompt=prompt,
             model=model,
             use_cache=True
@@ -374,13 +374,13 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_streaming_generation(self, Mock_ollama_service):
+    async def test_ollama_streaming_generation(self, mock_ollama_service):
         """Test Ollama streaming text generation"""
         prompt = "Tell me a story"
         model = "tinyllama"
         
         chunks = []
-        async for chunk in Mock_ollama_service.generate_streaming(
+        async for chunk in mock_ollama_service.generate_streaming(
             prompt=prompt,
             model=model
         ):
@@ -393,11 +393,11 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_batch_generation(self, Mock_ollama_service):
+    async def test_ollama_batch_generation(self, mock_ollama_service):
         """Test Ollama batch text generation"""
         prompts = ["Hello", "How are you?"]
         
-        results = await Mock_ollama_service.batch_generate(
+        results = await mock_ollama_service.batch_generate(
             prompts=prompts,
             max_concurrent=10
         )
@@ -412,9 +412,9 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_service_statistics(self, Mock_ollama_service):
+    async def test_ollama_service_statistics(self, mock_ollama_service):
         """Test Ollama service statistics"""
-        stats = Mock_ollama_service.get_stats()
+        stats = mock_ollama_service.get_stats()
         
         assert isinstance(stats, dict)
         assert "requests_processed" in stats
@@ -428,17 +428,17 @@ class TestOllamaService:
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_service_warmup(self, Mock_ollama_service):
+    async def test_ollama_service_warmup(self, mock_ollama_service):
         """Test Ollama service warmup"""
-        await Mock_ollama_service.warmup(3)
-        Mock_ollama_service.warmup.assert_called_with(3)
+        await mock_ollama_service.warmup(3)
+        mock_ollama_service.warmup.assert_called_with(3)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
-    async def test_ollama_service_shutdown(self, Mock_ollama_service):
+    async def test_ollama_service_shutdown(self, mock_ollama_service):
         """Test Ollama service shutdown"""
-        await Mock_ollama_service.shutdown()
-        Mock_ollama_service.shutdown.assert_called_once()
+        await mock_ollama_service.shutdown()
+        mock_ollama_service.shutdown.assert_called_once()
 
 
 class TestCoreConfiguration:
@@ -482,18 +482,18 @@ class TestServiceIntegration:
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_service_dependency_coordination(self, 
-                                                   Mock_cache_service,
-                                                   Mock_pool_manager,
-                                                   Mock_ollama_service,
-                                                   Mock_task_queue):
+                                                   mock_cache_service,
+                                                   mock_pool_manager,
+                                                   mock_ollama_service,
+                                                   mock_task_queue):
         """Test that services can work together"""
         # Test cache service with connection pool
-        assert Mock_cache_service is not None
-        assert Mock_pool_manager is not None
+        assert mock_cache_service is not None
+        assert mock_pool_manager is not None
         
         # Test cache stats and pool stats are available
-        cache_stats = Mock_cache_service.get_stats()
-        pool_stats = Mock_pool_manager.get_stats()
+        cache_stats = mock_cache_service.get_stats()
+        pool_stats = mock_pool_manager.get_stats()
         
         assert isinstance(cache_stats, dict)
         assert isinstance(pool_stats, dict)
@@ -501,45 +501,45 @@ class TestServiceIntegration:
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_error_handling_across_services(self,
-                                                   Mock_cache_service,
-                                                   Mock_ollama_service):
+                                                   mock_cache_service,
+                                                   mock_ollama_service):
         """Test error handling across different services"""
         # Configure Mock to raise exception
-        Mock_cache_service.get.side_effect = Exception("Redis connection failed")
+        mock_cache_service.get.side_effect = Exception("Redis connection failed")
         
         # Service should handle cache failures gracefully
         with pytest.raises(Exception) as exc_info:
-            await Mock_cache_service.get("test_key")
+            await mock_cache_service.get("test_key")
         
         assert "Redis connection failed" in str(exc_info.value)
 
     @pytest.mark.unit
     @pytest.mark.asyncio
     async def test_service_lifecycle_management(self,
-                                                Mock_pool_manager,
-                                                Mock_task_queue,
-                                                Mock_ollama_service):
+                                                mock_pool_manager,
+                                                mock_task_queue,
+                                                mock_ollama_service):
         """Test service lifecycle (startup/shutdown)"""
         # Test shutdown sequence
-        await Mock_ollama_service.shutdown()
-        await Mock_task_queue.stop()
-        await Mock_pool_manager.close()
+        await mock_ollama_service.shutdown()
+        await mock_task_queue.stop()
+        await mock_pool_manager.close()
         
         # Verify all services were shut down
-        Mock_ollama_service.shutdown.assert_called_once()
-        Mock_task_queue.stop.assert_called_once()
-        Mock_pool_manager.close.assert_called_once()
+        mock_ollama_service.shutdown.assert_called_once()
+        mock_task_queue.stop.assert_called_once()
+        mock_pool_manager.close.assert_called_once()
 
     @pytest.mark.unit
     @pytest.mark.performance
     @pytest.mark.asyncio
     async def test_concurrent_service_operations(self,
-                                                  Mock_cache_service,
-                                                  Mock_ollama_service):
+                                                  mock_cache_service,
+                                                  mock_ollama_service):
         """Test concurrent operations across services"""
         # Create concurrent operations
-        cache_task = Mock_cache_service.get("test_key")
-        ollama_task = Mock_ollama_service.generate(
+        cache_task = mock_cache_service.get("test_key")
+        ollama_task = mock_ollama_service.generate(
             prompt="test",
             model="tinyllama"
         )

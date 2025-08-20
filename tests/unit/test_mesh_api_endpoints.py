@@ -4,7 +4,7 @@ Tests all endpoints in backend/app/api/v1/endpoints/mesh.py with Mocked dependen
 """
 import json
 import pytest
-from unittest.Mock import Mock, patch, AsyncMock
+from unittest.mock import Mock, patch, AsyncMock
 from fastapi.testclient import TestClient
 from fastapi import HTTPException
 from typing import Dict, Any, List
@@ -82,7 +82,7 @@ def sample_agents_data():
     }
 
 @pytest.fixture
-def Mock_redis():
+def mock_redis():
     """Mock Redis client."""
     redis_Mock = Mock()
     redis_Mock.ping.return_value = True
@@ -91,39 +91,39 @@ def Mock_redis():
 class TestEnqueueEndpoint:
     """Test the /enqueue endpoint."""
     
-    @patch('backend.app.api.v1.endpoints.mesh.enqueue_task')
-    def test_enqueue_success(self, Mock_enqueue_task, sample_enqueue_request):
+    @patch('app.api.v1.endpoints.mesh.enqueue_task')
+    def test_enqueue_success(self, mock_enqueue_task, sample_enqueue_request):
         """Test successful task enqueuing."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_enqueue_task.return_value = "1699999999999-0"
+        mock_enqueue_task.return_value = "1699999999999-0"
         
         response = client.post("/mesh/enqueue", json=sample_enqueue_request)
         
         assert response.status_code == 200
         assert response.json() == {"id": "1699999999999-0"}
         
-        Mock_enqueue_task.assert_called_once_with(
+        mock_enqueue_task.assert_called_once_with(
             sample_enqueue_request["topic"],
             sample_enqueue_request["task"]
         )
     
-    @patch('backend.app.api.v1.endpoints.mesh.enqueue_task')
-    def test_enqueue_redis_error(self, Mock_enqueue_task, sample_enqueue_request):
+    @patch('app.api.v1.endpoints.mesh.enqueue_task')
+    def test_enqueue_redis_error(self, mock_enqueue_task, sample_enqueue_request):
         """Test enqueue with Redis connection error."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_enqueue_task.side_effect = Exception("Redis connection failed")
+        mock_enqueue_task.side_effect = Exception("Redis connection failed")
         
         response = client.post("/mesh/enqueue", json=sample_enqueue_request)
         
@@ -132,7 +132,7 @@ class TestEnqueueEndpoint:
     
     def test_enqueue_invalid_topic_empty(self):
         """Test enqueue with empty topic."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -150,7 +150,7 @@ class TestEnqueueEndpoint:
     
     def test_enqueue_invalid_topic_pattern(self):
         """Test enqueue with invalid topic pattern."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -168,7 +168,7 @@ class TestEnqueueEndpoint:
     
     def test_enqueue_topic_too_long(self):
         """Test enqueue with topic exceeding max length."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -186,7 +186,7 @@ class TestEnqueueEndpoint:
     
     def test_enqueue_missing_task(self):
         """Test enqueue with missing task field."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -204,7 +204,7 @@ class TestEnqueueEndpoint:
     
     def test_enqueue_valid_topic_patterns(self):
         """Test enqueue with various valid topic patterns."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -220,8 +220,8 @@ class TestEnqueueEndpoint:
             "data123"
         ]
         
-        with patch('backend.app.api.v1.endpoints.mesh.enqueue_task') as Mock_enqueue:
-            Mock_enqueue.return_value = "test-id"
+        with patch('app.api.v1.endpoints.mesh.enqueue_task') as mock_enqueue:
+            mock_enqueue.return_value = "test-id"
             
             for topic in valid_topics:
                 request = {"topic": topic, "task": {"test": "data"}}
@@ -231,10 +231,10 @@ class TestEnqueueEndpoint:
 class TestResultsEndpoint:
     """Test the /results endpoint."""
     
-    @patch('backend.app.api.v1.endpoints.mesh.tail_results')
-    def test_get_results_success(self, Mock_tail_results, sample_results_data):
+    @patch('app.api.v1.endpoints.mesh.tail_results')
+    def test_get_results_success(self, mock_tail_results, sample_results_data):
         """Test successful results retrieval."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -242,49 +242,49 @@ class TestResultsEndpoint:
         client = TestClient(app)
         
         # Mock tail_results to return tuples (id, data)
-        Mock_data = [
+        mock_data = [
             ("1699999999999-0", sample_results_data[0]["data"]),
             ("1699999999999-1", sample_results_data[1]["data"])
         ]
-        Mock_tail_results.return_value = Mock_data
+        mock_tail_results.return_value = mock_data
         
         response = client.get("/mesh/results?topic=data_processing&count=2")
         
         assert response.status_code == 200
         assert response.json() == sample_results_data
         
-        Mock_tail_results.assert_called_once_with("data_processing", 2)
+        mock_tail_results.assert_called_once_with("data_processing", 2)
     
-    @patch('backend.app.api.v1.endpoints.mesh.tail_results')
-    def test_get_results_empty(self, Mock_tail_results):
+    @patch('app.api.v1.endpoints.mesh.tail_results')
+    def test_get_results_empty(self, mock_tail_results):
         """Test results retrieval with no results."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_tail_results.return_value = []
+        mock_tail_results.return_value = []
         
         response = client.get("/mesh/results?topic=data_processing")
         
         assert response.status_code == 200
         assert response.json() == []
         
-        Mock_tail_results.assert_called_once_with("data_processing", 10)  # Default count
+        mock_tail_results.assert_called_once_with("data_processing", 10)  # Default count
     
-    @patch('backend.app.api.v1.endpoints.mesh.tail_results')
-    def test_get_results_redis_error(self, Mock_tail_results):
+    @patch('app.api.v1.endpoints.mesh.tail_results')
+    def test_get_results_redis_error(self, mock_tail_results):
         """Test results retrieval with Redis error."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_tail_results.side_effect = Exception("Redis connection failed")
+        mock_tail_results.side_effect = Exception("Redis connection failed")
         
         response = client.get("/mesh/results?topic=data_processing")
         
@@ -293,7 +293,7 @@ class TestResultsEndpoint:
     
     def test_get_results_missing_topic(self):
         """Test results retrieval without topic parameter."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -306,7 +306,7 @@ class TestResultsEndpoint:
     
     def test_get_results_invalid_topic_pattern(self):
         """Test results retrieval with invalid topic pattern."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -319,7 +319,7 @@ class TestResultsEndpoint:
     
     def test_get_results_count_validation(self):
         """Test results retrieval with count parameter validation."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -335,77 +335,77 @@ class TestResultsEndpoint:
         assert response.status_code == 422
         
         # Test valid count
-        with patch('backend.app.api.v1.endpoints.mesh.tail_results') as Mock_tail:
-            Mock_tail.return_value = []
+        with patch('app.api.v1.endpoints.mesh.tail_results') as mock_tail:
+            mock_tail.return_value = []
             response = client.get("/mesh/results?topic=data_processing&count=50")
             assert response.status_code == 200
     
     def test_get_results_default_count(self):
         """Test results retrieval uses default count when not specified."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        with patch('backend.app.api.v1.endpoints.mesh.tail_results') as Mock_tail:
-            Mock_tail.return_value = []
+        with patch('app.api.v1.endpoints.mesh.tail_results') as mock_tail:
+            mock_tail.return_value = []
             response = client.get("/mesh/results?topic=data_processing")
             
             assert response.status_code == 200
-            Mock_tail.assert_called_once_with("data_processing", 10)  # Default count
+            mock_tail.assert_called_once_with("data_processing", 10)  # Default count
 
 class TestAgentsEndpoint:
     """Test the /agents endpoint."""
     
-    @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_get_agents_success(self, Mock_list_agents, sample_agents_data):
+    @patch('app.api.v1.endpoints.mesh.list_agents')
+    def test_get_agents_success(self, mock_list_agents, sample_agents_data):
         """Test successful agents listing."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_list_agents.return_value = sample_agents_data["agents"]
+        mock_list_agents.return_value = sample_agents_data["agents"]
         
         response = client.get("/mesh/agents")
         
         assert response.status_code == 200
         assert response.json() == sample_agents_data
         
-        Mock_list_agents.assert_called_once()
+        mock_list_agents.assert_called_once()
     
-    @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_get_agents_empty(self, Mock_list_agents):
+    @patch('app.api.v1.endpoints.mesh.list_agents')
+    def test_get_agents_empty(self, mock_list_agents):
         """Test agents listing with no agents."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_list_agents.return_value = []
+        mock_list_agents.return_value = []
         
         response = client.get("/mesh/agents")
         
         assert response.status_code == 200
         assert response.json() == {"count": 0, "agents": []}
     
-    @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_get_agents_redis_error(self, Mock_list_agents):
+    @patch('app.api.v1.endpoints.mesh.list_agents')
+    def test_get_agents_redis_error(self, mock_list_agents):
         """Test agents listing with Redis error."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_list_agents.side_effect = Exception("Redis connection failed")
+        mock_list_agents.side_effect = Exception("Redis connection failed")
         
         response = client.get("/mesh/agents")
         
@@ -415,20 +415,20 @@ class TestAgentsEndpoint:
 class TestHealthEndpoint:
     """Test the /health endpoint."""
     
-    @patch('backend.app.api.v1.endpoints.mesh.get_redis')
-    @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_health_success(self, Mock_list_agents, Mock_get_redis, Mock_redis, sample_agents_data):
+    @patch('app.api.v1.endpoints.mesh.get_redis')
+    @patch('app.api.v1.endpoints.mesh.list_agents')
+    def test_health_success(self, mock_list_agents, mock_get_redis, mock_redis, sample_agents_data):
         """Test successful health check."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_get_redis.return_value = Mock_redis
-        Mock_redis.ping.return_value = True
-        Mock_list_agents.return_value = sample_agents_data["agents"]
+        mock_get_redis.return_value = mock_redis
+        mock_redis.ping.return_value = True
+        mock_list_agents.return_value = sample_agents_data["agents"]
         
         response = client.get("/mesh/health")
         
@@ -438,20 +438,20 @@ class TestHealthEndpoint:
         assert result["redis"] is True
         assert result["agents_count"] == 2
     
-    @patch('backend.app.api.v1.endpoints.mesh.get_redis')
-    @patch('backend.app.api.v1.endpoints.mesh.list_agents')
-    def test_health_redis_degraded(self, Mock_list_agents, Mock_get_redis, Mock_redis):
+    @patch('app.api.v1.endpoints.mesh.get_redis')
+    @patch('app.api.v1.endpoints.mesh.list_agents')
+    def test_health_redis_degraded(self, mock_list_agents, mock_get_redis, mock_redis):
         """Test health check with degraded Redis."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_get_redis.return_value = Mock_redis
-        Mock_redis.ping.return_value = False
-        Mock_list_agents.return_value = []
+        mock_get_redis.return_value = mock_redis
+        mock_redis.ping.return_value = False
+        mock_list_agents.return_value = []
         
         response = client.get("/mesh/health")
         
@@ -461,18 +461,18 @@ class TestHealthEndpoint:
         assert result["redis"] is False
         assert result["agents_count"] == 0
     
-    @patch('backend.app.api.v1.endpoints.mesh.get_redis')
-    def test_health_redis_error(self, Mock_get_redis, Mock_redis):
+    @patch('app.api.v1.endpoints.mesh.get_redis')
+    def test_health_redis_error(self, mock_get_redis, mock_redis):
         """Test health check with Redis connection error."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
         app.include_router(router, prefix="/mesh")
         client = TestClient(app)
         
-        Mock_get_redis.return_value = Mock_redis
-        Mock_redis.ping.side_effect = Exception("Connection failed")
+        mock_get_redis.return_value = mock_redis
+        mock_redis.ping.side_effect = Exception("Connection failed")
         
         response = client.get("/mesh/health")
         
@@ -512,13 +512,13 @@ class TestOllamaGenerateEndpoint:
             "eval_duration": 2000000000
         }
     
-    @patch('backend.app.api.v1.endpoints.mesh.default_ollama_bucket')
-    @patch('backend.app.api.v1.endpoints.mesh.get_cache_service')
-    @patch('backend.app.api.v1.endpoints.mesh.get_pool_manager')
-    def test_ollama_generate_success(self, Mock_pool_manager, Mock_cache_service, 
-                                   Mock_bucket, sample_generate_request, sample_ollama_response):
+    @patch('app.api.v1.endpoints.mesh.default_ollama_bucket')
+    @patch('app.api.v1.endpoints.mesh.get_cache_service')
+    @patch('app.api.v1.endpoints.mesh.get_pool_manager')
+    def test_ollama_generate_success(self, mock_pool_manager, mock_cache_service, 
+                                   mock_bucket, sample_generate_request, sample_ollama_response):
         """Test successful Ollama generation."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         import asyncio
         
@@ -529,13 +529,13 @@ class TestOllamaGenerateEndpoint:
         # Mock rate limiter
         bucket_Mock = Mock()
         bucket_Mock.try_acquire.return_value = (True, 0)
-        Mock_bucket.return_value = bucket_Mock
+        mock_bucket.return_value = bucket_Mock
         
         # Mock cache service
         cache_Mock = AsyncMock()
         cache_Mock.get.return_value = None  # Cache miss
         cache_Mock.set.return_value = None
-        Mock_cache_service.return_value = cache_Mock
+        mock_cache_service.return_value = cache_Mock
         
         # Mock HTTP client and pool manager
         http_client_Mock = AsyncMock()
@@ -547,7 +547,7 @@ class TestOllamaGenerateEndpoint:
         pool_manager_Mock = AsyncMock()
         pool_manager_Mock.get_http_client.return_value.__aenter__.return_value = http_client_Mock
         pool_manager_Mock.get_http_client.return_value.__aexit__.return_value = None
-        Mock_pool_manager.return_value = pool_manager_Mock
+        mock_pool_manager.return_value = pool_manager_Mock
         
         response = client.post("/mesh/ollama/generate", json=sample_generate_request)
         
@@ -556,7 +556,7 @@ class TestOllamaGenerateEndpoint:
     
     def test_ollama_generate_prompt_too_large(self):
         """Test Ollama generation with oversized prompt."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -574,10 +574,10 @@ class TestOllamaGenerateEndpoint:
         assert response.status_code == 400
         assert "prompt too large" in response.json()["detail"]
     
-    @patch('backend.app.api.v1.endpoints.mesh.default_ollama_bucket')
-    def test_ollama_generate_rate_limited(self, Mock_bucket, sample_generate_request):
+    @patch('app.api.v1.endpoints.mesh.default_ollama_bucket')
+    def test_ollama_generate_rate_limited(self, mock_bucket, sample_generate_request):
         """Test Ollama generation with rate limiting."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -587,19 +587,19 @@ class TestOllamaGenerateEndpoint:
         # Mock rate limiter to deny request
         bucket_Mock = Mock()
         bucket_Mock.try_acquire.return_value = (False, 5000)  # Denied with 5s wait
-        Mock_bucket.return_value = bucket_Mock
+        mock_bucket.return_value = bucket_Mock
         
         response = client.post("/mesh/ollama/generate", json=sample_generate_request)
         
         assert response.status_code == 429
         assert response.json()["detail"]["retry_after_ms"] == 5000
     
-    @patch('backend.app.api.v1.endpoints.mesh.default_ollama_bucket')
-    @patch('backend.app.api.v1.endpoints.mesh.get_cache_service')
-    def test_ollama_generate_cache_hit(self, Mock_cache_service, Mock_bucket, 
+    @patch('app.api.v1.endpoints.mesh.default_ollama_bucket')
+    @patch('app.api.v1.endpoints.mesh.get_cache_service')
+    def test_ollama_generate_cache_hit(self, mock_cache_service, mock_bucket, 
                                      sample_generate_request, sample_ollama_response):
         """Test Ollama generation with cache hit."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -609,12 +609,12 @@ class TestOllamaGenerateEndpoint:
         # Mock rate limiter
         bucket_Mock = Mock()
         bucket_Mock.try_acquire.return_value = (True, 0)
-        Mock_bucket.return_value = bucket_Mock
+        mock_bucket.return_value = bucket_Mock
         
         # Mock cache service with cache hit
         cache_Mock = AsyncMock()
         cache_Mock.get.return_value = sample_ollama_response
-        Mock_cache_service.return_value = cache_Mock
+        mock_cache_service.return_value = cache_Mock
         
         response = client.post("/mesh/ollama/generate", json=sample_generate_request)
         
@@ -626,7 +626,7 @@ class TestOllamaGenerateEndpoint:
     
     def test_ollama_generate_default_model(self):
         """Test Ollama generation with default model."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -639,17 +639,17 @@ class TestOllamaGenerateEndpoint:
         }
         
         with patch.dict('os.environ', {'OLLAMA_DEFAULT_MODEL': 'test-model'}):
-            with patch('backend.app.api.v1.endpoints.mesh.default_ollama_bucket') as Mock_bucket:
+            with patch('app.api.v1.endpoints.mesh.default_ollama_bucket') as mock_bucket:
                 bucket_Mock = Mock()
                 bucket_Mock.try_acquire.return_value = (True, 0)
-                Mock_bucket.return_value = bucket_Mock
+                mock_bucket.return_value = bucket_Mock
                 
-                with patch('backend.app.api.v1.endpoints.mesh.get_cache_service') as Mock_cache:
+                with patch('app.api.v1.endpoints.mesh.get_cache_service') as mock_cache:
                     cache_Mock = AsyncMock()
                     cache_Mock.get.return_value = None
-                    Mock_cache.return_value = cache_Mock
+                    mock_cache.return_value = cache_Mock
                     
-                    with patch('backend.app.api.v1.endpoints.mesh.get_pool_manager') as Mock_pool:
+                    with patch('app.api.v1.endpoints.mesh.get_pool_manager') as mock_pool:
                         http_client_Mock = AsyncMock()
                         response_Mock = Mock()
                         response_Mock.json.return_value = {"response": "test"}
@@ -659,7 +659,7 @@ class TestOllamaGenerateEndpoint:
                         pool_manager_Mock = AsyncMock()
                         pool_manager_Mock.get_http_client.return_value.__aenter__.return_value = http_client_Mock
                         pool_manager_Mock.get_http_client.return_value.__aexit__.return_value = None
-                        Mock_pool.return_value = pool_manager_Mock
+                        mock_pool.return_value = pool_manager_Mock
                         
                         response = client.post("/mesh/ollama/generate", json=request_no_model)
                         
@@ -672,7 +672,7 @@ class TestRequestValidation:
     
     def test_enqueue_request_validation(self):
         """Test EnqueueRequest model validation."""
-        from backend.app.api.v1.endpoints.mesh import EnqueueRequest
+        from app.api.v1.endpoints.mesh import EnqueueRequest
         from pydantic import ValidationError
         
         # Valid request
@@ -699,14 +699,14 @@ class TestRequestValidation:
     
     def test_enqueue_response_validation(self):
         """Test EnqueueResponse model validation."""
-        from backend.app.api.v1.endpoints.mesh import EnqueueResponse
+        from app.api.v1.endpoints.mesh import EnqueueResponse
         
         response = EnqueueResponse(id="1699999999999-0")
         assert response.id == "1699999999999-0"
     
     def test_generate_request_validation(self):
         """Test GenerateRequest model validation."""
-        from backend.app.api.v1.endpoints.mesh import GenerateRequest
+        from app.api.v1.endpoints.mesh import GenerateRequest
         import os
         
         # Test with explicit model
@@ -733,7 +733,7 @@ class TestErrorHandling:
     
     def test_internal_server_errors(self):
         """Test that internal errors are properly converted to HTTP exceptions."""
-        from backend.app.api.v1.endpoints.mesh import router
+        from app.api.v1.endpoints.mesh import router
         from fastapi import FastAPI
         
         app = FastAPI()
@@ -741,18 +741,18 @@ class TestErrorHandling:
         client = TestClient(app)
         
         # Test various error scenarios
-        with patch('backend.app.api.v1.endpoints.mesh.enqueue_task') as Mock_enqueue:
-            Mock_enqueue.side_effect = RuntimeError("Internal error")
+        with patch('app.api.v1.endpoints.mesh.enqueue_task') as mock_enqueue:
+            mock_enqueue.side_effect = RuntimeError("Internal error")
             response = client.post("/mesh/enqueue", json={"topic": "test", "task": {}})
             assert response.status_code == 500
         
-        with patch('backend.app.api.v1.endpoints.mesh.tail_results') as Mock_tail:
-            Mock_tail.side_effect = RuntimeError("Internal error")
+        with patch('app.api.v1.endpoints.mesh.tail_results') as mock_tail:
+            mock_tail.side_effect = RuntimeError("Internal error")
             response = client.get("/mesh/results?topic=test")
             assert response.status_code == 500
         
-        with patch('backend.app.api.v1.endpoints.mesh.list_agents') as Mock_list:
-            Mock_list.side_effect = RuntimeError("Internal error")
+        with patch('app.api.v1.endpoints.mesh.list_agents') as mock_list:
+            mock_list.side_effect = RuntimeError("Internal error")
             response = client.get("/mesh/agents")
             assert response.status_code == 500
 

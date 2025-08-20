@@ -8,7 +8,7 @@ import numpy as np
 import json
 import time
 from typing import Dict, List, Any, Optional, Tuple
-from unittest.Mock import Mock, patch
+from unittest.mock import Mock, patch
 import logging
 
 logger = logging.getLogger(__name__)
@@ -52,7 +52,7 @@ class MockAIModel:
         return {
             'accuracy': self.accuracy,
             'prediction_count': len(self.prediction_history),
-            'model_type': 'Mock_classifier'
+            'model_type': 'mock_classifier'
         }
 
 class TestData:

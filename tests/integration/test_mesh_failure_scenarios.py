@@ -7,12 +7,12 @@ import time
 import threading
 import pytest
 from typing import Dict, Any, List, Optional
-from unittest.Mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch, MagicMock
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import redis
 
 # Import mesh components
-from backend.app.mesh.redis_bus import (
+from app.mesh.redis_bus import (
     get_redis, enqueue_task, tail_results, register_agent,
     list_agents, create_consumer_group, read_group, ack,
     move_to_dead, task_stream, result_stream, dead_stream
@@ -192,8 +192,8 @@ class TestConnectionFailures:
         assert msg_id is not None
         
         # Simulate connection failure
-        with patch.object(redis_client, 'xadd') as Mock_xadd:
-            Mock_xadd.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        with patch.object(redis_client, 'xadd') as mock_xadd:
+            mock_xadd.side_effect = redis.exceptions.ConnectionError("Connection failed")
             
             # Should raise exception during connection failure
             with pytest.raises(redis.exceptions.ConnectionError):
@@ -218,8 +218,8 @@ class TestConnectionFailures:
         assert len(results) == 3
         
         # Simulate connection failure
-        with patch.object(redis_client, 'pipeline') as Mock_pipeline:
-            Mock_pipeline.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        with patch.object(redis_client, 'pipeline') as mock_pipeline:
+            mock_pipeline.side_effect = redis.exceptions.ConnectionError("Connection failed")
             
             # Should raise exception during connection failure
             with pytest.raises(redis.exceptions.ConnectionError):
@@ -242,16 +242,16 @@ class TestConnectionFailures:
         assert len(test_agents) == 1
         
         # Simulate connection failure for registration
-        with patch.object(redis_client, 'set') as Mock_set:
-            Mock_set.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        with patch.object(redis_client, 'set') as mock_set:
+            mock_set.side_effect = redis.exceptions.ConnectionError("Connection failed")
             
             # Should raise exception during connection failure
             with pytest.raises(redis.exceptions.ConnectionError):
                 register_agent(f"failing_agent_{int(time.time())}", "test_agent", 30)
         
         # Simulate connection failure for listing
-        with patch.object(redis_client, 'scan') as Mock_scan:
-            Mock_scan.side_effect = redis.exceptions.ConnectionError("Connection failed")
+        with patch.object(redis_client, 'scan') as mock_scan:
+            mock_scan.side_effect = redis.exceptions.ConnectionError("Connection failed")
             
             # Should raise exception during connection failure
             with pytest.raises(redis.exceptions.ConnectionError):
@@ -272,8 +272,8 @@ class TestTimeoutScenarios:
             enqueue_task._stream_cache = {}
         
         # Simulate timeout
-        with patch.object(redis_client, 'xadd') as Mock_xadd:
-            Mock_xadd.side_effect = redis.exceptions.TimeoutError("Operation timed out")
+        with patch.object(redis_client, 'xadd') as mock_xadd:
+            mock_xadd.side_effect = redis.exceptions.TimeoutError("Operation timed out")
             
             # Should raise timeout exception
             with pytest.raises(redis.exceptions.TimeoutError):
@@ -304,8 +304,8 @@ class TestTimeoutScenarios:
         assert len(messages) <= 1  # Might get the message or timeout
         
         # Simulate timeout on read
-        with patch.object(redis_client, 'xreadgroup') as Mock_read:
-            Mock_read.side_effect = redis.exceptions.TimeoutError("Read timed out")
+        with patch.object(redis_client, 'xreadgroup') as mock_read:
+            mock_read.side_effect = redis.exceptions.TimeoutError("Read timed out")
             
             # Should raise timeout exception
             with pytest.raises(redis.exceptions.TimeoutError):
@@ -328,14 +328,14 @@ class TestTimeoutScenarios:
             )
         
         # Simulate timeout during retrieval
-        with patch.object(redis_client, 'pipeline') as Mock_pipeline:
+        with patch.object(redis_client, 'pipeline') as mock_pipeline:
             # Create a Mock pipeline that times out
-            Mock_pipe = Mock()
-            Mock_pipe.__enter__ = Mock(return_value=Mock_pipe)
-            Mock_pipe.__exit__ = Mock(return_value=None)
-            Mock_pipe.xrevrange = Mock()
-            Mock_pipe.execute.side_effect = redis.exceptions.TimeoutError("Pipeline timed out")
-            Mock_pipeline.return_value = Mock_pipe
+            mock_pipe = Mock()
+            mock_pipe.__enter__ = Mock(return_value=mock_pipe)
+            mock_pipe.__exit__ = Mock(return_value=None)
+            mock_pipe.xrevrange = Mock()
+            mock_pipe.execute.side_effect = redis.exceptions.TimeoutError("Pipeline timed out")
+            mock_pipeline.return_value = mock_pipe
             
             # Should raise timeout exception
             with pytest.raises(redis.exceptions.TimeoutError):
@@ -361,8 +361,8 @@ class TestMemoryPressureScenarios:
         assert msg_id is not None
         
         # Simulate memory pressure
-        with patch.object(redis_client, 'xadd') as Mock_xadd:
-            Mock_xadd.side_effect = redis.exceptions.ResponseError(
+        with patch.object(redis_client, 'xadd') as mock_xadd:
+            mock_xadd.side_effect = redis.exceptions.ResponseError(
                 "OOM command not allowed when used memory > 'maxmemory'"
             )
             
@@ -382,8 +382,8 @@ class TestMemoryPressureScenarios:
         register_agent(agent_id, "memory_test", 30, {"test": True})
         
         # Simulate memory pressure
-        with patch.object(redis_client, 'set') as Mock_set:
-            Mock_set.side_effect = redis.exceptions.ResponseError(
+        with patch.object(redis_client, 'set') as mock_set:
+            mock_set.side_effect = redis.exceptions.ResponseError(
                 "OOM command not allowed when used memory > 'maxmemory'"
             )
             
@@ -630,8 +630,8 @@ class TestRecoveryScenarios:
         assert msg_id1 is not None
         
         # Simulate failure in one operation but not others
-        with patch.object(redis_client, 'set') as Mock_set:
-            Mock_set.side_effect = redis.exceptions.ConnectionError("Agent ops failing")
+        with patch.object(redis_client, 'set') as mock_set:
+            mock_set.side_effect = redis.exceptions.ConnectionError("Agent ops failing")
             
             # Agent operations should fail
             with pytest.raises(redis.exceptions.ConnectionError):
@@ -684,7 +684,7 @@ class TestRecoveryScenarios:
             return original_get_redis()  # Normal operation after failures
         
         # Test recovery
-        with patch('backend.app.mesh.redis_bus.get_redis', side_effect=failing_get_redis):
+        with patch('app.mesh.redis_bus.get_redis', side_effect=failing_get_redis):
             recovery_attempts = 0
             max_attempts = 10
             

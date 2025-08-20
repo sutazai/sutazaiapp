@@ -6,14 +6,14 @@ import pytest
 import os
 import json
 import tempfile
-from unittest.Mock import Mock, patch, AsyncMock, MagicMock
+from unittest.mock import Mock, patch, AsyncMock, MagicMock
 from fastapi.testclient import TestClient
 from fastapi import FastAPI
 from datetime import datetime
 from pathlib import Path
 
 @pytest.fixture
-def Mock_workflow():
+def mock_workflow():
     """Mock workflow for testing"""
     workflow = Mock()
     workflow.initialize = AsyncMock()
@@ -34,7 +34,7 @@ def Mock_workflow():
     return workflow
 
 @pytest.fixture
-def Mock_app_with_agents():
+def mock_app_with_agents():
     """Create FastAPI app with agent endpoints"""
     app = FastAPI()
     
@@ -130,9 +130,9 @@ def Mock_app_with_agents():
     return app
 
 @pytest.fixture
-def client_agents(Mock_app_with_agents):
+def client_agents(mock_app_with_agents):
     """Test client for agent endpoints"""
-    return TestClient(Mock_app_with_agents)
+    return TestClient(mock_app_with_agents)
 
 class TestAgentsEndpoints:
     """Test agent management endpoints"""
@@ -284,7 +284,7 @@ class TestWorkflowEndpoints:
         workflow_id = "nonexistent_workflow"
         
         # Mock the workflow_results to be empty
-        with patch('backend.app.api.v1.endpoints.agents.workflow_results', {}):
+        with patch('app.api.v1.endpoints.agents.workflow_results', {}):
             response = client_agents.get(f"/api/v1/agents/workflows/{workflow_id}")
             assert response.status_code == 404
             assert "Workflow not found" in response.json()["detail"]
@@ -306,7 +306,7 @@ class TestWorkflowEndpoints:
         """Test getting report for nonexistent workflow"""
         workflow_id = "nonexistent_workflow"
         
-        with patch('backend.app.api.v1.endpoints.agents.workflow_results', {}):
+        with patch('app.api.v1.endpoints.agents.workflow_results', {}):
             response = client_agents.get(f"/api/v1/agents/workflows/{workflow_id}/report")
             assert response.status_code == 404
             assert "Workflow not found" in response.json()["detail"]
@@ -314,7 +314,7 @@ class TestWorkflowEndpoints:
 # Test other endpoint files
 
 @pytest.fixture
-def Mock_chat_app():
+def mock_chat_app():
     """Mock app for chat endpoints"""
     app = FastAPI()
     
@@ -348,9 +348,9 @@ def Mock_chat_app():
     return app
 
 @pytest.fixture
-def client_chat(Mock_chat_app):
+def client_chat(mock_chat_app):
     """Test client for chat endpoints"""
-    return TestClient(Mock_chat_app)
+    return TestClient(mock_chat_app)
 
 class TestChatEndpoints:
     """Test chat-related endpoints"""
@@ -383,7 +383,7 @@ class TestChatEndpoints:
         assert "response" in data
 
 @pytest.fixture
-def Mock_documents_app():
+def mock_documents_app():
     """Mock app for document endpoints"""
     app = FastAPI()
     
@@ -437,9 +437,9 @@ def Mock_documents_app():
     return app
 
 @pytest.fixture
-def client_documents(Mock_documents_app):
+def client_documents(mock_documents_app):
     """Test client for document endpoints"""
-    return TestClient(Mock_documents_app)
+    return TestClient(mock_documents_app)
 
 class TestDocumentEndpoints:
     """Test document management endpoints"""
@@ -491,7 +491,7 @@ class TestDocumentEndpoints:
         assert data["status"] == "deleted"
 
 @pytest.fixture
-def Mock_models_app():
+def mock_models_app():
     """Mock app for model endpoints"""
     app = FastAPI()
     
@@ -536,9 +536,9 @@ def Mock_models_app():
     return app
 
 @pytest.fixture
-def client_models(Mock_models_app):
+def client_models(mock_models_app):
     """Test client for model endpoints"""
-    return TestClient(Mock_models_app)
+    return TestClient(mock_models_app)
 
 class TestModelEndpoints:
     """Test AI model management endpoints"""
@@ -581,7 +581,7 @@ class TestModelEndpoints:
         assert data["status"] == "unloaded"
 
 @pytest.fixture
-def Mock_system_app():
+def mock_system_app():
     """Mock app for system endpoints"""
     app = FastAPI()
     
@@ -629,9 +629,9 @@ def Mock_system_app():
     return app
 
 @pytest.fixture
-def client_system(Mock_system_app):
+def client_system(mock_system_app):
     """Test client for system endpoints"""
-    return TestClient(Mock_system_app)
+    return TestClient(mock_system_app)
 
 class TestSystemEndpoints:
     """Test system management endpoints"""
@@ -664,7 +664,7 @@ class TestSystemEndpoints:
         assert data["status"] == "restarting"
 
 @pytest.fixture
-def Mock_monitoring_app():
+def mock_monitoring_app():
     """Mock app for monitoring endpoints"""
     app = FastAPI()
     
@@ -714,9 +714,9 @@ def Mock_monitoring_app():
     return app
 
 @pytest.fixture
-def client_monitoring(Mock_monitoring_app):
+def client_monitoring(mock_monitoring_app):
     """Test client for monitoring endpoints"""
-    return TestClient(Mock_monitoring_app)
+    return TestClient(mock_monitoring_app)
 
 class TestMonitoringEndpoints:
     """Test monitoring and observability endpoints"""

@@ -66,7 +66,7 @@ class TestDataFactory:
         self._server_counter = 0
         self._package_counter = 0
     
-    def create_Mock_server(
+    def create_mock_server(
         self,
         name: Optional[str] = None,
         healthy: bool = True,
@@ -136,7 +136,7 @@ class TestDataFactory:
         
         for i in range(count):
             is_healthy = i < healthy_count
-            server = self.create_Mock_server(healthy=is_healthy)
+            server = self.create_mock_server(healthy=is_healthy)
             servers.append(server)
         
         return servers
@@ -490,14 +490,14 @@ def create_test_scenarios() -> List[Dict[str, Any]]:
         {
             "name": "healthy_server_baseline",
             "description": "Baseline scenario with healthy server",
-            "server": factory.create_Mock_server(name="baseline-server", healthy=True),
+            "server": factory.create_mock_server(name="baseline-server", healthy=True),
             "expected_outcome": "success",
             "test_categories": ["integration", "health", "performance"]
         },
         {
             "name": "failing_server_recovery",
             "description": "Server failure and recovery scenario",
-            "server": factory.create_Mock_server(name="failing-server", healthy=False),
+            "server": factory.create_mock_server(name="failing-server", healthy=False),
             "expected_outcome": "failure_with_recovery",
             "test_categories": ["rollback", "health"]
         },

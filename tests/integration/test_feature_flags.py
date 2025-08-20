@@ -5,17 +5,17 @@ Tests for optional feature flags functionality
 
 import os
 import pytest
-from unittest.Mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch, MagicMock
 import sys
 # Path handled by pytest configuration
 
-from backend.app.core.config import Settings, get_settings
-from backend.app.services.code_completion.factory import code_completion_factory, reset_completion_client
-from backend.app.services.code_completion.null_client import NullCodeCompletionClient
-from backend.app.services.code_completion.tabby_client import TabbyCodeCompletionClient
-from backend.app.services.training.factory import trainer_factory, reset_trainer
-from backend.app.services.training.default_trainer import DefaultTrainer
-from backend.app.services.training.fsdp_trainer import FsdpTrainer
+from app.core.config import Settings, get_settings
+from app.services.code_completion.factory import code_completion_factory, reset_completion_client
+from app.services.code_completion.null_client import NullCodeCompletionClient
+from app.services.code_completion.tabby_client import TabbyCodeCompletionClient
+from app.services.training.factory import trainer_factory, reset_trainer
+from app.services.training.default_trainer import DefaultTrainer
+from app.services.training.fsdp_trainer import FsdpTrainer
 
 
 class TestFeatureFlags:
@@ -55,11 +55,11 @@ class TestCodeCompletionFactory:
         client = code_completion_factory(settings)
         assert isinstance(client, NullCodeCompletionClient)
     
-    @patch('backend.app.services.code_completion.factory.TabbyCodeCompletionClient')
-    def test_tabby_client_when_enabled(self, Mock_tabby_class):
+    @patch('app.services.code_completion.factory.TabbyCodeCompletionClient')
+    def test_tabby_client_when_enabled(self, mock_tabby_class):
         """Test that TabbyCodeCompletionClient is used when TabbyML is enabled"""
-        Mock_client = Mock()
-        Mock_tabby_class.return_value = Mock_client
+        mock_client = Mock()
+        mock_tabby_class.return_value = mock_client
         
         settings = Settings(
             ENABLE_TABBY=True,
@@ -69,11 +69,11 @@ class TestCodeCompletionFactory:
         
         client = code_completion_factory(settings)
         
-        Mock_tabby_class.assert_called_once_with(
+        mock_tabby_class.assert_called_once_with(
             base_url="http://test:8080",
             api_key="key"
         )
-        assert client == Mock_client
+        assert client == mock_client
     
     def test_null_client_methods(self):
         """Test NullCodeCompletionClient methods return expected values"""
@@ -101,17 +101,17 @@ class TestTrainingFactory:
         trainer = trainer_factory(settings)
         assert isinstance(trainer, DefaultTrainer)
     
-    @patch('backend.app.services.training.factory.FsdpTrainer')
-    def test_fsdp_trainer_when_enabled(self, Mock_fsdp_class):
+    @patch('app.services.training.factory.FsdpTrainer')
+    def test_fsdp_trainer_when_enabled(self, mock_fsdp_class):
         """Test that FsdpTrainer is used when FSDP is enabled"""
-        Mock_trainer = Mock()
-        Mock_fsdp_class.return_value = Mock_trainer
+        mock_trainer = Mock()
+        mock_fsdp_class.return_value = mock_trainer
         
         settings = Settings(ENABLE_FSDP=True)
         trainer = trainer_factory(settings)
         
-        Mock_fsdp_class.assert_called_once()
-        assert trainer == Mock_trainer
+        mock_fsdp_class.assert_called_once()
+        assert trainer == mock_trainer
     
     def test_default_trainer_methods(self):
         """Test DefaultTrainer methods"""
@@ -135,7 +135,7 @@ class TestFeaturesEndpoint:
     def client(self):
         """Create test client"""
         from fastapi.testclient import TestClient
-        from backend.app.main import app
+        from app.main import app
         return TestClient(app)
     
     def test_features_endpoint_default(self, client):
@@ -157,7 +157,7 @@ class TestFeaturesEndpoint:
     def test_features_endpoint_enabled(self, client):
         """Test features endpoint with features enabled"""
         # Force settings reload
-        from backend.app.core import config
+        from app.core import config
         config._settings = None
         
         response = client.get("/api/v1/features/")
@@ -187,7 +187,7 @@ class TestOptionalDependencies:
         """Test that FSDP imports are optional"""
         # This should not raise ImportError even if fms-fsdp is not installed
         try:
-            from backend.app.services.training.fsdp_trainer import FsdpTrainer
+            from app.services.training.fsdp_trainer import FsdpTrainer
             # If we get here, the module exists
             assert True
         except ImportError as e:
@@ -197,7 +197,7 @@ class TestOptionalDependencies:
     def test_tabby_imports_optional(self):
         """Test that TabbyML imports are optional"""
         try:
-            from backend.app.services.code_completion.tabby_client import TabbyCodeCompletionClient
+            from app.services.code_completion.tabby_client import TabbyCodeCompletionClient
             # If we get here, the module exists
             assert True
         except ImportError as e:

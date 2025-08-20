@@ -10,7 +10,7 @@ import os
 import sys
 import tempfile
 import json
-from unittest.Mock import Mock, AsyncMock, patch
+from unittest.mock import Mock, AsyncMock, patch
 from datetime import datetime
 import logging
 
@@ -53,8 +53,8 @@ def temp_config_file():
 
 
 @pytest.fixture
-def Mock_environment():
-    """Mock environment variables for testing"""
+def test_environment():
+    """Test environment variables for testing"""
     test_env = {
         'AGENT_NAME': 'test-agent',
         'AGENT_TYPE': 'test',
@@ -68,9 +68,9 @@ def Mock_environment():
 
 
 @pytest.fixture
-def Mock_ollama_service():
-    """Mock Ollama service responses"""
-    class MockOllamaService:
+def test_ollama_service():
+    """Test Ollama service stub for unit testing"""
+    class TestOllamaService:
         def __init__(self):
             self.models = ["tinyllama"]
             self.responses = {}
@@ -81,50 +81,50 @@ def Mock_ollama_service():
         
         def get_response(self, prompt):
             """Get response for a prompt"""
-            return self.responses.get(prompt, f"Mock response for: {prompt[:50]}...")
+            return self.responses.get(prompt, f"Test response for: {prompt[:50]}...")
         
-        def Mock_generate(self, prompt, **kwargs):
-            """Mock generate method"""
+        def test_generate(self, prompt, **kwargs):
+            """Test generate method"""
             return self.get_response(prompt)
         
-        def Mock_chat(self, messages, **kwargs):
-            """Mock chat method"""
+        def test_chat(self, messages, **kwargs):
+            """Test chat method"""
             if messages:
                 last_message = messages[-1].get('content', '')
                 return self.get_response(last_message)
-            return "Mock chat response"
+            return "Test chat response"
         
-        def Mock_embeddings(self, text, **kwargs):
-            """Mock embeddings method"""
-            # Return Mock embedding vector
-            return [0.1, 0.2, 0.3, 0.4, 0.5] * 100  # 500-dimensional Mock vector
+        def test_embeddings(self, text, **kwargs):
+            """Test embeddings method"""
+            # Return test embedding vector
+            return [0.1, 0.2, 0.3, 0.4, 0.5] * 100  # 500-dimensional test vector
         
-        def Mock_model_list(self):
-            """Mock model list response"""
+        def test_model_list(self):
+            """Test model list response"""
             return {
                 "models": [{"name": f"{model}:latest"} for model in self.models]
             }
     
-    return MockOllamaService()
+    return TestOllamaService()
 
 
 @pytest.fixture
-def Mock_backend_service():
-    """Mock backend coordinator responses"""
-    class MockBackendService:
+def test_backend_service():
+    """Test backend coordinator stub for unit testing"""
+    class TestBackendService:
         def __init__(self):
             self.agents = {}
             self.tasks = []
             self.completions = []
         
         def register_agent(self, agent_data):
-            """Mock agent registration"""
+            """Test agent registration"""
             agent_name = agent_data.get('agent_name')
             self.agents[agent_name] = agent_data
             return Mock(status_code=200)
         
         def get_next_task(self, agent_type):
-            """Mock task retrieval"""
+            """Test task retrieval"""
             if self.tasks:
                 task = self.tasks.pop(0)
                 response = Mock()
@@ -141,19 +141,19 @@ def Mock_backend_service():
             self.tasks.append(task)
         
         def complete_task(self, completion_data):
-            """Mock task completion"""
+            """Test task completion"""
             self.completions.append(completion_data)
             return Mock(status_code=200)
         
         def heartbeat(self, heartbeat_data):
-            """Mock heartbeat"""
+            """Test heartbeat"""
             return Mock(status_code=200)
         
         def health_check(self):
-            """Mock health check"""
+            """Test health check"""
             return Mock(status_code=200)
     
-    return MockBackendService()
+    return TestBackendService()
 
 
 @pytest.fixture
@@ -206,50 +206,50 @@ def sample_task_result():
 
 
 @pytest.fixture
-def Mock_circuit_breaker():
-    """Mock circuit breaker for testing"""
+def test_circuit_breaker():
+    """Test circuit breaker stub for testing"""
     from core.circuit_breaker import CircuitBreaker, CircuitBreakerState
     
-    Mock_breaker = Mock(spec=CircuitBreaker)
-    Mock_breaker.state = CircuitBreakerState.CLOSED
-    Mock_breaker.call = AsyncMock(side_effect=lambda func, *args, **kwargs: func(*args, **kwargs))
-    Mock_breaker.trip_count = 0
+    test_breaker = Mock(spec=CircuitBreaker)
+    test_breaker.state = CircuitBreakerState.CLOSED
+    test_breaker.call = AsyncMock(side_effect=lambda func, *args, **kwargs: func(*args, **kwargs))
+    test_breaker.trip_count = 0
     
-    return Mock_breaker
+    return test_breaker
 
 
 @pytest.fixture
-def Mock_connection_pool():
-    """Mock connection pool for testing"""
+def test_connection_pool():
+    """Test connection pool stub for testing"""
     from core.ollama_pool import OllamaConnectionPool
     
-    Mock_pool = Mock(spec=OllamaConnectionPool)
-    Mock_pool.generate = AsyncMock(return_value="Mock pool response")
-    Mock_pool.chat = AsyncMock(return_value="Mock chat response")
-    Mock_pool.embeddings = AsyncMock(return_value=[0.1, 0.2, 0.3])
-    Mock_pool.health_check = AsyncMock(return_value=True)
-    Mock_pool.get_stats = Mock(return_value={
+    test_pool = Mock(spec=OllamaConnectionPool)
+    test_pool.generate = AsyncMock(return_value="Test pool response")
+    test_pool.chat = AsyncMock(return_value="Test chat response")
+    test_pool.embeddings = AsyncMock(return_value=[0.1, 0.2, 0.3])
+    test_pool.health_check = AsyncMock(return_value=True)
+    test_pool.get_stats = Mock(return_value={
         "total_requests": 10,
         "successful_requests": 9,
         "failed_requests": 1,
         "average_response_time": 0.5
     })
-    Mock_pool.close = AsyncMock()
+    test_pool.close = AsyncMock()
     
-    return Mock_pool
+    return test_pool
 
 
 @pytest.fixture
-def Mock_request_queue():
-    """Mock request queue for testing"""
+def test_request_queue():
+    """Test request queue stub for testing"""
     from core.request_queue import RequestQueue
     
-    Mock_queue = Mock(spec=RequestQueue)
-    Mock_queue.submit = AsyncMock(side_effect=lambda task: task)
-    Mock_queue.close = AsyncMock()
-    Mock_queue.size = Mock(return_value=0)
+    test_queue = Mock(spec=RequestQueue)
+    test_queue.submit = AsyncMock(side_effect=lambda task: task)
+    test_queue.close = AsyncMock()
+    test_queue.size = Mock(return_value=0)
     
-    return Mock_queue
+    return test_queue
 
 
 @pytest.fixture(autouse=True)

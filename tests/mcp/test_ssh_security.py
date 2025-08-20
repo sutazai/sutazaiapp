@@ -3,7 +3,7 @@ Tests for the security module
 """
 
 import os
-from unittest.Mock import patch
+from unittest.mock import patch
 
 import pytest
 

@@ -34,7 +34,7 @@ async def aiohttp_session() -> AsyncGenerator[aiohttp.ClientSession, None]:
         yield session
 
 @pytest.fixture
-def Mock_ollama_response():
+def mock_ollama_response():
     """Mock Ollama API response for unit tests."""
     return {
         "model": "tinyllama",
@@ -51,7 +51,7 @@ def Mock_ollama_response():
     }
 
 @pytest.fixture
-def Mock_database():
+def mock_database():
     """Mock database connection for unit tests."""
     db_Mock = Mock()
     db_Mock.execute = AsyncMock()
@@ -61,7 +61,7 @@ def Mock_database():
     return db_Mock
 
 @pytest.fixture
-def Mock_redis():
+def mock_redis():
     """Mock Redis connection for unit tests."""
     redis_Mock = Mock()
     redis_Mock.get = AsyncMock(return_value=None)
@@ -98,7 +98,7 @@ def sample_agent_config():
     }
 
 @pytest.fixture
-def Mock_agent_registry():
+def mock_agent_registry():
     """Mock agent registry for unit tests."""
     registry_Mock = Mock()
     registry_Mock.get_agent = AsyncMock()
@@ -170,13 +170,13 @@ async def test_database():
     """Test database connection (integration tests)."""
     try:
         # Import here to avoid import errors in unit tests
-        from backend.app.core.database import get_db
+        from app.core.database import get_db
         async for db in get_db():
             yield db
             break
     except ImportError:
         # Fallback Mock for unit tests
-        yield Mock_database()
+        yield mock_database()
 
 # Integration test markers
 def pytest_configure(config):

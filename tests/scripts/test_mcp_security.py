@@ -31,7 +31,7 @@ import os
 import stat
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
-from unittest.Mock import AsyncMock, Mock, patch, Mock_open
+from unittest.mock import AsyncMock, Mock, patch, mock_open
 from dataclasses import dataclass
 import urllib.parse
 
@@ -157,7 +157,7 @@ class TestMCPPackageSecurity:
     async def test_package_checksum_validation(
         self,
         test_environment: TestEnvironment,
-        Mock_process_runner
+        mock_process_runner
     ):
         """Test package checksum validation and integrity checking."""
         config = test_environment.config
@@ -170,7 +170,7 @@ class TestMCPPackageSecurity:
         # Mock download with checksum validation
         expected_checksum = "sha256:abc123def456"
         
-        async def Mock_download_with_checksum(*args, **kwargs):
+        async def mock_download_with_checksum(*args, **kwargs):
             # Simulate package download
             target_dir = args[2] if len(args) > 2 else kwargs.get("target_dir")
             package_dir = target_dir / f"{package_name.split('/')[-1]}-{version}"
@@ -198,7 +198,7 @@ class TestMCPPackageSecurity:
                 "download_time": 1.5
             }
         
-        with patch.object(download_manager, 'download_package', side_effect=Mock_download_with_checksum):
+        with patch.object(download_manager, 'download_package', side_effect=mock_download_with_checksum):
             result = await download_manager.download_package(
                 package_name,
                 version,
@@ -221,7 +221,7 @@ class TestMCPPackageSecurity:
     async def test_malicious_package_detection(
         self,
         test_environment: TestEnvironment,
-        Mock_process_runner
+        mock_process_runner
     ):
         """Test detection of malicious packages and security threats."""
         config = test_environment.config
@@ -232,7 +232,7 @@ class TestMCPPackageSecurity:
         malicious_package = "@test/malicious-package"
         version = "1.0.0"
         
-        with patch.object(download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(download_manager, '_run_command', side_effect=mock_process_runner):
             # Mock malicious package download
             staging_path = config.paths.staging_root / "malicious-test"
             staging_path.mkdir(parents=True, exist_ok=True)
@@ -267,7 +267,7 @@ class TestMCPPackageSecurity:
     async def test_vulnerability_scanning(
         self,
         test_environment: TestEnvironment,
-        Mock_process_runner
+        mock_process_runner
     ):
         """Test comprehensive vulnerability scanning of MCP packages."""
         config = test_environment.config
@@ -316,7 +316,7 @@ class TestMCPPackageSecurity:
     async def test_dependency_security_validation(
         self,
         test_environment: TestEnvironment,
-        Mock_process_runner
+        mock_process_runner
     ):
         """Test security validation of package dependencies."""
         config = test_environment.config
@@ -794,8 +794,8 @@ class TestMCPSecurityAuditingAndLogging:
     async def test_security_audit_trail(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner,
+        mock_health_checker,
+        mock_process_runner,
         tmp_path: Path
     ):
         """Test security audit trail and logging compliance."""
@@ -824,8 +824,8 @@ class TestMCPSecurityAuditingAndLogging:
             with open(audit_log_file, 'a') as f:
                 f.write(json.dumps(event) + "\n")
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Perform operations that should generate audit events
             server_name = "files"

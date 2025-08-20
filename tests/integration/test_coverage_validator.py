@@ -15,7 +15,7 @@ import ast
 import inspect
 from datetime import datetime
 from typing import Dict, List, Tuple, Any
-from unittest.Mock import Mock, patch
+from unittest.mock import Mock, patch
 import asyncio
 import urllib.request
 import urllib.error
@@ -348,8 +348,8 @@ class TestCoverageAnalyzer:
         # Test 3: Mock-based unit test
         try:
             # Simple Mock test
-            Mock_function = Mock(return_value='test_result')
-            result = Mock_function()
+            mock_function = Mock(return_value='test_result')
+            result = mock_function()
             assert result == 'test_result'
             logger.info("✅ Mock-based testing: PASSED")
         except Exception as e:

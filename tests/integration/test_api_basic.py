@@ -5,7 +5,7 @@ Requirements: pytest, httpx, fastapi
 """
 import pytest
 from fastapi.testclient import TestClient
-from unittest.Mock import Mock, patch
+from unittest.mock import Mock, patch
 import sys
 import os
 
@@ -16,7 +16,7 @@ if backend_path not in sys.path:
 
 
 @pytest.fixture
-def Mock_app():
+def mock_app():
     """Create a Mock FastAPI app for testing."""
     from fastapi import FastAPI
     
@@ -53,9 +53,9 @@ def Mock_app():
 
 
 @pytest.fixture
-def client(Mock_app):
+def client(mock_app):
     """Create test client."""
-    return TestClient(Mock_app)
+    return TestClient(mock_app)
 
 
 class TestBasicAPI:
@@ -127,11 +127,11 @@ class TestErrorHandling:
 class TestAsyncEndpoints:
     """Test async endpoint behavior."""
     
-    async def test_async_health_check(self, Mock_app):
+    async def test_async_health_check(self, mock_app):
         """Test async health check works correctly."""
         from httpx import AsyncClient
         
-        async with AsyncClient(app=Mock_app, base_url="http://test") as ac:
+        async with AsyncClient(app=mock_app, base_url="http://test") as ac:
             response = await ac.get("/health")
         
         assert response.status_code == 200

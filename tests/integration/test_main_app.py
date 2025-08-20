@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 import pytest
 import sys
 import os
-from unittest.Mock import patch, MagicMock
+from unittest.mock import patch, MagicMock
 
 # Add backend to path
 backend_path = os.path.join(os.path.dirname(__file__), '..')
@@ -20,7 +20,7 @@ if backend_path not in sys.path:
 
 
 @pytest.fixture
-def Mock_dependencies():
+def mock_dependencies():
     """Mock external dependencies."""
     with patch.dict(os.environ, {
         'DATABASE_URL': 'sqlite:///./test.db',
@@ -30,23 +30,23 @@ def Mock_dependencies():
         'LOG_LEVEL': 'INFO'
     }):
         # Mock Redis
-        with patch('redis.asyncio.Redis') as Mock_redis:
-            Mock_redis_instance = MagicMock()
-            Mock_redis.from_url.return_value = Mock_redis_instance
+        with patch('redis.asyncio.Redis') as mock_redis:
+            mock_redis_instance = MagicMock()
+            mock_redis.from_url.return_value = mock_redis_instance
             
             # Mock database
-            with patch('sqlalchemy.create_engine') as Mock_engine:
-                Mock_engine.return_value = MagicMock()
+            with patch('sqlalchemy.create_engine') as mock_engine:
+                mock_engine.return_value = MagicMock()
                 
                 # Mock other dependencies as needed
                 yield {
-                    'redis': Mock_redis_instance,
-                    'engine': Mock_engine
+                    'redis': mock_redis_instance,
+                    'engine': mock_engine
                 }
 
 
 @pytest.fixture
-def app(Mock_dependencies):
+def app(mock_dependencies):
     """Create the FastAPI app with Mocked dependencies."""
     try:
         from app.main import app as fastapi_app

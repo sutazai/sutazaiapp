@@ -15,7 +15,7 @@ import time
 import json
 import sys
 import os
-from unittest.Mock import AsyncMock, Mock, patch, MagicMock
+from unittest.mock import AsyncMock, Mock, patch, MagicMock
 from datetime import datetime, timedelta
 import tempfile
 
@@ -51,9 +51,9 @@ class TestAgentOllamaIntegration:
         await integration_agent._setup_async_components()
         
         # Mock successful Ollama interaction
-        Mock_ollama_response = "This is a test response from Ollama for the integration test."
+        mock_ollama_response = "This is a test response from Ollama for the integration test."
         
-        with patch.object(integration_agent.circuit_breaker, 'call', return_value=Mock_ollama_response):
+        with patch.object(integration_agent.circuit_breaker, 'call', return_value=mock_ollama_response):
             # Create a test task that would use Ollama
             task = {
                 "id": "integration-test-001",
@@ -89,12 +89,12 @@ class TestAgentOllamaIntegration:
             "tinyllama": "GPT-OSS response for complex reasoning"
         }
         
-        def Mock_ollama_call(*args, **kwargs):
+        def mock_ollama_call(*args, **kwargs):
             # Extract model from kwargs or use default
             model = kwargs.get('model', integration_agent.default_model)
             return model_responses.get(model, f"Response from {model}")
         
-        with patch.object(integration_agent.circuit_breaker, 'call', side_effect=Mock_ollama_call):
+        with patch.object(integration_agent.circuit_breaker, 'call', side_effect=mock_ollama_call):
             
             # Test tasks with different model requirements - all using GPT-OSS
             test_cases = [
@@ -135,11 +135,11 @@ class TestAgentOllamaIntegration:
         assert integration_agent.ollama_pool.default_model == integration_agent.default_model
         
         # Mock connection pool responses
-        async def Mock_pool_generate(prompt, **kwargs):
+        async def mock_pool_generate(prompt, **kwargs):
             await asyncio.sleep(0.1)  # Simulate processing time
             return f"Pool response for: {prompt[:20]}..."
         
-        with patch.object(integration_agent.ollama_pool, 'generate', side_effect=Mock_pool_generate):
+        with patch.object(integration_agent.ollama_pool, 'generate', side_effect=mock_pool_generate):
             
             # Test multiple concurrent requests through the pool
             prompts = [f"Concurrent request {i}" for i in range(10)]
@@ -176,7 +176,7 @@ class TestAgentOllamaIntegration:
         
         call_count = 0
         
-        async def Mock_failing_ollama_call(*args, **kwargs):
+        async def mock_failing_ollama_call(*args, **kwargs):
             nonlocal call_count
             call_count += 1
             
@@ -185,7 +185,7 @@ class TestAgentOllamaIntegration:
                 raise Exception(f"Simulated Ollama failure {call_count}")
             return f"Success after {call_count} attempts"
         
-        with patch.object(integration_agent.ollama_pool, 'generate', side_effect=Mock_failing_ollama_call):
+        with patch.object(integration_agent.ollama_pool, 'generate', side_effect=mock_failing_ollama_call):
             
             # First few calls should fail and eventually trip circuit breaker
             results = []
@@ -257,11 +257,11 @@ class TestMultiAgentCoordination:
             await agent._setup_async_components()
         
         # Mock different responses for GPT-OSS model
-        def Mock_model_response(*args, **kwargs):
+        def mock_model_response(*args, **kwargs):
             model = kwargs.get('model', 'tinyllama')
             return "Response from GPT-OSS model"
         
-        with patch.object(BaseAgent, 'query_ollama', side_effect=Mock_model_response):
+        with patch.object(BaseAgent, 'query_ollama', side_effect=mock_model_response):
             
             # Execute tasks on all agents concurrently
             async def agent_task(agent, task_num):
@@ -317,12 +317,12 @@ class TestMultiAgentCoordination:
         # Track resource usage
         connection_counts = []
         
-        def Mock_ollama_with_tracking(*args, **kwargs):
+        def mock_ollama_with_tracking(*args, **kwargs):
             # Simulate resource tracking
             connection_counts.append(len(connection_counts) + 1)
             return f"Shared response {len(connection_counts)}"
         
-        with patch.object(BaseAgent, 'query_ollama', side_effect=Mock_ollama_with_tracking):
+        with patch.object(BaseAgent, 'query_ollama', side_effect=mock_ollama_with_tracking):
             
             # Execute requests from all agents simultaneously
             async def agent_requests(agent):
@@ -379,20 +379,20 @@ class TestSystemIntegration:
         completion_response = Mock()
         completion_response.status_code = 200
         
-        with patch.object(agent.http_client, 'post') as Mock_post:
-            with patch.object(agent.http_client, 'get') as Mock_get:
+        with patch.object(agent.http_client, 'post') as mock_post:
+            with patch.object(agent.http_client, 'get') as mock_get:
                 
                 # Setup Mock responses
-                Mock_post.return_value = registration_response
-                Mock_get.side_effect = [task_response, no_task_response]
+                mock_post.return_value = registration_response
+                mock_get.side_effect = [task_response, no_task_response]
                 
                 # Test registration
                 registration_success = await agent.register_with_coordinator()
                 assert registration_success is True
                 
                 # Verify registration data was sent
-                assert Mock_post.called
-                registration_call = Mock_post.call_args
+                assert mock_post.called
+                registration_call = mock_post.call_args
                 registration_data = registration_call[1]['json']
                 assert registration_data['agent_name'] == agent.agent_name
                 assert registration_data['agent_type'] == agent.agent_type
@@ -408,7 +408,7 @@ class TestSystemIntegration:
                 assert no_task is None
                 
                 # Test task completion reporting
-                Mock_post.return_value = completion_response
+                mock_post.return_value = completion_response
                 
                 task_result = TaskResult(
                     task_id="backend-task-001",
@@ -420,7 +420,7 @@ class TestSystemIntegration:
                 await agent.report_task_complete(task_result)
                 
                 # Verify completion data was sent
-                completion_calls = [call for call in Mock_post.call_args_list 
+                completion_calls = [call for call in mock_post.call_args_list 
                                  if 'complete' in str(call)]
                 assert len(completion_calls) > 0
         
@@ -445,13 +445,13 @@ class TestSystemIntegration:
         
         # Mock backend responses
         @track_step("registration")
-        def Mock_registration(*args, **kwargs):
+        def mock_registration(*args, **kwargs):
             response = Mock()
             response.status_code = 200
             return response
         
         @track_step("get_task")
-        def Mock_get_task(*args, **kwargs):
+        def mock_get_task(*args, **kwargs):
             response = Mock()
             response.status_code = 200
             response.json.return_value = {
@@ -465,27 +465,27 @@ class TestSystemIntegration:
             return response
         
         @track_step("task_completion")
-        def Mock_completion(*args, **kwargs):
+        def mock_completion(*args, **kwargs):
             response = Mock()
             response.status_code = 200
             return response
         
         @track_step("ollama_processing")
-        def Mock_ollama(*args, **kwargs):
+        def mock_ollama(*args, **kwargs):
             return "Workflow test completed successfully"
         
         @track_step("heartbeat")
-        def Mock_heartbeat(*args, **kwargs):
+        def mock_heartbeat(*args, **kwargs):
             response = Mock()
             response.status_code = 200
             return response
         
         with patch.object(agent.http_client, 'post', side_effect=lambda url, **kwargs: 
-                         Mock_registration() if 'register' in url
-                         else Mock_completion() if 'complete' in url
-                         else Mock_heartbeat()):
-            with patch.object(agent.http_client, 'get', side_effect=Mock_get_task):
-                with patch.object(agent.circuit_breaker, 'call', side_effect=Mock_ollama):
+                         mock_registration() if 'register' in url
+                         else mock_completion() if 'complete' in url
+                         else mock_heartbeat()):
+            with patch.object(agent.http_client, 'get', side_effect=mock_get_task):
+                with patch.object(agent.circuit_breaker, 'call', side_effect=mock_ollama):
                     
                     # Execute full workflow
                     # 1. Register with coordinator
@@ -560,14 +560,14 @@ class TestConfigurationIntegration:
             
             # Test that config affects behavior
             # Mock registration to verify capabilities are sent
-            Mock_response = Mock()
-            Mock_response.status_code = 200
+            mock_response = Mock()
+            mock_response.status_code = 200
             
-            with patch.object(agent.http_client, 'post', return_value=Mock_response) as Mock_post:
+            with patch.object(agent.http_client, 'post', return_value=mock_response) as mock_post:
                 await agent.register_with_coordinator()
                 
                 # Verify capabilities were included in registration
-                call_args = Mock_post.call_args
+                call_args = mock_post.call_args
                 registration_data = call_args[1]['json']
                 assert registration_data['capabilities'] == config_data["capabilities"]
             
@@ -637,7 +637,7 @@ class TestErrorPropagationIntegration:
             error_chain.append((component, str(error)))
         
         # Mock Ollama failure
-        def Mock_ollama_failure(*args, **kwargs):
+        def mock_ollama_failure(*args, **kwargs):
             error = Exception("Simulated Ollama service failure")
             track_error("ollama", error)
             raise error
@@ -648,7 +648,7 @@ class TestErrorPropagationIntegration:
         async def tracking_process_task(task):
             try:
                 # Attempt to use Ollama
-                with patch.object(agent.circuit_breaker, 'call', side_effect=Mock_ollama_failure):
+                with patch.object(agent.circuit_breaker, 'call', side_effect=mock_ollama_failure):
                     result = await agent.query_ollama("Test prompt for error handling")
                     
                     if result is None:
@@ -681,10 +681,10 @@ class TestErrorPropagationIntegration:
         }
         
         # Mock successful task completion reporting
-        Mock_response = Mock()
-        Mock_response.status_code = 200
+        mock_response = Mock()
+        mock_response.status_code = 200
         
-        with patch.object(agent.http_client, 'post', return_value=Mock_response):
+        with patch.object(agent.http_client, 'post', return_value=mock_response):
             result = await agent.process_task(task)
         
         # Verify error was handled gracefully at task level

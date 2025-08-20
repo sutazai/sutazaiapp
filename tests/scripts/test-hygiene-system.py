@@ -19,7 +19,7 @@ import tempfile
 import shutil
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-from unittest.Mock import patch, MagicMock
+from unittest.mock import patch, MagicMock
 import datetime
 
 class HygieneSystemTestRunner:

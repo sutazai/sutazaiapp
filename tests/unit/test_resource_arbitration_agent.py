@@ -6,7 +6,7 @@ import asyncio
 import json
 import pytest
 from datetime import datetime, timedelta
-from unittest.Mock import Mock, AsyncMock, patch, MagicMock
+from unittest.mock import Mock, AsyncMock, patch, MagicMock
 import sys
 import os
 
@@ -47,14 +47,14 @@ class TestResourceArbitrationAgent:
         # Mock psutil for system resources
         with patch('psutil.cpu_count', return_value=8):
             with patch('psutil.cpu_percent', return_value=25.0):
-                with patch('psutil.virtual_memory') as Mock_mem:
-                    Mock_mem.return_value = MagicMock(
+                with patch('psutil.virtual_memory') as mock_mem:
+                    mock_mem.return_value = MagicMock(
                         total=16 * 1024**3,  # 16 GB
                         available=12 * 1024**3,  # 12 GB available
                         percent=25.0
                     )
-                    with patch('psutil.disk_usage') as Mock_disk:
-                        Mock_disk.return_value = MagicMock(
+                    with patch('psutil.disk_usage') as mock_disk:
+                        mock_disk.return_value = MagicMock(
                             total=500 * 1024**3,  # 500 GB
                             free=400 * 1024**3,  # 400 GB free
                             percent=20.0
@@ -493,38 +493,38 @@ class TestResourceArbitrationIntegration:
     @pytest.mark.asyncio
     async def test_full_resource_lifecycle(self):
         """Test complete resource allocation lifecycle"""
-        with patch('aio_pika.connect_robust') as Mock_connect:
+        with patch('aio_pika.connect_robust') as mock_connect:
             # Setup Mock RabbitMQ
-            Mock_connection = AsyncMock()
-            Mock_channel = AsyncMock()
-            Mock_exchange = AsyncMock()
-            Mock_queue = AsyncMock()
+            mock_connection = AsyncMock()
+            mock_channel = AsyncMock()
+            mock_exchange = AsyncMock()
+            mock_queue = AsyncMock()
             
-            Mock_connect.return_value = Mock_connection
-            Mock_connection.channel.return_value = Mock_channel
-            Mock_channel.declare_exchange.return_value = Mock_exchange
-            Mock_channel.declare_queue.return_value = Mock_queue
+            mock_connect.return_value = mock_connection
+            mock_connection.channel.return_value = mock_channel
+            mock_channel.declare_exchange.return_value = mock_exchange
+            mock_channel.declare_queue.return_value = mock_queue
             
             arbitrator = ResourceArbitrationAgent()
             
             # Mock Redis
-            with patch('redis.asyncio.from_url') as Mock_redis:
-                Mock_redis_client = AsyncMock()
-                Mock_redis.return_value = Mock_redis_client
-                Mock_redis_client.ping.return_value = True
-                Mock_redis_client.hgetall.return_value = {}
+            with patch('redis.asyncio.from_url') as mock_redis:
+                mock_redis_client = AsyncMock()
+                mock_redis.return_value = mock_redis_client
+                mock_redis_client.ping.return_value = True
+                mock_redis_client.hgetall.return_value = {}
                 
                 # Mock psutil
                 with patch('psutil.cpu_count', return_value=8):
                     with patch('psutil.cpu_percent', return_value=25.0):
-                        with patch('psutil.virtual_memory') as Mock_mem:
-                            Mock_mem.return_value = MagicMock(
+                        with patch('psutil.virtual_memory') as mock_mem:
+                            mock_mem.return_value = MagicMock(
                                 total=16 * 1024**3,
                                 available=12 * 1024**3,
                                 percent=25.0
                             )
-                            with patch('psutil.disk_usage') as Mock_disk:
-                                Mock_disk.return_value = MagicMock(
+                            with patch('psutil.disk_usage') as mock_disk:
+                                mock_disk.return_value = MagicMock(
                                     total=500 * 1024**3,
                                     free=400 * 1024**3,
                                     percent=20.0

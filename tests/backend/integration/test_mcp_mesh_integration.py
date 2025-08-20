@@ -5,7 +5,7 @@ Tests the complete integration of MCP servers with the service mesh
 import asyncio
 import pytest
 import json
-from unittest.Mock import Mock, AsyncMock, patch, MagicMock
+from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from pathlib import Path
 import sys
 
@@ -25,7 +25,7 @@ class TestMCPAdapter:
     """Test MCP Service Adapter functionality"""
     
     @pytest.fixture
-    def Mock_config(self):
+    def mock_config(self):
         """Create Mock MCP server configuration"""
         return MCPServerConfig(
             name="test-server",
@@ -38,13 +38,13 @@ class TestMCPAdapter:
         )
     
     @pytest.fixture
-    def adapter(self, Mock_config):
+    def adapter(self, mock_config):
         """Create MCP adapter instance"""
-        return MCPServiceAdapter(Mock_config)
+        return MCPServiceAdapter(mock_config)
     
-    def test_adapter_creation(self, adapter, Mock_config):
+    def test_adapter_creation(self, adapter, mock_config):
         """Test adapter is created with correct configuration"""
-        assert adapter.config == Mock_config
+        assert adapter.config == mock_config
         assert adapter.instances == {}
         assert not adapter.running
         assert adapter.app is not None
@@ -59,12 +59,12 @@ class TestMCPAdapter:
         assert "/instances" in routes
     
     @pytest.mark.asyncio
-    async def test_mcp_process_creation(self, Mock_config):
+    async def test_mcp_process_creation(self, mock_config):
         """Test MCP process instance creation"""
-        process = MCPProcess(Mock_config, instance_id=0)
+        process = MCPProcess(mock_config, instance_id=0)
         
         assert process.instance_id == 0
-        assert process.config == Mock_config
+        assert process.config == mock_config
         assert process.process is None
         assert process.health_status == "unknown"
         assert process.request_count == 0
@@ -72,21 +72,21 @@ class TestMCPAdapter:
     
     @pytest.mark.asyncio
     @patch('subprocess.Popen')
-    async def test_mcp_process_start(self, Mock_popen, Mock_config):
+    async def test_mcp_process_start(self, mock_popen, mock_config):
         """Test starting an MCP process"""
         # Mock the subprocess
-        Mock_proc = MagicMock()
-        Mock_proc.poll.return_value = None  # Process is running
-        Mock_popen.return_value = Mock_proc
+        mock_proc = MagicMock()
+        mock_proc.poll.return_value = None  # Process is running
+        mock_popen.return_value = mock_proc
         
-        process = MCPProcess(Mock_config, instance_id=0)
+        process = MCPProcess(mock_config, instance_id=0)
         success = await process.start(port=11100)
         
         assert success
         assert process.port == 11100
-        assert process.process == Mock_proc
+        assert process.process == mock_proc
         assert process.start_time is not None
-        Mock_popen.assert_called_once()
+        mock_popen.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_health_check_endpoint(self, adapter):
@@ -107,7 +107,7 @@ class TestMCPBridge:
     """Test MCP-Mesh Bridge functionality"""
     
     @pytest.fixture
-    def Mock_mesh(self):
+    def mock_mesh(self):
         """Create Mock service mesh"""
         mesh = AsyncMock(spec=ServiceMesh)
         mesh.register_service = AsyncMock(return_value=True)
@@ -117,7 +117,7 @@ class TestMCPBridge:
         return mesh
     
     @pytest.fixture
-    def bridge(self, Mock_mesh, tmp_path):
+    def bridge(self, mock_mesh, tmp_path):
         """Create MCP bridge with test registry"""
         # Create test registry file
         registry_path = tmp_path / "test_registry.yaml"
@@ -135,7 +135,7 @@ global_config:
 """
         registry_path.write_text(registry_content)
         
-        return MCPMeshBridge(Mock_mesh, str(registry_path))
+        return MCPMeshBridge(mock_mesh, str(registry_path))
     
     def test_bridge_creation(self, bridge):
         """Test bridge is created correctly"""
@@ -146,16 +146,16 @@ global_config:
         assert not bridge.running
     
     @pytest.mark.asyncio
-    async def test_bridge_initialization(self, bridge, Mock_mesh):
+    async def test_bridge_initialization(self, bridge, mock_mesh):
         """Test bridge initialization process"""
-        with patch('app.mesh.mcp_bridge.create_mcp_adapter') as Mock_create:
+        with patch('app.mesh.mcp_bridge.create_mcp_adapter') as mock_create:
             # Mock adapter
-            Mock_adapter = AsyncMock()
-            Mock_adapter.start = AsyncMock(return_value=[11100])
-            Mock_adapter.get_app = Mock(return_value=Mock())
-            Mock_adapter.instances = {0: Mock(health_status="healthy")}
-            Mock_adapter.running = True
-            Mock_create.return_value = Mock_adapter
+            mock_adapter = AsyncMock()
+            mock_adapter.start = AsyncMock(return_value=[11100])
+            mock_adapter.get_app = Mock(return_value=Mock())
+            mock_adapter.instances = {0: Mock(health_status="healthy")}
+            mock_adapter.running = True
+            mock_create.return_value = mock_adapter
             
             with patch('app.mesh.mcp_bridge.uvicorn.Server'):
                 results = await bridge.initialize()
@@ -169,9 +169,9 @@ global_config:
     async def test_service_status(self, bridge):
         """Test getting service status"""
         # Add Mock adapter
-        Mock_adapter = Mock()
-        Mock_adapter.running = True
-        Mock_adapter.instances = {
+        mock_adapter = Mock()
+        mock_adapter.running = True
+        mock_adapter.instances = {
             0: Mock(
                 service_id="test-0",
                 port=11100,
@@ -180,7 +180,7 @@ global_config:
                 error_count=1
             )
         }
-        bridge.adapters["test-service"] = Mock_adapter
+        bridge.adapters["test-service"] = mock_adapter
         
         status = await bridge.get_service_status("test-service")
         
@@ -190,7 +190,7 @@ global_config:
         assert status["instances"][0]["requests"] == 10
     
     @pytest.mark.asyncio
-    async def test_call_mcp_service(self, bridge, Mock_mesh):
+    async def test_call_mcp_service(self, bridge, mock_mesh):
         """Test calling MCP service through bridge"""
         result = await bridge.call_mcp_service(
             service_name="test-service",
@@ -199,7 +199,7 @@ global_config:
         )
         
         assert result == {"result": "success"}
-        Mock_mesh.call_service.assert_called_once()
+        mock_mesh.call_service.assert_called_once()
 
 class TestMCPLoadBalancer:
     """Test MCP-specific load balancing"""
@@ -210,7 +210,7 @@ class TestMCPLoadBalancer:
         return MCPLoadBalancer()
     
     @pytest.fixture
-    def Mock_instances(self):
+    def mock_instances(self):
         """Create Mock service instances"""
         return [
             ServiceInstance(
@@ -248,10 +248,10 @@ class TestMCPLoadBalancer:
         assert load_balancer.service_capabilities == {}
         assert load_balancer.sticky_sessions == {}
     
-    def test_select_healthy_instances(self, load_balancer, Mock_instances):
+    def test_select_healthy_instances(self, load_balancer, mock_instances):
         """Test that only healthy instances are selected"""
         selected = load_balancer.select_instance(
-            Mock_instances, 
+            mock_instances, 
             "mcp-test"
         )
         
@@ -259,12 +259,12 @@ class TestMCPLoadBalancer:
         assert selected.state == ServiceState.HEALTHY
         assert selected.service_id in ["inst-1", "inst-2"]
     
-    def test_capability_matching(self, load_balancer, Mock_instances):
+    def test_capability_matching(self, load_balancer, mock_instances):
         """Test capability-based selection"""
         context = {"required_capabilities": ["cap1", "cap2"]}
         
         selected = load_balancer.select_instance(
-            Mock_instances,
+            mock_instances,
             "mcp-language-server",  # Triggers capability strategy
             context
         )
@@ -310,7 +310,7 @@ class TestMCPAPIEndpoints:
     """Test MCP API endpoints"""
     
     @pytest.fixture
-    def Mock_bridge(self):
+    def mock_bridge(self):
         """Create Mock MCP bridge"""
         bridge = AsyncMock(spec=MCPMeshBridge)
         bridge.registry = {
@@ -339,17 +339,17 @@ class TestMCPAPIEndpoints:
         return bridge
     
     @pytest.mark.asyncio
-    async def test_list_services_endpoint(self, Mock_bridge):
+    async def test_list_services_endpoint(self, mock_bridge):
         """Test listing MCP services"""
         from app.api.v1.endpoints.mcp import list_mcp_services
         
-        with patch('app.api.v1.endpoints.mcp.get_bridge', return_value=Mock_bridge):
-            services = await list_mcp_services(bridge=Mock_bridge)
+        with patch('app.api.v1.endpoints.mcp.get_bridge', return_value=mock_bridge):
+            services = await list_mcp_services(bridge=mock_bridge)
         
         assert services == ["test-service"]
     
     @pytest.mark.asyncio
-    async def test_execute_command_endpoint(self, Mock_bridge):
+    async def test_execute_command_endpoint(self, mock_bridge):
         """Test executing MCP command"""
         from app.api.v1.endpoints.mcp import execute_mcp_command
         
@@ -358,27 +358,27 @@ class TestMCPAPIEndpoints:
             params={"key": "value"}
         )
         
-        with patch('app.api.v1.endpoints.mcp.get_bridge', return_value=Mock_bridge):
+        with patch('app.api.v1.endpoints.mcp.get_bridge', return_value=mock_bridge):
             result = await execute_mcp_command(
                 service_name="test-service",
                 request=request,
-                bridge=Mock_bridge
+                bridge=mock_bridge
             )
         
         assert result == {"result": "success"}
-        Mock_bridge.call_mcp_service.assert_called_once_with(
+        mock_bridge.call_mcp_service.assert_called_once_with(
             service_name="test-service",
             method="test_method",
             params={"key": "value"}
         )
     
     @pytest.mark.asyncio
-    async def test_health_endpoint(self, Mock_bridge):
+    async def test_health_endpoint(self, mock_bridge):
         """Test health check endpoint"""
         from app.api.v1.endpoints.mcp import get_mcp_health
         
-        with patch('app.api.v1.endpoints.mcp.get_bridge', return_value=Mock_bridge):
-            health = await get_mcp_health(bridge=Mock_bridge)
+        with patch('app.api.v1.endpoints.mcp.get_bridge', return_value=mock_bridge):
+            health = await get_mcp_health(bridge=mock_bridge)
         
         assert "test-service" in health
         assert health["test-service"]["overall_health"] == "healthy"
@@ -393,10 +393,10 @@ class TestIntegration:
         # This would be an integration test with real components
         # For now, we'll Mock the key components
         
-        with patch('app.mesh.service_mesh.get_service_mesh') as Mock_get_mesh:
-            Mock_mesh = AsyncMock(spec=ServiceMesh)
-            Mock_mesh.register_service = AsyncMock(return_value=True)
-            Mock_mesh.discover_services = AsyncMock(return_value=[
+        with patch('app.mesh.service_mesh.get_service_mesh') as mock_get_mesh:
+            mock_mesh = AsyncMock(spec=ServiceMesh)
+            mock_mesh.register_service = AsyncMock(return_value=True)
+            mock_mesh.discover_services = AsyncMock(return_value=[
                 {
                     "service_id": "mcp-test-0",
                     "address": "localhost",
@@ -404,13 +404,13 @@ class TestIntegration:
                     "state": "healthy"
                 }
             ])
-            Mock_mesh.call_service = AsyncMock(return_value={"result": "test"})
-            Mock_get_mesh.return_value = Mock_mesh
+            mock_mesh.call_service = AsyncMock(return_value={"result": "test"})
+            mock_get_mesh.return_value = mock_mesh
             
             # Test the flow
             from app.mesh.mcp_bridge import get_mcp_bridge
             
-            bridge = await get_mcp_bridge(Mock_mesh)
+            bridge = await get_mcp_bridge(mock_mesh)
             assert bridge is not None
             
             # Simulate service call

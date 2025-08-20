@@ -6,7 +6,7 @@ Tests all components with Mocked vector database clients
 import pytest
 import asyncio
 import json
-from unittest.Mock import Mock, AsyncMock, patch, MagicMock
+from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime
 
 # Import the system under test
@@ -36,10 +36,10 @@ class TestCircuitBreaker:
         cb = CircuitBreaker(failure_threshold=2)
         
         @cb.call
-        async def Mock_func():
+        async def mock_func():
             return "success"
         
-        result = await Mock_func()
+        result = await mock_func()
         assert result == "success"
         assert cb.state == "CLOSED"
         assert cb.failure_count == 0
@@ -95,16 +95,16 @@ class TestChromaDBClient:
     async def test_chromadb_search_success(self, chroma_client):
         """Test successful ChromaDB search"""
         # Mock the ChromaDB client
-        Mock_collection = Mock()
-        Mock_collection.query.return_value = {
+        mock_collection = Mock()
+        mock_collection.query.return_value = {
             "documents": [["Document 1", "Document 2"]],
             "metadatas": [[{"id": 1}, {"id": 2}]],
             "distances": [[0.1, 0.2]]
         }
         
-        Mock_chromadb_client = Mock()
-        Mock_chromadb_client.get_collection.return_value = Mock_collection
-        chroma_client.client = Mock_chromadb_client
+        mock_chromadb_client = Mock()
+        mock_chromadb_client.get_collection.return_value = mock_collection
+        chroma_client.client = mock_chromadb_client
         
         results = await chroma_client.search("test query")
         
@@ -125,9 +125,9 @@ class TestChromaDBClient:
     @pytest.mark.asyncio
     async def test_chromadb_search_exception(self, chroma_client):
         """Test ChromaDB search handles exceptions gracefully"""
-        Mock_chromadb_client = Mock()
-        Mock_chromadb_client.get_collection.side_effect = Exception("Connection failed")
-        chroma_client.client = Mock_chromadb_client
+        mock_chromadb_client = Mock()
+        mock_chromadb_client.get_collection.side_effect = Exception("Connection failed")
+        chroma_client.client = mock_chromadb_client
         
         results = await chroma_client.search("test query")
         assert results == []
@@ -144,13 +144,13 @@ class TestQdrantDBClient:
     async def test_qdrant_search_success(self, qdrant_client):
         """Test successful Qdrant search"""
         # Mock search results
-        Mock_point = Mock()
-        Mock_point.payload = {"content": "Test document", "metadata": {"id": 1}}
-        Mock_point.score = 0.85
+        mock_point = Mock()
+        mock_point.payload = {"content": "Test document", "metadata": {"id": 1}}
+        mock_point.score = 0.85
         
-        Mock_qdrant_client = Mock()
-        Mock_qdrant_client.search.return_value = [Mock_point]
-        qdrant_client.client = Mock_qdrant_client
+        mock_qdrant_client = Mock()
+        mock_qdrant_client.search.return_value = [mock_point]
+        qdrant_client.client = mock_qdrant_client
         
         results = await qdrant_client.search("test query")
         
@@ -185,21 +185,21 @@ class TestFAISSClient:
     
     @pytest.mark.asyncio
     @patch('httpx.AsyncClient')
-    async def test_faiss_search_success(self, Mock_httpx, faiss_client):
+    async def test_faiss_search_success(self, mock_httpx, faiss_client):
         """Test successful FAISS search"""
         # Mock HTTP response
-        Mock_response = Mock()
-        Mock_response.status_code = 200
-        Mock_response.json.return_value = {
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
             "results": [
                 {"content": "FAISS doc 1", "metadata": {"id": 1}, "score": 0.9},
                 {"content": "FAISS doc 2", "metadata": {"id": 2}, "score": 0.8}
             ]
         }
         
-        Mock_client = AsyncMock()
-        Mock_client.post.return_value = Mock_response
-        Mock_httpx.return_value.__aenter__.return_value = Mock_client
+        mock_client = AsyncMock()
+        mock_client.post.return_value = mock_response
+        mock_httpx.return_value.__aenter__.return_value = mock_client
         
         results = await faiss_client.search("test query")
         
@@ -210,25 +210,25 @@ class TestFAISSClient:
     
     @pytest.mark.asyncio
     @patch('httpx.AsyncClient')
-    async def test_faiss_search_http_error(self, Mock_httpx, faiss_client):
+    async def test_faiss_search_http_error(self, mock_httpx, faiss_client):
         """Test FAISS search with HTTP error"""
-        Mock_response = Mock()
-        Mock_response.status_code = 500
+        mock_response = Mock()
+        mock_response.status_code = 500
         
-        Mock_client = AsyncMock()
-        Mock_client.post.return_value = Mock_response
-        Mock_httpx.return_value.__aenter__.return_value = Mock_client
+        mock_client = AsyncMock()
+        mock_client.post.return_value = mock_response
+        mock_httpx.return_value.__aenter__.return_value = mock_client
         
         results = await faiss_client.search("test query")
         assert results == []
     
     @pytest.mark.asyncio
     @patch('httpx.AsyncClient')
-    async def test_faiss_search_connection_error(self, Mock_httpx, faiss_client):
+    async def test_faiss_search_connection_error(self, mock_httpx, faiss_client):
         """Test FAISS search with connection error"""
-        Mock_client = AsyncMock()
-        Mock_client.post.side_effect = Exception("Connection failed")
-        Mock_httpx.return_value.__aenter__.return_value = Mock_client
+        mock_client = AsyncMock()
+        mock_client.post.side_effect = Exception("Connection failed")
+        mock_httpx.return_value.__aenter__.return_value = mock_client
         
         results = await faiss_client.search("test query")
         assert results == []
@@ -260,7 +260,7 @@ class TestVectorContextInjector:
     async def test_analyze_user_request_knowledge_query(self, injector):
         """Test analyze_user_request with knowledge query"""
         # Mock the search method
-        Mock_context = KnowledgeContext(
+        mock_context = KnowledgeContext(
             results=[
                 VectorSearchResult("Test doc", {"id": 1}, 0.9, "chromadb")
             ],
@@ -270,7 +270,7 @@ class TestVectorContextInjector:
             enriched_context="Test context"
         )
         
-        injector.search_all_databases = AsyncMock(return_value=Mock_context)
+        injector.search_all_databases = AsyncMock(return_value=mock_context)
         
         needs_context, context = await injector.analyze_user_request("What is Docker?")
         
@@ -412,7 +412,7 @@ class TestVectorContextInjector:
     async def test_caching_functionality(self, injector):
         """Test result caching functionality"""
         # Mock successful search
-        Mock_context = KnowledgeContext(
+        mock_context = KnowledgeContext(
             results=[VectorSearchResult("Test doc", {}, 0.9, "chromadb")],
             query_time_ms=100.0,
             sources_used=["chromadb"],
@@ -422,7 +422,7 @@ class TestVectorContextInjector:
         
         # Mock the search method to track calls
         original_search = injector.search_all_databases
-        injector.search_all_databases = AsyncMock(return_value=Mock_context)
+        injector.search_all_databases = AsyncMock(return_value=mock_context)
         
         # First call should perform search
         context1 = await injector.search_all_databases("test query")

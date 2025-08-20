@@ -7,7 +7,7 @@ import pytest
 import asyncio
 import time
 import statistics
-from unittest.Mock import patch, AsyncMock
+from unittest.mock import patch, AsyncMock
 from httpx import AsyncClient
 import concurrent.futures
 
@@ -43,7 +43,7 @@ class TestResponseTimePerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_api_endpoint_response_times(self, async_client, Mock_validation):
+    async def test_api_endpoint_response_times(self, async_client, mock_validation):
         """Test critical API endpoints meet performance requirements"""
         endpoints = [
             "/api/v1/agents",
@@ -70,7 +70,7 @@ class TestResponseTimePerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_chat_endpoint_response_time(self, async_client, Mock_validation):
+    async def test_chat_endpoint_response_time(self, async_client, mock_validation):
         """Test chat endpoint performance with AI processing"""
         chat_request = {
             "message": "Hello",
@@ -134,7 +134,7 @@ class TestThroughputPerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_mixed_api_throughput(self, async_client, Mock_validation):
+    async def test_mixed_api_throughput(self, async_client, mock_validation):
         """Test throughput with mixed API operations"""
         endpoints = [
             "/health",
@@ -169,7 +169,7 @@ class TestThroughputPerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_chat_throughput(self, async_client, Mock_validation):
+    async def test_chat_throughput(self, async_client, mock_validation):
         """Test chat endpoint throughput under concurrent load"""
         chat_request = {
             "message": "Quick test",
@@ -204,7 +204,7 @@ class TestResourceUtilizationPerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_memory_usage_under_load(self, async_client, Mock_psutil):
+    async def test_memory_usage_under_load(self, async_client, mock_psutil):
         """Test memory usage remains stable under load"""
         # Make multiple concurrent requests to stress memory
         tasks = []
@@ -369,7 +369,7 @@ class TestCachePerformance:
 
     @pytest.mark.performance
     @pytest.mark.asyncio
-    async def test_cache_hit_performance(self, async_client, Mock_validation):
+    async def test_cache_hit_performance(self, async_client, mock_validation):
         """Test cache hit performance improves response times"""
         # First request (cache miss)
         start = time.time()
@@ -468,8 +468,8 @@ class TestErrorHandlingPerformance:
         
         start_time = time.time()
         
-        with patch('app.utils.validation.validate_model_name') as Mock_validate:
-            Mock_validate.side_effect = ValueError("Invalid model name")
+        with patch('app.utils.validation.validate_model_name') as mock_validate:
+            mock_validate.side_effect = ValueError("Invalid model name")
             
             tasks = []
             for request in invalid_requests:
@@ -518,7 +518,7 @@ class TestScalabilityIndicators:
 
     @pytest.mark.performance
     @pytest.mark.asyncio  
-    async def test_resource_efficiency_indicators(self, async_client, Mock_psutil):
+    async def test_resource_efficiency_indicators(self, async_client, mock_psutil):
         """Test resource efficiency under load"""
         # Make concurrent requests while monitoring resource metrics
         tasks = []

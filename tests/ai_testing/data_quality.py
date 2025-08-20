@@ -56,8 +56,8 @@ class DataQualityTestSuite:
     
     def __init__(self, dataset: Optional[pd.DataFrame] = None, reference_dataset: Optional[pd.DataFrame] = None):
         if dataset is None:
-            Mock_data = MockDataset()
-            self.dataset = Mock_data.data
+            mock_data = MockDataset()
+            self.dataset = mock_data.data
         else:
             self.dataset = dataset
             
@@ -288,14 +288,14 @@ class DataQualityTestSuite:
 @pytest.fixture
 def sample_dataset():
     """Fixture providing sample dataset for testing"""
-    Mock_data = MockDataset(rows=500, missing_rate=0.01)
-    return Mock_data.data
+    mock_data = MockDataset(rows=500, missing_rate=0.01)
+    return mock_data.data
 
 @pytest.fixture
 def reference_dataset():
     """Fixture providing reference dataset for drift detection"""
-    Mock_data = MockDataset(rows=500, missing_rate=0.01)
-    return Mock_data.data
+    mock_data = MockDataset(rows=500, missing_rate=0.01)
+    return mock_data.data
 
 @pytest.fixture
 def data_quality_suite(sample_dataset, reference_dataset):

@@ -14,7 +14,7 @@ from collections import defaultdict, Counter
 import random
 
 # Import mesh components
-from backend.app.mesh.redis_bus import (
+from app.mesh.redis_bus import (
     get_redis, enqueue_task, tail_results, register_agent,
     list_agents, create_consumer_group, read_group, ack,
     task_stream, result_stream, heartbeat_agent

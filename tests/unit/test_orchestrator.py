@@ -10,7 +10,7 @@ import json
 import tempfile
 import subprocess
 from pathlib import Path
-from unittest.Mock import patch, MagicMock, Mock_open
+from unittest.mock import patch, MagicMock, mock_open
 import sys
 import os
 
@@ -35,9 +35,9 @@ class TestAgentOrchestrator(unittest.TestCase):
         if self.project_root.exists():
             shutil.rmtree(self.project_root)
     
-    @patch('builtins.open', new_callable=Mock_open)
+    @patch('builtins.open', new_callable=mock_open)
     @patch('pathlib.Path.mkdir')
-    def test_log_action(self, Mock_mkdir, Mock_file):
+    def test_log_action(self, mock_mkdir, mock_file):
         """Test logging functionality"""
         # Import here to avoid issues with path setup
         from scripts.agents.hygiene_agent_orchestrator import AgentOrchestrator
@@ -46,8 +46,8 @@ class TestAgentOrchestrator(unittest.TestCase):
         orchestrator.log_action("Test message", "INFO")
         
         # Verify file operations
-        Mock_mkdir.assert_called()
-        Mock_file.assert_called()
+        mock_mkdir.assert_called()
+        mock_file.assert_called()
         
     def test_agent_registry_structure(self):
         """Test agent registry has required structure"""
@@ -111,17 +111,17 @@ class TestAgentOrchestrator(unittest.TestCase):
         self.assertTrue(task["dry_run"])
         
     @patch('subprocess.run')
-    @patch('builtins.open', new_callable=Mock_open)
-    def test_execute_agent_task_success(self, Mock_file, Mock_subprocess):
+    @patch('builtins.open', new_callable=mock_open)
+    def test_execute_agent_task_success(self, mock_file, mock_subprocess):
         """Test successful agent task execution"""
         from scripts.agents.hygiene_agent_orchestrator import AgentOrchestrator
         
         # Setup Mock subprocess result
-        Mock_result = MagicMock()
-        Mock_result.returncode = 0
-        Mock_result.stdout = "Success output"
-        Mock_result.stderr = ""
-        Mock_subprocess.return_value = Mock_result
+        mock_result = MagicMock()
+        mock_result.returncode = 0
+        mock_result.stdout = "Success output"
+        mock_result.stderr = ""
+        mock_subprocess.return_value = mock_result
         
         orchestrator = AgentOrchestrator(str(self.project_root))
         
@@ -140,16 +140,16 @@ class TestAgentOrchestrator(unittest.TestCase):
         self.assertEqual(result["return_code"], 0)
         
     @patch('subprocess.run')
-    def test_execute_agent_task_failure(self, Mock_subprocess):
+    def test_execute_agent_task_failure(self, mock_subprocess):
         """Test failed agent task execution"""
         from scripts.agents.hygiene_agent_orchestrator import AgentOrchestrator
         
         # Setup Mock subprocess result for failure
-        Mock_result = MagicMock()
-        Mock_result.returncode = 1
-        Mock_result.stdout = ""
-        Mock_result.stderr = "Error occurred"
-        Mock_subprocess.return_value = Mock_result
+        mock_result = MagicMock()
+        mock_result.returncode = 1
+        mock_result.stdout = ""
+        mock_result.stderr = "Error occurred"
+        mock_subprocess.return_value = mock_result
         
         orchestrator = AgentOrchestrator(str(self.project_root))
         

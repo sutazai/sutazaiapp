@@ -19,7 +19,7 @@ class TestUnifiedMemoryIntegration:
     async def client(self):
         """Test client for backend API"""
         # This will fail until we implement the routing
-        from backend.app.main import app
+        from app.main import app
         return TestClient(app)
     
     @pytest.fixture
@@ -147,7 +147,7 @@ class TestMCPServiceConfiguration:
     
     def test_mcp_adapter_includes_unified_memory(self):
         """RED: Test that MCP adapter includes unified-memory configuration"""
-        from backend.app.mesh.mcp_adapter import MCP_SERVERS
+        from app.mesh.mcp_adapter import MCP_SERVERS
         
         assert "unified-memory" in MCP_SERVERS, "unified-memory should be in MCP_SERVERS"
         
@@ -158,7 +158,7 @@ class TestMCPServiceConfiguration:
     
     def test_mcp_adapter_excludes_deprecated_services(self):
         """RED: Test that deprecated memory services are removed from config"""
-        from backend.app.mesh.mcp_adapter import MCP_SERVERS
+        from app.mesh.mcp_adapter import MCP_SERVERS
         
         assert "extended-memory" not in MCP_SERVERS, "extended-memory should be removed"
         assert "memory-bank-mcp" not in MCP_SERVERS, "memory-bank-mcp should be removed"
@@ -166,7 +166,7 @@ class TestMCPServiceConfiguration:
     def test_unified_memory_service_discovery(self):
         """RED: Test service discovery includes unified memory"""
         # This will fail until we update service discovery
-        from backend.app.mesh.mcp_stdio_bridge import MCPStdioBridge
+        from app.mesh.mcp_stdio_bridge import MCPStdioBridge
         
         bridge = MCPStdioBridge()
         services = bridge.get_available_services()

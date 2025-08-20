@@ -3,15 +3,15 @@ Tests for optional feature flags and service abstractions
 """
 import os
 import pytest
-from unittest.Mock import Mock, patch, AsyncMock
+from unittest.mock import Mock, patch, AsyncMock
 import sys
 # Path handled by pytest configuration
 
-from backend.app.core.config import Settings
-from backend.app.services.code_completion.factory import code_completion_factory, reset_completion_client
-from backend.app.services.code_completion.interfaces import CompletionRequest
-from backend.app.services.training.factory import trainer_factory, reset_trainer
-from backend.app.services.training.interfaces import TrainingConfig, TrainingStatus
+from app.core.config import Settings
+from app.services.code_completion.factory import code_completion_factory, reset_completion_client
+from app.services.code_completion.interfaces import CompletionRequest
+from app.services.training.factory import trainer_factory, reset_trainer
+from app.services.training.interfaces import TrainingConfig, TrainingStatus
 
 class TestFeatureFlags:
     """Test feature flag configuration"""
@@ -139,16 +139,16 @@ class TestFeatureEndpoint:
     @pytest.mark.asyncio
     async def test_features_endpoint_response(self):
         """Test that features endpoint returns correct structure"""
-        from backend.app.api.v1.features import get_feature_flags
+        from app.api.v1.features import get_feature_flags
         
-        with patch('backend.app.api.v1.features.get_settings') as Mock_get_settings:
+        with patch('app.api.v1.features.get_settings') as mock_get_settings:
             settings = Mock(spec=Settings)
             settings.ENABLE_FSDP = True
             settings.ENABLE_TABBY = False
             settings.TABBY_URL = 'http://tabby:8080'
             settings.ENABLE_GPU = False
             settings.ENABLE_MONITORING = True
-            Mock_get_settings.return_value = settings
+            mock_get_settings.return_value = settings
             
             response = await get_feature_flags(settings)
             
@@ -164,7 +164,7 @@ class TestOptionalImports:
     def test_fsdp_trainer_handles_missing_torch(self):
         """Test FSDP trainer gracefully handles missing PyTorch"""
         with patch.dict(sys.modules, {'torch': None}):
-            from backend.app.services.training.fsdp_trainer import FsdpTrainer
+            from app.services.training.fsdp_trainer import FsdpTrainer
             trainer = FsdpTrainer()
             # Should not raise ImportError during initialization
             assert trainer is not None
@@ -172,7 +172,7 @@ class TestOptionalImports:
     def test_default_trainer_handles_missing_torch(self):
         """Test default trainer works without PyTorch"""
         with patch.dict(sys.modules, {'torch': None, 'transformers': None}):
-            from backend.app.services.training.default_trainer import DefaultTrainer
+            from app.services.training.default_trainer import DefaultTrainer
             trainer = DefaultTrainer()
             assert trainer is not None
 

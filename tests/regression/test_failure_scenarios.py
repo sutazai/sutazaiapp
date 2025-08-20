@@ -25,7 +25,7 @@ import signal
 import time
 import psutil
 from pathlib import Path
-from unittest.Mock import patch, MagicMock, Mock_open
+from unittest.mock import patch, MagicMock, mock_open
 import sys
 
 # Add project root to path

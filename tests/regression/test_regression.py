@@ -8,7 +8,7 @@ import pytest
 import asyncio
 import sys
 import os
-from unittest.Mock import AsyncMock, Mock, patch, MagicMock
+from unittest.mock import AsyncMock, Mock, patch, MagicMock
 import tempfile
 import json
 

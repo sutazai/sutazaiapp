@@ -52,10 +52,15 @@ class FAISSManager:
                 # Inverted file index - good balance of speed and accuracy
                 quantizer = faiss.IndexFlatL2(dimension)
                 index = faiss.IndexIVFFlat(quantizer, dimension, 100)
-                # Train with synthetic data for index initialization
-                # TODO: Use real data samples for better index training
-                training_data = np.random.random((1000, dimension)).astype('float32')
-                index.train(training_data)
+                # Train with real data samples from project documentation and reports
+                training_data = self._generate_real_training_data(dimension)
+                if training_data is not None:
+                    index.train(training_data)
+                else:
+                    # Fallback to synthetic data if real data unavailable
+                    logger.warning("Using synthetic training data for FAISS index")
+                    training_data = np.random.random((1000, dimension)).astype('float32')
+                    index.train(training_data)
             elif index_type == "HNSW":
                 # Hierarchical Navigable Small World - very fast, good accuracy
                 index = faiss.IndexHNSWFlat(dimension, 32)
@@ -63,8 +68,12 @@ class FAISSManager:
                 # Default to IVF
                 quantizer = faiss.IndexFlatL2(dimension)
                 index = faiss.IndexIVFFlat(quantizer, dimension, 100)
-                training_data = np.random.random((1000, dimension)).astype('float32')
-                index.train(training_data)
+                training_data = self._generate_real_training_data(dimension)
+                if training_data is not None:
+                    index.train(training_data)
+                else:
+                    training_data = np.random.random((1000, dimension)).astype('float32')
+                    index.train(training_data)
             
             self.indexes[name] = index
             self.metadata[name] = []
@@ -255,6 +264,68 @@ class FAISSManager:
         except Exception as e:
             logger.error(f"Failed to optimize index: {e}")
             return False
+    
+    def _generate_real_training_data(self, dimension: int) -> Optional[np.ndarray]:
+        """Generate training data from real project documentation and reports"""
+        try:
+            import os
+            import re
+            from sentence_transformers import SentenceTransformer
+            
+            # Try to load a pre-trained embedding model
+            model = None
+            try:
+                model = SentenceTransformer('all-MiniLM-L6-v2')  # 384 dimensions
+            except:
+                logger.warning("Could not load SentenceTransformer, using text-based approach")
+                return None
+            
+            # Collect real text data from the project
+            text_sources = [
+                "/opt/sutazaiapp/CLAUDE.md",
+                "/opt/sutazaiapp/CHANGELOG.md",
+                "/opt/sutazaiapp/data/workflow_reports/demo_code_improvement_report.md",
+                "/opt/sutazaiapp/MASTER_INDEX/EXECUTIVE_SUMMARY.md",
+                "/opt/sutazaiapp/MASTER_INDEX/REAL_MCP_ARCHITECTURE.md"
+            ]
+            
+            texts = []
+            for source in text_sources:
+                if os.path.exists(source):
+                    try:
+                        with open(source, 'r', encoding='utf-8') as f:
+                            content = f.read()
+                            # Split into sentences and paragraphs
+                            sentences = re.split(r'[.!?]+', content)
+                            texts.extend([s.strip() for s in sentences if len(s.strip()) > 20])
+                    except Exception as e:
+                        logger.debug(f"Could not read {source}: {e}")
+            
+            if not texts:
+                logger.warning("No real text data found for training")
+                return None
+            
+            # Limit to reasonable number for training
+            texts = texts[:1000]
+            
+            # Generate embeddings
+            embeddings = model.encode(texts)
+            
+            # Ensure correct dimension
+            if embeddings.shape[1] != dimension:
+                # If dimensions don't match, pad or truncate
+                if embeddings.shape[1] < dimension:
+                    padding = np.zeros((embeddings.shape[0], dimension - embeddings.shape[1]))
+                    embeddings = np.concatenate([embeddings, padding], axis=1)
+                else:
+                    embeddings = embeddings[:, :dimension]
+            
+            logger.info(f"Generated {len(embeddings)} real training vectors from project documentation")
+            return embeddings.astype('float32')
+            
+        except Exception as e:
+            logger.debug(f"Could not generate real training data: {e}")
+            return None
 
 # Singleton instance
 faiss_manager = FAISSManager()

@@ -6,7 +6,7 @@ import pytest
 import asyncio
 import json
 import time
-from unittest.Mock import AsyncMock, Mock, patch, M cMock
+from unittest.mock import AsyncMock, Mock, patch, M cMock
 from fastapi.testclient import TestClient
 from fastapi import HTTPException
 import psutil
@@ -14,7 +14,7 @@ from datetime import datetime
 import httpx
 
 # Mock external dependencies before importing the app
-Mock_modules = {
+mock_modules = {
     'monitoring.monitoring': Mock(),
     'agent_orchestration.orchestrator': Mock(),
     'ai_agents.agent_manager': Mock(), 
@@ -25,48 +25,48 @@ Mock_modules = {
     'app.core.security': Mock(),
 }
 
-for module_name, Mock_module in Mock_modules.items():
-    with patch.dict('sys.modules', {module_name: Mock_module}):
+for module_name, mock_module in mock_modules.items():
+    with patch.dict('sys.modules', {module_name: mock_module}):
         pass
 
 # Mock settings
-Mock_settings = Mock()
-Mock_settings.database_url = "sqlite:///test.db"
-Mock_settings.secret_key = "test_secret"
+mock_settings = Mock()
+mock_settings.database_url = "sqlite:///test.db"
+mock_settings.secret_key = "test_secret"
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_Mocks():
     """Setup global Mocks for all tests"""
-    with patch('backend.app.main.settings', Mock_settings), \
-         patch('backend.app.main.ENTERPRISE_FEATURES', True), \
-         patch('backend.app.main.logger') as Mock_logger:
+    with patch('app.main.settings', mock_settings), \
+         patch('app.main.ENTERPRISE_FEATURES', True), \
+         patch('app.main.logger') as mock_logger:
         yield
 
 @pytest.fixture
-def Mock_external_services():
+def mock_external_services():
     """Mock external service calls"""
-    with patch('backend.app.main.check_ollama', new_callable=AsyncMock) as Mock_ollama, \
-         patch('backend.app.main.check_chromadb', new_callable=AsyncMock) as Mock_chromadb, \
-         patch('backend.app.main.check_qdrant', new_callable=AsyncMock) as Mock_qdrant, \
-         patch('backend.app.main.get_ollama_models', new_callable=AsyncMock) as Mock_models, \
-         patch('backend.app.main.query_ollama', new_callable=AsyncMock) as Mock_query:
+    with patch('app.main.check_ollama', new_callable=AsyncMock) as mock_ollama, \
+         patch('app.main.check_chromadb', new_callable=AsyncMock) as mock_chromadb, \
+         patch('app.main.check_qdrant', new_callable=AsyncMock) as mock_qdrant, \
+         patch('app.main.get_ollama_models', new_callable=AsyncMock) as mock_models, \
+         patch('app.main.query_ollama', new_callable=AsyncMock) as mock_query:
         
-        Mock_ollama.return_value = True
-        Mock_chromadb.return_value = True
-        Mock_qdrant.return_value = True
-        Mock_models.return_value = ["tinyllama.2:1b", "tinyllama2.5:3b", "tinyllama:7b"]
-        Mock_query.return_value = "Mock AI response"
+        mock_ollama.return_value = True
+        mock_chromadb.return_value = True
+        mock_qdrant.return_value = True
+        mock_models.return_value = ["tinyllama.2:1b", "tinyllama2.5:3b", "tinyllama:7b"]
+        mock_query.return_value = "Mock AI response"
         
         yield {
-            'ollama': Mock_ollama,
-            'chromadb': Mock_chromadb,
-            'qdrant': Mock_qdrant,
-            'models': Mock_models,
-            'query': Mock_query
+            'ollama': mock_ollama,
+            'chromadb': mock_chromadb,
+            'qdrant': mock_qdrant,
+            'models': mock_models,
+            'query': mock_query
         }
 
 @pytest.fixture
-def Mock_orchestrator():
+def mock_orchestrator():
     """Mock orchestrator with realistic behavior"""
     orchestrator = Mock()
     orchestrator.health_check.return_value = True
@@ -80,7 +80,7 @@ def Mock_orchestrator():
     return orchestrator
 
 @pytest.fixture
-def Mock_reasoning_engine():
+def mock_reasoning_engine():
     """Mock reasoning engine with AI capabilities"""
     engine = Mock()
     engine.health_check.return_value = True
@@ -113,7 +113,7 @@ def Mock_reasoning_engine():
     return engine
 
 @pytest.fixture
-def Mock_self_improvement():
+def mock_self_improvement():
     """Mock self-improvement system"""
     system = Mock()
     system.health_check.return_value = True
@@ -136,21 +136,21 @@ def Mock_self_improvement():
     return system
 
 @pytest.fixture
-def client_with_Mocks(Mock_external_services, Mock_orchestrator, Mock_reasoning_engine, Mock_self_improvement):
+def client_with_Mocks(mock_external_services, mock_orchestrator, mock_reasoning_engine, mock_self_improvement):
     """Create test client with all Mocks"""
-    with patch('backend.app.main.orchestrator', Mock_orchestrator), \
-         patch('backend.app.main.reasoning_engine', Mock_reasoning_engine), \
-         patch('backend.app.main.self_improvement', Mock_self_improvement):
+    with patch('app.main.orchestrator', mock_orchestrator), \
+         patch('app.main.reasoning_engine', mock_reasoning_engine), \
+         patch('app.main.self_improvement', mock_self_improvement):
         
         # Import and create app after Mocking
-        from backend.app.main import app
+        from app.main import app
         client = TestClient(app)
         yield client
 
 class TestHealthEndpoints:
     """Test health check and system status endpoints"""
     
-    def test_health_endpoint_success(self, client_with_Mocks, Mock_external_services):
+    def test_health_endpoint_success(self, client_with_Mocks, mock_external_services):
         """Test health endpoint returns correct status"""
         response = client_with_Mocks.get("/health")
         assert response.status_code == 200
@@ -171,8 +171,8 @@ class TestHealthEndpoints:
         
     def test_health_endpoint_with_service_failures(self, client_with_Mocks):
         """Test health endpoint when services are down"""
-        with patch('backend.app.main.check_ollama', new_callable=AsyncMock) as Mock_ollama:
-            Mock_ollama.return_value = False
+        with patch('app.main.check_ollama', new_callable=AsyncMock) as mock_ollama:
+            mock_ollama.return_value = False
             
             response = client_with_Mocks.get("/health")
             assert response.status_code == 200
@@ -232,8 +232,8 @@ class TestChatEndpoints:
     
     def test_chat_with_no_models(self, client_with_Mocks):
         """Test chat when no models are available"""
-        with patch('backend.app.main.get_ollama_models', new_callable=AsyncMock) as Mock_models:
-            Mock_models.return_value = []
+        with patch('app.main.get_ollama_models', new_callable=AsyncMock) as mock_models:
+            mock_models.return_value = []
             
             response = client_with_Mocks.post("/chat", json={"message": "test"})
             assert response.status_code == 200
@@ -387,8 +387,8 @@ class TestReasoningEndpoints:
     
     def test_reason_with_no_models(self, client_with_Mocks):
         """Test reasoning when no models available"""
-        with patch('backend.app.main.get_ollama_models', new_callable=AsyncMock) as Mock_models:
-            Mock_models.return_value = []
+        with patch('app.main.get_ollama_models', new_callable=AsyncMock) as mock_models:
+            mock_models.return_value = []
             
             response = client_with_Mocks.post("/reason", json={
                 "type": "general",
@@ -709,7 +709,7 @@ class TestErrorHandling:
     
     def test_orchestrator_unavailable(self, client_with_Mocks):
         """Test behavior when orchestrator is unavailable"""
-        with patch('backend.app.main.orchestrator', None):
+        with patch('app.main.orchestrator', None):
             response = client_with_Mocks.post("/api/v1/orchestration/agents", json={
                 "agent_type": "test",
                 "config": {}
@@ -719,7 +719,7 @@ class TestErrorHandling:
     
     def test_reasoning_engine_fallback(self, client_with_Mocks):
         """Test fallback when reasoning engine unavailable"""
-        with patch('backend.app.main.reasoning_engine', None):
+        with patch('app.main.reasoning_engine', None):
             response = client_with_Mocks.post("/api/v1/processing/process", json={
                 "input_data": "test",
                 "processing_type": "general"
@@ -731,7 +731,7 @@ class TestErrorHandling:
     
     def test_self_improvement_unavailable(self, client_with_Mocks):
         """Test behavior when self-improvement system unavailable"""
-        with patch('backend.app.main.self_improvement', None):
+        with patch('app.main.self_improvement', None):
             response = client_with_Mocks.post("/api/v1/improvement/analyze")
             assert response.status_code == 200
             
@@ -758,8 +758,8 @@ class TestInputValidation:
     def test_xss_protection_chat(self, client_with_Mocks):
         """Test XSS protection in chat messages"""
         # Mock XSS protection
-        with patch('backend.app.main.xss_protection') as Mock_xss:
-            Mock_xss.validator.validate_input.side_effect = ValueError("XSS detected")
+        with patch('app.main.xss_protection') as mock_xss:
+            mock_xss.validator.validate_input.side_effect = ValueError("XSS detected")
             
             response = client_with_Mocks.post("/chat", json={
                 "message": "<script>alert('xss')</script>"

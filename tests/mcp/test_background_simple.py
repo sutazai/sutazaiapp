@@ -1,5 +1,5 @@
 import os
-from unittest.Mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -27,18 +27,18 @@ class TestBackgroundExecution:
     @patch("mcp_ssh.server.execute_command_background")
     @patch("mcp_ssh.server.get_process_output")
     async def test_execute_command_quick_completion(
-        self, Mock_get_output, Mock_execute_bg, Mock_get_client
+        self, mock_get_output, mock_execute_bg, mock_get_client
     ):
         """Test command that completes quickly."""
-        Mock_client = MagicMock()
-        Mock_get_client.return_value = Mock_client
-        Mock_execute_bg.return_value = 12345
-        Mock_get_output.return_value = ("completed", "file1\nfile2\n", "", 0)
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_execute_bg.return_value = 12345
+        mock_get_output.return_value = ("completed", "file1\nfile2\n", "", 0)
 
         request = CommandRequest(host="test-host", command="ls -la")
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await execute_command(request, Mock_context)
+        result = await execute_command(request, mock_context)
 
         assert result.success is True
         assert result.status == "completed"
@@ -47,27 +47,27 @@ class TestBackgroundExecution:
         assert result.exit_code == 0
         assert result.has_more_output is False
 
-        Mock_client.close.assert_called_once()
+        mock_client.close.assert_called_once()
 
     @patch("mcp_ssh.server.get_ssh_client_from_config")
     @patch("mcp_ssh.server.execute_command_background")
     @patch("mcp_ssh.server.get_process_output")
     async def test_execute_command_large_output(
-        self, Mock_get_output, Mock_execute_bg, Mock_get_client
+        self, mock_get_output, mock_execute_bg, mock_get_client
     ):
         """Test command with output larger than limit."""
-        Mock_client = MagicMock()
-        Mock_get_client.return_value = Mock_client
-        Mock_execute_bg.return_value = 12345
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_execute_bg.return_value = 12345
 
         # Large output that exceeds 1000 byte limit
         large_output = "x" * 1000  # Exactly at limit
-        Mock_get_output.return_value = ("completed", large_output, "", 0)
+        mock_get_output.return_value = ("completed", large_output, "", 0)
 
         request = CommandRequest(host="test-host", command="cat large_file")
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await execute_command(request, Mock_context)
+        result = await execute_command(request, mock_context)
 
         assert result.success is True
         assert result.output_size == 1000
@@ -78,18 +78,18 @@ class TestBackgroundExecution:
     @patch("mcp_ssh.server.get_output_chunk")
     @patch("mcp_ssh.server.get_process_output")
     async def test_get_command_output_chunk(
-        self, Mock_get_output, Mock_get_chunk, Mock_get_client, Mock_manager
+        self, mock_get_output, mock_get_chunk, mock_get_client, mock_manager
     ):
         """Test getting specific output chunk."""
         # Setup Mock process
-        Mock_process = MagicMock()
-        Mock_process.host = "test-host"
-        Mock_manager.get_process.return_value = Mock_process
+        mock_process = MagicMock()
+        mock_process.host = "test-host"
+        mock_manager.get_process.return_value = mock_process
 
-        Mock_client = MagicMock()
-        Mock_get_client.return_value = Mock_client
-        Mock_get_chunk.return_value = ("chunk_data", True)  # Has more data
-        Mock_get_output.return_value = (
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_get_chunk.return_value = ("chunk_data", True)  # Has more data
+        mock_get_output.return_value = (
             "completed",
             "",
             "",
@@ -97,71 +97,71 @@ class TestBackgroundExecution:
         )  # status, output, errors, exit_code
 
         request = GetOutputRequest(process_id="test123", start_byte=500, chunk_size=200)
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await get_command_output(request, Mock_context)
+        result = await get_command_output(request, mock_context)
 
         assert result.success is True
         assert result.stdout == "chunk_data"
         assert result.has_more_output is True
         assert result.chunk_start == 500
 
-        Mock_get_chunk.assert_called_once_with(Mock_client, Mock_process, 500, 200)
-        Mock_client.close.assert_called_once()
+        mock_get_chunk.assert_called_once_with(mock_client, mock_process, 500, 200)
+        mock_client.close.assert_called_once()
 
     @patch("mcp_ssh.server.process_manager")
     @patch("mcp_ssh.server.get_ssh_client_from_config")
     @patch("mcp_ssh.server.get_process_output")
     async def test_get_command_status(
-        self, Mock_get_output, Mock_get_client, Mock_manager
+        self, mock_get_output, mock_get_client, mock_manager
     ):
         """Test getting command status."""
         # Setup Mock process
-        Mock_process = MagicMock()
-        Mock_process.host = "test-host"
-        Mock_process.start_time = MagicMock()
-        Mock_process.start_time.total_seconds.return_value = 10.5
-        Mock_manager.get_process.return_value = Mock_process
+        mock_process = MagicMock()
+        mock_process.host = "test-host"
+        mock_process.start_time = MagicMock()
+        mock_process.start_time.total_seconds.return_value = 10.5
+        mock_manager.get_process.return_value = mock_process
 
-        Mock_client = MagicMock()
-        Mock_get_client.return_value = Mock_client
-        Mock_get_output.return_value = ("running", "", "", None)
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_get_output.return_value = ("running", "", "", None)
 
         request = GetOutputRequest(process_id="test123")
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await get_command_status(request, Mock_context)
+        result = await get_command_status(request, mock_context)
 
         assert result.success is True
         assert result.status == "running"
         # Don't test exact execution time as it's calculated from current time
         assert result.execution_time > 0
 
-        Mock_client.close.assert_called_once()
+        mock_client.close.assert_called_once()
 
     @patch("mcp_ssh.server.process_manager")
-    async def test_get_command_output_process_not_found(self, Mock_manager):
+    async def test_get_command_output_process_not_found(self, mock_manager):
         """Test getting output for non-existent process."""
-        Mock_manager.get_process.return_value = None
+        mock_manager.get_process.return_value = None
 
         request = GetOutputRequest(process_id="nonexistent")
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await get_command_output(request, Mock_context)
+        result = await get_command_output(request, mock_context)
 
         assert result.success is False
         assert result.status == "failed"
         assert "not found" in result.error_message
 
     @patch("mcp_ssh.server.get_ssh_client_from_config")
-    async def test_execute_command_connection_failure(self, Mock_get_client):
+    async def test_execute_command_connection_failure(self, mock_get_client):
         """Test command execution when SSH connection fails."""
-        Mock_get_client.return_value = None
+        mock_get_client.return_value = None
 
         request = CommandRequest(host="test-host", command="ls -la")
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await execute_command(request, Mock_context)
+        result = await execute_command(request, mock_context)
 
         assert result.success is False
         assert result.status == "failed"
@@ -172,45 +172,45 @@ class TestBackgroundExecution:
     @patch("mcp_ssh.server.kill_background_process")
     @patch("mcp_ssh.server.cleanup_process_files")
     async def test_kill_command_success(
-        self, Mock_cleanup, Mock_kill, Mock_get_client, Mock_manager
+        self, mock_cleanup, mock_kill, mock_get_client, mock_manager
     ):
         """Test successfully killing a running process."""
         # Setup Mock process
-        Mock_process = MagicMock()
-        Mock_process.host = "test-host"
-        Mock_process.status = "running"
-        Mock_process.pid = 12345
-        Mock_manager.get_process.return_value = Mock_process
+        mock_process = MagicMock()
+        mock_process.host = "test-host"
+        mock_process.status = "running"
+        mock_process.pid = 12345
+        mock_manager.get_process.return_value = mock_process
 
-        Mock_client = MagicMock()
-        Mock_get_client.return_value = Mock_client
-        Mock_kill.return_value = (True, "Process 12345 terminated gracefully")
-        Mock_cleanup.return_value = True
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_kill.return_value = (True, "Process 12345 terminated gracefully")
+        mock_cleanup.return_value = True
 
         request = KillProcessRequest(process_id="test123", cleanup_files=True)
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await kill_command(request, Mock_context)
+        result = await kill_command(request, mock_context)
 
         assert result.success is True
         assert result.process_id == "test123"
         assert "terminated gracefully" in result.message
         assert "cleaned up" in result.message
 
-        Mock_kill.assert_called_once_with(Mock_client, Mock_process)
-        Mock_cleanup.assert_called_once_with(Mock_client, Mock_process)
-        Mock_manager.update_process.assert_called_with("test123", status="killed")
-        Mock_client.close.assert_called_once()
+        mock_kill.assert_called_once_with(mock_client, mock_process)
+        mock_cleanup.assert_called_once_with(mock_client, mock_process)
+        mock_manager.update_process.assert_called_with("test123", status="killed")
+        mock_client.close.assert_called_once()
 
     @patch("mcp_ssh.server.process_manager")
-    async def test_kill_command_not_found(self, Mock_manager):
+    async def test_kill_command_not_found(self, mock_manager):
         """Test killing non-existent process."""
-        Mock_manager.get_process.return_value = None
+        mock_manager.get_process.return_value = None
 
         request = KillProcessRequest(process_id="nonexistent")
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await kill_command(request, Mock_context)
+        result = await kill_command(request, mock_context)
 
         assert result.success is False
         assert "not found" in result.error_message
@@ -219,119 +219,119 @@ class TestBackgroundExecution:
     @patch("mcp_ssh.server.get_ssh_client_from_config")
     @patch("mcp_ssh.server.kill_background_process")
     async def test_kill_command_already_stopped(
-        self, Mock_kill, Mock_get_client, Mock_manager
+        self, mock_kill, mock_get_client, mock_manager
     ):
         """Test killing process that's already stopped."""
         # Setup Mock process that's already completed
-        Mock_process = MagicMock()
-        Mock_process.host = "test-host"
-        Mock_process.status = "completed"
-        Mock_process.pid = 12345
-        Mock_manager.get_process.return_value = Mock_process
+        mock_process = MagicMock()
+        mock_process.host = "test-host"
+        mock_process.status = "completed"
+        mock_process.pid = 12345
+        mock_manager.get_process.return_value = mock_process
 
-        Mock_client = MagicMock()
-        Mock_get_client.return_value = Mock_client
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
 
         # Mock the status check to confirm it's stopped
-        Mock_stdout = MagicMock()
-        Mock_stdout.read.return_value = b"STOPPED\n"
-        Mock_client.exec_command.return_value = (None, Mock_stdout, None)
+        mock_stdout = MagicMock()
+        mock_stdout.read.return_value = b"STOPPED\n"
+        mock_client.exec_command.return_value = (None, mock_stdout, None)
 
         request = KillProcessRequest(process_id="test123")
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await kill_command(request, Mock_context)
+        result = await kill_command(request, mock_context)
 
         assert result.success is False
         assert "not running" in result.error_message
 
         # Should not attempt to kill if already stopped
-        Mock_kill.assert_not_called()
-        Mock_client.close.assert_called_once()
+        mock_kill.assert_not_called()
+        mock_client.close.assert_called_once()
 
     @patch("mcp_ssh.server.process_manager")
     @patch("mcp_ssh.server.get_ssh_client_from_config")
     @patch("mcp_ssh.server.kill_background_process")
-    async def test_kill_command_failure(self, Mock_kill, Mock_get_client, Mock_manager):
+    async def test_kill_command_failure(self, mock_kill, mock_get_client, mock_manager):
         """Test killing process that fails."""
         # Setup Mock process
-        Mock_process = MagicMock()
-        Mock_process.host = "test-host"
-        Mock_process.status = "running"
-        Mock_process.pid = 12345
-        Mock_manager.get_process.return_value = Mock_process
+        mock_process = MagicMock()
+        mock_process.host = "test-host"
+        mock_process.status = "running"
+        mock_process.pid = 12345
+        mock_manager.get_process.return_value = mock_process
 
-        Mock_client = MagicMock()
-        Mock_get_client.return_value = Mock_client
-        Mock_kill.return_value = (False, "Permission denied")
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_kill.return_value = (False, "Permission denied")
 
         request = KillProcessRequest(process_id="test123")
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await kill_command(request, Mock_context)
+        result = await kill_command(request, mock_context)
 
         assert result.success is False
         assert "Permission denied" in result.error_message
 
-        Mock_kill.assert_called_once_with(Mock_client, Mock_process)
-        Mock_client.close.assert_called_once()
+        mock_kill.assert_called_once_with(mock_client, mock_process)
+        mock_client.close.assert_called_once()
 
     @patch("mcp_ssh.server.process_manager")
     @patch("mcp_ssh.server.get_ssh_client_from_config")
     @patch("mcp_ssh.server.kill_background_process")
     @patch("mcp_ssh.server.cleanup_process_files")
     async def test_kill_command_no_cleanup(
-        self, Mock_cleanup, Mock_kill, Mock_get_client, Mock_manager
+        self, mock_cleanup, mock_kill, mock_get_client, mock_manager
     ):
         """Test killing process without cleanup."""
         # Setup Mock process
-        Mock_process = MagicMock()
-        Mock_process.host = "test-host"
-        Mock_process.status = "running"
-        Mock_process.pid = 12345
-        Mock_manager.get_process.return_value = Mock_process
+        mock_process = MagicMock()
+        mock_process.host = "test-host"
+        mock_process.status = "running"
+        mock_process.pid = 12345
+        mock_manager.get_process.return_value = mock_process
 
-        Mock_client = MagicMock()
-        Mock_get_client.return_value = Mock_client
-        Mock_kill.return_value = (True, "Process 12345 terminated gracefully")
+        mock_client = MagicMock()
+        mock_get_client.return_value = mock_client
+        mock_kill.return_value = (True, "Process 12345 terminated gracefully")
 
         request = KillProcessRequest(process_id="test123", cleanup_files=False)
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await kill_command(request, Mock_context)
+        result = await kill_command(request, mock_context)
 
         assert result.success is True
         assert result.process_id == "test123"
         assert "terminated gracefully" in result.message
         assert "cleaned up" not in result.message
 
-        Mock_kill.assert_called_once_with(Mock_client, Mock_process)
-        Mock_cleanup.assert_not_called()
-        Mock_manager.update_process.assert_called_with("test123", status="killed")
-        Mock_client.close.assert_called_once()
+        mock_kill.assert_called_once_with(mock_client, mock_process)
+        mock_cleanup.assert_not_called()
+        mock_manager.update_process.assert_called_with("test123", status="killed")
+        mock_client.close.assert_called_once()
 
     @patch("mcp_ssh.server.process_manager")
     @patch("mcp_ssh.server.get_ssh_client_from_config")
-    async def test_kill_command_connection_failure(self, Mock_get_client, Mock_manager):
+    async def test_kill_command_connection_failure(self, mock_get_client, mock_manager):
         """Test killing process with connection failure."""
         # Setup Mock process
-        Mock_process = MagicMock()
-        Mock_process.host = "test-host"
-        Mock_process.status = "running"
-        Mock_process.pid = 12345
-        Mock_manager.get_process.return_value = Mock_process
+        mock_process = MagicMock()
+        mock_process.host = "test-host"
+        mock_process.status = "running"
+        mock_process.pid = 12345
+        mock_manager.get_process.return_value = mock_process
 
-        Mock_get_client.return_value = None
+        mock_get_client.return_value = None
 
         request = KillProcessRequest(process_id="test123")
-        Mock_context = AsyncMock()
+        mock_context = AsyncMock()
 
-        result = await kill_command(request, Mock_context)
+        result = await kill_command(request, mock_context)
 
         assert result.success is False
         assert "Failed to establish SSH connection" in result.error_message
 
-        Mock_get_client.assert_called_once_with("test-host")
+        mock_get_client.assert_called_once_with("test-host")
 
 
 class TestBackgroundProcessManager:

@@ -370,7 +370,7 @@ This document describes the Claude agent system and orchestration patterns.
             if line_num > 0 and line_num <= len(lines):
                 lines[line_num - 1] = lines[line_num - 1].replace(
                     "raise NotImplementedError",
-                    "logger.warning('Implementation pending'); pass  # TODO: Implement"
+                    "logger.warning('Function not yet implemented - returning None'); return None"
                 )
                 file_path.write_text('\n'.join(lines))
                 return True, f"Replaced NotImplementedError at {file_path}:{line_num}"

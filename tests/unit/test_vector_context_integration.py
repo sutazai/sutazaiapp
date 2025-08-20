@@ -6,7 +6,7 @@ Tests the full end-to-end flow with Mocked dependencies
 import pytest
 import asyncio
 import json
-from unittest.Mock import Mock, AsyncMock, patch, MagicMock
+from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime
 from fastapi.testclient import TestClient
 
@@ -23,7 +23,7 @@ class TestVectorContextIntegration:
         return TestClient(app)
     
     @pytest.fixture
-    def Mock_vector_context(self):
+    def mock_vector_context(self):
         """Mock vector context injector with sample data"""
         sample_results = [
             VectorSearchResult(
@@ -76,15 +76,15 @@ Use this knowledge context to provide accurate, informed responses.
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_chat_endpoint_with_vector_context(self, Mock_query_ollama, Mock_get_models, Mock_vci, client, Mock_vector_context):
+    async def test_chat_endpoint_with_vector_context(self, mock_query_ollama, mock_get_models, mock_vci, client, mock_vector_context):
         """Test chat endpoint with vector context integration"""
         # Setup Mocks
-        Mock_get_models.return_value = ["tinyllama"]
-        Mock_query_ollama.return_value = "Docker is a containerization platform that allows you to package applications with their dependencies into lightweight containers."
+        mock_get_models.return_value = ["tinyllama"]
+        mock_query_ollama.return_value = "Docker is a containerization platform that allows you to package applications with their dependencies into lightweight containers."
         
         # Mock vector context injector
-        Mock_vci.analyze_user_request = AsyncMock(return_value=(True, Mock_vector_context))
-        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="""
+        mock_vci.analyze_user_request = AsyncMock(return_value=(True, mock_vector_context))
+        mock_vci.inject_context_into_prompt = AsyncMock(return_value="""
 KNOWLEDGE CONTEXT FOR: What is Docker?
 [Context content here...]
 
@@ -115,21 +115,21 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
         assert data["vector_context_info"]["query_time_ms"] == 245.0
         
         # Verify the context injection was called
-        Mock_vci.analyze_user_request.assert_called_once_with("What is Docker?")
-        Mock_vci.inject_context_into_prompt.assert_called_once()
+        mock_vci.analyze_user_request.assert_called_once_with("What is Docker?")
+        mock_vci.inject_context_into_prompt.assert_called_once()
     
     @pytest.mark.asyncio
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_chat_endpoint_without_vector_context(self, Mock_query_ollama, Mock_get_models, Mock_vci, client):
+    async def test_chat_endpoint_without_vector_context(self, mock_query_ollama, mock_get_models, mock_vci, client):
         """Test chat endpoint when no vector context is needed"""
         # Setup Mocks
-        Mock_get_models.return_value = ["tinyllama"]
-        Mock_query_ollama.return_value = "Hello! How can I help you today?"
+        mock_get_models.return_value = ["tinyllama"]
+        mock_query_ollama.return_value = "Hello! How can I help you today?"
         
         # Mock vector context injector to return no context needed
-        Mock_vci.analyze_user_request = AsyncMock(return_value=(False, None))
+        mock_vci.analyze_user_request = AsyncMock(return_value=(False, None))
         
         # Make request with non-knowledge query
         response = client.post("/chat", json={
@@ -145,21 +145,21 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
         assert data["vector_context_info"] is None
         
         # Verify the analysis was still called
-        Mock_vci.analyze_user_request.assert_called_once_with("Hello there!")
+        mock_vci.analyze_user_request.assert_called_once_with("Hello there!")
     
     @pytest.mark.asyncio
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_think_endpoint_with_vector_context(self, Mock_query_ollama, Mock_get_models, Mock_vci, client, Mock_vector_context):
+    async def test_think_endpoint_with_vector_context(self, mock_query_ollama, mock_get_models, mock_vci, client, mock_vector_context):
         """Test think endpoint with vector context integration"""
         # Setup Mocks
-        Mock_get_models.return_value = ["tinyllama"]
-        Mock_query_ollama.return_value = "Based on the provided knowledge context, Docker is a containerization platform..."
+        mock_get_models.return_value = ["tinyllama"]
+        mock_query_ollama.return_value = "Based on the provided knowledge context, Docker is a containerization platform..."
         
         # Mock vector context injector
-        Mock_vci.analyze_user_request = AsyncMock(return_value=(True, Mock_vector_context))
-        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="Enhanced prompt with context")
+        mock_vci.analyze_user_request = AsyncMock(return_value=(True, mock_vector_context))
+        mock_vci.inject_context_into_prompt = AsyncMock(return_value="Enhanced prompt with context")
         
         # Make request to think endpoint
         response = client.post("/think", json={
@@ -185,15 +185,15 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models') 
     @patch('app.main.query_ollama')
-    async def test_public_think_endpoint_with_vector_context(self, Mock_query_ollama, Mock_get_models, Mock_vci, client, Mock_vector_context):
+    async def test_public_think_endpoint_with_vector_context(self, mock_query_ollama, mock_get_models, mock_vci, client, mock_vector_context):
         """Test public think endpoint with vector context"""
         # Setup Mocks
-        Mock_get_models.return_value = ["tinyllama"]
-        Mock_query_ollama.return_value = "Comprehensive analysis of Docker technology..."
+        mock_get_models.return_value = ["tinyllama"]
+        mock_query_ollama.return_value = "Comprehensive analysis of Docker technology..."
         
         # Mock vector context injector
-        Mock_vci.analyze_user_request = AsyncMock(return_value=(True, Mock_vector_context))
-        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="Enhanced reasoning prompt")
+        mock_vci.analyze_user_request = AsyncMock(return_value=(True, mock_vector_context))
+        mock_vci.inject_context_into_prompt = AsyncMock(return_value="Enhanced reasoning prompt")
         
         # Make request to public think endpoint
         response = client.post("/public/think", json={
@@ -214,10 +214,10 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     
     @pytest.mark.asyncio
     @patch('app.main.vector_context_injector')
-    async def test_vector_context_error_handling(self, Mock_vci, client):
+    async def test_vector_context_error_handling(self, mock_vci, client):
         """Test error handling in vector context injection"""
         # Mock vector context injector to raise an exception
-        Mock_vci.analyze_user_request = AsyncMock(side_effect=Exception("Database connection failed"))
+        mock_vci.analyze_user_request = AsyncMock(side_effect=Exception("Database connection failed"))
         
         with patch('app.main.get_ollama_models', return_value=["tinyllama"]):
             with patch('app.main.query_ollama', return_value="Response without context"):
@@ -238,10 +238,10 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     @patch('app.main.VECTOR_CONTEXT_AVAILABLE', False)
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_fallback_when_vector_context_unavailable(self, Mock_query_ollama, Mock_get_models, client):
+    async def test_fallback_when_vector_context_unavailable(self, mock_query_ollama, mock_get_models, client):
         """Test fallback behavior when vector context system is unavailable"""
-        Mock_get_models.return_value = ["tinyllama"]
-        Mock_query_ollama.return_value = "Response without vector context"
+        mock_get_models.return_value = ["tinyllama"]
+        mock_query_ollama.return_value = "Response without vector context"
         
         response = client.post("/chat", json={
             "message": "What is machine learning?",
@@ -260,11 +260,11 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     @patch('app.main.vector_context_injector')
     @patch('app.main.get_ollama_models')
     @patch('app.main.query_ollama')
-    async def test_performance_under_load(self, Mock_query_ollama, Mock_get_models, Mock_vci, client, Mock_vector_context):
+    async def test_performance_under_load(self, mock_query_ollama, mock_get_models, mock_vci, client, mock_vector_context):
         """Test system performance with multiple concurrent requests"""
         # Setup Mocks
-        Mock_get_models.return_value = ["tinyllama"]
-        Mock_query_ollama.return_value = "Quick response"
+        mock_get_models.return_value = ["tinyllama"]
+        mock_query_ollama.return_value = "Quick response"
         
         # Mock fast vector context response
         fast_context = KnowledgeContext(
@@ -274,8 +274,8 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
             total_results=1,
             enriched_context="Quick context"
         )
-        Mock_vci.analyze_user_request = AsyncMock(return_value=(True, fast_context))
-        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="Quick prompt")
+        mock_vci.analyze_user_request = AsyncMock(return_value=(True, fast_context))
+        mock_vci.inject_context_into_prompt = AsyncMock(return_value="Quick prompt")
         
         # Make multiple concurrent requests
         import concurrent.futures
@@ -310,12 +310,12 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
     
     @pytest.mark.asyncio
     @patch('app.main.vector_context_injector')
-    async def test_vector_context_caching(self, Mock_vci, client):
+    async def test_vector_context_caching(self, mock_vci, client):
         """Test that vector context results are cached appropriately"""
         # Mock vector context with cache behavior
         call_count = 0
         
-        async def Mock_analyze(query):
+        async def mock_analyze(query):
             nonlocal call_count
             call_count += 1
             if call_count == 1:
@@ -339,8 +339,8 @@ INSTRUCTIONS: Use the provided knowledge context above to give an accurate, well
                 )
                 return True, context
         
-        Mock_vci.analyze_user_request = Mock_analyze
-        Mock_vci.inject_context_into_prompt = AsyncMock(return_value="Cached prompt")
+        mock_vci.analyze_user_request = mock_analyze
+        mock_vci.inject_context_into_prompt = AsyncMock(return_value="Cached prompt")
         
         with patch('app.main.get_ollama_models', return_value=["tinyllama"]):
             with patch('app.main.query_ollama', return_value="Cached response"):
@@ -378,10 +378,10 @@ class TestVectorContextHealthChecks:
     @pytest.mark.asyncio
     @patch('app.main.check_chromadb')
     @patch('app.main.check_qdrant')
-    async def test_health_endpoint_shows_vector_db_status(self, Mock_check_qdrant, Mock_check_chromadb, client):
+    async def test_health_endpoint_shows_vector_db_status(self, mock_check_qdrant, mock_check_chromadb, client):
         """Test that health endpoint includes vector database status"""
-        Mock_check_chromadb.return_value = True
-        Mock_check_qdrant.return_value = False  # Simulate Qdrant being down
+        mock_check_chromadb.return_value = True
+        mock_check_qdrant.return_value = False  # Simulate Qdrant being down
         
         response = client.get("/health")
         assert response.status_code == 200

@@ -8,10 +8,10 @@ import time
 import pytest
 import asyncio
 from typing import Dict, Any, List, Tuple
-from unittest.Mock import patch
+from unittest.mock import patch
 
 # Import mesh components
-from backend.app.mesh.redis_bus import (
+from app.mesh.redis_bus import (
     get_redis, get_redis_async, enqueue_task, tail_results, 
     register_agent, heartbeat_agent, list_agents,
     create_consumer_group, read_group, ack, move_to_dead,
@@ -121,9 +121,9 @@ class TestRedisConnection:
     def test_redis_connection_pool_configuration(self):
         """Test Redis connection pool is properly configured."""
         # Reset global pool to test fresh creation
-        import backend.app.mesh.redis_bus
-        original_pool = backend.app.mesh.redis_bus._redis_pool
-        backend.app.mesh.redis_bus._redis_pool = None
+        import app.mesh.redis_bus
+        original_pool = app.mesh.redis_bus._redis_pool
+        app.mesh.redis_bus._redis_pool = None
         
         try:
             client = get_redis()
@@ -137,19 +137,19 @@ class TestRedisConnection:
             assert pool.connection_kwargs['health_check_interval'] == 30
         finally:
             # Restore original pool
-            backend.app.mesh.redis_bus._redis_pool = original_pool
+            app.mesh.redis_bus._redis_pool = original_pool
     
     def test_redis_url_configuration(self):
         """Test Redis URL configuration from environment."""
         # Test default URL
         with patch.dict(os.environ, {}, clear=True):
-            from backend.app.mesh.redis_bus import _redis_url
+            from app.mesh.redis_bus import _redis_url
             assert _redis_url() == "redis://redis:6379/0"
         
         # Test custom URL
         custom_url = "redis://custom:6380/1"
         with patch.dict(os.environ, {"REDIS_URL": custom_url}):
-            from backend.app.mesh.redis_bus import _redis_url
+            from app.mesh.redis_bus import _redis_url
             assert _redis_url() == custom_url
 
 class TestStreamKeys:

@@ -22,7 +22,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import the Text Analysis Agent and structured logging
 from agents.text_analysis_agent import TextAnalysisAgent
-from backend.app.core.logging_config import get_logger
+from app.core.logging_config import get_logger
 
 # Configure test logging (Rule 8 compliance)
 logger = get_logger(__name__)

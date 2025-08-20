@@ -8,7 +8,7 @@ Test the caching system logic without Streamlit dependencies
 
 import hashlib
 import time
-from unittest.Mock import MagicMock
+from unittest.mock import MagicMock
 import sys
 
 # Mock streamlit for testing
@@ -31,8 +31,8 @@ class MockSessionState:
         return key in self._storage
 
 # Create Mock st.session_state
-Mock_session_state = MockSessionState()
-sys.modules['streamlit'].session_state = Mock_session_state
+mock_session_state = MockSessionState()
+sys.modules['streamlit'].session_state = mock_session_state
 
 def test_caching_system():
     """Test the caching system functionality"""

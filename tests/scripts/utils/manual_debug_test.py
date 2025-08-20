@@ -25,7 +25,7 @@ from typing import Dict, Any, List
 from debug_tracer import debug_tracer
 
 # Configure structured logging (Rule 8 compliance)
-from backend.app.core.logging_config import get_logger
+from app.core.logging_config import get_logger
 logger = get_logger('ManualDebugTest')
 
 class ManualTestFramework:

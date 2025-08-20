@@ -2,7 +2,7 @@
 Unit tests for security module
 """
 import pytest
-from unittest.Mock import Mock, patch
+from unittest.mock import Mock, patch
 import jwt
 from datetime import datetime, timedelta, timezone
 

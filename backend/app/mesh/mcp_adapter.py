@@ -271,8 +271,8 @@ class MCPServiceAdapter:
                 if not healthy_instances:
                     raise HTTPException(status_code=503, detail="No healthy MCP instances available")
                 
-                # Round-robin selection
-                instance = healthy_instances[0]  # TODO: Implement proper load balancing
+                # Weighted round-robin load balancing based on performance metrics
+                instance = self._select_best_instance(healthy_instances)
                 
                 # Track metrics
                 start_time = time.time()
@@ -355,6 +355,37 @@ class MCPServiceAdapter:
         for instance in self.instances.values():
             await instance.stop()
         self.instances.clear()
+    
+    def _select_best_instance(self, healthy_instances: List[MCPProcess]) -> MCPProcess:
+        """Select the best instance using weighted round-robin based on performance metrics"""
+        if len(healthy_instances) == 1:
+            return healthy_instances[0]
+        
+        # Calculate weights based on inverse of error rate and request count
+        weights = []
+        for instance in healthy_instances:
+            # Base weight of 1.0, adjusted by performance
+            error_rate = instance.error_count / max(instance.request_count, 1)
+            load_factor = instance.request_count / max(time.time() - instance.start_time, 1)
+            
+            # Lower error rate and load = higher weight
+            weight = 1.0 / (1.0 + error_rate) / (1.0 + load_factor / 10.0)
+            weights.append(weight)
+        
+        # Weighted random selection
+        import random
+        total_weight = sum(weights)
+        if total_weight == 0:
+            return healthy_instances[0]
+        
+        r = random.uniform(0, total_weight)
+        for i, weight in enumerate(weights):
+            r -= weight
+            if r <= 0:
+                return healthy_instances[i]
+        
+        # Fallback to first instance
+        return healthy_instances[0]
     
     def get_app(self) -> FastAPI:
         """Get FastAPI app for this adapter"""

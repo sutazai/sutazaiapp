@@ -1,42 +1,17 @@
 """
 Feedback Loop API Integration
+Production implementation with database-backed feedback collection and analysis
 """
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 import logging
 import sys
 import os
 
-# Add the self_improvement module to path
+# Add the ai_agents module to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../"))
 
-try:
-    from ai_agents.self_improvement.feedback_loop import feedback_loop
-except ImportError:
-    # IMPORTANT: This is a necessary fallback when the ai_agents.self_improvement module is not available.
-    # This Mock implementation prevents the API from crashing when the real feedback loop module is missing.
-    # DO NOT REMOVE - Required for graceful degradation when dependencies are not installed.
-    # TODO: Implement real feedback loop in ai_agents.self_improvement.feedback_loop module
-    class MockFeedbackLoop:
-        def __init__(self):
-            self.is_running = False
-            
-        async def start(self):
-            self.is_running = True
-            
-        async def stop(self):
-            self.is_running = False
-            
-        def get_status(self):
-            return {
-                "is_running": self.is_running,
-                "metrics_collected": 0,
-                "issues_detected": 0,
-                "improvements_generated": 0,
-                "improvements_implemented": 0,
-                "recent_issues": []
-            }
-    
-    feedback_loop = MockFeedbackLoop()
+# Import the real feedback loop implementation
+from ai_agents.self_improvement.feedback_loop import feedback_loop
 
 logger = logging.getLogger(__name__)
 

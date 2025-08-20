@@ -99,14 +99,14 @@ class BasicAITestSuite:
         logger.info("Running basic performance validation test")
         
         # Simple performance test
-        def Mock_inference():
+        def mock_inference():
             """Mock AI inference operation"""
             time.sleep(0.001)  # Simulate 1ms processing
             return [0.8, 0.2]  # Mock prediction probabilities
         
         # Test inference latency
         start_time = time.time()
-        result = Mock_inference()
+        result = mock_inference()
         inference_time = (time.time() - start_time) * 1000  # milliseconds
         
         assert inference_time < 50, f"Inference time {inference_time:.2f}ms exceeds 50ms threshold"
@@ -116,7 +116,7 @@ class BasicAITestSuite:
         batch_start = time.time()
         batch_results = []
         for _ in range(10):
-            batch_results.append(Mock_inference())
+            batch_results.append(mock_inference())
         batch_time = time.time() - batch_start
         
         avg_batch_time = (batch_time / 10) * 1000  # ms per inference

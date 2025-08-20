@@ -29,7 +29,7 @@ import json
 import statistics
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
-from unittest.Mock import AsyncMock, Mock, patch
+from unittest.mock import AsyncMock, Mock, patch
 from dataclasses import dataclass, field
 from concurrent.futures import ThreadPoolExecutor
 
@@ -151,7 +151,7 @@ class TestMCPDownloadPerformance:
     async def test_single_download_performance(
         self,
         test_environment: TestEnvironment,
-        Mock_process_runner,
+        mock_process_runner,
         performance_monitor
     ):
         """Test performance of single MCP server download."""
@@ -163,7 +163,7 @@ class TestMCPDownloadPerformance:
         package_name = config.mcp_servers[server_name]["package"]
         version = "1.2.3"
         
-        with patch.object(download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(download_manager, '_run_command', side_effect=mock_process_runner):
             profiler.start_operation("single_download")
             
             result = await download_manager.download_package(
@@ -194,7 +194,7 @@ class TestMCPDownloadPerformance:
     async def test_concurrent_download_performance(
         self,
         test_environment: TestEnvironment,
-        Mock_process_runner
+        mock_process_runner
     ):
         """Test performance of concurrent MCP server downloads."""
         config = test_environment.config
@@ -204,7 +204,7 @@ class TestMCPDownloadPerformance:
         # Select multiple servers for concurrent download
         server_names = list(config.get_all_servers())[:3]
         
-        with patch.object(download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(download_manager, '_run_command', side_effect=mock_process_runner):
             profiler.start_operation("concurrent_downloads")
             
             # Start concurrent downloads
@@ -252,7 +252,7 @@ class TestMCPDownloadPerformance:
     async def test_download_throughput_scaling(
         self,
         test_environment: TestEnvironment,
-        Mock_process_runner
+        mock_process_runner
     ):
         """Test download throughput scaling with increasing concurrency."""
         config = test_environment.config
@@ -262,7 +262,7 @@ class TestMCPDownloadPerformance:
         concurrency_levels = [1, 2, 4]
         throughput_results = {}
         
-        with patch.object(download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(download_manager, '_run_command', side_effect=mock_process_runner):
             for concurrency in concurrency_levels:
                 profiler = PerformanceProfiler()
                 profiler.start_operation(f"throughput_test_{concurrency}")
@@ -327,8 +327,8 @@ class TestMCPSystemPerformance:
     async def test_system_load_performance(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner
+        mock_health_checker,
+        mock_process_runner
     ):
         """Test system performance under high load conditions."""
         config = test_environment.config
@@ -339,8 +339,8 @@ class TestMCPSystemPerformance:
         num_operations = 10
         concurrent_servers = 5
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             profiler.start_operation("system_load_test")
             
@@ -413,8 +413,8 @@ class TestMCPSystemPerformance:
     async def test_sustained_load_performance(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner
+        mock_health_checker,
+        mock_process_runner
     ):
         """Test system performance under sustained load over time."""
         config = test_environment.config
@@ -426,8 +426,8 @@ class TestMCPSystemPerformance:
         
         performance_samples = []
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             start_time = time.time()
             operation_count = 0
@@ -488,8 +488,8 @@ class TestMCPSystemPerformance:
     async def test_memory_usage_performance(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner
+        mock_health_checker,
+        mock_process_runner
     ):
         """Test memory usage patterns and potential memory leaks."""
         config = test_environment.config
@@ -498,8 +498,8 @@ class TestMCPSystemPerformance:
         memory_samples = []
         process = psutil.Process()
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Baseline memory measurement
             baseline_memory = process.memory_info().rss / (1024 * 1024)  # MB
@@ -562,8 +562,8 @@ class TestMCPPerformanceRegression:
     async def test_performance_baseline_establishment(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner,
+        mock_health_checker,
+        mock_process_runner,
         tmp_path: Path
     ):
         """Establish performance baselines for regression testing."""
@@ -572,8 +572,8 @@ class TestMCPPerformanceRegression:
         
         baseline_file = tmp_path / "performance_baseline.json"
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Measure baseline performance for key operations
             baselines = {}
@@ -653,8 +653,8 @@ class TestMCPPerformanceRegression:
     async def test_performance_regression_detection(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner,
+        mock_health_checker,
+        mock_process_runner,
         tmp_path: Path
     ):
         """Test detection of performance regressions against baseline."""
@@ -709,7 +709,7 @@ class TestMCPPerformanceRegression:
             }
         
         with patch.object(update_manager, '_run_health_check', side_effect=slow_health_check), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Measure current performance
             current_times = []
@@ -749,8 +749,8 @@ class TestMCPPerformanceRegression:
     async def test_performance_trend_analysis(
         self,
         test_environment: TestEnvironment,
-        Mock_health_checker,
-        Mock_process_runner,
+        mock_health_checker,
+        mock_process_runner,
         tmp_path: Path
     ):
         """Test performance trend analysis over multiple test runs."""
@@ -778,8 +778,8 @@ class TestMCPPerformanceRegression:
         with open(history_file, 'w') as f:
             json.dump(historical_data, f, indent=2)
         
-        with patch.object(update_manager, '_run_health_check', side_effect=Mock_health_checker), \
-             patch.object(update_manager.download_manager, '_run_command', side_effect=Mock_process_runner):
+        with patch.object(update_manager, '_run_health_check', side_effect=mock_health_checker), \
+             patch.object(update_manager.download_manager, '_run_command', side_effect=mock_process_runner):
             
             # Collect current performance data
             current_health_times = []

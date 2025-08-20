@@ -356,6 +356,14 @@ try:
 except Exception as e:
     logger.error(f"Models/Chat endpoint router setup failed: {e}")
 
+# CRITICAL FIX #2: Add feedback loop router for self-improvement system
+try:
+    from app.api.v1.feedback import router as feedback_router
+    app.include_router(feedback_router, prefix="/api/v1/feedback", tags=["Feedback Loop"])
+    logger.info("Feedback loop router loaded successfully - self-improvement system active")
+except Exception as e:
+    logger.error(f"Feedback loop router setup failed: {e}")
+
 # Initialize Unified Agent Registry for centralized agent management
 agent_registry = UnifiedAgentRegistry()
 

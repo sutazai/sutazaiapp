@@ -12,7 +12,7 @@ import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from unittest.Mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 from mcp_ssh.ssh import execute_command_background
 
@@ -22,22 +22,22 @@ class TestCommandExecutionFix(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures"""
-        self.Mock_client = Mock()
-        self.Mock_stdin = Mock()
-        self.Mock_stdout = Mock()
-        self.Mock_stderr = Mock()
-        self.Mock_channel = Mock()
+        self.mock_client = Mock()
+        self.mock_stdin = Mock()
+        self.mock_stdout = Mock()
+        self.mock_stderr = Mock()
+        self.mock_channel = Mock()
 
         # Set up the Mock chain
-        self.Mock_stdout.channel = self.Mock_channel
-        self.Mock_channel.exit_status_ready.return_value = True
-        self.Mock_stdout.read.return_value = b"12345\n"  # Mock PID
-        self.Mock_stderr.read.return_value = b""
+        self.mock_stdout.channel = self.mock_channel
+        self.mock_channel.exit_status_ready.return_value = True
+        self.mock_stdout.read.return_value = b"12345\n"  # Mock PID
+        self.mock_stderr.read.return_value = b""
 
-        self.Mock_client.exec_command.return_value = (
-            self.Mock_stdin,
-            self.Mock_stdout,
-            self.Mock_stderr,
+        self.mock_client.exec_command.return_value = (
+            self.mock_stdin,
+            self.mock_stdout,
+            self.mock_stderr,
         )
 
     def test_single_quote_escaping(self):
@@ -45,12 +45,12 @@ class TestCommandExecutionFix(unittest.TestCase):
         command = "echo 'Hello World' > test.txt"
 
         pid = execute_command_background(
-            self.Mock_client, command, "/tmp/out", "/tmp/err"
+            self.mock_client, command, "/tmp/out", "/tmp/err"
         )
 
         # Verify the command was called
-        self.Mock_client.exec_command.assert_called_once()
-        call_args = self.Mock_client.exec_command.call_args[0][0]
+        self.mock_client.exec_command.assert_called_once()
+        call_args = self.mock_client.exec_command.call_args[0][0]
 
         # The escaped command should not break bash -c syntax
         assert "echo '\"'\"'Hello World'\"'\"' > test.txt" in call_args
@@ -60,9 +60,9 @@ class TestCommandExecutionFix(unittest.TestCase):
         """Test that double quotes are preserved correctly"""
         command = 'echo "Hello World" > test.txt'
 
-        execute_command_background(self.Mock_client, command, "/tmp/out", "/tmp/err")
+        execute_command_background(self.mock_client, command, "/tmp/out", "/tmp/err")
 
-        call_args = self.Mock_client.exec_command.call_args[0][0]
+        call_args = self.mock_client.exec_command.call_args[0][0]
 
         # Double quotes should be preserved
         assert 'echo "Hello World" > test.txt' in call_args
@@ -71,9 +71,9 @@ class TestCommandExecutionFix(unittest.TestCase):
         """Test commands with mixed single and double quotes"""
         command = """echo 'Single "double" quotes' > test.txt"""
 
-        execute_command_background(self.Mock_client, command, "/tmp/out", "/tmp/err")
+        execute_command_background(self.mock_client, command, "/tmp/out", "/tmp/err")
 
-        call_args = self.Mock_client.exec_command.call_args[0][0]
+        call_args = self.mock_client.exec_command.call_args[0][0]
 
         # Should properly escape single quotes while preserving double quotes
         assert """echo '"'"'Single "double" quotes'"'"' > test.txt""" in call_args
@@ -91,10 +91,10 @@ class TestCommandExecutionFix(unittest.TestCase):
         for command in test_cases:
             with self.subTest(command=command):
                 execute_command_background(
-                    self.Mock_client, command, "/tmp/out", "/tmp/err"
+                    self.mock_client, command, "/tmp/out", "/tmp/err"
                 )
 
-                call_args = self.Mock_client.exec_command.call_args[0][0]
+                call_args = self.mock_client.exec_command.call_args[0][0]
 
                 # Verify redirection operators are preserved
                 for operator in [">", ">>", "|"]:
@@ -105,9 +105,9 @@ class TestCommandExecutionFix(unittest.TestCase):
         """Test complex shell commands with multiple features"""
         command = "echo 'Line 1' > file.txt && echo 'Line 2' >> file.txt"
 
-        execute_command_background(self.Mock_client, command, "/tmp/out", "/tmp/err")
+        execute_command_background(self.mock_client, command, "/tmp/out", "/tmp/err")
 
-        call_args = self.Mock_client.exec_command.call_args[0][0]
+        call_args = self.mock_client.exec_command.call_args[0][0]
 
         # Should preserve shell operators
         assert "&&" in call_args
@@ -121,36 +121,36 @@ Content line 1
 Content line 2
 EOF"""
 
-        execute_command_background(self.Mock_client, command, "/tmp/out", "/tmp/err")
+        execute_command_background(self.mock_client, command, "/tmp/out", "/tmp/err")
 
-        call_args = self.Mock_client.exec_command.call_args[0][0]
+        call_args = self.mock_client.exec_command.call_args[0][0]
 
         # Should preserve heredoc syntax
         assert "<<" in call_args
         assert "EOF" in call_args
 
     @patch("mcp_ssh.ssh.logger")
-    def test_debug_logging(self, Mock_logger):
+    def test_debug_logging(self, mock_logger):
         """Test that debug logging is working"""
         command = "echo 'test' > file.txt"
 
-        execute_command_background(self.Mock_client, command, "/tmp/out", "/tmp/err")
+        execute_command_background(self.mock_client, command, "/tmp/out", "/tmp/err")
 
         # Verify debug logging was called
-        Mock_logger.debug.assert_called()
+        mock_logger.debug.assert_called()
 
         # Check that original and escaped commands are logged
-        debug_calls = [call.args[0] for call in Mock_logger.debug.call_args_list]
+        debug_calls = [call.args[0] for call in mock_logger.debug.call_args_list]
         assert any("Original command:" in call for call in debug_calls)
         assert any("Escaped command:" in call for call in debug_calls)
 
     def test_error_handling_with_invalid_pid(self):
         """Test error handling when PID parsing fails"""
-        self.Mock_stdout.read.return_value = b"not_a_number\n"
+        self.mock_stdout.read.return_value = b"not_a_number\n"
 
         try:
             execute_command_background(
-                self.Mock_client, "echo test", "/tmp/out", "/tmp/err"
+                self.mock_client, "echo test", "/tmp/out", "/tmp/err"
             )
             raise AssertionError("Expected RuntimeError")
         except RuntimeError as e:
@@ -160,9 +160,9 @@ EOF"""
         """Test that the background wrapper has correct structure"""
         command = "echo 'test'"
 
-        execute_command_background(self.Mock_client, command, "/tmp/out", "/tmp/err")
+        execute_command_background(self.mock_client, command, "/tmp/out", "/tmp/err")
 
-        call_args = self.Mock_client.exec_command.call_args[0][0]
+        call_args = self.mock_client.exec_command.call_args[0][0]
 
         # Verify background wrapper structure
         assert "nohup bash -c" in call_args
@@ -175,9 +175,9 @@ EOF"""
         """Test commands without quotes work correctly"""
         command = "ls -la > output.txt"
 
-        execute_command_background(self.Mock_client, command, "/tmp/out", "/tmp/err")
+        execute_command_background(self.mock_client, command, "/tmp/out", "/tmp/err")
 
-        call_args = self.Mock_client.exec_command.call_args[0][0]
+        call_args = self.mock_client.exec_command.call_args[0][0]
 
         # Should work without modification
         assert "ls -la > output.txt" in call_args

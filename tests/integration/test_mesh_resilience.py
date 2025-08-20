@@ -8,10 +8,10 @@ from unittest. import , patch, Async
 import os
 import tempfile
 
-from backend.app.mesh.mcp_mesh_initializer import MCPMeshInitializer, get_mcp_mesh_initializer
-from backend.app.mesh.mcp_bridge import MCPMeshBridge, MCPServiceAdapter, MCPServiceConfig
-from backend.app.mesh.mcp_load_balancer import MCPLoadBalancer, get_mcp_load_balancer
-from backend.app.core.mcp_startup import initialize_mcp_on_startup, shutdown_mcp_services
+from app.mesh.mcp_mesh_initializer import MCPMeshInitializer, get_mcp_mesh_initializer
+from app.mesh.mcp_bridge import MCPMeshBridge, MCPServiceAdapter, MCPServiceConfig
+from app.mesh.mcp_load_balancer import MCPLoadBalancer, get_mcp_load_balancer
+from app.core.mcp_startup import initialize_mcp_on_startup, shutdown_mcp_services
 
 
 class TestMeshResilience:
@@ -92,7 +92,7 @@ class TestMeshResilience:
         assert result is None
         
         # Select with only unhealthy instances
-        from backend.app.mesh.service_mesh import ServiceInstance, ServiceState
+        from app.mesh.service_mesh import ServiceInstance, ServiceState
         
         unhealthy_instances = [
             ServiceInstance(
@@ -112,7 +112,7 @@ class TestMeshResilience:
         """Test load balancer uses degraded instances when no healthy ones available"""
         load_balancer = MCPLoadBalancer()
         
-        from backend.app.mesh.service_mesh import ServiceInstance, ServiceState
+        from app.mesh.service_mesh import ServiceInstance, ServiceState
         
         degraded_instances = [
             ServiceInstance(
@@ -131,7 +131,7 @@ class TestMeshResilience:
     @pytest.mark.asyncio
     async def test_startup_continues_without_mcp(self):
         """Test that system startup continues even if MCP initialization fails"""
-        with patch('backend.app.mesh.mcp_stdio_bridge.get_mcp_stdio_bridge') as _bridge:
+        with patch('app.mesh.mcp_stdio_bridge.get_mcp_stdio_bridge') as _bridge:
             # Simulate bridge initialization failure
             _bridge.side_effect = Exception("Bridge initialization failed")
             

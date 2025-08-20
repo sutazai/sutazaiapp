@@ -29,6 +29,7 @@ USER appuser
 COPY --chown=appuser:appgroup app.py .
 COPY --chown=appuser:appgroup components/ ./components/
 COPY --chown=appuser:appgroup pages/ ./pages/
+COPY --chown=appuser:appgroup utils/ ./utils/
 
 # Override base environment variables for frontend service
 ENV SERVICE_PORT=8501

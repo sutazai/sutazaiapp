@@ -29,7 +29,7 @@ import sqlite3
 import pytest
 import threading
 from pathlib import Path
-from unittest.Mock import Mock, patch, MagicMock, call
+from unittest.mock import Mock, patch, MagicMock, call
 from datetime import datetime, timedelta
 
 # Add the monitoring directory to Python path
@@ -779,14 +779,14 @@ def process():
         original_sleep = time.sleep
         sleep_count = 0
         
-        def Mock_sleep(duration):
+        def mock_sleep(duration):
             nonlocal sleep_count
             sleep_count += 1
             if sleep_count >= 1:
                 monitor.shutdown_event.set()
             return original_sleep(0.1)  # Very short sleep for testing
         
-        with patch('time.sleep', side_effect=Mock_sleep):
+        with patch('time.sleep', side_effect=mock_sleep):
             # This should exit quickly due to shutdown event
             monitor.run_daemon_mode()
         
