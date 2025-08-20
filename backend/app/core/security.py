@@ -157,5 +157,56 @@ class SecurityManager:
         }
 
 
-# Global instance
+class XSSProtection:
+    """XSS Protection and input sanitization"""
+    
+    def __init__(self):
+        self.validator = InputValidator()
+    
+    async def process_request(self, data: dict) -> dict:
+        """Process and sanitize request data"""
+        sanitized = {}
+        for key, value in data.items():
+            if isinstance(value, str):
+                sanitized[key] = self.validator.validate_input(value, "text")
+            else:
+                sanitized[key] = value
+        return sanitized
+    
+    async def sanitize_response(self, data: Any) -> Any:
+        """Sanitize response data"""
+        if isinstance(data, str):
+            return self.validator.validate_input(data, "text")
+        elif isinstance(data, dict):
+            return {k: await self.sanitize_response(v) for k, v in data.items()}
+        elif isinstance(data, list):
+            return [await self.sanitize_response(item) for item in data]
+        return data
+
+
+class InputValidator:
+    """Input validation and sanitization"""
+    
+    def validate_input(self, value: str, input_type: str = "text") -> str:
+        """Validate and sanitize input based on type"""
+        if not value:
+            return value
+        
+        # Basic HTML entity escaping
+        replacements = {
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;',
+            '&': '&amp;'
+        }
+        
+        for char, replacement in replacements.items():
+            value = value.replace(char, replacement)
+        
+        return value
+
+
+# Global instances
 security_manager = SecurityManager()
+xss_protection = XSSProtection()

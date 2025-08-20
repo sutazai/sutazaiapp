@@ -227,8 +227,20 @@ try:
     from app.middleware.security_headers import SecurityHeadersMiddleware, RateLimitMiddleware
     environment = os.getenv("SUTAZAI_ENV", "production")
     app.add_middleware(SecurityHeadersMiddleware, environment=environment)
-    app.add_middleware(RateLimitMiddleware, requests_per_minute=60)
-    logger.info("Security headers and rate limiting middleware loaded successfully")
+    
+    # Only add rate limiting in non-test environments
+    # Check both SUTAZAI_ENV and TEST_MODE for compatibility
+    is_test_env = (
+        environment == "test" or 
+        os.getenv("TEST_MODE", "").lower() == "true" or
+        os.getenv("TESTING", "").lower() == "true"
+    )
+    
+    if not is_test_env:
+        app.add_middleware(RateLimitMiddleware, requests_per_minute=60)
+        logger.info("Security headers and rate limiting middleware loaded successfully")
+    else:
+        logger.info("Security headers loaded - Rate limiting DISABLED for test environment")
 except ImportError:
     logger.warning("Security headers middleware not available - using basic security")
 
@@ -346,6 +358,67 @@ except Exception as e:
 
 # Initialize Unified Agent Registry for centralized agent management
 agent_registry = UnifiedAgentRegistry()
+
+# Register default agents if none exist
+if len(agent_registry.list_agents()) == 0:
+    logger.info("No agents found, registering default agents...")
+    # Register some default agents
+    from app.core.unified_agent_registry import UnifiedAgent
+    default_agents = [
+        UnifiedAgent(
+            id="text-analysis",
+            name="Text Analysis Agent",
+            type="internal",
+            description="Analyzes text for sentiment, entities, and key phrases",
+            capabilities=["sentiment_analysis", "entity_extraction", "text_summarization"],
+            priority=5,
+            deployment_info={"url": "internal", "method": "embedded"}
+        ),
+        UnifiedAgent(
+            id="code-generator",
+            name="Code Generator Agent",
+            type="internal",
+            description="Generates code snippets and solutions",
+            capabilities=["code_generation", "code_review", "refactoring"],
+            priority=5,
+            deployment_info={"url": "internal", "method": "embedded"}
+        ),
+        UnifiedAgent(
+            id="task-orchestrator",
+            name="Task Orchestrator Agent",
+            type="internal",
+            description="Orchestrates complex multi-step tasks",
+            capabilities=["task_planning", "workflow_management", "coordination"],
+            priority=5,
+            deployment_info={"url": "internal", "method": "embedded"}
+        ),
+        UnifiedAgent(
+            id="data-processor",
+            name="Data Processing Agent",
+            type="internal",
+            description="Processes and transforms data",
+            capabilities=["data_transformation", "etl", "data_validation"],
+            priority=5,
+            deployment_info={"url": "internal", "method": "embedded"}
+        ),
+        UnifiedAgent(
+            id="api-integrator",
+            name="API Integration Agent",
+            type="internal",
+            description="Integrates with external APIs and services",
+            capabilities=["api_integration", "webhook_handling", "data_sync"],
+            priority=5,
+            deployment_info={"url": "internal", "method": "embedded"}
+        )
+    ]
+    
+    for agent in default_agents:
+        agent_registry.agents[agent.id] = agent
+        logger.info(f"Registered default agent: {agent.name}")
+    
+    # Save the registry
+    agent_registry.save_registry()
+    logger.info(f"Registered {len(default_agents)} default agents")
 
 # Initialize Service Mesh for distributed coordination
 # RULE 1 FIX: Use actual accessible addresses based on environment
@@ -713,6 +786,32 @@ async def get_task(task_id: str):
         result=task_status.get('result')
     )
 
+
+# Mesh V1 Status endpoint (required by frontend)
+@app.get("/api/v1/mesh/status")
+async def mesh_status():
+    """Get mesh status with service information"""
+    try:
+        # Get mesh health
+        health = await service_mesh.health_check()
+        services = await service_mesh.discover_services()
+        
+        return {
+            "status": "operational" if health.get("status") != "error" else "degraded",
+            "services_count": len(services),
+            "services": services,
+            "queue_stats": health.get("queue_stats", {}),
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Mesh status check failed: {e}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "services_count": 0,
+            "services": [],
+            "timestamp": datetime.now().isoformat()
+        }
 
 # Service Mesh V2 Endpoints - Production-Ready Distributed Coordination
 @app.post("/api/v1/mesh/v2/register")

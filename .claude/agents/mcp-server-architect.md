@@ -22,7 +22,7 @@ proactive_triggers:
   - mcp_technology_migration_strategy_needed
   - cross_platform_mcp_standardization_required
   - mcp_team_mentorship_and_knowledge_transfer
-tools: [All previous tools] + Advanced monitoring, Performance profiling, Security scanning, Architecture modeling, Team collaboration, Crisis management, Legacy integration, Migration planning
+tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: deep_blue
 ---
 ## 🎖️ SENIOR ARCHITECT AUTHORITY & EXPERIENCE FRAMEWORK 🎖️

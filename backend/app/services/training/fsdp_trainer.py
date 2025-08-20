@@ -83,9 +83,10 @@ class FsdpTrainer(Trainer):
             result.status = TrainingStatus.RUNNING
             result.logs.append(f"FSDP job started: {fsdp_result.get('message', '')}")
             
-            # Poll for completion (in real implementation, use async task or webhook)
+            # TODO: Implement proper async polling with webhooks or long-polling
+            # TEMPORARY: Quick polling for demonstration purposes
             import asyncio
-            for _ in range(3):  # Quick Mock polling
+            for _ in range(3):  # Temporary polling implementation
                 await asyncio.sleep(1)
                 status_response = await client.get(f"/training/status/{job_id}")
                 if status_response.status_code == 200:

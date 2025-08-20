@@ -1,0 +1,60 @@
+# CHANGELOG.md Compliance Scan
+Generated: 20250819_214429_UTC
+
+## Top-level directories under /opt/sutazaiapp
+  - /opt/sutazaiapp/.claude
+  - /opt/sutazaiapp/.claude-flow
+  - /opt/sutazaiapp/.codex
+  - /opt/sutazaiapp/.git
+  - /opt/sutazaiapp/.github
+  - /opt/sutazaiapp/.hypothesis
+  - /opt/sutazaiapp/.mcp
+  - /opt/sutazaiapp/.qodo
+  - /opt/sutazaiapp/.roo
+  - /opt/sutazaiapp/.streamlit
+  - /opt/sutazaiapp/.swarm
+  - /opt/sutazaiapp/.venv
+  - /opt/sutazaiapp/.venvs
+  - /opt/sutazaiapp/IMPORTANT
+  - /opt/sutazaiapp/MASTER_INDEX
+  - /opt/sutazaiapp/__pycache__
+  - /opt/sutazaiapp/agents
+  - /opt/sutazaiapp/archive
+  - /opt/sutazaiapp/backend
+  - /opt/sutazaiapp/backups
+  - /opt/sutazaiapp/cache_consolidation_backup
+  - /opt/sutazaiapp/cleanup_backup_20250819_150904
+  - /opt/sutazaiapp/config
+  - /opt/sutazaiapp/data
+  - /opt/sutazaiapp/database
+  - /opt/sutazaiapp/docker
+  - /opt/sutazaiapp/docs
+  - /opt/sutazaiapp/frontend
+  - /opt/sutazaiapp/logs
+  - /opt/sutazaiapp/mcp-servers
+  - /opt/sutazaiapp/mcp_ssh
+  - /opt/sutazaiapp/memory
+  - /opt/sutazaiapp/memory-bank
+  - /opt/sutazaiapp/models
+  - /opt/sutazaiapp/monitoring
+  - /opt/sutazaiapp/nginx
+  - /opt/sutazaiapp/node_modules
+  - /opt/sutazaiapp/ollama
+  - /opt/sutazaiapp/playwright-report
+  - /opt/sutazaiapp/portainer
+  - /opt/sutazaiapp/reports
+  - /opt/sutazaiapp/requirements
+  - /opt/sutazaiapp/run
+  - /opt/sutazaiapp/schemas
+  - /opt/sutazaiapp/scripts
+  - /opt/sutazaiapp/secrets_secure
+  - /opt/sutazaiapp/security-scan-results
+  - /opt/sutazaiapp/sql
+  - /opt/sutazaiapp/src
+  - /opt/sutazaiapp/ssl
+  - /opt/sutazaiapp/test-results
+  - /opt/sutazaiapp/tests
+  - /opt/sutazaiapp/tools
+  - /opt/sutazaiapp/workflows
+
+## CHANGELOG.md presence by directory (depth 2)

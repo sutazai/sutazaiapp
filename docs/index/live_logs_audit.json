@@ -1,0 +1,141 @@
+{
+  "test_date": "2025-08-20T00:16:09+02:00",
+  "script_path": "/opt/sutazaiapp/scripts/monitoring/live_logs.sh",
+  "options": [
+    {
+      "option": 1,
+      "name": "System Overview",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 2,
+      "name": "Live Logs (All Services)",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 3,
+      "name": "Test API Endpoints",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 4,
+      "name": "Container Statistics",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 5,
+      "name": "Log Management",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 6,
+      "name": "Debug Controls",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "6. Set Log Level to ERROR ",
+      "has_output": true
+    }
+,
+    {
+      "option": 7,
+      "name": "Database Repair",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 8,
+      "name": "System Repair",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 9,
+      "name": "Restart All Services",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 10,
+      "name": "Unified Live Logs",
+      "status": "partial",
+      "exit_code": 0,
+      "error_messages": "sutazai-cadvisor  | I0819 22:14:26.431227       1 gce.go:44] Error while reading product_name: open /sys/class/dmi/id/product_name: no such file or directory sutazai-grafana         | logger=provisioning.dashboard type=file name=ux-dashboards t=2025-08-19T22:16:18.190653762Z level=error msg=\"failed to search for dashboards\" error=\"stat /etc/grafana/provisioning/dashboards/ux: no such file or directory\" sutazai-node-exporter   | time=2025-08-19T22:15:10.624Z level=ERROR source=http.go:169 msg=\"error gathering metrics: 8 error(s) occurred:\n* [from Gatherer #2] collected metric \\"node_filesystem_device_error\\" { label:{name:\\"device\\"  value:\\"none\\"}  label:{name:\\"device_error\\"  value:\\"\\"}  label:{name:\\"fstype\\"  value:\\"tmpfs\\"}  label:{name:\\"mountpoint\\"  value:\\"/run/user\\"}  gauge:{value:0}} was collected before with the same name and label values\n* [from Gatherer #2] collected metric \\"node_filesystem_readonly\\" { label:{name:\\"device\\"  value:\\"none\\"}  label:{name:\\"device_error\\"  value:\\"\\"}  label:{name:\\"fstype\\"  value:\\"tmpfs\\"}  label:{name:\\"mountpoint\\"  value:\\"/run/user\\"}  gauge:{value:0}} was collected before with the same name and label values\n* [from Gatherer #2] collected metric \\"node_filesystem_size_bytes\\" { label:{name:\\"device\\"  value:\\"none\\"}  label:{name:\\"device_error\\"  value:\\"\\"}  label:{name:\\"fstype\\"  value:\\"tmpfs\\"}  label:{name:\\"mountpoint\\"  value:\\"/run/user\\"}  gauge:{value:1.2499632128e+10}} was collected before with the same name and label values\n* [from Gatherer #2] collected metric \\"node_filesystem_free_bytes\\" { label:{name:\\"device\\"  value:\\"none\\"}  label:{name:\\"device_error\\"  value:\\"\\"}  label:{name:\\"fstype\\"  value:\\"tmpfs\\"}  label:{name:\\"mountpoint\\"  value:\\"/run/user\\"}  gauge:{value:1.2499492864e+10}} was collected before with the same name and label values\n* [from Gatherer #2] collected metric \\"node_filesystem_avail_bytes\\" { label:{name:\\"device\\"  value:\\"none\\"}  label:{name:\\"device_error\\"  value:\\"\\"}  label:{name:\\"fstype\\"  value:\\"tmpfs\\"}  label:{name:\\"mountpoint\\"  value:\\"/run/user\\"}  gauge:{value:1.2499492864e+10}} was collected before with the same name and label values\n* [from Gatherer #2] collected metric \\"node_filesystem_files\\" { label:{name:\\"device\\"  value:\\"none\\"}  label:{name:\\"device_error\\"  value:\\"\\"}  label:{name:\\"fstype\\"  value:\\"tmpfs\\"}  label:{name:\\"mountpoint\\"  value:\\"/run/user\\"}  gauge:{value:3.051668e+06}} was collected before with the same name and label values\n* [from Gatherer #2] collected metric \\"node_filesystem_files_free\\" { label:{name:\\"device\\"  value:\\"none\\"}  label:{name:\\"device_error\\"  value:\\"\\"}  label:{name:\\"fstype\\"  value:\\"tmpfs\\"}  label:{name:\\"mountpoint\\"  value:\\"/run/user\\"}  gauge:{value:3.051634e+06}} was collected before with the same name and label values\n* [from Gatherer #2] collected metric \\"node_filesystem_purgeable_bytes\\" { label:{name:\\"device\\"  value:\\"none\\"}  label:{name:\\"device_error\\"  value:\\"\\"}  label:{name:\\"fstype\\"  value:\\"tmpfs\\"}  label:{name:\\"mountpoint\\"  value:\\"/run/user\\"}  gauge:{value:0}} was collected before with the same name and label values\" ",
+      "has_output": true
+    }
+,
+    {
+      "option": 11,
+      "name": "Docker Troubleshooting",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 12,
+      "name": "Redeploy All Containers",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 13,
+      "name": "Smart Health Check",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 14,
+      "name": "Container Health Status",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+,
+    {
+      "option": 15,
+      "name": "Selective Service Deployment",
+      "status": "working",
+      "exit_code": 0,
+      "error_messages": "",
+      "has_output": true
+    }
+
+  ]
+}

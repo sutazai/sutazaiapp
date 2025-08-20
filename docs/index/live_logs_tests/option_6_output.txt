@@ -1,0 +1,62 @@
+[0;36m╔══════════════════════════════════════════════════════════════╗[0m
+[0;36m║                   SUTAZAI MONITORING MENU                   ║[0m
+[0;36m║                                                   [[0;31mnum[0m]     ║[0m
+[0;36m╚══════════════════════════════════════════════════════════════╝[0m
+
+1. System Overview
+2. Live Logs (All Services)
+3. Test API Endpoints
+4. Container Statistics
+5. Log Management
+6. Debug Controls
+7. Database Repair
+8. System Repair
+9. Restart All Services
+10. Unified Live Logs (All in One)
+11. Docker Troubleshooting & Recovery
+12. Redeploy All Containers
+13. Smart Health Check & Repair (Unhealthy Only)
+14. Container Health Status
+15. Selective Service Deployment
+0. Exit
+
+[0;36m╔══════════════════════════════════════════════════════════════╗[0m
+[0;36m║                      DEBUG CONTROLS                         ║[0m
+[0;36m╚══════════════════════════════════════════════════════════════╝[0m
+
+[1;33mCurrent Configuration:[0m
+  Debug Mode: false
+  Log Level: INFO
+
+1. Enable Debug Mode
+2. Disable Debug Mode
+3. Set Log Level to DEBUG
+4. Set Log Level to INFO
+5. Set Log Level to WARN
+6. Set Log Level to ERROR
+7. Show Current Config
+8. Reset to Defaults
+9. Back to Main Menu
+
+[0;36m╔══════════════════════════════════════════════════════════════╗[0m
+[0;36m║                   SUTAZAI MONITORING MENU                   ║[0m
+[0;36m║                                                   [[0;31mnum[0m]     ║[0m
+[0;36m╚══════════════════════════════════════════════════════════════╝[0m
+
+1. System Overview
+2. Live Logs (All Services)
+3. Test API Endpoints
+4. Container Statistics
+5. Log Management
+6. Debug Controls
+7. Database Repair
+8. System Repair
+9. Restart All Services
+10. Unified Live Logs (All in One)
+11. Docker Troubleshooting & Recovery
+12. Redeploy All Containers
+13. Smart Health Check & Repair (Unhealthy Only)
+14. Container Health Status
+15. Selective Service Deployment
+0. Exit
+

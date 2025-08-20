@@ -1,0 +1,34 @@
+=== REMOVING OLD CLEANUP BACKUP DIRECTORIES ===
+Removing: cleanup_backup_20250819_150904
+✓ Removed cleanup_backup_20250819_150904
+Removing: cache_consolidation_backup
+✓ Removed cache_consolidation_backup
+=== ANALYZING BACKEND FILES FOR MOCK REMOVAL ===
+
+--- Checking workflow_engine.py ---
+514:            # This is just a placeholder for completion
+540:                # Execute loop body (placeholder)
+
+--- Checking null_client.py ---
+"""
+Null implementation of code completion client (when feature is disabled)
+"""
+from .interfaces import CodeCompletionClient, CompletionRequest, CompletionResponse
+
+class NullCodeCompletionClient(CodeCompletionClient):
+    """
+    Null implementation that returns placeholder responses when feature is disabled
+    """
+    
+    async def complete(self, request: CompletionRequest) -> CompletionResponse:
+        """
+        Return a placeholder response indicating feature is disabled
+        """
+        return CompletionResponse(
+            completion="# Code completion is disabled. Enable ENABLE_TABBY=true to use this feature.",
+            confidence=0.0,
+            metadata={
+                "service": "null",
+                "enabled": False,
+
+=== Scripts Directory Analysis ===

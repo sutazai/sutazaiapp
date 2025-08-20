@@ -12,7 +12,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../../"))
 try:
     from ai_agents.self_improvement.feedback_loop import feedback_loop
 except ImportError:
-    # Create a simple Mock for   backend
+    # IMPORTANT: This is a necessary fallback when the ai_agents.self_improvement module is not available.
+    # This Mock implementation prevents the API from crashing when the real feedback loop module is missing.
+    # DO NOT REMOVE - Required for graceful degradation when dependencies are not installed.
+    # TODO: Implement real feedback loop in ai_agents.self_improvement.feedback_loop module
     class MockFeedbackLoop:
         def __init__(self):
             self.is_running = False

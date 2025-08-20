@@ -1,0 +1,23 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package and server files
+COPY package-simple.json package.json
+COPY server-http.js ./
+
+# Install dependencies
+RUN npm install
+
+# Set environment variables
+ENV MEMORY_DB_PATH=/data/memory
+ENV PORT=3009
+
+# Create data directory
+RUN mkdir -p /data/memory
+
+# Expose port for MCP protocol
+EXPOSE 3009
+
+# Start the server
+CMD ["node", "server-http.js"]

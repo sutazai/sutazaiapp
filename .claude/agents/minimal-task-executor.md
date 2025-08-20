@@ -5,7 +5,7 @@ model: opus
 proactive_triggers:
   - atomic_change_requested
   - quick_action_required
-  -_overhead_execution_needed
+  - overhead_execution_needed
   - immediate_impact_delivery_required
   - rapid_iteration_cycle_support
   - single_purpose_task_execution

@@ -1,0 +1,98 @@
+[0;36m╔══════════════════════════════════════════════════════════════╗[0m
+[0;36m║                   SUTAZAI MONITORING MENU                   ║[0m
+[0;36m║                                                   [[0;31mnum[0m]     ║[0m
+[0;36m╚══════════════════════════════════════════════════════════════╝[0m
+
+1. System Overview
+2. Live Logs (All Services)
+3. Test API Endpoints
+4. Container Statistics
+5. Log Management
+6. Debug Controls
+7. Database Repair
+8. System Repair
+9. Restart All Services
+10. Unified Live Logs (All in One)
+11. Docker Troubleshooting & Recovery
+12. Redeploy All Containers
+13. Smart Health Check & Repair (Unhealthy Only)
+14. Container Health Status
+15. Selective Service Deployment
+0. Exit
+
+[0;36m╔══════════════════════════════════════════════════════════════╗[0m
+[0;36m║                     LOG MANAGEMENT                          ║[0m
+[0;36m╚══════════════════════════════════════════════════════════════╝[0m
+
+[0;36mLog Status and Disk Usage:[0m
+
+[1;33mLog Directory Size:[0m 60K
+[1;33mLog Directory Path:[0m /opt/sutazaiapp/logs
+[1;33mTotal Log Files:[0m 4
+
+[0;36mContainer Log Status:[0m
+  sutazai-alertmanager Status: running    Log Size: 8.0K
+  sutazai-backend      Status: running    Log Size: 7.1M
+  sutazai-blackbox-exporter Status: running    Log Size: 8.0K
+  sutazai-cadvisor     Status: running    Log Size: 160K
+  sutazai-chromadb     Status: running    Log Size: 12K
+  sutazai-consul       Status: running    Log Size: 7.1M
+  sutazai-faiss        Status: running    Log Size: 80K
+  sutazai-frontend     Status: running    Log Size: 12K
+  sutazai-grafana      Status: running    Log Size: 5.4M
+  sutazai-jaeger       Status: running    Log Size: 72K
+  sutazai-kong         Status: running    Log Size: 1.3M
+  sutazai-loki         Status: running    Log Size: 452K
+  sutazai-mcp-manager  Status: running    Log Size: 152K
+  sutazai-mcp-orchestrator Status: running    Log Size: 24K
+  sutazai-neo4j        Status: running    Log Size: 8.0K
+  sutazai-node-exporter Status: running    Log Size: 6.8M
+  sutazai-ollama       Status: running    Log Size: 556K
+  sutazai-postgres     Status: running    Log Size: 56K
+  sutazai-prometheus   Status: running    Log Size: 84K
+  sutazai-promtail     Status: created    Log Size: 0
+  sutazai-qdrant       Status: running    Log Size: 504K
+  sutazai-rabbitmq     Status: running    Log Size: 112K
+  sutazai-redis        Status: running    Log Size: 12K
+  sutazai-redis-exporter Status: running    Log Size: 4.0K
+  sutazai-task-assignment-coordinator-fixed Status: running    Log Size: 4.0K
+
+[0;36mSystem Disk Usage:[0m
+  Root: 55G used, 901G available (6% full)
+[0;36mDocker Disk Usage:[0m
+  Images          85        29        27.75GB   19.95GB (71%)
+  Containers      41        40        375.3MB   0B (0%)
+  Local Volumes   110       25        1.938GB   38.06MB (1%)
+  Build Cache     28        0         6.43MB    6.43MB
+
+1. Cleanup Old Logs (7+ days)
+2. Cleanup Old Logs (Custom days)
+3. Reset All Logs (DANGEROUS)
+4. Archive Old Logs
+5. View Log Status
+6. Rotate Large Logs
+7. Clear Docker Logs
+8. Back to Main Menu
+
+[0;36m╔══════════════════════════════════════════════════════════════╗[0m
+[0;36m║                   SUTAZAI MONITORING MENU                   ║[0m
+[0;36m║                                                   [[0;31mnum[0m]     ║[0m
+[0;36m╚══════════════════════════════════════════════════════════════╝[0m
+
+1. System Overview
+2. Live Logs (All Services)
+3. Test API Endpoints
+4. Container Statistics
+5. Log Management
+6. Debug Controls
+7. Database Repair
+8. System Repair
+9. Restart All Services
+10. Unified Live Logs (All in One)
+11. Docker Troubleshooting & Recovery
+12. Redeploy All Containers
+13. Smart Health Check & Repair (Unhealthy Only)
+14. Container Health Status
+15. Selective Service Deployment
+0. Exit
+

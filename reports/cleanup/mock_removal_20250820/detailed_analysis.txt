@@ -1,0 +1,32 @@
+=== DETAILED MOCK PATTERN ANALYSIS ===
+
+1. NotImplementedError patterns:
+4
+
+2. TODO implement patterns:
+1
+
+3. Mock/stub class patterns:
+14
+
+4. Pass with implementation comment:
+0
+
+=== Critical Backend Files ===
+
+--- /opt/sutazaiapp/backend/ai_agents/agent_factory.py ---
+252:# Keep MockAgent as alias for backward compatibility during transition
+253:MockAgent = Agent
+
+--- /opt/sutazaiapp/backend/app/core/mcp_disabled.py ---
+3:This module provides stub implementations to prevent MCP startup errors
+16:    Stub initialization - MCP servers are managed externally by Claude
+37:    Stub background initialization
+43:    Stub shutdown - nothing to shutdown
+60:    Stub wait - immediately returns as initialized
+
+--- /opt/sutazaiapp/backend/app/mesh/service_mesh.py ---
+
+--- /opt/sutazaiapp/backend/app/orchestration/workflow_engine.py ---
+514:            # This is just a placeholder for completion
+540:                # Execute loop body (placeholder)

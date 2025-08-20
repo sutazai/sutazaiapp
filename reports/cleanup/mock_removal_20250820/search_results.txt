@@ -1,0 +1,11 @@
+=== MOCK IMPLEMENTATION SEARCH REPORT ===
+Timestamp: Wed Aug 20 01:34:46 CEST 2025
+
+1. Searching for Python files with mock patterns...
+Total files with mock patterns: 324
+
+Categorization:
+Test mocks (to keep): 129
+Production mocks (to remove/fix): 195
+
+First 20 production mock files:

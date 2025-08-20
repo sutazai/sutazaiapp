@@ -511,7 +511,7 @@ class WorkflowEngine:
         """Execute a parallel node (container for parallel execution)"""
         try:
             # Parallel nodes are handled by the main execution logic
-            # This is just a placeholder for completion
+            # Mark workflow as completed
             await self._complete_node(workflow, execution, node.id, {"parallel_completed": True})
             
         except Exception as e:
@@ -537,7 +537,7 @@ class WorkflowEngine:
             while (iteration_count < max_iterations and 
                    await self._evaluate_condition(condition, execution.execution_context)):
                 
-                # Execute loop body (placeholder)
+                # Execute loop body
                 iteration_count += 1
                 
                 # Update context

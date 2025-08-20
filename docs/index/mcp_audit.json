@@ -1,0 +1,377 @@
+{
+  "audit_metadata": {
+    "timestamp": "2025-08-20T00:20:00Z",
+    "auditor": "MCP Server Architect",
+    "version": "1.0.0",
+    "total_servers_found": 22,
+    "working_servers": 16,
+    "broken_servers": 3,
+    "unconfigured_servers": 3
+  },
+  "mcp_servers": {
+    "claude-flow": {
+      "name": "claude-flow",
+      "status": "broken",
+      "selfcheck_result": "timeout",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/claude-flow.sh",
+      "type": "npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_running",
+      "issues": ["Selfcheck timeout after 5 seconds"],
+      "recommendations": ["Check npx package availability", "Verify network connectivity"]
+    },
+    "claude-task-runner": {
+      "name": "claude-task-runner",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/claude-task-runner.sh",
+      "type": "local",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "source_directory": "/opt/sutazaiapp/mcp-servers/claude-task-runner",
+      "issues": [],
+      "recommendations": []
+    },
+    "compass-mcp": {
+      "name": "compass-mcp",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/compass-mcp.sh",
+      "type": "npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "issues": [],
+      "recommendations": []
+    },
+    "context7": {
+      "name": "context7",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/context7.sh",
+      "type": "npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "issues": [],
+      "recommendations": []
+    },
+    "ddg": {
+      "name": "ddg",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/ddg.sh",
+      "type": "docker/npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "mcp/duckduckgo (multiple running)",
+      "active_containers": ["cranky_greider", "xenodochial_beaver", "pedantic_clarke", "eloquent_feistel", "xenodochial_chatterjee"],
+      "issues": [],
+      "recommendations": ["Consider consolidating multiple container instances"]
+    },
+    "extended-memory": {
+      "name": "extended-memory",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh",
+      "type": "python_venv",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "venv_path": "/opt/sutazaiapp/.venvs/extended-memory",
+      "issues": [],
+      "recommendations": []
+    },
+    "files": {
+      "name": "files",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/files.sh",
+      "type": "npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "package": "@modelcontextprotocol/server-filesystem",
+      "issues": [],
+      "recommendations": []
+    },
+    "github": {
+      "name": "github",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/github.sh",
+      "type": "npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "issues": [],
+      "recommendations": []
+    },
+    "http_fetch": {
+      "name": "http_fetch",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/http_fetch.sh",
+      "type": "docker/npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "mcp/fetch (multiple running)",
+      "active_containers": ["naughty_ride", "amazing_rosalind", "laughing_chaplygin", "tender_dijkstra", "cranky_sinoussi"],
+      "issues": [],
+      "recommendations": ["Consider consolidating multiple container instances"]
+    },
+    "knowledge-graph-mcp": {
+      "name": "knowledge-graph-mcp",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/knowledge-graph-mcp.sh",
+      "type": "npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "issues": [],
+      "recommendations": []
+    },
+    "language-server": {
+      "name": "language-server",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/language-server.sh",
+      "type": "native",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "memory_limit": "512MB",
+      "max_instances": 6,
+      "issues": [],
+      "recommendations": []
+    },
+    "mcp_ssh": {
+      "name": "mcp_ssh",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/mcp_ssh.sh",
+      "type": "python_uv",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "source_directory": "/opt/sutazaiapp/mcp_ssh",
+      "issues": [],
+      "recommendations": []
+    },
+    "memory-bank-mcp": {
+      "name": "memory-bank-mcp",
+      "status": "partial",
+      "selfcheck_result": "warning",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh",
+      "type": "python_uv/npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "issues": ["Python module missing but npx fallback available"],
+      "recommendations": ["Install python module for full functionality"]
+    },
+    "nx-mcp": {
+      "name": "nx-mcp",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/nx-mcp.sh",
+      "type": "npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "issues": [],
+      "recommendations": []
+    },
+    "playwright-mcp": {
+      "name": "playwright-mcp",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh",
+      "type": "npx_global",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "browsers_installed": true,
+      "issues": [],
+      "recommendations": []
+    },
+    "ruv-swarm": {
+      "name": "ruv-swarm",
+      "status": "broken",
+      "selfcheck_result": "timeout",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/ruv-swarm.sh",
+      "type": "npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_running",
+      "issues": ["Selfcheck timeout after 60 seconds", "Package availability check failed"],
+      "recommendations": ["Verify ruv-swarm package exists in npm registry", "Check network connectivity"]
+    },
+    "sequentialthinking": {
+      "name": "sequentialthinking",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/sequentialthinking.sh",
+      "type": "docker/npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "mcp/sequentialthinking (multiple running)",
+      "active_containers": ["great_khorana", "happy_heisenberg", "practical_elbakyan", "elated_curran", "angry_elgamal"],
+      "issues": [],
+      "recommendations": ["Consider consolidating multiple container instances"]
+    },
+    "ultimatecoder": {
+      "name": "ultimatecoder",
+      "status": "working",
+      "selfcheck_result": "passed",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/ultimatecoder.sh",
+      "type": "python_venv",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "source_directory": "/opt/sutazaiapp/docker/mcp/UltimateCoderMCP",
+      "issues": [],
+      "recommendations": []
+    },
+    "http": {
+      "name": "http",
+      "status": "working",
+      "selfcheck_result": "not_tested",
+      "configuration_source": ".mcp.json",
+      "wrapper_path": "/opt/sutazaiapp/scripts/mcp/wrappers/http.sh",
+      "type": "npx",
+      "mesh_integration": "registered_in_consul",
+      "docker_container": "not_required",
+      "issues": [],
+      "recommendations": ["Run selfcheck to verify functionality"]
+    },
+    "supabase": {
+      "name": "supabase",
+      "status": "unconfigured",
+      "selfcheck_result": "not_tested",
+      "configuration_source": ".roo/mcp.json",
+      "type": "npx",
+      "mesh_integration": "not_registered",
+      "docker_container": "not_required",
+      "issues": ["Requires SUPABASE_ACCESS_TOKEN environment variable"],
+      "recommendations": ["Configure access token before use"]
+    },
+    "mem0": {
+      "name": "mem0",
+      "status": "unconfigured",
+      "selfcheck_result": "not_tested",
+      "configuration_source": ".roo/mcp.json",
+      "type": "remote_url",
+      "url": "https://mcp.composio.dev/mem0/abandoned-creamy-horse-Y39-hm?agent=cursor",
+      "mesh_integration": "not_registered",
+      "docker_container": "not_applicable",
+      "issues": ["External service dependency"],
+      "recommendations": ["Verify API access and credentials"]
+    },
+    "perplexityai": {
+      "name": "perplexityai",
+      "status": "unconfigured",
+      "selfcheck_result": "not_tested",
+      "configuration_source": ".roo/mcp.json",
+      "type": "remote_url",
+      "url": "https://mcp.composio.dev/perplexityai/abandoned-creamy-horse-Y39-hm?agent=cursor",
+      "mesh_integration": "not_registered",
+      "docker_container": "not_applicable",
+      "issues": ["External service dependency"],
+      "recommendations": ["Verify API access and credentials"]
+    }
+  },
+  "docker_infrastructure": {
+    "mcp_orchestrator": {
+      "container_name": "sutazai-mcp-orchestrator",
+      "image": "docker:25.0.5-dind-alpine3.19",
+      "status": "unhealthy",
+      "ports": ["12375", "12376", "18080", "19090"],
+      "uptime": "2 hours",
+      "issues": ["Container health check failing"],
+      "recommendations": ["Investigate Docker-in-Docker health issues", "Check logs for errors"]
+    },
+    "mcp_manager": {
+      "container_name": "sutazai-mcp-manager",
+      "image": "sutazai-mcp-manager:v1.0.0",
+      "status": "unhealthy",
+      "ports": ["18081"],
+      "uptime": "10 hours",
+      "health_endpoint": "http://localhost:18081/health",
+      "error": "Docker daemon unreachable",
+      "issues": ["Cannot connect to Docker daemon", "Health check failing"],
+      "recommendations": ["Fix Docker socket permissions", "Restart container with proper Docker access"]
+    },
+    "task_assignment_coordinator": {
+      "container_name": "sutazai-task-assignment-coordinator-fixed",
+      "image": "sutazai-mcp-unified-dev:latest",
+      "status": "healthy",
+      "ports": ["8551"],
+      "uptime": "5 hours",
+      "health_endpoint": "http://localhost:8551/health",
+      "health_response": {
+        "status": "healthy",
+        "service": "unified-dev",
+        "version": "1.0.0",
+        "capabilities": ["ultimatecoder", "language-server", "sequentialthinking"]
+      },
+      "issues": [],
+      "recommendations": []
+    }
+  },
+  "mesh_integration": {
+    "consul_registered": 19,
+    "consul_endpoint": "http://localhost:10006",
+    "registered_services": [
+      "mcp-claude-flow", "mcp-claude-task-runner", "mcp-compass-mcp", 
+      "mcp-context7", "mcp-ddg", "mcp-extended-memory", "mcp-files",
+      "mcp-github", "mcp-http", "mcp-http-fetch", "mcp-knowledge-graph-mcp",
+      "mcp-language-server", "mcp-memory-bank-mcp", "mcp-nx-mcp",
+      "mcp-playwright-mcp", "mcp-ruv-swarm", "mcp-sequentialthinking",
+      "mcp-ssh", "mcp-ultimatecoder"
+    ],
+    "network": "sutazai-network",
+    "issues": [],
+    "recommendations": ["All primary MCP services registered in Consul"]
+  },
+  "summary": {
+    "total_mcp_servers": 22,
+    "status_breakdown": {
+      "working": 16,
+      "partial": 1,
+      "broken": 2,
+      "unconfigured": 3
+    },
+    "deployment_types": {
+      "npx": 10,
+      "python": 3,
+      "docker": 3,
+      "native": 1,
+      "remote": 2,
+      "hybrid": 3
+    },
+    "critical_issues": [
+      "claude-flow MCP server timeout",
+      "ruv-swarm MCP server unavailable",
+      "MCP orchestrator container unhealthy",
+      "MCP manager Docker daemon unreachable",
+      "Multiple redundant container instances for ddg, fetch, and sequentialthinking"
+    ],
+    "recommendations": [
+      "Fix claude-flow and ruv-swarm package availability",
+      "Repair Docker-in-Docker orchestrator health",
+      "Consolidate multiple container instances",
+      "Configure external services (supabase, mem0, perplexityai)",
+      "Fix MCP manager Docker socket access"
+    ],
+    "claimed_vs_actual": {
+      "claimed_in_documentation": "6 real MCP servers in DIND",
+      "actual_found": "22 total MCP servers (19 in .mcp.json + 3 in .roo/mcp.json)",
+      "working_servers": "16 fully functional, 1 partial, 2 broken, 3 unconfigured",
+      "discrepancy": "Documentation understates actual MCP infrastructure"
+    }
+  }
+}

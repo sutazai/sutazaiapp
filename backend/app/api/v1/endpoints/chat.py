@@ -93,8 +93,10 @@ async def chat(
             generate_result = await model_manager.generate(
                 prompt=request.message,
                 model=request.model,
-                temperature=request.temperature,
-                options={"num_predict": request.max_tokens}
+                options={
+                    "num_predict": request.max_tokens,
+                    "temperature": request.temperature
+                }
             )
             # Extract the actual response text from the generate result dictionary
             if generate_result and isinstance(generate_result, dict):

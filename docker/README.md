@@ -2,7 +2,7 @@
 
 This directory contains the Docker configuration for the SutazAI automation system according to Docker Excellence standards.
 
-## Consolidated Structure (Updated 2025-08-15)
+## Consolidated Structure (Updated 2025-08-20)
 
 Docker Compose files have been reorganized from 19 files into a logical hierarchy:
 

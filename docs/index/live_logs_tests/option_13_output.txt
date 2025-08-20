@@ -1,0 +1,70 @@
+[0;36m╔══════════════════════════════════════════════════════════════╗[0m
+[0;36m║                   SUTAZAI MONITORING MENU                   ║[0m
+[0;36m║                                                   [[0;31mnum[0m]     ║[0m
+[0;36m╚══════════════════════════════════════════════════════════════╝[0m
+
+1. System Overview
+2. Live Logs (All Services)
+3. Test API Endpoints
+4. Container Statistics
+5. Log Management
+6. Debug Controls
+7. Database Repair
+8. System Repair
+9. Restart All Services
+10. Unified Live Logs (All in One)
+11. Docker Troubleshooting & Recovery
+12. Redeploy All Containers
+13. Smart Health Check & Repair (Unhealthy Only)
+14. Container Health Status
+15. Selective Service Deployment
+0. Exit
+
+[0;36m╔══════════════════════════════════════════════════════════════╗[0m
+[0;36m║        SMART CONTAINER HEALTH CHECK & REPAIR 🤖            ║[0m
+[0;36m╚══════════════════════════════════════════════════════════════╝[0m
+
+[1;33m⏳ Checking container health status and missing services...[0m
+
+[0;32m✅ Healthy Containers (6):[0m
+   - sutazai-backend
+   - sutazai-task-assignment-coordinator-fixed
+   - sutazai-frontend
+   - sutazai-consul
+   - sutazai-kong
+   - sutazai-neo4j
+
+[0;31m❌ Unhealthy Containers (2):[0m
+   - sutazai-mcp-orchestrator \033[1;33m[Unknown issue] Priority: 4\033[0m
+   - sutazai-mcp-manager \033[1;33m[Unknown issue] Priority: 4\033[0m
+
+[1;33m⚠️  Exited Containers (1):[0m
+   - sutazai-rabbitmq
+
+[0;35m🚫 Missing Services (8):[0m
+   - ai-agent-orchestrator
+   - hardware-resource-optimizer
+   - jarvis-automation-agent
+   - postgres-exporter
+   - resource-arbitration-agent
+   - ollama-integration
+   - jarvis-hardware-resource-optimizer
+   - task-assignment-coordinator
+
+[0;34mℹ️  No Health Check (0):[0m
+   None found
+
+[1;33m🔍 Analysis Summary:[0m
+  - 3 container(s) need repair
+  - 8 service(s) need deployment
+
+[0;36m🤖 Smart Recommendation:[0m
+  ℹ️  Standard issues detected
+  💡 Recommended: Option 1 - Repair containers first
+
+What would you like to do?
+1) Repair unhealthy/exited containers only
+2) Deploy missing services only
+3) Both repair and deploy (recommended for critical issues)
+4) Advanced repair with dependency check
+5) Cancel

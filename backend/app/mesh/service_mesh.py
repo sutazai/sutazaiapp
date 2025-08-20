@@ -677,19 +677,57 @@ class ServiceMesh:
                 for instance in instances
             ]
         else:
-            # Return all cached services
+            # Query Consul for ALL services when no specific service_name is provided
             all_services = []
-            for service_name, instances in self.discovery.services_cache.items():
-                for instance in instances:
-                    all_services.append({
-                        "id": instance.service_id,
-                        "name": instance.service_name,
-                        "address": instance.address,
-                        "port": instance.port,
-                        "tags": instance.tags,
-                        "metadata": instance.metadata,
-                        "state": instance.state.value
-                    })
+            try:
+                if not self.discovery.consul_client:
+                    await self.discovery.connect()
+                
+                if self.discovery.consul_client:
+                    # Get all services from Consul
+                    consul_services = self.discovery.consul_client.agent.services()
+                    
+                    for service_id, service_info in consul_services.items():
+                        all_services.append({
+                            "id": service_id,
+                            "name": service_info.get('Service', service_id),
+                            "address": service_info.get('Address', 'localhost'),
+                            "port": service_info.get('Port', 0),
+                            "tags": service_info.get('Tags', []),
+                            "metadata": service_info.get('Meta', {}),
+                            "state": "healthy"  # Assume healthy if in Consul
+                        })
+                    
+                    logger.info(f"Discovered {len(all_services)} services from Consul")
+                else:
+                    # Fallback to cache if Consul is not available
+                    logger.warning("Consul not available, returning cached services")
+                    for service_name, instances in self.discovery.services_cache.items():
+                        for instance in instances:
+                            all_services.append({
+                                "id": instance.service_id,
+                                "name": instance.service_name,
+                                "address": instance.address,
+                                "port": instance.port,
+                                "tags": instance.tags,
+                                "metadata": instance.metadata,
+                                "state": instance.state.value
+                            })
+            except Exception as e:
+                logger.error(f"Failed to query Consul for all services: {e}")
+                # Fallback to cache on error
+                for service_name, instances in self.discovery.services_cache.items():
+                    for instance in instances:
+                        all_services.append({
+                            "id": instance.service_id,
+                            "name": instance.service_name,
+                            "address": instance.address,
+                            "port": instance.port,
+                            "tags": instance.tags,
+                            "metadata": instance.metadata,
+                            "state": instance.state.value
+                        })
+            
             return all_services
     
     async def enqueue_task(self, task_type: str, payload: Dict[str, Any], priority: int = 0) -> str:

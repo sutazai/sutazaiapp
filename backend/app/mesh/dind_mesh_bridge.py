@@ -411,10 +411,20 @@ class DinDMeshBridge:
                 if not self.dind_client:
                     continue
                 
-                # Get current containers
-                containers = self.dind_client.containers.list(
-                    filters={"label": "mcp.service=true"}
-                )
+                # Get current containers - use same discovery logic as initialization
+                containers = []
+                try:
+                    # Try labeled containers first
+                    containers = self.dind_client.containers.list(
+                        filters={"label": "mcp.service=true"}
+                    )
+                except:
+                    pass
+                
+                # If no labeled containers, use name prefix
+                if not containers:
+                    all_containers = self.dind_client.containers.list()
+                    containers = [c for c in all_containers if c.name.startswith('mcp-')]
                 
                 current_names = {c.labels.get("mcp.name", c.name) for c in containers}
                 registered_names = set(self.mcp_services.keys())

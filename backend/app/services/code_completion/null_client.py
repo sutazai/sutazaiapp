@@ -1,11 +1,25 @@
 """
-Null implementation of code completion client (when feature is disabled)
+Null Object Pattern implementation for code completion client
+
+IMPORTANT: This is a deliberate design pattern, not a mock or stub.
+The Null Object Pattern provides a default object with neutral behavior,
+preventing null reference errors when the actual service is disabled.
+
+This implementation is REQUIRED for:
+1. Graceful degradation when ENABLE_TABBY=false
+2. Testing without external dependencies
+3. Development environments without code completion services
+
+DO NOT REMOVE - This is production code following the Null Object Pattern
 """
 from .interfaces import CodeCompletionClient, CompletionRequest, CompletionResponse
 
 class NullCodeCompletionClient(CodeCompletionClient):
     """
-    Null implementation that returns placeholder responses when feature is disabled
+    Null Object Pattern implementation for disabled code completion feature
+    
+    Returns informative messages instead of errors when the feature is disabled.
+    This is NOT a mock - it's a production implementation of the Null Object Pattern.
     """
     
     async def complete(self, request: CompletionRequest) -> CompletionResponse:

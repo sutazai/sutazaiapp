@@ -1,0 +1,68 @@
+=== CATEGORIZING MOCK FILES BY TYPE ===
+
+1. BACKUP FILES (Safe to remove):
+/opt/sutazaiapp/cache_consolidation_backup/edge_inference/model_cache.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/_mock_val_ser.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/mock.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/mocks.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubdoc.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubgen.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubgenc.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubinfo.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubtest.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubutil.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/teststubgen.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/teststubinfo.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/teststubtest.py
+
+2. ARCHIVE FILES (Likely safe to remove):
+/opt/sutazaiapp/frontend/utils/archive/api_client.py
+/opt/sutazaiapp/frontend/utils/archive/optimized_api_client.py
+/opt/sutazaiapp/scripts/archive/duplicate_apps/app_20.py
+
+3. ENFORCEMENT/CLEANUP SCRIPTS (Keep for now):
+/opt/sutazaiapp/cleanup_backup_20250819_150904/_mock_val_ser.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/mock.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/mocks.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubdoc.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubgen.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubgenc.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubinfo.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubtest.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/stubutil.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/teststubgen.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/teststubinfo.py
+/opt/sutazaiapp/cleanup_backup_20250819_150904/teststubtest.py
+/opt/sutazaiapp/scripts/cleanup_corrupted_files.py
+/opt/sutazaiapp/scripts/enforcement/aggressive_fantasy_eliminator.py
+/opt/sutazaiapp/scripts/enforcement/auto_remediation.py
+/opt/sutazaiapp/scripts/enforcement/comprehensive_rule_enforcer.py
+/opt/sutazaiapp/scripts/enforcement/fantasy_code_eliminator.py
+/opt/sutazaiapp/scripts/enforcement/remove_mock_implementations.py
+/opt/sutazaiapp/scripts/enforcement/rule_validator.py
+/opt/sutazaiapp/scripts/enforcement/rule_validator_simple.py
+/opt/sutazaiapp/scripts/enforcement/systematic_rule_testing.py
+/opt/sutazaiapp/scripts/mcp/automation/cleanup/safety_validator.py
+
+4. CORE BACKEND FILES (Need careful review):
+/opt/sutazaiapp/backend/ai_agents/agent_factory.py
+/opt/sutazaiapp/backend/ai_agents/orchestration/orchestration_dashboard.py
+/opt/sutazaiapp/backend/app/agents/text_analysis_agent.py
+/opt/sutazaiapp/backend/app/agents/validate_text_agent.py
+/opt/sutazaiapp/backend/app/api/v1/agents.py
+/opt/sutazaiapp/backend/app/api/v1/endpoints/documents.py
+/opt/sutazaiapp/backend/app/api/v1/endpoints/system.py
+/opt/sutazaiapp/backend/app/api/v1/feedback.py
+/opt/sutazaiapp/backend/app/core/cache_ultrafix.py
+/opt/sutazaiapp/backend/app/core/mcp_disabled.py
+/opt/sutazaiapp/backend/app/core/redis_connection.py
+/opt/sutazaiapp/backend/app/core/unified_agent_registry.py
+/opt/sutazaiapp/backend/app/mesh/service_mesh.py
+/opt/sutazaiapp/backend/app/orchestration/coordination.py
+/opt/sutazaiapp/backend/app/orchestration/workflow_engine.py
+/opt/sutazaiapp/backend/app/services/code_completion/null_client.py
+/opt/sutazaiapp/backend/app/services/faiss_manager.py
+/opt/sutazaiapp/backend/app/services/training/default_trainer.py
+/opt/sutazaiapp/backend/app/services/training/fsdp_trainer.py
+
+5. FRONTEND FILES:

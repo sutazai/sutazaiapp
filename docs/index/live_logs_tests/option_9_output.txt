@@ -1,0 +1,23 @@
+[0;36m╔══════════════════════════════════════════════════════════════╗[0m
+[0;36m║                   SUTAZAI MONITORING MENU                   ║[0m
+[0;36m║                                                   [[0;31mnum[0m]     ║[0m
+[0;36m╚══════════════════════════════════════════════════════════════╝[0m
+
+1. System Overview
+2. Live Logs (All Services)
+3. Test API Endpoints
+4. Container Statistics
+5. Log Management
+6. Debug Controls
+7. Database Repair
+8. System Repair
+9. Restart All Services
+10. Unified Live Logs (All in One)
+11. Docker Troubleshooting & Recovery
+12. Redeploy All Containers
+13. Smart Health Check & Repair (Unhealthy Only)
+14. Container Health Status
+15. Selective Service Deployment
+0. Exit
+
+Restarting all SutazAI services...

@@ -24,7 +24,7 @@ class SecurityValidationError(ValueError):
 
 # Security patterns for validation
 ALPHANUMERIC_PATTERN = re.compile(r'^[a-zA-Z0-9_-]+$')
-MODEL_NAME_PATTERN = re.compile(r'^[a-zA-Z0-9_.-]+$')
+MODEL_NAME_PATTERN = re.compile(r'^[a-zA-Z0-9_.:/-]+$')
 AGENT_ID_PATTERN = re.compile(r'^[a-zA-Z0-9_-]+$')
 TASK_ID_PATTERN = re.compile(r'^[a-zA-Z0-9_-]+$')
 UUID_PATTERN = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
@@ -90,18 +90,23 @@ def validate_model_name(model_name: str) -> str:
     if not MODEL_NAME_PATTERN.match(clean_name):
         raise SecurityValidationError(f"Model name contains invalid characters: {model_name}")
     
-    # Whitelist of allowed models
+    # Whitelist of allowed models (including Ollama format with colons)
     ALLOWED_MODELS = {
         "tinyllama", "tinyllama:latest", "llama2", "llama2:latest", 
         "mistral", "mistral:latest", "codellama", "codellama:latest",
-        "phi", "phi:latest", "gemma", "gemma:latest"
+        "phi", "phi:latest", "gemma", "gemma:latest",
+        "gpt-oss:20b"  # Adding the more powerful model mentioned in rules
     }
     
-    if clean_name not in ALLOWED_MODELS:
-        logger.warning(f"Model name not in whitelist, using default: {clean_name}")
-        return "tinyllama"  # Default safe model
+    # Allow model with :latest tag if base model is in whitelist
+    base_model = clean_name.split(':')[0] if ':' in clean_name else clean_name
     
-    return clean_name
+    if clean_name in ALLOWED_MODELS or base_model in ALLOWED_MODELS:
+        return clean_name
+    
+    logger.warning(f"Model name not in whitelist, using default: {clean_name}")
+    return "tinyllama:latest"  # Default safe model with proper Ollama format
+    
 
 
 def validate_agent_id(agent_id: str) -> str:

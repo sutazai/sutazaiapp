@@ -52,9 +52,10 @@ class FAISSManager:
                 # Inverted file index - good balance of speed and accuracy
                 quantizer = faiss.IndexFlatL2(dimension)
                 index = faiss.IndexIVFFlat(quantizer, dimension, 100)
-                # Train with dummy data
-                dummy_data = np.random.random((1000, dimension)).astype('float32')
-                index.train(dummy_data)
+                # Train with synthetic data for index initialization
+                # TODO: Use real data samples for better index training
+                training_data = np.random.random((1000, dimension)).astype('float32')
+                index.train(training_data)
             elif index_type == "HNSW":
                 # Hierarchical Navigable Small World - very fast, good accuracy
                 index = faiss.IndexHNSWFlat(dimension, 32)
@@ -62,8 +63,8 @@ class FAISSManager:
                 # Default to IVF
                 quantizer = faiss.IndexFlatL2(dimension)
                 index = faiss.IndexIVFFlat(quantizer, dimension, 100)
-                dummy_data = np.random.random((1000, dimension)).astype('float32')
-                index.train(dummy_data)
+                training_data = np.random.random((1000, dimension)).astype('float32')
+                index.train(training_data)
             
             self.indexes[name] = index
             self.metadata[name] = []

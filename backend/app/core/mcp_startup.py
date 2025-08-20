@@ -87,8 +87,8 @@ async def initialize_mcp_on_startup():
             container_bridge = EnhancedMCPBridge(mesh_client=mesh)
             await container_bridge.initialize()
             
-            # Get container service status
-            container_status = container_bridge.container_bridge.get_service_status()
+            # Get container service status - use the correct method that doesn't require service_name
+            container_status = container_bridge.container_bridge.get_service_status() if hasattr(container_bridge, 'container_bridge') else {'total': 0, 'healthy': 0}
             
             if container_status['healthy'] > 0:
                 logger.info(f"Container bridge initialized: {container_status['healthy']} healthy services")
