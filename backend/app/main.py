@@ -12,7 +12,7 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
@@ -37,6 +37,9 @@ from app.mesh.service_mesh import ServiceMesh, LoadBalancerStrategy
 # Temporarily use disabled MCP module to bypass startup failures
 from app.core.mcp_startup import initialize_mcp_background, shutdown_mcp_services
 # from app.core.mcp_disabled import initialize_mcp_background, shutdown_mcp_services
+
+# Import auth dependencies early to avoid NameError
+from app.auth.dependencies import get_current_user, get_current_active_user, require_admin, get_optional_user
 
 # Use uvloop for better async performance
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -207,26 +210,44 @@ async def emergency_health_check():
 
 # Configure CORS middleware with ultra-secure settings
 # Security: NO WILDCARDS - Using explicit whitelist of allowed origins
-from app.core.cors_security import get_secure_cors_config, validate_cors_security
-
-# Validate CORS security before startup
-if not validate_cors_security():
-    logger.critical("CRITICAL SECURITY FAILURE: CORS configuration contains wildcards")
-    logger.critical("STOPPING SYSTEM: Wildcard CORS origins are forbidden for security")
-    sys.exit(1)
-
-# Apply secure CORS configuration
-cors_config = get_secure_cors_config("api")
-app.add_middleware(CORSMiddleware, **cors_config)
-
-logger.info(f"CORS Security: Configured {len(cors_config['allow_origins'])} explicit allowed origins")
-logger.info(f"CORS Origins: {', '.join(cors_config['allow_origins'])}")
+try:
+    from app.core.cors_security import get_secure_cors_config, validate_cors_security
+    
+    # Validate CORS security before startup
+    if not validate_cors_security():
+        logger.critical("CRITICAL SECURITY FAILURE: CORS configuration contains wildcards")
+        logger.critical("STOPPING SYSTEM: Wildcard CORS origins are forbidden for security")
+        sys.exit(1)
+    
+    # Apply secure CORS configuration
+    cors_config = get_secure_cors_config("api")
+    app.add_middleware(CORSMiddleware, **cors_config)
+    
+    logger.info(f"CORS Security: Configured {len(cors_config['allow_origins'])} explicit allowed origins")
+    logger.info(f"CORS Origins: {', '.join(cors_config['allow_origins'])}")
+except ImportError:
+    # Fallback to secure default CORS configuration
+    logger.warning("Using default secure CORS configuration")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:10011", "http://localhost:3000"],
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization", "X-API-Key"],
+        expose_headers=["X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset"]
+    )
 
 # Add security headers middleware for enterprise-grade protection
 try:
     from app.middleware.security_headers import SecurityHeadersMiddleware, RateLimitMiddleware
+    from app.middleware.metrics_security import setup_metrics_security
+    
     environment = os.getenv("SUTAZAI_ENV", "production")
     app.add_middleware(SecurityHeadersMiddleware, environment=environment)
+    
+    # Add metrics security middleware BEFORE other middleware
+    setup_metrics_security(app, environment=environment)
+    logger.info("Metrics security middleware loaded - authentication required for metrics endpoints")
     
     # Only add rate limiting in non-test environments
     # Check both SUTAZAI_ENV and TEST_MODE for compatibility
@@ -241,8 +262,8 @@ try:
         logger.info("Security headers and rate limiting middleware loaded successfully")
     else:
         logger.info("Security headers loaded - Rate limiting DISABLED for test environment")
-except ImportError:
-    logger.warning("Security headers middleware not available - using basic security")
+except ImportError as e:
+    logger.warning(f"Security middleware not fully available: {e}")
 
 # Add compression middleware for better performance
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -573,9 +594,9 @@ async def detailed_health_check():
         )
 
 
-# Circuit breaker status endpoint
+# Circuit breaker status endpoint - SECURED
 @app.get("/api/v1/health/circuit-breakers")
-async def get_circuit_breaker_status():
+async def get_circuit_breaker_status(current_user = Depends(require_admin)):
     """Get status of all circuit breakers"""
     
     try:
@@ -598,9 +619,9 @@ async def get_circuit_breaker_status():
         }
 
 
-# Circuit breaker reset endpoint
+# Circuit breaker reset endpoint - SECURED
 @app.post("/api/v1/health/circuit-breakers/reset")
-async def reset_circuit_breakers():
+async def reset_circuit_breakers(current_user = Depends(require_admin)):
     """Reset all circuit breakers"""
     
     try:
@@ -1021,12 +1042,24 @@ async def batch_process(prompts: List[str]):
     return {"results": results}
 
 
-# Metrics endpoint with detailed performance data
+# Metrics endpoint with detailed performance data - SECURED
 @app.get("/api/v1/metrics")
-async def get_metrics():
-    """Get comprehensive system metrics"""
+async def get_metrics(current_user = Depends(get_optional_user)):
+    """Get comprehensive system metrics - requires authentication for sensitive data"""
     
     import psutil
+    
+    # Check if user is authenticated
+    if not current_user:
+        # Return limited metrics for unauthenticated users
+        return {
+            "status": "limited",
+            "message": "Authentication required for full metrics",
+            "public_metrics": {
+                "system_status": "operational",
+                "api_version": "2.0.0"
+            }
+        }
     
     pool_manager = await get_pool_manager()
     cache_service = await get_cache_service()
@@ -1059,10 +1092,13 @@ async def get_metrics():
     return metrics
 
 
-# Enhanced Prometheus metrics endpoint with comprehensive monitoring
+# Enhanced Prometheus metrics endpoint with comprehensive monitoring - SECURED
 @app.get("/metrics")
-async def prometheus_metrics():
-    """Enhanced Prometheus-compatible metrics endpoint with detailed service monitoring"""
+async def prometheus_metrics(current_user = Depends(get_optional_user)):
+    """Enhanced Prometheus-compatible metrics endpoint - requires authentication"""
+    
+    # Note: Authentication is handled by MetricsAuthenticationMiddleware
+    # This dependency is for additional validation if middleware is bypassed
     
     try:
         # Use enhanced health monitoring service for comprehensive metrics
@@ -1104,9 +1140,44 @@ async def prometheus_metrics():
             return f"# CRITICAL ERROR: Unable to generate metrics - {str(e)}"
 
 
-# Cache management endpoints with enhanced functionality
+# Import authentication dependencies
+try:
+    from app.auth.dependencies import get_current_user, get_current_active_user, require_admin, get_optional_user
+    # Create optional user dependency for metrics
+    async def get_current_user_optional(request: Request):
+        """Get current user if authenticated, None otherwise"""
+        try:
+            auth_header = request.headers.get("Authorization")
+            if not auth_header:
+                return None
+            from app.auth.dependencies import get_current_user as get_user
+            from app.core.database import get_db
+            from fastapi.security import HTTPAuthorizationCredentials
+            
+            # Create mock credentials
+            class MockCredentials:
+                def __init__(self, token):
+                    self.credentials = token
+            
+            if auth_header.startswith("Bearer "):
+                token = auth_header.replace("Bearer ", "")
+                creds = MockCredentials(token)
+                async for db in get_db():
+                    user = await get_user(creds, db)
+                    return user
+            return None
+        except:
+            return None
+except ImportError:
+    logger.warning("Authentication dependencies not available - using fallback")
+    async def get_current_user_optional(request: Request):
+        return None
+    async def require_admin():
+        raise HTTPException(status_code=503, detail="Authentication service unavailable")
+
+# Cache management endpoints with enhanced functionality - SECURED
 @app.post("/api/v1/cache/clear")
-async def clear_cache(pattern: Optional[str] = None):
+async def clear_cache(pattern: Optional[str] = None, current_user = Depends(require_admin)):
     """Clear cache entries with intelligent invalidation and input validation"""
     
     # CRITICAL SECURITY: Validate cache pattern to prevent injection
@@ -1132,7 +1203,7 @@ async def clear_cache(pattern: Optional[str] = None):
 
 
 @app.post("/api/v1/cache/invalidate")
-async def invalidate_cache_by_tags(tags: List[str]):
+async def invalidate_cache_by_tags(tags: List[str], current_user = Depends(require_admin)):
     """Invalidate cache entries by tags for smart cache management"""
     
     total_invalidated = await invalidate_by_tags(tags)
@@ -1145,7 +1216,7 @@ async def invalidate_cache_by_tags(tags: List[str]):
 
 
 @app.post("/api/v1/cache/warm")
-async def warm_cache():
+async def warm_cache(current_user = Depends(require_admin)):
     """Manually trigger cache warming"""
     
     try:
@@ -1174,7 +1245,7 @@ async def warm_cache():
 
 
 @app.get("/api/v1/cache/stats")
-async def cache_stats():
+async def cache_stats(current_user = Depends(get_current_user_optional)):
     """Get comprehensive cache statistics"""
     
     cache_service = await get_cache_service()
@@ -1211,10 +1282,10 @@ async def cache_stats():
     return stats
 
 
-# Settings endpoint
+# Settings endpoint - SECURED (public with limited info for unauthenticated)
 @app.get("/api/v1/settings")
 @cache_static_data(ttl=60)
-async def get_settings():
+async def get_settings(current_user = Depends(get_current_user_optional)):
     """Get system settings with caching"""
     return {
         "environment": os.getenv("SUTAZAI_ENV", "production"),

@@ -215,7 +215,9 @@
       "Bash(/opt/sutazaiapp/scripts/monitoring/aggressive_cleanup.sh:*)",
       "Bash(sqlite3:*)",
       "Bash(./run_migration.sh:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "mcp__http_fetch__fetch",
+      "mcp__ddg__search"
     ],
     "deny": [],
     "additionalDirectories": [

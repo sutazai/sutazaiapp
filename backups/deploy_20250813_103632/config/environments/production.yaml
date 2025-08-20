@@ -1,9 +1,0 @@
-database:
-  host: ${DATABASE_HOST}
-debug: false
-environment: production
-log_level: INFO
-security:
-  cors_origins:
-  - ${FRONTEND_URL}
-  jwt_secret: ${JWT_SECRET}
