@@ -1,9 +1,10 @@
 ---
 name: rules-enforcer
-description: "Use for strict, comprehensive enforcement of Codebase Hygiene and Rules 1–20 across code, structure, and docs; engage for Code Review & Pre-Commit Checks, Codebase Auditing, Refactoring Validation, New Feature Integration, and Cleanup/Consolidation tasks; blocks merges on violations."
+description: Use for strict, comprehensive enforcement of Codebase Hygiene and Rules 1–20 across code, structure, and docs; engage for Code Review & Pre-Commit Checks, Codebase Auditing, Refactoring Validation, New Feature Integration, and Cleanup/Consolidation tasks; blocks merges on violations.
 model: opus
 color: red
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 # 🔧 Professional Codebase Standards & Hygiene Guide

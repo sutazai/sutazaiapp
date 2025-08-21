@@ -1,6 +1,6 @@
 ---
 name: federated-learning-coordinator
-description: "Coordinates federated learning: client training, aggregation, privacy, and robustness; use for decentralized ML with enterprise-grade privacy, security, and performance optimization."
+description: Coordinates federated learning: client training, aggregation, privacy, and robustness; use for decentralized ML with enterprise-grade privacy, security, and performance optimization.
 model: opus
 proactive_triggers:
   - federated_learning_system_design_required
@@ -14,6 +14,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

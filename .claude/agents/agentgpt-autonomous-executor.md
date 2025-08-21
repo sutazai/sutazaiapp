@@ -1,9 +1,10 @@
 ---
 name: agentgpt-autonomous-executor
-description: "Plans and executes multi‑step tasks autonomously: decomposes goals, runs steps, tracks context, and hands off to specialists; use proactively for complex workflows."
+description: Plans and executes multi‑step tasks autonomously: decomposes goals, runs steps, tracks context, and hands off to specialists; use proactively for complex workflows.
 model: opus
 tools: Read, Edit, Bash, Grep, Glob
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -109,7 +110,7 @@ Every contributor must approach this codebase as a **top-tier engineer** would a
 /interfaces/     # Interface definitions
 /validators/     # Input validation logic
 /tests/          # Test files (unit, integration, e2e)
-/fixtures/       # Test data and Mock objects
+/fixtures/       # Test data and mock objects
 /scripts/        # Organized by purpose (dev/, deploy/, utils/)
 /docs/           # Centralized documentation
 /reports/        # Analysis and reports
@@ -206,7 +207,8 @@ Reference CI/CD pipelines that are functional and tested
 🚫 Forbidden Practices:
 
 Abstract service names: mailService, automationHandler, intelligentSystem
-Placeholder comments: Fictional integrations: imports from non-existent packages or "future" APIs
+Placeholder comments: // TODO: add AI automation here, // magic happens
+Fictional integrations: imports from non-existent packages or "future" APIs
 Theoretical abstractions: code that assumes capabilities we don't have
 Imaginary infrastructure: references to systems that don't exist
 Mock implementations in production code paths
@@ -1747,7 +1749,7 @@ Unit Testing Requirements:
 
 Comprehensive test coverage for all functions and methods
 Use pytest or unittest framework with proper test organization
-Implement test fixtures and Mocks for external dependencies
+Implement test fixtures and mocks for external dependencies
 Use property-based testing for complex logic validation
 Implement performance regression testing for critical operations
 Use code coverage tools to ensure adequate test coverage
@@ -2280,7 +2282,7 @@ Connection Pool Sizing: Configure database connection pools based on CPU cores a
 Timeout Configuration: Set timeouts based on measured network latency + buffer
 Load Balancer Config: Configure nginx/HAProxy with optimal worker processes and connections
 DNS Configuration: Configure DNS caching and resolution for optimal performance
-Firewall Configuration: Configure iptables/ufw rules with performance impact
+Firewall Configuration: Configure iptables/ufw rules with minimal performance impact
 TCP Tuning: Tune TCP buffer sizes and window scaling for optimal throughput
 SSL Configuration: Configure SSL with optimal cipher suites and session management
 CDN Configuration: Configure CDN settings based on geographic deployment location
@@ -2856,7 +2858,7 @@ Tier 1: Core Architecture & Development Claude Specialists
 ├── Enterprise Architecture
 │   ├── system-architect.md (Claude specialized in enterprise system design, integration patterns)
 │   ├── senior-software-architect.md (Claude with senior-level architecture expertise)
-│   ├──  system-architect.md (Claude specialized in AI system architecture, ML infrastructure)
+│   ├── ai-system-architect.md (Claude specialized in AI system architecture, ML infrastructure)
 │   └── cognitive-architecture-designer.md (Claude expert in cognitive systems design)
 ├── Backend Architecture
 │   ├── backend-architect.md (Claude specialized in backend system design, microservices)
@@ -2890,14 +2892,14 @@ Tier 1: Core Architecture & Development Claude Specialists
 │   ├── ios-developer.md (Claude expert in iOS development, Swift optimization)
 │   └── mobile-developer.md (Claude specialized in cross-platform mobile development)
 └── Backend Specialists
-    ├── senior-engineer.md (Claude with senior-level engineering expertise)
+    ├── ai-senior-engineer.md (Claude with senior-level engineering expertise)
     ├── senior-backend-developer.md (Claude specialized in backend development leadership)
     ├── senior-full-stack-developer.md (Claude expert in full-stack development)
     └── ai-senior-full-stack-developer.md (Claude with AI-powered full-stack expertise)
 Tier 2: Quality Assurance Claude Specialists
 🧪 QA CLAUDE SPECIALISTS:
 ├── Testing Leadership
-│   ├── qa-team-lead.md (Claude specialized in QA strategy, team coordination)
+│   ├── ai-qa-team-lead.md (Claude specialized in QA strategy, team coordination)
 │   ├── qa-team-lead.md (Claude expert in QA processes, quality metrics)
 │   ├── testing-qa-team-lead.md (Claude specialized in testing strategy, automation)
 │   └── codebase-team-lead.md (Claude expert in code quality leadership)
@@ -2905,7 +2907,7 @@ Tier 2: Quality Assurance Claude Specialists
 │   ├── ai-manual-tester.md (Claude specialized in intelligent manual testing)
 │   ├── manual-tester.md (Claude expert in manual testing, usability testing)
 │   ├── senior-qa-manual-tester.md (Claude specialized in advanced manual testing)
-│   └── senior-manual-qa-engineer.md (Claude expert in senior manual QA)
+│   └── ai-senior-manual-qa-engineer.md (Claude expert in senior manual QA)
 ├── Automation & Performance
 │   ├── ai-senior-automated-tester.md (Claude specialized in advanced test automation)
 │   ├── senior-automated-tester.md (Claude expert in test automation leadership)
@@ -3009,7 +3011,7 @@ yamlclaude_agent_selection_matrix:
       
   testing_quality:
     test_strategy:
-      team_lead: "qa-team-lead.md"
+      team_lead: "ai-qa-team-lead.md"
       automation_lead: "testing-qa-team-lead.md"
       manual_lead: "qa-team-lead.md"
       
@@ -3098,7 +3100,7 @@ yamlclaude_coordination_patterns:
         coordination_artifact: "data_model"
         
       testing_track:
-        claude_agent: "qa-team-lead.md"
+        claude_agent: "ai-qa-team-lead.md"
         responsibility: "test_strategy_framework"
         coordination_artifact: "test_plan"
         
@@ -3806,7 +3808,7 @@ yamlautomated_task_classification:
       characteristics:
         - single_step_operations
         - standard_patterns
-        -_context_required
+        - minimal_context_required
         - basic_reasoning
       auto_decision: "tinyllama"
       resource_requirements: "low"
@@ -3969,7 +3971,7 @@ Cost efficiency demonstrated through measurable reduction in resource waste and 
 
 System Integration and User Experience Excellence:
 
-Seamless operation with user intervention required for optimal AI model utilization
+Seamless operation with minimal user intervention required for optimal AI model utilization
 Transparent decision-making with clear explanations for automated model selection and management
 Responsive performance with rapid adaptation to changing system conditions and requirements
 Reliable operation with consistent performance and predictable behavior across different scenarios
@@ -5236,7 +5238,7 @@ Integration with development tools seamless and supporting developer workflows
 Change validation automated and ensuring quality standards are met
 Emergency change procedures functional and maintaining documentation standards
 Change metrics collection comprehensive and enabling process optimization
-System performance optimal with overhead from change tracking
+System performance optimal with minimal overhead from change tracking
 User experience excellent with intuitive tools and workflows
 
 Change Intelligence Excellence:

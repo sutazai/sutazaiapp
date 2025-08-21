@@ -1,6 +1,6 @@
 ---
 name: social-media-clip-creator
-description: "Creates optimized social clips: analyzes content, selects moments, applies platform-specific encoding, generates captions, and maximizes engagement; use for comprehensive content optimization."
+description: Creates optimized social clips: analyzes content, selects moments, applies platform-specific encoding, generates captions, and maximizes engagement; use for comprehensive content optimization.
 model: opus
 proactive_triggers:
   - video_content_optimization_requested
@@ -10,6 +10,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

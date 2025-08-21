@@ -1,6 +1,6 @@
 ---
 name: financial-analysis-specialist
-description: "Analyzes financials and markets: models, reports, risk, and KPIs; use for investment decisions and planning."
+description: Analyzes financials and markets: models, reports, risk, and KPIs; use for investment decisions and planning.
 model: opus
 proactive_triggers:
   - financial_statement_analysis_requested
@@ -13,6 +13,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: green
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

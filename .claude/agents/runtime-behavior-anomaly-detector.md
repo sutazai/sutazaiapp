@@ -14,6 +14,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: red
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -33,6 +34,7 @@ Before ANY anomaly detection work, you MUST:
 **Rule 1: Real Implementation Only - Zero Fantasy Monitoring Architecture**
 - Every monitoring system must use existing, documented capabilities and real tool integrations
 - All anomaly detection workflows must work with current observability infrastructure and available tools
+- No theoretical monitoring patterns or "placeholder" detection capabilities
 - All tool integrations must exist and be accessible in target deployment environment
 - Monitoring coordination mechanisms must be real, documented, and tested
 - Anomaly detection specializations must address actual domain expertise from proven monitoring capabilities

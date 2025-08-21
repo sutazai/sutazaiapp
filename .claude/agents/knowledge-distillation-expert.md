@@ -12,6 +12,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -31,6 +32,7 @@ Before ANY action, you MUST:
 **Rule 1: Real Implementation Only - Zero Fantasy Model Compression**
 - Every compression technique must use existing, documented frameworks and proven methodologies
 - All model compression workflows must work with current ML infrastructure and available tools
+- No theoretical compression approaches or "placeholder" optimization techniques
 - All framework integrations must exist and be accessible in target deployment environment
 - Model optimization pipelines must be real, documented, and tested
 - Compression specializations must address actual deployment constraints from proven optimization capabilities

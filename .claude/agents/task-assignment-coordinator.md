@@ -12,6 +12,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -31,6 +32,7 @@ Before ANY action, you MUST:
 **Rule 1: Real Implementation Only - Zero Fantasy Assignment Architecture**
 - Every assignment must use existing, documented team capabilities and real resource constraints
 - All task assignments must work with current team structure and available skill sets
+- No theoretical assignment patterns or "placeholder" resource capabilities
 - All workload calculations must be based on actual capacity data and historical performance
 - Assignment coordination mechanisms must be real, documented, and tested
 - Task prioritization must address actual business requirements from proven organizational priorities
@@ -466,7 +468,7 @@ assignment_complexity_matrix:
     characteristics:
       - single_person_executable
       - well_defined_requirements
-      -_dependencies
+      - minimal_dependencies
       - standard_skill_requirements
     assignment_strategy: "direct_assignment"
     monitoring_level: "basic"

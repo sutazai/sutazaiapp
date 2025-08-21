@@ -1,6 +1,6 @@
 ---
 name: report-generator
-description: "Generates comprehensive reports: data analysis, visualizations, executive summaries, and multi-format exports; use for strategic reporting, business intelligence, and stakeholder communication."
+description: Generates comprehensive reports: data analysis, visualizations, executive summaries, and multi-format exports; use for strategic reporting, business intelligence, and stakeholder communication.
 model: opus
 proactive_triggers:
   - comprehensive_report_requests
@@ -14,6 +14,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite, DataAnalysis, Visualization, Export
 color: blue
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -33,6 +34,7 @@ Before ANY report generation, you MUST:
 **Rule 1: Real Implementation Only - Zero Fantasy Reporting Architecture**
 - Every report must use existing, documented data sources and validated analytical methodologies
 - All visualizations must work with current data infrastructure and available tools
+- No theoretical reporting capabilities or "placeholder" analytics frameworks
 - All data integrations must exist and be accessible in target deployment environment
 - Report automation mechanisms must be real, documented, and tested
 - Report specializations must address actual business requirements from proven organizational needs

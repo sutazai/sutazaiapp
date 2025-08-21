@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  backend:
+    mem_limit: 512m
+    mem_reservation: 256m
+    memswap_limit: 1g
+    
+  frontend:
+    mem_limit: 256m
+    mem_reservation: 128m
+    memswap_limit: 512m
+    
+  neo4j:
+    mem_limit: 1g
+    mem_reservation: 512m
+    environment:
+      - NEO4J_server_memory_heap_initial__size=256m
+      - NEO4J_server_memory_heap_max__size=512m
+      - NEO4J_server_memory_pagecache_size=256m
+    
+  postgres:
+    mem_limit: 512m
+    mem_reservation: 256m
+    environment:
+      - POSTGRES_SHARED_BUFFERS=128MB
+      - POSTGRES_EFFECTIVE_CACHE_SIZE=256MB
+    
+  redis:
+    mem_limit: 256m
+    mem_reservation: 128m
+    command: redis-server --maxmemory 200mb --maxmemory-policy allkeys-lru
+    
+  chromadb:
+    mem_limit: 512m
+    mem_reservation: 256m
+    
+  qdrant:
+    mem_limit: 512m
+    mem_reservation: 256m
+    
+  grafana:
+    mem_limit: 256m
+    mem_reservation: 128m
+    
+  prometheus:
+    mem_limit: 512m
+    mem_reservation: 256m
+    command:
+      - '--storage.tsdb.retention.time=3d'
+      - '--storage.tsdb.retention.size=256MB'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'

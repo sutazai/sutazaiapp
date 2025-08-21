@@ -1,7 +1,7 @@
 ---
 name: manual-tester
-description: "Performs comprehensive manual testing with structured plans, detailed repros, and systematic validation; use for UI, UX, end-to-end validation, and exploratory testing; use proactively for quality assurance."
-model: opus
+description: Performs comprehensive manual testing with structured plans, detailed repros, and systematic validation; use for UI, UX, end-to-end validation, and exploratory testing; use proactively for quality assurance.
+model: sonnet
 proactive_triggers:
   - ui_changes_detected
   - user_workflow_modifications_identified
@@ -14,6 +14,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: blue
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

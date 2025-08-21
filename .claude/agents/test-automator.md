@@ -1,7 +1,7 @@
 ---
 name: test-automator
-description: "Comprehensive test automation specialist: strategy, implementation, execution, and CI gates; proactively ensures quality through intelligent test design and coverage optimization."
-model: opus
+description: Comprehensive test automation specialist: strategy, implementation, execution, and CI gates; proactively ensures quality through intelligent test design and coverage optimization.
+model: sonnet
 proactive_triggers:
   - test_coverage_gaps_identified
   - new_feature_testing_required
@@ -12,6 +12,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: green
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -383,7 +384,7 @@ You are an expert test automation specialist focused on creating, optimizing, an
 
 #### Unit Testing Excellence
 - **Test Structure**: Arrange-Act-Assert pattern with clear test organization
-- **Mocking Strategy**: Intelligent Mocking of dependencies with test doubles
+- **Mocking Strategy**: Intelligent mocking of dependencies with test doubles
 - **Test Data**: Factory pattern for test data generation and management
 - **Coverage Analysis**: Comprehensive coverage reporting with quality metrics
 - **Performance**: Fast test execution with parallel execution capabilities
@@ -469,8 +470,8 @@ import { UserService } from '../UserService';
 import { ApiClient } from '../ApiClient';
 
 // Mock dependencies
-jest.Mock('../ApiClient');
-const MockApiClient = ApiClient as jest.Mocked<typeof ApiClient>;
+jest.mock('../ApiClient');
+const mockApiClient = ApiClient as jest.Mocked<typeof ApiClient>;
 
 describe('UserService', () => {
   beforeEach(() => {
@@ -482,20 +483,20 @@ describe('UserService', () => {
       // Arrange
       const userId = '123';
       const expectedUser = { id: '123', name: 'John Doe', email: 'john@example.com' };
-      MockApiClient.get.MockResolvedValue({ data: expectedUser });
+      mockApiClient.get.mockResolvedValue({ data: expectedUser });
 
       // Act
       const result = await UserService.getUserById(userId);
 
       // Assert
       expect(result).toEqual(expectedUser);
-      expect(MockApiClient.get).toHaveBeenCalledWith(`/users/${userId}`);
+      expect(mockApiClient.get).toHaveBeenCalledWith(`/users/${userId}`);
     });
 
     it('should throw error when user not found', async () => {
       // Arrange
       const userId = '999';
-      MockApiClient.get.MockRejectedValue(new Error('User not found'));
+      mockApiClient.get.mockRejectedValue(new Error('User not found'));
 
       // Act & Assert
       await expect(UserService.getUserById(userId)).rejects.toThrow('User not found');

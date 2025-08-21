@@ -1,7 +1,7 @@
 ---
 name: debugger
-description: "Elite debugging specialist: root cause analysis, error isolation, systematic reproduction, comprehensive fix validation, and prevention strategies; use for failures, unexpected behavior, and complex debugging scenarios."
-model: opus
+description: Elite debugging specialist: root cause analysis, error isolation, systematic reproduction, comprehensive fix validation, and prevention strategies; use for failures, unexpected behavior, and complex debugging scenarios.
+model: sonnet
 proactive_triggers:
   - error_conditions_detected
   - unexpected_behavior_reported
@@ -12,6 +12,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: red
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.

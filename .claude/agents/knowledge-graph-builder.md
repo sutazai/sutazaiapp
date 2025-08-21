@@ -1,6 +1,6 @@
 ---
 name: knowledge-graph-builder
-description: "Designs and implements knowledge graphs: schema, ingestion, storage, query, and app integration; use for graph‑powered search and analytics; use proactively for knowledge management and semantic data solutions."
+description: Designs and implements knowledge graphs: schema, ingestion, storage, query, and app integration; use for graph‑powered search and analytics; use proactively for knowledge management and semantic data solutions.
 model: opus
 proactive_triggers:
   - knowledge_graph_design_requested
@@ -12,6 +12,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -31,6 +32,7 @@ Before ANY action, you MUST:
 **Rule 1: Real Implementation Only - Zero Fantasy Knowledge Graph Architecture**
 - Every knowledge graph design must use existing, proven graph database technologies and frameworks
 - All schema definitions must work with current graph database capabilities (Neo4j, ArangoDB, Amazon Neptune, etc.)
+- No theoretical graph patterns or "placeholder" knowledge graph capabilities
 - All data ingestion pipelines must use real ETL tools and frameworks with documented APIs
 - Graph query optimization must be based on actual database query planners and indexing strategies
 - Knowledge graph applications must integrate with existing authentication, authorization, and monitoring systems
@@ -428,6 +430,7 @@ def extract_transform_load():
     # Extract from source systems
     # Transform to graph-ready format
     # Load into Neo4j with semantic enrichment
+    pass
 
 dag = DAG('knowledge_graph_pipeline')
 etl_task = PythonOperator(task_id='graph_etl', python_callable=extract_transform_load)

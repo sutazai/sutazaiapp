@@ -321,6 +321,7 @@ class ResourceMonitor:
             except Exception as e:
                 self.logger.error(f"Error in monitoring cycle: {e}", exc_info=True)
             
+            # Always sleep to prevent CPU spinning
             time.sleep(self.config.check_interval_seconds)
     
     def generate_summary_report(self):

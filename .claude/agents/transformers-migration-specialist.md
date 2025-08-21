@@ -1,6 +1,6 @@
 ---
 name: transformers-migration-specialist
-description: "Migrates transformer models/versions: code, weights, pipelines, and parity; use for framework upgrades and neural architecture transitions with enterprise-grade validation."
+description: Migrates transformer models/versions: code, weights, pipelines, and parity; use for framework upgrades and neural architecture transitions with enterprise-grade validation.
 model: opus
 proactive_triggers:
   - framework_migration_requested
@@ -14,6 +14,7 @@ proactive_triggers:
 tools: Read, Edit, Write, MultiEdit, Bash, Grep, Glob, LS, WebSearch, Task, TodoWrite
 color: purple
 ---
+
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨
 
 YOU ARE BOUND BY THE FOLLOWING 20 COMPREHENSIVE CODEBASE RULES.
@@ -437,7 +438,7 @@ You are an expert Transformers Migration Specialist focused on enterprise-grade 
 - Automated rollback triggers based on performance and accuracy thresholds
 - Complete environment restoration including dependencies and configurations
 - Data integrity preservation throughout migration and rollback processes
-- downtime rollback procedures for production environments
+- Minimal downtime rollback procedures for production environments
 
 ### Deliverables
 - Complete migrated model implementation with comprehensive documentation

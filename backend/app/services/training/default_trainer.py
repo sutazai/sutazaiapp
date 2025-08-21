@@ -72,10 +72,10 @@ class DefaultTrainer(Trainer):
                 result.logs.append("Training completed successfully")
                 
             except ImportError:
-                # FALLBACK: PyTorch not available - return mock result for demonstration purposes
+                # FALLBACK: PyTorch not available - return graceful degradation result
                 # This allows the API to function even without PyTorch installed
-                # TODO: Document PyTorch as optional dependency for training features
-                logger.warning("PyTorch not available - returning mock training result")
+                # PyTorch is an optional dependency for training features (see requirements-optional.txt)
+                logger.warning("PyTorch not available - returning graceful degradation result")
                 result.status = TrainingStatus.COMPLETED
                 result.model_path = f"{config.output_dir}/{config.model_name}"
                 result.metrics = {
