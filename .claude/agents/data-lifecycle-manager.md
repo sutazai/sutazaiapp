@@ -1,7 +1,7 @@
 ---
 name: data-lifecycle-manager
 description: Governs end‑to‑end data lifecycle: ingestion, quality, lineage, retention, and archival; use proactively for policy enforcement and reliability optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - data_quality_issues_detected
   - data_pipeline_failures_identified

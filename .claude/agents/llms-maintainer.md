@@ -1,7 +1,7 @@
 ---
 name: llms-maintainer
 description: Maintains llms.txt for AI crawlers: scans content changes, rebuilds sitemap entries, and enforces AEO checklists; use post‑build or on content updates; use proactively for AI discoverability optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - content_changes_detected
   - post_build_deployment

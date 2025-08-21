@@ -1,7 +1,7 @@
 ---
 name: data-analysis-engineer
 description: End‑to‑end analytics engineering: EDA, modeling, pipelines, and dashboards; use for insight generation and data products.
-model: sonnet
+model: opus
 proactive_triggers:
   - data_pipeline_design_requested
   - statistical_analysis_requirements_identified

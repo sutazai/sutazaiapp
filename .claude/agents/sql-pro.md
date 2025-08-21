@@ -1,7 +1,7 @@
 ---
 name: sql-pro
 description: Senior SQL engineer: schema design, query optimization, performance tuning, and database migrations; use proactively for all database performance and correctness tasks.
-model: sonnet
+model: opus
 proactive_triggers:
   - database_performance_issues_detected
   - complex_query_optimization_needed

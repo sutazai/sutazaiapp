@@ -1,7 +1,7 @@
 ---
 name: url-context-validator
 description: Comprehensive URL validation and contextual analysis: technical validation, content relevance, security assessment, and optimization recommendations for web links and automation targets.
-model: sonnet
+model: opus
 proactive_triggers:
   - url_validation_requested
   - link_checking_automation_needed

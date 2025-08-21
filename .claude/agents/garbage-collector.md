@@ -1,7 +1,7 @@
 ---
 name: garbage-collector
 description: Elite codebase hygiene specialist: comprehensive dead code elimination, duplicate consolidation, technical debt reduction, and intelligent waste prevention; use proactively for codebase optimization and before releases.
-model: sonnet
+model: opus
 proactive_triggers:
   - codebase_cleanup_required
   - pre_release_hygiene_check

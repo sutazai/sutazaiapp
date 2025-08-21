@@ -1,7 +1,7 @@
 ---
 name: agent-performance-optimizer
 description: Performance enhancement specialist for agents: profiling, bottleneck analysis, resource optimization, and scalability improvements; use for latency reduction and throughput maximization.
-model: sonnet
+model: opus
 tools: Read, Edit, Write, MultiEdit, Grep, Glob, LS, Bash, WebFetch, WebSearch, Task, TodoWrite
 ---
 

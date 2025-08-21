@@ -1,7 +1,7 @@
 ---
 name: review-agent
 description: Performs comprehensive code and system reviews: scope analysis, diff evaluation, security assessment, risk analysis, documentation validation, and quality gates; proactively enforces standards and gates critical merges.
-model: sonnet
+model: opus
 proactive_triggers:
   - code_review_requested
   - pre_merge_validation_required

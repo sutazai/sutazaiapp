@@ -1,7 +1,7 @@
 ---
 name: system-knowledge-curator
 description: Curates system knowledge: taxonomy, updates, deduplication, linking, and governance; use to keep docs accurate and navigable.
-model: sonnet
+model: opus
 proactive_triggers:
   - knowledge_inconsistencies_detected
   - documentation_gaps_identified

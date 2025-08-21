@@ -1,7 +1,7 @@
 ---
 name: compute-scheduler-optimizer
 description: Optimizes compute scheduling: priorities, queues, quotas, and fairness; use proactively for throughput improvements and resource optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - resource_utilization_inefficiencies_detected
   - job_queue_bottlenecks_identified

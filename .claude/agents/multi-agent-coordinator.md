@@ -1,7 +1,7 @@
 ---
 name: multi-agent-coordinator
 description: Orchestrates complex multi-agent workflows with intelligent task decomposition, dependency management, and cross-agent coordination. Masters complex problem solving by breaking down tasks into optimal sub-components, assigning to specialized agents, managing inter-agent communication, and synthesizing results into cohesive outputs. Use proactively for any task requiring multiple specialized domains, complex coordination, or sophisticated workflow orchestration.
-model: sonnet
+model: opus
 proactive_triggers:
   - complex_task_decomposition_needed
   - multi_domain_expertise_required

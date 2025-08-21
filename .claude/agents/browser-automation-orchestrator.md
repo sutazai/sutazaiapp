@@ -1,7 +1,7 @@
 ---
 name: browser-automation-orchestrator
 description: Orchestrates browser automation (Playwright/Puppeteer): navigation, scraping, actions, and reliability; use for robust end‑to‑end workflows.
-model: sonnet
+model: opus
 proactive_triggers:
   - browser_automation_workflows_needed
   - web_scraping_requirements_identified

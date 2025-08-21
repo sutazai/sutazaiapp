@@ -1,7 +1,7 @@
 ---
 name: php-pro
 description: Senior PHP engineer: modern OOP, SPL, performance, and frameworks; use for high‑quality PHP features and refactors; use proactively for PHP optimization and architecture.
-model: sonnet
+model: opus
 proactive_triggers:
   - php_performance_optimization_needed
   - modern_php_patterns_implementation_required

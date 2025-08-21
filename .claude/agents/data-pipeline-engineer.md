@@ -1,7 +1,7 @@
 ---
 name: data-pipeline-engineer
 description: Engineers batch/stream ETL/ELT: ingestion, transforms, orchestration, and data quality; use for robust, performant pipelines.
-model: sonnet
+model: opus
 proactive_triggers:
   - data_ingestion_requirements_identified
   - etl_elt_pipeline_optimization_needed

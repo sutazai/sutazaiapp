@@ -1,7 +1,7 @@
 ---
 name: shell-automation-specialist
 description: Automates with shell safely: idempotent scripts, error handling, portability, and CI; use for tooling and ops.
-model: sonnet
+model: opus
 proactive_triggers:
   - shell_script_development_needed
   - automation_workflow_optimization_required

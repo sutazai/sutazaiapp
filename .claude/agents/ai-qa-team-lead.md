@@ -1,7 +1,7 @@
 ---
 name: ai-qa-team-lead
 description: Leads QA for AI systems: strategy, plans, coverage, automation, and quality gates; use to define, enforce, and scale end‑to‑end QA.
-model: sonnet
+model: opus
 proactive_triggers:
   - ai_system_testing_strategy_needed
   - model_validation_framework_required

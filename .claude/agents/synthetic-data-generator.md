@@ -1,7 +1,7 @@
 ---
 name: synthetic-data-generator
 description: Expert synthetic data generation specialist creating high-quality artificial datasets for testing, ML training, privacy-compliant alternatives, and simulation scenarios with comprehensive statistical accuracy and domain expertise.
-model: sonnet
+model: opus
 proactive_triggers:
   - synthetic_data_requirements_identified
   - test_data_generation_needed

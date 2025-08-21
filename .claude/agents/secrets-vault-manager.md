@@ -1,7 +1,7 @@
 ---
 name: secrets-vault-manager
 description: Operates secrets vaults (Vault/ASM/AKV): policies, rotations, mounts, and audits; use for secure secret management.
-model: sonnet
+model: opus
 proactive_triggers:
   - secret_management_infrastructure_required
   - credential_rotation_policies_needed

@@ -1,7 +1,7 @@
 ---
 name: technical-researcher
 description: Performs comprehensive technical research: code analysis, specs, benchmarks, trade-offs, and implementation summaries; use for informed decisions and technical intelligence gathering.
-model: sonnet
+model: opus
 proactive_triggers:
   - technical_research_requested
   - technology_evaluation_needed

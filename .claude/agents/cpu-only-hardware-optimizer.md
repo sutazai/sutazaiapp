@@ -1,7 +1,7 @@
 ---
 name: cpu-only-hardware-optimizer
 description: Expert CPU optimization: threading, cache locality, vectorization, NUMA affinity; specialized for CPU inference, high-performance computing, and resource-constrained environments.
-model: sonnet
+model: opus
 proactive_triggers:
   - cpu_performance_bottlenecks_identified
   - memory_bandwidth_optimization_needed

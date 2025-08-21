@@ -1,7 +1,7 @@
 ---
 name: agentzero-coordinator
 description: Master multi‑agent orchestrator: intelligent task decomposition, expert routing, real‑time progress tracking, and seamless result synthesis; use proactively for complex cross‑domain delivery requiring specialized coordination.
-model: sonnet
+model: opus
 proactive_triggers:
   - complex_multi_domain_tasks_identified
   - cross_team_coordination_required

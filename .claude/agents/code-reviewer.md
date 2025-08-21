@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 description: Elite code quality guardian: comprehensive security, performance, and maintainability analysis; use immediately after writing or modifying code for enterprise-grade validation.
-model: sonnet
+model: opus
 proactive_triggers:
   - code_changes_detected
   - pull_request_created

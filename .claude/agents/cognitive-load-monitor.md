@@ -1,7 +1,7 @@
 ---
 name: cognitive-load-monitor
 description: Monitors cognitive load: latency, token usage, context fit, and cost; use to tune prompts/pipelines and optimize system performance.
-model: sonnet
+model: opus
 proactive_triggers:
   - cognitive_overload_detected
   - performance_bottlenecks_identified

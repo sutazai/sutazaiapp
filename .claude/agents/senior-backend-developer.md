@@ -1,7 +1,7 @@
 ---
 name: senior-backend-developer
 description: Senior backend engineer: APIs/services, data, security, observability, and performance; use for critical server features and reviews.
-model: sonnet
+model: opus
 proactive_triggers:
   - api_design_and_implementation_needed
   - backend_architecture_review_required

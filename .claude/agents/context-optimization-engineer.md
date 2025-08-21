@@ -1,7 +1,7 @@
 ---
 name: context-optimization-engineer
 description: Optimizes prompts and corpora for AI: condenses, restructures, and de‑duplicates to fit context windows without losing signal; use proactively for context efficiency and information density optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - context_window_optimization_needed
   - information_density_improvement_required

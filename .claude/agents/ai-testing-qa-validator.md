@@ -1,7 +1,7 @@
 ---
 name: ai-testing-qa-validator
 description: Executes comprehensive QA validation for AI+applications: intelligent test design, automated execution, and advanced reporting across functional, performance, integration, and AI-specific testing; use pre-release and for AI system regressions.
-model: sonnet
+model: opus
 proactive_triggers:
   - ai_system_deployment_validation_required
   - ml_model_testing_and_validation_needed

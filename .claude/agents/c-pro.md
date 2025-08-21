@@ -1,7 +1,7 @@
 ---
 name: c-pro
 description: Systems C engineer: memory, concurrency, and performance on bare‑metal/user‑space; use for embedded, kernels, and perf‑critical paths.
-model: sonnet
+model: opus
 proactive_triggers:
   - c_programming_tasks_identified
   - systems_programming_requirements

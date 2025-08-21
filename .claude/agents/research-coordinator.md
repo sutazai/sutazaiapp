@@ -1,7 +1,7 @@
 ---
 name: research-coordinator
 description: Coordinates research across agents: sourcing, tagging, deduplication, and handoffs; use for multi‑threaded investigations.
-model: sonnet
+model: opus
 proactive_triggers:
   - multi_source_research_required
   - complex_investigation_needed

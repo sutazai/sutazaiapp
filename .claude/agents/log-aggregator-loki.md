@@ -1,7 +1,7 @@
 ---
 name: log-aggregator-loki
 description: Operates comprehensive Loki log stack: ingestion, labels, LogQL, retention, and dashboards; use for log aggregation, analysis, troubleshooting, and alerting; use proactively for observability excellence.
-model: sonnet
+model: opus
 proactive_triggers:
   - log_ingestion_optimization_needed
   - log_analysis_and_troubleshooting_required

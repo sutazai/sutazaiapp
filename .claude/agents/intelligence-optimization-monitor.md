@@ -1,7 +1,7 @@
 ---
 name: intelligence-optimization-monitor
 description: Monitors and improves AI systems: drift/latency/error tracking, bottleneck analysis, and metric‑driven optimizations with safe rollbacks; use proactively for reliability.
-model: sonnet
+model: opus
 proactive_triggers:
   - ai_performance_degradation_detected
   - ai_system_drift_monitoring_required

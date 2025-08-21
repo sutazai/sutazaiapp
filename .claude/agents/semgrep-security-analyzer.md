@@ -1,7 +1,7 @@
 ---
 name: semgrep-security-analyzer
 description: Enforces secure coding with Semgrep: rules, triage, CI gates, and fixes; use across repos for comprehensive security analysis and vulnerability remediation.
-model: sonnet
+model: opus
 proactive_triggers:
   - security_vulnerability_detected
   - code_security_review_requested

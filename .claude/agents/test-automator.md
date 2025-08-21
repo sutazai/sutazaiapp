@@ -1,7 +1,7 @@
 ---
 name: test-automator
 description: Comprehensive test automation specialist: strategy, implementation, execution, and CI gates; proactively ensures quality through intelligent test design and coverage optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - test_coverage_gaps_identified
   - new_feature_testing_required

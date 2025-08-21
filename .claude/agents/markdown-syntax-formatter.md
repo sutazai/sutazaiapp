@@ -1,7 +1,7 @@
 ---
 name: markdown-syntax-formatter
 description: Advanced markdown syntax formatting specialist: converts visual formatting to proper markdown, fixes formatting issues, ensures consistent structure, optimizes readability; use proactively for documentation quality, content migration, and markdown standardization.
-model: sonnet
+model: opus
 proactive_triggers:
   - markdown_formatting_issues_detected
   - visual_formatting_conversion_needed

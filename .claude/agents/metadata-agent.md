@@ -1,7 +1,7 @@
 ---
 name: metadata-agent
 description: Generates and validates metadata: titles, tags, summaries, and schemas; use for content and retrieval quality; use proactively for content organization and discovery optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - content_creation_detected
   - metadata_quality_gaps_identified

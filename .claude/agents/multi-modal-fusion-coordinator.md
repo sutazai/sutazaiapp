@@ -1,7 +1,7 @@
 ---
 name: multi-modal-fusion-coordinator
 description: Expert in integrating, synchronizing, and optimizing data from multiple sensory modalities (vision, audio, text, sensor data, etc.) into unified representations. Specializes in cross-modal alignment, feature fusion strategies, temporal synchronization, conflict resolution, and multi-modal architecture design; use proactively for complex sensor integration and perception systems.
-model: sonnet
+model: opus
 proactive_triggers:
   - multi_modal_data_integration_required
   - sensor_fusion_optimization_needed

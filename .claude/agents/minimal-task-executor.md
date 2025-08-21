@@ -1,7 +1,7 @@
 ---
 name: atomic-task-executor
 description: Executes precise, well-scoped tasks with zero overhead; specialized in atomic changes and quick actions; use proactively for immediate impact delivery and rapid iteration cycles.
-model: sonnet
+model: opus
 proactive_triggers:
   - atomic_change_requested
   - quick_action_required

@@ -1,7 +1,7 @@
 ---
 name: data-engineer
 description: Builds reliable data platforms: batch/stream pipelines, storage, and orchestration; use for ingestion, transformation, and analytics infra.
-model: sonnet
+model: opus
 proactive_triggers:
   - data_pipeline_design_requested
   - etl_performance_optimization_needed

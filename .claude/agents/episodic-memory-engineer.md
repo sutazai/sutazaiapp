@@ -1,7 +1,7 @@
 ---
 name: episodic-memory-engineer
 description: Designs episodic memory for agents: storage, retrieval, consolidation, and policies; use for temporal context and learning.
-model: sonnet
+model: opus
 proactive_triggers:
   - memory_architecture_design_requested
   - temporal_context_management_needed

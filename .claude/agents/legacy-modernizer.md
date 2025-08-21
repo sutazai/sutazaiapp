@@ -1,7 +1,7 @@
 ---
 name: legacy-modernizer
 description: Modernizes legacy systems safely: incremental refactors, framework/library upgrades, debt paydown, and compatibility layers; use for migrations and long‑lived stability; use proactively for legacy system assessment and modernization planning.
-model: sonnet
+model: opus
 proactive_triggers:
   - legacy_system_assessment_needed
   - framework_upgrade_requirements_identified

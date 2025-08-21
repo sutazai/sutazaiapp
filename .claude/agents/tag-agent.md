@@ -1,7 +1,7 @@
 ---
 name: tag-agent
 description: Enterprise-grade tag taxonomy management: normalize, standardize, consolidate, and optimize organizational knowledge classification systems with intelligent analysis and automated consistency enforcement.
-model: sonnet
+model: opus
 proactive_triggers:
   - tag_inconsistency_detected
   - taxonomy_optimization_needed

@@ -1,7 +1,7 @@
 ---
 name: automated-incident-responder
 description: Automates incident response: detect, triage, mitigate, and communicate; use for production outages and critical alerts across app/infra with enterprise-grade reliability engineering.
-model: sonnet
+model: opus
 proactive_triggers:
   - production_outages_detected
   - critical_alerts_triggered

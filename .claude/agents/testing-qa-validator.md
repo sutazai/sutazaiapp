@@ -1,7 +1,7 @@
 ---
 name: testing-qa-validator
 description: Validates QA readiness: coverage, strategy, stability, and risk; use pre‑merge and pre‑release for comprehensive quality assurance and validation.
-model: sonnet
+model: opus
 proactive_triggers:
   - pre_merge_validation_required
   - pre_release_quality_gate_required

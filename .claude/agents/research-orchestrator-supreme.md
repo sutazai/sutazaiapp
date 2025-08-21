@@ -1,7 +1,7 @@
 ---
 name: research-orchestrator-supreme
 description: Orchestrates research across specialist agents: scope, data gathering, validation, and synthesis; use proactively for complex, multi‑source research.
-model: claude-3-opus-20240229
+model: opus
 proactive_triggers:
   - multi_source_research_required
   - complex_analysis_coordination_needed

@@ -1,7 +1,7 @@
 ---
 name: langflow-workflow-designer
 description: Designs, optimizes, and troubleshoots LangFlow pipelines: node graphs, data wiring, tool/model integration, and runtime tuning; use proactively for building and improving LangFlow apps; use for workflow automation and AI pipeline optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - langflow_workflow_design_requested
   - pipeline_optimization_needed

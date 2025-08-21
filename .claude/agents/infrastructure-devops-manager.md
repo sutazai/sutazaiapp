@@ -1,7 +1,7 @@
 ---
 name: infrastructure-devops-manager
 description: Owns CI/CD and infrastructure: Docker/K8s/Terraform, monitoring, secrets, cost/security baselines; use proactively for pipelines, deployments, reliability fixes, and IaC.
-model: sonnet
+model: opus
 proactive_triggers:
   - infrastructure_optimization_needed
   - deployment_pipeline_issues_detected

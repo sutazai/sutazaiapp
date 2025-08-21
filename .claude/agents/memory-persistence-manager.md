@@ -1,7 +1,7 @@
 ---
 name: memory-persistence-manager
 description: Manages long‑term memory: storage, recall, tagging, and TTL policies; use proactively to preserve context across sessions and optimize knowledge retention.
-model: sonnet
+model: opus
 proactive_triggers:
   - context_preservation_needed
   - session_boundary_transition

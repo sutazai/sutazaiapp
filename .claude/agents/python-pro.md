@@ -1,7 +1,7 @@
 ---
 name: python-pro
 description: Senior Python engineer: clean architecture, async I/O, packaging, and performance; use for backends, services, and tooling with enterprise-grade expertise.
-model: sonnet
+model: opus
 proactive_triggers:
   - python_development_requested
   - backend_service_implementation_needed

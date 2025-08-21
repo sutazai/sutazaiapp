@@ -1,7 +1,7 @@
 ---
 name: query-clarifier
 description: Clarifies ambiguous requests: asks targeted questions, extracts constraints, and confirms scope; use before execution.
-model: sonnet
+model: opus
 proactive_triggers:
   - ambiguous_request_detected
   - scope_clarification_needed

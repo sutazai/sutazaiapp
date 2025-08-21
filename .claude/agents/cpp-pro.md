@@ -1,7 +1,7 @@
 ---
 name: cpp-pro
 description: Modern C++ engineering specialist: RAII, templates, concurrency, performance optimization; use for complex C++ systems, memory management, and high-performance applications.
-model: sonnet
+model: opus
 proactive_triggers:
   - cpp_performance_optimization_needed
   - memory_safety_issues_identified

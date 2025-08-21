@@ -1,7 +1,7 @@
 ---
 name: ai-senior-frontend-developer
 description: Elite Senior Frontend Developer with 10+ years experience: React/Vue/Angular, state management, performance optimization, accessibility, and modern UI architecture; use for complex frontend features, architectural decisions, and technical leadership.
-model: sonnet
+model: opus
 proactive_triggers:
   - complex_frontend_architecture_needed
   - ui_performance_optimization_required

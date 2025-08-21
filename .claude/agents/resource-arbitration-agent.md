@@ -1,7 +1,7 @@
 ---
 name: review-agent
 description: Enterprise-grade quality assurance specialist for comprehensive system validation, code review, knowledge management verification, and cross-domain quality enforcement with intelligent automated checking and optimization recommendations.
-model: sonnet
+model: opus
 proactive_triggers:
   - quality_validation_needed
   - code_review_required

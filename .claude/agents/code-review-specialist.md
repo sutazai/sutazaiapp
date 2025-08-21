@@ -1,7 +1,7 @@
 ---
 name: code-review-specialist
 description: Conducts focused code reviews: correctness, maintainability, security, and performance; use for rapid feedback and best‑practice alignment.\n\nExamples:\n- <example>\n  Context: The user wants code reviewed after implementing a new feature.\n  user: "I've just implemented a new authentication system. Can you review it?"\n  assistant: "I'll use the code-review-specialist agent to thoroughly review your authentication implementation."\n  <commentary>\n  Since the user has completed writing authentication code and wants it reviewed, use the code-review-specialist agent to analyze the implementation for security, best practices, and potential issues.\n  </commentary>\n</example>\n- <example>\n  Context: The user has written a complex algorithm and wants feedback.\n  user: "I've finished implementing the sorting algorithm with custom comparators"\n  assistant: "Let me launch the code-review-specialist agent to review your sorting algorithm implementation."\n  <commentary>\n  The user has completed writing an algorithm and implicitly wants it reviewed for correctness and efficiency, so use the code-review-specialist agent.\n  </commentary>\n</example>\n- <example>\n  Context: After making changes to existing code.\n  user: "I've refactored the database connection pooling logic"\n  assistant: "I'll use the code-review-specialist agent to review your refactored database connection pooling implementation."\n  <commentary>\n  Since the user has modified existing code through refactoring, use the code-review-specialist agent to ensure the changes maintain functionality while improving code quality.\n  </commentary>\n</example>
-model: sonnet
+model: opus
 ---
 
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨

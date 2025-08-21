@@ -1,7 +1,7 @@
 ---
 name: ui-ux-designer
 description: Expert UI/UX designer: user research, design systems, accessibility, prototyping, and usability testing; use proactively for interface design and user experience optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - new_interface_design_required
   - user_experience_optimization_needed

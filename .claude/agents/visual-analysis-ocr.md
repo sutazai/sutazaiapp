@@ -1,7 +1,7 @@
 ---
 name: visual-analysis-ocr
 description: Advanced OCR and visual analysis specialist: text extraction, document structure analysis, format preservation, and intelligent content parsing; use for complex document processing, image analysis, and automated text extraction workflows.
-model: sonnet
+model: opus
 proactive_triggers:
   - image_analysis_required
   - document_digitization_needed

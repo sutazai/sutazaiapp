@@ -1,7 +1,7 @@
 ---
 name: network-engineer
 description: Operates and troubleshoots networks: DNS, TLS, LB, routing, and traffic; use for connectivity and performance; use proactively for network optimization and infrastructure reliability.
-model: sonnet
+model: opus
 proactive_triggers:
   - network_performance_degradation_detected
   - connectivity_issues_identified

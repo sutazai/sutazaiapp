@@ -1,7 +1,7 @@
 ---
 name: research-brief-generator
 description: Produces comprehensive research briefs: intelligent source analysis, synthesis planning, risk assessment, and actionable recommendations; use proactively for strategic research alignment and executive decision support.
-model: sonnet
+model: opus
 proactive_triggers:
   - complex_research_questions_identified
   - strategic_analysis_requirements_detected

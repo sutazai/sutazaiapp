@@ -1,7 +1,7 @@
 ---
 name: edge-inference-proxy
 description: Designs and implements high-performance edge inference proxy systems: lightweight servers, intelligent routing, model versioning, latency optimization, and resource-aware deployment for distributed AI inference at the edge.
-model: sonnet
+model: opus
 proactive_triggers:
   - edge_inference_architecture_design_needed
   - ai_model_serving_optimization_required

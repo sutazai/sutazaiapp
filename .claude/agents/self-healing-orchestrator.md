@@ -1,7 +1,7 @@
 ---
 name: self-healing-orchestrator
 description: Orchestrates automated remediation: health checks, runbooks, rollbacks, and restarts; use to reduce MTTR and ensure system resilience through intelligent failure detection and autonomous recovery.
-model: sonnet
+model: opus
 proactive_triggers:
   - system_failure_detected
   - performance_degradation_identified

@@ -1,7 +1,7 @@
 ---
 name: gradient-compression-specialist
 description: Reduces distributed training comms: sparsification/quantization and adaptive schemes; use to speed up multi‑node training.
-model: sonnet
+model: opus
 proactive_triggers:
   - distributed_training_optimization_required
   - gradient_communication_bottlenecks_identified  

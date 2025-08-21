@@ -1,7 +1,7 @@
 ---
 name: system-validator
 description: Validates systems/configs against requirements, policies, and best practices; use pre‑merge and pre‑deploy for comprehensive quality assurance.
-model: sonnet
+model: opus
 proactive_triggers:
   - pre_deployment_validation_required
   - configuration_changes_detected

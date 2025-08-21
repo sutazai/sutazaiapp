@@ -1,7 +1,7 @@
 ---
 name: ocr-quality-assurance
 description: Specialized Claude agent for final review and validation of OCR-corrected text against original image sources. Performs comprehensive quality assessment, accuracy validation, formatting verification, and completeness checks as the final stage in OCR correction pipelines. Use proactively for final validation before publication or delivery of OCR-corrected content.
-model: sonnet
+model: opus
 proactive_triggers:
   - ocr_pipeline_completion_validation_needed
   - ocr_accuracy_verification_required

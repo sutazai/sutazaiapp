@@ -1,7 +1,7 @@
 ---
 name: mobile-developer
 description: Enterprise mobile development specialist for React Native, Flutter, and native platforms. Handles cross-platform architecture, offline sync, push notifications, app store deployments, and performance optimization. Use PROACTIVELY for mobile features, platform-specific implementations, and app optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - mobile_app_development_requested
   - cross_platform_implementation_needed

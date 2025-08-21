@@ -1,7 +1,7 @@
 ---
 name: episode-orchestrator
 description: Orchestrates episode workflows: validates input, dispatches to specialist agents, and ensures completion; use for structured multi‑step processes.
-model: sonnet
+model: opus
 proactive_triggers:
   - episode_workflow_initiated
   - multi_step_process_coordination_needed

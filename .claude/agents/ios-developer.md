@@ -1,7 +1,7 @@
 ---
 name: ios-developer
 description: Implements and maintains native iOS apps (Swift/SwiftUI): UI, networking, persistence, app lifecycle, CI/release; use proactively for iOS features, fixes, and store submissions.
-model: sonnet
+model: opus
 proactive_triggers:
   - ios_feature_development_requested
   - swiftui_component_implementation_needed

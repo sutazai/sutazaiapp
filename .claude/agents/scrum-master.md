@@ -1,7 +1,7 @@
 ---
 name: scrum-master
 description: Facilitates Scrum ceremonies, removes impediments, coaches Agile practices, tracks metrics, and optimizes team flow; use proactively for sprint planning, retrospectives, and team velocity improvements.
-model: sonnet
+model: opus
 proactive_triggers:
   - sprint_planning_optimization_needed
   - team_velocity_degradation_detected

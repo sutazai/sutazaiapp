@@ -1,7 +1,7 @@
 ---
 name: deployment-engineer
 description: Implements CI/CD and deployments: container builds, Kubernetes manifests, and rollout automation; use for setup and ongoing delivery.
-model: sonnet
+model: opus
 proactive_triggers:
   - ci_cd_pipeline_optimization_needed
   - deployment_automation_gaps_identified

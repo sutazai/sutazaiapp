@@ -1,7 +1,7 @@
 ---
 name: url-link-extractor
 description: Extracts, filters, and normalizes links; use for crawling and content pipelines.
-model: sonnet
+model: opus
 proactive_triggers:
   - url_audit_required
   - link_validation_needed

@@ -1,7 +1,7 @@
 ---
 name: observability-dashboard-manager-grafana
 description: Comprehensive Grafana dashboard management: data sources, panels, alerts, performance optimization; creates fast, clear observability views; use proactively for monitoring excellence.
-model: sonnet
+model: opus
 proactive_triggers:
   - monitoring_requirements_identified
   - dashboard_performance_issues_detected

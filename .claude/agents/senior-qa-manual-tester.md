@@ -1,7 +1,7 @@
 ---
 name: senior-qa-manual-tester
 description: Senior manual QA specialist: comprehensive exploratory/regression/UAT testing with thorough bug reproduction; use for complex feature validation and release sign-off.
-model: sonnet
+model: opus
 proactive_triggers:
   - complex_feature_testing_required
   - regression_testing_cycles_needed

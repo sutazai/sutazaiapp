@@ -1,7 +1,7 @@
 ---
 name: customer-support
 description: Handles support at scale: triage, responses, knowledge base, and troubleshooting guides; use to improve resolution time and CSAT.
-model: haiku
+model: opus
 proactive_triggers:
   - customer_escalation_patterns_detected
   - support_ticket_volume_spikes_identified

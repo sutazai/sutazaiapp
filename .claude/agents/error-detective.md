@@ -1,7 +1,7 @@
 ---
 name: error-detective
 description: Investigates errors across logs/code: pattern search, correlation, and RCA; use during incidents and postmortems.
-model: sonnet
+model: opus
 proactive_triggers:
   - error_spike_detected
   - incident_response_initiated

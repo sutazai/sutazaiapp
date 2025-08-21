@@ -103,47 +103,46 @@ async def lifespan(app: FastAPI):
     app.state.emergency_mode = True
     
     try:
-        # Try initialization with timeout
-        async with asyncio.timeout(15):  # 15 second timeout
-            logger.info("Attempting standard initialization...")
-            
-            # Initialize connection pools with non-blocking approach
-            try:
-                from app.core.connection_pool import ConnectionPoolManager
-                pool_manager = ConnectionPoolManager()
-                # Don't await full initialization, just create instance
-                app.state.pool_manager = pool_manager
-                logger.info("Connection pool manager created (lazy init)")
-            except Exception as e:
-                logger.error(f"Pool manager creation failed: {e}")
-                app.state.pool_manager = None
-            
-            # Initialize cache service with non-blocking approach
-            try:
-                from app.core.cache import CacheService
-                cache_service = CacheService()
-                app.state.cache_service = cache_service
-                logger.info("Cache service created (lazy init)")
-            except Exception as e:
-                logger.error(f"Cache service creation failed: {e}")
-                app.state.cache_service = None
-            
-            # Skip other heavy initializations for now
-            logger.info("Skipping heavy initializations to prevent deadlock")
-            
-            # Register minimal task handlers (skip if import fails)
-            try:
-                from app.core.task_queue import get_task_queue
-                task_queue = None  # Will be initialized later
-                app.state.task_queue = task_queue
-            except Exception as e:
-                logger.warning(f"Task queue setup skipped: {e}")
-                app.state.task_queue = None
-            
-            # Mark as partially initialized
-            app.state.initialization_complete = True
-            app.state.emergency_mode = False
-            logger.info("✅ Backend initialized successfully (minimal mode)")
+        # Initialize without timeout for proper setup
+        logger.info("Starting backend initialization...")
+        
+        # Initialize connection pools with non-blocking approach
+        try:
+            from app.core.connection_pool import ConnectionPoolManager
+            pool_manager = ConnectionPoolManager()
+            # Don't await full initialization, just create instance
+            app.state.pool_manager = pool_manager
+            logger.info("Connection pool manager created (lazy init)")
+        except Exception as e:
+            logger.error(f"Pool manager creation failed: {e}")
+            app.state.pool_manager = None
+        
+        # Initialize cache service with non-blocking approach
+        try:
+            from app.core.cache import CacheService
+            cache_service = CacheService()
+            app.state.cache_service = cache_service
+            logger.info("Cache service created (lazy init)")
+        except Exception as e:
+            logger.error(f"Cache service creation failed: {e}")
+            app.state.cache_service = None
+        
+        # Skip other heavy initializations for now
+        logger.info("Skipping heavy initializations to prevent deadlock")
+        
+        # Register minimal task handlers (skip if import fails)
+        try:
+            from app.core.task_queue import get_task_queue
+            task_queue = None  # Will be initialized later
+            app.state.task_queue = task_queue
+        except Exception as e:
+            logger.warning(f"Task queue setup skipped: {e}")
+            app.state.task_queue = None
+        
+        # Mark as fully initialized
+        app.state.initialization_complete = True
+        app.state.emergency_mode = False
+        logger.info("✅ Backend initialized successfully")
             
     except asyncio.TimeoutError:
         logger.error("⚠️ Initialization timeout - running in emergency mode")

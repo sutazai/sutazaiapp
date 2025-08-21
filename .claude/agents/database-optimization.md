@@ -1,7 +1,7 @@
 ---
 name: database-optimization
 description: Expert database performance optimization: queries, indexes, schema, pooling, caching, and architecture; use for slow queries, scaling issues, and performance tuning.
-model: sonnet
+model: opus
 proactive_triggers:
   - slow_query_performance_detected
   - database_scaling_requirements_identified

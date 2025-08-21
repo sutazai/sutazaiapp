@@ -1,7 +1,7 @@
 ---
 name: mcp-testing-engineer
 description: Comprehensive MCP (Model Context Protocol) testing, validation, and quality assurance specialist. Ensures MCP server reliability, security, performance, and compliance through systematic testing, debugging, and continuous monitoring. Use proactively for MCP development cycles, security audits, and production readiness validation.
-model: sonnet
+model: opus
 proactive_triggers:
   - mcp_server_implementation_completed
   - mcp_protocol_compliance_validation_needed

@@ -1,7 +1,7 @@
 ---
 name: text-comparison-validator
 description: Performs meticulous OCR/extracted text validation against source documents; detects discrepancies, formatting issues, and content inconsistencies with precision analytics and automated quality assurance.
-model: sonnet
+model: opus
 proactive_triggers:
   - ocr_text_extraction_completed
   - document_digitization_validation_required

@@ -1,7 +1,7 @@
 ---
 name: api-security-audit
 description: Comprehensive API security auditing: authentication/authorization vulnerabilities, injection attacks, data exposure risks, OWASP compliance, and regulatory standards; use for pre-release security reviews and incident response.
-model: sonnet
+model: opus
 proactive_triggers:
   - api_security_vulnerability_detected
   - pre_release_security_review_required

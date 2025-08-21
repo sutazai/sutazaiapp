@@ -1,7 +1,7 @@
 ---
 name: react-performance-optimization
 description: Optimizes React apps: rendering, memoization, code‑splitting, and profiling; use to reduce latency and re‑renders.
-model: sonnet
+model: opus
 proactive_triggers:
   - performance_degradation_detected
   - bundle_size_optimization_needed

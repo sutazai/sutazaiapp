@@ -1,7 +1,7 @@
 ---
 name: energy-consumption-optimizer
 description: Reduces compute energy usage through intelligent profiling, green algorithms, power-aware scheduling, and sustainable infrastructure optimization; use proactively for carbon footprint reduction and operational cost savings.
-model: sonnet
+model: opus
 proactive_triggers:
   - high_energy_consumption_detected
   - carbon_footprint_optimization_required

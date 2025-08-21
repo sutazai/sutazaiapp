@@ -1,7 +1,0 @@
-/opt/sutazaiapp/scripts/mcp/wrappers/ddg.sh
-/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh
-/opt/sutazaiapp/scripts/mcp/wrappers/files.sh
-/opt/sutazaiapp/scripts/mcp/wrappers/github.sh
-/opt/sutazaiapp/scripts/mcp/wrappers/http_fetch.sh
-/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh
-/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh

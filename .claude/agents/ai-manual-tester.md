@@ -1,7 +1,7 @@
 ---
 name: ai-manual-tester
 description: Executes comprehensive manual QA testing including exploratory, regression, usability, acceptance, AI validation, and edge case testing; use for feature verification and critical system validation.
-model: sonnet
+model: opus
 proactive_triggers:
   - feature_deployment_pending
   - user_workflow_changes_detected

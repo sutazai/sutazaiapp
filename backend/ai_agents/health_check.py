@@ -113,8 +113,8 @@ class HealthCheck:
                 if health_report["overall_status"] != "healthy":
                     logger.warning(f"System health degraded: {health_report['unhealthy_agents']} unhealthy agents")
                     
-                time.sleep(self.check_interval)
+                await asyncio.sleep(self.check_interval)
                 
             except Exception as e:
                 logger.error(f"Health monitoring error: {e}")
-                time.sleep(10)  # Shorter sleep on error
+                await asyncio.sleep(10)  # Shorter sleep on error

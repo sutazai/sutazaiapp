@@ -1,7 +1,7 @@
 ---
 name: private-data-analyst
 description: Analyzes sensitive data with privacy controls and compliance (e.g., GDPR); use for secure insights on confidential datasets; use proactively for data privacy and compliance validation.
-model: sonnet
+model: opus
 proactive_triggers:
   - sensitive_data_analysis_requested
   - privacy_compliance_validation_needed

@@ -1,7 +1,7 @@
 ---
 name: comprehensive-researcher
 description: Conducts comprehensive research: sources, cross‑checks, synthesis, and citations; use for deep dives.
-model: sonnet
+model: opus
 ---
 
 ## 🚨 MANDATORY RULE ENFORCEMENT SYSTEM 🚨

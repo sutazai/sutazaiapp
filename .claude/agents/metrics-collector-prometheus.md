@@ -1,7 +1,7 @@
 ---
 name: metrics-collector-prometheus
 description: Comprehensive Prometheus metrics infrastructure specialist: collection, exporters, alerting, optimization; use proactively for observability excellence and performance intelligence.
-model: sonnet
+model: opus
 proactive_triggers:
   - metrics_collection_gaps_identified
   - prometheus_infrastructure_optimization_needed

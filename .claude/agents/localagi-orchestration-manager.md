@@ -1,7 +1,7 @@
 ---
 name: localagi-orchestration-manager
 description: Manages local AGI orchestration: services, agents, queues, and monitoring; use for local stacks; use proactively for intelligent infrastructure coordination and autonomous system optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - local_agi_infrastructure_optimization_needed
   - service_orchestration_coordination_required

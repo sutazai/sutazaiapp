@@ -1,7 +1,7 @@
 ---
 name: ml-ops-experiment-monitor
 description: Monitors ML experiments/pipelines: drift, failures, and SLOs; use to keep models reliable; use proactively for experiment optimization and production stability.
-model: sonnet
+model: opus
 proactive_triggers:
   - model_performance_degradation_detected
   - experiment_failure_patterns_identified

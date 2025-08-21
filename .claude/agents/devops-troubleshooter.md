@@ -1,7 +1,7 @@
 ---
 name: devops-troubleshooter
 description: Diagnoses production issues across app/infra: logs, traces, metrics, and pipelines; use for outages and degraded performance with comprehensive incident response.
-model: sonnet
+model: opus
 proactive_triggers:
   - production_outage_detected
   - performance_degradation_alerts

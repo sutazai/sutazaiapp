@@ -1,7 +1,7 @@
 ---
 name: ai-product-manager
 description: Drives AI product strategy: vision, metrics, and roadmap; use to align users, business, and tech for maximum AI product success.
-model: sonnet
+model: opus
 proactive_triggers:
   - ai_product_strategy_development_needed
   - product_roadmap_optimization_required

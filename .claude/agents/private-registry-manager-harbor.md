@@ -1,7 +1,7 @@
 ---
 name: private-registry-manager-harbor
 description: Comprehensive Harbor registry management: enterprise security, automated scanning, replication topology, RBAC governance, storage optimization, and CI/CD integration; use proactively for secure container lifecycle.
-model: sonnet
+model: opus
 proactive_triggers:
   - container_registry_setup_required
   - harbor_security_governance_needed

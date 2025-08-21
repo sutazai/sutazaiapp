@@ -1,7 +1,7 @@
 ---
 name: javascript-pro
 description: Senior JavaScript engineer: ES202x, async, Node/browser, tooling and performance; use proactively for complex JS features, debugging, and optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - complex_javascript_features_needed
   - performance_optimization_required

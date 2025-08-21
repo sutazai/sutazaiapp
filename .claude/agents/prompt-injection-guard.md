@@ -1,7 +1,7 @@
 ---
 name: prompt-injection-guard
 description: Protects against prompt injection and data exfiltration; use to harden agents, chat UIs, and RAG pipelines; provides comprehensive security analysis and threat prevention.
-model: sonnet
+model: opus
 proactive_triggers:
   - prompt_injection_detected
   - adversarial_input_analysis_needed

@@ -1,7 +1,7 @@
 ---
 name: testing-qa-team-lead
 description: Leads QA practice: test strategy, coverage goals, automation roadmap, and reporting; use to scale quality.
-model: sonnet
+model: opus
 proactive_triggers:
   - test_strategy_development_needed
   - qa_process_optimization_required

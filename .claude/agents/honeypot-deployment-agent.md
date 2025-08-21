@@ -1,7 +1,7 @@
 ---
 name: honeypot-deployment-agent
 description: Deploys and manages honeypots: decoys, traps, monitoring, and SIEM integration; use to detect and study attacks with advanced deception technology.
-model: sonnet
+model: opus
 proactive_triggers:
   - security_incident_detected
   - threat_intelligence_updates_received

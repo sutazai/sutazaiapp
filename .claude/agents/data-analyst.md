@@ -1,7 +1,7 @@
 ---
 name: data-analyst
 description: Analyzes datasets for trends, comparisons, and impact; use for KPI tracking, statistical analysis, data-driven decision support, and comprehensive quantitative insights with enterprise-grade methodology.
-model: sonnet
+model: opus
 proactive_triggers:
   - data_analysis_requested
   - statistical_analysis_needed

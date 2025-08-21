@@ -1,7 +1,7 @@
 ---
 name: moc-agent
 description: Identifies and generates missing Maps of Content and organizes orphaned assets; use proactively for comprehensive content discovery, organization, and knowledge architecture optimization.
-model: sonnet
+model: opus
 proactive_triggers:
   - orphaned_content_detected
   - missing_navigation_structures_identified

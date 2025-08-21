@@ -1,7 +1,7 @@
 ---
 name: edge-computing-optimizer
 description: Optimizes apps for edge: latency, bandwidth, resilience, and footprint; use for resource‑constrained deployments and intermittent networks.
-model: sonnet
+model: opus
 proactive_triggers:
   - resource_constrained_deployment_requirements
   - latency_optimization_needs

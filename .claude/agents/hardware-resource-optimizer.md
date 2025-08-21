@@ -1,7 +1,7 @@
 ---
 name: hardware-resource-optimizer
 description: Optimizes CPU/GPU/memory/storage/network usage: allocation, tuning, and bottlenecks; use for system performance and hardware intelligence.
-model: sonnet
+model: opus
 proactive_triggers:
   - hardware_performance_issues_detected
   - resource_bottlenecks_identified

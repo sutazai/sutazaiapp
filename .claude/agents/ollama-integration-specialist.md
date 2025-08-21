@@ -1,7 +1,7 @@
 ---
 name: ollama-integration-specialist
 description: Integrates Ollama: local model setup, storage, streaming, switching, and performance tuning; use for on‑prem LLM workflows; use proactively for intelligent hardware-aware AI operations.
-model: sonnet
+model: opus
 proactive_triggers:
   - ollama_setup_required
   - local_llm_performance_optimization_needed

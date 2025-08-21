@@ -1,7 +1,7 @@
 ---
 name: ocr-grammar-fixer
 description: Expert OCR text processing and correction specialist: advanced character recognition error detection, contextual grammar correction, multi-language support, and intelligent content reconstruction; use proactively for document digitization workflows and text quality enhancement.
-model: sonnet
+model: opus
 proactive_triggers:
   - ocr_text_correction_needed
   - document_digitization_quality_issues

@@ -1,7 +1,7 @@
 ---
 name: opendevin-code-generator
 description: Generates and scaffolds code from specs: endpoints, modules, and boilerplate following project conventions; use to accelerate delivery; use proactively for rapid development cycles and architecture implementation.
-model: sonnet
+model: opus
 proactive_triggers:
   - code_scaffolding_requested
   - api_endpoint_generation_needed

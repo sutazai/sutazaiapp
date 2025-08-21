@@ -1,7 +1,7 @@
 ---
 name: ai-system-validator
 description: Validates AI systems: configs, deployments, behaviors, and safety/compliance against specs; use pre‑merge and pre‑deploy for risk reduction.
-model: sonnet
+model: opus
 proactive_triggers:
   - ai_system_configuration_changes
   - model_deployment_requests
