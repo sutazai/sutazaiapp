@@ -57,7 +57,7 @@ class KnowledgeContext:
 class CircuitBreaker:
     """Circuit breaker for failing vector database connections"""
     
-    def __init__(self, failure_threshold: int = 3, reset_timeout: int = 60):
+    def __init__(self, failure_threshold: int = 3, reset_timeout: int = 5):
         self.failure_threshold = failure_threshold
         self.reset_timeout = reset_timeout
         self.failure_count = 0

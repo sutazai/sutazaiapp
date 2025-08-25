@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-08-25T15:00:53+02:00",
+  "platform": "Windows (Git Bash)",
+  "working_servers": [
+  ]
+    "ddg-search"
+  ],
+  "total_servers": 1,
+  "config_files": {
+    "mcp_config": "/c/Users/root/sutazaiapp/.mcp.json",
+    "claude_config": "C:\Users\root\AppData\Roaming/Claude/claude_desktop_config.json"
+  }
+}

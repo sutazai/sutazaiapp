@@ -16,7 +16,7 @@ mcp_services:
     load_balancer: ROUND_ROBIN
     circuit_breaker:
       failure_threshold: 3
-      recovery_timeout: 20
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["read", "write", "watch", "list"]
@@ -31,7 +31,7 @@ mcp_services:
     load_balancer: IP_HASH  # Sticky sessions for code context
     circuit_breaker:
       failure_threshold: 5
-      recovery_timeout: 30
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["completion", "diagnostics", "hover", "definition"]
@@ -45,7 +45,7 @@ mcp_services:
     load_balancer: WEIGHTED
     circuit_breaker:
       failure_threshold: 5
-      recovery_timeout: 45
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["generate", "refactor", "optimize", "test"]
@@ -59,7 +59,7 @@ mcp_services:
     load_balancer: ROUND_ROBIN
     circuit_breaker:
       failure_threshold: 5
-      recovery_timeout: 60
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["analyze", "plan", "reason", "solve"]
@@ -73,7 +73,7 @@ mcp_services:
     load_balancer: RANDOM
     circuit_breaker:
       failure_threshold: 3
-      recovery_timeout: 15
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["docs", "examples", "references"]
@@ -88,7 +88,7 @@ mcp_services:
     load_balancer: ROUND_ROBIN
     circuit_breaker:
       failure_threshold: 3
-      recovery_timeout: 15
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["search", "suggestions", "instant_answers"]
@@ -103,7 +103,7 @@ mcp_services:
     load_balancer: ROUND_ROBIN  # Single instance, doesn't matter
     circuit_breaker:
       failure_threshold: 5
-      recovery_timeout: 30
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["store", "retrieve", "search", "expire"]
@@ -117,7 +117,7 @@ mcp_services:
     load_balancer: ROUND_ROBIN
     circuit_breaker:
       failure_threshold: 5
-      recovery_timeout: 30
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["store", "query", "index", "delete"]
@@ -132,7 +132,7 @@ mcp_services:
     load_balancer: LEAST_CONNECTIONS
     circuit_breaker:
       failure_threshold: 3
-      recovery_timeout: 45
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["exec", "transfer", "tunnel", "shell"]
@@ -147,7 +147,7 @@ mcp_services:
     load_balancer: ROUND_ROBIN
     circuit_breaker:
       failure_threshold: 3
-      recovery_timeout: 20
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["workspace", "generators", "executors", "graph"]
@@ -162,7 +162,7 @@ mcp_services:
     load_balancer: LEAST_CONNECTIONS
     circuit_breaker:
       failure_threshold: 3
-      recovery_timeout: 60
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["test", "automate", "record", "trace"]
@@ -177,7 +177,7 @@ mcp_services:
     load_balancer: ROUND_ROBIN
     circuit_breaker:
       failure_threshold: 5
-      recovery_timeout: 45
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["graph", "query", "reason", "infer"]
@@ -191,14 +191,14 @@ mcp_services:
     load_balancer: ROUND_ROBIN
     circuit_breaker:
       failure_threshold: 3
-      recovery_timeout: 20
+      recovery_timeout: 5
     metadata:
       version: "1.0.0"
       capabilities: ["discover", "recommend", "navigate", "suggest"]
 
 # Global MCP configuration
 global_config:
-  default_timeout: 30.0
+  default_timeout: 5.0
   default_retry_count: 3
   health_check_interval: 10
   startup_delay: 2  # Seconds between starting instances

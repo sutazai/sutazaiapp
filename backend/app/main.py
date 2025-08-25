@@ -17,7 +17,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-import uvloop
+# uvloop is Unix-only, skip on Windows
+try:
+    import uvloop
+except ImportError:
+    uvloop = None
 
 # Import performance modules
 from app.core.connection_pool import get_pool_manager, get_http_client
@@ -40,6 +44,7 @@ from app.core.mcp_startup import initialize_mcp_background, shutdown_mcp_service
 
 # Import auth dependencies early to avoid NameError
 from app.auth.dependencies import get_current_user, get_current_active_user, require_admin, get_optional_user
+from app.auth.middleware import SecurityMiddleware, APIKeyMiddleware
 
 # Use uvloop for better async performance
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -236,33 +241,41 @@ except ImportError:
         expose_headers=["X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset"]
     )
 
-# Add security headers middleware for enterprise-grade protection
+# Add comprehensive security middleware
 try:
-    from app.middleware.security_headers import SecurityHeadersMiddleware, RateLimitMiddleware
-    from app.middleware.metrics_security import setup_metrics_security
-    
+    # Add our new comprehensive security middleware FIRST (most important)
     environment = os.getenv("SUTAZAI_ENV", "production")
-    app.add_middleware(SecurityHeadersMiddleware, environment=environment)
-    
-    # Add metrics security middleware BEFORE other middleware
-    setup_metrics_security(app, environment=environment)
-    logger.info("Metrics security middleware loaded - authentication required for metrics endpoints")
-    
-    # Only add rate limiting in non-test environments
-    # Check both SUTAZAI_ENV and TEST_MODE for compatibility
     is_test_env = (
         environment == "test" or 
         os.getenv("TEST_MODE", "").lower() == "true" or
         os.getenv("TESTING", "").lower() == "true"
     )
     
+    # Main security middleware with authentication and rate limiting
+    app.add_middleware(SecurityMiddleware, enable_rate_limiting=not is_test_env)
+    
+    # API Key middleware for service-to-service communication
+    app.add_middleware(APIKeyMiddleware)
+    
+    logger.info(f"✅ Comprehensive security middleware loaded - Auth: ✓ Rate-limiting: {'✗ (test env)' if is_test_env else '✓'}")
+    
+    # Try to add legacy security middleware if available (backward compatibility)
+    try:
+        from app.middleware.security_headers import SecurityHeadersMiddleware, RateLimitMiddleware
+        from app.middleware.metrics_security import setup_metrics_security
+        
+        # Add metrics security middleware
+        setup_metrics_security(app, environment=environment)
+        logger.info("Legacy metrics security middleware also loaded")
+        
+    except ImportError:
+        logger.info("Legacy security middleware not available - using new comprehensive middleware only")
+        
+except Exception as e:
+    logger.error(f"❌ Critical security middleware failed to load: {e}")
     if not is_test_env:
-        app.add_middleware(RateLimitMiddleware, requests_per_minute=60)
-        logger.info("Security headers and rate limiting middleware loaded successfully")
-    else:
-        logger.info("Security headers loaded - Rate limiting DISABLED for test environment")
-except ImportError as e:
-    logger.warning(f"Security middleware not fully available: {e}")
+        logger.critical("STOPPING: Cannot run production without security middleware")
+        raise RuntimeError("Security middleware is required for production deployment")
 
 # Add compression middleware for better performance
 app.add_middleware(GZipMiddleware, minimum_size=1000)

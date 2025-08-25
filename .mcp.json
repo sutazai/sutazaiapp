@@ -1,106 +1,28 @@
 {
   "mcpServers": {
+    "files": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-files", "C:\\Users\\root\\sutazaiapp"],
+      "type": "stdio"
+    },
+    "http-fetch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-http-fetch"],
+      "type": "stdio"
+    },
+    "ddg-search": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-ddg"],
+      "type": "stdio"
+    },
     "claude-flow": {
       "command": "npx",
-      "args": [
-        "claude-flow@alpha",
-        "mcp",
-        "start"
-      ],
+      "args": ["claude-flow@alpha", "mcp", "start", "--stdio"],
       "type": "stdio"
     },
     "ruv-swarm": {
       "command": "npx",
-      "args": [
-        "ruv-swarm@latest",
-        "mcp",
-        "start"
-      ],
-      "type": "stdio"
-    },
-    "files": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/files.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "context7": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/context7.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "http_fetch": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/http_fetch.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "ddg": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/ddg.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "sequentialthinking": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/sequentialthinking.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "nx-mcp": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/nx-mcp.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "extended-memory": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/extended-memory.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "mcp_ssh": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/mcp_ssh.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "ultimatecoder": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/ultimatecoder.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "playwright-mcp": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "memory-bank-mcp": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/memory-bank-mcp.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "knowledge-graph-mcp": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/knowledge-graph-mcp.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "compass-mcp": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/compass-mcp.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "github": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/github.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "http": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/http.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "language-server": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/language-server.sh",
-      "args": [],
-      "type": "stdio"
-    },
-    "claude-task-runner": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/claude-task-runner.sh",
-      "args": [],
+      "args": ["ruv-swarm@latest", "mcp", "start", "--stdio", "--stability"],
       "type": "stdio"
     }
   }

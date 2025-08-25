@@ -116,7 +116,7 @@ class SystemStatusIndicator:
         
         # Estimated recovery time
         recovery_times = [
-            cb.get("recovery_timeout", 60) 
+            cb.get("recovery_timeout", 5) 
             for cb in circuit_breakers.values() 
             if cb.get("state") == "open"
         ]
@@ -432,7 +432,7 @@ class ErrorRecoveryUI:
         if open_breakers:
             st.write("**Affected services:**")
             for name, cb in open_breakers:
-                recovery_time = cb.get("recovery_timeout", 60)
+                recovery_time = cb.get("recovery_timeout", 5)
                 st.caption(f"• {name.replace('_', ' ').title()}: Recovery in ~{recovery_time}s")
         
         if st.button("⏰ Wait for Recovery", use_container_width=True):

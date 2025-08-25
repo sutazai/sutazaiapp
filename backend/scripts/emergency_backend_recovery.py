@@ -99,12 +99,22 @@ class EmergencyBackendRecovery:
             db_host = "sutazai-postgres" if is_container else "localhost"
             db_port = 5432 if is_container else 10000
             
+            # Get credentials from environment variables for security
+            db_user = os.getenv('POSTGRES_USER', 'sutazai')
+            db_password = os.getenv('POSTGRES_PASSWORD')
+            db_name = os.getenv('POSTGRES_DB', 'sutazai')
+            
+            if not db_password:
+                logger.error("❌ POSTGRES_PASSWORD environment variable not set")
+                self.recovery_status["errors"].append("PostgreSQL: Missing POSTGRES_PASSWORD env var")
+                return False
+            
             conn = await asyncpg.connect(
                 host=db_host,
                 port=db_port,
-                user='sutazai',
-                password='sutazai123',
-                database='sutazai',
+                user=db_user,
+                password=db_password,
+                database=db_name,
                 timeout=5
             )
             

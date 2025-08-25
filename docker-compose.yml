@@ -11,15 +11,17 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: sutazai-postgres
-    mem_limit: 512m
-    mem_reservation: 256m
+    mem_limit: 2g
+    mem_reservation: 1g
     environment:
       POSTGRES_DB: sutazai
       POSTGRES_USER: ${POSTGRES_USER:-sutazai}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sutazai123}
-      POSTGRES_SHARED_BUFFERS: 64MB
-      POSTGRES_EFFECTIVE_CACHE_SIZE: 128MB
-      POSTGRES_WORK_MEM: 2MB
+      POSTGRES_SHARED_BUFFERS: 512MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 1GB
+      POSTGRES_WORK_MEM: 16MB
+      POSTGRES_MAINTENANCE_WORK_MEM: 256MB
+      POSTGRES_MAX_CONNECTIONS: 200
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
@@ -34,18 +36,18 @@ services:
     deploy:
       resources:
         limits:
-          memory: 256M
-          cpus: '0.5'
+          memory: 2G
+          cpus: '1.0'
         reservations:
-          memory: 128M
+          memory: 1G
     restart: unless-stopped
 
   redis:
     image: redis:7-alpine
     container_name: sutazai-redis
-    mem_limit: 256m
-    mem_reservation: 128m
-    command: redis-server --maxmemory 200mb --maxmemory-policy allkeys-lru
+    mem_limit: 512m
+    mem_reservation: 256m
+    command: redis-server --maxmemory 400mb --maxmemory-policy allkeys-lru --save "" --appendonly no
     volumes:
       - redis-data:/data
     ports:
@@ -60,10 +62,10 @@ services:
     deploy:
       resources:
         limits:
-          memory: 64M
-          cpus: '0.25'
+          memory: 512M
+          cpus: '0.5'
         reservations:
-          memory: 32M
+          memory: 256M
     restart: unless-stopped
 
   neo4j:
@@ -191,9 +193,9 @@ services:
       dockerfile: ../docker/backend/Dockerfile
     image: sutazai-backend:latest
     container_name: sutazai-backend
-    mem_limit: 512m
-    mem_reservation: 256m
-    memswap_limit: 1g
+    mem_limit: 1g
+    mem_reservation: 512m
+    memswap_limit: 2g
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai123}@postgres:5432/sutazai
       REDIS_URL: redis://redis:6379
@@ -226,10 +228,10 @@ services:
     deploy:
       resources:
         limits:
-          memory: 512M
-          cpus: '0.5'
+          memory: 1G
+          cpus: '1.0'
         reservations:
-          memory: 256M
+          memory: 512M
     restart: unless-stopped
 
   frontend:
@@ -538,9 +540,19 @@ services:
       - "10206:8080"
     networks:
       - sutazai-network
-    privileged: true
+    cap_add:
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - SYS_TIME
+    security_opt:
+      - no-new-privileges:true
     devices:
       - /dev/kmsg
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     deploy:
       resources:
         limits:

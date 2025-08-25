@@ -193,12 +193,15 @@ class ClaudeAgentExecutor:
 class ClaudeAgentPool:
     """Manages a pool of Claude agent executors for parallel execution"""
     
-    def __init__(self, pool_size: int = 5):
+    def __init__(self, pool_size: int = 5, max_results: int = 1000):
         self.pool_size = pool_size
+        self.max_results = max_results  # Prevent memory leak
         self.executors = [ClaudeAgentExecutor() for _ in range(pool_size)]
         self.current_executor = 0
         self.execution_queue = asyncio.Queue()
         self.results = {}
+        self._cleanup_task = None
+        self._start_cleanup_task()
         
     async def submit_task(self, agent_name: str, task_description: str,
                           context: Dict[str, Any] = None) -> str:
@@ -234,8 +237,16 @@ class ClaudeAgentPool:
                     task_data.get("context")
                 )
                 
-                # Store result
+                # Store result with memory management
                 self.results[task_data["task_id"]] = result
+                
+                # Prevent memory leak by limiting result storage
+                if len(self.results) > self.max_results:
+                    # Remove oldest 20% of results
+                    oldest_keys = sorted(self.results.keys())[:int(self.max_results * 0.2)]
+                    for key in oldest_keys:
+                        del self.results[key]
+                    logger.info(f"ClaudeAgentPool: Cleaned up {len(oldest_keys)} old results to prevent memory leak")
                 
             except asyncio.TimeoutError:
                 continue
@@ -250,6 +261,34 @@ class ClaudeAgentPool:
         """Get all results"""
         return self.results.copy()
         
+    def _start_cleanup_task(self):
+        """Start background task to periodically clean up old results"""
+        async def cleanup_old_results():
+            while True:
+                await asyncio.sleep(300)  # Run every 5 minutes
+                if len(self.results) > self.max_results * 0.8:  # 80% threshold
+                    current_time = time.time()
+                    # Remove results older than 1 hour
+                    old_keys = [
+                        task_id for task_id, result in self.results.items()
+                        if current_time - result.get('execution_time', current_time) > 3600
+                    ]
+                    for key in old_keys:
+                        del self.results[key]
+                    if old_keys:
+                        logger.info(f"ClaudeAgentPool: Cleaned up {len(old_keys)} old results (>1h)")
+        
+        # Start cleanup task if not already running
+        if self._cleanup_task is None or self._cleanup_task.done():
+            self._cleanup_task = asyncio.create_task(cleanup_old_results())
+            
+    def shutdown(self):
+        """Shutdown the pool and cleanup resources"""
+        if self._cleanup_task and not self._cleanup_task.done():
+            self._cleanup_task.cancel()
+        self.results.clear()
+        logger.info("ClaudeAgentPool: Shutdown complete")
+        
 
 # Global executor instance
 _executor_instance = None
@@ -262,9 +301,16 @@ def get_executor() -> ClaudeAgentExecutor:
         _executor_instance = ClaudeAgentExecutor()
     return _executor_instance
     
-def get_pool(pool_size: int = 5) -> ClaudeAgentPool:
+def get_pool(pool_size: int = 5, max_results: int = 1000) -> ClaudeAgentPool:
     """Get singleton pool instance"""
     global _pool_instance
     if _pool_instance is None:
-        _pool_instance = ClaudeAgentPool(pool_size)
+        _pool_instance = ClaudeAgentPool(pool_size, max_results)
     return _pool_instance
+    
+def shutdown_pool():
+    """Shutdown and cleanup the singleton pool instance"""
+    global _pool_instance
+    if _pool_instance is not None:
+        _pool_instance.shutdown()
+        _pool_instance = None

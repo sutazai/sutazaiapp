@@ -18,7 +18,7 @@ CACHE_TTL = 30  # 30 seconds
 class CircuitBreaker:
     """Simple circuit breaker implementation"""
     
-    def __init__(self, failure_threshold=5, recovery_timeout=60):
+    def __init__(self, failure_threshold=5, recovery_timeout=5):
         self.failure_threshold = failure_threshold
         self.recovery_timeout = recovery_timeout
         self.failure_count = 0

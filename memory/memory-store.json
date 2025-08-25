@@ -1,0 +1,98 @@
+{
+  "test": [
+    {
+      "key": "test_key",
+      "value": "test_value",
+      "namespace": "test",
+      "timestamp": 1756125409777
+    },
+    {
+      "key": "test_key_1756127431",
+      "value": "test_value",
+      "namespace": "test",
+      "timestamp": 1756127433415
+    }
+  ],
+  "default": [
+    {
+      "key": "test_1756125412489",
+      "value": "value_1756125412489",
+      "namespace": "default",
+      "timestamp": 1756125413720
+    },
+    {
+      "key": "test",
+      "value": "{invalid json",
+      "namespace": "default",
+      "timestamp": 1756126249278
+    }
+  ],
+  "mcp-test": [
+    {
+      "key": "test_1756125492207",
+      "value": "{\"message\":\"MCP Integration Test\",\"timestamp\":\"2025-08-25T12:38:12.207Z\",\"platform\":\"win32\"}",
+      "namespace": "mcp-test",
+      "timestamp": 1756125493342
+    }
+  ],
+  "concurrent": [
+    {
+      "key": "concurrent_test_1756126242270_1",
+      "value": "value_1_4rx44pese",
+      "namespace": "concurrent",
+      "timestamp": 1756126243805
+    },
+    {
+      "key": "concurrent_test_1756126242270_0",
+      "value": "value_0_ntzw6tpul",
+      "namespace": "concurrent",
+      "timestamp": 1756126243816
+    },
+    {
+      "key": "concurrent_test_1756126242270_3",
+      "value": "value_3_ktxoletdk",
+      "namespace": "concurrent",
+      "timestamp": 1756126243826
+    },
+    {
+      "key": "concurrent_test_1756126242270_2",
+      "value": "value_2_9ig0x507h",
+      "namespace": "concurrent",
+      "timestamp": 1756126243840
+    },
+    {
+      "key": "concurrent_test_1756126242270_4",
+      "value": "value_4_d5m0lkqjd",
+      "namespace": "concurrent",
+      "timestamp": 1756126243997
+    }
+  ],
+  "persistence": [
+    {
+      "key": "session_test_1756126249312",
+      "value": "{\"created\":\"2025-08-25T12:50:49.312Z\",\"data\":\"This should persist\",\"random\":0.6281172527870844}",
+      "namespace": "persistence",
+      "timestamp": 1756126250634
+    }
+  ],
+  "batch": [
+    {
+      "key": "batch_1",
+      "value": "first",
+      "namespace": "batch",
+      "timestamp": 1756126255436
+    },
+    {
+      "key": "batch_2",
+      "value": "second",
+      "namespace": "batch",
+      "timestamp": 1756126256895
+    },
+    {
+      "key": "batch_3",
+      "value": "third",
+      "namespace": "batch",
+      "timestamp": 1756126258575
+    }
+  ]
+}
