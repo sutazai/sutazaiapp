@@ -12,7 +12,7 @@ selfcheck() {
 
 case "${1:-start}" in
     start)
-        exec npx @nx-console/nx-mcp-server@latest
+        exec npx nx-mcp@latest
         ;;
     selfcheck|--selfcheck)
         selfcheck

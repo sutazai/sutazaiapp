@@ -44,7 +44,7 @@
       "type": "stdio"
     },
     "nx-mcp": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/nx-mcp.sh",
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/nx-mcp-official.sh",
       "args": [],
       "type": "stdio"
     },
@@ -64,7 +64,7 @@
       "type": "stdio"
     },
     "playwright-mcp": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp.sh",
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/playwright-mcp-official.sh",
       "args": [],
       "type": "stdio"
     },
@@ -99,7 +99,17 @@
       "type": "stdio"
     },
     "claude-task-runner": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/claude-task-runner.sh",
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/claude-task-runner-v2.sh",
+      "args": [],
+      "type": "stdio"
+    },
+    "git-mcp": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/git-mcp-official.sh",
+      "args": [],
+      "type": "stdio"
+    },
+    "github": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/github.sh",
       "args": [],
       "type": "stdio"
     }

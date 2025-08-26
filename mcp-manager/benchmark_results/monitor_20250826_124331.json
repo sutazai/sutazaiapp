@@ -1,0 +1,274 @@
+{
+  "timestamp": 1756204982.3768225,
+  "date": "2025-08-26T12:43:02.376829",
+  "servers_monitored": 20,
+  "results": [
+    {
+      "name": "claude-flow",
+      "health": {
+        "status": "N/A",
+        "message": "Not a wrapper script"
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1008.1028938293457
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "ruv-swarm",
+      "health": {
+        "status": "N/A",
+        "message": "Not a wrapper script"
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1000.9839534759521
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "files",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== Filesystem MCP selfcheck 2025-08-26T12:43:04+0200 ==\u001b[0m\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1001.7216205596924
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "context7",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== Context7 MCP selfcheck 2025-08-26T12:43:05+0200 ==\u001b[0m\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1001.6798973083496
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "http_fetch",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== HTTP Fetch MCP selfcheck 2025-08-26T12:43:06+0200 ==\u001b[0m\n[OK] docker present\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1003.7877559661865
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "ddg",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== DDG MCP selfcheck 2025-08-26T12:43:08+0200 ==\u001b[0m\n[OK] docker present\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1001.1508464813232
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "sequentialthinking",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== SequentialThinking MCP selfcheck 2025-08-26T12:43:11+0200 ==\u001b[0m\n[OK] docker present\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1001.1441707611084
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "nx-mcp",
+      "health": {
+        "status": "PASS",
+        "message": "\u2713 nx-mcp selfcheck passed",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1000.8513927459717
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "extended-memory",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== extended-memory MCP selfcheck 2025-08-26T12:43:15+0200 ==\u001b[0m\n[OK] venv present + module import OK",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1000.7309913635254
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "mcp_ssh",
+      "health": {
+        "status": "PASS",
+        "message": "SSH MCP Server selfcheck\n\u2713 ssh-mcp package installed",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": false,
+        "startup_time_ms": 0,
+        "error": "Process exited immediately"
+      },
+      "overall_status": "FAILED"
+    },
+    {
+      "name": "ultimatecoder",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== UltimateCoder MCP selfcheck 2025-08-26T12:43:17+0200 ==\u001b[0m\n[OK] venv python present\n[OK] main.py present\n[OK] fastmcp import OK",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1003.6802291870117
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "playwright-mcp",
+      "health": {
+        "status": "PASS",
+        "message": "\u2713 playwright-mcp selfcheck passed",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1000.8885860443115
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "memory-bank-mcp",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== memory-bank-mcp selfcheck 2025-08-26T12:43:20+0200 ==\u001b[0m\n[WARN] uv not found\n[WARN] python module missing\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1000.6747245788574
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "knowledge-graph-mcp",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== mcp-knowledge-graph selfcheck 2025-08-26T12:43:21+0200 ==\u001b[0m\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1000.523567199707
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "compass-mcp",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== mcp-compass selfcheck 2025-08-26T12:43:22+0200 ==\u001b[0m\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1002.5181770324707
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "github",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== GitHub MCP selfcheck 2025-08-26T12:43:23+0200 ==\u001b[0m\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1002.086877822876
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "http",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== HTTP Fetch MCP selfcheck 2025-08-26T12:43:24+0200 ==\u001b[0m\n[OK] docker present\n[OK] npx present",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1000.9157657623291
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "language-server",
+      "health": {
+        "status": "PASS",
+        "message": "\u001b[1;36m== language-server selfcheck 2025-08-26T12:43:27+0200 ==\u001b[0m\n[OK] mcp-language-server present\n[OK] typescript-language-server present\n[OK] will cap Node memory to 512MB and limit to 6 instances",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": false,
+        "startup_time_ms": 0,
+        "error": "Process exited immediately"
+      },
+      "overall_status": "FAILED"
+    },
+    {
+      "name": "claude-task-runner",
+      "health": {
+        "status": "PASS",
+        "message": "\u2713 claude-task-runner v2 selfcheck passed",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1001.2805461883545
+      },
+      "overall_status": "WORKING"
+    },
+    {
+      "name": "git-mcp",
+      "health": {
+        "status": "PASS",
+        "message": "\u2713 git-mcp selfcheck passed",
+        "return_code": 0
+      },
+      "startup": {
+        "startup_success": true,
+        "startup_time_ms": 1005.5258274078369
+      },
+      "overall_status": "WORKING"
+    }
+  ],
+  "summary": {
+    "working_servers": 18,
+    "total_servers": 20,
+    "availability_percent": 90.0,
+    "health_pass_percent": 90.0,
+    "average_startup_ms": 1002.1248790952894
+  }
+}

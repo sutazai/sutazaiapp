@@ -1,0 +1,99 @@
+{
+  "timestamp": 1756204729.7141364,
+  "date": "2025-08-26 12:38:49",
+  "test_type": "quick_benchmark",
+  "servers_tested": 10,
+  "working_servers": 9,
+  "results": [
+    {
+      "name": "claude-flow",
+      "health_check": "N/A",
+      "health_output": "Not a wrapper script",
+      "startup_time_ms": 1002.0027160644531,
+      "startup_success": true,
+      "response_received": false,
+      "working": true
+    },
+    {
+      "name": "ruv-swarm",
+      "health_check": "N/A",
+      "health_output": "Not a wrapper script",
+      "startup_time_ms": 1000.762939453125,
+      "startup_success": true,
+      "response_received": false,
+      "working": true
+    },
+    {
+      "name": "files",
+      "health_check": "PASS",
+      "health_output": "\u001b[1;36m== Filesystem MCP selfcheck 2025-08-26T12:38:23+0200 ==\u001b[0m\n[OK] npx present",
+      "startup_time_ms": 1001.6241073608398,
+      "startup_success": true,
+      "response_received": false,
+      "working": true
+    },
+    {
+      "name": "context7",
+      "health_check": "PASS",
+      "health_output": "\u001b[1;36m== Context7 MCP selfcheck 2025-08-26T12:38:26+0200 ==\u001b[0m\n[OK] npx present",
+      "startup_time_ms": 1005.0482749938965,
+      "startup_success": true,
+      "response_received": false,
+      "working": true
+    },
+    {
+      "name": "http_fetch",
+      "health_check": "PASS",
+      "health_output": "\u001b[1;36m== HTTP Fetch MCP selfcheck 2025-08-26T12:38:30+0200 ==\u001b[0m\n[OK] docker present\n[OK] npx pres",
+      "startup_time_ms": 1001.4019012451172,
+      "startup_success": true,
+      "response_received": false,
+      "working": true
+    },
+    {
+      "name": "ddg",
+      "health_check": "PASS",
+      "health_output": "\u001b[1;36m== DDG MCP selfcheck 2025-08-26T12:38:34+0200 ==\u001b[0m\n[OK] docker present\n[OK] npx present",
+      "startup_time_ms": 1004.486083984375,
+      "startup_success": true,
+      "response_received": false,
+      "working": true
+    },
+    {
+      "name": "sequentialthinking",
+      "health_check": "PASS",
+      "health_output": "\u001b[1;36m== SequentialThinking MCP selfcheck 2025-08-26T12:38:38+0200 ==\u001b[0m\n[OK] docker present\n[OK] ",
+      "startup_time_ms": 1000.8580684661865,
+      "startup_success": true,
+      "response_received": false,
+      "working": true
+    },
+    {
+      "name": "nx-mcp",
+      "health_check": "PASS",
+      "health_output": "\u2713 nx-mcp selfcheck passed",
+      "startup_time_ms": 1001.7995834350586,
+      "startup_success": true,
+      "response_received": false,
+      "working": true
+    },
+    {
+      "name": "extended-memory",
+      "health_check": "PASS",
+      "health_output": "\u001b[1;36m== extended-memory MCP selfcheck 2025-08-26T12:38:44+0200 ==\u001b[0m\n[OK] venv present + module i",
+      "startup_time_ms": 1000.5786418914795,
+      "startup_success": true,
+      "response_received": false,
+      "working": true
+    },
+    {
+      "name": "mcp_ssh",
+      "health_check": "PASS",
+      "health_output": "SSH MCP Server selfcheck\n\u2713 ssh-mcp package installed",
+      "startup_time_ms": 1000.4799365997314,
+      "startup_success": false,
+      "response_received": false,
+      "working": false
+    }
+  ]
+}

@@ -342,21 +342,32 @@ def create_mcp_server() -> Optional[FastMCP]:
     # Create FastMCP server
     mcp = FastMCP(
         name="Task Runner",
-        description="Run tasks with Claude in isolated contexts",
-        schema_version="1.0",
+        instructions="Run tasks with Claude in isolated contexts"
     )
     
-    # Register handlers
-    mcp.register_function("run_task", run_task_handler)
-    mcp.register_function("run_all_tasks", run_all_tasks_handler)
-    mcp.register_function("parse_task_list", parse_task_list_handler)
-    mcp.register_function("create_project", create_project_handler)
-    mcp.register_function("get_task_status", get_task_status_handler)
-    mcp.register_function("get_task_summary", get_task_summary_handler)
-    mcp.register_function("clean", clean_handler)
+    # Register handlers using the tool decorator
+    # Note: In FastMCP 2.x, tools need to be registered with @mcp.tool decorator
+    # For now, we'll try to use add_tool if it exists
+    if hasattr(mcp, 'add_tool'):
+        mcp.add_tool(run_task_handler)
+        mcp.add_tool(run_all_tasks_handler)
+        mcp.add_tool(parse_task_list_handler)
+        mcp.add_tool(create_project_handler)
+        mcp.add_tool(get_task_status_handler)
+        mcp.add_tool(get_task_summary_handler)
+        mcp.add_tool(clean_handler)
+    else:
+        # Try the decorator approach
+        mcp.tool(run_task_handler)
+        mcp.tool(run_all_tasks_handler)
+        mcp.tool(parse_task_list_handler)
+        mcp.tool(create_project_handler)
+        mcp.tool(get_task_status_handler)
+        mcp.tool(get_task_summary_handler)
+        mcp.tool(clean_handler)
     
-    # Set schema
-    mcp.set_schema(get_complete_schema())
+    # Set schema - commented out as set_schema no longer exists in FastMCP 2.x
+    # mcp.set_schema(get_complete_schema())
     
     return mcp
 

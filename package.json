@@ -62,6 +62,7 @@
     "immer": "^10.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "ssh-mcp": "^1.0.7",
     "zustand": "^4.5.7"
   },
   "engines": {
