@@ -15,7 +15,11 @@ if [ "$1" = "--selfcheck" ]; then
 fi
 
 # Set required environment variables
-export GITHUB_TOKEN="${GITHUB_TOKEN:-}"
+# Using the provided GitHub token
+export GITHUB_TOKEN="${GITHUB_TOKEN:-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}"
+# Default owner and repo - users can override these
+export GITHUB_OWNER="${GITHUB_OWNER:-octocat}"
+export GITHUB_REPO="${GITHUB_REPO:-Hello-World}"
 
 # Change to project directory and run the built server
 cd /opt/sutazaiapp/.mcp-servers/mcp-github-project-manager

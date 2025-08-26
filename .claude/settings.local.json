@@ -303,7 +303,14 @@
       "mcp__playwright__browser_close",
       "Bash(/opt/sutazaiapp/.mcp-servers/optimize-mcp.sh:*)",
       "Bash(/opt/sutazaiapp/.mcp-servers/troubleshoot-mcp.sh:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/mcp-github-project-manager.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/code-index-mcp.sh:*)",
+      "Bash(script=\"/opt/sutazaiapp/scripts/mcp/wrappers/$wrapper.sh\")",
+      "Bash(if [ -f \"$script\" ])",
+      "Bash(if \"$script\" --selfcheck)",
+      "Bash(else)",
+      "Bash(/opt/sutazaiapp/scripts/mcp/wrappers/postgres.sh:*)"
     ],
     "deny": [],
     "additionalDirectories": [
