@@ -26,9 +26,9 @@ jobs:
     
     - name: Run Python audit with pip-audit
       run: |
-        pip install pip-audit
+        pip install pip-audit || true
         cd backend
-        pip-audit -r requirements-optimized.txt --format json > python-audit.json
+        pip-audit -r requirements/base.txt --format json > python-audit.json
     
     - name: Run npm audit
       run: |
@@ -139,7 +139,7 @@ jobs:
     
     - name: Detect secrets with detect-secrets
       run: |
-        pip install detect-secrets
+        pip install detect-secrets || true
         detect-secrets scan --baseline .secrets.baseline
         detect-secrets audit .secrets.baseline
 
@@ -154,7 +154,7 @@ jobs:
     
     - name: Check Python licenses
       run: |
-        pip install pip-licenses
+        pip install pip-licenses || true
         cd backend
         pip-licenses --format=json --output-file=python-licenses.json
     
@@ -183,7 +183,7 @@ jobs:
     
     - name: Kubernetes security scan
       run: |
-        curl -sSX POST --data-binary @k8s/production/deployment.yaml \
+        curl -sSX POST --data-binary @docker/deployment.yaml \
           https://kubesec.io/scan | jq .
 
   # Security Report

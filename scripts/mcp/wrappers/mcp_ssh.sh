@@ -1,27 +1,30 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-. "${SCRIPT_DIR}/../_common.sh"
-
 PROJECT_DIR="${PROJECT_DIR:-/opt/sutazaiapp}"
-MCP_SSH_DIR="$PROJECT_DIR/mcp_ssh"
 
+# SSH MCP Server wrapper for npm-based ssh-mcp package
 if [ "${1:-}" = "--selfcheck" ]; then
-  section "mcp_ssh selfcheck $(ts)"
-  if has_cmd uv; then ok_line "uv present"; else warn_line "uv not found"; fi
-  if has_cmd python3 && PYTHONPATH="$MCP_SSH_DIR/src:${PYTHONPATH:-}" python3 -c 'import mcp_ssh' >/dev/null 2>&1; then ok_line "python import mcp_ssh OK"; else warn_line "python import mcp_ssh failed"; fi
-  exit 0
+    echo "SSH MCP Server selfcheck"
+    if [ -f "$PROJECT_DIR/node_modules/.bin/ssh-mcp" ]; then
+        echo "✓ ssh-mcp package installed"
+        exit 0
+    else
+        echo "✗ ssh-mcp not found"
+        exit 1
+    fi
 fi
 
-if has_cmd uv; then
-  exec uv --directory "$MCP_SSH_DIR" run mcp_ssh
+# Run the ssh-mcp server
+# Note: This server requires SSH host configuration to work
+if [ -f "$PROJECT_DIR/node_modules/.bin/ssh-mcp" ]; then
+    # Disabled - requires actual SSH credentials
+    # To enable, uncomment and configure:
+    # exec "$PROJECT_DIR/node_modules/.bin/ssh-mcp" --host your-host --user your-user
+    echo "SSH MCP Server disabled - requires SSH host configuration" >&2
+    exit 0
+else
+    echo "Error: ssh-mcp not installed. Run: npm install ssh-mcp" >&2
+    exit 1
 fi
-
-# Try python directly if uv missing but dependencies already installed
-if has_cmd python3; then
-  export PYTHONPATH="$MCP_SSH_DIR/src:${PYTHONPATH:-}"
-  exec python3 -m mcp_ssh.server
-fi
-
-err "mcp_ssh requires 'uv' or python with dependencies installed (see $MCP_SSH_DIR)."
-exit 127

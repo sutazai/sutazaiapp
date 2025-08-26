@@ -79,16 +79,17 @@ start_mcp() {
     cd "$MCP_SERVER_DIR"
     
     # Add src to Python path
-    export PYTHONPATH="$MCP_SERVER_DIR/src:$PYTHONPATH"
+    export PYTHONPATH="$MCP_SERVER_DIR/src${PYTHONPATH:+:$PYTHONPATH}"
     
-    # Check if using virtual environment
-    if [ -d "$MCP_SERVER_DIR/venv" ]; then
-        echo "Using virtual environment for $MCP_NAME..."
-        exec "$MCP_SERVER_DIR/venv/bin/python" -m task_runner.mcp.mcp_server
-    else
-        # Try with system Python
-        exec python3 -m task_runner.mcp.mcp_server
+    # Always use virtual environment (required for dependencies)
+    if [ ! -d "$MCP_SERVER_DIR/venv" ]; then
+        echo "Creating virtual environment for $MCP_NAME..."
+        python3 -m venv "$MCP_SERVER_DIR/venv"
+        "$MCP_SERVER_DIR/venv/bin/pip" install --quiet --upgrade pip
     fi
+    
+    # Use virtual environment Python with start argument
+    exec "$MCP_SERVER_DIR/venv/bin/python" -m task_runner.mcp.mcp_server start
 }
 
 # Stop function  

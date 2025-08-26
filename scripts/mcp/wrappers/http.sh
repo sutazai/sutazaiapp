@@ -1,0 +1,1 @@
+/opt/sutazaiapp/scripts/mcp/wrappers/http_fetch.sh

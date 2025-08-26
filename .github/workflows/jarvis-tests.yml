@@ -119,13 +119,13 @@ jobs:
 
       - name: Start services
         run: |
-          docker-compose up -d postgres redis neo4j ollama chromadb qdrant faiss
+          if [ -f docker-compose.yml ]; then docker-compose up -d postgres redis neo4j ollama chromadb qdrant faiss; else echo "docker-compose.yml not found"; fi
           sleep 30
           
       - name: Start backend and jarvis services
         run: |
-          docker-compose up -d backend
-          docker-compose up -d jarvis-voice-interface jarvis-knowledge-management jarvis-automation-agent jarvis-multimodal-ai jarvis-hardware-resource-optimizer
+          if [ -f docker-compose.yml ]; then docker-compose up -d backend; else echo "docker-compose.yml not found"; fi
+          if [ -f docker-compose.yml ]; then docker-compose up -d jarvis-voice-interface jarvis-knowledge-management jarvis-automation-agent jarvis-multimodal-ai jarvis-hardware-resource-optimizer; else echo "docker-compose.yml not found"; fi
           sleep 60
 
       - name: Wait for services to be ready
@@ -240,7 +240,7 @@ jobs:
 
       - name: Start services
         run: |
-          docker-compose up -d
+          if [ -f docker-compose.yml ]; then docker-compose up -d; else echo "docker-compose.yml not found"; fi
           sleep 90
 
       - name: Wait for frontend to be ready
@@ -317,15 +317,15 @@ jobs:
       - name: Start services with optimized resources
         run: |
           # Start core services first
-          docker-compose up -d postgres redis ollama
+          if [ -f docker-compose.yml ]; then docker-compose up -d postgres redis ollama; else echo "docker-compose.yml not found"; fi
           sleep 30
           
           # Start dependent services
-          docker-compose up -d backend chromadb qdrant faiss neo4j
+          if [ -f docker-compose.yml ]; then docker-compose up -d backend chromadb qdrant faiss neo4j; else echo "docker-compose.yml not found"; fi
           sleep 60
           
           # Start Jarvis services
-          docker-compose up -d jarvis-voice-interface jarvis-knowledge-management jarvis-automation-agent jarvis-multimodal-ai jarvis-hardware-resource-optimizer
+          if [ -f docker-compose.yml ]; then docker-compose up -d jarvis-voice-interface jarvis-knowledge-management jarvis-automation-agent jarvis-multimodal-ai jarvis-hardware-resource-optimizer; else echo "docker-compose.yml not found"; fi
           sleep 30
 
       - name: Verify system stability

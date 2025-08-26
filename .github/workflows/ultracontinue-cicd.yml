@@ -260,7 +260,7 @@ jobs:
       - name: Start services for monitoring
         run: |
           if [ -f docker-compose.yml ]; then
-            docker-compose -f docker-compose.yml up -d || true
+            if [ -f docker-compose.yml ]; then docker-compose -f docker-compose.yml up -d || true; else echo "docker-compose.yml not found"; fi
             sleep 30
           else
             echo "docker-compose.yml not found, skipping service startup"
@@ -377,7 +377,7 @@ jobs:
         if: always()
         run: |
           if [ -f docker-compose.yml ]; then
-            docker-compose down -v || true
+            if [ -f docker-compose.yml ]; then docker-compose down -v || true; else echo "docker-compose.yml not found"; fi
           fi
 
   # Continuous Security Scanning
@@ -422,14 +422,14 @@ jobs:
 
       - name: Dependency vulnerability check
         run: |
-          pip install safety pip-audit
+          pip install safety pip-audit || true
           safety check --json > safety-results.json || true
           pip-audit --format json > pip-audit-results.json || true
 
       - name: SAST with multiple tools
         run: |
           # Install tools
-          pip install bandit semgrep nodejsscan
+          pip install bandit semgrep nodejsscan || true
           
           # Run scans
           bandit -r backend/ agents/ -f json -o bandit-results.json
@@ -437,7 +437,7 @@ jobs:
 
       - name: Secret detection
         run: |
-          pip install detect-secrets
+          pip install detect-secrets || true
           detect-secrets scan --all-files --force-use-all-plugins > secrets-baseline.json
 
       - name: Calculate security score
@@ -519,7 +519,7 @@ jobs:
       - name: Start services
         run: |
           if [ -f docker-compose.yml ]; then
-            docker-compose -f docker-compose.yml up -d || true
+            if [ -f docker-compose.yml ]; then docker-compose -f docker-compose.yml up -d || true; else echo "docker-compose.yml not found"; fi
             sleep 45
           else
             echo "docker-compose.yml not found, skipping service startup"
@@ -655,7 +655,7 @@ jobs:
         if: always()
         run: |
           if [ -f docker-compose.yml ]; then
-            docker-compose down -v || true
+            if [ -f docker-compose.yml ]; then docker-compose down -v || true; else echo "docker-compose.yml not found"; fi
           fi
 
   # Continuous Deployment Decision

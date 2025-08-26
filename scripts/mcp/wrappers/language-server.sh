@@ -10,7 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 WORKSPACE="/opt/sutazaiapp"
 MCP_BIN="/root/go/bin/mcp-language-server"
-TS_LSP="/root/.nvm/versions/node/v22.18.0/bin/typescript-language-server"
+TS_LSP="$(which typescript-language-server 2>/dev/null || echo /usr/local/bin/typescript-language-server)"
 
 MAX_INSTANCES="${MCP_LANGSERVER_MAX_INSTANCES:-6}"
 MEM_MB="${MCP_LANGSERVER_NODE_MAX_MB:-512}"

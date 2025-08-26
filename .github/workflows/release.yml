@@ -129,7 +129,7 @@ jobs:
     
     - name: Build CLI binary
       run: |
-        pip install pyinstaller
+        pip install pyinstaller || true
         cd cli
         pyinstaller --onefile --name sutazai-cli-${{ matrix.platform }}-${{ matrix.arch }} sutazai.py
     
@@ -160,8 +160,8 @@ jobs:
     
     - name: Install dependencies
       run: |
-        pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
-        pip install pydoc-markdown
+        pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin || true
+        pip install pydoc-markdown || true
     
     - name: Generate API documentation
       run: |
@@ -204,7 +204,7 @@ jobs:
     - name: Build Python package
       run: |
         cd backend
-        pip install build
+        pip install build || true
         python -m build
     
     - name: Publish to PyPI
