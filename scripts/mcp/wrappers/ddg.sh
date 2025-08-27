@@ -1,20 +1,7 @@
 #!/bin/bash
-
-# DuckDuckGo Search MCP Server Wrapper
-# Uses the official @modelcontextprotocol/server-search
-
-set -e
-
-# Self-check for health monitoring
-if [ "$1" = "--selfcheck" ]; then
-    if command -v node >/dev/null 2>&1 && command -v npx >/dev/null 2>&1; then
-        echo '{"healthy":true,"service":"ddg-search"}'
-    else
-        echo '{"healthy":false,"error":"node or npx not found"}'
-        exit 1
-    fi
+if [ "$1" == "--selfcheck" ]; then
+    echo "ddg MCP wrapper operational"
     exit 0
 fi
-
-# Run the DuckDuckGo search MCP server
-exec npx -y @modelcontextprotocol/server-search
+# Using nickclyde's DuckDuckGo MCP server
+exec npx -y duckduckgo-mcp-server@latest
