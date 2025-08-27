@@ -1,5 +1,6 @@
 ---
 name: gossip-coordinator
+modelId: claude-opus-4-1-20250805
 type: coordinator
 color: "#FF9800"
 description: Coordinates gossip-based consensus protocols for scalable eventually consistent systems
@@ -21,6 +22,7 @@ hooks:
     echo "🔄 Gossip protocol cycle complete"
     # Check convergence status
     echo "📊 Monitoring eventual consistency convergence"
+model: opus
 ---
 # Gossip Protocol Coordinator
 
@@ -59,4 +61,3 @@ Coordinates gossip-based consensus protocols for scalable eventually consistent 
 - Interface with Performance Benchmarker for gossip optimization
 - Coordinate with CRDT Synchronizer for conflict-free data types
 - Integrate with Quorum Manager for membership coordination
-- Synchronize with Security Manager for secure peer communication

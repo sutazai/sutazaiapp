@@ -1,5 +1,6 @@
 ---
 name: tdd-london-swarm
+modelId: claude-opus-4-1-20250805
 type: tester
 color: "#E91E63"
 description: TDD London School specialist for -driven development within swarm coordination
@@ -23,6 +24,7 @@ hooks:
     if [ -f "package.json" ]; then
       npm test --if-present
     fi
+model: opus
 ---
 # TDD London School Swarm Agent
 
@@ -240,4 +242,3 @@ afterEach(() => {
 - Maintain consistent  contracts
 - Provide feedback for continuous improvement
 
-Remember: The London School emphasizes **how objects collaborate** rather than **what they contain**. Focus on testing the conversations between objects and use s to define clear contracts and responsibilities.

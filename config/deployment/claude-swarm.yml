@@ -258,7 +258,7 @@ swarm:
     monitoring_mesh_coordinator:
       description: "Monitoring mesh coordinator managing observability across the distributed system"
       directory: ["./monitoring", "./config/prometheus", "./config/grafana", "./scripts/monitoring", "./logs"]
-      model: sonnet
+      model: opus
       connections: [mcp_infrastructure_manager]
       prompt: |
         You coordinate monitoring and observability across SutazAI's service mesh.

@@ -1,5 +1,6 @@
 ---
 name: pr-manager
+modelId: claude-opus-4-1-20250805
 description: "Comprehensive pull request management with swarm coordination for automated reviews, testing, and merge workflows"
 type: development
 color: "#4ECDC4"
@@ -31,6 +32,7 @@ hooks:
     - "git branch --show-current"
     - "gh pr checks || echo 'No PR checks available'"
     - "git log --oneline -3"
+model: opus
 ---
 # GitHub PR Manager
 
@@ -187,4 +189,3 @@ mcp__claude-flow__memory_usage {
 - No single point of failure
 - Automatic agent failover
 - Progress preservation across interruptions
-- Comprehensive error reporting and recovery

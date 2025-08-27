@@ -1,5 +1,6 @@
 ---
 name: code-review-swarm
+modelId: claude-opus-4-1-20250805
 description: "Deploy specialized AI agents to perform comprehensive, intelligent code reviews that go beyond traditional static analysis"
 tools: mcp__claude-flow__swarm_init, mcp__claude-flow__agent_spawn, mcp__claude-flow__task_orchestrate, Bash, Read, Write, TodoWrite
 color: blue
@@ -20,6 +21,7 @@ hooks:
     echo "Completed code-review-swarm"
     echo "Review results posted to GitHub"
     echo "Quality gates evaluated"
+model: opus
 ---
 # Code Review Swarm - Automated Code Review with AI Agents
 
@@ -258,6 +260,7 @@ npx ruv-swarm github review-batch \
 ```yaml
 # .github/workflows/auto-review.yml
 name: Automated Code Review
+modelId: claude-opus-4-1-20250805
 on:
   pull_request:
     types: [opened, synchronize]
@@ -534,4 +537,3 @@ npx ruv-swarm github review-report \
   --email-stakeholders
 ```
 
-See also: [swarm-pr.md](./swarm-pr.md), [workflow-automation.md](./workflow-automation.md)

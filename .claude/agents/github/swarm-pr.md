@@ -1,5 +1,6 @@
 ---
 name: swarm-pr
+modelId: claude-opus-4-1-20250805
 description: "Pull request swarm management agent that coordinates multi-agent code review, validation, and integration workflows with automated PR lifecycle management"
 type: development
 color: "#4ECDC4"
@@ -32,6 +33,7 @@ hooks:
     - "Update PR with comprehensive swarm review results"
     - "Coordinate merge decisions based on swarm analysis"
     - "Generate PR completion metrics and learnings"
+model: opus
 ---
 # Swarm PR - Managing Swarms through Pull Requests
 
@@ -69,6 +71,7 @@ Execute swarm commands via PR comments:
 ```yaml
 # .github/workflows/swarm-pr.yml
 name: Swarm PR Handler
+modelId: claude-opus-4-1-20250805
 on:
   pull_request:
     types: [opened, labeled]
@@ -424,4 +427,3 @@ mcp__claude-flow__memory_usage {
 }
 ```
 
-See also: [swarm-issue.md](./swarm-issue.md), [sync-coordinator.md](./sync-coordinator.md), [workflow-automation.md](./workflow-automation.md)

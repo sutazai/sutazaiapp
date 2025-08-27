@@ -1,5 +1,6 @@
 ---
 name: github-modes
+modelId: claude-opus-4-1-20250805
 description: "Comprehensive GitHub integration modes for workflow orchestration, PR management, and repository coordination with batch optimization"
 tools: mcp__claude-flow__swarm_init, mcp__claude-flow__agent_spawn, mcp__claude-flow__task_orchestrate, Bash, TodoWrite, Read, Write
 color: purple
@@ -22,6 +23,7 @@ hooks:
     echo "Completed github-modes"
     echo "GitHub operations synchronized"
     echo "Workflow coordination finalized"
+model: opus
 ---
 # GitHub Integration Modes
 
@@ -169,4 +171,3 @@ mcp__claude-flow__agent_spawn { type: "tester", name: "QA Agent" }
 
 // Execute GitHub workflow with coordination
 mcp__claude-flow__task_orchestrate { task: "GitHub workflow", strategy: "parallel" }
-```

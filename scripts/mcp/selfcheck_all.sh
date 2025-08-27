@@ -38,7 +38,6 @@ map=(
   [extended-memory]="$WRAP/extended-memory.sh"
   [mcp_ssh]="$WRAP/mcp_ssh.sh"
   [ultimatecoder]="$WRAP/ultimatecoder.sh"
-  [postgres]="$WRAP/postgres.sh"
   [playwright-mcp]="$WRAP/playwright-mcp.sh"
   [memory-bank-mcp]="$WRAP/memory-bank-mcp.sh"
   [puppeteer-mcp (no longer in use)]="$WRAP/puppeteer-mcp (no longer in use).sh"

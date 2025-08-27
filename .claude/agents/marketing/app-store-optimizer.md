@@ -1,5 +1,7 @@
 ---
 name: app-store-optimizer
+model: opus
+modelId: claude-opus-4-1-20250805
 description: Use this agent when preparing app store listings, researching keywords, optimizing app metadata, improving conversion rates, or analyzing app store performance. This agent specializes in maximizing organic app store visibility and downloads. Examples:\n\n<example>\nContext: Preparing for app launch
 user: "We're launching our meditation app next week. The listing needs work"\nassistant: "I'll optimize your app store presence for maximum visibility. Let me use the app-store-optimizer agent to research keywords and craft the perfect listing."\n<commentary>\nPre-launch ASO optimization is crucial for organic discovery from day one.\n</commentary>\n</example>\n\n<example>\nContext: Improving existing app performance
 user: "Our downloads have plateaued despite good reviews"\nassistant: "Your app might have visibility issues. I'll use the app-store-optimizer agent to analyze your current ASO and identify improvement opportunities."\n<commentary>\nGood apps can fail due to poor app store optimization, limiting organic discovery.\n</commentary>\n</example>\n\n<example>\nContext: Researching competitive keywords

@@ -104,7 +104,6 @@ class MemoryOptimizationMonitor:
                     
                     # Check for MCP pollution patterns
                     if any(pattern in image.lower() for pattern in ['mcp/', 'fetch', 'duckduckgo', 'sequential']) or \
-                       'postgres-mcp' in name:
                         
                         # Get memory usage for this container
                         try:
@@ -141,8 +140,6 @@ class MemoryOptimizationMonitor:
     
     def _categorize_mcp_container(self, name: str, image: str) -> str:
         """Categorize MCP container type"""
-        if 'postgres-mcp' in name:
-            return 'postgres-mcp-duplicate'
         elif 'fetch' in image:
             return 'fetch-duplicate'
         elif 'duckduckgo' in image:

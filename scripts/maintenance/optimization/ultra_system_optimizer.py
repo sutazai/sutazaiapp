@@ -5,7 +5,6 @@ Date: August 12, 2025
 Author: System Optimization and Reorganization Specialist
 
 CRITICAL: PRESERVES ALL MCP INFRASTRUCTURE
-- crystaldba/postgres-mcp containers - PRESERVED
 - mcp/duckduckgo containers - PRESERVED  
 - mcp/fetch containers - PRESERVED
 - mcp/sequentialthinking containers - PRESERVED
@@ -60,7 +59,6 @@ class UltraSystemOptimizer:
         
         # MCP containers that must be preserved
         self.mcp_patterns = [
-            'crystaldba/postgres-mcp',
             'mcp/duckduckgo', 
             'mcp/fetch',
             'mcp/sequentialthinking'

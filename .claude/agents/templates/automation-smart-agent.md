@@ -1,5 +1,6 @@
 ---
 name: smart-agent
+modelId: claude-opus-4-1-20250805
 color: "orange"
 type: automation
 description: Intelligent agent coordination and dynamic spawning specialist
@@ -21,6 +22,7 @@ hooks:
     echo "✅ Smart coordination complete"
     memory_store "last_coordination_$(date +%s)" "Intelligent agent coordination executed"
     echo "💡 Agent spawning patterns learned and stored"
+model: opus
 ---
 # Smart Agent Coordinator
 
@@ -201,4 +203,3 @@ Output: Resource predictions
 - Detect struggling agents
 - Automatic reinforcement
 - Strategy adjustment
-- Graceful degradation

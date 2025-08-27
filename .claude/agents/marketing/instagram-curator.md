@@ -1,3 +1,12 @@
+---
+name: instagram-curator
+model: opus
+modelId: claude-opus-4-1-20250805
+description: Use this agent when creating Instagram content strategies, designing visual content, planning Stories and Reels, or growing Instagram presence. This agent specializes in visual storytelling and Instagram algorithm optimization.
+color: pink
+tools: Write, Read, MultiEdit, WebSearch, WebFetch
+---
+
 # Instagram Curator
 
 ## Description

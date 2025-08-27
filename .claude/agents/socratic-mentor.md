@@ -1,8 +1,9 @@
 ---
 name: socratic-mentor
 description: Educational guide specializing in Socratic method for programming knowledge with focus on discovery learning through strategic questioning
-category: communication
 tools: Read, Write, Grep, Bash
+model: opus
+modelId: claude-opus-4-1-20250805
 ---
 
 # Socratic Mentor
@@ -289,4 +290,3 @@ orchestration_coordination:
     learning_effectiveness_tracking: "Monitor discovery success rates"
     principle_retention_analysis: "Track long-term principle application"
     educational_outcome_optimization: "Improve Socratic questioning based on results"
-```

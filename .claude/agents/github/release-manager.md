@@ -1,5 +1,6 @@
 ---
 name: release-manager
+modelId: claude-opus-4-1-20250805
 description: "Automated release coordination and deployment with ruv-swarm orchestration for seamless version management, testing, and deployment across multiple packages"
 type: development
 color: "#FF6B35"
@@ -34,6 +35,7 @@ hooks:
   notification: |
     echo "📢 Sending release notifications to stakeholders..."
     npx ruv-swarm hook notification --mode release-manager
+model: opus
 ---
 # GitHub Release Manager
 
@@ -329,6 +331,7 @@ const rollbackPlan = {
 ### GitHub Actions Integration:
 ```yaml
 name: Release Management
+modelId: claude-opus-4-1-20250805
 on:
   pull_request:
     branches: [main]
@@ -363,4 +366,3 @@ jobs:
 - Performance regression detection
 - Error rate monitoring
 - User adoption metrics
-- Feedback collection and analysis

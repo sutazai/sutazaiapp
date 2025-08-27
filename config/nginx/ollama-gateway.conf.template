@@ -6,7 +6,7 @@ upstream ollama_backend {
 # Rate limiting zones
 limit_req_zone $binary_remote_addr zone=agent_limit:10m rate=20r/s;
 limit_req_zone $http_x_agent_type zone=opus_limit:10m rate=10r/m;
-limit_req_zone $http_x_agent_type zone=sonnet_limit:10m rate=20r/m;
+limit_req_zone $http_x_agent_type zone=opus_limit:10m rate=20r/m;
 
 server {
     listen 80;
@@ -48,8 +48,8 @@ server {
         if ($http_x_agent_type = "opus") {
             set $limit_zone opus_limit;
         }
-        if ($http_x_agent_type = "sonnet") {
-            set $limit_zone sonnet_limit;
+        if ($http_x_agent_type = "opus") {
+            set $limit_zone opus_limit;
         }
         
         limit_req zone=$limit_zone burst=5 nodelay;

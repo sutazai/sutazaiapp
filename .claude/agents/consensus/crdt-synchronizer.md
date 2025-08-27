@@ -1,5 +1,6 @@
 ---
 name: crdt-synchronizer
+modelId: claude-opus-4-1-20250805
 type: synchronizer
 color: "#4CAF50"
 description: Implements Conflict-free Replicated Data Types for eventually consistent state synchronization
@@ -21,6 +22,7 @@ hooks:
     echo "🎯 CRDT synchronization complete"
     # Verify eventual consistency
     echo "✅ Validating conflict-free state convergence"
+model: opus
 ---
 # CRDT Synchronizer
 
@@ -993,4 +995,3 @@ class CRDTConsensusIntegrator {
 }
 ```
 
-This CRDT Synchronizer provides comprehensive support for conflict-free replicated data types, enabling eventually consistent distributed state management that complements consensus protocols for different consistency requirements.

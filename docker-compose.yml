@@ -9,10 +9,8 @@ services:
   # ===================================
   
   postgres:
-    image: postgres:16-alpine
+    image: postgres:14-alpine
     container_name: sutazai-postgres
-    mem_limit: 512m
-    mem_reservation: 256m
     environment:
       POSTGRES_DB: sutazai
       POSTGRES_USER: ${POSTGRES_USER:-sutazai}
@@ -34,17 +32,15 @@ services:
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 512M
           cpus: '0.5'
         reservations:
-          memory: 128M
+          memory: 256M
     restart: unless-stopped
 
   redis:
     image: redis:7-alpine
     container_name: sutazai-redis
-    mem_limit: 256m
-    mem_reservation: 128m
     command: redis-server --maxmemory 200mb --maxmemory-policy allkeys-lru
     volumes:
       - redis-data:/data
@@ -60,17 +56,15 @@ services:
     deploy:
       resources:
         limits:
-          memory: 64M
+          memory: 256M
           cpus: '0.25'
         reservations:
-          memory: 32M
+          memory: 128M
     restart: unless-stopped
 
   neo4j:
     image: neo4j:5-community
     container_name: sutazai-neo4j
-    mem_limit: 1g
-    mem_reservation: 512m
     environment:
       NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-neo4j123}
       NEO4J_dbms_memory_heap_initial__size: 512M
@@ -132,7 +126,7 @@ services:
     restart: unless-stopped
 
   kong:
-    image: kong:3.4-alpine
+    image: kong:latest
     container_name: sutazai-kong
     environment:
       KONG_DATABASE: "off"
@@ -165,7 +159,7 @@ services:
     restart: unless-stopped
 
   consul:
-    image: consul:1.17-alpine
+    image: consul:latest
     container_name: sutazai-consul
     command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
     volumes:
@@ -191,9 +185,6 @@ services:
       dockerfile: ../docker/backend/Dockerfile
     image: sutazai-backend:latest
     container_name: sutazai-backend
-    mem_limit: 512m
-    mem_reservation: 256m
-    memswap_limit: 1g
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai123}@postgres:5432/sutazai
       REDIS_URL: redis://redis:6379
@@ -238,9 +229,6 @@ services:
       dockerfile: ../docker/frontend/Dockerfile
     image: sutazai-frontend:latest
     container_name: sutazai-frontend
-    mem_limit: 256m
-    mem_reservation: 128m
-    memswap_limit: 512m
     environment:
       BACKEND_URL: http://backend:10010
       STREAMLIT_SERVER_PORT: 10011
@@ -274,8 +262,6 @@ services:
   chromadb:
     image: chromadb/chroma:latest
     container_name: sutazai-chromadb
-    mem_limit: 512m
-    mem_reservation: 256m
     environment:
       CHROMA_SERVER_HOST: 0.0.0.0
       CHROMA_SERVER_PORT: 8000
@@ -296,8 +282,6 @@ services:
   qdrant:
     image: qdrant/qdrant:latest
     container_name: sutazai-qdrant
-    mem_limit: 512m
-    mem_reservation: 256m
     environment:
       QDRANT__SERVICE__HTTP_PORT: 6333
       QDRANT__SERVICE__GRPC_PORT: 6334
@@ -368,8 +352,6 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: sutazai-prometheus
-    mem_limit: 512m
-    mem_reservation: 256m
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -400,8 +382,6 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: sutazai-grafana
-    mem_limit: 256m
-    mem_reservation: 128m
     environment:
       GF_SECURITY_ADMIN_USER: ${GF_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GF_ADMIN_PASSWORD:-admin123}

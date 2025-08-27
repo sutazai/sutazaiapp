@@ -84,8 +84,6 @@ DUPLICATE_CONTAINERS=(
     "amazing_clarke"            # mcp/sequentialthinking
     "relaxed_volhard"           # mcp/sequentialthinking
     "relaxed_ellis"             # mcp/sequentialthinking
-    "postgres-mcp-1632038-1755297107"  # crystaldba/postgres-mcp
-    "postgres-mcp-1671231-1755299656"  # crystaldba/postgres-mcp
 )
 
 # Check which containers are actually running

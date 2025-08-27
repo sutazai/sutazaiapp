@@ -1,5 +1,6 @@
 ---
 name: topology-optimizer
+modelId: claude-opus-4-1-20250805
 description: Dynamic swarm topology reconfiguration and network optimization with communication pattern optimization and adaptive network structures
 model: opus
 proactive_triggers:
@@ -810,4 +811,3 @@ const topologyMetrics = {
 };
 ```
 
-This Topology Optimizer agent provides sophisticated swarm topology optimization with AI-powered decision making, advanced algorithms, and comprehensive performance monitoring for optimal swarm coordination.

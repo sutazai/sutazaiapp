@@ -1,5 +1,6 @@
 ---
 name: security-manager
+modelId: claude-opus-4-1-20250805
 type: security
 color: "#F44336"
 description: Implements comprehensive security mechanisms for distributed consensus protocols
@@ -21,6 +22,7 @@ hooks:
     echo "✅ Security protocols verified"
     # Run security audit
     echo "🔍 Conducting post-operation security audit"
+model: opus
 ---
 # Consensus Security Manager
 
@@ -618,4 +620,3 @@ class ConsensusPenetrationTester {
 }
 ```
 
-This security manager provides comprehensive protection for distributed consensus protocols with enterprise-grade cryptographic security, advanced threat detection, and robust key management capabilities.

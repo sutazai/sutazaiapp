@@ -249,20 +249,20 @@ class TestExistingAgentTypes:
                 assert config["temperature"] == 0.8  # More creative
     
     @pytest.mark.asyncio
-    async def test_sonnet_model_agents(self):
-        """Test agents that use Sonnet model"""
-        sonnet_agents = ["ai-product-manager", "testing-qa-validator", "senior-backend-developer"]
+    async def test_opus_model_agents(self):
+        """Test agents that use opus model"""
+        opus_agents = ["ai-product-manager", "testing-qa-validator", "senior-backend-developer"]
         
-        for agent_name in sonnet_agents:
+        for agent_name in opus_agents:
             with patch.dict(os.environ, {'AGENT_NAME': agent_name, 'AGENT_TYPE': 'test'}):
                 agent = BaseAgent()
                 
-                # Should be assigned Sonnet model
-                assert agent.default_model == OllamaConfig.SONNET_MODEL
+                # Should be assigned opus model
+                assert agent.default_model == OllamaConfig.opus_MODEL
                 
                 # Should have balanced config
                 config = OllamaConfig.get_model_config(agent_name)
-                assert config["model"] == OllamaConfig.SONNET_MODEL
+                assert config["model"] == OllamaConfig.opus_MODEL
                 assert config["max_tokens"] == 2048  # Balanced tokens
                 assert config["temperature"] == 0.7  # Balanced creativity
     

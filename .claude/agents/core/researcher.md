@@ -1,5 +1,6 @@
 ---
 name: researcher
+modelId: claude-opus-4-1-20250805
 type: analyst
 color: "#9B59B6"
 description: Deep research and information gathering specialist
@@ -17,6 +18,7 @@ hooks:
   post: |
     echo "📊 Research findings documented"
     memory_search "research_*" | head -5
+model: opus
 ---
 # Research and Analysis Agent
 
@@ -132,4 +134,3 @@ read specific-file.ts
 4. **Document Everything**: Future agents depend on your findings
 5. **Iterate**: Refine research based on new discoveries
 
-Remember: Good research is the foundation of successful implementation. Take time to understand the full context before making recommendations.

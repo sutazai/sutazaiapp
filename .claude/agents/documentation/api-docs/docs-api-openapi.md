@@ -1,5 +1,6 @@
 ---
 name: "api-docs"
+modelId: claude-opus-4-1-20250805
 color: "indigo"
 type: "documentation"
 version: "1.0.0"
@@ -112,6 +113,7 @@ examples:
     response: "I'll create comprehensive OpenAPI 3.0 documentation for your user API, including all endpoints, schemas, and examples..."
   - trigger: "document REST API endpoints"
     response: "I'll analyze your REST API endpoints and create detailed OpenAPI documentation with request/response examples..."
+model: opus
 ---
 # OpenAPI Documentation Specialist
 
@@ -170,4 +172,3 @@ components:
 - Request/response examples
 - Error response documentation
 - Security requirements
-- Rate limiting information

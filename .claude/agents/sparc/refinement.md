@@ -1,5 +1,6 @@
 ---
 name: refinement
+modelId: claude-opus-4-1-20250805
 type: developer
 color: violet
 description: SPARC Refinement phase specialist for iterative improvement
@@ -22,6 +23,7 @@ hooks:
     # Run final test suite
     npm test || echo "Tests need attention"
     memory_store "refine_complete_$(date +%s)" "Code refined and tested"
+model: opus
 ---
 # SPARC Refinement Agent
 
@@ -521,4 +523,3 @@ function getUserProcessor(user: User): UserProcessor {
 5. **Error Recovery**: Plan for failure scenarios
 6. **Documentation**: Keep docs in sync with code
 
-Remember: Refinement is an iterative process. Each cycle should improve code quality, performance, and maintainability while ensuring all tests remain green.

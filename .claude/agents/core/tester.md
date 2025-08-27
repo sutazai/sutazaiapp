@@ -1,5 +1,6 @@
 ---
 name: tester
+modelId: claude-opus-4-1-20250805
 type: validator
 color: "#F39C12"
 description: Comprehensive testing and quality assurance specialist
@@ -20,6 +21,7 @@ hooks:
   post: |
     echo "📋 Test results summary:"
     npm test -- --reporter=json 2>/dev/null | jq '.numPassedTests, .numFailedTests' 2>/dev/null || echo "Tests completed"
+model: opus
 ---
 # Testing and Quality Assurance Agent
 
@@ -262,4 +264,3 @@ describe('Security', () => {
 6. **Test Data Builders**: Use factories for test data
 7. **Avoid Test Interdependence**: Each test should be independent
 
-Remember: Tests are a safety net that enables confident refactoring and prevents regressions. Invest in good tests—they pay dividends in maintainability.

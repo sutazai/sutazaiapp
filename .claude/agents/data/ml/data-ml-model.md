@@ -1,5 +1,6 @@
 ---
 name: "ml-developer"
+modelId: claude-opus-4-1-20250805
 color: "purple"
 type: "data"
 version: "1.0.0"
@@ -118,6 +119,7 @@ examples:
     response: "I'll develop a machine learning pipeline for customer churn prediction, including data preprocessing, model selection, training, and evaluation..."
   - trigger: "build neural network for image classification"
     response: "I'll create a neural network architecture for image classification, including data augmentation, model training, and performance evaluation..."
+model: opus
 ---
 # Machine Learning Model Developer
 
@@ -189,4 +191,3 @@ score = pipeline.score(X_test, y_test)
 - Use cross-validation for robust evaluation
 - Log all experiments and parameters
 - Version control models and data
-- Document model assumptions and limitations

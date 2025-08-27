@@ -1,5 +1,6 @@
 ---
 name: migration-planner
+modelId: claude-opus-4-1-20250805
 type: planning
 color: red
 description: Comprehensive migration plan for converting commands to agent-based system
@@ -23,6 +24,7 @@ hooks:
     echo "✅ Migration planning completed"
     echo "📊 Agent mapping strategy defined"
     echo "🚀 Ready for systematic agent system rollout"
+model: opus
 ---
 # Claude Flow Commands to Agent System Migration Plan
 
@@ -35,6 +37,7 @@ Each agent uses YAML frontmatter with the following structure:
 ---
 role: agent-type
 name: Agent Display Name
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Primary responsibility
   - Secondary responsibility
@@ -63,6 +66,7 @@ triggers:
 ---
 role: coordinator
 name: Swarm Initializer
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Initialize agent swarms with optimal topology
   - Configure distributed coordination systems
@@ -95,6 +99,7 @@ triggers:
 ---
 role: coordinator
 name: Agent Spawner
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Create specialized cognitive patterns for task execution
   - Assign capabilities to agents based on requirements
@@ -127,6 +132,7 @@ triggers:
 ---
 role: orchestrator
 name: Task Orchestrator
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Decompose complex tasks into manageable subtasks
   - Coordinate parallel and sequential execution strategies
@@ -165,6 +171,7 @@ triggers:
 ---
 role: github-specialist
 name: Pull Request Manager
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Manage complete pull request lifecycle
   - Coordinate multi-reviewer workflows
@@ -201,6 +208,7 @@ triggers:
 ---
 role: reviewer
 name: Code Review Coordinator
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Orchestrate multi-agent code reviews
   - Ensure code quality and standards compliance
@@ -237,6 +245,7 @@ triggers:
 ---
 role: release-coordinator
 name: Release Manager
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Coordinate release preparation and deployment
   - Manage version tagging and changelog generation
@@ -274,6 +283,7 @@ triggers:
 ---
 role: sparc-coordinator
 name: SPARC Orchestrator
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Coordinate SPARC methodology phases
   - Manage task decomposition and agent allocation
@@ -311,6 +321,7 @@ triggers:
 ---
 role: implementer
 name: SPARC Implementation Specialist
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Transform specifications into working code
   - Implement TDD practices with parallel test creation
@@ -346,6 +357,7 @@ triggers:
 ---
 role: quality-assurance
 name: SPARC Testing Specialist
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Design comprehensive test strategies
   - Implement parallel test execution
@@ -383,6 +395,7 @@ triggers:
 ---
 role: analyst
 name: Performance Bottleneck Analyzer
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Identify performance bottlenecks in workflows
   - Analyze execution patterns and resource usage
@@ -419,6 +432,7 @@ triggers:
 ---
 role: analyst
 name: Token Efficiency Analyzer
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Monitor token consumption across operations
   - Identify inefficient token usage patterns
@@ -456,6 +470,7 @@ triggers:
 ---
 role: memory-manager
 name: Memory Coordination Specialist
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Manage persistent memory across sessions
   - Coordinate memory namespaces and TTL
@@ -491,6 +506,7 @@ triggers:
 ---
 role: ai-specialist
 name: Neural Pattern Coordinator
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Train and manage neural patterns
   - Coordinate cognitive behavior analysis
@@ -528,6 +544,7 @@ triggers:
 ---
 role: automation-specialist
 name: Smart Agent Coordinator
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Automate agent spawning based on task requirements
   - Implement intelligent capability matching
@@ -563,6 +580,7 @@ triggers:
 ---
 role: reliability-engineer
 name: Self-Healing System Coordinator
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Detect and recover from system failures
   - Implement fault tolerance strategies
@@ -599,6 +617,7 @@ triggers:
 ---
 role: optimizer
 name: Parallel Execution Optimizer
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Optimize task execution for parallelism
   - Identify parallelization opportunities
@@ -633,6 +652,7 @@ triggers:
 ---
 role: optimizer
 name: Topology Optimization Specialist
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Analyze and optimize swarm topology
   - Adapt topology based on workload
@@ -670,6 +690,7 @@ triggers:
 ---
 role: monitor
 name: Swarm Status Monitor
+modelId: claude-opus-4-1-20250805
 responsibilities:
   - Monitor swarm health and performance
   - Track agent status and utilization
@@ -742,4 +763,3 @@ triggers:
 - No functionality loss during migration
 - Improved natural language understanding
 - Better task decomposition and parallelization
-- Enhanced error handling and recovery

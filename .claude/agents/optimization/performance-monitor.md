@@ -1,5 +1,6 @@
 ---
 name: performance-monitor
+modelId: claude-opus-4-1-20250805
 description: "Real-time metrics collection and bottleneck analysis with SLA monitoring, resource tracking, and anomaly detection"
 model: opus
 proactive_triggers:
@@ -674,4 +675,3 @@ const analytics = {
 };
 ```
 
-This Performance Monitor agent provides comprehensive real-time monitoring, bottleneck detection, SLA compliance tracking, and advanced analytics for optimal swarm performance management.

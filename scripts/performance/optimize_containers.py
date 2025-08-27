@@ -131,7 +131,7 @@ class ContainerOptimizer:
             
             # Check for unnamed containers with MCP images
             if container.name not in self.expected_containers:
-                if any(img in str(container.image.tags) for img in ['mcp/', 'postgres-mcp']):
+                if any(img in str(container.image.tags) for img in ['mcp/']):
                     is_orphan = True
                 
                 # Check for random names (Docker default naming)

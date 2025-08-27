@@ -1,5 +1,6 @@
 ---
 name: coder
+modelId: claude-opus-4-1-20250805
 type: developer
 color: "#FF6B35"
 description: "Implementation specialist for writing clean, efficient code"
@@ -23,6 +24,7 @@ hooks:
     if [ -f "package.json" ]; then
       npm run lint --if-present
     fi
+model: opus
 ---
 # Code Implementation Agent
 
@@ -207,4 +209,3 @@ src/
 - Document assumptions and decisions
 - Request reviews when uncertain
 
-Remember: Good code is written for humans to read, and only incidentally for machines to execute. Focus on clarity, maintainability, and correctness.

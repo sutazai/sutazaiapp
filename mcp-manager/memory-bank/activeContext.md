@@ -3574,7 +3574,7 @@
 - venv/lib/python3.12/site-packages/pygments/lexers/jmespath.py
 - venv/lib/python3.12/site-packages/pygments/lexers/jslt.py
 - venv/lib/python3.12/site-packages/pygments/lexers/json5.py
-- venv/lib/python3.12/site-packages/pygments/lexers/jsonnet.py
+- venv/lib/python3.12/site-packages/pygments/lexers/jopus.py
 - venv/lib/python3.12/site-packages/pygments/lexers/jsx.py
 - venv/lib/python3.12/site-packages/pygments/lexers/julia.py
 - venv/lib/python3.12/site-packages/pygments/lexers/jvm.py
@@ -8113,7 +8113,7 @@
 - venv/lib/python3.12/site-packages/pygments/lexers/jmespath.py
 - venv/lib/python3.12/site-packages/pygments/lexers/jslt.py
 - venv/lib/python3.12/site-packages/pygments/lexers/json5.py
-- venv/lib/python3.12/site-packages/pygments/lexers/jsonnet.py
+- venv/lib/python3.12/site-packages/pygments/lexers/jopus.py
 - venv/lib/python3.12/site-packages/pygments/lexers/jsx.py
 - venv/lib/python3.12/site-packages/pygments/lexers/julia.py
 - venv/lib/python3.12/site-packages/pygments/lexers/jvm.py
@@ -12652,7 +12652,7 @@
 - venv/lib/python3.12/site-packages/pygments/lexers/jmespath.py
 - venv/lib/python3.12/site-packages/pygments/lexers/jslt.py
 - venv/lib/python3.12/site-packages/pygments/lexers/json5.py
-- venv/lib/python3.12/site-packages/pygments/lexers/jsonnet.py
+- venv/lib/python3.12/site-packages/pygments/lexers/jopus.py
 - venv/lib/python3.12/site-packages/pygments/lexers/jsx.py
 - venv/lib/python3.12/site-packages/pygments/lexers/julia.py
 - venv/lib/python3.12/site-packages/pygments/lexers/jvm.py

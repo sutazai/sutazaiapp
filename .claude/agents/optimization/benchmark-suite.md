@@ -1,5 +1,6 @@
 ---
 name: benchmark-suite
+modelId: claude-opus-4-1-20250805
 description: "Comprehensive performance benchmarking and testing with automated benchmarking, regression detection, and performance validation"
 model: opus
 proactive_triggers:
@@ -667,4 +668,3 @@ const standardBenchmarks = {
 };
 ```
 
-This Benchmark Suite agent provides comprehensive automated performance testing, regression detection, and validation capabilities to ensure optimal swarm performance and prevent performance degradation.

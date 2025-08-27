@@ -1,5 +1,6 @@
 ---
 name: "system-architect"
+modelId: claude-opus-4-1-20250805
 type: "architecture"
 color: "purple"
 version: "1.0.0"
@@ -121,6 +122,7 @@ examples:
     response: "I'll design a comprehensive microservices architecture for your e-commerce platform, including service boundaries, communication patterns, and deployment strategy..."
   - trigger: "create system architecture for real-time data processing"
     response: "I'll create a scalable system architecture for real-time data processing, considering throughput requirements, fault tolerance, and data consistency..."
+model: opus
 ---
 # System Architecture Designer
 
@@ -152,4 +154,3 @@ You are a System Architecture Designer responsible for high-level technical deci
 - What are the constraints and assumptions?
 - What are the trade-offs of each option?
 - How does this align with business goals?
-- What are the risks and mitigation strategies?

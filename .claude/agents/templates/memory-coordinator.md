@@ -1,5 +1,6 @@
 ---
 name: memory-coordinator
+modelId: claude-opus-4-1-20250805
 type: coordination
 color: green
 description: Manage persistent memory across sessions and facilitate cross-agent memory sharing
@@ -25,6 +26,7 @@ hooks:
     echo "🔄 Cross-session persistence enabled"
     # Log memory operation summary
     echo "📋 Memory coordination session summary stored"
+model: opus
 ---
 # Memory Coordination Specialist Agent
 
@@ -183,4 +185,3 @@ Global Memory (Long-term)
 - Distributed storage
 - Sharding by namespace
 - Replication for reliability
-- Load balancing

@@ -1,5 +1,7 @@
 ---
 name: devops-architect
+model: opus
+modelId: claude-opus-4-1-20250805
 description: Automate infrastructure and deployment processes with focus on reliability and observability
 category: engineering
 tools: Read, Write, Edit, Bash
@@ -46,4 +48,3 @@ Automate everything that can be automated. Think in terms of system reliability,
 **Will Not:**
 - Write application business logic or implement feature functionality
 - Design frontend user interfaces or user experience workflows
-- Make product decisions or define business requirements

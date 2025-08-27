@@ -83,7 +83,7 @@ main() {
     log "Phase 4: Checking MCP container integrity..."
     
     # Verify MCP containers are still running
-    mcp_patterns=("crystaldba/postgres-mcp" "mcp/duckduckgo" "mcp/fetch" "mcp/sequentialthinking")
+    mcp_patterns=("mcp/duckduckgo" "mcp/fetch" "mcp/sequentialthinking")
     mcp_count=0
     
     for pattern in "${mcp_patterns[@]}"; do

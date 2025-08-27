@@ -1,58 +1,34 @@
-#!/usr/bin/env bash
-# Claude Task Runner MCP Server - FastMCP v2 Compatible
+#!/bin/bash
 
-set -Eeuo pipefail
+# Task Runner MCP Server Wrapper (simplified)
+# Uses the claude-task-runner implementation with fastmcp
+
+set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MCP_MANAGER_DIR="/opt/sutazaiapp/mcp-manager"
-VENV_DIR="$MCP_MANAGER_DIR/venv"
+MCP_SERVER_DIR="/opt/sutazaiapp/mcp-servers/claude-task-runner"
 
-# Ensure virtual environment exists
-if [ ! -d "$VENV_DIR" ]; then
-    echo "Creating virtual environment..." >&2
-    python3 -m venv "$VENV_DIR"
-    "$VENV_DIR/bin/pip" install --quiet --upgrade pip
+# Self-check for health monitoring
+if [ "$1" = "--selfcheck" ]; then
+    if [ -d "$MCP_SERVER_DIR/venv" ] && [ -f "$MCP_SERVER_DIR/src/task_runner/mcp/mcp_server.py" ]; then
+        echo '{"healthy":true,"service":"task-runner"}'
+    else
+        echo '{"healthy":false,"error":"task-runner not properly installed"}'
+        exit 1
+    fi
+    exit 0
 fi
 
-# Install/upgrade dependencies if needed
-check_dependencies() {
-    if ! "$VENV_DIR/bin/python" -c "import fastmcp" 2>/dev/null; then
-        echo "Installing FastMCP..." >&2
-        "$VENV_DIR/bin/pip" install --quiet "fastmcp>=2.3.3"
-    fi
-}
+# Ensure virtual environment exists with dependencies
+if [ ! -d "$MCP_SERVER_DIR/venv" ]; then
+    python3 -m venv "$MCP_SERVER_DIR/venv"
+    "$MCP_SERVER_DIR/venv/bin/pip" install --quiet --upgrade pip
+    "$MCP_SERVER_DIR/venv/bin/pip" install --quiet "fastmcp>=2.3.3" mcp typer rich loguru litellm json-repair python-dotenv
+fi
 
-# Selfcheck function
-selfcheck() {
-    check_dependencies
-    if "$VENV_DIR/bin/python" "$MCP_MANAGER_DIR/claude_task_runner_server.py" health >/dev/null 2>&1; then
-        echo "✓ claude-task-runner v2 selfcheck passed"
-        return 0
-    fi
-    echo "✗ claude-task-runner v2 selfcheck failed"
-    return 1
-}
+# Change to server directory and run
+cd "$MCP_SERVER_DIR"
+export PYTHONPATH="$MCP_SERVER_DIR/src:$PYTHONPATH"
 
-# Start function
-start_mcp() {
-    check_dependencies
-    exec "$VENV_DIR/bin/python" "$MCP_MANAGER_DIR/claude_task_runner_server.py" start
-}
-
-# Main command handling
-case "${1:-start}" in
-    start)
-        start_mcp
-        ;;
-    selfcheck|--selfcheck)
-        selfcheck
-        ;;
-    health)
-        check_dependencies
-        "$VENV_DIR/bin/python" "$MCP_MANAGER_DIR/claude_task_runner_server.py" health
-        ;;
-    *)
-        echo "Usage: $0 {start|selfcheck|health}"
-        exit 1
-        ;;
-esac
+# Run the task runner MCP server
+exec "$MCP_SERVER_DIR/venv/bin/python" -m task_runner.mcp.mcp_server

@@ -219,7 +219,7 @@ agents:
   ai-agent-debugger:
     id: ai-agent-debugger
     name: ai-agent-debugger
-    type: sonnet
+    type: opus
     description: 'AI agent: ai-agent-debugger'
     capabilities:
     - automation
@@ -5598,7 +5598,7 @@ agents:
   explainable-ai-specialist:
     id: explainable-ai-specialist
     name: explainable-ai-specialist
-    type: sonnet
+    type: opus
     description: 'AI agent: explainable-ai-specialist'
     capabilities:
     - automation
@@ -7892,7 +7892,7 @@ statistics:
   total_agents: 422
   active_agents: 69
   agent_types:
-  - sonnet
+  - opus
   - container
   - code_assistant
   - utility

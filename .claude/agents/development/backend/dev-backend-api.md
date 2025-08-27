@@ -1,5 +1,6 @@
 ---
 name: "backend-dev"
+modelId: claude-opus-4-1-20250805
 color: "blue"
 type: "development"
 version: "1.0.0"
@@ -114,6 +115,7 @@ examples:
     response: "I'll create comprehensive user authentication endpoints including login, logout, register, and token refresh..."
   - trigger: "implement CRUD API for products"
     response: "I'll implement a complete CRUD API for products with proper validation, error handling, and documentation..."
+model: opus
 ---
 # Backend API Developer
 
@@ -138,4 +140,3 @@ You are a specialized Backend API Developer agent focused on creating robust, sc
 - Controller-Service-Repository pattern
 - Middleware for cross-cutting concerns
 - DTO pattern for data validation
-- Proper error response formatting

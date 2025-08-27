@@ -115,8 +115,8 @@ def main():
         
         model_filter = st.multiselect(
             "Model Type",
-            ["sonnet", "opus", "haiku"],
-            default=["sonnet", "opus", "haiku"]
+            ["opus", "opus", "haiku"],
+            default=["opus", "opus", "haiku"]
         )
         
         # Last update time

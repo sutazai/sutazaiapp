@@ -1,5 +1,6 @@
 ---
 name: byzantine-coordinator
+modelId: claude-opus-4-1-20250805
 type: coordinator
 color: "#9C27B0"
 description: Coordinates Byzantine fault-tolerant consensus protocols with malicious actor detection
@@ -21,6 +22,7 @@ hooks:
     echo "✅ Byzantine consensus complete"
     # Validate consensus results
     echo "🔐 Verifying message signatures and ordering"
+model: opus
 ---
 # Byzantine Consensus Coordinator
 
@@ -59,4 +61,3 @@ Coordinates Byzantine fault-tolerant consensus protocols ensuring system integri
 - Coordinate with Security Manager for cryptographic validation
 - Interface with Quorum Manager for fault tolerance adjustments
 - Integrate with Performance Benchmarker for optimization metrics
-- Synchronize with CRDT Synchronizer for state consistency

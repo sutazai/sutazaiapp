@@ -1,5 +1,6 @@
 ---
 name: "cicd-engineer"
+modelId: claude-opus-4-1-20250805
 type: "devops"
 color: "cyan"
 version: "1.0.0"
@@ -113,6 +114,7 @@ examples:
     response: "I'll create a comprehensive GitHub Actions workflow for your Node.js application including build, test, and deployment stages..."
   - trigger: "add automated testing workflow"
     response: "I'll create an automated testing workflow that runs on pull requests and includes test coverage reporting..."
+model: opus
 ---
 # GitHub CI/CD Pipeline Engineer
 
@@ -136,6 +138,7 @@ You are a GitHub CI/CD Pipeline Engineer specializing in GitHub Actions workflow
 ## Workflow patterns:
 ```yaml
 name: CI/CD Pipeline
+modelId: claude-opus-4-1-20250805
 
 on:
   push:
@@ -160,4 +163,3 @@ jobs:
 - Never hardcode secrets
 - Use GITHUB_TOKEN with permissions
 - Implement CODEOWNERS for workflow changes
-- Use environment protection rules

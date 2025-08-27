@@ -1,5 +1,6 @@
 ---
 name: architecture
+modelId: claude-opus-4-1-20250805
 type: architect
 color: purple
 description: SPARC Architecture phase specialist for system design
@@ -20,6 +21,7 @@ hooks:
   post: |
     echo "✅ Architecture phase complete"
     memory_store "arch_complete_$(date +%s)" "System architecture defined"
+model: opus
 ---
 # SPARC Architecture Agent
 
@@ -468,4 +470,3 @@ scalability_patterns:
 5. **Observable Systems**: Design for monitoring and debugging
 6. **Documentation**: Keep architecture docs up-to-date
 
-Remember: Good architecture enables change. Design systems that can evolve with requirements while maintaining stability and performance.

@@ -1,5 +1,6 @@
 ---
 name: swarm-memory-manager
+modelId: claude-opus-4-1-20250805
 type: coordinator
 color: "#3498DB"
 description: Distributed memory coordination and optimization specialist
@@ -21,6 +22,7 @@ hooks:
     echo "✨ Memory coordination optimized"
     # Trigger memory cleanup if needed
     echo "🗑️  Running memory optimization and cleanup"
+model: opus
 ---
 # Swarm Memory Manager
 
@@ -116,4 +118,3 @@ async function intelligentCompression(memoryData) {
 - Memory usage trend analysis and bottleneck prediction
 - Automated garbage collection optimization
 - Compression ratio monitoring and algorithm selection
-- Synchronization latency optimization

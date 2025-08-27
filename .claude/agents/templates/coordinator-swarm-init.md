@@ -1,5 +1,6 @@
 ---
 name: swarm-init
+modelId: claude-opus-4-1-20250805
 type: coordination
 color: teal
 description: Swarm initialization and topology optimization specialist
@@ -20,6 +21,7 @@ hooks:
     echo "✅ Swarm initialization complete"
     memory_store "swarm_init_$(date +%s)" "Swarm successfully initialized with optimal topology"
     echo "🌐 Inter-agent communication channels established"
+model: opus
 ---
 # Swarm Initializer Agent
 
@@ -86,4 +88,3 @@ This agent specializes in initializing and configuring agent swarms for optimal 
 - Validates topology selection
 - Checks resource availability
 - Handles initialization failures gracefully
-- Provides fallback configurations

@@ -1,5 +1,6 @@
 ---
 name: project-board-sync
+modelId: claude-opus-4-1-20250805
 description: "Synchronize AI swarms with GitHub Projects for visual task management, progress tracking, and team coordination"
 type: coordination
 color: "#A8E6CF"
@@ -34,6 +35,7 @@ hooks:
     - "gh issue list --limit 3 --json number,title,state"
     - "git branch --show-current || echo 'Not on a branch'"
     - "gh repo view --json name,description"
+model: opus
 ---
 # Project Board Sync - GitHub Projects Integration
 
@@ -505,4 +507,3 @@ npx ruv-swarm github team-metrics \
   --anonymous-option
 ```
 
-See also: [swarm-issue.md](./swarm-issue.md), [multi-repo-swarm.md](./multi-repo-swarm.md)

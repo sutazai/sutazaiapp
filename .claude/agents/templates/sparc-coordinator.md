@@ -1,5 +1,6 @@
 ---
 name: sparc-coord
+modelId: claude-opus-4-1-20250805
 type: coordination
 color: orange
 description: SPARC methodology orchestrator for systematic development phase coordination
@@ -21,6 +22,7 @@ hooks:
     echo "✅ SPARC coordination phase complete"
     memory_store "sparc_coord_complete_$(date +%s)" "SPARC methodology phases coordinated"
     echo "📊 Phase progress tracked in memory"
+model: opus
 ---
 # SPARC Methodology Orchestrator Agent
 
@@ -179,4 +181,3 @@ Completion → Final Review → Deployment
 - Time per phase
 - Quality gate pass rate
 - Defect discovery timing
-- Methodology compliance

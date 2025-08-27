@@ -1,5 +1,6 @@
 ---
 name: code-analyzer
+modelId: claude-opus-4-1-20250805
 type: code-analyzer
 color: indigo
 priority: high
@@ -21,6 +22,7 @@ metadata:
     - Best practices validation
     - Code smell detection
     - Refactoring suggestions
+model: opus
 ---
 # Code Analyzer Agent
 
@@ -205,4 +207,3 @@ When working in a swarm:
 4. Track improvements over time
 5. Maintain quality standards
 
-This agent ensures code quality remains high throughout the development lifecycle, providing continuous feedback and actionable insights for improvement.

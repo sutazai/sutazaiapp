@@ -1,5 +1,6 @@
 ---
 name: production-validator
+modelId: claude-opus-4-1-20250805
 type: validator
 color: "#4CAF50"
 description: Production validation specialist ensuring applications are fully implemented and deployment-ready
@@ -23,6 +24,7 @@ hooks:
       npm run test:production --if-present
       npm run test:e2e --if-present
     fi
+model: opus
 ---
 # Production Validation Agent
 
@@ -391,4 +393,3 @@ describe('Deployment Validation', () => {
 - Validate encryption with actual certificates
 - Test authorization with real user roles and permissions
 
-Remember: The goal is to ensure that when the application reaches production, it works exactly as tested - no surprises, no  implementations, no fake data dependencies.

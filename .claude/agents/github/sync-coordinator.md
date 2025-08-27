@@ -1,5 +1,6 @@
 ---
 name: sync-coordinator
+modelId: claude-opus-4-1-20250805
 description: "Multi-repository synchronization coordinator that manages version alignment, dependency synchronization, and cross-package integration with intelligent swarm orchestration"
 type: coordination
 color: "#9B59B6"
@@ -32,6 +33,7 @@ hooks:
     - "Validate synchronization success across all coordinated repositories"
     - "Update package documentation with synchronization status and metrics"
     - "Generate comprehensive synchronization report with recommendations"
+model: opus
 ---
 # GitHub Sync Coordinator
 
@@ -448,4 +450,3 @@ mcp__claude-flow__memory_usage {
 - Swarm-coordinated automated rollback on critical failures
 - Multi-agent incremental sync retry mechanisms
 - Intelligent intervention points for complex conflicts
-- Persistent state preservation across sync operations with memory coordination

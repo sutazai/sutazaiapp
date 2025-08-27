@@ -1,5 +1,6 @@
 ---
 name: task-orchestrator
+modelId: claude-opus-4-1-20250805
 color: "indigo"
 type: orchestration
 description: "Central coordination agent for task decomposition, execution planning, and result synthesis"
@@ -20,6 +21,7 @@ hooks:
   post: |
     echo "✅ Task orchestration complete"
     memory_store "orchestration_complete_$(date +%s)" "Tasks distributed and monitored"
+model: opus
 ---
 # Task Orchestrator Agent
 
@@ -135,4 +137,3 @@ The Task Orchestrator is the central coordination agent responsible for breaking
 ### 3. Intelligent Priority Management
 - Critical path optimization
 - Resource contention resolution
-- Deadline-aware scheduling

@@ -1,5 +1,6 @@
 ---
 name: load-balancer
+modelId: claude-opus-4-1-20250805
 description: Dynamic task distribution and resource allocation coordinator with work-stealing algorithms and adaptive load balancing
 model: opus
 proactive_triggers:
@@ -433,4 +434,3 @@ const benchmarks = {
 };
 ```
 
-This Load Balancing Coordinator agent provides comprehensive task distribution optimization with advanced algorithms, real-time monitoring, and adaptive resource allocation capabilities for high-performance swarm coordination.

@@ -84,8 +84,8 @@ class AgentRegistry:
         """Classify agent type based on name patterns"""
         name_lower = agent_name.lower()
         
-        if any(keyword in name_lower for keyword in ['opus', 'sonnet', 'ai-', '  ']):
-            return "opus" if "opus" in name_lower else "sonnet"
+        if any(keyword in name_lower for keyword in ['opus', 'opus', 'ai-', '  ']):
+            return "opus" if "opus" in name_lower else "opus"
         elif any(keyword in name_lower for keyword in ['security', 'penetration', 'vulnerability', 'kali']):
             return "security"
         elif any(keyword in name_lower for keyword in ['frontend', 'ui', 'interface']):

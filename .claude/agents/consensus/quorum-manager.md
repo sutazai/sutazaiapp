@@ -1,5 +1,6 @@
 ---
 name: quorum-manager
+modelId: claude-opus-4-1-20250805
 type: coordinator
 color: "#673AB7"
 description: Implements dynamic quorum adjustment and intelligent membership management
@@ -21,6 +22,7 @@ hooks:
     echo "⚖️  Quorum adjustment complete"
     # Validate new quorum configuration
     echo "✅ Verifying fault tolerance and availability guarantees"
+model: opus
 ---
 # Quorum Manager
 
@@ -819,4 +821,3 @@ await this.mcpTools.task_orchestrate({
 });
 ```
 
-This Quorum Manager provides intelligent, adaptive quorum management that optimizes for network conditions, performance requirements, and fault tolerance needs while maintaining the safety and liveness properties of distributed consensus protocols.

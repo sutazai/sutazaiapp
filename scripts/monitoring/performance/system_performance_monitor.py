@@ -67,7 +67,7 @@ class SystemPerformanceMonitor:
             mcp_containers = 0
             sutazai_containers = 0
             
-            mcp_patterns = ['crystaldba/postgres-mcp', 'mcp/duckduckgo', 'mcp/fetch', 'mcp/sequentialthinking']
+            mcp_patterns = ['mcp/duckduckgo', 'mcp/fetch', 'mcp/sequentialthinking']
             
             for container in containers:
                 if container.status == 'running':

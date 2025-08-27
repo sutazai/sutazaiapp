@@ -1,5 +1,6 @@
 ---
 name: release-swarm
+modelId: claude-opus-4-1-20250805
 description: Orchestrate complex software releases using AI swarms that handle everything from changelog generation to multi-platform deployment
 type: coordination
 color: "#4ECDC4"
@@ -35,6 +36,7 @@ hooks:
   notification: |
     echo "📡 Broadcasting release completion across all swarm agents..."
     npx ruv-swarm hook notification --mode release-swarm --broadcast
+model: opus
 ---
 # Release Swarm - Intelligent Release Automation
 
@@ -303,6 +305,7 @@ npx ruv-swarm github hotfix \
 ```yaml
 # .github/workflows/release.yml
 name: Release Workflow
+modelId: claude-opus-4-1-20250805
 on:
   push:
     tags: ['v*']
@@ -579,4 +582,3 @@ npx ruv-swarm github rollback \
   --notify-users
 ```
 
-See also: [workflow-automation.md](./workflow-automation.md), [multi-repo-swarm.md](./multi-repo-swarm.md)

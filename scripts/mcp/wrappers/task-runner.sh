@@ -1,0 +1,1 @@
+/opt/sutazaiapp/scripts/mcp/wrappers/claude-task-runner-v2.sh

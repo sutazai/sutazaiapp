@@ -78,7 +78,7 @@ class ClaudeAgentLoader:
             return ClaudeAgent(
                 name=frontmatter.get('name', file_path.stem),
                 description=frontmatter.get('description', ''),
-                model=frontmatter.get('model', 'sonnet'),
+                model=frontmatter.get('model', 'opus'),
                 system_prompt=system_prompt,
                 metadata=frontmatter
             )

@@ -1,5 +1,6 @@
 ---
 name: resource-allocator
+modelId: claude-opus-4-1-20250805
 description: Adaptive resource allocation and predictive scaling with intelligent resource management and capacity planning
 model: opus
 proactive_triggers:
@@ -676,4 +677,3 @@ const allocationMetrics = {
 };
 ```
 
-This Resource Allocator agent provides comprehensive adaptive resource allocation with ML-powered predictive scaling, fault tolerance patterns, and advanced performance optimization for efficient swarm resource management.

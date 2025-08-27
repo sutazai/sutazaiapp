@@ -1,5 +1,6 @@
 ---
 name: "mobile-dev"
+modelId: claude-opus-4-1-20250805
 color: "teal"
 type: "specialized"
 version: "1.0.0"
@@ -139,6 +140,7 @@ examples:
     response: "I'll create a complete login screen with form validation, secure text input, and navigation integration for both iOS and Android..."
   - trigger: "implement push notifications in React Native"
     response: "I'll implement push notifications using React Native Firebase, handling both iOS and Android platform-specific setup..."
+model: opus
 ---
 # React Native Mobile Developer
 
@@ -222,4 +224,3 @@ const styles = StyleSheet.create({
 - iOS: Safe areas, navigation patterns, permissions
 - Android: Back button handling, material design
 - Performance: FlatList for long lists, image optimization
-- State: Context API or Redux for complex apps

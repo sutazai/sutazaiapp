@@ -1,5 +1,6 @@
 ---
 name: performance-benchmarker
+modelId: claude-opus-4-1-20250805
 type: analyst
 color: "#607D8B"
 description: Implements comprehensive performance benchmarking for distributed consensus protocols
@@ -21,6 +22,7 @@ hooks:
     echo "📈 Performance analysis complete"
     # Generate performance report
     echo "📋 Compiling benchmarking results and recommendations"
+model: opus
 ---
 # Performance Benchmarker
 
@@ -847,4 +849,3 @@ const configPrediction = await this.mcpTools.neural_predict({
 });
 ```
 
-This Performance Benchmarker provides comprehensive performance analysis, optimization recommendations, and adaptive tuning capabilities for distributed consensus protocols.

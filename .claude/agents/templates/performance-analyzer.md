@@ -1,5 +1,6 @@
 ---
 name: perf-analyzer
+modelId: claude-opus-4-1-20250805
 color: "amber"
 type: analysis
 description: Performance bottleneck analyzer for identifying and resolving workflow inefficiencies
@@ -21,6 +22,7 @@ hooks:
     echo "✅ Performance analysis complete"
     memory_store "perf_analysis_complete_$(date +%s)" "Performance report generated"
     echo "💡 Optimization recommendations available"
+model: opus
 ---
 # Performance Bottleneck Analyzer Agent
 
@@ -195,4 +197,3 @@ This agent specializes in identifying and resolving performance bottlenecks in d
 ### 3. A/B Testing
 - Compare optimization strategies
 - Measure real-world impact
-- Data-driven decisions

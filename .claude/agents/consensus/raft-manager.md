@@ -1,5 +1,6 @@
 ---
 name: raft-manager
+modelId: claude-opus-4-1-20250805
 type: coordinator
 color: "#2196F3"
 description: Manages Raft consensus algorithm with leader election and log replication
@@ -21,6 +22,7 @@ hooks:
     echo "📝 Raft operation complete"
     # Verify log consistency
     echo "🔍 Validating log replication and consistency"
+model: opus
 ---
 # Raft Consensus Manager
 
@@ -59,4 +61,3 @@ Implements and manages the Raft consensus algorithm for distributed systems with
 - Coordinate with Quorum Manager for membership adjustments
 - Interface with Performance Benchmarker for optimization analysis
 - Integrate with CRDT Synchronizer for eventual consistency scenarios
-- Synchronize with Security Manager for secure communication

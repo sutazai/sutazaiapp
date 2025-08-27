@@ -1,5 +1,6 @@
 ---
 name: planner
+modelId: claude-opus-4-1-20250805
 type: coordinator
 color: "#4ECDC4"
 description: Strategic planning and task orchestration agent
@@ -17,6 +18,7 @@ hooks:
   post: |
     echo "✅ Planning complete"
     memory_store "planner_end_$(date +%s)" "Completed planning: $TASK"
+model: opus
 ---
 # Strategic Planning Agent
 
@@ -112,4 +114,3 @@ plan:
    - Efficient resource utilization
    - Continuous progress visibility
 
-Remember: A good plan executed now is better than a perfect plan executed never. Focus on creating actionable, practical plans that drive progress.

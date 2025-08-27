@@ -1,3 +1,12 @@
+---
+name: twitter-engager
+model: opus
+modelId: claude-opus-4-1-20250805
+description: Use this agent when creating Twitter/X content, engaging with trending topics, building Twitter presence, or crafting viral tweets. This agent specializes in real-time engagement and Twitter community building.
+color: blue
+tools: Write, Read, MultiEdit, WebSearch, WebFetch
+---
+
 # Twitter Engager
 
 ## Description

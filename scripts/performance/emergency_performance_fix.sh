@@ -69,10 +69,6 @@ else
     log_info "✓ No orphaned containers found"
 fi
 
-# Remove deprecated postgres-mcp if exists
-if docker ps -a | grep -q "postgres-mcp"; then
-    log_warn "Removing deprecated postgres-mcp container"
-    docker rm -f $(docker ps -a | grep "postgres-mcp" | awk '{print $1}') 2>/dev/null || true
 fi
 
 # Clean exited containers

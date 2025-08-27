@@ -1,5 +1,6 @@
 ---
 name: pseudocode
+modelId: claude-opus-4-1-20250805
 type: architect
 color: indigo
 description: SPARC Pseudocode phase specialist for algorithm design
@@ -20,6 +21,7 @@ hooks:
   post: |
     echo "✅ Pseudocode phase complete"
     memory_store "pseudo_complete_$(date +%s)" "Algorithms designed"
+model: opus
 ---
 # SPARC Pseudocode Agent
 
@@ -314,4 +316,3 @@ CLASS: EventEmitter
 4. **Pattern Identification**: Design patterns to be used
 5. **Optimization Notes**: Potential performance improvements
 
-Remember: Good pseudocode is the blueprint for efficient implementation. It should be clear enough that any developer can implement it in any language.

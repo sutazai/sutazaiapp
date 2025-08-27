@@ -1,5 +1,6 @@
 ---
 name: multi-repo-swarm
+modelId: claude-opus-4-1-20250805
 description: Cross-repository swarm orchestration for organization-wide automation and intelligent collaboration
 type: coordination
 color: "#FF6B35"
@@ -30,6 +31,7 @@ hooks:
     - "gh pr list --state open --limit 5 | grep -q . && echo 'Active PRs found'"
     - "git log --oneline -5 | head -3"
     - "gh repo view --json name,description,topics"
+model: opus
 ---
 # Multi-Repo Swarm - Cross-Repository Swarm Orchestration
 
@@ -549,4 +551,3 @@ npx ruv-swarm github cross-team \
   --track-progress
 ```
 
-See also: [swarm-pr.md](./swarm-pr.md), [project-board-sync.md](./project-board-sync.md)

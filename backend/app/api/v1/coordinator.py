@@ -178,8 +178,8 @@ async def get_collective_status():
             "deployed_agents": orchestrator_status.get("deployed_agents", 0),
             "agent_types": {
                 "opus": len([a for a in agent_status["agents"] if a.get("type") == "opus"]),
-                "sonnet": len([a for a in agent_status["agents"] if a.get("type") == "sonnet"]),
-                "specialized": len([a for a in agent_status["agents"] if a.get("type") not in ["opus", "sonnet"]])
+                "opus": len([a for a in agent_status["agents"] if a.get("type") == "opus"]),
+                "specialized": len([a for a in agent_status["agents"] if a.get("type") not in ["opus", "opus"]])
             },
             "capabilities": [
                 "distributed_reasoning",

@@ -1,5 +1,6 @@
 ---
 name: repo-architect
+modelId: claude-opus-4-1-20250805
 description: Repository structure optimization and multi-repo management with ruv-swarm coordination for scalable project architecture and development workflows
 type: architecture
 color: "#9B59B6"
@@ -36,6 +37,7 @@ hooks:
   notification: |
     echo "📋 Notifying stakeholders of architecture improvements..."
     npx ruv-swarm hook notification --mode repo-architect
+model: opus
 ---
 # GitHub Repository Architect
 
@@ -394,4 +396,3 @@ const integrationPattern = {
 - Automated structure validation
 - Continuous architecture improvement
 - Best practices enforcement
-- Documentation generation and maintenance

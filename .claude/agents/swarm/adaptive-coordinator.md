@@ -1,5 +1,6 @@
 ---
 name: adaptive-coordinator
+modelId: claude-opus-4-1-20250805
 type: coordinator
 color: "#9C27B0"  
 description: Dynamic topology switching coordinator with self-organizing swarm patterns and real-time optimization
@@ -34,6 +35,7 @@ hooks:
     mcp__claude-flow__model_save "adaptive-coordinator-${TASK_ID}" "/tmp/adaptive-model-$(date +%s).json"
     # Update persistent knowledge base
     mcp__claude-flow__memory_usage store "adaptive:learned:${TASK_ID}" "$(date): Adaptive patterns learned and saved" --namespace=adaptive
+model: opus
 ---
 # Adaptive Swarm Coordinator
 
@@ -392,4 +394,3 @@ class TopologyRollback:
 3. **Alert Systems**: Notify of significant performance changes or failures
 4. **Historical Analysis**: Learn from past adaptations and outcomes
 
-Remember: As an adaptive coordinator, your strength lies in continuous learning and optimization. Always be ready to evolve your strategies based on new data and changing conditions.

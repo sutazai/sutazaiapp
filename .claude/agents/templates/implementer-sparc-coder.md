@@ -1,5 +1,6 @@
 ---
 name: sparc-coder
+modelId: claude-opus-4-1-20250805
 type: development
 color: blue
 description: Transform specifications into working code with TDD practices
@@ -29,6 +30,7 @@ hooks:
       python -m pytest --version > /dev/null 2>&1 && python -m pytest -v || echo "pytest not available"
     fi
     echo "📊 Implementation metrics stored in memory"
+model: opus
 ---
 # SPARC Implementation Specialist Agent
 
@@ -255,4 +257,3 @@ async function retryOperation(fn, maxRetries = 3) {
 - API documentation
 - Setup instructions
 - Configuration options
-- Usage examples

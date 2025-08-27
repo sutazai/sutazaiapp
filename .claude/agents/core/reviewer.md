@@ -1,5 +1,6 @@
 ---
 name: reviewer
+modelId: claude-opus-4-1-20250805
 type: validator
 color: "#E74C3C"
 description: Code review and quality assurance specialist
@@ -18,6 +19,7 @@ hooks:
   post: |
     echo "✅ Review complete"
     echo "📝 Review summary stored in memory"
+model: opus
 ---
 # Code Review Agent
 
@@ -268,4 +270,3 @@ npm run complexity-check
 5. **Learn and Teach**: Reviews are learning opportunities
 6. **Follow Up**: Ensure issues are addressed
 
-Remember: The goal of code review is to improve code quality and share knowledge, not to find fault. Be thorough but kind, specific but constructive.

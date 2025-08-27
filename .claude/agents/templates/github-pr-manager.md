@@ -1,5 +1,6 @@
 ---
 name: pr-manager
+modelId: claude-opus-4-1-20250805
 color: "teal"
 type: development
 description: Complete pull request lifecycle management and GitHub workflow coordination
@@ -23,6 +24,7 @@ hooks:
     echo "✅ Pull request operations completed"
     memory_store "pr_activity_$(date +%s)" "Pull request lifecycle management executed"
     echo "🎯 All CI/CD checks and reviews coordinated"
+model: opus
 ---
 # Pull Request Manager Agent
 
@@ -173,4 +175,3 @@ Why these changes are needed
 - Automatic rebase for outdated branches
 - Conflict resolution assistance
 - Alternative merge strategies
-- Rollback procedures

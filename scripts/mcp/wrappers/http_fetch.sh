@@ -1,24 +1,20 @@
-#!/usr/bin/env bash
-set -Eeuo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-. "${SCRIPT_DIR}/../_common.sh"
+#!/bin/bash
 
-if [ "${1:-}" = "--selfcheck" ]; then
-  section "HTTP Fetch MCP selfcheck $(ts)"
-  if has_cmd docker; then ok_line "docker present"; else warn_line "docker not found"; fi
-  if has_cmd npx; then ok_line "npx present"; else warn_line "npx not found"; fi
-  if ! has_cmd docker && ! has_cmd npx; then err_line "no launcher available"; exit 127; fi
-  exit 0
+# HTTP Fetch MCP Server Wrapper
+# Uses the official @modelcontextprotocol/server-fetch
+
+set -e
+
+# Self-check for health monitoring
+if [ "$1" = "--selfcheck" ]; then
+    if command -v node >/dev/null 2>&1 && command -v npx >/dev/null 2>&1; then
+        echo '{"healthy":true,"service":"http-fetch"}'
+    else
+        echo '{"healthy":false,"error":"node or npx not found"}'
+        exit 1
+    fi
+    exit 0
 fi
 
-if has_cmd docker; then
-  exec docker run --rm -i mcp/fetch
-fi
-
-if has_cmd npx; then
-  # Prefer Node variant if available
-  exec npx -y @modelcontextprotocol/server-fetch
-fi
-
-err "HTTP fetch MCP requires Docker (mcp/fetch) or Node (@modelcontextprotocol/server-fetch)."
-exit 127
+# Run the HTTP fetch MCP server
+exec npx -y @modelcontextprotocol/server-fetch

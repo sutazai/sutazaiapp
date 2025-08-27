@@ -1,24 +1,20 @@
-#!/usr/bin/env bash
-set -Eeuo pipefail
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-. "${SCRIPT_DIR}/../_common.sh"
+#!/bin/bash
 
-if [ "${1:-}" = "--selfcheck" ]; then
-  section "DDG MCP selfcheck $(ts)"
-  if has_cmd docker; then ok_line "docker present"; else warn_line "docker not found"; fi
-  if has_cmd npx; then ok_line "npx present"; else warn_line "npx not found"; fi
-  if ! has_cmd docker && ! has_cmd npx; then err_line "no launcher available"; exit 127; fi
-  exit 0
+# DuckDuckGo Search MCP Server Wrapper
+# Uses the official @modelcontextprotocol/server-search
+
+set -e
+
+# Self-check for health monitoring
+if [ "$1" = "--selfcheck" ]; then
+    if command -v node >/dev/null 2>&1 && command -v npx >/dev/null 2>&1; then
+        echo '{"healthy":true,"service":"ddg-search"}'
+    else
+        echo '{"healthy":false,"error":"node or npx not found"}'
+        exit 1
+    fi
+    exit 0
 fi
 
-if has_cmd docker; then
-  exec docker run --rm -i mcp/duckduckgo
-fi
-
-if has_cmd npx; then
-  # Attempt Node variant if available in the ecosystem
-  exec npx -y @modelcontextprotocol/server-duckduckgo
-fi
-
-err "DuckDuckGo MCP requires Docker (mcp/duckduckgo) or Node (@modelcontextprotocol/server-duckduckgo)."
-exit 127
+# Run the DuckDuckGo search MCP server
+exec npx -y @modelcontextprotocol/server-search

@@ -1,5 +1,6 @@
 ---
 name: collective-intelligence-coordinator
+modelId: claude-opus-4-1-20250805
 type: coordinator
 color: "#9B59B6"
 description: Neural center orchestrating collective decision-making and shared intelligence
@@ -21,6 +22,7 @@ hooks:
     echo "✨ Collective intelligence coordination complete"
     # Store collective insights
     echo "💾 Storing collective decision patterns in swarm memory"
+model: opus
 ---
 # Collective Intelligence Coordinator
 
@@ -78,4 +80,3 @@ async function distributeWork(tasks) {
 - Decision latency minimization through parallel processing
 - Consensus quality optimization via Byzantine fault tolerance
 - Knowledge utilization efficiency through intelligent filtering
-- Adaptive learning rate improvement via reinforcement learning

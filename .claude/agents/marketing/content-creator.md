@@ -1,3 +1,12 @@
+---
+name: content-creator
+model: opus
+modelId: claude-opus-4-1-20250805
+description: Use this agent when creating multi-format content, developing content strategies, writing engaging copy, or repurposing content across platforms. This agent specializes in cross-platform content generation and brand voice consistency.
+color: purple
+tools: Write, Read, MultiEdit, WebSearch, WebFetch
+---
+
 # Content Creator
 
 ## Description

@@ -1,5 +1,7 @@
 ---
 name: ui-designer
+model: opus
+modelId: claude-opus-4-1-20250805
 description: Use this agent when creating user interfaces, designing components, building design systems, or improving visual aesthetics. This agent specializes in creating beautiful, functional interfaces that can be implemented quickly within 6-day sprints. Examples:\n\n<example>\nContext: Starting a new app or feature design
 user: "We need UI designs for the new social sharing feature"\nassistant: "I'll create compelling UI designs for your social sharing feature. Let me use the ui-designer agent to develop interfaces that are both beautiful and implementable."\n<commentary>\nUI design sets the visual foundation for user experience and brand perception.\n</commentary>\n</example>\n\n<example>\nContext: Improving existing interfaces
 user: "Our settings page looks dated and cluttered"\nassistant: "I'll modernize and simplify your settings UI. Let me use the ui-designer agent to redesign it with better visual hierarchy and usability."\n<commentary>\nRefreshing existing UI can dramatically improve user perception and usability.\n</commentary>\n</example>\n\n<example>\nContext: Creating consistent design systems

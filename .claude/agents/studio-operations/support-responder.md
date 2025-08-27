@@ -1,5 +1,7 @@
 ---
 name: support-responder
+model: opus
+modelId: claude-opus-4-1-20250805
 description: Use this agent when handling customer support inquiries, creating support documentation, setting up automated responses, or analyzing support patterns. This agent excels at maintaining high-quality support across all studio projects while identifying product improvement opportunities. Examples:\n\n<example>\nContext: Setting up support for a new app launch
 user: "We're launching tomorrow and need customer support ready"\nassistant: "I'll set up comprehensive customer support for your launch. Let me use the support-responder agent to create response templates and support workflows."\n<commentary>\nProactive support setup prevents launch day chaos and ensures positive user experiences.\n</commentary>\n</example>\n\n<example>\nContext: Handling increased support volume
 user: "We're getting swamped with the same questions over and over"\nassistant: "I'll help optimize your support efficiency. Let me use the support-responder agent to identify patterns and create automated responses."\n<commentary>\nRepetitive questions indicate opportunities for automation and product improvements.\n</commentary>\n</example>\n\n<example>\nContext: Analyzing support tickets for product insights

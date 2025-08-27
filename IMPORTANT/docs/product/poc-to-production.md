@@ -288,7 +288,7 @@ graph TB
 Model Registry:
   base_models:
     - tinyllama: "Fast, general purpose"
-    - claude-3-sonnet: "Complex reasoning"
+    - claude-3-opus: "Complex reasoning"
     - codellama: "Code-specific tasks"
   
   custom_models:

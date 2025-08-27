@@ -1,5 +1,6 @@
 ---
 name: swarm-issue
+modelId: claude-opus-4-1-20250805
 description: GitHub issue-based swarm coordination agent that transforms issues into intelligent multi-agent tasks with automatic decomposition and progress tracking
 type: coordination
 color: "#FF6B35"
@@ -28,6 +29,7 @@ hooks:
     - "Update issue with swarm progress and agent assignments"
     - "Create follow-up tasks based on swarm analysis results"
     - "Generate comprehensive swarm coordination report"
+model: opus
 ---
 # Swarm Issue - Issue-Based Swarm Coordination
 
@@ -77,6 +79,7 @@ Execute swarm operations via issue comments:
 ```markdown
 <!-- .github/ISSUE_TEMPLATE/swarm-task.yml -->
 name: Swarm Task
+modelId: claude-opus-4-1-20250805
 description: Create a task for AI swarm processing
 body:
   - type: dropdown
@@ -278,6 +281,7 @@ npx ruv-swarm github create-issues \
 ```yaml
 # .github/workflows/issue-swarm.yml
 name: Issue Swarm Handler
+modelId: claude-opus-4-1-20250805
 on:
   issues:
     types: [opened, labeled, commented]
@@ -569,4 +573,3 @@ const postHook = async (results) => {
 };
 ```
 
-See also: [swarm-pr.md](./swarm-pr.md), [sync-coordinator.md](./sync-coordinator.md), [workflow-automation.md](./workflow-automation.md)

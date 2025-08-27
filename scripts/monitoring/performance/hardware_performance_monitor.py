@@ -55,7 +55,7 @@ class HardwarePerformanceMonitor:
         """Get count of MCP containers"""
         try:
             result = subprocess.run(
-                "docker ps --format '{{.Names}}' | grep -E '(mcp|postgres-mcp|duckduckgo|fetch|sequentialthinking)' | wc -l",
+                "docker ps --format '{{.Names}}' | grep -E '(mcp|duckduckgo|fetch|sequentialthinking)' | wc -l",
                 shell=True, capture_output=True, text=True
             )
             if result.returncode == 0:

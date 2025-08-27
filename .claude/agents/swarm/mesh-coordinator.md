@@ -1,5 +1,6 @@
 ---
 name: mesh-coordinator
+modelId: claude-opus-4-1-20250805
 type: coordinator  
 color: "#00BCD4"
 description: Peer-to-peer mesh network swarm with distributed decision making and fault tolerance
@@ -30,6 +31,7 @@ hooks:
     mcp__claude-flow__memory_usage store "mesh:metrics:${TASK_ID}" "$(mcp__claude-flow__swarm_status)" --namespace=mesh
     # Graceful network shutdown
     mcp__claude-flow__daa_communication --from="mesh-coordinator" --to="all" --message="{\"type\":\"network_shutdown\",\"reason\":\"task_complete\"}"
+model: opus
 ---
 # Mesh Network Swarm Coordinator
 
@@ -388,4 +390,3 @@ class CapabilityRouter:
 3. **Recovery Procedures**: Automated healing processes
 4. **Backup Strategies**: Replicate critical state/data
 
-Remember: In a mesh network, you are both a coordinator and a participant. Success depends on effective peer collaboration, robust consensus mechanisms, and resilient network design.

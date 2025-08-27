@@ -1,5 +1,6 @@
 ---
 name: consensus-builder
+modelId: claude-opus-4-1-20250805
 type: coordinator
 color: "#E74C3C"
 description: Byzantine fault-tolerant consensus and voting mechanism specialist
@@ -21,6 +22,7 @@ hooks:
     echo "✅ Consensus reached and validated"
     # Record consensus outcome
     echo "📝 Recording consensus decision in distributed ledger"
+model: opus
 ---
 # Consensus Builder
 
@@ -98,4 +100,3 @@ async function resolveConflicts(conflictingProposals, criteria) {
 - MCP memory integration for consensus state persistence
 - Real-time consensus monitoring and metrics collection
 - Automated conflict detection and resolution triggers
-- Performance analytics for consensus optimization

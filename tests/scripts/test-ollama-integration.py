@@ -69,7 +69,7 @@ class OllamaIntegrationTester:
         logger.info("\nTesting model availability...")
         required_models = [
             OllamaConfig.DEFAULT_MODEL,
-            OllamaConfig.SONNET_MODEL,
+            OllamaConfig.opus_MODEL,
             OllamaConfig.OPUS_MODEL
         ]
         
@@ -152,7 +152,7 @@ class OllamaIntegrationTester:
         
         models = [
             OllamaConfig.DEFAULT_MODEL,
-            OllamaConfig.SONNET_MODEL,
+            OllamaConfig.opus_MODEL,
             OllamaConfig.OPUS_MODEL
         ]
         
@@ -217,10 +217,10 @@ class OllamaIntegrationTester:
                           if m == OllamaConfig.OPUS_MODEL]
             agents_to_test.extend(opus_agents[:3])
             
-            # Sample Sonnet agents  
-            sonnet_agents = [a for a, m in OllamaConfig.AGENT_MODELS.items()
-                           if m == OllamaConfig.SONNET_MODEL]
-            agents_to_test.extend(sonnet_agents[:5])
+            # Sample opus agents  
+            opus_agents = [a for a, m in OllamaConfig.AGENT_MODELS.items()
+                           if m == OllamaConfig.opus_MODEL]
+            agents_to_test.extend(opus_agents[:5])
             
             # Sample default agents
             default_agents = [a for a, m in OllamaConfig.AGENT_MODELS.items()

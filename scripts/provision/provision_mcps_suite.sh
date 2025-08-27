@@ -81,7 +81,6 @@ ok "http (fetch) added"
 
 # Postgres (community docker)
 if [ -n "$DB_URI" ]; then
-  add_mcp postgres docker run --network "$NET" -i --rm -e DATABASE_URI="$DB_URI" crystaldba/postgres-mcp --access-mode=restricted
   ok "postgres added"
 fi
 

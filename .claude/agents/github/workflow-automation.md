@@ -1,5 +1,6 @@
 ---
 name: workflow-automation
+modelId: claude-opus-4-1-20250805
 description: "GitHub Actions workflow automation agent that creates intelligent, self-organizing CI/CD pipelines with adaptive multi-agent coordination and automated optimization"
 type: automation
 color: "#E74C3C"
@@ -33,6 +34,7 @@ hooks:
     - "Deploy optimized workflows with continuous performance monitoring"
     - "Generate workflow automation metrics and optimization recommendations"
     - "Update automation rules based on swarm learning and performance data"
+model: opus
 ---
 # Workflow Automation - GitHub Actions Integration
 
@@ -45,6 +47,7 @@ Integrate AI swarms with GitHub Actions to create intelligent, self-organizing C
 ```yaml
 # .github/workflows/swarm-ci.yml
 name: Intelligent CI with Swarms
+modelId: claude-opus-4-1-20250805
 on: [push, pull_request]
 
 jobs:
@@ -93,6 +96,7 @@ npx ruv-swarm actions generate-workflow \
 ```yaml
 # .github/workflows/polyglot-swarm.yml
 name: Polyglot Project Handler
+modelId: claude-opus-4-1-20250805
 on: push
 
 jobs:
@@ -118,6 +122,7 @@ jobs:
 ```yaml
 # .github/workflows/security-swarm.yml
 name: Intelligent Security Scan
+modelId: claude-opus-4-1-20250805
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -190,6 +195,7 @@ npx ruv-swarm actions resources \
 ```yaml
 # Auto-fix common CI failures
 name: Self-Healing Pipeline
+modelId: claude-opus-4-1-20250805
 on: workflow_run
 
 jobs:
@@ -209,6 +215,7 @@ jobs:
 ```yaml
 # Intelligent deployment strategy
 name: Smart Deployment
+modelId: claude-opus-4-1-20250805
 on:
   push:
     branches: [main]
@@ -235,6 +242,7 @@ jobs:
 ```yaml
 # Automatic performance testing
 name: Performance Guard
+modelId: claude-opus-4-1-20250805
 on: pull_request
 
 jobs:
@@ -255,6 +263,7 @@ jobs:
 ```javascript
 // action.yml
 name: 'Swarm Custom Action'
+modelId: claude-opus-4-1-20250805
 description: 'Custom swarm-powered action'
 inputs:
   task:
@@ -344,6 +353,7 @@ npx ruv-swarm actions failure-patterns \
 ### 1. PR Validation Swarm
 ```yaml
 name: PR Validation Swarm
+modelId: claude-opus-4-1-20250805
 on: pull_request
 
 jobs:
@@ -369,6 +379,7 @@ jobs:
 ### 2. Release Automation
 ```yaml
 name: Intelligent Release
+modelId: claude-opus-4-1-20250805
 on:
   push:
     tags: ['v*']
@@ -389,6 +400,7 @@ jobs:
 ### 3. Documentation Updates
 ```yaml
 name: Auto Documentation
+modelId: claude-opus-4-1-20250805
 on:
   push:
     paths: ['src/**']
@@ -631,4 +643,3 @@ mcp__claude-flow__task_orchestrate {
 }
 ```
 
-See also: [swarm-pr.md](./swarm-pr.md), [swarm-issue.md](./swarm-issue.md), [sync-coordinator.md](./sync-coordinator.md)
