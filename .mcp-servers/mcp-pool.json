@@ -1,9 +1,0 @@
-{
-  "maxProcesses": 10,
-  "processTimeout": 300000,
-  "recycleAfter": 100,
-  "memoryLimit": "512M",
-  "cpuLimit": "25%",
-  "autoKillStale": true,
-  "staleThreshold": 3600000
-}

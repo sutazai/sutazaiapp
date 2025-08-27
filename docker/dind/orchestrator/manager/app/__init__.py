@@ -1,1 +1,0 @@
-# MCP Manager Application Package

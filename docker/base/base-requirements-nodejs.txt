@@ -1,7 +1,0 @@
-# Python packages for Node.js services that need AI integration
-#   set for ML/AI bridge functionality
-
-# Core AI packages (lightweight versions)
-openai==1.3.7
-requests==2.31.0
-python-dotenv==1.0.0

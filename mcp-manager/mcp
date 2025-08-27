@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-# MCP Manager CLI
-
-exec /opt/sutazaiapp/mcp-manager/venv/bin/python /opt/sutazaiapp/mcp-manager/manager.py "$@"
