@@ -443,7 +443,9 @@
       "Bash(git branch:*)",
       "Bash(git log:*)",
       "mcp__gitmcp-sutazai__git_status",
-      "mcp__memory-bank__memory-bank-status"
+      "mcp__memory-bank__memory-bank-status",
+      "Bash(ollama:*)",
+      "mcp__extended-memory__read_graph"
     ],
     "deny": [],
     "additionalDirectories": [
