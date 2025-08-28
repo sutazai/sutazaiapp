@@ -1,0 +1,189 @@
+version: '3.8'
+
+# Lightweight Agent Deployment for SutazAI Platform
+# Optimized for limited resources (23GB RAM, 11GB available)
+# Leverages existing infrastructure services
+
+services:
+  # Priority Agent 1: CrewAI - Lightest orchestration framework
+  crewai:
+    container_name: sutazai-crewai
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir crewai crewai-tools langchain-community fastapi uvicorn redis asyncpg &&
+             python /app/crewai_wrapper.py"
+    ports:
+      - "11401:8000"
+    networks:
+      - sutazai-network
+    environment:
+      # Reuse existing services
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - REDIS_URL=redis://sutazai-redis:6379
+      - RABBITMQ_URL=amqp://sutazai:sutazai_secure_2024@sutazai-rabbitmq:5672
+      - CHROMADB_URL=http://sutazai-chromadb:8000
+      - QDRANT_URL=http://sutazai-qdrant:6333
+      - MCP_BRIDGE_URL=http://host.docker.internal:11100
+      - CONSUL_URL=http://sutazai-consul:8500
+      # Resource limits
+      - PYTHONUNBUFFERED=1
+      - MAX_WORKERS=2
+    volumes:
+      - ./wrappers/crewai_wrapper.py:/app/crewai_wrapper.py:ro
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  # Priority Agent 2: Aider - Code generation with API wrapper
+  aider:
+    container_name: sutazai-aider
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             pip install --no-cache-dir aider-chat fastapi uvicorn redis &&
+             python /app/aider_wrapper.py"
+    ports:
+      - "11301:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - AIDER_REDIS_URL=redis://sutazai-redis:6379
+      - AIDER_POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - MCP_BRIDGE_URL=http://host.docker.internal:11100
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/aider_wrapper.py:/app/aider_wrapper.py:ro
+      - ./code-generation/aider/workspace:/workspace:rw
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Priority Agent 3: ShellGPT - CLI assistant with API wrapper
+  shellgpt:
+    container_name: sutazai-shellgpt
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir shell-gpt fastapi uvicorn redis &&
+             python /app/shellgpt_wrapper.py"
+    ports:
+      - "11701:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - REDIS_URL=redis://sutazai-redis:6379
+      - MCP_BRIDGE_URL=http://host.docker.internal:11100
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/shellgpt_wrapper.py:/app/shellgpt_wrapper.py:ro
+    mem_limit: 256m
+    cpus: 0.25
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Priority Agent 4: Documind - Document processing
+  documind-lite:
+    container_name: sutazai-documind
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir fastapi uvicorn PyPDF2 python-docx aiohttp &&
+             python /app/documind_main.py"
+    ports:
+      - "11502:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - VECTOR_DB_URL=http://sutazai-chromadb:8000
+      - QDRANT_URL=http://sutazai-qdrant:6333
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - REDIS_URL=redis://sutazai-redis:6379
+      - MCP_BRIDGE_URL=http://host.docker.internal:11100
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/documind_main.py:/app/documind_main.py:ro
+      - documind-uploads:/app/uploads:rw
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Priority Agent 5: LangChain API Server
+  langchain-lite:
+    container_name: sutazai-langchain
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir langchain langchain-community fastapi uvicorn redis &&
+             python /app/langchain_wrapper.py"
+    ports:
+      - "11201:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - LANGCHAIN_TRACING_V2=false  # Disable tracing to save resources
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - REDIS_URL=redis://sutazai-redis:6379
+      - VECTOR_STORE=chromadb
+      - CHROMADB_URL=http://sutazai-chromadb:8000
+      - MCP_BRIDGE_URL=http://host.docker.internal:11100
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/langchain_wrapper.py:/app/langchain_wrapper.py:ro
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+volumes:
+  documind-uploads:
+    driver: local
+
+# Resource Summary:
+# - CrewAI: 1GB RAM, 1 CPU
+# - Aider: 512MB RAM, 0.5 CPU
+# - ShellGPT: 256MB RAM, 0.25 CPU
+# - Documind: 512MB RAM, 0.5 CPU
+# - LangChain: 768MB RAM, 0.75 CPU
+# Total: ~3GB RAM, 3 CPUs (well within our 11GB available)
+
+# Deployment Strategy:
+# 1. Deploy one agent at a time
+# 2. Monitor resource usage after each
+# 3. Scale up/down based on actual usage
+# 4. Agents auto-sleep when idle

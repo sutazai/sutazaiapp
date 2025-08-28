@@ -1,0 +1,254 @@
+# SutazAI Platform - Phase 3 Medium Agents
+# All configured for local LLM with Ollama/TinyLlama
+# Target: ~3GB RAM total
+
+services:
+  # Deep Agent - Deep Learning Agent
+  deepagent:
+    container_name: sutazai-deepagent
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu &&
+             pip install --no-cache-dir fastapi uvicorn numpy &&
+             python /app/deepagent_local.py"
+    ports:
+      - "11107:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/deepagent_local.py:/app/deepagent_local.py:ro
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 180s
+
+  # Local Deep Researcher
+  deepresearcher:
+    container_name: sutazai-deepresearcher
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir langchain langchain-community fastapi uvicorn &&
+             python /app/deepresearcher_local.py"
+    ports:
+      - "11108:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/deepresearcher_local.py:/app/deepresearcher_local.py:ro
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # AgentGPT - Autonomous GPT
+  agentgpt:
+    container_name: sutazai-agentgpt
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir litellm fastapi uvicorn &&
+             python /app/agentgpt_local.py"
+    ports:
+      - "11104:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/agentgpt_local.py:/app/agentgpt_local.py:ro
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # PrivateGPT - Local Document Q&A
+  privategpt:
+    container_name: sutazai-privategpt
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir privategpt fastapi uvicorn &&
+             python /app/privategpt_local.py"
+    ports:
+      - "11501:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - EMBEDDING_MODEL=tinyllama
+      - VECTOR_DB_URL=http://sutazai-chromadb:8000
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/privategpt_local.py:/app/privategpt_local.py:ro
+      - privategpt-data:/app/data:rw
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # LlamaIndex - Data Framework
+  llamaindex:
+    container_name: sutazai-llamaindex
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir llama-index llama-index-llms-ollama fastapi uvicorn &&
+             python /app/llamaindex_local.py"
+    ports:
+      - "11202:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/llamaindex_local.py:/app/llamaindex_local.py:ro
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # FlowiseAI - Visual Workflow
+  flowise:
+    container_name: sutazai-flowise
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir fastapi uvicorn websockets &&
+             python /app/flowise_local.py"
+    ports:
+      - "11404:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/flowise_local.py:/app/flowise_local.py:ro
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # PentestGPT - Security Testing
+  pentestgpt:
+    container_name: sutazai-pentestgpt
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl nmap &&
+             pip install --no-cache-dir fastapi uvicorn requests &&
+             python /app/pentestgpt_local.py"
+    ports:
+      - "11802:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/pentestgpt_local.py:/app/pentestgpt_local.py:ro
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # OpenDevin - AI Coding
+  opendevin:
+    container_name: sutazai-opendevin
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             pip install --no-cache-dir litellm fastapi uvicorn &&
+             python /app/opendevin_local.py"
+    ports:
+      - "11303:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/opendevin_local.py:/app/opendevin_local.py:ro
+      - ./workspaces/opendevin:/workspace:rw
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+volumes:
+  privategpt-data:
+    driver: local
+
+# Phase 3 Resource Summary:
+# - Deep Agent: 512MB RAM, 0.5 CPU
+# - Deep Researcher: 384MB RAM, 0.4 CPU
+# - AgentGPT: 384MB RAM, 0.4 CPU
+# - PrivateGPT: 512MB RAM, 0.5 CPU
+# - LlamaIndex: 384MB RAM, 0.4 CPU
+# - FlowiseAI: 384MB RAM, 0.4 CPU
+# - PentestGPT: 384MB RAM, 0.4 CPU
+# - OpenDevin: 384MB RAM, 0.4 CPU
+# Total: ~3.3GB RAM, 3.4 CPUs

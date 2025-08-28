@@ -1,0 +1,29 @@
+/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py:287: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py:304: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("shutdown")
+2025-08-28 19:25:56,810 - __main__ - INFO - Starting MCP Bridge Server...
+INFO:     Started server process [212745]
+INFO:     Waiting for application startup.
+2025-08-28 19:25:56,880 - __main__ - INFO - Initializing MCP Bridge connections...
+2025-08-28 19:25:56,965 - __main__ - INFO - RabbitMQ initialized successfully
+2025-08-28 19:25:56,971 - __main__ - INFO - Redis initialized successfully
+2025-08-28 19:25:57,013 - __main__ - INFO - Consul initialized and service registered
+2025-08-28 19:25:57,014 - __main__ - INFO - MCP Bridge initialization complete
+INFO:     Application startup complete.
+ERROR:    [Errno 98] error while attempting to bind on address ('0.0.0.0', 11100): address already in use
+INFO:     Waiting for application shutdown.
+/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py:310: DeprecationWarning: Call to deprecated close. (Use aclose() instead) -- Deprecated since version 5.0.1.
+  await redis_client.close()
+2025-08-28 19:25:57,036 - __main__ - INFO - MCP Bridge shutdown complete
+INFO:     Application shutdown complete.

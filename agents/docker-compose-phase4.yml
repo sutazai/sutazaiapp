@@ -1,0 +1,215 @@
+# SutazAI Platform - Phase 4 Heavy/GPU-Optional Agents
+# These require more resources or GPU support
+# Deploy only if sufficient resources available
+
+services:
+  # LangFlow - Visual Orchestration
+  langflow:
+    container_name: sutazai-langflow
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir langflow fastapi &&
+             python /app/langflow_local.py"
+    ports:
+      - "11402:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/langflow_local.py:/app/langflow_local.py:ro
+      - langflow-data:/app/data:rw
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 180s
+
+  # Dify - AI Application Platform
+  dify:
+    container_name: sutazai-dify
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir fastapi uvicorn sqlalchemy &&
+             python /app/dify_local.py"
+    ports:
+      - "11403:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/dify_local.py:/app/dify_local.py:ro
+      - dify-data:/app/data:rw
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # TabbyML - Code Completion (GPU Optional)
+  tabbyml:
+    container_name: sutazai-tabbyml
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir fastapi uvicorn &&
+             python /app/tabbyml_local.py"
+    ports:
+      - "11304:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - USE_GPU=${USE_GPU:-false}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/tabbyml_local.py:/app/tabbyml_local.py:ro
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+    # Uncomment for GPU support:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # PyTorch - ML Framework (CPU version)
+  pytorch:
+    container_name: sutazai-pytorch
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu &&
+             pip install --no-cache-dir fastapi uvicorn numpy &&
+             python /app/pytorch_local.py"
+    ports:
+      - "11901:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/pytorch_local.py:/app/pytorch_local.py:ro
+      - pytorch-models:/app/models:rw
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # TensorFlow - ML Framework (CPU version)
+  tensorflow:
+    container_name: sutazai-tensorflow
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir tensorflow-cpu fastapi uvicorn &&
+             python /app/tensorflow_local.py"
+    ports:
+      - "11902:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/tensorflow_local.py:/app/tensorflow_local.py:ro
+      - tensorflow-models:/app/models:rw
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # JAX - ML Framework
+  jax:
+    container_name: sutazai-jax
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir jax jaxlib fastapi uvicorn &&
+             python /app/jax_local.py"
+    ports:
+      - "11903:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/jax_local.py:/app/jax_local.py:ro
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+volumes:
+  langflow-data:
+    driver: local
+  dify-data:
+    driver: local
+  pytorch-models:
+    driver: local
+  tensorflow-models:
+    driver: local
+
+# Phase 4 Resource Summary:
+# - LangFlow: 1GB RAM, 1.0 CPU
+# - Dify: 1GB RAM, 1.0 CPU
+# - TabbyML: 768MB RAM, 0.75 CPU (GPU optional)
+# - PyTorch: 1GB RAM, 1.0 CPU
+# - TensorFlow: 1GB RAM, 1.0 CPU
+# - JAX: 768MB RAM, 0.75 CPU
+# Total: ~5.5GB RAM, 5.5 CPUs
+
+# Note: Deploy this phase only if you have sufficient resources
+# GPU support can be enabled for TabbyML, PyTorch, TensorFlow by uncommenting GPU sections
