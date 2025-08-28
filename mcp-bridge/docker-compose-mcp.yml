@@ -40,10 +40,6 @@ services:
       - FAISS_PORT=8000
       - BACKEND_HOST=sutazai-backend
       - BACKEND_PORT=8000
-    depends_on:
-      - postgres
-      - redis
-      - rabbitmq
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:11100/health"]
       interval: 30s
@@ -59,15 +55,6 @@ services:
       - "traefik.http.routers.mcp-bridge.rule=Host(`mcp.sutazai.local`)"
       - "traefik.http.services.mcp-bridge.loadbalancer.server.port=11100"
 
-  # Reference to existing services (not recreating)
-  postgres:
-    external_name: sutazai-postgres
-    
-  redis:
-    external_name: sutazai-redis
-    
-  rabbitmq:
-    external_name: sutazai-rabbitmq
 
 networks:
   sutazai-network:

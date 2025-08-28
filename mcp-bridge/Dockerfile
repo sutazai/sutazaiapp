@@ -1,15 +1,9 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements
+# Copy requirements first for better caching
 COPY requirements.txt .
 
 # Install Python dependencies
@@ -30,7 +24,7 @@ ENV MCP_BRIDGE_PORT=11100
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:11100/health || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:11100/health').read()" || exit 1
 
 # Expose port
 EXPOSE 11100
