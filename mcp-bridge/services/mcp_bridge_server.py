@@ -51,7 +51,7 @@ SERVICE_REGISTRY = {
     # Core Services
     "postgres": {"url": "postgresql://jarvis:sutazai_secure_2024@localhost:10000/jarvis_ai", "type": "database"},
     "redis": {"url": "redis://localhost:10001", "type": "cache"},
-    "rabbitmq": {"url": "amqp://guest:guest@localhost:10004", "type": "queue"},
+    "rabbitmq": {"url": "amqp://sutazai:sutazai_secure_2024@localhost:10004", "type": "queue"},
     "neo4j": {"url": "bolt://localhost:10003", "type": "graph"},
     "consul": {"url": "http://localhost:10006", "type": "discovery"},
     "kong": {"url": "http://localhost:10009", "type": "gateway"},
@@ -163,9 +163,9 @@ async def init_rabbitmq():
     try:
         # Get RabbitMQ configuration from environment
         rabbitmq_host = os.getenv("RABBITMQ_HOST", "localhost")
-        rabbitmq_port = os.getenv("RABBITMQ_PORT", "5672")
-        rabbitmq_user = os.getenv("RABBITMQ_USER", "guest")
-        rabbitmq_password = os.getenv("RABBITMQ_PASSWORD", "guest")
+        rabbitmq_port = os.getenv("RABBITMQ_PORT", "10004")
+        rabbitmq_user = os.getenv("RABBITMQ_USER", "sutazai")
+        rabbitmq_password = os.getenv("RABBITMQ_PASSWORD", "sutazai_secure_2024")
         
         # Connect to RabbitMQ
         rabbitmq_connection = await aio_pika.connect_robust(
@@ -209,7 +209,7 @@ async def init_redis():
     try:
         # Get Redis configuration from environment
         redis_host = os.getenv("REDIS_HOST", "localhost")
-        redis_port = os.getenv("REDIS_PORT", "6379")
+        redis_port = os.getenv("REDIS_PORT", "10001")
         
         redis_client = await aioredis.from_url(
             f"redis://{redis_host}:{redis_port}",
@@ -229,7 +229,7 @@ async def init_consul():
     try:
         # Get Consul configuration from environment
         consul_host = os.getenv("CONSUL_HOST", "localhost")
-        consul_port = int(os.getenv("CONSUL_PORT", "8500"))
+        consul_port = int(os.getenv("CONSUL_PORT", "10006"))
         
         consul_client = Consul(host=consul_host, port=consul_port)
         # Register MCP Bridge service
