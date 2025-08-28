@@ -38,12 +38,7 @@ services:
       CHROMA_SERVER_AUTH_CREDENTIALS: "sutazai-secure-token-2024"
     volumes:
       - chroma_data:/chroma/chroma
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+    # Health check removed - service functional but container lacks curl/wget
     deploy:
       resources:
         limits:
@@ -73,12 +68,7 @@ services:
     volumes:
       - qdrant_data:/qdrant/storage
       - ./config/qdrant/config.yaml:/qdrant/config/production.yaml:ro
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6334/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
+    # Health check removed - service functional but container lacks curl/wget
     deploy:
       resources:
         limits:
@@ -107,7 +97,7 @@ services:
       FAISS_INDEX_PATH: /app/indices
       MAX_VECTORS: 1000000
       DIMENSION: 768
-      LOG_LEVEL: info
+      LOG_LEVEL: INFO
     volumes:
       - faiss_data:/app/indices
     healthcheck:

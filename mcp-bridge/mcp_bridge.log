@@ -1,0 +1,27 @@
+/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py:287: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py:304: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("shutdown")
+2025-08-28 19:25:43,649 - __main__ - INFO - Starting MCP Bridge Server...
+INFO:     Started server process [211760]
+INFO:     Waiting for application startup.
+2025-08-28 19:25:43,679 - __main__ - INFO - Initializing MCP Bridge connections...
+2025-08-28 19:25:43,732 - __main__ - INFO - RabbitMQ initialized successfully
+2025-08-28 19:25:43,736 - __main__ - INFO - Redis initialized successfully
+2025-08-28 19:25:43,753 - __main__ - INFO - Consul initialized and service registered
+2025-08-28 19:25:43,753 - __main__ - INFO - MCP Bridge initialization complete
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:11100 (Press CTRL+C to quit)
+INFO:     127.0.0.1:55130 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36672 - "GET /services HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35366 - "GET /services HTTP/1.1" 200 OK

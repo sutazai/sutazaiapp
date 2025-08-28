@@ -1,0 +1,30 @@
+
+Collecting usage statistics. To deactivate, set browser.gatherUsageStats to false.
+
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://0.0.0.0:11000
+
+2025-08-28 19:33:55.975 Uncaught app execution
+Traceback (most recent call last):
+  File "/opt/sutazaiapp/frontend/venv/lib/python3.12/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 128, in exec_func_with_error_handling
+    result = func()
+             ^^^^^^
+  File "/opt/sutazaiapp/frontend/venv/lib/python3.12/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 669, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sutazaiapp/frontend/app.py", line 12, in <module>
+    from streamlit_chat import message
+ModuleNotFoundError: No module named 'streamlit_chat'
+2025-08-28 19:33:56.244 Uncaught app execution
+Traceback (most recent call last):
+  File "/opt/sutazaiapp/frontend/venv/lib/python3.12/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 128, in exec_func_with_error_handling
+    result = func()
+             ^^^^^^
+  File "/opt/sutazaiapp/frontend/venv/lib/python3.12/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 669, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sutazaiapp/frontend/app.py", line 12, in <module>
+    from streamlit_chat import message
+ModuleNotFoundError: No module named 'streamlit_chat'

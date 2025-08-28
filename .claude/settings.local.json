@@ -445,7 +445,15 @@
       "mcp__gitmcp-sutazai__git_status",
       "mcp__memory-bank__memory-bank-status",
       "Bash(ollama:*)",
-      "mcp__extended-memory__read_graph"
+      "mcp__extended-memory__read_graph",
+      "Bash(./venv/bin/pip install --quiet streamlit streamlit-mic-recorder)",
+      "Bash(/opt/sutazaiapp/agents/deploy_agents.sh:*)",
+      "Bash(/opt/sutazaiapp/agents/deploy_priority_agents.sh:*)",
+      "Bash(PGPASSWORD=sutazai_secure_2024 psql -h localhost -p 10000 -U jarvis -d jarvis_ai -c \"SELECT version();\")",
+      "Bash(PGPASSWORD=sutazai_secure_2024 psql -h 172.20.0.10 -p 5432 -U jarvis -d jarvis_ai -c \"SELECT 1;\")",
+      "mcp__filesystem__directory_tree",
+      "Bash(./venv/bin/pip install --quiet fastapi uvicorn httpx pydantic aioredis)",
+      "mcp__filesystem__search_files"
     ],
     "deny": [],
     "additionalDirectories": [

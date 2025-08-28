@@ -14,7 +14,17 @@ from pydantic import BaseModel
 import logging
 
 # Configure logging
-logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
+# Handle case-insensitive log level from environment
+log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+# Validate log level to prevent invalid values
+valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+if log_level not in valid_levels:
+    log_level = "INFO"  # Default to INFO if invalid
+
+logging.basicConfig(
+    level=getattr(logging, log_level),
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app

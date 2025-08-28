@@ -4867,3 +4867,109 @@ This production-ready PRD provides a complete, port-compliant architecture that:
 6. **Scales agents properly** with correct port allocation
 
 The system is ready for immediate deployment with all configurations matching your infrastructure requirements.
+
+
+and whatever else we missing from: 
+
+├── Model Management
+
+│   ├── Ollama repo: curl -fsSL https://ollama.com/install.sh | sh
+
+│   ├── tinyllama:latest repo: ollama run tinyllama as default for intital setup 
+
+│   ├── qwen3 repo: ollama run qwen3 optional (only activated when complex taskS)
+
+│   ├── ChromaDB (Vector Memory) repo: https://github.com/johnnycode8/chromadb_quickstart https://www.trychroma.com/
+
+│   ├── context-engineering-framework repo: https://github.com/mihaicode/context-engineering-framework
+
+│   ├── FSDP repo: https://github.com/foundation-model-stack/fms-fsdp (optional need strong GPU)
+
+
+├── AI Agents
+
+│   ├── deep-agent │https://github.com/soartech/deep-agent
+│   ├── local-deep-researcher - https://github.com/langchain-ai/local-deep-researcher 
+│   ├── Letta (Task Automation) repo: https://github.com/mysuperai/letta
+
+│   ├── AutoGPT (Task Automation) repo: https://github.com/Significant-Gravitas/AutoGPT
+
+│   ├── LocalAGI  (Autonomous AI Orchestration) repo: https://github.com/mudler/Local 
+
+│   ├── TabbyML (Code Completion) repo: https://github.com/TabbyML/tabby (optional need strong GPU)
+
+│   ├── Semgrep (Code Security) repo: https://github.com/semgrep/semgrep
+
+│   ├── LangChain Agents (Orchestration) repo: https://github.com/langchain-ai/langchain
+
+│   ├── AutoGen (Agents Configuration) repo: https://github.com/ag2ai/ag2
+
+│   ├── AgentZero repo: https://github.com/frdel/agent-zero
+
+│   ├── BigAGI  repo: https://github.com/enricoros/big- 
+
+│   ├── Browser Use repo: https://github.com/browser-use/browser-use
+
+│   ├── Skyvern repo: https://github.com/Skyvern-AI/skyvern
+
+│   ├── qdrant repo: https://github.com/qdrant/qdrant
+
+│   ├── pytorch repo: https://github.com/pytorch/pytorch
+
+│   ├── TensorFlow repo: https://github.com/tensorflow/tensorflow
+
+│   ├── jax repo: https://github.com/jax-ml/jax
+
+│   ├── langflow repo: https://github.com/langflow-ai/langflow
+
+│   ├── dify repo: https://github.com/langgenius/dify
+
+│   ├── Awesome-Code-AI repo: https://github.com/sourcegraph/awesome-code-ai
+
+│   ├── AgentGPT repo: https://github.com/reworkd/AgentGPT
+
+│   ├── CrewAI repo: https://github.com/crewAIInc/crewAI
+
+│   ├── PrivateGPT repo: https://github.com/zylon-ai/private-gpt
+
+│   ├── LlamaIndex repo: https://github.com/run-llama/llama_index
+
+│   ├── FlowiseAI repo: https://github.com/FlowiseAI/Flowise
+
+│   ├── ShellGPT repo: https://github.com/TheR1D/shell_gpt
+
+│   ├── PentestGPT repo: https://github.com/GreyDGL/PentestGPT
+
+│   ├── documind Document Processing (PDF, DOCX, TXT) repo: https://github.com/DocumindHQ/documind
+
+│   ├── FinRobot Financial Analysis AI repo: https://github.com/AI4Finance-Foundation/FinRobot
+
+│   ├── AI Code Generator (GPT Engineer)Use gpt-engineer with a Local LLM repo: https://github.com/AntonOsika/gpt-engineer
+
+│   ├── AI Code Generator (OpenDevin) repo: https://github.com/AI-App/OpenDevin.OpenDevin
+
+│   ├── AI Code Editor (Aider)repo: https://gitUhub.com/Aider-AI/aider
+
+
+Frontend 
+
+└── Streamlit Web UI repo: https://github.com/streamlit/streamlit
+
+├── Interactive Chatbot/Text and voicedirectly integrated (jarvis will be the one for this) │   ├── Jarvis repo: https://github.com/Dipeshpal/Jarvis_AI and https://github.com/microsoft/JARVIS and https://github.com/danilofalcao/jarvis and https://github.com/SreejanPersonal/JARVIS- jarvis - https://github.com/llm-guy/jarvis (make the best out of it get all the ai agents to perfect this and make no mistakes make sure its 100% perfect product delivery)
+
+├── Full on System Dashboard
+
+Everyhting must run through a meshing system includiong the MCP servers
+
+Kong, consul, node-exporter, rabbitmq, alertmanager, blackbox-exporter, 
+
+Anything that makes it perfectly modern Docker-in-Docker (DinD)
+
+And everyhting must be managed from portainer
+
+
+
+The Code Generation must be used by the Sutazai system to improve its own code autonomously (with suggestive prompts for the owner to ensure permission is granted).
+Some of the models or AI agents can be easily integrated into our application, while others may require setting up a separate Docker container. These must be installed and run within that environment—but ensure everything communicates properly within the unified SutazaiApp system.
+
+Remember: everything must be fully automated, including all scripts, dependencies, and requirements, from beginning to end. make sure to use the proper libraries , frameworks and anything else thats needed
