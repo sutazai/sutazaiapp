@@ -18,7 +18,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -47,7 +47,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -75,7 +75,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -103,7 +103,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - EMBEDDING_MODEL=tinyllama
       - VECTOR_DB_URL=http://sutazai-chromadb:8000
@@ -134,7 +134,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -162,7 +162,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -186,11 +186,11 @@ services:
              pip install --no-cache-dir fastapi uvicorn requests &&
              python /app/pentestgpt_local.py"
     ports:
-      - "11802:8000"
+      - "11411:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -218,7 +218,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:

@@ -13,13 +13,15 @@ services:
              pip install --no-cache-dir litellm fastapi uvicorn pyyaml httpx &&
              python /app/autogpt_local.py"
     ports:
-      - "11102:8000"
+      - "11402:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://172.20.0.1:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/autogpt_local.py:/app/autogpt_local.py:ro
       - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
@@ -45,13 +47,14 @@ services:
              pip install --no-cache-dir fastapi uvicorn requests httpx &&
              python /app/localagi_local.py"
     ports:
-      - "11103:8000"
+      - "11406:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_HOST=http://172.20.0.1:11434
+      - OLLAMA_HOST=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/localagi_local.py:/app/localagi_local.py:ro
       - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
@@ -74,13 +77,14 @@ services:
              pip install --no-cache-dir fastapi uvicorn litellm httpx &&
              python /app/agentzero_local.py"
     ports:
-      - "11105:8000"
+      - "11408:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_API_BASE=http://172.20.0.1:11434
+      - OLLAMA_API_BASE=http://ollama:11434
       - LLM_MODEL=tinyllama
       - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/agentzero_local.py:/app/agentzero_local.py:ro
       - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
@@ -103,13 +107,15 @@ services:
              pip install --no-cache-dir fastapi uvicorn websockets httpx &&
              python /app/bigagi_local.py"
     ports:
-      - "11106:8000"
+      - "11407:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://172.20.0.1:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/bigagi_local.py:/app/bigagi_local.py:ro
       - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
@@ -137,6 +143,7 @@ services:
       - sutazai-network
     environment:
       - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/semgrep_local.py:/app/semgrep_local.py:ro
       - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
@@ -160,13 +167,15 @@ services:
              pip install --no-cache-dir pyautogen fastapi uvicorn httpx &&
              python /app/autogen_local.py"
     ports:
-      - "11203:8000"
+      - "11415:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://172.20.0.1:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/autogen_local.py:/app/autogen_local.py:ro
       - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
@@ -193,9 +202,11 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://172.20.0.1:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/browseruse_local.py:/app/browseruse_local.py:ro
       - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
@@ -218,13 +229,15 @@ services:
              pip install --no-cache-dir selenium fastapi uvicorn httpx &&
              python /app/skyvern_local.py"
     ports:
-      - "11702:8000"
+      - "11409:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://172.20.0.1:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/skyvern_local.py:/app/skyvern_local.py:ro
       - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro

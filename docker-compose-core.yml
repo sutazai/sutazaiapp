@@ -181,7 +181,7 @@ services:
       -bootstrap-expect=1
       -ui
       -client=0.0.0.0
-      -bind=172.20.0.14
+      -bind=0.0.0.0
       -data-dir=/consul/data
       -config-dir=/consul/config
       -encrypt=XImL7pLGKruSCKO/VCZ1BwNGJl2gDwPe0fVLdGzJfBQ=
@@ -248,7 +248,7 @@ services:
       - "10009:8001"  # Admin API
     networks:
       sutazai-network:
-        ipv4_address: 172.20.0.15
+        ipv4_address: 172.20.0.35
     environment:
       KONG_DATABASE: postgres
       KONG_PG_HOST: sutazai-postgres

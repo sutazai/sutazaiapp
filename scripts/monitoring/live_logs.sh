@@ -1606,17 +1606,14 @@ show_system_overview() {
     echo ""
 }
 
-# Function to log with color and service prefix (FIXED for real-time output)
+# Function to log with color and service prefix
 log_with_color() {
     local color="$1"
     local service="$2"
     local message="$3"
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     
-    # Use printf for immediate output and explicit line ending
-    printf "%b[%s] [%s]%b %s\n" "$color" "$timestamp" "$service" "$NC" "$message"
-    # Force flush stdout
-    exec 1>&1
+    echo -e "${color}[${timestamp}] [${service}]${NC} ${message}"
 }
 
 # Function to show live logs
@@ -1648,7 +1645,7 @@ show_live_logs() {
     done
     echo ""
     
-    # Start log monitoring for each container with FIXED real-time streaming
+    # Start log monitoring for each container
     for container in "${running_containers[@]}"; do
         # Create short display name
         display_name=$(echo "$container" | sed 's/sutazai-//' | tr '[:lower:]' '[:upper:]' | cut -c1-8)
@@ -1657,45 +1654,18 @@ show_live_logs() {
         color=${container_colors[$((color_index % ${#container_colors[@]}))]}
         ((color_index++))
         
-        # Start background log monitoring with proper unbuffered output
+        # Start background log monitoring
         (
-            # Export variables for subshell
-            export COLOR="$color"
-            export DISPLAY_NAME="$display_name"
-            
-            # Check if stdbuf is available for optimal performance
-            if command -v stdbuf >/dev/null 2>&1; then
-                # Use stdbuf to disable buffering completely
-                exec stdbuf -o0 -e0 docker logs -f --tail=50 "$container" 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
-                    log_with_color "$COLOR" "$DISPLAY_NAME" "$line"
-                done
-            else
-                # Fallback: use direct piping without stdbuf
-                exec docker logs -f --tail=50 "$container" 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
-                    log_with_color "$color" "$display_name" "$line"
-                done
-            fi
+            docker logs -f "$container" 2>&1 | while IFS= read -r line; do
+                log_with_color "$color" "$display_name" "$line"
+            done
         ) &
         log_pids+=($!)
     done
     
-    # Improved signal handling for clean shutdown
-    cleanup_logs() {
-        echo -e "\n${YELLOW}Stopping log monitoring...${NC}"
-        for pid in "${log_pids[@]}"; do
-            if kill -0 "$pid" 2>/dev/null; then
-                kill "$pid" 2>/dev/null
-            fi
-        done
-        wait "${log_pids[@]}" 2>/dev/null
-        echo -e "${GREEN}Log monitoring stopped.${NC}"
-        exit 0
-    }
-    
-    trap cleanup_logs INT TERM
-    
-    # Wait for all background processes
-    wait "${log_pids[@]}"
+    # Wait for interrupt and kill all background processes
+    trap "kill ${log_pids[*]} 2>/dev/null; exit 0" INT TERM
+    wait
 }
 
 # Function to test API endpoints
@@ -2022,68 +1992,21 @@ show_unified_live_logs() {
     echo -e "${GREEN}📡 LIVE UNIFIED LOG STREAM - Press Ctrl+C to stop${NC}"
     echo -e "${CYAN}════════════════════════════════════════════════════════════════${NC}"
     
-    # FIXED: Skip docker-compose logs entirely - it has unfixable internal buffering
-    # Always use individual container streaming for true real-time output
-    echo -e "${CYAN}Using direct container streaming for real-time logs...${NC}"
-    echo ""
-    individual_streaming_realtime
+    # Use docker compose logs with follow for real unified streaming
+    if command -v docker &> /dev/null && [ -f "/opt/sutazaiapp/docker-compose.yml" ]; then
+        # Use docker compose logs for true unified streaming
+        cd /opt/sutazaiapp
+        docker compose logs -f --tail=5 2>/dev/null || {
+            # Fallback to individual container streaming
+            echo -e "${YELLOW}Docker compose not available, using individual streams...${NC}"
+            individual_streaming
+        }
+    else
+        individual_streaming
+    fi
 }
 
-# NEW: True real-time streaming function with zero buffering
-individual_streaming_realtime() {
-    local color_index=0
-    local colors=(31 32 33 34 35 36 91 92 93 94 95 96)
-    local pids=()
-    
-    # Ensure Python applications output unbuffered
-    export PYTHONUNBUFFERED=1
-    
-    for container in "${running_containers[@]}"; do
-        local short_name=$(echo "$container" | sed 's/sutazai-//' | tr '[:lower:]' '[:upper:]' | cut -c1-8)
-        local color_code=${colors[$((color_index % ${#colors[@]}))]}
-        
-        # Use tail -F for true real-time following (better than docker logs)
-        (
-            # First, get the container's log file location
-            log_file=$(docker inspect --format='{{.LogPath}}' "$container" 2>/dev/null)
-            
-            if [ -n "$log_file" ] && [ -f "$log_file" ]; then
-                # Direct file following - bypasses ALL Docker buffering
-                tail -F -n 0 "$log_file" 2>/dev/null | \
-                jq -r '.log // .stream // .stdout // .stderr // .' 2>/dev/null | \
-                while IFS= read -r line; do
-                    printf "\033[%sm[%s] [%s]\033[0m %s\n" "$color_code" "$(date '+%H:%M:%S')" "$short_name" "$line"
-                done
-            else
-                # Fallback to docker logs with aggressive unbuffering
-                docker logs -f --tail=0 --timestamps=false "$container" 2>&1 | \
-                while IFS= read -r line; do
-                    printf "\033[%sm[%s] [%s]\033[0m %s\n" "$color_code" "$(date '+%H:%M:%S')" "$short_name" "$line"
-                done
-            fi
-        ) &
-        pids+=($!)
-        
-        ((color_index++))
-    done
-    
-    # Proper cleanup on exit
-    cleanup_realtime() {
-        echo -e "\n${YELLOW}Stopping real-time monitoring...${NC}"
-        for pid in "${pids[@]}"; do
-            kill -TERM "$pid" 2>/dev/null
-        done
-        wait "${pids[@]}" 2>/dev/null
-        echo -e "${GREEN}Monitoring stopped.${NC}"
-    }
-    
-    trap cleanup_realtime INT TERM
-    
-    # Wait for all background processes
-    wait "${pids[@]}"
-}
-
-# Fallback function for individual container streaming (FIXED for real-time)
+# Fallback function for individual container streaming
 individual_streaming() {
     local color_index=0
     local colors=(31 32 33 34 35 36 91 92 93 94 95 96)
@@ -2092,19 +2015,11 @@ individual_streaming() {
         local short_name=$(echo "$container" | sed 's/sutazai-//' | tr '[:lower:]' '[:upper:]' | cut -c1-8)
         local color_code=${colors[$((color_index % ${#colors[@]}))]}
         
-        # Stream each container's logs in background with proper unbuffering
+        # Stream each container's logs in background with color and formatting
         {
-            if command -v stdbuf >/dev/null 2>&1; then
-                # Use stdbuf for optimal real-time performance
-                exec stdbuf -o0 -e0 docker logs -f --tail=2 "$container" 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
-                    printf "\033[%sm[%s] [%s]\033[0m %s\n" "$color_code" "$(date '+%H:%M:%S')" "$short_name" "$line"
-                done
-            else
-                # Fallback without stdbuf
-                exec docker logs -f --tail=2 "$container" 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
-                    printf "\033[%sm[%s] [%s]\033[0m %s\n" "$color_code" "$(date '+%H:%M:%S')" "$short_name" "$line"
-                done
-            fi
+            docker logs -f --tail=2 "$container" 2>&1 | while IFS= read -r line; do
+                printf "\033[%sm[%s] [%s]\033[0m %s\n" "$color_code" "$(date '+%H:%M:%S')" "$short_name" "$line"
+            done
         } &
         
         ((color_index++))

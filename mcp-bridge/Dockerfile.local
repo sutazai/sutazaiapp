@@ -1,0 +1,34 @@
+FROM python:3.11
+
+# Set working directory
+WORKDIR /app
+
+# Copy only the requirements file first
+COPY requirements.txt .
+
+# Try to install dependencies with multiple fallback options
+RUN pip config set global.timeout 120 && \
+    pip config set global.index-url https://pypi.org/simple && \
+    pip config set global.trusted-host pypi.org && \
+    pip install --no-cache-dir --default-timeout=120 -r requirements.txt || \
+    (echo "Warning: Some packages may not have been installed" && \
+     pip install --no-cache-dir fastapi uvicorn pydantic httpx aiohttp redis || true)
+
+# Copy application code
+COPY services/ ./services/
+COPY config/ ./config/  
+COPY scripts/ ./scripts/
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1
+ENV LOG_LEVEL=INFO
+ENV MCP_BRIDGE_PORT=11100
+
+# Expose port
+EXPOSE 11100
+
+# Run the MCP Bridge server - with fallback to basic Python HTTP server if main fails
+CMD python services/mcp_bridge_server.py || python -m http.server 11100

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mcp-bridge:
+    container_name: sutazai-mcp-bridge
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "
+        pip install fastapi uvicorn httpx aiohttp redis &&
+        python services/mcp_bridge_simple.py
+      "
+    ports:
+      - "11100:11100"
+    environment:
+      - LOG_LEVEL=INFO
+      - MCP_BRIDGE_PORT=11100
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:11100/health').read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    volumes:
+      - ./services:/app/services:ro
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+      - ./data:/app/data
+    networks:
+      - bridge
+
+networks:
+  bridge:
+    driver: bridge

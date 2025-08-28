@@ -23,8 +23,8 @@ class Settings(BaseSettings):
     WORKERS: int = 4
     
     # PostgreSQL
-    POSTGRES_HOST: str = "sutazai-postgres"
-    POSTGRES_PORT: int = 5432
+    POSTGRES_HOST: str = "localhost"
+    POSTGRES_PORT: int = 10000
     POSTGRES_USER: str = "jarvis"
     POSTGRES_PASSWORD: str = "sutazai_secure_2024"
     POSTGRES_DB: str = "jarvis_ai"

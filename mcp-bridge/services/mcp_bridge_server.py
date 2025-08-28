@@ -7,6 +7,7 @@ Unified communication bridge for all AI agents and services
 import asyncio
 import json
 import logging
+import os
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from pathlib import Path
@@ -50,7 +51,7 @@ SERVICE_REGISTRY = {
     # Core Services
     "postgres": {"url": "postgresql://jarvis:sutazai_secure_2024@localhost:10000/jarvis_ai", "type": "database"},
     "redis": {"url": "redis://localhost:10001", "type": "cache"},
-    "rabbitmq": {"url": "amqp://sutazai:sutazai_secure_2024@localhost:10004", "type": "queue"},
+    "rabbitmq": {"url": "amqp://guest:guest@localhost:10004", "type": "queue"},
     "neo4j": {"url": "bolt://localhost:10003", "type": "graph"},
     "consul": {"url": "http://localhost:10006", "type": "discovery"},
     "kong": {"url": "http://localhost:10009", "type": "gateway"},
@@ -65,11 +66,11 @@ SERVICE_REGISTRY = {
     "frontend": {"url": "http://localhost:11000", "type": "ui"},
     
     # AI Agents (when deployed)
-    "letta": {"url": "http://localhost:11100", "type": "agent", "status": "pending"},
-    "autogpt": {"url": "http://localhost:11101", "type": "agent", "status": "pending"},
-    "crewai": {"url": "http://localhost:11102", "type": "agent", "status": "pending"},
-    "aider": {"url": "http://localhost:11103", "type": "agent", "status": "pending"},
-    "private-gpt": {"url": "http://localhost:11104", "type": "agent", "status": "pending"},
+    "letta": {"url": "http://localhost:11400", "type": "agent", "status": "pending"},  # Fixed port
+    "autogpt": {"url": "http://localhost:11402", "type": "agent", "status": "pending"},
+    "crewai": {"url": "http://localhost:11401", "type": "agent", "status": "pending"},
+    "aider": {"url": "http://localhost:11403", "type": "agent", "status": "pending"},
+    "private-gpt": {"url": "http://localhost:11404", "type": "agent", "status": "pending"},
 }
 
 # Agent Registry
@@ -77,31 +78,31 @@ AGENT_REGISTRY = {
     "letta": {
         "name": "Letta (MemGPT)",
         "capabilities": ["memory", "conversation", "task-automation"],
-        "port": 11100,
+        "port": 11400,
         "status": "offline"
     },
     "autogpt": {
         "name": "AutoGPT",
         "capabilities": ["autonomous", "web-search", "task-execution"],
-        "port": 11101,
+        "port": 11402,
         "status": "offline"
     },
     "crewai": {
         "name": "CrewAI",
         "capabilities": ["multi-agent", "orchestration", "collaboration"],
-        "port": 11102,
+        "port": 11401,
         "status": "offline"
     },
     "aider": {
         "name": "Aider",
         "capabilities": ["code-editing", "pair-programming", "refactoring"],
-        "port": 11103,
+        "port": 11403,
         "status": "offline"
     },
     "private-gpt": {
         "name": "Private-GPT",
         "capabilities": ["document-qa", "local-llm", "privacy"],
-        "port": 11104,
+        "port": 11404,
         "status": "offline"
     }
 }
@@ -160,9 +161,15 @@ async def init_rabbitmq():
     """Initialize RabbitMQ connection and setup exchanges/queues"""
     global rabbitmq_connection, rabbitmq_channel
     try:
+        # Get RabbitMQ configuration from environment
+        rabbitmq_host = os.getenv("RABBITMQ_HOST", "localhost")
+        rabbitmq_port = os.getenv("RABBITMQ_PORT", "5672")
+        rabbitmq_user = os.getenv("RABBITMQ_USER", "guest")
+        rabbitmq_password = os.getenv("RABBITMQ_PASSWORD", "guest")
+        
         # Connect to RabbitMQ
         rabbitmq_connection = await aio_pika.connect_robust(
-            "amqp://sutazai:sutazai_secure_2024@localhost:10004/"
+            f"amqp://{rabbitmq_user}:{rabbitmq_password}@{rabbitmq_host}:{rabbitmq_port}/"
         )
         rabbitmq_channel = await rabbitmq_connection.channel()
         
@@ -200,8 +207,12 @@ async def init_redis():
     """Initialize Redis connection for caching and session management"""
     global redis_client
     try:
+        # Get Redis configuration from environment
+        redis_host = os.getenv("REDIS_HOST", "localhost")
+        redis_port = os.getenv("REDIS_PORT", "6379")
+        
         redis_client = await aioredis.from_url(
-            "redis://localhost:10001",
+            f"redis://{redis_host}:{redis_port}",
             encoding="utf-8",
             decode_responses=True
         )
@@ -216,7 +227,11 @@ async def init_consul():
     """Initialize Consul for service discovery"""
     global consul_client
     try:
-        consul_client = Consul(host='localhost', port=10006)
+        # Get Consul configuration from environment
+        consul_host = os.getenv("CONSUL_HOST", "localhost")
+        consul_port = int(os.getenv("CONSUL_PORT", "8500"))
+        
+        consul_client = Consul(host=consul_host, port=consul_port)
         # Register MCP Bridge service
         consul_client.agent.service.register(
             name='mcp-bridge',

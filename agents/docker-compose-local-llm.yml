@@ -28,7 +28,7 @@ services:
              pip install --no-cache-dir crewai crewai-tools langchain-community langchain-ollama fastapi uvicorn &&
              python /app/crewai_local.py"
     ports:
-      - "11401:8000"
+      - "11403:8000"
     networks:
       - sutazai-network
     environment:
@@ -61,11 +61,11 @@ services:
              pip install --no-cache-dir aider-chat litellm fastapi uvicorn &&
              python /app/aider_local.py"
     ports:
-      - "11301:8000"
+      - "11404:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_API_BASE=http://172.20.0.1:11434
+      - OLLAMA_API_BASE=http://ollama:11434
       - OLLAMA_MODEL=tinyllama
       - AIDER_MODEL=ollama/tinyllama
       - PYTHONUNBUFFERED=1
@@ -91,10 +91,9 @@ services:
     command: |
       sh -c "apt-get update && apt-get install -y git curl &&
              pip install --no-cache-dir letta fastapi uvicorn &&
-             export OLLAMA_BASE_URL=http://172.20.0.1:11434 &&
              python /app/letta_local.py"
     ports:
-      - "11101:8000"
+      - "11401:8000"
     networks:
       - sutazai-network
     environment:
@@ -126,11 +125,11 @@ services:
              pip install --no-cache-dir litellm fastapi uvicorn &&
              python /app/gpt_engineer_local.py"
     ports:
-      - "11302:8000"
+      - "11416:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_API_BASE=http://172.20.0.1:11434
+      - OLLAMA_API_BASE=http://ollama:11434
       - MODEL=ollama/tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -157,7 +156,7 @@ services:
              pip install --no-cache-dir pandas numpy yfinance fastapi uvicorn httpx &&
              python /app/finrobot_wrapper.py"
     ports:
-      - "11601:8000"
+      - "11410:8000"
     networks:
       - sutazai-network
     environment:
@@ -185,11 +184,11 @@ services:
              pip install --no-cache-dir litellm fastapi uvicorn &&
              python /app/shellgpt_local.py"
     ports:
-      - "11701:8000"
+      - "11413:8000"
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_API_BASE=http://172.20.0.1:11434
+      - OLLAMA_API_BASE=http://ollama:11434
       - MODEL=ollama/tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -214,7 +213,7 @@ services:
              pip install --no-cache-dir fastapi uvicorn PyPDF2 python-docx httpx &&
              python /app/documind_main.py"
     ports:
-      - "11502:8000"
+      - "11414:8000"
     networks:
       - sutazai-network
     environment:
@@ -243,7 +242,7 @@ services:
              pip install --no-cache-dir langchain langchain-community langchain-ollama fastapi uvicorn &&
              python /app/langchain_local.py"
     ports:
-      - "11201:8000"
+      - "11405:8000"
     networks:
       - sutazai-network
     environment:
