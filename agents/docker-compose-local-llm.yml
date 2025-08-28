@@ -1,0 +1,287 @@
+# SutazAI Platform - Local LLM Agent Deployment
+# All agents configured for Ollama with TinyLlama
+# Optimized for limited hardware (23GB RAM, 11GB available)
+
+services:
+  # Ollama LLM Service - Shared by all agents
+  ollama:
+    container_name: sutazai-ollama
+    image: ollama/ollama:latest
+    ports:
+      - "11435:11434"  # Different external port to avoid conflict
+    networks:
+      - sutazai-network
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    restart: unless-stopped
+    command: serve
+
+  # CrewAI with Local LLM
+  crewai:
+    container_name: sutazai-crewai
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir crewai crewai-tools langchain-community langchain-ollama fastapi uvicorn &&
+             python /app/crewai_local.py"
+    ports:
+      - "11401:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=tinyllama
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - REDIS_URL=redis://sutazai-redis:6379
+      - PYTHONUNBUFFERED=1
+      - MAX_WORKERS=2
+    volumes:
+      - ./wrappers/crewai_local.py:/app/crewai_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+
+  # Aider with Local LLM
+  aider:
+    container_name: sutazai-aider
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             pip install --no-cache-dir aider-chat litellm fastapi uvicorn &&
+             python /app/aider_local.py"
+    ports:
+      - "11301:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_API_BASE=http://172.20.0.1:11434
+      - OLLAMA_MODEL=tinyllama
+      - AIDER_MODEL=ollama/tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/aider_local.py:/app/aider_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+      - ./workspaces/aider:/workspace:rw
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+
+  # Letta (MemGPT) with Local LLM
+  letta:
+    container_name: sutazai-letta
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             pip install --no-cache-dir letta fastapi uvicorn &&
+             export OLLAMA_BASE_URL=http://172.20.0.1:11434 &&
+             python /app/letta_local.py"
+    ports:
+      - "11101:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - LLM_MODEL=tinyllama
+      - EMBEDDING_MODEL=tinyllama
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/letta_local.py:/app/letta_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 90s
+      timeout: 30s
+      retries: 5
+      start_period: 180s
+
+  # GPT-Engineer with Local LLM
+  gpt-engineer:
+    container_name: sutazai-gpt-engineer
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             pip install --no-cache-dir litellm fastapi uvicorn &&
+             python /app/gpt_engineer_local.py"
+    ports:
+      - "11302:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_API_BASE=http://172.20.0.1:11434
+      - MODEL=ollama/tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/gpt_engineer_local.py:/app/gpt_engineer_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+      - ./workspaces/gpt-engineer:/workspace:rw
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+
+  # FinRobot with Local Analysis
+  finrobot:
+    container_name: sutazai-finrobot
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             pip install --no-cache-dir pandas numpy yfinance fastapi uvicorn &&
+             python /app/finrobot_wrapper.py"
+    ports:
+      - "11601:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - REDIS_URL=redis://sutazai-redis:6379
+    volumes:
+      - ./wrappers/finrobot_wrapper.py:/app/finrobot_wrapper.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # ShellGPT with Local LLM
+  shellgpt:
+    container_name: sutazai-shellgpt
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir litellm fastapi uvicorn &&
+             python /app/shellgpt_local.py"
+    ports:
+      - "11701:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_API_BASE=http://172.20.0.1:11434
+      - MODEL=ollama/tinyllama
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/shellgpt_local.py:/app/shellgpt_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 256m
+    cpus: 0.25
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # Documind Document Processing
+  documind:
+    container_name: sutazai-documind
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir fastapi uvicorn PyPDF2 python-docx &&
+             python /app/documind_main.py"
+    ports:
+      - "11502:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - VECTOR_DB_URL=http://sutazai-chromadb:8000
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/documind_main.py:/app/documind_main.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+      - documind-uploads:/app/uploads:rw
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # LangChain with Local LLM
+  langchain:
+    container_name: sutazai-langchain
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir langchain langchain-community langchain-ollama fastapi uvicorn &&
+             python /app/langchain_local.py"
+    ports:
+      - "11201:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=tinyllama
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - REDIS_URL=redis://sutazai-redis:6379
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/langchain_local.py:/app/langchain_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+volumes:
+  documind-uploads:
+    driver: local
+  ollama-data:
+    driver: local
+
+# Resource Summary with Local LLM:
+# - CrewAI: 768MB RAM, 0.75 CPU
+# - Aider: 512MB RAM, 0.5 CPU  
+# - Letta: 1GB RAM, 1 CPU
+# - GPT-Engineer: 768MB RAM, 0.75 CPU
+# - FinRobot: 768MB RAM, 0.75 CPU
+# - ShellGPT: 256MB RAM, 0.25 CPU
+# - Documind: 512MB RAM, 0.5 CPU
+# - LangChain: 768MB RAM, 0.75 CPU
+# Total: ~5.3GB RAM, 5.25 CPUs (well within 11GB available)

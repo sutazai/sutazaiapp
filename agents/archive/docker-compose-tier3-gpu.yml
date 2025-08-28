@@ -1,0 +1,143 @@
+version: '3.8'
+
+# Tier 3: GPU-Intensive Agents (OPTIONAL - Requires NVIDIA GPU)
+# Only deploy these if you have GPU resources available
+
+services:
+  # TabbyML - Code Completion (GPU Required)
+  tabbyml:
+    container_name: sutazai-tabbyml
+    image: tabbyml/tabby:latest
+    ports:
+      - "11304:8080"
+    networks:
+      - sutazai-network
+    environment:
+      - TABBY_MODEL=TabbyML/StarCoder-1B
+      - TABBY_DEVICE=cuda  # Change to cpu if no GPU
+    volumes:
+      - ./tabby-data:/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # PyTorch (GPU Optimized)
+  pytorch:
+    container_name: sutazai-pytorch
+    image: pytorch/pytorch:latest
+    working_dir: /app
+    command: |
+      sh -c "pip install --no-cache-dir fastapi uvicorn jupyter &&
+             jupyter notebook --ip=0.0.0.0 --port=8000 --no-browser --allow-root"
+    ports:
+      - "11901:8000"
+    networks:
+      - sutazai-network
+    volumes:
+      - ./notebooks/pytorch:/app:rw
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # TensorFlow (GPU Optimized)
+  tensorflow:
+    container_name: sutazai-tensorflow
+    image: tensorflow/tensorflow:latest-gpu
+    working_dir: /app
+    command: |
+      sh -c "pip install --no-cache-dir fastapi uvicorn jupyter &&
+             jupyter notebook --ip=0.0.0.0 --port=8000 --no-browser --allow-root"
+    ports:
+      - "11902:8000"
+    networks:
+      - sutazai-network
+    volumes:
+      - ./notebooks/tensorflow:/app:rw
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # JAX (GPU Optimized)
+  jax:
+    container_name: sutazai-jax
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "pip install --no-cache-dir 'jax[cuda11_pip]' -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html &&
+             pip install --no-cache-dir fastapi uvicorn jupyter &&
+             jupyter notebook --ip=0.0.0.0 --port=8000 --no-browser --allow-root"
+    ports:
+      - "11903:8000"
+    networks:
+      - sutazai-network
+    volumes:
+      - ./notebooks/jax:/app:rw
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # FSDP - Foundation Model Stack (GPU Heavy)
+  fsdp:
+    container_name: sutazai-fsdp
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git &&
+             git clone https://github.com/foundation-model-stack/fms-fsdp.git . &&
+             pip install --no-cache-dir -r requirements.txt &&
+             python -m fms_fsdp.server --host 0.0.0.0 --port 8000"
+    ports:
+      - "11904:8000"
+    networks:
+      - sutazai-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    mem_limit: 8g  # Requires significant RAM
+    restart: unless-stopped
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+volumes:
+  tabby-data:
+    driver: local
+
+# WARNING: These agents require:
+# - NVIDIA GPU with CUDA support
+# - nvidia-docker2 installed
+# - At least 8GB VRAM
+# - Additional 16GB+ system RAM
+#
+# To deploy GPU agents:
+# docker compose -f docker-compose-tier3-gpu.yml up -d
+#
+# To check GPU availability:
+# nvidia-smi
+# docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi

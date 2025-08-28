@@ -1,0 +1,435 @@
+version: '3.8'
+
+# Tier 2: Medium Resource Agents (3-5GB RAM total)
+# For systems with moderate resources
+
+services:
+  # Financial Analysis Agent
+  finrobot:
+    container_name: sutazai-finrobot
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/AI4Finance-Foundation/FinRobot.git . &&
+             pip install --no-cache-dir -r requirements.txt fastapi uvicorn &&
+             python -m uvicorn app:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "11601:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - REDIS_URL=redis://sutazai-redis:6379
+      - MCP_BRIDGE_URL=http://host.docker.internal:11100
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # GPT-Engineer
+  gpt-engineer:
+    container_name: sutazai-gpt-engineer
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/AntonOsika/gpt-engineer.git . &&
+             pip install --no-cache-dir -e . fastapi uvicorn &&
+             python /app/wrapper.py"
+    ports:
+      - "11302:8000"
+    networks:
+      - sutazai-network
+    volumes:
+      - ./wrappers/gpt_engineer_wrapper.py:/app/wrapper.py:ro
+      - ./workspaces/gpt-engineer:/workspace:rw
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+
+  # OpenDevin
+  opendevin:
+    container_name: sutazai-opendevin
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl nodejs npm &&
+             git clone https://github.com/OpenDevin/OpenDevin.git . &&
+             pip install --no-cache-dir -r requirements.txt &&
+             python -m opendevin.server --host 0.0.0.0 --port 8000"
+    ports:
+      - "11303:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - WORKSPACE_PATH=/workspace
+      - MCP_BRIDGE_URL=http://host.docker.internal:11100
+    volumes:
+      - ./workspaces/opendevin:/workspace:rw
+    mem_limit: 1.5g
+    cpus: 1.5
+    restart: unless-stopped
+
+  # AutoGPT
+  autogpt:
+    container_name: sutazai-autogpt
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/Significant-Gravitas/AutoGPT.git . &&
+             pip install --no-cache-dir -r requirements.txt &&
+             python -m autogpt --continuous-mode --api-port 8000"
+    ports:
+      - "11102:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - REDIS_URL=redis://sutazai-redis:6379
+      - MCP_BRIDGE_URL=http://host.docker.internal:11100
+    volumes:
+      - ./workspaces/autogpt:/workspace:rw
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # Letta (MemGPT)
+  letta:
+    container_name: sutazai-letta
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/letta-ai/letta.git . &&
+             pip install --no-cache-dir -e . fastapi uvicorn &&
+             letta server --host 0.0.0.0 --port 8000"
+    ports:
+      - "11101:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # LocalAGI
+  localagi:
+    container_name: sutazai-localagi
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/mudler/LocalAI.git . &&
+             pip install --no-cache-dir -r requirements.txt &&
+             python api.py --host 0.0.0.0 --port 8000"
+    ports:
+      - "11103:8000"
+    networks:
+      - sutazai-network
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # Agent Zero
+  agent-zero:
+    container_name: sutazai-agent-zero
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/frdel/agent-zero.git . &&
+             pip install --no-cache-dir -r requirements.txt &&
+             python main.py --api --host 0.0.0.0 --port 8000"
+    ports:
+      - "11105:8000"
+    networks:
+      - sutazai-network
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+
+  # BigAGI
+  bigagi:
+    container_name: sutazai-bigagi
+    image: node:18-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git &&
+             git clone https://github.com/enricoros/big-AGI.git . &&
+             npm install && npm run build &&
+             npm start"
+    ports:
+      - "11106:3000"
+    networks:
+      - sutazai-network
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # Browser Use
+  browser-use:
+    container_name: sutazai-browser-use
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl chromium &&
+             git clone https://github.com/browser-use/browser-use.git . &&
+             pip install --no-cache-dir -e . playwright &&
+             playwright install chromium &&
+             python -m browser_use.server --host 0.0.0.0 --port 8000"
+    ports:
+      - "11701:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - DISPLAY=:99
+    mem_limit: 1.5g
+    cpus: 1.5
+    restart: unless-stopped
+
+  # Skyvern
+  skyvern:
+    container_name: sutazai-skyvern
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl chromium &&
+             git clone https://github.com/Skyvern-AI/skyvern.git . &&
+             pip install --no-cache-dir -r requirements.txt &&
+             python -m skyvern.server --host 0.0.0.0 --port 8000"
+    ports:
+      - "11702:8000"
+    networks:
+      - sutazai-network
+    mem_limit: 1.5g
+    cpus: 1.5
+    restart: unless-stopped
+
+  # Semgrep
+  semgrep:
+    container_name: sutazai-semgrep
+    image: returntocorp/semgrep:latest
+    working_dir: /src
+    command: |
+      sh -c "semgrep --config=auto --json-output=/reports/results.json /src"
+    volumes:
+      - ./code-to-scan:/src:ro
+      - ./reports:/reports:rw
+    networks:
+      - sutazai-network
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+
+  # AutoGen
+  autogen:
+    container_name: sutazai-autogen
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/ag2ai/ag2.git . &&
+             pip install --no-cache-dir pyautogen fastapi uvicorn &&
+             python /app/autogen_wrapper.py"
+    ports:
+      - "11203:8000"
+    networks:
+      - sutazai-network
+    volumes:
+      - ./wrappers/autogen_wrapper.py:/app/autogen_wrapper.py:ro
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+
+  # LangFlow
+  langflow:
+    container_name: sutazai-langflow
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "pip install --no-cache-dir langflow &&
+             langflow run --host 0.0.0.0 --port 8000"
+    ports:
+      - "11402:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - LANGFLOW_DATABASE_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # Dify
+  dify:
+    container_name: sutazai-dify
+    image: langgenius/dify-api:latest
+    ports:
+      - "11403:5001"
+    networks:
+      - sutazai-network
+    environment:
+      - DB_USERNAME=jarvis
+      - DB_PASSWORD=sutazai_secure_2024
+      - DB_HOST=sutazai-postgres
+      - DB_PORT=5432
+      - DB_DATABASE=jarvis_ai
+      - REDIS_URL=redis://sutazai-redis:6379
+    mem_limit: 1.5g
+    cpus: 1.5
+    restart: unless-stopped
+
+  # Flowise
+  flowise:
+    container_name: sutazai-flowise
+    image: flowiseai/flowise:latest
+    ports:
+      - "11404:3000"
+    networks:
+      - sutazai-network
+    environment:
+      - DATABASE_TYPE=postgres
+      - DATABASE_HOST=sutazai-postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=jarvis
+      - DATABASE_PASSWORD=sutazai_secure_2024
+      - DATABASE_NAME=jarvis_ai
+    volumes:
+      - flowise-data:/root/.flowise
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # AgentGPT
+  agentgpt:
+    container_name: sutazai-agentgpt
+    image: node:18
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git &&
+             git clone https://github.com/reworkd/AgentGPT.git . &&
+             cd platform && npm install && npm run build &&
+             npm start"
+    ports:
+      - "11104:3000"
+    networks:
+      - sutazai-network
+    environment:
+      - DATABASE_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    mem_limit: 1.5g
+    cpus: 1.5
+    restart: unless-stopped
+
+  # Private-GPT
+  private-gpt:
+    container_name: sutazai-private-gpt
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/zylon-ai/private-gpt.git . &&
+             pip install --no-cache-dir -r requirements.txt &&
+             python -m private_gpt --host 0.0.0.0 --port 8000"
+    ports:
+      - "11501:8000"
+    networks:
+      - sutazai-network
+    volumes:
+      - ./models:/models:rw
+      - ./documents:/documents:ro
+    mem_limit: 1.5g
+    cpus: 1.5
+    restart: unless-stopped
+
+  # LlamaIndex
+  llama-index:
+    container_name: sutazai-llama-index
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "pip install --no-cache-dir llama-index fastapi uvicorn &&
+             python /app/llama_index_wrapper.py"
+    ports:
+      - "11202:8000"
+    networks:
+      - sutazai-network
+    volumes:
+      - ./wrappers/llama_index_wrapper.py:/app/llama_index_wrapper.py:ro
+      - ./data:/data:rw
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # PentestGPT
+  pentestgpt:
+    container_name: sutazai-pentestgpt
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git nmap nikto &&
+             git clone https://github.com/GreyDGL/PentestGPT.git . &&
+             pip install --no-cache-dir -r requirements.txt &&
+             python pentestgpt.py --api --host 0.0.0.0 --port 8000"
+    ports:
+      - "11801:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # Deep Agent
+  deep-agent:
+    container_name: sutazai-deep-agent
+    image: python:3.11
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/soartech/deep-agent.git . &&
+             pip install --no-cache-dir -r requirements.txt &&
+             python -m deep_agent.server --host 0.0.0.0 --port 8000"
+    ports:
+      - "11107:8000"
+    networks:
+      - sutazai-network
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+  # Context Engineering Framework
+  context-engineering:
+    container_name: sutazai-context-engineering
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/mihaicode/context-engineering-framework.git . &&
+             pip install --no-cache-dir -r requirements.txt fastapi uvicorn &&
+             python -m uvicorn app:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "11204:8000"
+    networks:
+      - sutazai-network
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+volumes:
+  flowise-data:
+    driver: local
+
+# Resource Summary for Tier 2:
+# Total: ~20GB RAM required for all agents
+# Deploy in groups of 5-6 to stay within limits
