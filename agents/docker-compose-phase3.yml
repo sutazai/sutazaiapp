@@ -18,7 +18,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -47,7 +47,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -75,7 +75,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -103,7 +103,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - EMBEDDING_MODEL=tinyllama
       - VECTOR_DB_URL=http://sutazai-chromadb:8000
@@ -134,7 +134,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -162,7 +162,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -190,11 +190,12 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
       - ./wrappers/pentestgpt_local.py:/app/pentestgpt_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
     mem_limit: 384m
     cpus: 0.4
     restart: unless-stopped
@@ -218,7 +219,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:

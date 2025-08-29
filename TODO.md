@@ -136,7 +136,7 @@ Frontend           Running (Streamlit)     Port 11000
 - [ ] OpenDevin - AI coding (Port 11303)
 - [ ] Context Engineering - Framework (Port 11204)
 
-#### GPU-Required Agents (docker-compose-tier3-gpu.yml): (not applicable to limited hardware environements)
+#### GPU-Required Agents (docker-compose-tier3-gpu.yml): (Do not deploy unless searched online and hardware is tested and fit for this - not applicable to limited hardware environments)
 - [ ] TabbyML - Code completion (Port 11304) - Requires Strong NVIDIA GPU
 - [ ] PyTorch - ML framework (Port 11901) - Requires Strong NVIDIA GPU
 - [ ] TensorFlow - ML framework (Port 11902) - Requires Strong NVIDIA GPU

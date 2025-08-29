@@ -17,7 +17,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -47,7 +47,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
       - PYTHONUNBUFFERED=1
@@ -77,12 +77,13 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - USE_GPU=${USE_GPU:-false}
       - PYTHONUNBUFFERED=1
     volumes:
       - ./wrappers/tabbyml_local.py:/app/tabbyml_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
     mem_limit: 768m
     cpus: 0.75
     restart: unless-stopped
@@ -115,7 +116,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -144,7 +145,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:
@@ -173,7 +174,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
     volumes:

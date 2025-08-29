@@ -1,3 +1,39 @@
 
 # Swarm database files (may contain secrets)
 .swarm/
+
+# Python virtual environments
+venv/
+.venv/
+env/
+.env/
+**/venv/
+**/.venv/
+frontend/venv/
+agents/venv/
+backend/venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+
+# Memory bank large files
+memory-bank/activeContext.md
+memory-bank/*.md
+memory-bank/
+
+# Large binary files
+*.so
+*.dylib
+*.dll
+*.a
+
+# Package directories
+*.egg-info/
+dist/
+build/
+eggs/
+wheels/

@@ -20,11 +20,25 @@ class VoiceAssistant:
     def __init__(self):
         # Initialize speech recognition
         self.recognizer = sr.Recognizer()
-        self.microphone = sr.Microphone()
+        
+        # Try to initialize microphone (may fail in server environments)
+        try:
+            self.microphone = sr.Microphone()
+            self.audio_available = True
+        except (OSError, AttributeError) as e:
+            print(f"Warning: No audio input device available: {e}")
+            self.microphone = None
+            self.audio_available = False
         
         # Initialize text-to-speech
-        self.engine = pyttsx3.init()
-        self._configure_voice()
+        try:
+            self.engine = pyttsx3.init()
+            self._configure_voice()
+            self.tts_available = True
+        except (RuntimeError, OSError) as e:
+            print(f"Warning: TTS not available: {e}")
+            self.engine = None
+            self.tts_available = False
         
         # Threading for background listening
         self.listening_thread = None
@@ -41,20 +55,31 @@ class VoiceAssistant:
         
     def _configure_voice(self):
         """Configure TTS voice parameters"""
-        voices = self.engine.getProperty('voices')
-        
-        # Try to set a male voice (JARVIS-like)
-        for voice in voices:
-            if "male" in voice.name.lower():
-                self.engine.setProperty('voice', voice.id)
-                break
+        if not self.engine:
+            return
+            
+        try:
+            voices = self.engine.getProperty('voices')
+            
+            # Try to set a male voice (JARVIS-like)
+            for voice in voices:
+                if "male" in voice.name.lower():
+                    self.engine.setProperty('voice', voice.id)
+                    break
+        except Exception as e:
+            print(f"Warning: Could not configure voice: {e}")
         
         # Set speech parameters
-        self.engine.setProperty('rate', 175)  # Speaking rate
-        self.engine.setProperty('volume', 1.0)  # Volume
+        if self.engine:
+            self.engine.setProperty('rate', 175)  # Speaking rate
+            self.engine.setProperty('volume', 1.0)  # Volume
         
     def start_listening(self, callback=None):
         """Start continuous background listening"""
+        if not self.audio_available:
+            print("Warning: Audio not available, cannot start listening")
+            return False
+            
         if not self.is_listening:
             self.is_listening = True
             self.listening_thread = threading.Thread(
@@ -75,6 +100,9 @@ class VoiceAssistant:
     
     def _listen_background(self, callback):
         """Background listening thread"""
+        if not self.microphone:
+            return
+            
         with self.microphone as source:
             # Adjust for ambient noise
             self.recognizer.adjust_for_ambient_noise(source, duration=1)
@@ -137,6 +165,10 @@ class VoiceAssistant:
     
     def speak(self, text: str, wait: bool = True):
         """Convert text to speech"""
+        if not self.tts_available or not self.engine:
+            print(f"TTS: {text}")  # Fallback to console output
+            return
+            
         try:
             if wait:
                 self.engine.say(text)
@@ -153,8 +185,9 @@ class VoiceAssistant:
     
     def _speak_async(self, text: str):
         """Asynchronous speech synthesis"""
-        self.engine.say(text)
-        self.engine.runAndWait()
+        if self.engine:
+            self.engine.say(text)
+            self.engine.runAndWait()
     
     def process_audio_bytes(self, audio_bytes: bytes) -> Optional[str]:
         """Process raw audio bytes and convert to text"""

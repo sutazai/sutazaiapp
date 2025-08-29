@@ -460,7 +460,8 @@
       "Bash(./venv/bin/pip install speech_recognition psutil docker plotly pyaudio --quiet)",
       "Bash(./fix_all_agents.sh)",
       "Bash(ip addr:*)",
-      "Bash(sutazai-mcp-bridge:latest)"
+      "Bash(sutazai-mcp-bridge:latest)",
+      "Bash(./restart-all-agents.sh:*)"
     ],
     "deny": [],
     "additionalDirectories": [

@@ -17,10 +17,9 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
-      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
       - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/autogpt_local.py:/app/autogpt_local.py:ro
@@ -51,7 +50,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
       - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
@@ -81,7 +80,7 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_API_BASE=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - LLM_MODEL=tinyllama
       - PYTHONUNBUFFERED=1
       - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
@@ -111,10 +110,9 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
-      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
       - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/bigagi_local.py:/app/bigagi_local.py:ro
@@ -171,10 +169,9 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
-      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
       - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/autogen_local.py:/app/autogen_local.py:ro
@@ -202,10 +199,9 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
-      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
       - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/browseruse_local.py:/app/browseruse_local.py:ro
@@ -233,10 +229,9 @@ services:
     networks:
       - sutazai-network
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
       - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
-      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
       - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
     volumes:
       - ./wrappers/skyvern_local.py:/app/skyvern_local.py:ro
@@ -254,6 +249,14 @@ networks:
   sutazai-network:
     external: true
     name: sutazaiapp_sutazai-network
+
+# Agent Dependencies
+# Note: These agents depend on the following services being available:
+# 1. Ollama at ollama:11434 (provided by docker-compose-network-fix.yml)
+# 2. MCP Bridge at sutazai-mcp-bridge:11100
+# 3. RabbitMQ at sutazai-rabbitmq:5672
+# 4. Redis at sutazai-redis:6379
+# 5. Consul at sutazai-consul:8500
 
 # Phase 2 Resource Summary:
 # - AutoGPT: 512MB RAM, 0.5 CPU
