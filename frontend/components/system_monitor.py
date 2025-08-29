@@ -19,6 +19,83 @@ import concurrent.futures
 class SystemMonitor:
     """Advanced system monitoring with real-time metrics"""
     
+    # Class-level instance for singleton pattern
+    _instance = None
+    
+    @classmethod
+    def get_instance(cls):
+        """Get or create singleton instance"""
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
+    
+    @classmethod
+    def get_cpu_usage(cls) -> float:
+        """Get current CPU usage percentage"""
+        try:
+            return psutil.cpu_percent(interval=1)
+        except Exception:
+            return 0.0
+    
+    @classmethod
+    def get_memory_usage(cls) -> float:
+        """Get current memory usage percentage"""
+        try:
+            return psutil.virtual_memory().percent
+        except Exception:
+            return 0.0
+    
+    @classmethod
+    def get_disk_usage(cls) -> float:
+        """Get disk usage percentage for root partition"""
+        try:
+            return psutil.disk_usage('/').percent
+        except Exception:
+            return 0.0
+    
+    @classmethod
+    def get_network_speed(cls) -> float:
+        """Get current network speed in MB/s"""
+        try:
+            stats = psutil.net_io_counters()
+            # Simple approximation - would need to track over time for actual speed
+            return round((stats.bytes_sent + stats.bytes_recv) / (1024 * 1024 * 100), 2)
+        except Exception:
+            return 0.0
+    
+    @classmethod
+    def get_docker_stats(cls) -> List[Dict]:
+        """Get Docker container statistics"""
+        containers = []
+        try:
+            docker_client = docker.from_env()
+            for container in docker_client.containers.list():
+                stats = container.stats(stream=False)
+                
+                # Calculate CPU percentage
+                cpu_delta = stats["cpu_stats"]["cpu_usage"]["total_usage"] - \
+                           stats["precpu_stats"]["cpu_usage"]["total_usage"]
+                system_delta = stats["cpu_stats"]["system_cpu_usage"] - \
+                              stats["precpu_stats"]["system_cpu_usage"]
+                cpu_percent = 0.0
+                if system_delta > 0:
+                    cpu_percent = (cpu_delta / system_delta) * 100.0
+                
+                # Calculate memory usage
+                mem_usage = stats["memory_stats"].get("usage", 0) / (1024 * 1024)  # MB
+                
+                containers.append({
+                    "name": container.name,
+                    "status": container.status,
+                    "cpu": round(cpu_percent, 2),
+                    "memory": round(mem_usage, 2),
+                    "uptime": container.attrs["State"].get("StartedAt", "Unknown")
+                })
+        except Exception as e:
+            print(f"Docker stats error: {e}")
+        
+        return containers
+    
     def __init__(self):
         self.metrics_queue = Queue()
         self.monitoring_thread = None

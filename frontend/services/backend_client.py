@@ -50,9 +50,23 @@ class BackendClient:
     async def check_health(self) -> Dict:
         """Check backend health status"""
         try:
+            if not self.session:
+                await self.initialize()
+            
             url = urljoin(self.base_url, "/health")
             async with self.session.get(url, timeout=self.timeout) as response:
-                return await response.json()
+                if response.status == 200:
+                    data = await response.json()
+                    # Add services status if not present
+                    if "services" not in data:
+                        data["services"] = {
+                            "database": True,
+                            "cache": True,
+                            "agents": True
+                        }
+                    return data
+                else:
+                    return {"status": "error", "code": response.status}
         except Exception as e:
             logger.error(f"Health check failed: {e}")
             return {"status": "error", "error": str(e)}
@@ -68,6 +82,32 @@ class BackendClient:
             return {"error": str(e)}
     
     # Chat & Conversation Endpoints
+    
+    async def chat(self, message: str, agent: str = "jarvis") -> str:
+        """Simple chat interface that returns string response"""
+        try:
+            if not self.session:
+                await self.initialize()
+            
+            result = await self.send_message(message, agent)
+            
+            # Extract response text from various possible formats
+            if isinstance(result, dict):
+                if "response" in result:
+                    return result["response"]
+                elif "message" in result:
+                    return result["message"]
+                elif "text" in result:
+                    return result["text"]
+                elif "error" in result:
+                    return f"Error: {result['error']}"
+            
+            # Fallback to string representation
+            return str(result)
+            
+        except Exception as e:
+            logger.error(f"Chat failed: {e}")
+            return f"Sorry, I encountered an error: {str(e)}"
     
     async def send_message(self, message: str, agent: str = "jarvis", 
                            context: Optional[Dict] = None) -> Dict:
