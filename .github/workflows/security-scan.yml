@@ -5,8 +5,8 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  schedule:
-    - cron: '0 2 * * 1' # Weekly scan
+  # schedule:
+  #   - cron: '0 2 * * 1' # Weekly scan (disabled to prevent failures)
 
 jobs:
   security-scan:

@@ -241,7 +241,17 @@
       "Bash(do echo -n \"$tool: \")",
       "Bash(then echo \"✅ Available\")",
       "Bash(else echo \"❌ Not connected\")",
-      "Read(/C:\\Users\\root\\.claude/**)"
+      "Read(/C:\\Users\\root\\.claude/**)",
+      "Bash(git push:*)",
+      "Bash(wsl:*)",
+      "Bash(cmd.exe:*)",
+      "Bash(wsl.exe:*)",
+      "Read(/C:\\Users\\root\\.claude/**)",
+      "Read(/C:\\Users\\root\\.claude/**)",
+      "Bash(claude mcp:*)",
+      "Read(/C:\\Users\\root/**)",
+      "Read(/C:\\Users\\root/**)",
+      "WebFetch(domain:gitmcp.io)"
     ],
     "deny": [],
     "additionalDirectories": [

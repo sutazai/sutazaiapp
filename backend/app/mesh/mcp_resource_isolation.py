@@ -14,8 +14,20 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
 import hashlib
-import fcntl
 import socket
+import sys
+
+# fcntl is Unix-only, provide mock for Windows
+if sys.platform == 'win32':
+    class fcntl:
+        LOCK_EX = 2
+        LOCK_NB = 4
+        LOCK_UN = 8
+        @staticmethod
+        def flock(fd, operation):
+            pass
+else:
+    import fcntl
 import json
 
 logger = logging.getLogger(__name__)

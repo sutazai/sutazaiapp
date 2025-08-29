@@ -1,11 +1,11 @@
-# ULTRACONTINUE Continuous Monitoring Configuration
+# SutazAI Continuous Monitoring Configuration
 # Prometheus configuration for comprehensive system monitoring
 
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    monitor: 'sutazai-ultracontinue'
+    monitor: 'sutazai-monitoring'
     environment: 'production'
 
 # Alerting configuration
