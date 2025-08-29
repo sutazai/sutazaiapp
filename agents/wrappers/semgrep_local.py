@@ -27,6 +27,12 @@ class SemgrepLocal(BaseAgentWrapper):
     def setup_semgrep_routes(self):
         """Setup Semgrep-specific routes"""
         
+        
+        @self.app.get("/health")
+        async def health_check():
+            """Health check endpoint"""
+            return {"status": "healthy", "agent": "semgrep"}
+
         @self.app.post("/scan")
         async def scan_code(request: Dict[str, Any]):
             """Scan code for security issues"""

@@ -17,7 +17,7 @@ services:
       - "10200:8000"
     networks:
       sutazai-network:
-        ipv4_address: 172.20.0.30
+        ipv4_address: 172.20.0.40
     environment:
       # Application
       APP_NAME: "SutazAI Platform API"

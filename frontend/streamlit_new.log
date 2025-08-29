@@ -1,9 +1,4 @@
 
 Collecting usage statistics. To deactivate, set browser.gatherUsageStats to false.
 
-
-  You can now view your Streamlit app in your browser.
-
-  URL: http://0.0.0.0:11000
-
-  Stopping...
+2025-08-29 13:30:23.035 Port 11000 is already in use

@@ -818,7 +818,7 @@ docker system prune -f --volumes 2>/dev/null || true
 
 # Update CHANGELOG files where missing
 echo "📝 Updating CHANGELOG files..."
-find "$BASE_DIR" -type d -not -path "*/\.*" -not -path "*/node_modules/*" -not -path "*/venv/*" | while read -r dir; do
+find "$BASE_DIR" -type d -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/venv/*" | while read -r dir; do
     if [ ! -f "$dir/CHANGELOG.md" ]; then
         echo "# Changelog" > "$dir/CHANGELOG.md"
         echo "" >> "$dir/CHANGELOG.md"
