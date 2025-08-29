@@ -1,0 +1,71 @@
+# MCP Ignore File - Prevents MCP tools from traversing these paths
+# This prevents massive token generation from directory_tree operations
+
+# Python virtual environments
+**/venv/
+**/.venv/
+**/env/
+**/.env/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+
+# Node.js dependencies
+**/node_modules/
+**/bower_components/
+
+# Build outputs
+**/dist/
+**/build/
+**/out/
+**/.next/
+**/.nuxt/
+
+# Version control
+**/.git/
+**/.svn/
+
+# IDE files
+**/.idea/
+**/.vscode/
+**/*.swp
+**/*.swo
+
+# Logs and temporary files
+**/logs/
+**/*.log
+**/tmp/
+**/temp/
+
+# Docker volumes
+**/volumes/
+
+# Large binary files
+**/*.tar.gz
+**/*.zip
+**/*.rar
+**/*.7z
+
+# Database files
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+
+# Media files (if not needed)
+**/*.mp4
+**/*.avi
+**/*.mov
+**/*.mkv
+
+# OS files
+**/.DS_Store
+**/Thumbs.db
+
+# Claude cache
+**/.cache/
+**/.claude/
+
+# Frontend build artifacts
+frontend/venv/
+agents/*/node_modules/
+agents/*/venv/
