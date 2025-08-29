@@ -42,7 +42,7 @@ services:
     
     networks:
       sutazai-network:
-        ipv4_address: 172.20.0.30
+        ipv4_address: 172.20.0.31
     
     # Backend is in separate compose file, no direct dependency
     
