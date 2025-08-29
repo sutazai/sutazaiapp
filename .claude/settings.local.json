@@ -461,7 +461,8 @@
       "Bash(./fix_all_agents.sh)",
       "Bash(ip addr:*)",
       "Bash(sutazai-mcp-bridge:latest)",
-      "Bash(./restart-all-agents.sh:*)"
+      "Bash(./restart-all-agents.sh:*)",
+      "Bash(PGPASSWORD=sutazai_secure_2024 psql -h localhost -p 10000 -U jarvis -d jarvis_ai -c \"SELECT id, username, email, is_active, is_superuser, is_verified, created_at FROM users;\")"
     ],
     "deny": [],
     "additionalDirectories": [
