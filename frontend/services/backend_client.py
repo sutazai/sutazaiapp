@@ -33,24 +33,40 @@ class BackendClient:
         self.retry_count = 3
         self.retry_delay = 1
         
+    async def __aenter__(self):
+        """Async context manager entry"""
+        await self.initialize()
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Async context manager exit"""
+        await self.close()
+        
     async def initialize(self):
         """Initialize async session"""
-        if not self.session:
+        if not self.session or self.session.closed:
             self.session = aiohttp.ClientSession(headers=self.headers)
+    
+    async def ensure_session(self):
+        """Ensure session is available and open"""
+        if not self.session or self.session.closed:
+            await self.initialize()
     
     async def close(self):
         """Close connections"""
-        if self.session:
+        if self.session and not self.session.closed:
             await self.session.close()
+            self.session = None
         if self.websocket:
             await self.websocket.close()
+            self.websocket = None
     
     # Health & Status Endpoints
     
     async def check_health(self) -> Dict:
         """Check backend health status"""
         try:
-            if not self.session:
+            if not self.session or self.session.closed:
                 await self.initialize()
             
             url = urljoin(self.base_url, "/health")
@@ -74,6 +90,7 @@ class BackendClient:
     async def get_services_status(self) -> Dict:
         """Get status of all backend services"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "system/services")
             async with self.session.get(url, timeout=self.timeout) as response:
                 return await response.json()
@@ -86,7 +103,7 @@ class BackendClient:
     async def chat(self, message: str, agent: str = "jarvis") -> str:
         """Simple chat interface that returns string response"""
         try:
-            if not self.session:
+            if not self.session or self.session.closed:
                 await self.initialize()
             
             result = await self.send_message(message, agent)
@@ -113,16 +130,31 @@ class BackendClient:
                            context: Optional[Dict] = None) -> Dict:
         """Send message to AI agent"""
         try:
-            url = urljoin(self.api_v1, "chat")
+            await self.ensure_session()
+            url = urljoin(self.api_v1, "chat/message")
             payload = {
                 "message": message,
-                "agent": agent,
-                "context": context or {},
-                "timestamp": datetime.now().isoformat()
+                "model": "tinyllama:latest",  # Using default model from backend
+                "user_id": context.get("user_id") if context else None,
+                "session_id": context.get("session_id") if context else None,
+                "stream": False,
+                "temperature": 0.7,
+                "max_tokens": 1000
             }
             
             async with self.session.post(url, json=payload, timeout=self.timeout) as response:
-                return await response.json()
+                if response.status == 200:
+                    return await response.json()
+                else:
+                    error_text = await response.text()
+                    logger.error(f"Backend returned {response.status}: {error_text}")
+                    return {"error": f"Backend error: {error_text}"}
+        except aiohttp.ClientConnectorError as e:
+            logger.error(f"Cannot connect to backend: {e}")
+            return {"error": "Cannot connect to backend service. Please ensure it's running."}
+        except asyncio.TimeoutError:
+            logger.error("Request timed out")
+            return {"error": "Request timed out. Please try again."}
         except Exception as e:
             logger.error(f"Send message failed: {e}")
             return {"error": str(e)}
@@ -161,6 +193,7 @@ class BackendClient:
     async def list_agents(self) -> List[Dict]:
         """List available AI agents"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "agents")
             async with self.session.get(url, timeout=self.timeout) as response:
                 return await response.json()
@@ -171,6 +204,7 @@ class BackendClient:
     async def get_agent_status(self, agent_id: str) -> Dict:
         """Get specific agent status"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, f"agents/{agent_id}/status")
             async with self.session.get(url, timeout=self.timeout) as response:
                 return await response.json()
@@ -181,6 +215,7 @@ class BackendClient:
     async def start_agent(self, agent_id: str, config: Optional[Dict] = None) -> Dict:
         """Start an AI agent"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, f"agents/{agent_id}/start")
             payload = {"config": config or {}}
             
@@ -193,6 +228,7 @@ class BackendClient:
     async def stop_agent(self, agent_id: str) -> Dict:
         """Stop an AI agent"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, f"agents/{agent_id}/stop")
             
             async with self.session.post(url, timeout=self.timeout) as response:
@@ -207,6 +243,7 @@ class BackendClient:
                          agents: Optional[List[str]] = None) -> Dict:
         """Create a new task for agents"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "orchestration/tasks")
             payload = {
                 "type": task_type,
@@ -224,6 +261,7 @@ class BackendClient:
     async def get_task_status(self, task_id: str) -> Dict:
         """Get task execution status"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, f"orchestration/tasks/{task_id}")
             
             async with self.session.get(url, timeout=self.timeout) as response:
@@ -235,6 +273,7 @@ class BackendClient:
     async def cancel_task(self, task_id: str) -> Dict:
         """Cancel a running task"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, f"orchestration/tasks/{task_id}/cancel")
             
             async with self.session.post(url, timeout=self.timeout) as response:
@@ -248,6 +287,7 @@ class BackendClient:
     async def upload_document(self, file_path: str, metadata: Optional[Dict] = None) -> Dict:
         """Upload document for processing"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "documents/upload")
             
             with open(file_path, 'rb') as f:
@@ -265,6 +305,7 @@ class BackendClient:
     async def search_documents(self, query: str, filters: Optional[Dict] = None) -> List[Dict]:
         """Search documents in knowledge base"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "documents/search")
             payload = {
                 "query": query,
@@ -284,6 +325,7 @@ class BackendClient:
                            top_k: int = 5) -> List[Dict]:
         """Search in vector database"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "vectors/search")
             payload = {
                 "query": query,
@@ -301,6 +343,7 @@ class BackendClient:
                            collection: str = "default") -> Dict:
         """Add text embedding to vector database"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "vectors/add")
             payload = {
                 "text": text,
@@ -319,6 +362,7 @@ class BackendClient:
     async def transcribe_audio(self, audio_data: bytes) -> Dict:
         """Transcribe audio to text"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "voice/transcribe")
             
             data = aiohttp.FormData()
@@ -333,6 +377,7 @@ class BackendClient:
     async def synthesize_speech(self, text: str, voice: str = "jarvis") -> bytes:
         """Convert text to speech"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "voice/synthesize")
             payload = {
                 "text": text,
@@ -354,6 +399,7 @@ class BackendClient:
     async def get_metrics(self) -> Dict:
         """Get system metrics"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "metrics")
             
             async with self.session.get(url, timeout=self.timeout) as response:
@@ -366,6 +412,7 @@ class BackendClient:
                       limit: int = 100) -> List[Dict]:
         """Get system logs"""
         try:
+            await self.ensure_session()
             url = urljoin(self.api_v1, "logs")
             params = {"limit": limit}
             if service:
@@ -436,10 +483,14 @@ class BackendClient:
         """Synchronous message sending"""
         payload = {
             "message": message,
-            "agent": agent,
-            "timestamp": datetime.now().isoformat()
+            "model": "tinyllama:latest",
+            "user_id": None,
+            "session_id": None,
+            "stream": False,
+            "temperature": 0.7,
+            "max_tokens": 1000
         }
-        return self._sync_request("POST", "chat", json=payload)
+        return self._sync_request("POST", "chat/message", json=payload)
     
     def list_agents_sync(self) -> List[Dict]:
         """Synchronous agent listing"""

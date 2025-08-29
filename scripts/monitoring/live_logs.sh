@@ -1996,12 +1996,22 @@ show_unified_live_logs() {
     if command -v docker &> /dev/null && [ -f "/opt/sutazaiapp/docker-compose.yml" ]; then
         # Use docker compose logs for true unified streaming
         cd /opt/sutazaiapp
-        docker compose logs -f --tail=5 2>/dev/null || {
+        
+        # Get all running container services
+        local services=$(docker compose ps --services 2>/dev/null | tr '\n' ' ')
+        
+        if [ -n "$services" ]; then
+            echo -e "${GREEN}📡 Starting unified log stream for services: $services${NC}"
+            echo ""
+            # Stream logs with colors and timestamps
+            docker compose logs -f --tail=10 --timestamps $services 2>&1
+        else
             # Fallback to individual container streaming
-            echo -e "${YELLOW}Docker compose not available, using individual streams...${NC}"
+            echo -e "${YELLOW}No compose services found, using individual streams...${NC}"
             individual_streaming
-        }
+        fi
     else
+        echo -e "${YELLOW}Docker compose not available, using individual streams...${NC}"
         individual_streaming
     fi
 }
@@ -2010,23 +2020,34 @@ show_unified_live_logs() {
 individual_streaming() {
     local color_index=0
     local colors=(31 32 33 34 35 36 91 92 93 94 95 96)
+    local pids=()
     
+    # Start streaming logs from each container in background
     for container in "${running_containers[@]}"; do
         local short_name=$(echo "$container" | sed 's/sutazai-//' | tr '[:lower:]' '[:upper:]' | cut -c1-8)
         local color_code=${colors[$((color_index % ${#colors[@]}))]}
         
         # Stream each container's logs in background with color and formatting
         {
-            docker logs -f --tail=2 "$container" 2>&1 | while IFS= read -r line; do
+            docker logs -f --tail=10 "$container" 2>&1 | while IFS= read -r line; do
                 printf "\033[%sm[%s] [%s]\033[0m %s\n" "$color_code" "$(date '+%H:%M:%S')" "$short_name" "$line"
             done
         } &
+        pids+=($!)
         
         ((color_index++))
     done
     
-    # Wait for all background processes
-    wait
+    # Show initial message
+    echo ""
+    echo -e "${GREEN}📡 Streaming logs from ${#running_containers[@]} containers...${NC}"
+    echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
+    echo ""
+    
+    # Wait for all background processes or until interrupted
+    for pid in "${pids[@]}"; do
+        wait $pid 2>/dev/null
+    done
 }
 
 # Redeploy all containers function
@@ -2600,4 +2621,4 @@ case "${1:-}" in
         # Run main function with parameters
         main "$@"
         ;;
-esacfrontend/venv
+esac

@@ -280,6 +280,35 @@ class AgentOrchestrator:
             if agent.status == AgentStatus.IDLE
         ]
     
+    def select_best_agent(self, task_description: str) -> Optional[str]:
+        """Select best agent for a task based on description"""
+        # Simple keyword-based selection
+        task_lower = task_description.lower()
+        
+        if any(word in task_lower for word in ["code", "write", "program", "develop"]):
+            capability = "code_generation"
+        elif any(word in task_lower for word in ["search", "find", "research"]):
+            capability = "web_search"
+        elif any(word in task_lower for word in ["analyze", "data", "statistics"]):
+            capability = "data_analysis"
+        elif any(word in task_lower for word in ["chat", "talk", "conversation"]):
+            capability = "conversation"
+        else:
+            capability = "planning"
+        
+        suitable_agents = self.get_agents_by_capability(capability)
+        available = [a for a in suitable_agents if a.status == AgentStatus.IDLE]
+        
+        if available:
+            # Return the name of the best agent
+            return available[0].name
+        elif suitable_agents:
+            # Return a busy but suitable agent's name
+            return suitable_agents[0].name
+        
+        # Default to JARVIS
+        return "JARVIS"
+    
     # Task Management
     
     def create_task(self, task_type: str, description: str, 

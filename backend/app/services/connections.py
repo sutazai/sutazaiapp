@@ -95,19 +95,35 @@ class ServiceConnections:
     
     async def connect_vector_dbs(self):
         """Connect to vector databases"""
-        # ChromaDB
+        # ChromaDB - Using v2 API configuration
         try:
-            # Try simple connection without auth first
-            self.chroma_client = chromadb.HttpClient(
-                host=settings.CHROMADB_HOST,
-                port=settings.CHROMADB_PORT
+            # Use Client factory with proper v2 API settings
+            self.chroma_client = chromadb.Client(
+                ChromaSettings(
+                    chroma_api_impl="chromadb.api.segment.SegmentAPI",
+                    chroma_server_host=settings.CHROMADB_HOST,
+                    chroma_server_http_port=settings.CHROMADB_PORT,
+                    chroma_server_ssl_enabled=False,
+                    chroma_client_auth_provider=None,
+                    chroma_client_auth_credentials=None
+                )
             )
-            logger.info("ChromaDB connection established")
+            # Test the connection with v2 API
+            heartbeat_result = self.chroma_client.heartbeat()
+            logger.info(f"ChromaDB v2 API connection established (heartbeat: {heartbeat_result})")
         except Exception as e:
-            logger.error(f"ChromaDB connection failed: {e}")
-            # Continue without ChromaDB for now
-            logger.warning("Continuing without ChromaDB connection")
-            self.chroma_client = None
+            logger.error(f"ChromaDB v2 API connection failed: {e}")
+            # Try fallback to HttpClient if Client factory fails
+            try:
+                self.chroma_client = chromadb.HttpClient(
+                    host=settings.CHROMADB_HOST,
+                    port=settings.CHROMADB_PORT
+                )
+                logger.info("ChromaDB connection established using HttpClient fallback")
+            except Exception as fallback_error:
+                logger.error(f"ChromaDB HttpClient fallback also failed: {fallback_error}")
+                logger.warning("Continuing without ChromaDB connection")
+                self.chroma_client = None
         
         # Qdrant
         try:
@@ -240,11 +256,13 @@ class ServiceConnections:
         
         # ChromaDB
         try:
-            # ChromaDB doesn't have async heartbeat, use sync
-            self.chroma_client.heartbeat()
-            health["chromadb"] = True
-        except:
-            pass
+            if self.chroma_client:
+                # ChromaDB doesn't have async heartbeat, use sync
+                heartbeat = self.chroma_client.heartbeat()
+                health["chromadb"] = heartbeat is not None
+        except Exception as e:
+            logger.debug(f"ChromaDB health check failed: {e}")
+            health["chromadb"] = False
         
         # Qdrant
         try:

@@ -3,7 +3,7 @@ SutazAI Platform Main Application
 FastAPI backend with comprehensive service integrations
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
@@ -12,6 +12,8 @@ from app.core.config import settings
 from app.core.database import init_db, close_db, Base
 from app.services.connections import service_connections
 from app.api.v1.router import api_router
+# Import JARVIS components
+from app.api.v1.endpoints.jarvis_websocket import websocket_endpoint, manager, jarvis_orchestrator
 # Import models to ensure they're registered
 from app.models import User
 
@@ -78,6 +80,16 @@ app.add_middleware(
 
 # Include API routers
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+# WebSocket endpoint for real-time communication
+@app.websocket("/ws")
+async def websocket_chat(websocket: WebSocket, client_id: str = None):
+    """WebSocket endpoint for real-time chat with JARVIS orchestration"""
+    from app.core.database import get_db
+    # Create a database session
+    async for db in get_db():
+        await websocket_endpoint(websocket, client_id, db)
+        break
 
 
 @app.get("/")

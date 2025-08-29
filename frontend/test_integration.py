@@ -126,7 +126,7 @@ def test_agent_orchestrator():
         agents = orchestrator.get_available_agents()
         print(f"✅ Found {len(agents)} available agents:")
         for agent in agents:
-            print(f"   - {agent['name']}: {agent['status']}")
+            print(f"   - {agent.name}: {agent.status.value}")
         
         # Test agent selection
         selected = orchestrator.select_best_agent("Write some code")
