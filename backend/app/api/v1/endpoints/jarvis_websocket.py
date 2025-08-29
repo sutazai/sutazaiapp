@@ -296,8 +296,15 @@ async def handle_voice_message(client_id: str, data: Dict[str, Any]):
         
         # Convert to AudioData format
         # This is simplified - in production, handle various audio formats
-        from speech_recognition import AudioData
-        audio = AudioData(audio_bytes, 16000, 2)
+        try:
+            from speech_recognition import AudioData
+            audio = AudioData(audio_bytes, 16000, 2)
+        except ImportError:
+            await manager.send_message(client_id, {
+                "type": "error",
+                "message": "Speech recognition not available on server"
+            })
+            return
         
         # Recognize speech
         text = await pipeline._recognize_speech(audio)

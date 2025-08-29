@@ -485,7 +485,8 @@
       "Bash(./fix_jarvis_critical.py)",
       "Bash(./venv/bin/pip install:*)",
       "Bash(./verify_fixes.py)",
-      "Bash(./venv_new/bin/pip install --upgrade pip setuptools wheel)"
+      "Bash(./venv_new/bin/pip install --upgrade pip setuptools wheel)",
+      "Bash(gh auth:*)"
     ],
     "deny": [],
     "additionalDirectories": [

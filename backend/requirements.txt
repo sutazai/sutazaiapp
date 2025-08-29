@@ -2,6 +2,8 @@
 fastapi==0.115.0
 uvicorn[standard]==0.32.0
 python-multipart==0.0.12
+websockets==12.0
+python-socketio==5.10.0
 
 # Database
 sqlalchemy==2.0.35
@@ -21,6 +23,7 @@ neo4j==5.26.0
 # HTTP Client
 httpx==0.28.0
 aiohttp==3.10.10
+aiofiles==23.2.1
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
@@ -37,6 +40,25 @@ chromadb==0.5.0
 qdrant-client==1.12.0
 numpy==1.26.4
 
+# JARVIS Core Dependencies
+langchain==0.1.0
+langchain-community==0.0.10
+transformers==4.36.0
+torch>=2.1.0
+huggingface-hub==0.19.0
+sentence-transformers==2.2.2
+
+# Voice Recognition
+SpeechRecognition==3.10.0
+pyttsx3==2.90
+gTTS==2.4.0
+pygame==2.5.2
+
+# AI Model Providers (minimal for now)
+openai==1.6.0
+# anthropic==0.8.0  # Optional
+# google-generativeai==0.3.0  # Optional
+
 # Testing
 pytest==8.3.0
 pytest-asyncio==0.24.0
@@ -44,6 +66,7 @@ pytest-cov==5.0.0
 
 # Monitoring
 prometheus-client==0.21.0
+loguru==0.7.2
 
 # CORS
 # CORS is handled by FastAPI middleware

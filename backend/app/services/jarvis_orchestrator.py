@@ -13,14 +13,25 @@ from enum import Enum
 import httpx
 from pydantic import BaseModel, Field
 
-# AI Provider imports
-from langchain.chat_models import ChatOpenAI
-from langchain.tools import Tool
-from langchain.agents import initialize_agent, AgentType
-from transformers import pipeline
-import torch
-
 logger = logging.getLogger(__name__)
+
+# AI Provider imports with fallback
+try:
+    from langchain.chat_models import ChatOpenAI
+    from langchain.tools import Tool
+    from langchain.agents import initialize_agent, AgentType
+    LANGCHAIN_AVAILABLE = True
+except ImportError:
+    LANGCHAIN_AVAILABLE = False
+    logger.warning("LangChain not available - some features will be limited")
+
+try:
+    from transformers import pipeline
+    import torch
+    TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    TRANSFORMERS_AVAILABLE = False
+    logger.warning("Transformers not available - some features will be limited")
 
 
 class TaskType(Enum):
@@ -159,30 +170,31 @@ class JARVISOrchestrator:
             }
         }
     
-    def _initialize_tools(self) -> List[Tool]:
+    def _initialize_tools(self) -> list:
         """Initialize LangChain tools for enhanced capabilities"""
         tools = []
         
-        # Add search tool
-        tools.append(Tool(
-            name="web_search",
-            func=self._web_search,
-            description="Search the web for current information"
-        ))
-        
-        # Add calculator tool
-        tools.append(Tool(
-            name="calculator",
-            func=self._calculate,
-            description="Perform mathematical calculations"
-        ))
-        
-        # Add code execution tool
-        tools.append(Tool(
-            name="code_executor",
-            func=self._execute_code,
-            description="Execute Python code safely"
-        ))
+        if LANGCHAIN_AVAILABLE:
+            # Add search tool
+            tools.append(Tool(
+                name="web_search",
+                func=self._web_search,
+                description="Search the web for current information"
+            ))
+            
+            # Add calculator tool
+            tools.append(Tool(
+                name="calculator",
+                func=self._calculate,
+                description="Perform mathematical calculations"
+            ))
+            
+            # Add code execution tool
+            tools.append(Tool(
+                name="code_executor",
+                func=self._execute_code,
+                description="Execute Python code safely"
+            ))
         
         return tools
     

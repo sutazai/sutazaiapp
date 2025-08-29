@@ -15,15 +15,57 @@ from dataclasses import dataclass
 from enum import Enum
 import numpy as np
 
-# Speech recognition providers
-import speech_recognition as sr
-import whisper
-import vosk
+# Speech recognition providers with fallback
+try:
+    import speech_recognition as sr
+    SR_AVAILABLE = True
+except ImportError:
+    SR_AVAILABLE = False
+    logging.warning("SpeechRecognition not available")
+
+try:
+    import whisper
+    WHISPER_AVAILABLE = True
+except ImportError:
+    WHISPER_AVAILABLE = False
+    logging.warning("Whisper not available")
+
+try:
+    import vosk
+    VOSK_AVAILABLE = True
+except ImportError:
+    VOSK_AVAILABLE = False
+    logging.warning("Vosk not available")
+
 import json
-import pyaudio
-import pyttsx3
-from gtts import gTTS
-import pygame
+
+try:
+    import pyaudio
+    PYAUDIO_AVAILABLE = True
+except ImportError:
+    PYAUDIO_AVAILABLE = False
+    logging.warning("PyAudio not available")
+
+try:
+    import pyttsx3
+    PYTTSX3_AVAILABLE = True
+except ImportError:
+    PYTTSX3_AVAILABLE = False
+    logging.warning("pyttsx3 not available")
+
+try:
+    from gtts import gTTS
+    GTTS_AVAILABLE = True
+except ImportError:
+    GTTS_AVAILABLE = False
+    logging.warning("gTTS not available")
+
+try:
+    import pygame
+    PYGAME_AVAILABLE = True
+except ImportError:
+    PYGAME_AVAILABLE = False
+    logging.warning("pygame not available")
 
 # Wake word detection
 try:
@@ -65,7 +107,7 @@ class VoiceConfig:
     vosk_model_path: Optional[str] = None
     enable_wake_word: bool = True
     enable_interruption: bool = True
-    audio_format: int = pyaudio.paInt16
+    audio_format: int = 8 if not PYAUDIO_AVAILABLE else pyaudio.paInt16
     channels: int = 1
     rate: int = 16000
     chunk_size: int = 512
@@ -84,10 +126,11 @@ class VoicePipeline:
         self.on_command_callback = on_command_callback
         
         # Initialize components
-        self.audio = pyaudio.PyAudio()
-        self.recognizer = sr.Recognizer()
-        self.recognizer.energy_threshold = config.energy_threshold
-        self.recognizer.pause_threshold = config.pause_threshold
+        self.audio = pyaudio.PyAudio() if PYAUDIO_AVAILABLE else None
+        self.recognizer = sr.Recognizer() if SR_AVAILABLE else None
+        if self.recognizer:
+            self.recognizer.energy_threshold = config.energy_threshold
+            self.recognizer.pause_threshold = config.pause_threshold
         
         # Initialize ASR providers
         self.whisper_model = None

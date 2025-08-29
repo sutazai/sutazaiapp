@@ -15,6 +15,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 
+# Check if speech_recognition is available
+try:
+    if not SR_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail="Speech recognition not available - dependencies not installed"
+        )
+    SR_AVAILABLE = True
+except ImportError:
+    SR_AVAILABLE = False
+    logger.warning("SpeechRecognition not available - voice features limited")
+
 router = APIRouter()
 
 # Initialize components
@@ -74,7 +86,11 @@ async def process_voice(
     """
     import time
     import uuid
-    import speech_recognition as sr
+    if not SR_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail="Speech recognition not available - dependencies not installed"
+        )
     
     start_time = time.time()
     session_id = request.session_id or str(uuid.uuid4())
@@ -92,7 +108,13 @@ async def process_voice(
         pipeline = VoicePipeline(voice_config, process_callback)
         
         # Convert audio bytes to AudioData
-        audio_data = sr.AudioData(audio_bytes, 16000, 2)
+        if SR_AVAILABLE:
+            audio_data = sr.AudioData(audio_bytes, 16000, 2)
+        else:
+            raise HTTPException(
+                status_code=503,
+                detail="Speech recognition not available"
+            )
         
         # Recognize speech
         recognized_text = await pipeline._recognize_speech(audio_data)
@@ -144,7 +166,11 @@ async def transcribe_audio(
         pipeline = VoicePipeline(voice_config, None)
         
         # Convert to AudioData
-        import speech_recognition as sr
+        if not SR_AVAILABLE:
+            raise HTTPException(
+                status_code=503,
+                detail="Speech recognition not available - dependencies not installed"
+            )
         audio_data = sr.AudioData(audio_content, 16000, 2)
         
         # Recognize speech
@@ -307,7 +333,11 @@ async def voice_health_check() -> Dict[str, Any]:
     
     # Check ASR
     try:
-        import speech_recognition as sr
+        if not SR_AVAILABLE:
+            raise HTTPException(
+                status_code=503,
+                detail="Speech recognition not available - dependencies not installed"
+            )
         health_status["components"]["asr"] = "healthy"
     except Exception as e:
         health_status["components"]["asr"] = f"unhealthy: {str(e)}"
