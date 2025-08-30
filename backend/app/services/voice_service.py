@@ -68,12 +68,13 @@ except ImportError:
     logging.warning("Vosk not available")
 
 # Audio playback
+PYGAME_AVAILABLE = False
 try:
     import pygame
-    pygame.mixer.init()
+    # Don't initialize mixer here - do it lazily when needed
     PYGAME_AVAILABLE = True
 except ImportError:
-    PYGAME_AVAILABLE = False
+    pygame = None
     logging.warning("Pygame not available")
 
 # WebRTC VAD for better voice activity detection
@@ -490,14 +491,20 @@ class VoiceService:
                 audio_bytes = audio_buffer.read()
                 
                 if not save_to_file and PYGAME_AVAILABLE:
-                    # Play audio
-                    audio_buffer.seek(0)
-                    pygame.mixer.music.load(audio_buffer)
-                    pygame.mixer.music.play()
-                    
-                    # Wait for playback to complete
-                    while pygame.mixer.music.get_busy():
-                        await asyncio.sleep(0.1)
+                    try:
+                        # Initialize mixer if not already done
+                        if not pygame.mixer.get_init():
+                            pygame.mixer.init()
+                        # Play audio
+                        audio_buffer.seek(0)
+                        pygame.mixer.music.load(audio_buffer)
+                        pygame.mixer.music.play()
+                        
+                        # Wait for playback to complete
+                        while pygame.mixer.music.get_busy():
+                            await asyncio.sleep(0.1)
+                    except (pygame.error, AttributeError) as e:
+                        logger.warning(f"Pygame playback failed: {e}")
                 
                 logger.info("Speech synthesized with gTTS")
                 return audio_bytes
@@ -517,8 +524,12 @@ class VoiceService:
             # Stop current speech
             if self.tts_engine:
                 self.tts_engine.stop()
-            if PYGAME_AVAILABLE:
-                pygame.mixer.music.stop()
+            if PYGAME_AVAILABLE and pygame:
+                try:
+                    if pygame.mixer.get_init():
+                        pygame.mixer.music.stop()
+                except (pygame.error, AttributeError):
+                    pass
         
         self.is_speaking = True
         

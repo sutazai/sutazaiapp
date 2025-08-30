@@ -186,6 +186,9 @@ services:
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
       - REDIS_URL=redis://sutazai-redis:6379
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+      - MODEL=tinyllama
       - MAX_WORKERS=2
     volumes:
       - ./wrappers/finrobot_wrapper.py:/app/finrobot_wrapper.py:ro
@@ -248,6 +251,9 @@ services:
       - sutazai-network
     environment:
       - VECTOR_DB_URL=http://sutazai-chromadb:8000
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+      - MODEL=tinyllama
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
       - MAX_WORKERS=1

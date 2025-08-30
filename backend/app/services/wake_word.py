@@ -139,9 +139,10 @@ class WakeWordDetector:
     def _initialize_porcupine(self):
         """Initialize Porcupine wake word engine"""
         try:
-            # Note: Requires Porcupine access key
-            # This is a placeholder - actual implementation needs valid key
-            access_key = "YOUR_PORCUPINE_ACCESS_KEY"
+            # Porcupine requires a valid access key from Picovoice Console
+            # Get your free key at: https://console.picovoice.ai/
+            import os
+            access_key = os.environ.get("PORCUPINE_ACCESS_KEY", "")
             
             keyword_paths = []
             sensitivities = []
@@ -152,6 +153,11 @@ class WakeWordDetector:
                     keyword_paths.append(keyword.lower())
                     sensitivities.append(self.config.sensitivity)
             
+            if not access_key:
+                logger.warning("Porcupine access key not found in environment. Set PORCUPINE_ACCESS_KEY to enable.")
+                self.porcupine = None
+                return
+                
             if keyword_paths:
                 self.porcupine = pvporcupine.create(
                     access_key=access_key,
