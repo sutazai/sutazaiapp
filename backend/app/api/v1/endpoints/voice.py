@@ -1,27 +1,28 @@
 """Voice processing endpoints for JARVIS"""
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
+from fastapi import APIRouter, HTTPException, UploadFile, File, Depends, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Annotated, List
 import base64
 import io
+import json
 import logging
 from datetime import datetime
 
+from app.services.voice_service import VoiceService, AudioConfig, get_voice_service
+from app.services.wake_word import WakeWordDetector, WakeWordConfig, WakeWordEngine, get_wake_word_detector
 from app.services.voice_pipeline import VoicePipeline, VoiceConfig, ASRProvider, TTSProvider
 from app.services.jarvis_orchestrator import JARVISOrchestrator
 from app.core.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.api.dependencies.auth import get_current_active_user
+from app.models.user import User
 
 logger = logging.getLogger(__name__)
 
 # Check if speech_recognition is available
 try:
-    if not SR_AVAILABLE:
-        raise HTTPException(
-            status_code=503,
-            detail="Speech recognition not available - dependencies not installed"
-        )
+    import speech_recognition as sr
     SR_AVAILABLE = True
 except ImportError:
     SR_AVAILABLE = False
@@ -36,6 +37,17 @@ voice_config = VoiceConfig(
     enable_wake_word=False,
     enable_interruption=True
 )
+
+# Initialize voice service (singleton)
+voice_service = get_voice_service()
+
+# Initialize wake word detector
+wake_word_config = WakeWordConfig(
+    engine=WakeWordEngine.ENERGY_BASED,  # Start with simple detection
+    keywords=["jarvis", "hey jarvis", "ok jarvis"],
+    sensitivity=0.5
+)
+wake_word_detector = get_wake_word_detector(wake_word_config)
 
 # Shared orchestrator instance
 jarvis_config = {
@@ -76,6 +88,7 @@ class TTSRequest(BaseModel):
 @router.post("/process", response_model=VoiceResponse)
 async def process_voice(
     request: VoiceRequest,
+    current_user: Annotated[User, Depends(get_current_active_user)],
     db: AsyncSession = Depends(get_db)
 ) -> VoiceResponse:
     """
@@ -86,48 +99,41 @@ async def process_voice(
     """
     import time
     import uuid
-    if not SR_AVAILABLE:
-        raise HTTPException(
-            status_code=503,
-            detail="Speech recognition not available - dependencies not installed"
-        )
     
     start_time = time.time()
-    session_id = request.session_id or str(uuid.uuid4())
+    session_id = request.session_id or await voice_service.create_session(str(current_user.id))
     
     try:
         # Decode base64 audio
         audio_bytes = base64.b64decode(request.audio_data)
         
-        # Initialize voice pipeline for this request
-        async def process_callback(text: str) -> str:
-            """Process recognized text through JARVIS"""
-            result = await jarvis.process(text, {"session_id": session_id})
-            return result.get("response", "")
+        # Check for wake word if enabled
+        if request.session_id is None:  # New session, check wake word
+            detection = await wake_word_detector.detect(audio_bytes)
+            if detection.detected:
+                logger.info(f"Wake word detected: {detection.keyword} with confidence {detection.confidence}")
         
-        pipeline = VoicePipeline(voice_config, process_callback)
+        # Process voice command using real voice service
+        result = await voice_service.process_voice_command(
+            audio_bytes,
+            session_id=session_id
+        )
         
-        # Convert audio bytes to AudioData
-        if SR_AVAILABLE:
-            audio_data = sr.AudioData(audio_bytes, 16000, 2)
-        else:
-            raise HTTPException(
-                status_code=503,
-                detail="Speech recognition not available"
-            )
-        
-        # Recognize speech
-        recognized_text = await pipeline._recognize_speech(audio_data)
-        
-        if not recognized_text:
+        if not result["success"]:
             raise HTTPException(
                 status_code=400,
-                detail="Could not recognize speech from audio"
+                detail=result.get("error", "Could not process voice command")
             )
+        
+        recognized_text = result["transcription"]
         
         # Process through JARVIS
         context = {"session_id": session_id} if request.include_context else {}
         jarvis_response = await jarvis.process(recognized_text, context)
+        
+        # Synthesize response if requested
+        if jarvis_response.get("response"):
+            await voice_service.speak(jarvis_response["response"])
         
         processing_time = time.time() - start_time
         
@@ -152,8 +158,9 @@ async def process_voice(
 
 @router.post("/transcribe")
 async def transcribe_audio(
+    current_user: Annotated[User, Depends(get_current_active_user)],
     audio_file: UploadFile = File(...),
-    language: str = "en-US"
+    language: str = "en"
 ) -> Dict[str, Any]:
     """
     Transcribe audio file to text using multiple ASR providers
@@ -162,19 +169,8 @@ async def transcribe_audio(
         # Read audio file
         audio_content = await audio_file.read()
         
-        # Initialize voice pipeline
-        pipeline = VoicePipeline(voice_config, None)
-        
-        # Convert to AudioData
-        if not SR_AVAILABLE:
-            raise HTTPException(
-                status_code=503,
-                detail="Speech recognition not available - dependencies not installed"
-            )
-        audio_data = sr.AudioData(audio_content, 16000, 2)
-        
-        # Recognize speech
-        text = await pipeline._recognize_speech(audio_data)
+        # Use real voice service for transcription
+        text = await voice_service.transcribe_audio(audio_content, language=language)
         
         if not text:
             raise HTTPException(
@@ -186,9 +182,13 @@ async def transcribe_audio(
             "text": text,
             "language": language,
             "filename": audio_file.filename,
-            "status": "success"
+            "status": "success",
+            "word_count": len(text.split()),
+            "character_count": len(text)
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Transcription error: {str(e)}")
         raise HTTPException(
@@ -198,31 +198,44 @@ async def transcribe_audio(
 
 
 @router.post("/synthesize")
-async def text_to_speech(request: TTSRequest) -> Dict[str, Any]:
+async def text_to_speech(
+    request: TTSRequest,
+    current_user: Annotated[User, Depends(get_current_active_user)]
+) -> Dict[str, Any]:
     """
     Convert text to speech and return audio data
     """
     try:
-        # Initialize voice pipeline
-        pipeline = VoicePipeline(voice_config, None)
+        # Use real voice service for TTS
+        audio_bytes = await voice_service.synthesize_speech(
+            text=request.text,
+            voice=request.voice if request.voice != "default" else None,
+            save_to_file=True  # Get bytes instead of direct playback
+        )
         
-        # Generate speech (this is a simplified version)
-        # In production, this would generate actual audio data
-        import pyttsx3
-        import io
-        import wave
-        
-        # For now, return a placeholder response
-        # Real implementation would generate audio
-        
-        return {
-            "status": "success",
-            "text": request.text,
-            "voice": request.voice,
-            "format": request.format,
-            "audio_data": None,  # Would contain base64 encoded audio
-            "message": "TTS endpoint configured but audio generation not fully implemented"
-        }
+        if audio_bytes:
+            # Encode audio to base64
+            audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
+            
+            return {
+                "status": "success",
+                "text": request.text,
+                "voice": request.voice,
+                "format": request.format,
+                "audio_data": audio_base64,
+                "audio_size": len(audio_bytes),
+                "duration_estimate": len(request.text) * 0.06  # Rough estimate
+            }
+        else:
+            # Fallback response if TTS not available
+            return {
+                "status": "partial",
+                "text": request.text,
+                "voice": request.voice,
+                "format": request.format,
+                "audio_data": None,
+                "message": "TTS synthesis completed but audio generation failed"
+            }
         
     except Exception as e:
         logger.error(f"TTS error: {str(e)}")
@@ -328,17 +341,35 @@ async def voice_health_check() -> Dict[str, Any]:
     health_status = {
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat(),
-        "components": {}
+        "components": {},
+        "metrics": {}
     }
     
-    # Check ASR
+    # Check voice service
+    try:
+        voice_metrics = voice_service.get_metrics()
+        health_status["components"]["voice_service"] = "healthy"
+        health_status["metrics"]["voice"] = voice_metrics
+    except Exception as e:
+        health_status["components"]["voice_service"] = f"unhealthy: {str(e)}"
+        health_status["status"] = "degraded"
+    
+    # Check wake word detector
+    try:
+        wake_metrics = wake_word_detector.get_metrics()
+        health_status["components"]["wake_word"] = "healthy"
+        health_status["metrics"]["wake_word"] = wake_metrics
+    except Exception as e:
+        health_status["components"]["wake_word"] = f"unhealthy: {str(e)}"
+        health_status["status"] = "degraded"
+    
+    # Check ASR availability
     try:
         if not SR_AVAILABLE:
-            raise HTTPException(
-                status_code=503,
-                detail="Speech recognition not available - dependencies not installed"
-            )
-        health_status["components"]["asr"] = "healthy"
+            health_status["components"]["asr"] = "limited - speech_recognition not available"
+            health_status["status"] = "degraded"
+        else:
+            health_status["components"]["asr"] = "healthy"
     except Exception as e:
         health_status["components"]["asr"] = f"unhealthy: {str(e)}"
         health_status["status"] = "degraded"
@@ -361,3 +392,372 @@ async def voice_health_check() -> Dict[str, Any]:
         health_status["status"] = "degraded"
     
     return health_status
+
+
+@router.websocket("/stream")
+async def voice_stream(websocket: WebSocket):
+    """
+    WebSocket endpoint for real-time voice streaming
+    Implements bidirectional audio streaming with JARVIS
+    
+    Protocol:
+    Client -> Server: {"type": "audio", "data": base64_audio}
+    Client -> Server: {"type": "control", "command": "start|stop|pause"}
+    Server -> Client: {"type": "transcription", "text": "..."}
+    Server -> Client: {"type": "response", "text": "...", "audio": base64_audio}
+    Server -> Client: {"type": "status", "message": "..."}
+    """
+    await websocket.accept()
+    
+    session_id = None
+    audio_buffer = []
+    is_recording = False
+    
+    try:
+        # Create voice session
+        session_id = await voice_service.create_session()
+        
+        # Send initial status
+        await websocket.send_json({
+            "type": "status",
+            "message": "Connected to JARVIS voice stream",
+            "session_id": session_id
+        })
+        
+        # Start listening for messages
+        while True:
+            try:
+                # Receive message
+                message = await websocket.receive_json()
+                msg_type = message.get("type")
+                
+                if msg_type == "audio":
+                    # Receive audio chunk
+                    audio_data = base64.b64decode(message.get("data", ""))
+                    
+                    if is_recording:
+                        audio_buffer.append(audio_data)
+                        
+                        # Check for wake word in real-time
+                        detection = await wake_word_detector.detect(audio_data)
+                        if detection.detected:
+                            await websocket.send_json({
+                                "type": "wake_word",
+                                "keyword": detection.keyword,
+                                "confidence": detection.confidence
+                            })
+                    
+                elif msg_type == "control":
+                    command = message.get("command")
+                    
+                    if command == "start":
+                        is_recording = True
+                        audio_buffer = []
+                        await websocket.send_json({
+                            "type": "status",
+                            "message": "Recording started"
+                        })
+                    
+                    elif command == "stop" and is_recording:
+                        is_recording = False
+                        
+                        if audio_buffer:
+                            # Process accumulated audio
+                            full_audio = b''.join(audio_buffer)
+                            
+                            # Transcribe
+                            text = await voice_service.transcribe_audio(full_audio)
+                            
+                            if text:
+                                # Send transcription
+                                await websocket.send_json({
+                                    "type": "transcription",
+                                    "text": text
+                                })
+                                
+                                # Process through JARVIS
+                                context = {"session_id": session_id}
+                                jarvis_response = await jarvis.process(text, context)
+                                
+                                response_text = jarvis_response.get("response", "")
+                                
+                                # Generate TTS response
+                                if response_text:
+                                    audio_response = await voice_service.synthesize_speech(
+                                        response_text,
+                                        save_to_file=True
+                                    )
+                                    
+                                    # Send response with audio
+                                    response_data = {
+                                        "type": "response",
+                                        "text": response_text
+                                    }
+                                    
+                                    if audio_response:
+                                        response_data["audio"] = base64.b64encode(audio_response).decode('utf-8')
+                                    
+                                    await websocket.send_json(response_data)
+                            else:
+                                await websocket.send_json({
+                                    "type": "error",
+                                    "message": "Could not transcribe audio"
+                                })
+                        
+                        audio_buffer = []
+                    
+                    elif command == "pause":
+                        is_recording = False
+                        await websocket.send_json({
+                            "type": "status",
+                            "message": "Recording paused"
+                        })
+                
+                elif msg_type == "text":
+                    # Direct text input (bypass ASR)
+                    text = message.get("text", "")
+                    
+                    if text:
+                        # Process through JARVIS
+                        context = {"session_id": session_id}
+                        jarvis_response = await jarvis.process(text, context)
+                        
+                        response_text = jarvis_response.get("response", "")
+                        
+                        # Generate TTS response
+                        if response_text:
+                            audio_response = await voice_service.synthesize_speech(
+                                response_text,
+                                save_to_file=True
+                            )
+                            
+                            response_data = {
+                                "type": "response",
+                                "text": response_text
+                            }
+                            
+                            if audio_response:
+                                response_data["audio"] = base64.b64encode(audio_response).decode('utf-8')
+                            
+                            await websocket.send_json(response_data)
+                
+            except WebSocketDisconnect:
+                break
+            except json.JSONDecodeError:
+                await websocket.send_json({
+                    "type": "error",
+                    "message": "Invalid JSON message"
+                })
+            except Exception as e:
+                logger.error(f"WebSocket processing error: {e}")
+                await websocket.send_json({
+                    "type": "error",
+                    "message": str(e)
+                })
+    
+    except WebSocketDisconnect:
+        logger.info(f"WebSocket disconnected for session {session_id}")
+    except Exception as e:
+        logger.error(f"WebSocket error: {e}")
+    finally:
+        # Clean up session
+        if session_id:
+            session = voice_service.get_session(session_id)
+            if session:
+                session.is_active = False
+
+
+@router.post("/record")
+async def record_voice(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    duration: Optional[float] = None
+) -> Dict[str, Any]:
+    """
+    Record audio from microphone
+    Returns base64 encoded audio data
+    """
+    try:
+        # Record audio
+        audio_bytes = await voice_service.record_audio(
+            duration=duration,
+            detect_silence=duration is None
+        )
+        
+        if not audio_bytes:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to record audio"
+            )
+        
+        # Encode to base64
+        audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
+        
+        return {
+            "status": "success",
+            "audio_data": audio_base64,
+            "duration": duration,
+            "size": len(audio_bytes),
+            "sample_rate": voice_service.config.rate
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Recording error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Recording failed: {str(e)}"
+        )
+
+
+@router.post("/wake-word/configure")
+async def configure_wake_word(
+    keywords: List[str],
+    sensitivity: float = 0.5,
+    current_user: Annotated[User, Depends(get_current_active_user)] = None
+) -> Dict[str, Any]:
+    """
+    Configure wake word detection settings
+    """
+    try:
+        # Update wake word configuration
+        wake_word_detector.set_keywords(keywords)
+        wake_word_detector.set_sensitivity(sensitivity)
+        
+        return {
+            "status": "success",
+            "keywords": keywords,
+            "sensitivity": sensitivity,
+            "engine": wake_word_detector.config.engine.value
+        }
+        
+    except Exception as e:
+        logger.error(f"Wake word configuration error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Configuration failed: {str(e)}"
+        )
+
+
+@router.post("/wake-word/test")
+async def test_wake_word(
+    audio_file: UploadFile = File(...),
+    current_user: Annotated[User, Depends(get_current_active_user)] = None
+) -> Dict[str, Any]:
+    """
+    Test wake word detection on an audio file
+    """
+    try:
+        # Read audio file
+        audio_content = await audio_file.read()
+        
+        # Test wake word detection
+        detection = await wake_word_detector.detect(audio_content)
+        
+        return {
+            "detected": detection.detected,
+            "keyword": detection.keyword,
+            "confidence": detection.confidence,
+            "filename": audio_file.filename,
+            "engine": wake_word_detector.config.engine.value
+        }
+        
+    except Exception as e:
+        logger.error(f"Wake word test error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Test failed: {str(e)}"
+        )
+
+
+@router.get("/sessions")
+async def list_sessions(
+    current_user: Annotated[User, Depends(get_current_active_user)] = None
+) -> Dict[str, Any]:
+    """
+    List active voice sessions
+    """
+    try:
+        active_sessions = [
+            {
+                "session_id": session.session_id,
+                "start_time": session.start_time.isoformat(),
+                "is_active": session.is_active,
+                "command_count": session.command_count,
+                "wake_word_count": session.wake_word_count,
+                "error_count": session.error_count
+            }
+            for session in voice_service.sessions.values()
+            if session.is_active
+        ]
+        
+        return {
+            "sessions": active_sessions,
+            "total_active": len(active_sessions),
+            "metrics": voice_service.get_metrics()
+        }
+        
+    except Exception as e:
+        logger.error(f"Session list error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to list sessions: {str(e)}"
+        )
+
+
+@router.post("/continuous-listening/start")
+async def start_continuous_listening(
+    current_user: Annotated[User, Depends(get_current_active_user)] = None
+) -> Dict[str, Any]:
+    """
+    Start continuous listening mode with wake word detection
+    """
+    try:
+        # Define callback for processing commands
+        async def command_callback(text: str) -> str:
+            # Process through JARVIS
+            result = await jarvis.process(text, {})
+            return result.get("response", "")
+        
+        # Start continuous listening in background
+        import asyncio
+        asyncio.create_task(
+            voice_service.start_continuous_listening(callback=command_callback)
+        )
+        
+        return {
+            "status": "success",
+            "message": "Continuous listening started",
+            "wake_words": wake_word_detector.config.keywords
+        }
+        
+    except Exception as e:
+        logger.error(f"Continuous listening error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to start continuous listening: {str(e)}"
+        )
+
+
+@router.post("/continuous-listening/stop")
+async def stop_continuous_listening(
+    current_user: Annotated[User, Depends(get_current_active_user)] = None
+) -> Dict[str, Any]:
+    """
+    Stop continuous listening mode
+    """
+    try:
+        voice_service.is_listening = False
+        
+        return {
+            "status": "success",
+            "message": "Continuous listening stopped",
+            "metrics": voice_service.get_metrics()
+        }
+        
+    except Exception as e:
+        logger.error(f"Stop listening error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to stop listening: {str(e)}"
+        )

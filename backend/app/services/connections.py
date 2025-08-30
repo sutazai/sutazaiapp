@@ -11,8 +11,9 @@ from neo4j import AsyncGraphDatabase
 from qdrant_client import AsyncQdrantClient
 import chromadb
 from chromadb.config import Settings as ChromaSettings
-from typing import Optional
+from typing import Optional, Dict, Any
 import logging
+import asyncio
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -167,18 +168,27 @@ class ServiceConnections:
             logger.warning(f"Consul connection failed (non-critical): {e}")
             self.consul_client = None
         
-        # Kong Admin API
-        try:
-            self.kong_client = httpx.AsyncClient(
-                base_url=f"http://{settings.KONG_HOST}:{settings.KONG_ADMIN_PORT}"
-            )
-            # Test connection
-            response = await self.kong_client.get("/status")
-            response.raise_for_status()
-            logger.info("Kong Admin API connection established")
-        except Exception as e:
-            logger.warning(f"Kong connection failed (non-critical): {e}")
-            self.kong_client = None
+        # Kong Admin API - with retry logic and timeout
+        max_retries = 5
+        retry_delay = 2
+        for retry in range(max_retries):
+            try:
+                self.kong_client = httpx.AsyncClient(
+                    base_url=f"http://{settings.KONG_HOST}:{settings.KONG_ADMIN_PORT}",
+                    timeout=httpx.Timeout(5.0, connect=10.0)
+                )
+                # Test connection with retry
+                response = await self.kong_client.get("/status")
+                response.raise_for_status()
+                logger.info("Kong Admin API connection established")
+                break
+            except Exception as e:
+                if retry < max_retries - 1:
+                    logger.warning(f"Kong connection attempt {retry + 1} failed, retrying in {retry_delay}s: {e}")
+                    await asyncio.sleep(retry_delay)
+                else:
+                    logger.error(f"Kong connection failed after {max_retries} attempts: {e}")
+                    self.kong_client = None
         
         # Ollama
         try:
@@ -218,7 +228,7 @@ class ServiceConnections:
         
         logger.info("All service connections closed")
     
-    async def health_check(self) -> dict:
+    async def health_check(self) -> Dict[str, Any]:
         """Check health of all services"""
         health = {
             "redis": False,
@@ -260,44 +270,61 @@ class ServiceConnections:
                 # ChromaDB doesn't have async heartbeat, use sync
                 heartbeat = self.chroma_client.heartbeat()
                 health["chromadb"] = heartbeat is not None
+            else:
+                health["chromadb"] = False
         except Exception as e:
             logger.debug(f"ChromaDB health check failed: {e}")
             health["chromadb"] = False
         
         # Qdrant
         try:
-            await self.qdrant_client.get_collections()
-            health["qdrant"] = True
+            if self.qdrant_client:
+                await self.qdrant_client.get_collections()
+                health["qdrant"] = True
+            else:
+                health["qdrant"] = False
         except:
-            pass
+            health["qdrant"] = False
         
         # FAISS
         try:
-            response = await self.faiss_client.get("/health")
-            health["faiss"] = response.status_code == 200
+            if self.faiss_client:
+                response = await self.faiss_client.get("/health")
+                health["faiss"] = response.status_code == 200
+            else:
+                health["faiss"] = False
         except:
-            pass
+            health["faiss"] = False
         
         # Consul
         try:
-            response = await self.consul_client.get("/v1/status/leader")
-            health["consul"] = response.status_code == 200
+            if self.consul_client:
+                response = await self.consul_client.get("/v1/status/leader")
+                health["consul"] = response.status_code == 200
+            else:
+                health["consul"] = False
         except:
-            pass
+            health["consul"] = False
         
         # Kong
         try:
-            response = await self.kong_client.get("/status")
-            health["kong"] = response.status_code == 200
+            if self.kong_client:
+                response = await self.kong_client.get("/status")
+                health["kong"] = response.status_code == 200
+            else:
+                health["kong"] = False
         except:
-            pass
+            health["kong"] = False
         
         # Ollama
         try:
-            response = await self.ollama_client.get("/api/tags")
-            health["ollama"] = response.status_code == 200
+            if self.ollama_client:
+                response = await self.ollama_client.get("/api/tags")
+                health["ollama"] = response.status_code == 200
+            else:
+                health["ollama"] = False
         except:
-            pass
+            health["ollama"] = False
         
         return health
 

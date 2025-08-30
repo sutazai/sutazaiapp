@@ -12,6 +12,7 @@ from datetime import datetime
 from enum import Enum
 import httpx
 from pydantic import BaseModel, Field
+from app.services.ollama_helper import ollama_helper
 
 logger = logging.getLogger(__name__)
 
@@ -150,6 +151,16 @@ class JARVISOrchestrator:
                 "quality": 0.85
             },
             # Local models (via Ollama)
+            "tinyllama": {
+                "provider": ModelProvider.OLLAMA,
+                "capabilities": [TaskType.CHAT, TaskType.CREATIVE],
+                "max_tokens": 2048,
+                "cost_per_1k": 0.0,
+                "latency": 0.3,
+                "quality": 0.75,
+                "local": True,
+                "name": "tinyllama"
+            },
             "llama-3-70b": {
                 "provider": ModelProvider.OLLAMA,
                 "capabilities": [TaskType.CHAT, TaskType.CODE],
@@ -157,7 +168,8 @@ class JARVISOrchestrator:
                 "cost_per_1k": 0.0,
                 "latency": 2.5,
                 "quality": 0.88,
-                "local": True
+                "local": True,
+                "name": "llama-3-70b"
             },
             "mistral-7b": {
                 "provider": ModelProvider.OLLAMA,
@@ -166,7 +178,8 @@ class JARVISOrchestrator:
                 "cost_per_1k": 0.0,
                 "latency": 0.5,
                 "quality": 0.82,
-                "local": True
+                "local": True,
+                "name": "mistral-7b"
             }
         }
     
@@ -270,15 +283,28 @@ class JARVISOrchestrator:
         Respond in JSON format.
         """
         
+        # Check for task type override in context
+        task_type = TaskType.CHAT
+        if context and context.get('task_type_override'):
+            try:
+                task_type = TaskType(context['task_type_override'])
+            except:
+                task_type = self._classify_task_type(user_input)
+        else:
+            task_type = self._classify_task_type(user_input)
+        
         # For now, use simple heuristics (in production, use an LLM)
         task_plan = TaskPlan(
-            task_type=self._classify_task_type(user_input),
+            task_type=task_type,
             complexity=self._estimate_complexity(user_input),
             requires_context=bool(context),
             requires_tools=self._check_tool_requirement(user_input),
             privacy_sensitive=self._check_privacy_sensitivity(user_input),
             expected_tokens=min(len(user_input) * 10, 4000)
         )
+        
+        # Store context for scoring
+        task_plan._context = context or {}
         
         # Break down into subtasks if complex
         if task_plan.complexity > 0.7:
@@ -429,6 +455,15 @@ class JARVISOrchestrator:
         """Score model suitability for task"""
         score = model_info["quality"] * 100
         
+        # Strong preference for local models if requested
+        context = getattr(task_plan, '_context', {})
+        prefer_local = context.get('prefer_local', False)
+        
+        if prefer_local and model_info.get("local"):
+            score += 100  # Strong boost for local models
+        elif prefer_local and not model_info.get("local"):
+            score -= 50  # Penalty for cloud models when local preferred
+        
         # Adjust for privacy requirements
         if task_plan.privacy_sensitive and model_info.get("local"):
             score += 50
@@ -444,6 +479,47 @@ class JARVISOrchestrator:
         
         # Adjust for latency requirements
         score -= model_info["latency"] * 5
+        
+        # Check if model is actually available
+        if model_info["provider"] == ModelProvider.OLLAMA:
+            # Check dynamically which models are available
+            import asyncio
+            try:
+                # Run async check in sync context
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    # We're already in an async context
+                    available_models = loop.create_task(ollama_helper.get_available_models())
+                else:
+                    available_models = loop.run_until_complete(ollama_helper.get_available_models())
+                
+                # Map model names
+                model_mapping = {
+                    "llama-3-70b": "llama3:latest",
+                    "llama3": "llama3:latest",
+                    "mistral-7b": "mistral:latest",
+                    "mistral": "mistral:latest",
+                    "tinyllama": "tinyllama:latest"
+                }
+                
+                ollama_name = model_mapping.get(model_info.get("name", "").lower(), "")
+                if isinstance(available_models, list):
+                    if ollama_name not in available_models:
+                        score -= 1000  # Make unavailable models unusable
+                elif asyncio.iscoroutine(available_models):
+                    # If it's still a coroutine, we can't check now, be optimistic
+                    pass
+            except:
+                # If we can't check, be conservative and prefer tinyllama
+                if "tinyllama" not in model_info.get("name", "").lower():
+                    score -= 500
+        elif model_info["provider"] in [ModelProvider.OPENAI, ModelProvider.ANTHROPIC]:
+            # No API keys configured
+            import os
+            if model_info["provider"] == ModelProvider.OPENAI and not os.getenv("OPENAI_API_KEY"):
+                score -= 1000
+            elif model_info["provider"] == ModelProvider.ANTHROPIC and not os.getenv("ANTHROPIC_API_KEY"):
+                score -= 1000
         
         return score
     
@@ -469,18 +545,173 @@ class JARVISOrchestrator:
     
     async def _call_openai(self, model: str, prompt: str, context: Dict) -> str:
         """Call OpenAI model"""
-        # Placeholder - implement actual API call
-        return f"OpenAI {model} response to: {prompt}"
+        import httpx
+        import os
+        
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            logger.warning("OpenAI API key not found, falling back to local models")
+            raise Exception("OpenAI API key not configured")
+        
+        try:
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                # Build messages array
+                messages = []
+                if context and context.get("system_prompt"):
+                    messages.append({"role": "system", "content": context["system_prompt"]})
+                
+                if context and context.get("history"):
+                    # Add conversation history
+                    for msg in context["history"][-10:]:
+                        messages.append({
+                            "role": msg["role"],
+                            "content": msg["content"]
+                        })
+                
+                messages.append({"role": "user", "content": prompt})
+                
+                # Call OpenAI API
+                response = await client.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": model,
+                        "messages": messages,
+                        "temperature": 0.7,
+                        "max_tokens": 2000
+                    }
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    return result["choices"][0]["message"]["content"]
+                else:
+                    logger.error(f"OpenAI API error: {response.status_code} - {response.text}")
+                    raise Exception(f"OpenAI API error: {response.status_code}")
+                    
+        except Exception as e:
+            logger.error(f"Error calling OpenAI: {str(e)}")
+            raise Exception(f"OpenAI error: {str(e)}")
     
     async def _call_anthropic(self, model: str, prompt: str, context: Dict) -> str:
         """Call Anthropic model"""
-        # Placeholder - implement actual API call
-        return f"Anthropic {model} response to: {prompt}"
+        import httpx
+        import os
+        
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        if not api_key:
+            logger.warning("Anthropic API key not found, falling back to local models")
+            raise Exception("Anthropic API key not configured")
+        
+        try:
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                # Build the prompt with context
+                full_prompt = prompt
+                if context and context.get("system_prompt"):
+                    full_prompt = f"{context['system_prompt']}\n\nHuman: {prompt}\n\nAssistant:"
+                elif context and context.get("history"):
+                    # Add conversation history
+                    history_text = "\n".join([
+                        f"{msg['role'].capitalize()}: {msg['content']}"
+                        for msg in context["history"][-5:]
+                    ])
+                    full_prompt = f"{history_text}\n\nHuman: {prompt}\n\nAssistant:"
+                else:
+                    full_prompt = f"Human: {prompt}\n\nAssistant:"
+                
+                # Map model names
+                model_mapping = {
+                    "claude-3-opus": "claude-3-opus-20240229",
+                    "claude-3-sonnet": "claude-3-sonnet-20240229",
+                    "claude-3-haiku": "claude-3-haiku-20240307"
+                }
+                anthropic_model = model_mapping.get(model, "claude-3-haiku-20240307")
+                
+                # Call Anthropic API
+                response = await client.post(
+                    "https://api.anthropic.com/v1/messages",
+                    headers={
+                        "x-api-key": api_key,
+                        "anthropic-version": "2023-06-01",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": anthropic_model,
+                        "messages": [{"role": "user", "content": prompt}],
+                        "max_tokens": 2000,
+                        "temperature": 0.7
+                    }
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    return result["content"][0]["text"]
+                else:
+                    logger.error(f"Anthropic API error: {response.status_code} - {response.text}")
+                    raise Exception(f"Anthropic API error: {response.status_code}")
+                    
+        except Exception as e:
+            logger.error(f"Error calling Anthropic: {str(e)}")
+            raise Exception(f"Anthropic error: {str(e)}")
     
     async def _call_ollama(self, model: str, prompt: str, context: Dict) -> str:
-        """Call local Ollama model"""
-        # Placeholder - implement actual API call
-        return f"Ollama {model} response to: {prompt}"
+        """Call local Ollama model using helper"""
+        # Map model names to Ollama model names
+        model_mapping = {
+            "llama-3-70b": "llama3:latest",
+            "llama3": "llama3:latest",
+            "mistral-7b": "mistral:latest",
+            "mistral": "mistral:latest",
+            "tinyllama": "tinyllama:latest"
+        }
+        
+        # Use the model name directly if it's already in the right format
+        if ":" in model:
+            ollama_model = model
+        else:
+            ollama_model = model_mapping.get(model, "tinyllama:latest")
+        
+        try:
+            # Build messages for chat format
+            messages = []
+            
+            # Add system prompt if available
+            if context and context.get("system_prompt"):
+                messages.append({
+                    "role": "system",
+                    "content": context["system_prompt"]
+                })
+            
+            # Add conversation history if available
+            if context and context.get("history"):
+                for msg in context["history"][-5:]:  # Last 5 messages
+                    messages.append({
+                        "role": msg.get("role", "user"),
+                        "content": msg.get("content", "")
+                    })
+            
+            # Add current user message
+            messages.append({
+                "role": "user",
+                "content": prompt
+            })
+            
+            # Use the helper to generate response
+            response = await ollama_helper.chat(
+                model=ollama_model,
+                messages=messages,
+                temperature=0.7,
+                max_tokens=2000
+            )
+            
+            return response
+            
+        except Exception as e:
+            logger.error(f"Error calling Ollama: {str(e)}")
+            raise Exception(f"Ollama error: {str(e)}")
     
     def _format_code_response(self, response: str) -> str:
         """Format code response with syntax highlighting hints"""

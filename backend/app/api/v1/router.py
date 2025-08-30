@@ -4,7 +4,7 @@ Aggregates all endpoint routers including JARVIS endpoints
 """
 
 from fastapi import APIRouter
-from app.api.v1.endpoints import health, agents, vectors, chat, auth, voice, jarvis_websocket
+from app.api.v1.endpoints import health, agents, vectors, chat, auth, voice, jarvis_websocket, jarvis_chat, simple_chat
 
 api_router = APIRouter()
 
@@ -16,3 +16,5 @@ api_router.include_router(vectors.router, prefix="/vectors", tags=["vectors"])
 api_router.include_router(chat.router, prefix="/chat", tags=["chat"])
 api_router.include_router(voice.router, prefix="/voice", tags=["voice"])
 api_router.include_router(jarvis_websocket.router, prefix="/jarvis", tags=["jarvis"])
+api_router.include_router(jarvis_chat.router, prefix="/jarvis", tags=["jarvis-chat"])
+api_router.include_router(simple_chat.router, prefix="/chat", tags=["simple-chat"])

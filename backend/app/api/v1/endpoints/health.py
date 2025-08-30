@@ -29,6 +29,33 @@ async def health_status() -> Dict[str, Any]:
         raise HTTPException(status_code=503, detail=str(e))
 
 
+@router.get("/services")
+async def all_services_health() -> Dict[str, Any]:
+    """Get detailed health status of all services"""
+    try:
+        service_health = await service_connections.health_check()
+        
+        # Categorize services by status
+        services_detail = []
+        for service, is_healthy in service_health.items():
+            services_detail.append({
+                "name": service,
+                "status": "healthy" if is_healthy else "unhealthy",
+                "healthy": is_healthy
+            })
+        
+        return {
+            "total_services": len(service_health),
+            "healthy_count": sum(service_health.values()),
+            "unhealthy_count": len(service_health) - sum(service_health.values()),
+            "status": "healthy" if all(service_health.values()) else "degraded",
+            "services": services_detail
+        }
+    except Exception as e:
+        logger.error(f"Services health check error: {e}")
+        raise HTTPException(status_code=503, detail=str(e))
+
+
 @router.get("/services/{service_name}")
 async def service_health(service_name: str) -> Dict[str, Any]:
     """Check health of a specific service"""
@@ -47,10 +74,24 @@ async def service_health(service_name: str) -> Dict[str, Any]:
         service_health = await service_connections.health_check()
         is_healthy = service_health.get(service_name, False)
         
+        # Add more detail for specific services
+        details = {}
+        if service_name == "kong":
+            details["admin_port"] = 10009
+            details["proxy_port"] = 10008
+            details["note"] = "Kong API Gateway for service routing"
+        elif service_name == "redis":
+            details["port"] = 10001
+            details["note"] = "Cache and session storage"
+        elif service_name == "postgres":
+            details["port"] = 10000
+            details["note"] = "Main database (not directly monitored)"
+        
         return {
             "service": service_name,
             "status": "healthy" if is_healthy else "unhealthy",
-            "healthy": is_healthy
+            "healthy": is_healthy,
+            **details
         }
     except Exception as e:
         logger.error(f"Service health check error for {service_name}: {e}")

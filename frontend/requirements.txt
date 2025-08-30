@@ -13,7 +13,10 @@ gTTS==2.5.0
 # API Communication
 httpx==0.27.0
 websockets==12.0
+websocket-client==1.7.0
 aiohttp==3.9.3
+nest-asyncio==1.6.0
+requests==2.31.0
 
 # Audio Processing
 pydub==0.25.1
@@ -36,6 +39,8 @@ python-dotenv==1.0.1
 pydantic==2.6.1
 python-multipart==0.0.9
 Pillow==10.2.0
+psutil==5.9.8
+docker==7.0.0
 
 # AI/ML Support
 numpy==1.26.4

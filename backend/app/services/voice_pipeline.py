@@ -310,10 +310,11 @@ class VoicePipeline:
         finally:
             self.is_processing = False
     
-    async def _record_audio(self, stream) -> Optional[sr.AudioData]:
+    async def _record_audio(self, stream) -> Optional[Any]:
         """
         Record audio until pause detected
         Implements interruption handling from JARVIS-AGI
+        Returns AudioData if SR_AVAILABLE, otherwise None
         """
         frames = []
         silence_count = 0
@@ -338,17 +339,18 @@ class VoicePipeline:
                 logger.error(f"Audio recording error: {e}")
                 break
         
-        if frames:
+        if frames and SR_AVAILABLE:
             # Convert to AudioData format
             audio_bytes = b''.join(frames)
             return sr.AudioData(audio_bytes, self.config.rate, 2)
         
         return None
     
-    async def _recognize_speech(self, audio_data: sr.AudioData) -> Optional[str]:
+    async def _recognize_speech(self, audio_data: Any) -> Optional[str]:
         """
         Recognize speech using multiple providers with fallback
         Priority: Whisper -> Vosk -> Google
+        Expects AudioData object if SR_AVAILABLE
         """
         text = None
         
@@ -462,10 +464,11 @@ class VoicePipeline:
     
     # Advanced features from repositories
     
-    async def process_with_context(self, audio_data: sr.AudioData, context: Dict[str, Any]) -> Optional[str]:
+    async def process_with_context(self, audio_data: Any, context: Dict[str, Any]) -> Optional[str]:
         """
         Process audio with conversation context
         Inspired by JARVIS-AGI's session management
+        Expects AudioData if SR_AVAILABLE
         """
         text = await self._recognize_speech(audio_data)
         
@@ -482,11 +485,14 @@ class VoicePipeline:
         Inspired by Dipeshpal's server architecture
         """
         results = []
-        for audio_file in audio_files:
-            # Load and process each file
-            with sr.AudioFile(audio_file) as source:
-                audio_data = self.recognizer.record(source)
-                text = await self._recognize_speech(audio_data)
-                results.append(text)
+        if SR_AVAILABLE and self.recognizer:
+            for audio_file in audio_files:
+                # Load and process each file
+                with sr.AudioFile(audio_file) as source:
+                    audio_data = self.recognizer.record(source)
+                    text = await self._recognize_speech(audio_data)
+                    results.append(text)
+        else:
+            logger.warning("Batch audio processing not available without SpeechRecognition")
         
         return results

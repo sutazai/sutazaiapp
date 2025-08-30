@@ -1,16 +1,19 @@
 # JARVIS Frontend Dockerfile
 FROM python:3.11-slim
 
-# Install system dependencies for audio processing and health checks
-RUN apt-get update && apt-get install -y \
-    curl \
-    portaudio19-dev \
-    python3-pyaudio \
-    ffmpeg \
-    espeak \
-    libespeak-dev \
-    alsa-utils \
-    pulseaudio \
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    STREAMLIT_SERVER_PORT=11000 \
+    STREAMLIT_SERVER_ADDRESS=0.0.0.0 \
+    STREAMLIT_THEME_BASE=dark \
+    STREAMLIT_THEME_PRIMARY_COLOR="#00D4FF"
+
+# Use a simpler approach - install only essential packages
+RUN apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -20,11 +23,9 @@ WORKDIR /app
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Install additional audio dependencies
-RUN pip install --no-cache-dir pyaudio
+# Install Python dependencies (including audio libraries)
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
@@ -32,12 +33,7 @@ COPY . .
 # Create necessary directories
 RUN mkdir -p /app/temp /app/logs /app/data
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV STREAMLIT_SERVER_PORT=11000
-ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
-ENV STREAMLIT_THEME_BASE=dark
-ENV STREAMLIT_THEME_PRIMARY_COLOR="#00D4FF"
+# Environment variables are already set above
 
 # Expose Streamlit port
 EXPOSE 11000
