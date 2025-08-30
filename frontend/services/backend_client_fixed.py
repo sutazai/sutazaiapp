@@ -8,7 +8,7 @@ import requests
 import asyncio
 import aiohttp
 import json
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Union
 from datetime import datetime
 import websockets
 import logging
@@ -59,9 +59,9 @@ class BackendClient:
             return {"status": "error", "error": str(e)}
     
     def chat_sync(self, message: str, agent: str = "default", stream: bool = False) -> Dict:
-        """Synchronous chat for Streamlit"""
+        """Synchronous chat for Streamlit - uses /api/v1/chat/ endpoint"""
         try:
-            url = urljoin(self.api_v1, "chat")
+            url = urljoin(self.api_v1, "chat/")
             payload = {
                 "message": message,
                 "agent": agent,
@@ -129,9 +129,9 @@ class BackendClient:
         return st.session_state.session_id
     
     def send_voice_sync(self, audio_data: bytes) -> Dict:
-        """Send voice data synchronously"""
+        """Send voice data synchronously using demo endpoint"""
         try:
-            url = urljoin(self.api_v1, "voice/process")
+            url = urljoin(self.api_v1, "voice/demo/transcribe")
             files = {"audio": ("audio.wav", audio_data, "audio/wav")}
             response = requests.post(url, files=files, timeout=30)
             
@@ -142,6 +142,41 @@ class BackendClient:
         except Exception as e:
             logger.error(f"Voice processing failed: {e}")
             return {"error": str(e)}
+    
+    def synthesize_voice_sync(self, text: str) -> Optional[bytes]:
+        """Convert text to speech using demo endpoint"""
+        try:
+            url = urljoin(self.api_v1, "voice/demo/synthesize")
+            payload = {"text": text}
+            response = requests.post(url, json=payload, headers=self.headers, timeout=30)
+            
+            if response.status_code == 200:
+                return response.content
+            else:
+                return None
+        except Exception as e:
+            logger.error(f"Voice synthesis failed: {e}")
+            return None
+    
+    def check_voice_status_sync(self) -> Dict:
+        """Check voice service status using demo health endpoint"""
+        try:
+            url = urljoin(self.api_v1, "voice/demo/health")
+            response = requests.get(url, headers=self.headers, timeout=5)
+            
+            if response.status_code == 200:
+                data = response.json()
+                # Map health response to status format
+                return {
+                    "status": "ready" if data.get("status") == "healthy" else "degraded",
+                    "message": data.get("status", "unknown"),
+                    "details": data
+                }
+            else:
+                return {"status": "error", "message": f"Status check failed: {response.status_code}"}
+        except Exception as e:
+            logger.error(f"Voice status check failed: {e}")
+            return {"status": "error", "message": str(e)}
     
     def get_models_sync(self) -> List[str]:
         """Get available AI models synchronously"""

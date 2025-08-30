@@ -1,0 +1,680 @@
+{
+  "initial_load": {
+    "ttfb": 0,
+    "dom_ready": 0,
+    "full_load": 0,
+    "resource_count": 0,
+    "total_size_kb": 0,
+    "js_execution_ms": 0,
+    "css_parsing_ms": 0,
+    "error": "HTTPConnectionPool(host='localhost', port=11000): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7746267d7080>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+  },
+  "runtime_performance": {
+    "bottlenecks": [
+      {
+        "line": 62,
+        "type": "continuous_animation",
+        "severity": "medium",
+        "code": "animation: pulse 2s ease-in-out infinite;",
+        "impact": "Constant CPU/GPU usage",
+        "fix": "Use CSS transforms, reduce animation frequency"
+      },
+      {
+        "line": 86,
+        "type": "continuous_animation",
+        "severity": "medium",
+        "code": "animation: reactor-glow 2s ease-in-out infinite;",
+        "impact": "Constant CPU/GPU usage",
+        "fix": "Use CSS transforms, reduce animation frequency"
+      },
+      {
+        "line": 117,
+        "type": "continuous_animation",
+        "severity": "medium",
+        "code": "animation: wave 1.2s linear infinite;",
+        "impact": "Constant CPU/GPU usage",
+        "fix": "Use CSS transforms, reduce animation frequency"
+      },
+      {
+        "line": 197,
+        "type": "continuous_animation",
+        "severity": "medium",
+        "code": "animation: pulse 2s infinite;",
+        "impact": "Constant CPU/GPU usage",
+        "fix": "Use CSS transforms, reduce animation frequency"
+      },
+      {
+        "line": 233,
+        "type": "sync_api_call",
+        "severity": "high",
+        "code": "health = st.session_state.backend_client.check_health_sync()",
+        "impact": "Blocks UI during network I/O",
+        "fix": "Use async operations with callbacks"
+      },
+      {
+        "line": 276,
+        "type": "sync_api_call",
+        "severity": "high",
+        "code": "st.session_state.available_models = st.session_state.backend_client.get_models_sync()",
+        "impact": "Blocks UI during network I/O",
+        "fix": "Use async operations with callbacks"
+      },
+      {
+        "line": 446,
+        "type": "sync_api_call",
+        "severity": "high",
+        "code": "health = st.session_state.backend_client.check_health_sync()",
+        "impact": "Blocks UI during network I/O",
+        "fix": "Use async operations with callbacks"
+      },
+      {
+        "line": 459,
+        "type": "full_page_rerun",
+        "severity": "high",
+        "code": "st.rerun()",
+        "impact": "Complete page re-execution",
+        "fix": "Use partial updates or callbacks"
+      },
+      {
+        "line": 467,
+        "type": "full_page_rerun",
+        "severity": "high",
+        "code": "st.rerun()",
+        "impact": "Complete page re-execution",
+        "fix": "Use partial updates or callbacks"
+      },
+      {
+        "line": 513,
+        "type": "blocking_sleep",
+        "severity": "high",
+        "code": "time.sleep(0.5)  # Brief pause for visual feedback",
+        "impact": "Blocks UI thread",
+        "fix": "Use async/await or background thread"
+      },
+      {
+        "line": 519,
+        "type": "full_page_rerun",
+        "severity": "high",
+        "code": "st.rerun()",
+        "impact": "Complete page re-execution",
+        "fix": "Use partial updates or callbacks"
+      },
+      {
+        "line": 569,
+        "type": "full_page_rerun",
+        "severity": "high",
+        "code": "st.rerun()",
+        "impact": "Complete page re-execution",
+        "fix": "Use partial updates or callbacks"
+      },
+      {
+        "line": 597,
+        "type": "full_page_rerun",
+        "severity": "high",
+        "code": "st.rerun()",
+        "impact": "Complete page re-execution",
+        "fix": "Use partial updates or callbacks"
+      },
+      {
+        "line": 719,
+        "type": "inefficient_loop",
+        "severity": "medium",
+        "code": "cpu_data = [50 + np.random.randn() * 10 for _ in range(60)]",
+        "impact": "CPU intensive operation",
+        "fix": "Use numpy or vectorized operations"
+      },
+      {
+        "line": 720,
+        "type": "inefficient_loop",
+        "severity": "medium",
+        "code": "memory_data = [60 + np.random.randn() * 8 for _ in range(60)]",
+        "impact": "CPU intensive operation",
+        "fix": "Use numpy or vectorized operations"
+      },
+      {
+        "line": 744,
+        "type": "chart_regeneration",
+        "severity": "medium",
+        "code": "st.plotly_chart(fig, use_container_width=True)",
+        "impact": "Full chart re-render on each update",
+        "fix": "Use partial updates or caching"
+      },
+      {
+        "line": 748,
+        "type": "full_page_rerun",
+        "severity": "high",
+        "code": "st.rerun()",
+        "impact": "Complete page re-execution",
+        "fix": "Use partial updates or callbacks"
+      },
+      {
+        "line": 776,
+        "type": "full_page_rerun",
+        "severity": "high",
+        "code": "st.rerun()",
+        "impact": "Complete page re-execution",
+        "fix": "Use partial updates or callbacks"
+      },
+      {
+        "line": 852,
+        "type": "blocking_sleep",
+        "severity": "high",
+        "code": "#     time.sleep(5)",
+        "impact": "Blocks UI thread",
+        "fix": "Use async/await or background thread"
+      },
+      {
+        "line": 853,
+        "type": "full_page_rerun",
+        "severity": "high",
+        "code": "#     st.rerun()",
+        "impact": "Complete page re-execution",
+        "fix": "Use partial updates or callbacks"
+      }
+    ],
+    "total_issues": 20,
+    "high_severity": 13,
+    "session_state_writes": 55
+  },
+  "memory_usage": {
+    "initial_memory_mb": 41.5625,
+    "python_objects": 0,
+    "largest_allocations": [],
+    "error": "HTTPConnectionPool(host='localhost', port=11000): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7746263fc0b0>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+  },
+  "network_requests": {
+    "backend_endpoints": [
+      "api/v1/",
+      "ws",
+      "health"
+    ],
+    "websocket_usage": true,
+    "polling_intervals": [],
+    "api_calls": [
+      {
+        "line": 216,
+        "call": "st.session_state.backend_client = BackendClient(settings.BACKEND_URL)",
+        "is_sync": false
+      },
+      {
+        "line": 233,
+        "call": "health = st.session_state.backend_client.check_health_sync()",
+        "is_sync": true
+      },
+      {
+        "line": 263,
+        "call": "ws_thread = st.session_state.backend_client.connect_websocket(",
+        "is_sync": false
+      },
+      {
+        "line": 276,
+        "call": "st.session_state.available_models = st.session_state.backend_client.get_models_sync()",
+        "is_sync": true
+      },
+      {
+        "line": 277,
+        "call": "st.session_state.available_agents = st.session_state.backend_client.get_agents_sync()",
+        "is_sync": true
+      },
+      {
+        "line": 295,
+        "call": "response = st.session_state.backend_client.chat_sync(",
+        "is_sync": true
+      },
+      {
+        "line": 333,
+        "call": "result = st.session_state.backend_client.send_voice_sync(audio_bytes)",
+        "is_sync": true
+      },
+      {
+        "line": 446,
+        "call": "health = st.session_state.backend_client.check_health_sync()",
+        "is_sync": true
+      },
+      {
+        "line": 526,
+        "call": "voice_status = st.session_state.backend_client.check_voice_status_sync()",
+        "is_sync": true
+      },
+      {
+        "line": 624,
+        "call": "health_status = st.session_state.backend_client.check_voice_status_sync()",
+        "is_sync": true
+      }
+    ],
+    "total_api_calls": 10,
+    "sync_calls": 8
+  },
+  "animation_performance": {
+    "css_animations": [
+      {
+        "definition": "pulse 2s ease-in-out infinite",
+        "duration_ms": 2000.0,
+        "is_infinite": true,
+        "performance_impact": "high"
+      },
+      {
+        "definition": "reactor-glow 2s ease-in-out infinite",
+        "duration_ms": 2000.0,
+        "is_infinite": true,
+        "performance_impact": "high"
+      },
+      {
+        "definition": "wave 1.2s linear infinite",
+        "duration_ms": 1200.0,
+        "is_infinite": true,
+        "performance_impact": "high"
+      },
+      {
+        "definition": "pulse 2s infinite",
+        "duration_ms": 2000.0,
+        "is_infinite": true,
+        "performance_impact": "high"
+      }
+    ],
+    "estimated_fps_impact": 20,
+    "gpu_acceleration": [
+      "CSS transforms detected (GPU accelerated)"
+    ],
+    "keyframe_definitions": [
+      "reactor",
+      "wave",
+      "pulse"
+    ],
+    "infinite_animation_count": 4
+  },
+  "session_state": {
+    "state_variables": [
+      {
+        "name": "initialized",
+        "line": 214,
+        "initialization": "st.session_state.initialized = True"
+      },
+      {
+        "name": "messages",
+        "line": 215,
+        "initialization": "st.session_state.messages = []"
+      },
+      {
+        "name": "backend_client",
+        "line": 216,
+        "initialization": "st.session_state.backend_client = BackendClient(settings.BACKEND_URL)"
+      },
+      {
+        "name": "chat_interface",
+        "line": 217,
+        "initialization": "st.session_state.chat_interface = ChatInterface()"
+      },
+      {
+        "name": "voice_assistant",
+        "line": 218,
+        "initialization": "st.session_state.voice_assistant = VoiceAssistant()"
+      },
+      {
+        "name": "agent_orchestrator",
+        "line": 219,
+        "initialization": "st.session_state.agent_orchestrator = AgentOrchestrator()"
+      },
+      {
+        "name": "current_model",
+        "line": 220,
+        "initialization": "st.session_state.current_model = \"tinyllama:latest\""
+      },
+      {
+        "name": "current_agent",
+        "line": 221,
+        "initialization": "st.session_state.current_agent = \"default\""
+      },
+      {
+        "name": "backend_connected",
+        "line": 222,
+        "initialization": "st.session_state.backend_connected = False"
+      },
+      {
+        "name": "websocket_connected",
+        "line": 223,
+        "initialization": "st.session_state.websocket_connected = False"
+      },
+      {
+        "name": "available_models",
+        "line": 224,
+        "initialization": "st.session_state.available_models = []"
+      },
+      {
+        "name": "available_agents",
+        "line": 225,
+        "initialization": "st.session_state.available_agents = []"
+      },
+      {
+        "name": "is_listening",
+        "line": 226,
+        "initialization": "st.session_state.is_listening = False"
+      },
+      {
+        "name": "is_processing",
+        "line": 227,
+        "initialization": "st.session_state.is_processing = False"
+      },
+      {
+        "name": "backend_connected",
+        "line": 234,
+        "initialization": "st.session_state.backend_connected = health.get(\"status\") != \"error\""
+      },
+      {
+        "name": "backend_connected",
+        "line": 237,
+        "initialization": "st.session_state.backend_connected = False"
+      },
+      {
+        "name": "backend_connected",
+        "line": 255,
+        "initialization": "st.session_state.backend_connected = message.get(\"connected\", False)"
+      },
+      {
+        "name": "websocket_connected",
+        "line": 259,
+        "initialization": "st.session_state.websocket_connected = False"
+      },
+      {
+        "name": "websocket_connected",
+        "line": 269,
+        "initialization": "st.session_state.websocket_connected = True"
+      },
+      {
+        "name": "available_models",
+        "line": 276,
+        "initialization": "st.session_state.available_models = st.session_state.backend_client.get_models_sync()"
+      },
+      {
+        "name": "available_agents",
+        "line": 277,
+        "initialization": "st.session_state.available_agents = st.session_state.backend_client.get_agents_sync()"
+      },
+      {
+        "name": "is_processing",
+        "line": 284,
+        "initialization": "st.session_state.is_processing = True"
+      },
+      {
+        "name": "is_processing",
+        "line": 326,
+        "initialization": "st.session_state.is_processing = False"
+      },
+      {
+        "name": "current_model",
+        "line": 382,
+        "initialization": "st.session_state.current_model = selected_model"
+      },
+      {
+        "name": "current_agent",
+        "line": 407,
+        "initialization": "st.session_state.current_agent = selected_agent"
+      },
+      {
+        "name": "voice_enabled",
+        "line": 417,
+        "initialization": "st.session_state.voice_enabled = st.toggle(\"Enable Voice\", value=False)"
+      },
+      {
+        "name": "is_listening",
+        "line": 423,
+        "initialization": "st.session_state.is_listening = True"
+      },
+      {
+        "name": "is_listening",
+        "line": 427,
+        "initialization": "st.session_state.is_listening = False"
+      },
+      {
+        "name": "messages",
+        "line": 466,
+        "initialization": "st.session_state.messages = []"
+      },
+      {
+        "name": "last_transcription",
+        "line": 561,
+        "initialization": "st.session_state.last_transcription = text"
+      },
+      {
+        "name": "current_agent",
+        "line": 774,
+        "initialization": "st.session_state.current_agent = agent.get('id')"
+      }
+    ],
+    "initialization_overhead": 250,
+    "update_frequency": {},
+    "total_variables": 31,
+    "heavy_objects": [
+      {
+        "name": "backend_client",
+        "line": 216,
+        "initialization": "st.session_state.backend_client = BackendClient(settings.BACKEND_URL)"
+      },
+      {
+        "name": "chat_interface",
+        "line": 217,
+        "initialization": "st.session_state.chat_interface = ChatInterface()"
+      }
+    ]
+  },
+  "api_latency": {
+    "health_check": -1,
+    "chat_endpoint": -1,
+    "voice_endpoint": -1,
+    "agent_list": -1,
+    "model_list": -1
+  },
+  "resource_usage": {},
+  "thread_analysis": {
+    "thread_creation_points": [
+      {
+        "file": "system_monitor.py",
+        "line": 141,
+        "code": "self.monitoring_thread = threading.Thread(",
+        "is_daemon": false
+      }
+    ],
+    "cleanup_issues": [],
+    "daemon_threads": [],
+    "total_threads": 1,
+    "daemon_count": 0,
+    "cleanup_issue_count": 0
+  },
+  "bottlenecks": [],
+  "resource_bundling": {
+    "inline_css_count": 0,
+    "inline_js_count": 0,
+    "external_resources": [],
+    "caching_headers": false,
+    "compression": false,
+    "error": "HTTPConnectionPool(host='localhost', port=11000): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7746263fe2a0>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+  },
+  "monitoring_impact": {
+    "cpu_overhead": 0,
+    "memory_overhead": 0,
+    "update_frequency": [],
+    "expensive_operations": [
+      {
+        "line": 73,
+        "operation": "Docker stats API call",
+        "estimated_ms": 100,
+        "impact": "High CPU/Network I/O"
+      },
+      {
+        "line": 344,
+        "operation": "Docker stats API call",
+        "estimated_ms": 100,
+        "impact": "High CPU/Network I/O"
+      },
+      {
+        "line": 457,
+        "operation": "Service health check",
+        "estimated_ms": 20,
+        "impact": "Network I/O"
+      },
+      {
+        "line": 484,
+        "operation": "Process iteration",
+        "estimated_ms": 50,
+        "impact": "CPU intensive"
+      }
+    ],
+    "update_interval_seconds": 5,
+    "estimated_overhead_ms_per_update": 270,
+    "cpu_overhead_percent": 5.4
+  },
+  "summary": {
+    "critical_issues": [
+      "13 high-severity bottlenecks found",
+      "4 infinite animations impacting FPS"
+    ],
+    "performance_score": -35,
+    "estimated_optimization_potential": 50
+  },
+  "recommendations": [
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 233: sync_api_call",
+      "impact": "Blocks UI during network I/O",
+      "fix": "Use async operations with callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 276: sync_api_call",
+      "impact": "Blocks UI during network I/O",
+      "fix": "Use async operations with callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 446: sync_api_call",
+      "impact": "Blocks UI during network I/O",
+      "fix": "Use async operations with callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 459: full_page_rerun",
+      "impact": "Complete page re-execution",
+      "fix": "Use partial updates or callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 467: full_page_rerun",
+      "impact": "Complete page re-execution",
+      "fix": "Use partial updates or callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 513: blocking_sleep",
+      "impact": "Blocks UI thread",
+      "fix": "Use async/await or background thread",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 519: full_page_rerun",
+      "impact": "Complete page re-execution",
+      "fix": "Use partial updates or callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 569: full_page_rerun",
+      "impact": "Complete page re-execution",
+      "fix": "Use partial updates or callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 597: full_page_rerun",
+      "impact": "Complete page re-execution",
+      "fix": "Use partial updates or callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 748: full_page_rerun",
+      "impact": "Complete page re-execution",
+      "fix": "Use partial updates or callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 776: full_page_rerun",
+      "impact": "Complete page re-execution",
+      "fix": "Use partial updates or callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 852: blocking_sleep",
+      "impact": "Blocks UI thread",
+      "fix": "Use async/await or background thread",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 1,
+      "category": "Runtime Performance",
+      "issue": "Line 853: full_page_rerun",
+      "impact": "Complete page re-execution",
+      "fix": "Use partial updates or callbacks",
+      "estimated_improvement": "20-30% faster response"
+    },
+    {
+      "priority": 2,
+      "category": "Network Optimization",
+      "issue": "8 synchronous API calls",
+      "impact": "UI blocking during network I/O",
+      "fix": "Convert to async operations with loading states",
+      "estimated_improvement": "60% faster perceived performance"
+    },
+    {
+      "priority": 2,
+      "category": "Caching Strategy",
+      "issue": "No cache headers configured",
+      "impact": "Full reload on every visit",
+      "fix": "Implement proper Cache-Control headers and ETags",
+      "estimated_improvement": "70% faster subsequent loads"
+    },
+    {
+      "priority": 3,
+      "category": "Animation Performance",
+      "issue": "4 continuous animations",
+      "impact": "~20 FPS reduction",
+      "fix": "Use CSS transforms, reduce animation frequency, add will-change",
+      "estimated_improvement": "15-20 FPS improvement"
+    },
+    {
+      "priority": 3,
+      "category": "Monitoring Optimization",
+      "issue": "Real-time monitoring using 5.4% CPU",
+      "impact": "Continuous resource consumption",
+      "fix": "Cache monitoring results, increase update interval, use background workers",
+      "estimated_improvement": "80% reduction in monitoring overhead"
+    }
+  ],
+  "performance_budget": {
+    "initial_load_ms": 3000,
+    "api_response_ms": 200,
+    "animation_fps": 60,
+    "memory_growth_mb_per_hour": 10,
+    "cpu_usage_percent": 20,
+    "network_requests_per_minute": 30
+  }
+}

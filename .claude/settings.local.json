@@ -40,7 +40,16 @@
       "Bash(do if [ -f \"$file\" ])",
       "Bash(then mv \"$file\" tests/)",
       "Bash(echo:*)",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(./venv/bin/pip install:*)",
+      "Bash(./venv/bin/python -m pytest tests/integration/test_api_endpoints.py::TestHealthEndpoints -v --tb=short)",
+      "Bash(./venv/bin/pytest tests/unit/ -v --tb=short --color=yes)",
+      "Bash(./venv/bin/pytest tests/integration/ -v --tb=short --color=yes)",
+      "Bash(./venv/bin/pytest tests/e2e/ -v --tb=short --color=yes)",
+      "Bash(./venv/bin/pytest tests/integration/ --cov=. --cov-report=term-missing --cov-report=html -q)",
+      "Bash(./venv/bin/pytest tests/integration/ -q --tb=no)",
+      "WebSearch",
+      "Bash(./venv/bin/python tests/test_comprehensive_validation.py)"
     ],
     "deny": [],
     "ask": [],

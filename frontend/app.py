@@ -313,7 +313,7 @@ def process_chat_message(message: str):
         
         # Speak response if voice is enabled
         if st.session_state.get("voice_enabled", False):
-            st.session_state.voice_assistant.speak(response_text, wait=False)
+            synthesize_speech(response_text)
         
     except Exception as e:
         error_message = f"Error: {str(e)}"
@@ -522,44 +522,83 @@ with tab2:
     # Voice command center
     st.markdown("### 🎙️ Voice Command Center")
     
-    if not st.session_state.voice_assistant.audio_available:
-        st.warning("⚠️ No audio input device detected. Voice features may be limited.")
+    # Check voice service status
+    voice_status = st.session_state.backend_client.check_voice_status_sync()
+    if voice_status.get("status") == "ready":
+        st.success("🎤 Voice service is ready")
+    else:
+        st.warning(f"⚠️ Voice service status: {voice_status.get('message', 'Unknown')}")
     
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        # Mic recorder with visual feedback
-        st.markdown("Click the button below and speak your command:")
+    # Simple audio recording section
+    st.markdown("### 🎙️ Voice Recording")
+    
+    # File upload method for audio
+    st.markdown("Upload an audio file to transcribe:")
+    
+    uploaded_file = st.file_uploader(
+        "Choose an audio file",
+        type=["wav", "mp3", "ogg", "m4a"],
+        key="audio_uploader"
+    )
+    
+    if uploaded_file is not None:
+        # Display the uploaded audio
+        st.audio(uploaded_file, format=f"audio/{uploaded_file.name.split('.')[-1]}")
         
-        audio = mic_recorder(
-            start_prompt="🎤 Click to speak",
-            stop_prompt="🛑 Stop recording",
-            just_once=False,
-            use_container_width=True,
-            format="wav",
-            key="mic_recorder"
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🎯 Transcribe Audio", use_container_width=True):
+                # Read the file bytes
+                audio_bytes = uploaded_file.read()
+                uploaded_file.seek(0)  # Reset file pointer
+                
+                # Process the audio
+                with st.spinner("Transcribing audio..."):
+                    text = process_voice_input(audio_bytes)
+                    
+                    if text:
+                        st.success(f"📝 Transcription: **{text}**")
+                        st.session_state.last_transcription = text
+                    else:
+                        st.error("❌ Could not transcribe audio. Please try a different file.")
+        
+        with col2:
+            if st.button("💬 Send to Chat", use_container_width=True, disabled=not st.session_state.get('last_transcription')):
+                if st.session_state.get('last_transcription'):
+                    process_chat_message(st.session_state.last_transcription)
+                    st.rerun()
+    
+    # WebRTC recording if available
+    if WEBRTC_AVAILABLE:
+        st.markdown("### 🎤 Live Recording (Experimental)")
+        st.info("Click Start to begin recording from your microphone")
+        
+        ctx = webrtc_streamer(
+            key="voice-recorder",
+            mode=WebRtcMode.SENDONLY,
+            audio_processor_factory=AudioProcessor,
+            media_stream_constraints={"audio": True, "video": False},
+            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
         )
         
-        if audio:
-            # Display audio player
-            st.audio(audio["bytes"], format="audio/wav")
-            
-            # Process audio
-            with st.spinner("Processing your voice command..."):
-                text = process_voice_input(audio["bytes"])
-                
-                if text:
-                    st.success(f"You said: **{text}**")
-                    
-                    # Process as chat message
-                    process_chat_message(text)
-                    
-                    # Show response
-                    if st.session_state.messages:
-                        last_response = st.session_state.messages[-1]
-                        if last_response["role"] == "assistant":
-                            st.info(f"JARVIS: {last_response['content']}")
+        if ctx.audio_processor:
+            if st.button("📤 Process Recording", use_container_width=True):
+                audio_bytes = ctx.audio_processor.get_audio_bytes()
+                if audio_bytes:
+                    # Process the audio
+                    with st.spinner("Processing your voice..."):
+                        text = process_voice_input(audio_bytes)
+                        
+                        if text:
+                            st.success(f"📝 Transcription: **{text}**")
+                            # Process as chat
+                            with st.spinner("JARVIS is thinking..."):
+                                process_chat_message(text)
+                                st.rerun()
+                        else:
+                            st.error("❌ Could not transcribe audio.")
                 else:
-                    st.error("Could not understand the audio. Please try again.")
+                    st.warning("No audio recorded. Please speak into your microphone.")
     
     # Voice commands list
     with st.expander("📝 Available Voice Commands"):
@@ -575,24 +614,41 @@ with tab2:
         - **"Help"** - Show available commands
         """)
     
-    # Voice settings
-    st.markdown("### ⚙️ Voice Settings")
-    col1, col2 = st.columns(2)
+    # Voice settings and testing
+    st.markdown("### ⚙️ Voice Testing")
     
-    with col1:
-        speaking_rate = st.slider("Speaking Rate", 100, 300, 175)
-        st.session_state.voice_assistant.set_voice_parameters(rate=speaking_rate)
+    # Test voice pipeline
+    if st.button("🧪 Test Voice Health", use_container_width=True):
+        with st.spinner("Checking voice service health..."):
+            try:
+                health_status = st.session_state.backend_client.check_voice_status_sync()
+                if health_status.get("status") == "ready":
+                    st.success("✅ Voice service is healthy!")
+                    with st.expander("Health Details"):
+                        if "details" in health_status:
+                            st.json(health_status["details"])
+                        else:
+                            st.json(health_status)
+                elif health_status.get("status") == "degraded":
+                    st.warning("⚠️ Voice service is degraded")
+                    with st.expander("Health Details"):
+                        st.json(health_status.get("details", health_status))
+                else:
+                    st.error(f"Voice service error: {health_status.get('message', 'Unknown')}")
+            except Exception as e:
+                st.error(f"Voice health check error: {e}")
     
-    with col2:
-        volume = st.slider("Volume", 0, 100, 100)
-        st.session_state.voice_assistant.set_voice_parameters(volume=volume/100)
-    
-    # Voice calibration
-    if st.button("🎚️ Calibrate Microphone"):
-        with st.spinner("Calibrating... Please remain silent."):
-            calibration = st.session_state.voice_assistant.calibrate_microphone()
-            st.success("Calibration complete!")
-            st.json(calibration)
+    # Text to Speech Test
+    st.markdown("#### 🔊 Text-to-Speech Test")
+    tts_text = st.text_input("Enter text to synthesize:", "Hello, I am JARVIS, your AI assistant.")
+    if st.button("🎵 Synthesize Speech", use_container_width=True):
+        if tts_text:
+            with st.spinner("Synthesizing speech..."):
+                success = synthesize_speech(tts_text)
+                if success:
+                    st.success("✅ Speech synthesized successfully!")
+                else:
+                    st.error("❌ Speech synthesis failed")
 
 with tab3:
     # System monitoring dashboard
