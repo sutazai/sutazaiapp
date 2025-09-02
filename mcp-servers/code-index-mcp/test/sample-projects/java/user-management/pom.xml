@@ -20,7 +20,7 @@
         <junit.version>5.9.2</junit.version>
         <jackson.version>2.15.2</jackson.version>
         <slf4j.version>2.0.7</slf4j.version>
-        <logback.version>1.4.7</logback.version>
+        <logback.version>1.5.15</logback.version>
     </properties>
 
     <dependencies>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>3.17.0</version>
         </dependency>
         
         <dependency>

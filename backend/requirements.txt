@@ -1,7 +1,7 @@
 # Core FastAPI
 fastapi==0.115.0
 uvicorn[standard]==0.32.0
-python-multipart==0.0.12
+python-multipart==0.0.18
 websockets==12.0
 python-socketio==5.10.0
 
@@ -22,11 +22,11 @@ neo4j==5.26.0
 
 # HTTP Client
 httpx==0.28.0
-aiohttp==3.10.10
+aiohttp==3.10.11
 aiofiles==23.2.1
 
 # Authentication & Security
-python-jose[cryptography]==3.3.0
+python-jose[cryptography]==3.4.0
 passlib[bcrypt]==1.7.4
 python-dotenv==1.0.1
 
@@ -41,9 +41,9 @@ qdrant-client==1.12.0
 numpy==1.26.4
 
 # JARVIS Core Dependencies
-langchain==0.1.0
-langchain-community==0.0.10
-transformers==4.36.0
+langchain==0.3.10
+langchain-community==0.3.10
+transformers==4.48.0
 torch>=2.1.0
 huggingface-hub==0.19.0
 sentence-transformers==2.2.2
