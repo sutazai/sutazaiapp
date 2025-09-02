@@ -49,7 +49,8 @@
       "Bash(./venv/bin/pytest tests/integration/ --cov=. --cov-report=term-missing --cov-report=html -q)",
       "Bash(./venv/bin/pytest tests/integration/ -q --tb=no)",
       "WebSearch",
-      "Bash(./venv/bin/python tests/test_comprehensive_validation.py)"
+      "Bash(./venv/bin/python tests/test_comprehensive_validation.py)",
+      "mcp__sequential-thinking__sequentialthinking"
     ],
     "deny": [],
     "ask": [],
