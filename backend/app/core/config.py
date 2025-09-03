@@ -1,15 +1,20 @@
 """
 SutazAI Platform Configuration
 Centralized configuration management for all services
+Compliant with Professional Project Standards - No hardcoded credentials
 """
 
 from pydantic_settings import BaseSettings
 from typing import Optional
 import os
+from app.core.secrets_manager import get_secrets_manager
 
 
 class Settings(BaseSettings):
-    """Application settings with environment variable support"""
+    """Application settings with secure secrets management"""
+    
+    # Initialize secrets manager
+    _secrets = get_secrets_manager()
     
     # Application
     APP_NAME: str = "SutazAI Platform API"
@@ -22,11 +27,16 @@ class Settings(BaseSettings):
     PORT: int = 8000
     WORKERS: int = 4
     
-    # PostgreSQL
-    POSTGRES_HOST: str = "localhost"
+    # PostgreSQL (using secrets manager)
+    POSTGRES_HOST: str = os.getenv("POSTGRES_HOST", "sutazai-postgres")
     POSTGRES_PORT: int = 10000
     POSTGRES_USER: str = "jarvis"
-    POSTGRES_PASSWORD: str = "sutazai_secure_2024"
+    
+    @property
+    def POSTGRES_PASSWORD(self) -> str:
+        """Get PostgreSQL password from secure storage"""
+        return self._secrets.get_secret("POSTGRES_PASSWORD", "change_me_in_production")
+    
     POSTGRES_DB: str = "jarvis_ai"
     
     @property
@@ -42,31 +52,43 @@ class Settings(BaseSettings):
     def REDIS_URL(self) -> str:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
     
-    # RabbitMQ
+    # RabbitMQ (using secrets manager)
     RABBITMQ_HOST: str = "sutazai-rabbitmq"
     RABBITMQ_PORT: int = 5672
     RABBITMQ_USER: str = "sutazai"
-    RABBITMQ_PASSWORD: str = "sutazai_secure_2024"
+    
+    @property
+    def RABBITMQ_PASSWORD(self) -> str:
+        """Get RabbitMQ password from secure storage"""
+        return self._secrets.get_secret("RABBITMQ_PASSWORD", "change_me_in_production")
     
     @property
     def RABBITMQ_URL(self) -> str:
         return f"amqp://{self.RABBITMQ_USER}:{self.RABBITMQ_PASSWORD}@{self.RABBITMQ_HOST}:{self.RABBITMQ_PORT}/"
     
-    # Neo4j
+    # Neo4j (using secrets manager)
     NEO4J_HOST: str = "sutazai-neo4j"
     NEO4J_BOLT_PORT: int = 7687
     NEO4J_HTTP_PORT: int = 7474
     NEO4J_USER: str = "neo4j"
-    NEO4J_PASSWORD: str = "sutazai_secure_2024"
+    
+    @property
+    def NEO4J_PASSWORD(self) -> str:
+        """Get Neo4j password from secure storage"""
+        return self._secrets.get_secret("NEO4J_PASSWORD", "change_me_in_production")
     
     @property
     def NEO4J_URL(self) -> str:
         return f"bolt://{self.NEO4J_HOST}:{self.NEO4J_BOLT_PORT}"
     
-    # Vector Databases
+    # Vector Databases (using secrets manager)
     CHROMADB_HOST: str = "sutazai-chromadb"
     CHROMADB_PORT: int = 8000
-    CHROMADB_TOKEN: str = "sutazai-secure-token-2024"
+    
+    @property
+    def CHROMADB_TOKEN(self) -> str:
+        """Get ChromaDB token from secure storage"""
+        return self._secrets.get_secret("CHROMADB_TOKEN", "change_me_in_production")
     
     QDRANT_HOST: str = "sutazai-qdrant"
     QDRANT_HTTP_PORT: int = 6334
@@ -88,8 +110,12 @@ class Settings(BaseSettings):
     OLLAMA_HOST: str = "host.docker.internal"
     OLLAMA_PORT: int = 11434
     
-    # Security
-    SECRET_KEY: str = "sutazai-secret-key-2025-change-in-production"
+    # Security (using secrets manager)
+    @property
+    def SECRET_KEY(self) -> str:
+        """Get JWT secret key from secure storage"""
+        return self._secrets.get_secret("JWT_SECRET_KEY", "change_me_in_production")
+    
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     

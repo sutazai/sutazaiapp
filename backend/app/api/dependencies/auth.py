@@ -4,17 +4,19 @@ Provides dependency injection for authentication and authorization
 """
 
 from typing import Optional, Annotated
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from jose import JWTError
 import logging
 from datetime import datetime, timezone
+import time
 
 from app.core.security import security
 from app.core.database import get_db
 from app.models.user import User, TokenData
+from app.services.connections import service_connections
 
 logger = logging.getLogger(__name__)
 
@@ -192,7 +194,7 @@ async def get_current_superuser(
 
 class RateLimiter:
     """
-    Rate limiter dependency for protecting endpoints
+    Rate limiter dependency for protecting endpoints using Redis sliding window
     """
     def __init__(self, calls: int = 10, period: int = 60):
         """
@@ -204,24 +206,74 @@ class RateLimiter:
         """
         self.calls = calls
         self.period = period
-        self.cache = {}  # In production, use Redis
     
-    async def __call__(self, user: User = Depends(get_current_user_optional)) -> bool:
+    async def __call__(self, request: Request, user: User = Depends(get_current_user_optional)) -> bool:
         """
-        Check if request should be rate limited
+        Check if request should be rate limited using Redis sliding window algorithm
         
         Args:
+            request: FastAPI request object for IP extraction
             user: Optional current user
             
         Returns:
             True if allowed, raises exception if rate limited
         """
-        # Get identifier (user ID or IP)
-        identifier = str(user.id) if user else "anonymous"
+        # Get Redis connection from ServiceConnections singleton
+        redis_client = service_connections.redis_client
+        if not redis_client:
+            # If Redis is unavailable, allow request but log warning
+            logger.warning("Redis unavailable for rate limiting - allowing request")
+            return True
         
-        # Check rate limit (simplified - use Redis in production)
-        # This is a placeholder implementation
-        return True
+        # Get identifier (user ID or IP address)
+        if user:
+            identifier = f"rate_limit:user:{user.id}"
+        else:
+            # Extract IP from request
+            client_ip = request.client.host if request.client else "unknown"
+            identifier = f"rate_limit:ip:{client_ip}"
+        
+        try:
+            current_time = time.time()
+            window_start = current_time - self.period
+            
+            # Use Redis sorted set for sliding window
+            # Remove expired entries
+            await redis_client.zremrangebyscore(identifier, 0, window_start)
+            
+            # Count current entries in window
+            current_count = await redis_client.zcard(identifier)
+            
+            if current_count >= self.calls:
+                # Calculate time until oldest entry expires
+                oldest_entry = await redis_client.zrange(identifier, 0, 0, withscores=True)
+                if oldest_entry:
+                    reset_time = oldest_entry[0][1] + self.period
+                    retry_after = int(reset_time - current_time)
+                else:
+                    retry_after = self.period
+                
+                raise HTTPException(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                    detail=f"Rate limit exceeded. Try again in {retry_after} seconds",
+                    headers={"Retry-After": str(retry_after)}
+                )
+            
+            # Add current request to the window
+            await redis_client.zadd(identifier, {str(current_time): current_time})
+            
+            # Set expiry on the key
+            await redis_client.expire(identifier, self.period)
+            
+            return True
+            
+        except HTTPException:
+            # Re-raise HTTP exceptions
+            raise
+        except Exception as e:
+            # Log Redis errors but don't block requests
+            logger.error(f"Rate limiter Redis error: {e}")
+            return True
 
 
 # Dependency instances

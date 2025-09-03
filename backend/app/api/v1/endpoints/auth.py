@@ -22,6 +22,7 @@ from app.api.dependencies.auth import (
     get_current_user, get_current_active_user,
     strict_rate_limiter
 )
+from app.services.email import email_service
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -85,6 +86,15 @@ async def register(
     await db.refresh(db_user)
     
     logger.info(f"New user registered: {db_user.username} ({db_user.email})")
+    
+    # Generate and send verification email
+    verification_token = security.generate_email_verification_token(db_user.email)
+    email_sent = await email_service.send_verification_email(db_user.email, verification_token)
+    
+    if email_sent:
+        logger.info(f"Verification email sent to {db_user.email}")
+    else:
+        logger.warning(f"Failed to send verification email to {db_user.email}, token: {verification_token}")
     
     return UserResponse.model_validate(db_user)
 
@@ -323,12 +333,13 @@ async def request_password_reset(
         # Generate reset token
         reset_token = security.generate_password_reset_token(user.email)
         
-        # In production, send email with reset token
-        # For now, log the token
-        logger.info(f"Password reset token for {user.email}: {reset_token}")
+        # Send password reset email
+        email_sent = await email_service.send_password_reset_email(user.email, reset_token)
         
-        # TODO: Implement email sending
-        # await send_password_reset_email(user.email, reset_token)
+        if email_sent:
+            logger.info(f"Password reset email sent to {user.email}")
+        else:
+            logger.warning(f"Failed to send password reset email to {user.email}, but token generated: {reset_token}")
     
     # Always return success to prevent email enumeration
     return {
@@ -406,7 +417,37 @@ async def verify_email(
     Raises:
         HTTPException: If token is invalid
     """
-    # TODO: Implement email verification
-    # This is a placeholder for email verification logic
+    # Verify the token and extract email
+    email = security.verify_email_token(token)
     
-    return {"message": "Email verification not yet implemented"}
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired verification token"
+        )
+    
+    # Find user by email
+    result = await db.execute(
+        select(User).where(User.email == email)
+    )
+    user = result.scalar_one_or_none()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    if user.is_verified:
+        return {"message": "Email already verified"}
+    
+    # Mark user as verified
+    user.is_verified = True
+    user.verified_at = datetime.now(timezone.utc)
+    
+    await db.commit()
+    await db.refresh(user)
+    
+    logger.info(f"Email verified for user: {user.username} ({user.email})")
+    
+    return {"message": "Email successfully verified"}

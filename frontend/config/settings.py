@@ -15,7 +15,7 @@ class Settings:
     APP_VERSION = "5.0.0"
     
     # Backend API
-    BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:10200")
+    BACKEND_URL = os.getenv("BACKEND_URL", "http://sutazai-backend:8000")
     API_TIMEOUT = 30
     
     # Voice Settings

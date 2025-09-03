@@ -17,13 +17,8 @@ logger = logging.getLogger(__name__)
 # Password hashing context with bcrypt
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# Generate a secure secret key if not set properly
-if settings.SECRET_KEY == "sutazai-secret-key-2025-change-in-production":
-    # Generate a cryptographically secure secret key
-    REAL_SECRET_KEY = secrets.token_urlsafe(32)
-    logger.warning(f"Generated new SECRET_KEY for JWT. Add this to .env: SECRET_KEY={REAL_SECRET_KEY}")
-else:
-    REAL_SECRET_KEY = settings.SECRET_KEY
+# JWT secret key is now managed through the secrets manager
+# The settings.SECRET_KEY property handles generation and warnings
 
 
 class SecurityUtils:
@@ -90,7 +85,7 @@ class SecurityUtils:
         # Create the JWT token
         encoded_jwt = jwt.encode(
             to_encode, 
-            REAL_SECRET_KEY, 
+            settings.SECRET_KEY, 
             algorithm=settings.ALGORITHM
         )
         
@@ -126,7 +121,7 @@ class SecurityUtils:
         # Create the JWT token
         encoded_jwt = jwt.encode(
             to_encode, 
-            REAL_SECRET_KEY, 
+            settings.SECRET_KEY, 
             algorithm=settings.ALGORITHM
         )
         
@@ -157,7 +152,7 @@ class SecurityUtils:
             # Decode the token
             payload = jwt.decode(
                 token, 
-                REAL_SECRET_KEY, 
+                settings.SECRET_KEY, 
                 algorithms=[settings.ALGORITHM]
             )
             
@@ -216,6 +211,60 @@ class SecurityUtils:
             return email
             
         except HTTPException:
+            return None
+
+    
+    @staticmethod
+    def generate_email_verification_token(email: str) -> str:
+        """
+        Generate email verification token
+        
+        Args:
+            email: User's email address
+            
+        Returns:
+            JWT token for email verification
+        """
+        expire = datetime.now(timezone.utc) + timedelta(hours=24)  # 24 hour expiry
+        data = {
+            "sub": email,
+            "type": "email_verification",
+            "exp": expire
+        }
+        
+        encoded_jwt = jwt.encode(data, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+        return encoded_jwt
+    
+    @staticmethod
+    def verify_email_token(token: str) -> Optional[str]:
+        """
+        Verify email verification token
+        
+        Args:
+            token: JWT token to verify
+            
+        Returns:
+            Email address if valid, None otherwise
+        """
+        try:
+            payload = jwt.decode(
+                token, 
+                settings.SECRET_KEY, 
+                algorithms=[settings.ALGORITHM]
+            )
+            
+            # Check token type
+            if payload.get("type") != "email_verification":
+                return None
+            
+            email: str = payload.get("sub")
+            return email
+            
+        except JWTError as e:
+            logger.error(f"Email verification token error: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected error verifying email token: {e}")
             return None
 
 
