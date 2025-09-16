@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Automated Code Review
+This repository uses CodeRabbit AI for automated code reviews on all pull requests. CodeRabbit will automatically analyze code changes for:
+- Code quality issues
+- Security vulnerabilities
+- Performance optimizations
+- Best practice violations
+
 ## Quick Start Commands
 
 ### Full Stack Deployment
