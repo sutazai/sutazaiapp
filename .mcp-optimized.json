@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/filesystem.sh",
+      "settings": {
+        "maxFileSize": 50000,
+        "tokenLimit": 2000
+      }
+    },
+    "memory": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/memory.sh",
+      "settings": {
+        "maxEntries": 50,
+        "autoCleanup": true,
+        "ttl": 3600
+      }
+    },
+    "code-index": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/code-index.sh",
+      "settings": {
+        "semanticSearch": true,
+        "maxResults": 10,
+        "chunkSize": 500
+      }
+    }
+  }
+}

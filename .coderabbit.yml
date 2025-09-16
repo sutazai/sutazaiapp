@@ -1,0 +1,11 @@
+reviews:
+  auto_review:
+    enabled: true
+  
+language_model:
+  provider: "openai"
+  model: "gpt-4"
+
+rules:
+  - pattern: "console.log"
+    message: "Remove console.log statements before committing"
