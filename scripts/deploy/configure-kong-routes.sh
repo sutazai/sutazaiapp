@@ -1,0 +1,1 @@
+deploy/infrastructure/configure-kong-routes.sh

@@ -1,0 +1,97 @@
+version: '3.8'
+
+# Phase 2A: First batch of Tier 2 agents (Testing deployment)
+# Memory-conscious deployment for limited resources
+
+services:
+  # Letta (MemGPT) - Memory-enhanced AI
+  letta:
+    container_name: sutazai-letta
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             pip install --no-cache-dir letta fastapi uvicorn &&
+             uvicorn --host 0.0.0.0 --port 8000 --factory letta.server.server:app"
+    ports:
+      - "11101:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - POSTGRES_URL=postgresql://jarvis:sutazai_secure_2024@sutazai-postgres:5432/jarvis_ai
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - PYTHONUNBUFFERED=1
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+
+  # GPT-Engineer - Code generation
+  gpt-engineer:
+    container_name: sutazai-gpt-engineer
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             if [ ! -d '.git' ]; then git clone https://github.com/AntonOsika/gpt-engineer.git .; fi &&
+             pip install --no-cache-dir -e . &&
+             pip install fastapi uvicorn &&
+             python /app/gpt_engineer_wrapper.py"
+    ports:
+      - "11302:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./wrappers/gpt_engineer_wrapper.py:/app/gpt_engineer_wrapper.py:ro
+      - ./workspaces/gpt-engineer:/workspace:rw
+    mem_limit: 768m
+    cpus: 0.75
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+
+  # FinRobot - Financial Analysis
+  finrobot:
+    container_name: sutazai-finrobot
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             git clone https://github.com/AI4Finance-Foundation/FinRobot.git . &&
+             pip install --no-cache-dir -r requirements.txt 2>/dev/null || pip install --no-cache-dir pandas numpy yfinance fastapi uvicorn &&
+             python /app/finrobot_wrapper.py"
+    ports:
+      - "11601:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - REDIS_URL=redis://sutazai-redis:6379
+    volumes:
+      - ./wrappers/finrobot_wrapper.py:/app/finrobot_wrapper.py:ro
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network

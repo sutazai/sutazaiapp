@@ -1,0 +1,48 @@
+# SutazAI Platform - Ollama Service Fix
+# Fixes health check and network connectivity issues
+
+version: '3.8'
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sutazai-ollama
+    restart: unless-stopped
+    ports:
+      - "11435:11434"  # External port 11435 -> Internal port 11434
+    networks:
+      sutazai-network:
+        aliases:
+          - ollama
+          - sutazai-ollama
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_NUM_PARALLEL=2
+      - OLLAMA_MAX_LOADED_MODELS=2
+    healthcheck:
+      # Use ollama CLI which is available in the container
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+          cpus: '1.0'
+
+volumes:
+  ollama-data:
+    driver: local

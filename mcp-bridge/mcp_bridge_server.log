@@ -1,0 +1,59 @@
+/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py:344: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py:364: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("shutdown")
+/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py:653: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+2025-08-29 10:24:00,481 - __main__ - INFO - Starting MCP Bridge Server...
+INFO:     Started server process [1816056]
+INFO:     Waiting for application startup.
+2025-08-29 10:24:00,556 - __main__ - INFO - Initializing MCP Bridge connections...
+2025-08-29 10:24:00,760 - __main__ - INFO - RabbitMQ initialized successfully
+2025-08-29 10:24:00,769 - __main__ - INFO - Redis initialized successfully
+2025-08-29 10:24:00,786 - __main__ - INFO - Consul initialized and service registered
+2025-08-29 10:24:00,787 - __main__ - INFO - Checking health of all agents...
+2025-08-29 10:24:00,870 - httpx - INFO - HTTP Request: GET http://localhost:11401/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:00,870 - __main__ - INFO - Agent letta is online
+2025-08-29 10:24:00,894 - httpx - INFO - HTTP Request: GET http://localhost:11402/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:00,894 - __main__ - INFO - Agent autogpt is online
+2025-08-29 10:24:00,917 - httpx - INFO - HTTP Request: GET http://localhost:11403/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:00,917 - __main__ - INFO - Agent crewai is online
+2025-08-29 10:24:00,939 - httpx - INFO - HTTP Request: GET http://localhost:11404/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:00,940 - __main__ - INFO - Agent aider is online
+2025-08-29 10:24:00,967 - httpx - INFO - HTTP Request: GET http://localhost:11405/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:00,967 - __main__ - INFO - Agent langchain is online
+2025-08-29 10:24:00,991 - httpx - INFO - HTTP Request: GET http://localhost:11407/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:00,992 - __main__ - INFO - Agent bigagi is online
+2025-08-29 10:24:01,020 - httpx - INFO - HTTP Request: GET http://localhost:11408/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:01,020 - __main__ - INFO - Agent agentzero is online
+2025-08-29 10:24:01,046 - httpx - INFO - HTTP Request: GET http://localhost:11409/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:01,047 - __main__ - INFO - Agent skyvern is online
+2025-08-29 10:24:01,070 - httpx - INFO - HTTP Request: GET http://localhost:11413/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:01,070 - __main__ - INFO - Agent shellgpt is online
+2025-08-29 10:24:01,093 - httpx - INFO - HTTP Request: GET http://localhost:11415/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:01,094 - __main__ - INFO - Agent autogen is online
+2025-08-29 10:24:01,125 - httpx - INFO - HTTP Request: GET http://localhost:11703/health "HTTP/1.1 200 OK"
+2025-08-29 10:24:01,126 - __main__ - INFO - Agent browseruse is online
+2025-08-29 10:24:03,146 - __main__ - INFO - MCP Bridge initialization complete
+INFO:     Application startup complete.
+ERROR:    [Errno 98] error while attempting to bind on address ('0.0.0.0', 11100): address already in use
+INFO:     Waiting for application shutdown.
+/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py:370: DeprecationWarning: Call to deprecated close. (Use aclose() instead) -- Deprecated since version 5.0.1.
+  await redis_client.close()
+2025-08-29 10:24:03,155 - __main__ - INFO - MCP Bridge shutdown complete
+INFO:     Application shutdown complete.

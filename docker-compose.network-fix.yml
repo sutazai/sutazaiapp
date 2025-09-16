@@ -1,0 +1,78 @@
+# Network Segmentation Configuration
+
+networks:
+  # Main network for inter-service communication
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+  # Database network (isolated)
+  sutazai-db-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+
+  # Agent network (isolated)
+  sutazai-agent-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/24
+
+  # Vector DB network (isolated)
+  sutazai-vector-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/24
+
+services:
+  # Update backend to use correct IP
+  backend:
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.40  # Changed from .30 to avoid conflicts
+      sutazai-db-network:
+      sutazai-vector-network:
+
+  # Update frontend to documented IP
+  jarvis-frontend:
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.31  # As documented
+
+  # Database services on isolated network
+  postgres:
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.10
+      sutazai-db-network:
+        ipv4_address: 172.21.0.10
+
+  redis:
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.11
+      sutazai-db-network:
+        ipv4_address: 172.21.0.11
+
+  neo4j:
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.12
+      sutazai-db-network:
+        ipv4_address: 172.21.0.12
+
+  # Agent services on isolated network
+  ollama:
+    networks:
+      sutazai-network:
+      sutazai-agent-network:
+        ipv4_address: 172.22.0.10
+
+  semgrep:
+    networks:
+      sutazai-network:
+      sutazai-agent-network:
+        ipv4_address: 172.22.0.20

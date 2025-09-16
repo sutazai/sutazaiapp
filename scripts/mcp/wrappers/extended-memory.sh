@@ -1,0 +1,1 @@
+../../utils/integration/mcp/extended-memory.sh

@@ -1,0 +1,1 @@
+deploy/infrastructure/stop-infrastructure.sh

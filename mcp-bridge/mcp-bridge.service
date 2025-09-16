@@ -1,0 +1,23 @@
+[Unit]
+Description=SutazAI MCP Bridge Service
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/sutazaiapp/mcp-bridge
+Environment="PYTHONUNBUFFERED=1"
+Environment="LOG_LEVEL=INFO"
+Environment="MCP_BRIDGE_PORT=11100"
+ExecStart=/opt/sutazaiapp/mcp-bridge/venv/bin/python /opt/sutazaiapp/mcp-bridge/services/mcp_bridge_simple.py
+Restart=always
+RestartSec=10
+User=root
+Group=opt-admins
+
+# Logging
+StandardOutput=append:/opt/sutazaiapp/mcp-bridge/logs/mcp_bridge_service.log
+StandardError=append:/opt/sutazaiapp/mcp-bridge/logs/mcp_bridge_error.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/opt/sutazaiapp/mcp-bridge/services/mcp_bridge_server.py", line 15, in <module>
+    from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+ModuleNotFoundError: No module named 'fastapi'

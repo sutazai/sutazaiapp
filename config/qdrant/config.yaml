@@ -1,0 +1,39 @@
+log_level: INFO
+
+storage:
+  # Storage configuration
+  storage_path: /qdrant/storage
+  # Performance optimizations
+  performance:
+    max_search_threads: 0  # Auto-detect optimal threads
+    max_optimization_threads: 1
+    
+  # WAL configuration
+  wal:
+    wal_capacity_mb: 32
+    wal_segments_ahead: 0
+
+service:
+  # API configuration
+  http_port: 6334
+  grpc_port: 6333
+  host: 0.0.0.0
+  
+  # Security
+  enable_cors: true
+  
+  # Performance limits
+  max_request_size_mb: 32
+  max_workers: 0  # Auto-detect
+
+  # Timeouts
+  read_timeout_sec: 20
+  write_timeout_sec: 20
+
+cluster:
+  # Single node configuration
+  enabled: false
+  
+telemetry:
+  # Disable telemetry
+  anonymized_telemetry: false

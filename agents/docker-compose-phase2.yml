@@ -1,0 +1,276 @@
+# SutazAI Platform - Phase 2 Lightweight Agents
+# All configured for local LLM with Ollama/TinyLlama
+# Target: ~3GB RAM total
+
+services:
+  # AutoGPT - Autonomous Task Execution
+  autogpt:
+    container_name: sutazai-autogpt
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y git curl &&
+             pip install --no-cache-dir litellm fastapi uvicorn pyyaml httpx &&
+             python /app/autogpt_local.py"
+    ports:
+      - "11402:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+    volumes:
+      - ./wrappers/autogpt_local.py:/app/autogpt_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+      - ./workspaces/autogpt:/workspace:rw
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+
+  # LocalAGI - Autonomous AI Orchestration
+  localagi:
+    container_name: sutazai-localagi
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir fastapi uvicorn requests httpx &&
+             python /app/localagi_local.py"
+    ports:
+      - "11406:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+      - PYTHONDONTWRITEBYTECODE=1
+      - MAX_WORKERS=1
+    volumes:
+      - ./wrappers/localagi_local.py:/app/localagi_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 768m
+    mem_reservation: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 90s
+
+  # Agent Zero - Autonomous Agent Framework
+  agentzero:
+    container_name: sutazai-agentzero
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir fastapi uvicorn litellm httpx &&
+             python /app/agentzero_local.py"
+    ports:
+      - "11408:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - LLM_MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+    volumes:
+      - ./wrappers/agentzero_local.py:/app/agentzero_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # BigAGI - Chat Interface
+  bigagi:
+    container_name: sutazai-bigagi
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir fastapi uvicorn websockets httpx &&
+             python /app/bigagi_local.py"
+    ports:
+      - "11407:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+    volumes:
+      - ./wrappers/bigagi_local.py:/app/bigagi_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # Semgrep - Code Security Analysis
+  semgrep:
+    container_name: sutazai-semgrep
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir semgrep fastapi uvicorn httpx &&
+             python /app/semgrep_local.py"
+    ports:
+      - "11801:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+      - MODEL=tinyllama
+    volumes:
+      - ./wrappers/semgrep_local.py:/app/semgrep_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+      - ./workspaces/semgrep:/workspace:rw
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # AutoGen - Agent Configuration
+  autogen:
+    container_name: sutazai-autogen
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir pyautogen fastapi uvicorn httpx &&
+             python /app/autogen_local.py"
+    ports:
+      - "11415:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+    volumes:
+      - ./wrappers/autogen_local.py:/app/autogen_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # Browser Use - Web Automation
+  browseruse:
+    container_name: sutazai-browseruse
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl chromium-driver &&
+             pip install --no-cache-dir playwright fastapi uvicorn httpx &&
+             python /app/browseruse_local.py"
+    ports:
+      - "11703:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+    volumes:
+      - ./wrappers/browseruse_local.py:/app/browseruse_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+  # Skyvern - Browser Automation
+  skyvern:
+    container_name: sutazai-skyvern
+    image: python:3.11-slim
+    working_dir: /app
+    command: |
+      sh -c "apt-get update && apt-get install -y curl &&
+             pip install --no-cache-dir selenium fastapi uvicorn httpx &&
+             python /app/skyvern_local.py"
+    ports:
+      - "11409:8000"
+    networks:
+      - sutazai-network
+    environment:
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - MODEL=tinyllama
+      - PYTHONUNBUFFERED=1
+      - MCP_BRIDGE_URL=http://sutazai-mcp-bridge:11100
+    volumes:
+      - ./wrappers/skyvern_local.py:/app/skyvern_local.py:ro
+      - ./wrappers/base_agent_wrapper.py:/app/base_agent_wrapper.py:ro
+    mem_limit: 384m
+    cpus: 0.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+# Agent Dependencies
+# Note: These agents depend on the following services being available:
+# 1. Ollama at ollama:11434 (provided by docker-compose-network-fix.yml)
+# 2. MCP Bridge at sutazai-mcp-bridge:11100
+# 3. RabbitMQ at sutazai-rabbitmq:5672
+# 4. Redis at sutazai-redis:6379
+# 5. Consul at sutazai-consul:8500
+
+# Phase 2 Resource Summary:
+# - AutoGPT: 512MB RAM, 0.5 CPU
+# - LocalAGI: 384MB RAM, 0.4 CPU
+# - AgentZero: 384MB RAM, 0.4 CPU
+# - BigAGI: 384MB RAM, 0.4 CPU
+# - Semgrep: 512MB RAM, 0.5 CPU
+# - AutoGen: 384MB RAM, 0.4 CPU
+# - Browser Use: 512MB RAM, 0.5 CPU
+# - Skyvern: 384MB RAM, 0.4 CPU
+# Total: ~3.3GB RAM, 3.6 CPUs

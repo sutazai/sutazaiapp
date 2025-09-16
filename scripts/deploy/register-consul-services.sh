@@ -1,0 +1,1 @@
+deploy/infrastructure/register-consul-services.sh

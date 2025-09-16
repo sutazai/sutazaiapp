@@ -1,0 +1,1 @@
+deploy/infrastructure/start-infrastructure.sh

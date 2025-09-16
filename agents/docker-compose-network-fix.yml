@@ -1,0 +1,100 @@
+# SutazAI Platform - Network Configuration Fix
+# This compose file fixes agent-to-Ollama connectivity issues
+
+version: '3.8'
+
+networks:
+  sutazai-network:
+    name: sutazaiapp_sutazai-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    driver_opts:
+      com.docker.network.bridge.name: sutazai-br
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+      com.docker.network.bridge.host_binding_ipv4: "0.0.0.0"
+      com.docker.network.driver.mtu: "1500"
+
+services:
+  # Ollama Service - Make it accessible to agents
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sutazai-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.100
+        aliases:
+          - ollama
+          - ollama.sutazai
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=5m
+      - OLLAMA_NUM_PARALLEL=2
+      - OLLAMA_MAX_LOADED_MODELS=2
+      - OLLAMA_FLASH_ATTENTION=1
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # MCP Bridge with proper network configuration
+  mcp-bridge:
+    image: python:3.11-slim
+    container_name: sutazai-mcp-bridge
+    restart: unless-stopped
+    working_dir: /app
+    command: |
+      sh -c "pip install --no-cache-dir fastapi uvicorn aio_pika redis httpx websockets python-consul &&
+             python /app/mcp_bridge_server.py"
+    ports:
+      - "11100:11100"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.101
+        aliases:
+          - mcp-bridge
+          - sutazai-mcp-bridge
+    environment:
+      # Use Docker service names for internal communication
+      - RABBITMQ_HOST=sutazai-rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=sutazai
+      - RABBITMQ_PASSWORD=sutazai_secure_2024
+      - REDIS_HOST=sutazai-redis
+      - REDIS_PORT=6379
+      - CONSUL_HOST=sutazai-consul
+      - CONSUL_PORT=8500
+      - POSTGRES_HOST=sutazai-postgres
+      - POSTGRES_PORT=5432
+      - NEO4J_HOST=sutazai-neo4j
+      - NEO4J_BOLT_PORT=7687
+      - OLLAMA_HOST=ollama
+      - OLLAMA_PORT=11434
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ../mcp-bridge/services/mcp_bridge_server.py:/app/mcp_bridge_server.py:ro
+    depends_on:
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  ollama_data:
+    driver: local

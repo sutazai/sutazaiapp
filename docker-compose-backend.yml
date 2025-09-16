@@ -1,0 +1,93 @@
+version: '3.8'
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: sutazai/backend:latest
+    container_name: sutazai-backend
+    restart: unless-stopped
+    ports:
+      - "10200:8000"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.40
+    environment:
+      # Application
+      APP_NAME: "SutazAI Platform API"
+      DEBUG: "false"
+      
+      # PostgreSQL
+      POSTGRES_HOST: sutazai-postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: jarvis
+      POSTGRES_PASSWORD: sutazai_secure_2024
+      POSTGRES_DB: jarvis_ai
+      
+      # Redis
+      REDIS_HOST: sutazai-redis
+      REDIS_PORT: 6379
+      
+      # RabbitMQ
+      RABBITMQ_HOST: sutazai-rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: sutazai
+      RABBITMQ_PASSWORD: sutazai_secure_2024
+      
+      # Neo4j
+      NEO4J_HOST: sutazai-neo4j
+      NEO4J_BOLT_PORT: 7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: sutazai_secure_2024
+      
+      # Vector Databases
+      CHROMADB_HOST: sutazai-chromadb
+      CHROMADB_PORT: 8000
+      CHROMADB_TOKEN: sutazai-secure-token-2024
+      
+      QDRANT_HOST: sutazai-qdrant
+      QDRANT_HTTP_PORT: 6334
+      
+      FAISS_HOST: sutazai-faiss
+      FAISS_PORT: 8000
+      
+      # Service Mesh
+      CONSUL_HOST: sutazai-consul
+      CONSUL_PORT: 8500
+      
+      KONG_HOST: sutazai-kong
+      KONG_ADMIN_PORT: 8001
+      
+      # Ollama (host machine)
+      OLLAMA_HOST: sutazai-ollama
+      OLLAMA_PORT: 11434
+      
+    # External dependencies managed by other compose files
+    # depends_on removed since services are in different compose files
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    volumes:
+      - ./backend/app:/app/app
+    
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'

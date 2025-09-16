@@ -1,0 +1,1 @@
+../../utils/integration/mcp/github-project-manager.sh

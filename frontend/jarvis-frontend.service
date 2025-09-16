@@ -1,0 +1,23 @@
+[Unit]
+Description=JARVIS Frontend Streamlit Application
+After=network.target
+Wants=sutazai-backend.service
+
+[Service]
+Type=simple
+User=root
+Group=opt-admins
+WorkingDirectory=/opt/sutazaiapp/frontend
+Environment="PATH=/opt/sutazaiapp/frontend/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="BACKEND_URL=http://localhost:10200"
+Environment="STREAMLIT_SERVER_PORT=11000"
+Environment="STREAMLIT_SERVER_ADDRESS=0.0.0.0"
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/opt/sutazaiapp/frontend/venv/bin/streamlit run app.py --server.port 11000 --server.address 0.0.0.0 --server.headless true
+Restart=always
+RestartSec=10
+StandardOutput=append:/opt/sutazaiapp/logs/jarvis-frontend.log
+StandardError=append:/opt/sutazaiapp/logs/jarvis-frontend-error.log
+
+[Install]
+WantedBy=multi-user.target

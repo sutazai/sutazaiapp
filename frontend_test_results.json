@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-08-29T19:08:14.104829",
+  "tests_passed": 3,
+  "tests_failed": 2,
+  "tests": [
+    {
+      "name": "Homepage Load Test",
+      "status": "passed",
+      "details": "Page loaded, title: Streamlit"
+    },
+    {
+      "name": "Chat Interface Test",
+      "status": "failed",
+      "error": "Chat input not found"
+    },
+    {
+      "name": "Sidebar Test",
+      "status": "passed",
+      "details": "Sidebar found with content length: 191"
+    },
+    {
+      "name": "API Connection Test",
+      "status": "warning",
+      "details": "No API calls detected (might be normal for initial load)"
+    },
+    {
+      "name": "Responsive Design Test",
+      "status": "failed",
+      "error": "Page.set_viewport_size() got an unexpected keyword argument 'width'"
+    },
+    {
+      "name": "Accessibility Test",
+      "status": "passed",
+      "details": "Basic accessibility checks passed"
+    }
+  ]
+}
