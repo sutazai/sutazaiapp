@@ -1,0 +1,768 @@
+# SutazaiApp Complete Portainer Stack
+# Version: 1.0.0
+# Created: 2025-11-13 21:30:00 UTC
+# Purpose: Unified Docker Compose stack for complete SutazaiApp deployment via Portainer
+# 
+# This stack consolidates all services from:
+# - docker-compose-core.yml (infrastructure)
+# - docker-compose-backend.yml (API backend)
+# - docker-compose-frontend.yml (Jarvis UI)
+# - docker-compose-vectors.yml (vector databases)
+# - docker-compose-jarvis.yml (Jarvis services)
+# - Adds Portainer management interface
+
+version: '3.8'
+
+################################################################################
+# NETWORKS
+################################################################################
+networks:
+  sutazai-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    labels:
+      com.sutazai.network: "main"
+      com.sutazai.description: "Primary network for all SutazaiApp services"
+
+################################################################################
+# VOLUMES
+################################################################################
+volumes:
+  # Core Infrastructure
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  neo4j_data:
+    driver: local
+  neo4j_logs:
+    driver: local
+  neo4j_plugins:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  consul_data:
+    driver: local
+  
+  # Vector Databases
+  chroma_data:
+    driver: local
+  qdrant_data:
+    driver: local
+  faiss_data:
+    driver: local
+  
+  # Frontend
+  jarvis_data:
+    driver: local
+  jarvis_logs:
+    driver: local
+  
+  # AI Services
+  ollama_data:
+    driver: local
+  huggingface_cache:
+    driver: local
+  
+  # Monitoring
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  
+  # Portainer
+  portainer_data:
+    driver: local
+
+################################################################################
+# SERVICES
+################################################################################
+services:
+
+  ############################################################################
+  # PORTAINER - CONTAINER MANAGEMENT
+  ############################################################################
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: sutazai-portainer
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9443:9443"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.50
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    environment:
+      - PORTAINER_LOG_LEVEL=INFO
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9000/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+    labels:
+      - "com.sutazai.service=management"
+      - "com.sutazai.component=portainer"
+      - "com.sutazai.description=Container management and monitoring"
+
+  ############################################################################
+  # CORE INFRASTRUCTURE - Phase 1
+  ############################################################################
+  
+  postgres:
+    image: postgres:16-alpine
+    container_name: sutazai-postgres
+    restart: unless-stopped
+    ports:
+      - "10000:5432"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.10
+    environment:
+      POSTGRES_DB: jarvis_ai
+      POSTGRES_USER: jarvis
+      POSTGRES_PASSWORD: sutazai_secure_2024
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts/postgres:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jarvis -d jarvis_ai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+    labels:
+      - "com.sutazai.service=database"
+      - "com.sutazai.component=postgresql"
+
+  redis:
+    image: redis:7-alpine
+    container_name: sutazai-redis
+    restart: unless-stopped
+    ports:
+      - "10001:6379"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.11
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --save 60 1
+      --appendonly yes
+      --protected-mode no
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+    labels:
+      - "com.sutazai.service=cache"
+      - "com.sutazai.component=redis"
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: sutazai-neo4j
+    restart: unless-stopped
+    ports:
+      - "10002:7474"  # HTTP
+      - "10003:7687"  # Bolt
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.12
+    environment:
+      NEO4J_AUTH: neo4j/sutazai_secure_2024
+      NEO4J_server_memory_heap_initial__size: 512M
+      NEO4J_server_memory_heap_max__size: 512M
+      NEO4J_server_memory_pagecache_size: 256M
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_apoc_export_file_enabled: "true"
+      NEO4J_apoc_import_file_enabled: "true"
+      NEO4J_apoc_import_file_use__neo4j__config: "true"
+      NEO4J_dbms_security_procedures_unrestricted: "apoc.*"
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_plugins:/plugins
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:7474"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 768M
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      - "com.sutazai.service=database"
+      - "com.sutazai.component=neo4j"
+      - "com.sutazai.type=graph"
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: sutazai-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "10004:5672"   # AMQP
+      - "10005:15672"  # Management UI
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.13
+    environment:
+      RABBITMQ_DEFAULT_USER: sutazai
+      RABBITMQ_DEFAULT_PASS: sutazai_secure_2024
+      RABBITMQ_DEFAULT_VHOST: /
+      RABBITMQ_ERLANG_COOKIE: sutazai_cluster_cookie
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbit log_levels [{connection,error},{default,error}]"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+        reservations:
+          memory: 384M
+    labels:
+      - "com.sutazai.service=messaging"
+      - "com.sutazai.component=rabbitmq"
+
+  consul:
+    image: hashicorp/consul:1.19
+    container_name: sutazai-consul
+    restart: unless-stopped
+    ports:
+      - "10006:8500"  # UI/API
+      - "10007:8600"  # DNS
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.14
+    command: >
+      consul agent
+      -server
+      -bootstrap-expect=1
+      -ui
+      -client=0.0.0.0
+      -bind=0.0.0.0
+      -data-dir=/consul/data
+      -config-dir=/consul/config
+      -encrypt=XImL7pLGKruSCKO/VCZ1BwNGJl2gDwPe0fVLdGzJfBQ=
+    volumes:
+      - consul_data:/consul/data
+    environment:
+      CONSUL_LOCAL_CONFIG: |
+        {
+          "datacenter": "sutazai-dc1",
+          "log_level": "INFO",
+          "server": true,
+          "ui_config": {
+            "enabled": true
+          },
+          "connect": {
+            "enabled": true
+          },
+          "performance": {
+            "raft_multiplier": 1
+          }
+        }
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: '0.75'
+        reservations:
+          memory: 256M
+    labels:
+      - "com.sutazai.service=discovery"
+      - "com.sutazai.component=consul"
+
+  ############################################################################
+  # API GATEWAY
+  ############################################################################
+  
+  kong-migration:
+    image: kong:3.9
+    container_name: sutazai-kong-migration
+    restart: on-failure
+    networks:
+      - sutazai-network
+    command: kong migrations bootstrap
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: sutazai-postgres
+      KONG_PG_PORT: 5432
+      KONG_PG_DATABASE: kong
+      KONG_PG_USER: jarvis
+      KONG_PG_PASSWORD: sutazai_secure_2024
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      - "com.sutazai.service=gateway"
+      - "com.sutazai.component=kong-migration"
+
+  kong:
+    image: kong:3.9
+    container_name: sutazai-kong
+    restart: unless-stopped
+    ports:
+      - "10008:8000"  # Proxy
+      - "10009:8001"  # Admin API
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.15
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: sutazai-postgres
+      KONG_PG_PORT: 5432
+      KONG_PG_DATABASE: kong
+      KONG_PG_USER: jarvis
+      KONG_PG_PASSWORD: sutazai_secure_2024
+      KONG_PROXY_LISTEN: "0.0.0.0:8000"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: '1.5'
+        reservations:
+          memory: 512M
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kong-migration:
+        condition: service_completed_successfully
+    labels:
+      - "com.sutazai.service=gateway"
+      - "com.sutazai.component=kong"
+
+  ############################################################################
+  # VECTOR DATABASES
+  ############################################################################
+  
+  chromadb:
+    image: chromadb/chroma:1.0.20
+    container_name: sutazai-chromadb
+    restart: unless-stopped
+    ports:
+      - "10100:8000"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.20
+    environment:
+      IS_PERSISTENT: "TRUE"
+      PERSIST_DIRECTORY: /chroma/chroma
+      ANONYMIZED_TELEMETRY: "FALSE"
+      ALLOW_RESET: "FALSE"
+      CHROMA_SERVER_AUTH_PROVIDER: "chromadb.auth.token.TokenAuthServerProvider"
+      CHROMA_SERVER_AUTH_CREDENTIALS: "sutazai-secure-token-2024"
+    volumes:
+      - chroma_data:/chroma/chroma
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+    labels:
+      - "com.sutazai.service=vector-db"
+      - "com.sutazai.component=chromadb"
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: sutazai-qdrant
+    restart: unless-stopped
+    ports:
+      - "10101:6333"  # gRPC API
+      - "10102:6334"  # REST API
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.21
+    environment:
+      QDRANT__LOG_LEVEL: INFO
+      QDRANT__SERVICE__GRPC_PORT: 6333
+      QDRANT__SERVICE__HTTP_PORT: 6334
+    volumes:
+      - qdrant_data:/qdrant/storage
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+    labels:
+      - "com.sutazai.service=vector-db"
+      - "com.sutazai.component=qdrant"
+
+  faiss:
+    build:
+      context: ./services/faiss
+      dockerfile: Dockerfile
+    image: sutazai/faiss-service:latest
+    container_name: sutazai-faiss
+    restart: unless-stopped
+    ports:
+      - "10103:8000"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.22
+    environment:
+      FAISS_INDEX_PATH: /app/indices
+      MAX_VECTORS: 1000000
+      DIMENSION: 768
+      LOG_LEVEL: INFO
+    volumes:
+      - faiss_data:/app/indices
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+    labels:
+      - "com.sutazai.service=vector-db"
+      - "com.sutazai.component=faiss"
+
+  ############################################################################
+  # AI SERVICES
+  ############################################################################
+  
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sutazai-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.23
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_MODELS=/root/.ollama/models
+      - OLLAMA_HOST=0.0.0.0
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '4.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/api/tags || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "com.sutazai.service=ai"
+      - "com.sutazai.component=ollama"
+      - "com.sutazai.description=Local LLM inference server"
+
+  ############################################################################
+  # BACKEND API
+  ############################################################################
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: sutazai/backend:latest
+    container_name: sutazai-backend
+    restart: unless-stopped
+    ports:
+      - "10200:8000"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.30
+    environment:
+      # Application
+      APP_NAME: "SutazAI Platform API"
+      DEBUG: "false"
+      
+      # PostgreSQL
+      POSTGRES_HOST: sutazai-postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: jarvis
+      POSTGRES_PASSWORD: sutazai_secure_2024
+      POSTGRES_DB: jarvis_ai
+      
+      # Redis
+      REDIS_HOST: sutazai-redis
+      REDIS_PORT: 6379
+      
+      # RabbitMQ
+      RABBITMQ_HOST: sutazai-rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: sutazai
+      RABBITMQ_PASSWORD: sutazai_secure_2024
+      
+      # Neo4j
+      NEO4J_HOST: sutazai-neo4j
+      NEO4J_BOLT_PORT: 7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: sutazai_secure_2024
+      
+      # Vector Databases
+      CHROMADB_HOST: sutazai-chromadb
+      CHROMADB_PORT: 8000
+      CHROMADB_TOKEN: sutazai-secure-token-2024
+      
+      QDRANT_HOST: sutazai-qdrant
+      QDRANT_HTTP_PORT: 6334
+      
+      FAISS_HOST: sutazai-faiss
+      FAISS_PORT: 8000
+      
+      # Service Mesh
+      CONSUL_HOST: sutazai-consul
+      CONSUL_PORT: 8500
+      
+      KONG_HOST: sutazai-kong
+      KONG_ADMIN_PORT: 8001
+      
+      # Ollama
+      OLLAMA_HOST: sutazai-ollama
+      OLLAMA_PORT: 11434
+      
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    volumes:
+      - ./backend/app:/app/app
+    
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      kong:
+        condition: service_healthy
+      chromadb:
+        condition: service_started
+      qdrant:
+        condition: service_started
+      ollama:
+        condition: service_healthy
+    
+    labels:
+      - "com.sutazai.service=backend"
+      - "com.sutazai.component=api"
+      - "com.sutazai.version=1.0.0"
+
+  ############################################################################
+  # FRONTEND - JARVIS UI
+  ############################################################################
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: sutazai/frontend:latest
+    container_name: sutazai-frontend
+    hostname: sutazai-frontend
+    restart: unless-stopped
+    ports:
+      - "11000:11000"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.31
+    environment:
+      # Backend connection
+      BACKEND_URL: http://sutazai-backend:8000
+      
+      # Streamlit settings
+      STREAMLIT_SERVER_PORT: 11000
+      STREAMLIT_SERVER_ADDRESS: 0.0.0.0
+      STREAMLIT_THEME_BASE: dark
+      STREAMLIT_THEME_PRIMARY_COLOR: "#00D4FF"
+      
+      # Voice settings
+      WAKE_WORD: jarvis
+      SPEECH_RECOGNITION_ENGINE: google
+      TTS_ENGINE: pyttsx3
+      VOICE_LANGUAGE: en-US
+      
+      # Features
+      ENABLE_VOICE_COMMANDS: "true"
+      ENABLE_TYPING_ANIMATION: "true"
+      SHOW_SYSTEM_METRICS: "true"
+      
+      # Logging
+      PYTHONUNBUFFERED: 1
+      LOG_LEVEL: INFO
+    
+    volumes:
+      - ./frontend:/app
+      - jarvis_data:/app/data
+      - jarvis_logs:/app/logs
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11000/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    
+    depends_on:
+      backend:
+        condition: service_healthy
+    
+    labels:
+      - "com.sutazai.service=frontend"
+      - "com.sutazai.component=jarvis"
+      - "com.sutazai.version=1.0.0"
+
+  ############################################################################
+  # MONITORING
+  ############################################################################
+  
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: sutazai-prometheus
+    restart: unless-stopped
+    ports:
+      - "10200:9090"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.40
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+    labels:
+      - "com.sutazai.service=monitoring"
+      - "com.sutazai.component=prometheus"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: sutazai-grafana
+    restart: unless-stopped
+    ports:
+      - "10201:3000"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.41
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=sutazai_secure_2024
+      - GF_INSTALL_PLUGINS=redis-datasource
+      - GF_SERVER_ROOT_URL=http://localhost:10201
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+    depends_on:
+      - prometheus
+    labels:
+      - "com.sutazai.service=monitoring"
+      - "com.sutazai.component=grafana"
