@@ -1,9 +1,27 @@
 import { test, expect } from '@playwright/test';
 
+// Helper function to wait for Streamlit app to be fully loaded
+async function waitForStreamlitReady(page) {
+  await page.waitForSelector('[data-testid="stApp"]', { timeout: 15000 }).catch(() => {
+    return page.waitForSelector('.main', { timeout: 15000 });
+  });
+  
+  await page.waitForFunction(() => {
+    const spinners = document.querySelectorAll('[data-testid="stSpinner"]');
+    return spinners.length === 0;
+  }, { timeout: 10000 }).catch(() => {});
+  
+  await page.waitForTimeout(2000);
+}
+
 test.describe('JARVIS Backend Integration', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.waitForTimeout(3000);
+    // Set longer navigation timeout for slow loads
+    page.setDefaultNavigationTimeout(30000);
+    page.setDefaultTimeout(15000);
+    
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await waitForStreamlitReady(page);
   });
 
   test('should connect to backend API', async ({ page }) => {

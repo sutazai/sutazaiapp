@@ -17,6 +17,30 @@ import threading
 import plotly.graph_objects as go
 import numpy as np
 
+# Try to import webrtc if available
+try:
+    from streamlit_webrtc import webrtc_streamer, WebRtcMode, AudioProcessorBase
+    WEBRTC_AVAILABLE = True
+    
+    # Define AudioProcessor class if webrtc is available
+    class AudioProcessor(AudioProcessorBase):
+        def __init__(self):
+            self.audio_buffer = []
+        
+        def recv(self, frame):
+            # Store audio frames
+            self.audio_buffer.append(frame.to_ndarray())
+            return frame
+        
+        def get_audio_bytes(self):
+            if self.audio_buffer:
+                import numpy as np
+                audio_data = np.concatenate(self.audio_buffer)
+                return audio_data.tobytes()
+            return None
+except ImportError:
+    WEBRTC_AVAILABLE = False
+
 # Custom imports
 from config.settings import settings
 from components.chat_interface import ChatInterface

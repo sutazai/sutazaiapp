@@ -9,23 +9,33 @@
 - **10001**: Redis (Cache & Message Broker)
 - **10002**: Neo4j HTTP
 - **10003**: Neo4j Bolt
-- **10005**: Kong API Gateway (Proxy)
-- **10006**: Consul (Service Discovery)
-- **10007**: RabbitMQ AMQP
-- **10008**: RabbitMQ Management UI
-- **10010**: Backend API (FastAPI)
-- **10011**: Frontend (Streamlit/Jarvis UI)
-- **10015**: Kong Admin API
+- **10006**: Consul (Service Discovery HTTP)
+- **10007**: Consul DNS
+- **10008**: Kong Proxy
+- **10009**: Kong Admin API
+- **10004**: RabbitMQ AMQP
+- **10005**: RabbitMQ Management UI
 
 ## AI & Vector Services (10100-10199)
 - **10100**: ChromaDB (Vector Database)
 - **10101**: Qdrant HTTP
 - **10102**: Qdrant gRPC
-- **10103**: FAISS Service (when activated)
-- **10104**: Ollama (Model Server) - CRITICAL PORT
-- **10105-10199**: Reserved for additional AI services
+- **10103**: FAISS Service
+- **10104-10199**: Reserved for additional AI services
 
-## Monitoring Stack (10200-10299)
+## Application Services (10200-10299)
+- **10200**: Backend API (FastAPI) - Main REST/WebSocket API
+- **10201-10299**: Reserved for application layer
+
+## Frontend Services (11000-11099)
+- **11000**: Frontend UI (Streamlit/JARVIS)
+- **11001-11099**: Reserved for UI components
+
+## LLM Services (11400-11499)
+- **11434**: Ollama (Local LLM Server) - CRITICAL PORT
+- **11435-11499**: Reserved for additional LLM services
+
+## Monitoring Stack (10200-10299) [DEPRECATED - See Application Services]
 - **10200**: Prometheus
 - **10201**: Grafana
 - **10203**: AlertManager
@@ -95,8 +105,10 @@
 - 172.20.0.20: ChromaDB
 - 172.20.0.21: Qdrant
 - 172.20.0.22: Ollama
-- 172.20.0.30: Backend API
-- 172.20.0.31: Frontend
+- 172.20.0.30: [Reserved - was causing conflict]
+- 172.20.0.31: Frontend (Streamlit)
+- 172.20.0.35: Kong Gateway
+- 172.20.0.40: Backend API
 - 172.20.0.40: Prometheus
 - 172.20.0.41: Grafana
 - 172.20.0.100+: Agent Services

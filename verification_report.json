@@ -1,199 +1,51 @@
 {
-  "timestamp": "2025-08-29T19:10:21.394973",
-  "overall_status": "degraded",
+  "timestamp": "2025-11-12T15:54:35.431406",
+  "overall_status": "critical",
   "components": {
-    "docker": {
-      "sutazai-backend": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-ollama": {
-        "state": "running",
-        "status": "Up 5 hours (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-gpt-engineer": {
-        "state": "running",
-        "status": "Up 7 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-finrobot": {
-        "state": "running",
-        "status": "Up 7 minutes (unhealthy)",
-        "health": "healthy"
-      },
-      "sutazai-documind": {
-        "state": "running",
-        "status": "Up 7 minutes (unhealthy)",
-        "health": "healthy"
-      },
-      "sutazai-localagi": {
-        "state": "running",
-        "status": "Up 7 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-semgrep": {
-        "state": "running",
-        "status": "Up 15 minutes (unhealthy)",
-        "health": "healthy"
-      },
-      "sutazai-agentzero": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-bigagi": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-autogen": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-browseruse": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-skyvern": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-autogpt": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-aider": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-shellgpt": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-letta": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-langchain": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-crewai": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-mcp-bridge": {
-        "state": "running",
-        "status": "Up 9 hours (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-chromadb": {
-        "state": "running",
-        "status": "Up 24 hours",
-        "health": "healthy"
-      },
-      "sutazai-qdrant": {
-        "state": "running",
-        "status": "Up 24 hours",
-        "health": "healthy"
-      },
-      "sutazai-faiss": {
-        "state": "running",
-        "status": "Up 15 minutes (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-neo4j": {
-        "state": "running",
-        "status": "Up 24 hours (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-consul": {
-        "state": "running",
-        "status": "Up 24 hours (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-rabbitmq": {
-        "state": "running",
-        "status": "Up 21 hours (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-postgres": {
-        "state": "running",
-        "status": "Up 24 hours (healthy)",
-        "health": "healthy"
-      },
-      "sutazai-redis": {
-        "state": "running",
-        "status": "Up 24 hours (healthy)",
-        "health": "healthy"
-      }
-    },
+    "docker": {},
     "postgresql": {
-      "status": "healthy",
-      "version": "PostgreSQL 16.10 on x86_64-pc-linux-musl, compiled by gcc (Alpine 14.2.0) 14.2.0, 64-bit",
-      "tables": 1,
-      "users": 6
+      "status": "unhealthy",
+      "error": "connection to server at \"localhost\" (127.0.0.1), port 10000 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n"
     },
     "redis": {
-      "status": "healthy",
-      "memory": "1.07M",
-      "clients": 3
+      "status": "unhealthy",
+      "error": "Error 111 connecting to localhost:10001. Connection refused."
     },
     "neo4j": {
-      "status": "healthy",
-      "nodes": 0
+      "status": "unhealthy",
+      "error": "Couldn't connect to localhost:10003 (resolved to ('127.0.0.1:10003',)):\nFailed to establish connection to ResolvedIPv4Address(('127.0.0.1', 10003)) (reason [Errno 111] Connection refused)"
     },
     "rabbitmq": {
-      "status": "healthy",
-      "messages": 0
+      "status": "unhealthy",
+      "error": ""
     },
     "backend": {
-      "status": "healthy",
-      "health": {
-        "status": "healthy",
-        "app": "SutazAI Platform API"
-      },
-      "docs": true,
-      "auth": true
+      "status": "unhealthy",
+      "error": "All connection attempts failed"
     },
     "frontend": {
-      "status": "healthy",
-      "accessible": true
+      "status": "unhealthy",
+      "error": "All connection attempts failed"
     },
     "mcp_bridge": {
-      "status": "healthy",
-      "health": {
-        "status": "healthy",
-        "service": "mcp-bridge",
-        "version": "1.0.0",
-        "timestamp": "2025-08-29T17:10:21.601386"
-      },
-      "agents_online": 4,
-      "agents_total": 5
+      "status": "unhealthy",
+      "error": "All connection attempts failed"
     },
     "chromadb": {
       "status": "unhealthy",
-      "error": "Status code: 410"
+      "error": "All connection attempts failed"
     },
     "qdrant": {
       "status": "unhealthy",
-      "error": "illegal request line"
+      "error": "All connection attempts failed"
     },
     "faiss": {
-      "status": "healthy"
+      "status": "unhealthy",
+      "error": "All connection attempts failed"
     }
   },
-  "errors": [],
+  "errors": [
+    "Docker check failed: [Errno 2] No such file or directory: 'docker'"
+  ],
   "warnings": []
 }
