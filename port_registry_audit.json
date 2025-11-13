@@ -1,0 +1,409 @@
+{
+  "timestamp": "2025-11-13T22:26:38.692366+00:00",
+  "total_ports": 26,
+  "total_conflicts": 0,
+  "total_discrepancies": 57,
+  "docker_compose_files_scanned": 9,
+  "port_mappings": {
+    "8888": {
+      "service": "jarvis-core",
+      "container": "jarvis-core",
+      "internal_port": "8888",
+      "file": "docker-compose-jarvis.yml"
+    },
+    "8889": {
+      "service": "jarvis-core",
+      "container": "jarvis-core",
+      "internal_port": "8889",
+      "file": "docker-compose-jarvis.yml"
+    },
+    "11434": {
+      "service": "ollama",
+      "container": "jarvis-ollama",
+      "internal_port": "11434",
+      "file": "docker-compose-jarvis.yml"
+    },
+    "8890": {
+      "service": "jarvis-voice",
+      "container": "jarvis-voice",
+      "internal_port": "8890",
+      "file": "docker-compose-jarvis.yml"
+    },
+    "8891": {
+      "service": "jarvis-huggingface",
+      "container": "jarvis-huggingface",
+      "internal_port": "8891",
+      "file": "docker-compose-jarvis.yml"
+    },
+    "80": {
+      "service": "jarvis-nginx",
+      "container": "jarvis-nginx",
+      "internal_port": "80",
+      "file": "docker-compose-jarvis.yml"
+    },
+    "443": {
+      "service": "jarvis-nginx",
+      "container": "jarvis-nginx",
+      "internal_port": "443",
+      "file": "docker-compose-jarvis.yml"
+    },
+    "9090": {
+      "service": "jarvis-prometheus",
+      "container": "jarvis-prometheus",
+      "internal_port": "9090",
+      "file": "docker-compose-jarvis.yml"
+    },
+    "3000": {
+      "service": "jarvis-grafana",
+      "container": "jarvis-grafana",
+      "internal_port": "3000",
+      "file": "docker-compose-jarvis.yml"
+    },
+    "10000": {
+      "service": "postgres",
+      "container": "sutazai-postgres",
+      "internal_port": "5432",
+      "file": "docker-compose-core.yml"
+    },
+    "10001": {
+      "service": "redis",
+      "container": "sutazai-redis",
+      "internal_port": "6379",
+      "file": "docker-compose-core.yml"
+    },
+    "10002": {
+      "service": "neo4j",
+      "container": "sutazai-neo4j",
+      "internal_port": "7474",
+      "file": "docker-compose-core.yml"
+    },
+    "10003": {
+      "service": "neo4j",
+      "container": "sutazai-neo4j",
+      "internal_port": "7687",
+      "file": "docker-compose-core.yml"
+    },
+    "10004": {
+      "service": "rabbitmq",
+      "container": "sutazai-rabbitmq",
+      "internal_port": "5672",
+      "file": "docker-compose-core.yml"
+    },
+    "10005": {
+      "service": "rabbitmq",
+      "container": "sutazai-rabbitmq",
+      "internal_port": "15672",
+      "file": "docker-compose-core.yml"
+    },
+    "10006": {
+      "service": "consul",
+      "container": "sutazai-consul",
+      "internal_port": "8500",
+      "file": "docker-compose-core.yml"
+    },
+    "10007": {
+      "service": "consul",
+      "container": "sutazai-consul",
+      "internal_port": "8600",
+      "file": "docker-compose-core.yml"
+    },
+    "10008": {
+      "service": "kong",
+      "container": "sutazai-kong",
+      "internal_port": "8000",
+      "file": "docker-compose-core.yml"
+    },
+    "10009": {
+      "service": "kong",
+      "container": "sutazai-kong",
+      "internal_port": "8001",
+      "file": "docker-compose-core.yml"
+    },
+    "11000": {
+      "service": "jarvis-frontend",
+      "container": "sutazai-jarvis-frontend",
+      "internal_port": "11000",
+      "file": "docker-compose-frontend.yml"
+    },
+    "10100": {
+      "service": "chromadb",
+      "container": "sutazai-chromadb",
+      "internal_port": "8000",
+      "file": "docker-compose-vectors.yml"
+    },
+    "10101": {
+      "service": "qdrant",
+      "container": "sutazai-qdrant",
+      "internal_port": "6333",
+      "file": "docker-compose-vectors.yml"
+    },
+    "10102": {
+      "service": "qdrant",
+      "container": "sutazai-qdrant",
+      "internal_port": "6334",
+      "file": "docker-compose-vectors.yml"
+    },
+    "10103": {
+      "service": "faiss",
+      "container": "sutazai-faiss",
+      "internal_port": "8000",
+      "file": "docker-compose-vectors.yml"
+    },
+    "11435": {
+      "service": "ollama",
+      "container": "sutazai-ollama",
+      "internal_port": "11434",
+      "file": "docker-compose-ollama-fix.yml"
+    },
+    "10200": {
+      "service": "backend",
+      "container": "sutazai-backend",
+      "internal_port": "8000",
+      "file": "docker-compose-backend.yml"
+    }
+  },
+  "conflicts": [],
+  "discrepancies": [
+    {
+      "type": "in_registry_not_actual",
+      "port": "11305"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11101"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11103"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11304"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "9000"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11312"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "12375"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11300"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11309"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11321"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11318"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11324"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11315"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11306"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11316"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10201"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10204"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10203"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11100"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11319"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11322"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10211"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10015"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11314"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11102"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11303"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11311"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10205"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "9443"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10210"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10104"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11104"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11310"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11301"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11317"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11320"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10011"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11307"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11308"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11105"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "10010"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11302"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11323"
+    },
+    {
+      "type": "in_registry_not_actual",
+      "port": "11313"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "11435",
+      "service": "ollama"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "3000",
+      "service": "jarvis-grafana"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "11000",
+      "service": "jarvis-frontend"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "9090",
+      "service": "jarvis-prometheus"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "8888",
+      "service": "jarvis-core"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "10009",
+      "service": "kong"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "8889",
+      "service": "jarvis-core"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "8891",
+      "service": "jarvis-huggingface"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "80",
+      "service": "jarvis-nginx"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "8890",
+      "service": "jarvis-voice"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "11434",
+      "service": "ollama"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "10004",
+      "service": "rabbitmq"
+    },
+    {
+      "type": "in_actual_not_registry",
+      "port": "443",
+      "service": "jarvis-nginx"
+    }
+  ]
+}
