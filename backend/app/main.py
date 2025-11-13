@@ -11,6 +11,7 @@ import sys
 import json
 import uuid
 import httpx
+import asyncio
 from datetime import datetime
 from typing import Dict, List, Any
 from app.core.config import settings
@@ -41,8 +42,11 @@ async def lifespan(app: FastAPI):
     
     try:
         # Initialize database
-        await init_db()
-        logger.info("Database initialized")
+        try:
+            await init_db()
+            logger.info("Database initialized")
+        except Exception as e:
+            logger.warning(f"Database init failed or skipped: {e}")
         
         # Connect to all services
         await service_connections.connect_all()
@@ -57,7 +61,10 @@ async def lifespan(app: FastAPI):
         # Cleanup on shutdown
         logger.info("Shutting down application")
         await service_connections.disconnect_all()
-        await close_db()
+        try:
+            await close_db()
+        except Exception as e:
+            logger.warning(f"Database close failed: {e}")
         await deregister_from_consul()
         logger.info("Cleanup completed")
 
@@ -200,9 +207,17 @@ async def websocket_chat(websocket: WebSocket):
             "message": "WebSocket chat connected successfully"
         })
         
+        RECEIVE_TIMEOUT = 20
         while True:
-            # Receive message from client
-            data = await websocket.receive_json()
+            # Receive message from client with timeout to avoid hangs
+            try:
+                data = await asyncio.wait_for(websocket.receive_json(), timeout=RECEIVE_TIMEOUT)
+            except asyncio.TimeoutError:
+                await ws_manager.send_message(websocket, {
+                    "type": "error",
+                    "message": "Timeout waiting for client message"
+                })
+                break
             
             # Handle different message types
             message_type = data.get("type", "chat")

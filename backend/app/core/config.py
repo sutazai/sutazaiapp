@@ -4,7 +4,7 @@ Centralized configuration management for all services
 Compliant with Professional Project Standards - No hardcoded credentials
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 import os
 from app.core.secrets_manager import get_secrets_manager
@@ -128,9 +128,11 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: list = ["*"]
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True,
+        extra="ignore"
+    )
 
 
 # Create global settings instance

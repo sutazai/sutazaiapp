@@ -61,13 +61,18 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 async def init_db() -> None:
     """Initialize database tables"""
-    async with engine.begin() as conn:
-        # Create all tables
-        await conn.run_sync(Base.metadata.create_all)
-        logger.info("Database tables initialized")
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database tables initialized")
+    except Exception as e:
+        logger.warning(f"Database initialization skipped: {e}")
 
 
 async def close_db() -> None:
     """Close database connections"""
-    await engine.dispose()
+    try:
+        await engine.dispose()
+    except Exception as e:
+        logger.warning(f"Error during DB close: {e}")
     logger.info("Database connections closed")

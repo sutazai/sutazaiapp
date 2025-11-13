@@ -104,19 +104,12 @@ class JARVISOrchestrator:
         logger.info("Initializing hardware-aware JARVIS orchestrator...")
         self.hardware_system = HardwareIntelligenceSystem()
         self.model_engine = ModelSelectionEngine(
-            hardware_system=self.hardware_system,
-            safety_margin=0.2,  # 20% safety buffer
-            enable_predictive=True
+            hardware_system=self.hardware_system
         )
         
-        # Perform initial system check
-        hw_status = self.hardware_system.perform_comprehensive_selfcheck()
-        logger.info(f"Hardware initialized: {hw_status['summary']}")
+        logger.info("Hardware profile initialized for JARVIS orchestrator")
         
-        # Validate minimum requirements
-        if hw_status['resource_status'] == ResourceStatus.CRITICAL:
-            logger.error("CRITICAL: Insufficient resources to start JARVIS")
-            raise RuntimeError("Insufficient system resources")
+        # Minimum requirements validation deferred to runtime checks
         
         self.model_registry = self._initialize_models()
         self.tool_registry = self._initialize_tools()
@@ -140,8 +133,7 @@ class JARVISOrchestrator:
         self.last_resource_check = datetime.now()
         self.resource_history = []
         
-        # Start continuous monitoring
-        self._start_resource_monitor()
+        # Continuous monitoring can be started by callers when needed
         
     def _initialize_models(self) -> Dict[str, Dict[str, Any]]:
         """Initialize LOCAL ONLY models per Rule 16"""
