@@ -1,0 +1,190 @@
+{
+  "timestamp": "2025-11-13T14:30:30.474912",
+  "core_infrastructure": {
+    "PostgreSQL": {
+      "port": 10000,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "Redis": {
+      "port": 10001,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "Neo4j HTTP": {
+      "port": 10002,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "Neo4j Bolt": {
+      "port": 10003,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "Kong Proxy": {
+      "port": 10008,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "Kong Admin": {
+      "port": 10009,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "RabbitMQ AMQP": {
+      "port": 10004,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "RabbitMQ Management": {
+      "port": 10005,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "Consul": {
+      "port": 10006,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "Backend API": {
+      "port": 10200,
+      "status": "offline",
+      "host": "localhost"
+    },
+    "Frontend": {
+      "port": 11000,
+      "status": "offline",
+      "host": "localhost"
+    }
+  },
+  "ai_services": {
+    "ChromaDB": {
+      "port": 10100,
+      "tcp_status": "offline",
+      "http_status": "Connection refused"
+    },
+    "Qdrant HTTP": {
+      "port": 10101,
+      "tcp_status": "offline",
+      "http_status": "Connection refused"
+    },
+    "Qdrant gRPC": {
+      "port": 10102,
+      "tcp_status": "offline",
+      "http_status": null
+    },
+    "FAISS": {
+      "port": 10103,
+      "tcp_status": "offline",
+      "http_status": "Connection refused"
+    },
+    "Ollama": {
+      "port": 11434,
+      "tcp_status": "offline",
+      "http_status": "Connection refused"
+    }
+  },
+  "agents": {
+    "Letta": {
+      "port": 11101,
+      "status": "offline"
+    },
+    "LangChain": {
+      "port": 11201,
+      "status": "offline"
+    },
+    "Aider": {
+      "port": 11301,
+      "status": "offline"
+    },
+    "GPT-Engineer": {
+      "port": 11302,
+      "status": "offline"
+    },
+    "CrewAI": {
+      "port": 11401,
+      "status": "offline"
+    },
+    "Documind": {
+      "port": 11502,
+      "status": "offline"
+    },
+    "FinRobot": {
+      "port": 11601,
+      "status": "offline"
+    },
+    "ShellGPT": {
+      "port": 11701,
+      "status": "offline"
+    }
+  },
+  "mcp_services": {
+    "MCP Bridge": {
+      "port": 11100,
+      "tcp_status": "offline",
+      "http_status": "Connection refused"
+    }
+  },
+  "monitoring": {
+    "Prometheus": {
+      "port": 10200,
+      "status": "offline"
+    },
+    "Grafana": {
+      "port": 10201,
+      "status": "offline"
+    },
+    "Loki": {
+      "port": 10202,
+      "status": "offline"
+    },
+    "AlertManager": {
+      "port": 10203,
+      "status": "offline"
+    },
+    "Blackbox Exporter": {
+      "port": 10204,
+      "status": "offline"
+    },
+    "Node Exporter": {
+      "port": 10205,
+      "status": "offline"
+    },
+    "Jaeger": {
+      "port": 10211,
+      "status": "offline"
+    }
+  },
+  "summary": {
+    "core_infrastructure": {
+      "total": 11,
+      "online": 0,
+      "offline": 11,
+      "percentage": 0.0
+    },
+    "ai_services": {
+      "total": 5,
+      "online": 0,
+      "offline": 5,
+      "percentage": 0.0
+    },
+    "agents": {
+      "total": 8,
+      "online": 0,
+      "offline": 8,
+      "percentage": 0.0
+    },
+    "mcp_services": {
+      "total": 1,
+      "online": 0,
+      "offline": 1,
+      "percentage": 0.0
+    },
+    "monitoring": {
+      "total": 7,
+      "online": 0,
+      "offline": 7,
+      "percentage": 0.0
+    }
+  }
+}
