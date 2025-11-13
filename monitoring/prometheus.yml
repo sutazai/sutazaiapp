@@ -1,0 +1,135 @@
+# Prometheus Configuration for SutazaiApp
+# Version: 1.0.0
+# Created: 2025-11-13 21:30:00 UTC
+# Purpose: Monitoring configuration for all SutazaiApp services
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'sutazai-platform'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Load rules once and periodically evaluate them
+rule_files:
+  # - "alerts/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # PostgreSQL
+  - job_name: 'postgresql'
+    static_configs:
+      - targets: ['sutazai-postgres:5432']
+        labels:
+          service: 'postgresql'
+          component: 'database'
+
+  # Redis
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['sutazai-redis:6379']
+        labels:
+          service: 'redis'
+          component: 'cache'
+
+  # Neo4j
+  - job_name: 'neo4j'
+    static_configs:
+      - targets: ['sutazai-neo4j:7474']
+        labels:
+          service: 'neo4j'
+          component: 'graph-database'
+
+  # RabbitMQ
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['sutazai-rabbitmq:15672']
+        labels:
+          service: 'rabbitmq'
+          component: 'messaging'
+
+  # Consul
+  - job_name: 'consul'
+    static_configs:
+      - targets: ['sutazai-consul:8500']
+        labels:
+          service: 'consul'
+          component: 'service-discovery'
+
+  # Kong
+  - job_name: 'kong'
+    static_configs:
+      - targets: ['sutazai-kong:8001']
+        labels:
+          service: 'kong'
+          component: 'api-gateway'
+
+  # ChromaDB
+  - job_name: 'chromadb'
+    static_configs:
+      - targets: ['sutazai-chromadb:8000']
+        labels:
+          service: 'chromadb'
+          component: 'vector-database'
+
+  # Qdrant
+  - job_name: 'qdrant'
+    static_configs:
+      - targets: ['sutazai-qdrant:6334']
+        labels:
+          service: 'qdrant'
+          component: 'vector-database'
+
+  # FAISS
+  - job_name: 'faiss'
+    static_configs:
+      - targets: ['sutazai-faiss:8000']
+        labels:
+          service: 'faiss'
+          component: 'vector-database'
+
+  # Ollama
+  - job_name: 'ollama'
+    static_configs:
+      - targets: ['sutazai-ollama:11434']
+        labels:
+          service: 'ollama'
+          component: 'llm-inference'
+
+  # Backend API
+  - job_name: 'backend'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['sutazai-backend:8000']
+        labels:
+          service: 'backend'
+          component: 'api'
+
+  # Frontend
+  - job_name: 'frontend'
+    static_configs:
+      - targets: ['sutazai-frontend:11000']
+        labels:
+          service: 'frontend'
+          component: 'ui'
+
+  # Portainer
+  - job_name: 'portainer'
+    static_configs:
+      - targets: ['sutazai-portainer:9000']
+        labels:
+          service: 'portainer'
+          component: 'management'

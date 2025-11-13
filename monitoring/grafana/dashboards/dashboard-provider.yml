@@ -1,0 +1,15 @@
+# Grafana Dashboard Provisioning Configuration
+
+apiVersion: 1
+
+providers:
+  - name: 'SutazaiApp Dashboards'
+    orgId: 1
+    folder: 'SutazaiApp'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      foldersFromFilesStructure: true
