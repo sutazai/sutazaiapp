@@ -199,7 +199,15 @@ class BackendClient:
             response = requests.get(url, headers=self.headers, timeout=5)
             
             if response.status_code == 200:
-                return response.json().get("agents", [])
+                data = response.json()
+                # Backend returns a list directly, not a dict with "agents" key
+                if isinstance(data, list):
+                    return data
+                elif isinstance(data, dict) and "agents" in data:
+                    return data["agents"]
+                else:
+                    logger.warning(f"Unexpected agents response format: {type(data)}")
+                    return []
             else:
                 # Return default agents
                 return [

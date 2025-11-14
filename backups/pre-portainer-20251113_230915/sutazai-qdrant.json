@@ -1,0 +1,280 @@
+[
+    {
+        "Id": "3b1bf741026c67fc5e73919aa8296f6f6bdbd345af4ad6e939781bc5d03cf935",
+        "Created": "2025-11-13T21:54:09.40234859Z",
+        "Path": "./entrypoint.sh",
+        "Args": [],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 737105,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-11-13T21:54:09.660949001Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:e35e37cf82b6894049e69e168e1135cbc2a084f3b63bdccc7908afff1bdc57d6",
+        "ResolvConfPath": "/var/lib/docker/containers/3b1bf741026c67fc5e73919aa8296f6f6bdbd345af4ad6e939781bc5d03cf935/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/3b1bf741026c67fc5e73919aa8296f6f6bdbd345af4ad6e939781bc5d03cf935/hostname",
+        "HostsPath": "/var/lib/docker/containers/3b1bf741026c67fc5e73919aa8296f6f6bdbd345af4ad6e939781bc5d03cf935/hosts",
+        "LogPath": "/var/lib/docker/containers/3b1bf741026c67fc5e73919aa8296f6f6bdbd345af4ad6e939781bc5d03cf935/3b1bf741026c67fc5e73919aa8296f6f6bdbd345af4ad6e939781bc5d03cf935-json.log",
+        "Name": "/sutazai-qdrant",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "sutazaiapp_qdrant_data:/qdrant/storage:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sutazaiapp_sutazai-network",
+            "PortBindings": {
+                "6333/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10101"
+                    }
+                ],
+                "6334/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10102"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 536870912,
+            "NanoCpus": 500000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 1073741824,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "3b1bf741026c67fc5e73919aa8296f6f6bdbd345af4ad6e939781bc5d03cf935",
+                "LowerDir": "/var/lib/docker/overlay2/2ea08cc0f66d4f09b7836330b292c6363fe43f059e7aed914c8e7c752b10dbdf-init/diff:/var/lib/docker/overlay2/bbb417bd587ab342a3b1da798672dbdf6491f9fbab333729acf1eb052c3b742b/diff:/var/lib/docker/overlay2/1399dc5ea5f8cf523ecc9eac62c1f8c80d87a347382032ccb4531a68811f4ccf/diff:/var/lib/docker/overlay2/bb1205803f2a2a4556c006f08994e591a60582fa6d3948497ae99e920e112d18/diff:/var/lib/docker/overlay2/5111e54b77c95c0649e3d900073bea188112afa23903775a7b56f08bbb01e3c4/diff:/var/lib/docker/overlay2/6d50f9dd83a037a6344ea852d798a8b42b3f84ec6d76e9f84d992b36bfc8c1d2/diff:/var/lib/docker/overlay2/0c951eebba8e5cb280057f3c815873f05b8f89ed76e5c22b82b58af84fb74018/diff:/var/lib/docker/overlay2/67a0ecbbbcff077ccbf9359d7ab7f2a1fcf3b76ff020cd7095cdde67310ee26d/diff:/var/lib/docker/overlay2/879ff63b5c4da1df7e0f6ac08adedab29b279fb23dbcf2804cba21971c41b8b5/diff:/var/lib/docker/overlay2/6903c9474ddba0c4b259b8395d8be0531397bb27c85da0b18828ea95fc380c9e/diff:/var/lib/docker/overlay2/eaa1261dba288a3b11915d27da91d98faa8db38011c9c46f91eb91cfbaddd8a7/diff:/var/lib/docker/overlay2/79cc34e52c72e7774bda143ec65485fc3b1b5ed05b08aff8c46b81ca2b81eeff/diff:/var/lib/docker/overlay2/6e4f38322e44ef9a27ebb792fb4cc6548638d24e607ee25b68c3df0d8357fee2/diff:/var/lib/docker/overlay2/91fd765c172c45c72443a591f64a8836c7256a55f2c91b5f5db3a40cb863f001/diff:/var/lib/docker/overlay2/98097a5f19c721d1e6b4fcfca92dd472a6ef2d1f9db8233f7067d3666ae4f39e/diff",
+                "MergedDir": "/var/lib/docker/overlay2/2ea08cc0f66d4f09b7836330b292c6363fe43f059e7aed914c8e7c752b10dbdf/merged",
+                "UpperDir": "/var/lib/docker/overlay2/2ea08cc0f66d4f09b7836330b292c6363fe43f059e7aed914c8e7c752b10dbdf/diff",
+                "WorkDir": "/var/lib/docker/overlay2/2ea08cc0f66d4f09b7836330b292c6363fe43f059e7aed914c8e7c752b10dbdf/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "sutazaiapp_qdrant_data",
+                "Source": "/var/lib/docker/volumes/sutazaiapp_qdrant_data/_data",
+                "Destination": "/qdrant/storage",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "3b1bf741026c",
+            "Domainname": "",
+            "User": "0:0",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "6333/tcp": {},
+                "6334/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "DIR=",
+                "TZ=Etc/UTC",
+                "RUN_MODE=production"
+            ],
+            "Cmd": [
+                "./entrypoint.sh"
+            ],
+            "Image": "qdrant/qdrant:v1.15.4",
+            "Volumes": {
+                "/qdrant/storage": {}
+            },
+            "WorkingDir": "/qdrant",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "54d3ca4c43b8c4f5c8d999e10971c0148e8041c8d23109c1648e844253e3853a",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sutazaiapp",
+                "com.docker.compose.project.config_files": "docker-compose-portainer.yml",
+                "com.docker.compose.project.working_dir": "/opt/sutazaiapp",
+                "com.docker.compose.service": "qdrant",
+                "com.docker.compose.version": "1.29.2",
+                "org.opencontainers.image.description": "Official Qdrant image",
+                "org.opencontainers.image.documentation": "https://qdrant.com/docs",
+                "org.opencontainers.image.source": "https://github.com/qdrant/qdrant",
+                "org.opencontainers.image.title": "Qdrant",
+                "org.opencontainers.image.url": "https://qdrant.com/",
+                "org.opencontainers.image.vendor": "Qdrant",
+                "org.opencontainers.image.version": "v1.15.4"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "4783f66f958cb0c10df8f24554d18718beb779b291d652ec9c3ef6f3749ab682",
+            "SandboxKey": "/var/run/docker/netns/4783f66f958c",
+            "Ports": {
+                "6333/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10101"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10101"
+                    }
+                ],
+                "6334/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10102"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10102"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sutazaiapp_sutazai-network": {
+                    "IPAMConfig": {
+                        "IPv4Address": "172.20.0.21"
+                    },
+                    "Links": null,
+                    "Aliases": [
+                        "3b1bf741026c",
+                        "qdrant"
+                    ],
+                    "MacAddress": "5a:03:bc:63:e6:18",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "c9a748f48913a9868b40449ed3c89a66069ed7d1213a35a485552a35deac76a8",
+                    "EndpointID": "75d899e8a0af332b4a1856732e1178f611d9dc1de2b2bf98b7e3eddf48b3d5b0",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.21",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sutazai-qdrant",
+                        "3b1bf741026c",
+                        "qdrant"
+                    ]
+                }
+            }
+        }
+    }
+]

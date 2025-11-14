@@ -1,0 +1,330 @@
+[
+    {
+        "Id": "7400be2301bafcb0ae5f36d4f54d2ff8049fb49cb4f8f7e2cf96904f5491a773",
+        "Created": "2025-11-13T14:43:40.525729844Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "redis-server",
+            "--maxmemory",
+            "128mb",
+            "--maxmemory-policy",
+            "allkeys-lru",
+            "--save",
+            "60",
+            "1",
+            "--appendonly",
+            "yes",
+            "--protected-mode",
+            "no"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 83478,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-11-13T14:43:40.766944264Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2025-11-13T22:03:44.029212972+01:00",
+                        "End": "2025-11-13T22:03:44.06736374+01:00",
+                        "ExitCode": 0,
+                        "Output": "PONG\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:03:54.068202443+01:00",
+                        "End": "2025-11-13T22:03:54.123966966+01:00",
+                        "ExitCode": 0,
+                        "Output": "PONG\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:04.125200819+01:00",
+                        "End": "2025-11-13T22:04:04.196213453+01:00",
+                        "ExitCode": 0,
+                        "Output": "PONG\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:14.196552024+01:00",
+                        "End": "2025-11-13T22:04:14.255459876+01:00",
+                        "ExitCode": 0,
+                        "Output": "PONG\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:24.255968729+01:00",
+                        "End": "2025-11-13T22:04:24.308836025+01:00",
+                        "ExitCode": 0,
+                        "Output": "PONG\n"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:13105d2858ded45aedf7b24f0870e6a4e7ce4964924bffce68e562ca72149f1e",
+        "ResolvConfPath": "/var/lib/docker/containers/7400be2301bafcb0ae5f36d4f54d2ff8049fb49cb4f8f7e2cf96904f5491a773/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/7400be2301bafcb0ae5f36d4f54d2ff8049fb49cb4f8f7e2cf96904f5491a773/hostname",
+        "HostsPath": "/var/lib/docker/containers/7400be2301bafcb0ae5f36d4f54d2ff8049fb49cb4f8f7e2cf96904f5491a773/hosts",
+        "LogPath": "/var/lib/docker/containers/7400be2301bafcb0ae5f36d4f54d2ff8049fb49cb4f8f7e2cf96904f5491a773/7400be2301bafcb0ae5f36d4f54d2ff8049fb49cb4f8f7e2cf96904f5491a773-json.log",
+        "Name": "/sutazai-redis",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "sutazaiapp_redis_data:/data:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sutazaiapp_sutazai-network",
+            "PortBindings": {
+                "6379/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10001"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 134217728,
+            "NanoCpus": 250000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 67108864,
+            "MemorySwap": 268435456,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "7400be2301bafcb0ae5f36d4f54d2ff8049fb49cb4f8f7e2cf96904f5491a773",
+                "LowerDir": "/var/lib/docker/overlay2/f739e4ac08de8164656f58204ad7bcedef3b1d311fb9346d8fd25c37e6e9fca2-init/diff:/var/lib/docker/overlay2/91f0a135fe63febf97f621f7e91fe1cf2377964e04f0adbf815c838cb9323f0f/diff:/var/lib/docker/overlay2/d3482cbf0a501a49c56a73a4909ad7ad0eea727ec03640514d53ebf691f86294/diff:/var/lib/docker/overlay2/5e6054a7f3540878bb3720b00d0c314cfa0a194a3c213cc7fb8dd0c6d1774544/diff:/var/lib/docker/overlay2/9faa7a1134640c92943241a6aa613e34b67af99e406adbe13cd711c6fa1d8698/diff:/var/lib/docker/overlay2/9954614f53938601dd96dc14460db5e7cf520ba162b485d2fe66cafb4f7d93ce/diff:/var/lib/docker/overlay2/6773de32ccb6e08fd66ecfdfe7d0f3b9753a625117bd3f651cada6f7a6a90d27/diff:/var/lib/docker/overlay2/5c7b76a50ff19bebfd1a1f7161b92ac5587cdd03841bd5593307e2f08ad5c31e/diff:/var/lib/docker/overlay2/adf45630db389f0a401236cf0fa4c3ac7c3f25aa49ead6359d1d5bb44e262e62/diff",
+                "MergedDir": "/var/lib/docker/overlay2/f739e4ac08de8164656f58204ad7bcedef3b1d311fb9346d8fd25c37e6e9fca2/merged",
+                "UpperDir": "/var/lib/docker/overlay2/f739e4ac08de8164656f58204ad7bcedef3b1d311fb9346d8fd25c37e6e9fca2/diff",
+                "WorkDir": "/var/lib/docker/overlay2/f739e4ac08de8164656f58204ad7bcedef3b1d311fb9346d8fd25c37e6e9fca2/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "sutazaiapp_redis_data",
+                "Source": "/var/lib/docker/volumes/sutazaiapp_redis_data/_data",
+                "Destination": "/data",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "7400be2301ba",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "6379/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "GOSU_VERSION=1.17",
+                "REDIS_VERSION=7.4.7",
+                "REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-7.4.7.tar.gz",
+                "REDIS_DOWNLOAD_SHA=c97e57b0df330a9e091cacff012bebe763c275398cf36ff44cdba876814b595b"
+            ],
+            "Cmd": [
+                "redis-server",
+                "--maxmemory",
+                "128mb",
+                "--maxmemory-policy",
+                "allkeys-lru",
+                "--save",
+                "60",
+                "1",
+                "--appendonly",
+                "yes",
+                "--protected-mode",
+                "no"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "redis-cli",
+                    "ping"
+                ],
+                "Interval": 10000000000,
+                "Timeout": 5000000000,
+                "StartPeriod": 10000000000,
+                "Retries": 5
+            },
+            "Image": "redis:7-alpine",
+            "Volumes": {
+                "/data": {}
+            },
+            "WorkingDir": "/data",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "b688c718c22b2f5aceeb2fde8d256732361364b5188d978b71e72cae3ea9ab60",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sutazaiapp",
+                "com.docker.compose.project.config_files": "docker-compose-core.yml",
+                "com.docker.compose.project.working_dir": "/opt/sutazaiapp",
+                "com.docker.compose.service": "redis",
+                "com.docker.compose.version": "1.29.2"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "d50c9239d683019c632eac6ada1ecb18f2eb8fd80df57c552d5f7c62b4f36e64",
+            "SandboxKey": "/var/run/docker/netns/d50c9239d683",
+            "Ports": {
+                "6379/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10001"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10001"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sutazaiapp_sutazai-network": {
+                    "IPAMConfig": {
+                        "IPv4Address": "172.20.0.11"
+                    },
+                    "Links": null,
+                    "Aliases": [
+                        "redis",
+                        "7400be2301ba"
+                    ],
+                    "MacAddress": "ce:27:ab:19:2d:5f",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "4697ccfa8ce5da1b842e4ceebc9277a143b6ad8242733a9c4d5ae5304bd8492a",
+                    "EndpointID": "dd3899062f02ade662d07e15a41f47333eac899a426076d868d65a7dbfbb3cc6",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.11",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sutazai-redis",
+                        "redis",
+                        "7400be2301ba"
+                    ]
+                }
+            }
+        }
+    }
+]

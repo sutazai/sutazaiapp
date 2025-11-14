@@ -1,6 +1,8 @@
 # SutazaiApp Port Registry
+
 ## Multi-Agent AI System Port Allocation
-### Last Updated: 2025-08-27
+
+### Last Updated: 2025-01-13 (Verified against running deployment)
 
 ---
 
@@ -32,17 +34,18 @@
 - **11001-11099**: Reserved for UI components
 
 ## LLM Services (11400-11499)
-- **11434**: Ollama (Local LLM Server) - CRITICAL PORT
+- **11434**: Ollama (Local LLM Server) - CRITICAL PORT - **HOST SERVICE (Not Dockerized)**
 - **11435-11499**: Reserved for additional LLM services
 
-## Monitoring Stack (10200-10299) [DEPRECATED - See Application Services]
-- **10200**: Prometheus
-- **10201**: Grafana
-- **10203**: AlertManager
-- **10204**: Blackbox Exporter
-- **10205**: Node Exporter
-- **10210**: Loki (Logging)
-- **10211**: Jaeger (Tracing)
+## Monitoring Stack (10300-10399) [PLANNED - NOT YET DEPLOYED]
+- **10300**: Prometheus (Metrics Collection) - PLANNED
+- **10301**: Grafana (Visualization) - PLANNED
+- **10303**: AlertManager (Alerting) - PLANNED
+- **10304**: Blackbox Exporter (Probing) - PLANNED
+- **10305**: Node Exporter (System Metrics) - PLANNED
+- **10310**: Loki (Logging) - PLANNED
+- **10311**: Jaeger (Tracing) - PLANNED
+- **10312-10399**: Reserved for additional monitoring services
 
 ## Agent Services (11000-11299)
 ### Core Agents (11300-11324)
@@ -95,20 +98,20 @@
 - **Monitoring Range**: 172.20.0.40-49
 - **Agent Range**: 172.20.0.100-199
 
-## Service IP Assignments
+## Service IP Assignments (Current Deployment)
+
 - 172.20.0.10: PostgreSQL
 - 172.20.0.11: Redis
 - 172.20.0.12: Neo4j
-- 172.20.0.13: Kong
+- 172.20.0.13: RabbitMQ
 - 172.20.0.14: Consul
-- 172.20.0.15: RabbitMQ
 - 172.20.0.20: ChromaDB
 - 172.20.0.21: Qdrant
-- 172.20.0.22: Ollama
-- 172.20.0.30: [Reserved - was causing conflict]
-- 172.20.0.31: Frontend (Streamlit)
+- 172.20.0.22: FAISS Service
+- 172.20.0.31: Frontend (Streamlit/JARVIS)
 - 172.20.0.35: Kong Gateway
-- 172.20.0.40: Backend API
-- 172.20.0.40: Prometheus
-- 172.20.0.41: Grafana
-- 172.20.0.100+: Agent Services
+- 172.20.0.40: Backend API (FastAPI)
+- 172.20.0.41-49: Reserved for Monitoring Stack (Prometheus, Grafana, etc.)
+- 172.20.0.100+: Reserved for Agent Services
+
+**Note**: Ollama (11434) runs on **host** at 172.17.0.1 (accessible via host.docker.internal)

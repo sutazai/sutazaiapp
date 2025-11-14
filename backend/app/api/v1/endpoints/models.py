@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List, Dict
 import httpx
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -13,11 +14,16 @@ router = APIRouter()
 async def list_models() -> Dict:
     """List available AI models"""
     
+    # Get Ollama connection details from environment
+    ollama_host = os.getenv("OLLAMA_HOST", "host.docker.internal")
+    ollama_port = os.getenv("OLLAMA_PORT", "11434")
+    ollama_url = f"http://{ollama_host}:{ollama_port}"
+    
     # Try to get models from Ollama
     ollama_models = []
     try:
         async with httpx.AsyncClient(timeout=5.0) as client:
-            response = await client.get("http://sutazai-ollama:11434/api/tags")
+            response = await client.get(f"{ollama_url}/api/tags")
             if response.status_code == 200:
                 data = response.json()
                 ollama_models = [
@@ -29,8 +35,9 @@ async def list_models() -> Dict:
                     }
                     for model in data.get("models", [])
                 ]
+                logger.info(f"Successfully fetched {len(ollama_models)} models from Ollama at {ollama_url}")
     except Exception as e:
-        logger.warning(f"Could not fetch Ollama models: {e}")
+        logger.warning(f"Could not fetch Ollama models from {ollama_url}: {e}")
     
     # Static list of models (including both available and planned)
     static_models = [

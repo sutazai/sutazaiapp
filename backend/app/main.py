@@ -3,7 +3,7 @@ SutazAI Platform Main Application
 FastAPI backend with comprehensive service integrations
 """
 
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Response
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
@@ -18,6 +18,10 @@ from app.core.config import settings
 from app.core.database import init_db, close_db, Base
 from app.services.connections import service_connections
 from app.api.v1.router import api_router
+
+# Import Prometheus metrics
+from prometheus_client import Counter, Histogram, Gauge, generate_latest, REGISTRY, CONTENT_TYPE_LATEST
+
 # Import models to ensure they're registered
 from app.models import User
 
@@ -30,6 +34,14 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+# Initialize Prometheus metrics
+REQUEST_COUNT = Counter('backend_requests_total', 'Total HTTP requests', ['method', 'endpoint', 'status'])
+REQUEST_DURATION = Histogram('backend_request_duration_seconds', 'HTTP request duration', ['method', 'endpoint'])
+ACTIVE_CONNECTIONS = Gauge('backend_active_connections', 'Active database connections')
+SERVICE_STATUS = Gauge('backend_service_status', 'Service connection status', ['service'])
+CHAT_MESSAGES = Counter('backend_chat_messages_total', 'Total chat messages processed')
+WEBSOCKET_CONNECTIONS = Gauge('backend_websocket_connections', 'Active WebSocket connections')
 
 
 @asynccontextmanager
@@ -126,7 +138,7 @@ class WebSocketManager:
 ws_manager = WebSocketManager()
 
 # Ollama configuration
-OLLAMA_HOST = "sutazai-ollama"
+OLLAMA_HOST = "host.docker.internal"
 OLLAMA_PORT = "11434"
 OLLAMA_BASE_URL = f"http://{OLLAMA_HOST}:{OLLAMA_PORT}"
 
@@ -372,6 +384,10 @@ async def detailed_health_check():
         service_health = await service_connections.health_check()
         all_healthy = all(service_health.values())
         
+        # Update service status metrics
+        for service, status in service_health.items():
+            SERVICE_STATUS.labels(service=service).set(1 if status else 0)
+        
         return {
             "status": "healthy" if all_healthy else "degraded",
             "app": settings.APP_NAME,
@@ -383,6 +399,23 @@ async def detailed_health_check():
     except Exception as e:
         logger.error(f"Health check failed: {e}")
         raise HTTPException(status_code=503, detail=str(e))
+
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus metrics endpoint"""
+    try:
+        # Update connection metrics before exposing
+        service_health = await service_connections.health_check()
+        for service, status in service_health.items():
+            SERVICE_STATUS.labels(service=service).set(1 if status else 0)
+        
+        # Generate metrics
+        metrics_output = generate_latest(REGISTRY)
+        return Response(content=metrics_output, media_type=CONTENT_TYPE_LATEST)
+    except Exception as e:
+        logger.error(f"Failed to generate metrics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 async def register_with_consul():

@@ -1,0 +1,108 @@
+[
+    {
+        "Name": "sutazaiapp_sutazai-network",
+        "Id": "c9a748f48913a9868b40449ed3c89a66069ed7d1213a35a485552a35deac76a8",
+        "Created": "2025-11-13T22:05:05.105932558+01:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "10497e6d8b78450be61a877f180dc2a8acabb791ea3aa323db595fd7f625b653": {
+                "Name": "sutazai-kong",
+                "EndpointID": "b9794f32f3b58491db4f57de5cb193f22fa5a92b89ce08be8b0674f4d41f2876",
+                "MacAddress": "52:bd:9b:44:e9:0c",
+                "IPv4Address": "172.20.0.35/16",
+                "IPv6Address": ""
+            },
+            "132452b351284c5260303f775fc2d2b3b25c402e30143111630cc25bbcc9b584": {
+                "Name": "sutazai-neo4j",
+                "EndpointID": "d20b8a37fdfe4cb503a9d66914ca0a4f253e51e97fe0d3f1fff2d43921374465",
+                "MacAddress": "ce:37:ed:9b:14:c0",
+                "IPv4Address": "172.20.0.12/16",
+                "IPv6Address": ""
+            },
+            "180fe6a210c9847a9bee42a0bc36497dc8feca77734f10a656f1017e03f45de7": {
+                "Name": "sutazai-consul",
+                "EndpointID": "ebf9c936b103b597fa3407379a18d60bd1237320a194675aa230dcf147b9e7ba",
+                "MacAddress": "ea:0e:4a:f2:2b:77",
+                "IPv4Address": "172.20.0.14/16",
+                "IPv6Address": ""
+            },
+            "2a59bc9d0538a267a82acccc386349065ed0e0336e114c2bb83bc01910402a41": {
+                "Name": "sutazai-backend",
+                "EndpointID": "ef351b99d815129b3b5a3784444e6e5df20357f3facee6ba93594c3f1c276912",
+                "MacAddress": "56:5e:c8:31:26:03",
+                "IPv4Address": "172.20.0.40/16",
+                "IPv6Address": ""
+            },
+            "34de30b700ca8dbe4bf5ada7d9cb6e01c069a0ab2d035587bdc93b7d9aef6fae": {
+                "Name": "sutazai-postgres",
+                "EndpointID": "012d7fb6077924c5767dbab7cdd932d03d4f64c2453d801793a28f1ac52dd70f",
+                "MacAddress": "16:10:74:06:fc:08",
+                "IPv4Address": "172.20.0.10/16",
+                "IPv6Address": ""
+            },
+            "3b1bf741026c67fc5e73919aa8296f6f6bdbd345af4ad6e939781bc5d03cf935": {
+                "Name": "sutazai-qdrant",
+                "EndpointID": "75d899e8a0af332b4a1856732e1178f611d9dc1de2b2bf98b7e3eddf48b3d5b0",
+                "MacAddress": "5a:03:bc:63:e6:18",
+                "IPv4Address": "172.20.0.21/16",
+                "IPv6Address": ""
+            },
+            "85416ce7911dc9ad02dfe6a6499ecc12ca3e5f6a32e92319c401cd8bb2853729": {
+                "Name": "sutazai-redis",
+                "EndpointID": "9349601c03757aa8a987e21876362eb8547573c10a69fdb5901290a920c04454",
+                "MacAddress": "16:48:f7:50:9b:38",
+                "IPv4Address": "172.20.0.11/16",
+                "IPv6Address": ""
+            },
+            "8a2ef37efdff3a53b83f11342fbc54e5ab3a6e812f2108df7dd3839e89af63e1": {
+                "Name": "sutazai-faiss",
+                "EndpointID": "0d5f2bfb4cfd84d8c7b5faafeaf5ea642986360755e41e32390891bb5273905f",
+                "MacAddress": "4e:f1:5e:aa:f6:4a",
+                "IPv4Address": "172.20.0.22/16",
+                "IPv6Address": ""
+            },
+            "bf1782db18cb7ae45f306374383cd1687c2a71b75c9591cf7e70948d08344959": {
+                "Name": "sutazai-chromadb",
+                "EndpointID": "40f457ce34e9ac55801b2da011e1dc4ee21a596dbdf8ce32b20e553c40620583",
+                "MacAddress": "8a:a7:96:ae:9c:4f",
+                "IPv4Address": "172.20.0.20/16",
+                "IPv6Address": ""
+            },
+            "f8d34290d99cd5fb7f293b83f06f90f117f7ad44243b712277a7e176dc70ac8d": {
+                "Name": "sutazai-jarvis-frontend",
+                "EndpointID": "b07fc8e7ad266c9d925da33f2e264807fc2d1d03d35fb9d87ba1825b69e9a5db",
+                "MacAddress": "a6:c6:78:92:0e:c1",
+                "IPv4Address": "172.20.0.31/16",
+                "IPv6Address": ""
+            },
+            "fa266674415a80d4a440f1260987d73b3d360c6c500e7f7823d9bcc0b31e957c": {
+                "Name": "sutazai-rabbitmq",
+                "EndpointID": "390bf64a2f55bf24a11afecb6a5f37c0bcdea724ee7a7318e02d8d522bf8c79a",
+                "MacAddress": "9a:57:29:22:a4:a7",
+                "IPv4Address": "172.20.0.13/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {}
+    }
+]

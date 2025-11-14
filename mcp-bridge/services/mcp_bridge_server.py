@@ -11,6 +11,7 @@ import os
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from pathlib import Path
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,11 +31,60 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# FastAPI app
+# Global connection objects
+rabbitmq_connection = None
+rabbitmq_channel = None
+redis_client = None
+consul_client = None
+websocket_connections: List[WebSocket] = []
+
+# Lifespan context manager for FastAPI
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage application lifespan - startup and shutdown"""
+    # Startup
+    logger.info("Starting MCP Bridge Server...")
+    logger.info("Initializing MCP Bridge connections...")
+    
+    # Initialize services
+    await init_rabbitmq()
+    await init_redis()
+    await init_consul()
+    
+    logger.info("MCP Bridge initialization complete")
+    
+    yield
+    
+    # Shutdown
+    global rabbitmq_connection, rabbitmq_channel, redis_client, consul_client
+    
+    logger.info("Shutting down MCP Bridge Server...")
+    
+    # Close RabbitMQ
+    if rabbitmq_channel:
+        await rabbitmq_channel.close()
+    if rabbitmq_connection:
+        await rabbitmq_connection.close()
+    
+    # Close Redis
+    if redis_client:
+        await redis_client.aclose()  # Use aclose() instead of close()
+    
+    # Deregister from Consul
+    if consul_client:
+        try:
+            consul_client.agent.service.deregister('mcp-bridge-1')
+        except:
+            pass
+    
+    logger.info("MCP Bridge shutdown complete")
+
+# FastAPI app with lifespan
 app = FastAPI(
     title="SutazAI MCP Bridge",
     description="Message Control Protocol Bridge for AI Agent Integration",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 # CORS configuration
@@ -340,36 +390,47 @@ async def get_from_redis(key: str):
         logger.error(f"Failed to get from Redis: {e}")
         return None
 
+# ============================================
+# API ENDPOINTS
+# ============================================
+
+# Health Check
+
 # Startup Event
-@app.on_event("startup")
-async def startup_event():
-    """Initialize all connections on startup"""
+async def lifespan_startup():
+    """Initialize connections on startup"""
+    logger.info("Starting MCP Bridge Server...")
     logger.info("Initializing MCP Bridge connections...")
     
-    # Initialize RabbitMQ
+    # Initialize services
     await init_rabbitmq()
-    
-    # Initialize Redis
     await init_redis()
-    
-    # Initialize Consul
     await init_consul()
-    
-    # Check all agents on startup
-    await check_all_agents_health()
     
     logger.info("MCP Bridge initialization complete")
 
 # Shutdown Event
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Clean up connections on shutdown"""
+async def lifespan_shutdown():
+    """Cleanup connections on shutdown"""
+    global rabbitmq_connection, rabbitmq_channel, redis_client, consul_client
+    
+    # Close RabbitMQ
+    if rabbitmq_channel:
+        await rabbitmq_channel.close()
     if rabbitmq_connection:
         await rabbitmq_connection.close()
+    
+    # Close Redis
     if redis_client:
-        await redis_client.close()
+        await redis_client.aclose()  # Use aclose() instead of close()
+    
+    # Deregister from Consul
     if consul_client:
-        consul_client.agent.service.deregister('mcp-bridge-1')
+        try:
+            consul_client.agent.service.deregister('mcp-bridge-1')
+        except:
+            pass
+    
     logger.info("MCP Bridge shutdown complete")
 
 # Health Check Endpoint
@@ -648,12 +709,6 @@ async def periodic_health_check():
     while True:
         await asyncio.sleep(30)  # Check every 30 seconds
         await check_all_agents_health()
-
-# Start background health check
-@app.on_event("startup")
-async def start_background_tasks():
-    """Start background tasks"""
-    asyncio.create_task(periodic_health_check())
 
 # Bridge Status Endpoint
 @app.get("/status", response_model=BridgeStatus)

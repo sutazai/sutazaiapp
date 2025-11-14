@@ -28,6 +28,7 @@ class SecurityUtils:
     def verify_password(plain_password: str, hashed_password: str) -> bool:
         """
         Verify a plain password against a hashed password
+        Truncates password to 72 bytes to match hashing behavior
         
         Args:
             plain_password: The plain text password
@@ -37,7 +38,9 @@ class SecurityUtils:
             True if password matches, False otherwise
         """
         try:
-            return pwd_context.verify(plain_password, hashed_password)
+            # Truncate to 72 bytes to match get_password_hash behavior
+            password_bytes = plain_password.encode('utf-8')[:72]
+            return pwd_context.verify(password_bytes, hashed_password)
         except Exception as e:
             logger.error(f"Password verification error: {e}")
             return False
@@ -46,6 +49,7 @@ class SecurityUtils:
     def get_password_hash(password: str) -> str:
         """
         Hash a password using bcrypt
+        Truncates password to 72 bytes to comply with bcrypt limitations
         
         Args:
             password: Plain text password
@@ -53,7 +57,10 @@ class SecurityUtils:
         Returns:
             Bcrypt hashed password
         """
-        return pwd_context.hash(password)
+        # Bcrypt has a 72-byte limit, truncate password if needed
+        # This is safe as 72 bytes provides sufficient entropy
+        password_bytes = password.encode('utf-8')[:72]
+        return pwd_context.hash(password_bytes)
     
     @staticmethod
     def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:

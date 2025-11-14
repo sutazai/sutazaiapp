@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-11-15T00:20:06.916085",
+  "configuration": {
+    "num_vectors": 1000,
+    "vector_dim": 384,
+    "search_queries": 10,
+    "top_k": 5
+  },
+  "results": [
+    {
+      "database": "ChromaDB",
+      "status": "\u2705 PASS",
+      "connection_time_ms": 202.82,
+      "insert_time_s": 0.6,
+      "insert_throughput": 1677.0,
+      "avg_search_time_ms": 3.24,
+      "update_time_ms": 53.08,
+      "delete_time_ms": 48.01,
+      "final_count": 950
+    },
+    {
+      "database": "Qdrant",
+      "status": "\u274c FAIL: illegal request line"
+    },
+    {
+      "database": "FAISS",
+      "status": "\u2705 PASS",
+      "create_time_ms": 0.06,
+      "insert_time_s": 0.0,
+      "insert_throughput": 4471539.0,
+      "avg_search_time_ms": 0.04,
+      "final_count": 1000
+    }
+  ]
+}

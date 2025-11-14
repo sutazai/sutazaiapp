@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # Ollama configuration - using Docker service name
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "sutazai-ollama")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "host.docker.internal")
 OLLAMA_PORT = os.getenv("OLLAMA_PORT", "11434")
 OLLAMA_BASE_URL = f"http://{OLLAMA_HOST}:{OLLAMA_PORT}"
 

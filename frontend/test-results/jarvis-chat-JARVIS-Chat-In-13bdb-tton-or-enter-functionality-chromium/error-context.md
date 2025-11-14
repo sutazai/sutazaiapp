@@ -15,53 +15,66 @@
       - generic [ref=e30]:
         - heading "🎮 Control Panel" [level=2] [ref=e34]
         - heading "🤖 AI Model" [level=3] [ref=e38]
-        - alert [ref=e41]:
-          - paragraph [ref=e46]: No models available. Using default.
-        - heading "🚀 AI Agent" [level=3] [ref=e50]
-        - alert [ref=e53]:
-          - paragraph [ref=e58]: Using default agent
-        - heading "🎤 Voice Settings" [level=3] [ref=e62]
-        - generic [ref=e65] [cursor=pointer]:
-          - checkbox "Enable Voice"
-          - paragraph [ref=e71]: Enable Voice
-        - heading "📊 System Status" [level=3] [ref=e75]
-        - alert [ref=e78]:
-          - paragraph [ref=e83]: ❌ Backend Disconnected
-        - button "🔄 Retry Connection" [ref=e86] [cursor=pointer]:
-          - paragraph [ref=e88]: 🔄 Retry Connection
-        - heading "⚡ Quick Actions" [level=3] [ref=e92]
-        - generic [ref=e93]:
-          - button "🗑️ Clear Chat" [ref=e100] [cursor=pointer]:
-            - paragraph [ref=e102]: 🗑️ Clear Chat
-          - button "💾 Export Chat" [ref=e109] [cursor=pointer]:
-            - paragraph [ref=e111]: 💾 Export Chat
-      - generic [ref=e120]:
-        - generic [ref=e126]:
-          - heading "J.A.R.V.I.S" [level=1] [ref=e135]: J.A.R.V.I.S
-          - paragraph [ref=e140]: Just A Rather Very Intelligent System
-        - generic [ref=e142]: "Backend: Disconnected"
-        - generic [ref=e144]:
-          - tablist [ref=e146]:
-            - tab "💬 Chat" [selected] [ref=e147] [cursor=pointer]:
-              - paragraph [ref=e149]: 💬 Chat
-            - tab "🎤 Voice" [ref=e150] [cursor=pointer]:
-              - paragraph [ref=e152]: 🎤 Voice
-            - tab "📊 Monitor" [ref=e153] [cursor=pointer]:
-              - paragraph [ref=e155]: 📊 Monitor
-            - tab "🚀 Agents" [ref=e156] [cursor=pointer]:
-              - paragraph [ref=e158]: 🚀 Agents
-          - tabpanel "💬 Chat" [ref=e161]:
-            - generic [ref=e164]:
-              - heading "💬 Chat Interface" [level=3] [ref=e169]: 💬 Chat Interface
-              - alert [ref=e173]:
-                - paragraph [ref=e178]: ⚠️ Backend is disconnected. Responses will be limited.
-              - alert [ref=e184]:
-                - paragraph [ref=e189]: Start a conversation by typing a message below or using voice commands.
-              - generic [ref=e192]:
-                - textbox "Type your message or say 'Hey JARVIS'..." [ref=e195]
-                - button [disabled] [ref=e196]:
-                  - img [ref=e197]
-        - separator [ref=e203]
-        - paragraph [ref=e207]: JARVIS v2.0 | Powered by SutazAI Platform | 2025-11-13 17:59:38
-  - img [ref=e208]
+        - generic [ref=e40]:
+          - paragraph [ref=e43]: Select Model
+          - generic [ref=e45]:
+            - generic [ref=e46]:
+              - generic [ref=e47]: tinyllama:latest
+              - combobox "Selected tinyllama:latest. Select Model" [ref=e49]
+            - img "open" [ref=e51]
+        - heading "🚀 AI Agent" [level=3] [ref=e56]
+        - generic [ref=e58]:
+          - paragraph [ref=e61]: Select Agent
+          - generic [ref=e63]:
+            - generic [ref=e64]:
+              - generic [ref=e65]: JARVIS Orchestrator
+              - combobox "Selected JARVIS Orchestrator. Select Agent" [ref=e67]
+            - img "open" [ref=e69]
+        - alert [ref=e73]:
+          - paragraph [ref=e78]: Switched to JARVIS Orchestrator
+        - paragraph [ref=e82]: Microsoft JARVIS-inspired multi-model orchestrator
+        - heading "🎤 Voice Settings" [level=3] [ref=e86]
+        - alert [ref=e89]:
+          - paragraph [ref=e94]: Voice controls are disabled for this environment.
+        - heading "📊 System Status" [level=3] [ref=e98]
+        - alert [ref=e101]:
+          - paragraph [ref=e106]: ✅ Backend Connected
+        - generic [ref=e110]: "WebSocket: connected"
+        - group [ref=e113]:
+          - generic "Service Status" [ref=e114] [cursor=pointer]:
+            - paragraph [ref=e117]: Service Status
+            - img [ref=e118]
+        - heading "⚡ Quick Actions" [level=3] [ref=e124]
+        - generic [ref=e125]:
+          - button "🗑️ Clear Chat" [ref=e132] [cursor=pointer]:
+            - paragraph [ref=e134]: 🗑️ Clear Chat
+          - button "💾 Export Chat" [ref=e141] [cursor=pointer]:
+            - paragraph [ref=e143]: 💾 Export Chat
+      - generic [ref=e152]:
+        - generic [ref=e158]:
+          - heading "J.A.R.V.I.S" [level=1] [ref=e167]: J.A.R.V.I.S
+          - paragraph [ref=e172]: Just A Rather Very Intelligent System
+        - generic [ref=e174]: "Backend: Connected"
+        - generic [ref=e176]:
+          - tablist [ref=e178]:
+            - tab "💬 Chat" [selected] [ref=e179] [cursor=pointer]:
+              - paragraph [ref=e181]: 💬 Chat
+            - tab "🎤 Voice" [ref=e182] [cursor=pointer]:
+              - paragraph [ref=e184]: 🎤 Voice
+            - tab "📊 Monitor" [ref=e185] [cursor=pointer]:
+              - paragraph [ref=e187]: 📊 Monitor
+            - tab "🚀 Agents" [ref=e188] [cursor=pointer]:
+              - paragraph [ref=e190]: 🚀 Agents
+          - tabpanel "💬 Chat" [ref=e193]:
+            - generic [ref=e196]:
+              - heading "💬 Chat Interface" [level=3] [ref=e201]: 💬 Chat Interface
+              - alert [ref=e208]:
+                - paragraph [ref=e213]: Start a conversation by typing a message below or using voice commands.
+              - generic [ref=e216]:
+                - textbox "Type your message or say 'Hey JARVIS'..." [ref=e219]
+                - button [disabled] [ref=e220]:
+                  - img [ref=e221]
+        - separator [ref=e227]
+        - paragraph [ref=e231]: JARVIS v2.0 | Powered by SutazAI Platform | 2025-11-14 23:05:41
+  - img [ref=e232]
 ```

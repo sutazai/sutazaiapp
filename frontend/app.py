@@ -16,6 +16,7 @@ import requests
 import threading
 import plotly.graph_objects as go
 import numpy as np
+from typing import Optional
 
 # Try to import webrtc if available
 try:
@@ -239,7 +240,7 @@ if 'initialized' not in st.session_state:
     st.session_state.messages = []
     st.session_state.backend_client = BackendClient(settings.BACKEND_URL)
     st.session_state.chat_interface = ChatInterface()
-    st.session_state.voice_assistant = VoiceAssistant()
+    st.session_state.voice_assistant = None
     st.session_state.agent_orchestrator = AgentOrchestrator()
     st.session_state.current_model = "tinyllama:latest"
     st.session_state.current_agent = "default"
@@ -249,6 +250,7 @@ if 'initialized' not in st.session_state:
     st.session_state.available_agents = []
     st.session_state.is_listening = False
     st.session_state.is_processing = False
+    st.session_state.voice_enabled = settings.ENABLE_VOICE_COMMANDS
 
 # Function to check backend connection
 def check_backend_connection():
@@ -302,6 +304,24 @@ def load_backend_resources():
         except Exception as e:
             print(f"Failed to load resources: {e}")
 
+def get_voice_assistant() -> Optional[VoiceAssistant]:
+    """Lazily create the voice assistant when voice features are enabled"""
+    if not settings.ENABLE_VOICE_COMMANDS:
+        return None
+    assistant = st.session_state.get("voice_assistant")
+    if assistant is None:
+        assistant = VoiceAssistant()
+        st.session_state.voice_assistant = assistant
+    return assistant
+
+def synthesize_speech(text: str) -> bool:
+    """Speak text using the local voice assistant when available"""
+    assistant = get_voice_assistant()
+    if assistant and assistant.tts_available:
+        assistant.speak(text, wait=False)
+        return True
+    return False
+
 # Function to process chat message
 def process_chat_message(message: str):
     """Process a chat message and get response from backend"""
@@ -352,6 +372,8 @@ def process_chat_message(message: str):
 # Function to process voice input
 def process_voice_input(audio_bytes):
     """Process voice input and convert to text"""
+    if not settings.ENABLE_VOICE_COMMANDS:
+        return None
     try:
         # Send audio to backend for processing
         result = st.session_state.backend_client.send_voice_sync(audio_bytes)
@@ -360,8 +382,10 @@ def process_voice_input(audio_bytes):
             return result["text"]
         else:
             # Fallback to local processing
-            text = st.session_state.voice_assistant.process_audio_bytes(audio_bytes)
-            return text
+            assistant = get_voice_assistant()
+            if assistant:
+                return assistant.process_audio_bytes(audio_bytes)
+            return None
     except Exception as e:
         print(f"Voice processing error: {e}")
         return None
@@ -438,18 +462,29 @@ with st.sidebar:
     
     # Voice settings
     st.markdown("### 🎤 Voice Settings")
-    st.session_state.voice_enabled = st.toggle("Enable Voice", value=False)
-    
-    if st.session_state.voice_enabled:
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("🎙️ Start Listening", use_container_width=True):
-                st.session_state.is_listening = True
-                st.session_state.voice_assistant.start_listening()
-        with col2:
-            if st.button("🛑 Stop Listening", use_container_width=True):
-                st.session_state.is_listening = False
-                st.session_state.voice_assistant.stop_listening()
+    if not settings.ENABLE_VOICE_COMMANDS:
+        st.session_state.voice_enabled = False
+        st.info("Voice controls are disabled for this environment.")
+    else:
+        current_voice_state = st.session_state.get("voice_enabled", False)
+        st.session_state.voice_enabled = st.toggle("Enable Voice", value=current_voice_state)
+        
+        if st.session_state.voice_enabled:
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🎙️ Start Listening", use_container_width=True):
+                    assistant = get_voice_assistant()
+                    if assistant and assistant.audio_available:
+                        st.session_state.is_listening = True
+                        assistant.start_listening()
+                    else:
+                        st.warning("Audio input is not available.")
+            with col2:
+                if st.button("🛑 Stop Listening", use_container_width=True):
+                    st.session_state.is_listening = False
+                    assistant = st.session_state.get("voice_assistant")
+                    if assistant:
+                        assistant.stop_listening()
     
     # System status
     st.markdown("### 📊 System Status")
@@ -546,133 +581,136 @@ with tab2:
     # Voice command center
     st.markdown("### 🎙️ Voice Command Center")
     
-    # Check voice service status
-    voice_status = st.session_state.backend_client.check_voice_status_sync()
-    if voice_status.get("status") == "ready":
-        st.success("🎤 Voice service is ready")
+    if not settings.ENABLE_VOICE_COMMANDS:
+        st.info("Voice functionality is disabled for this deployment.")
     else:
-        st.warning(f"⚠️ Voice service status: {voice_status.get('message', 'Unknown')}")
-    
-    # Simple audio recording section
-    st.markdown("### 🎙️ Voice Recording")
-    
-    # File upload method for audio
-    st.markdown("Upload an audio file to transcribe:")
-    
-    uploaded_file = st.file_uploader(
-        "Choose an audio file",
-        type=["wav", "mp3", "ogg", "m4a"],
-        key="audio_uploader"
-    )
-    
-    if uploaded_file is not None:
-        # Display the uploaded audio
-        st.audio(uploaded_file, format=f"audio/{uploaded_file.name.split('.')[-1]}")
+        # Check voice service status
+        voice_status = st.session_state.backend_client.check_voice_status_sync()
+        if voice_status.get("status") == "ready":
+            st.success("🎤 Voice service is ready")
+        else:
+            st.warning(f"⚠️ Voice service status: {voice_status.get('message', 'Unknown')}")
         
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("🎯 Transcribe Audio", use_container_width=True):
-                # Read the file bytes
-                audio_bytes = uploaded_file.read()
-                uploaded_file.seek(0)  # Reset file pointer
-                
-                # Process the audio
-                with st.spinner("Transcribing audio..."):
-                    text = process_voice_input(audio_bytes)
-                    
-                    if text:
-                        st.success(f"📝 Transcription: **{text}**")
-                        st.session_state.last_transcription = text
-                    else:
-                        st.error("❌ Could not transcribe audio. Please try a different file.")
+        # Simple audio recording section
+        st.markdown("### 🎙️ Voice Recording")
         
-        with col2:
-            if st.button("💬 Send to Chat", use_container_width=True, disabled=not st.session_state.get('last_transcription')):
-                if st.session_state.get('last_transcription'):
-                    process_chat_message(st.session_state.last_transcription)
-                    st.rerun()
-    
-    # WebRTC recording if available
-    if WEBRTC_AVAILABLE:
-        st.markdown("### 🎤 Live Recording (Experimental)")
-        st.info("Click Start to begin recording from your microphone")
+        # File upload method for audio
+        st.markdown("Upload an audio file to transcribe:")
         
-        ctx = webrtc_streamer(
-            key="voice-recorder",
-            mode=WebRtcMode.SENDONLY,
-            audio_processor_factory=AudioProcessor,
-            media_stream_constraints={"audio": True, "video": False},
-            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+        uploaded_file = st.file_uploader(
+            "Choose an audio file",
+            type=["wav", "mp3", "ogg", "m4a"],
+            key="audio_uploader"
         )
         
-        if ctx.audio_processor:
-            if st.button("📤 Process Recording", use_container_width=True):
-                audio_bytes = ctx.audio_processor.get_audio_bytes()
-                if audio_bytes:
+        if uploaded_file is not None:
+            # Display the uploaded audio
+            st.audio(uploaded_file, format=f"audio/{uploaded_file.name.split('.')[-1]}")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🎯 Transcribe Audio", use_container_width=True):
+                    # Read the file bytes
+                    audio_bytes = uploaded_file.read()
+                    uploaded_file.seek(0)  # Reset file pointer
+                    
                     # Process the audio
-                    with st.spinner("Processing your voice..."):
+                    with st.spinner("Transcribing audio..."):
                         text = process_voice_input(audio_bytes)
                         
                         if text:
                             st.success(f"📝 Transcription: **{text}**")
-                            # Process as chat
-                            with st.spinner("JARVIS is thinking..."):
-                                process_chat_message(text)
-                                st.rerun()
+                            st.session_state.last_transcription = text
                         else:
-                            st.error("❌ Could not transcribe audio.")
-                else:
-                    st.warning("No audio recorded. Please speak into your microphone.")
-    
-    # Voice commands list
-    with st.expander("📝 Available Voice Commands"):
-        st.markdown("""
-        - **"Hey JARVIS"** - Wake word to activate
-        - **"What's the time?"** - Get current time
-        - **"What's the weather?"** - Weather information
-        - **"Tell me a joke"** - Hear a joke
-        - **"Search for [query]"** - Web search
-        - **"Analyze [topic]"** - Detailed analysis
-        - **"Show system status"** - System metrics
-        - **"Switch to [agent]"** - Change AI agent
-        - **"Help"** - Show available commands
-        """)
-    
-    # Voice settings and testing
-    st.markdown("### ⚙️ Voice Testing")
-    
-    # Test voice pipeline
-    if st.button("🧪 Test Voice Health", use_container_width=True):
-        with st.spinner("Checking voice service health..."):
-            try:
-                health_status = st.session_state.backend_client.check_voice_status_sync()
-                if health_status.get("status") == "ready":
-                    st.success("✅ Voice service is healthy!")
-                    with st.expander("Health Details"):
-                        if "details" in health_status:
-                            st.json(health_status["details"])
-                        else:
-                            st.json(health_status)
-                elif health_status.get("status") == "degraded":
-                    st.warning("⚠️ Voice service is degraded")
-                    with st.expander("Health Details"):
-                        st.json(health_status.get("details", health_status))
-                else:
-                    st.error(f"Voice service error: {health_status.get('message', 'Unknown')}")
-            except Exception as e:
-                st.error(f"Voice health check error: {e}")
-    
-    # Text to Speech Test
-    st.markdown("#### 🔊 Text-to-Speech Test")
-    tts_text = st.text_input("Enter text to synthesize:", "Hello, I am JARVIS, your AI assistant.")
-    if st.button("🎵 Synthesize Speech", use_container_width=True):
-        if tts_text:
-            with st.spinner("Synthesizing speech..."):
-                success = synthesize_speech(tts_text)
-                if success:
-                    st.success("✅ Speech synthesized successfully!")
-                else:
-                    st.error("❌ Speech synthesis failed")
+                            st.error("❌ Could not transcribe audio. Please try a different file.")
+            
+            with col2:
+                if st.button("💬 Send to Chat", use_container_width=True, disabled=not st.session_state.get('last_transcription')):
+                    if st.session_state.get('last_transcription'):
+                        process_chat_message(st.session_state.last_transcription)
+                        st.rerun()
+        
+        # WebRTC recording if available
+        if WEBRTC_AVAILABLE:
+            st.markdown("### 🎤 Live Recording (Experimental)")
+            st.info("Click Start to begin recording from your microphone")
+            
+            ctx = webrtc_streamer(
+                key="voice-recorder",
+                mode=WebRtcMode.SENDONLY,
+                audio_processor_factory=AudioProcessor,
+                media_stream_constraints={"audio": True, "video": False},
+                rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+            )
+            
+            if ctx.audio_processor:
+                if st.button("📤 Process Recording", use_container_width=True):
+                    audio_bytes = ctx.audio_processor.get_audio_bytes()
+                    if audio_bytes:
+                        # Process the audio
+                        with st.spinner("Processing your voice..."):
+                            text = process_voice_input(audio_bytes)
+                            
+                            if text:
+                                st.success(f"📝 Transcription: **{text}**")
+                                # Process as chat
+                                with st.spinner("JARVIS is thinking..."):
+                                    process_chat_message(text)
+                                    st.rerun()
+                            else:
+                                st.error("❌ Could not transcribe audio.")
+                    else:
+                        st.warning("No audio recorded. Please speak into your microphone.")
+        
+        # Voice commands list
+        with st.expander("📝 Available Voice Commands"):
+            st.markdown("""
+            - **"Hey JARVIS"** - Wake word to activate
+            - **"What's the time?"** - Get current time
+            - **"What's the weather?"** - Weather information
+            - **"Tell me a joke"** - Hear a joke
+            - **"Search for [query]"** - Web search
+            - **"Analyze [topic]"** - Detailed analysis
+            - **"Show system status"** - System metrics
+            - **"Switch to [agent]"** - Change AI agent
+            - **"Help"** - Show available commands
+            """)
+        
+        # Voice settings and testing
+        st.markdown("### ⚙️ Voice Testing")
+        
+        # Test voice pipeline
+        if st.button("🧪 Test Voice Health", use_container_width=True):
+            with st.spinner("Checking voice service health..."):
+                try:
+                    health_status = st.session_state.backend_client.check_voice_status_sync()
+                    if health_status.get("status") == "ready":
+                        st.success("✅ Voice service is healthy!")
+                        with st.expander("Health Details"):
+                            if "details" in health_status:
+                                st.json(health_status["details"])
+                            else:
+                                st.json(health_status)
+                    elif health_status.get("status") == "degraded":
+                        st.warning("⚠️ Voice service is degraded")
+                        with st.expander("Health Details"):
+                            st.json(health_status.get("details", health_status))
+                    else:
+                        st.error(f"Voice service error: {health_status.get('message', 'Unknown')}")
+                except Exception as e:
+                    st.error(f"Voice health check error: {e}")
+        
+        # Text to Speech Test
+        st.markdown("#### 🔊 Text-to-Speech Test")
+        tts_text = st.text_input("Enter text to synthesize:", "Hello, I am JARVIS, your AI assistant.")
+        if st.button("🎵 Synthesize Speech", use_container_width=True):
+            if tts_text:
+                with st.spinner("Synthesizing speech..."):
+                    success = synthesize_speech(tts_text)
+                    if success:
+                        st.success("✅ Speech synthesized successfully!")
+                    else:
+                        st.error("❌ Speech synthesis failed")
 
 with tab3:
     # System monitoring dashboard
@@ -711,26 +749,32 @@ with tab3:
     
     # Docker container status
     st.markdown("#### 🐳 Docker Containers")
-    
-    try:
-        containers = SystemMonitor.get_docker_stats()
-        
-        if containers:
-            container_data = []
-            for container in containers:
-                container_data.append({
-                    "Name": container["name"],
-                    "Status": "🟢 Running" if container["status"] == "running" else "🔴 Stopped",
-                    "CPU": f"{container.get('cpu', 0)}%",
-                    "Memory": f"{container.get('memory', 0)} MB",
-                    "Uptime": container.get("uptime", "N/A")
-                })
+    docker_support = SystemMonitor.get_docker_support_status()
+    if not settings.SHOW_DOCKER_STATS:
+        st.info("Docker statistics are disabled in the configuration.")
+    elif not docker_support.get("available"):
+        message = docker_support.get("error") or "Docker daemon is not reachable."
+        st.warning(f"Docker stats unavailable: {message}")
+    else:
+        try:
+            containers = SystemMonitor.get_docker_stats()
             
-            st.dataframe(container_data, use_container_width=True)
-        else:
-            st.info("No container data available")
-    except Exception as e:
-        st.error(f"Failed to get container stats: {e}")
+            if containers:
+                container_data = []
+                for container in containers:
+                    container_data.append({
+                        "Name": container["name"],
+                        "Status": "🟢 Running" if container["status"] == "running" else "🔴 Stopped",
+                        "CPU": f"{container.get('cpu', 0)}%",
+                        "Memory": f"{container.get('memory', 0)} MB",
+                        "Uptime": container.get("uptime", "N/A")
+                    })
+                
+                st.dataframe(container_data, use_container_width=True)
+            else:
+                st.info("No container data available")
+        except Exception as e:
+            st.error(f"Failed to get container stats: {e}")
     
     # Real-time performance chart
     st.markdown("#### 📈 Real-time Performance")

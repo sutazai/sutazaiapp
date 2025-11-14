@@ -1,0 +1,269 @@
+[
+    {
+        "Id": "b0add1a971adcacf60b5ba274dba7e009bb7d1bd60b08a550820f8b18c4c50fb",
+        "Created": "2025-11-13T14:50:04.242399192Z",
+        "Path": "dumb-init",
+        "Args": [
+            "--",
+            "chroma",
+            "run",
+            "/config.yaml"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 97311,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-11-13T14:50:04.43590417Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:737b99c09bbffed77d08fe1d63babf5397f7a972ce4aa4810a8c5a60ca9d5231",
+        "ResolvConfPath": "/var/lib/docker/containers/b0add1a971adcacf60b5ba274dba7e009bb7d1bd60b08a550820f8b18c4c50fb/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/b0add1a971adcacf60b5ba274dba7e009bb7d1bd60b08a550820f8b18c4c50fb/hostname",
+        "HostsPath": "/var/lib/docker/containers/b0add1a971adcacf60b5ba274dba7e009bb7d1bd60b08a550820f8b18c4c50fb/hosts",
+        "LogPath": "/var/lib/docker/containers/b0add1a971adcacf60b5ba274dba7e009bb7d1bd60b08a550820f8b18c4c50fb/b0add1a971adcacf60b5ba274dba7e009bb7d1bd60b08a550820f8b18c4c50fb-json.log",
+        "Name": "/sutazai-chromadb",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "sutazaiapp_chroma_data:/chroma/chroma:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sutazaiapp_sutazai-network",
+            "PortBindings": {
+                "8000/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10100"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 1073741824,
+            "NanoCpus": 1000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 536870912,
+            "MemorySwap": 2147483648,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "b0add1a971adcacf60b5ba274dba7e009bb7d1bd60b08a550820f8b18c4c50fb",
+                "LowerDir": "/var/lib/docker/overlay2/e1698e2f89cee4c2fda0e94099eb69c5032d483c4b6c847d913d1e2d2e7b7f12-init/diff:/var/lib/docker/overlay2/40c886a926fefbeb19c53fade254fb906f3f21d5cc1007807d12e87461331ee6/diff:/var/lib/docker/overlay2/65b71c511d893f9350259d767ce002b8694f48dcefec4098dcd58388de7f8930/diff:/var/lib/docker/overlay2/31a1b8d5062496eb3d87c5200ba95dd38ff93f812f24f46ac1ca00a7f5b0164c/diff:/var/lib/docker/overlay2/cacb306f4a6365b225570f5c55b919d6f33e4504890c887c36d35a3c272a4189/diff:/var/lib/docker/overlay2/254f8791c6c01dcc085541207ef8964e73daddf50328bf05f7188c87d9038347/diff",
+                "MergedDir": "/var/lib/docker/overlay2/e1698e2f89cee4c2fda0e94099eb69c5032d483c4b6c847d913d1e2d2e7b7f12/merged",
+                "UpperDir": "/var/lib/docker/overlay2/e1698e2f89cee4c2fda0e94099eb69c5032d483c4b6c847d913d1e2d2e7b7f12/diff",
+                "WorkDir": "/var/lib/docker/overlay2/e1698e2f89cee4c2fda0e94099eb69c5032d483c4b6c847d913d1e2d2e7b7f12/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "sutazaiapp_chroma_data",
+                "Source": "/var/lib/docker/volumes/sutazaiapp_chroma_data/_data",
+                "Destination": "/chroma/chroma",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "b0add1a971ad",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8000/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "IS_PERSISTENT=TRUE",
+                "PERSIST_DIRECTORY=/chroma/chroma",
+                "ANONYMIZED_TELEMETRY=FALSE",
+                "ALLOW_RESET=FALSE",
+                "CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthServerProvider",
+                "CHROMA_SERVER_AUTH_CREDENTIALS=sutazai-secure-token-2024",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "run",
+                "/config.yaml"
+            ],
+            "Image": "chromadb/chroma:1.0.20",
+            "Volumes": {
+                "/chroma/chroma": {}
+            },
+            "WorkingDir": "",
+            "Entrypoint": [
+                "dumb-init",
+                "--",
+                "chroma"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "e1bdb2169a2c95c01669f597ca3600816f407064d9681dfc676e38219f7dccf4",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sutazaiapp",
+                "com.docker.compose.project.config_files": "docker-compose-vectors.yml",
+                "com.docker.compose.project.working_dir": "/opt/sutazaiapp",
+                "com.docker.compose.service": "chromadb",
+                "com.docker.compose.version": "1.29.2"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "5fd851610709401443d8168a3130be830fddcd922aa802f9f45f7cfd4a430945",
+            "SandboxKey": "/var/run/docker/netns/5fd851610709",
+            "Ports": {
+                "8000/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10100"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10100"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sutazaiapp_sutazai-network": {
+                    "IPAMConfig": {
+                        "IPv4Address": "172.20.0.20"
+                    },
+                    "Links": null,
+                    "Aliases": [
+                        "chromadb",
+                        "b0add1a971ad"
+                    ],
+                    "MacAddress": "36:54:c8:d8:db:4d",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "4697ccfa8ce5da1b842e4ceebc9277a143b6ad8242733a9c4d5ae5304bd8492a",
+                    "EndpointID": "b0493826f2abffa8c207f8ed4b63185536533a7cffee30ca47e518d9b2c501ca",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.20",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sutazai-chromadb",
+                        "chromadb",
+                        "b0add1a971ad"
+                    ]
+                }
+            }
+        }
+    }
+]

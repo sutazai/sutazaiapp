@@ -1,0 +1,115 @@
+{
+  "test_timestamp": "2025-11-15T00:12:42.699791",
+  "total_duration_seconds": 152.08,
+  "configuration": {
+    "requests_per_agent": 15,
+    "concurrent_requests": 3
+  },
+  "agents": [
+    {
+      "name": "aider",
+      "success_rate": 0.0,
+      "successful_requests": 0,
+      "failed_requests": 15,
+      "avg_response_time_ms": 0,
+      "p95_response_time_ms": 0,
+      "p99_response_time_ms": 0,
+      "errors": [
+        "Agent not accessible: Cannot connect to host localhost:11402 ssl:default [Connect call failed ('127.0.0.1', 11402)]"
+      ]
+    },
+    {
+      "name": "crewai",
+      "success_rate": 20.0,
+      "successful_requests": 3,
+      "failed_requests": 12,
+      "avg_response_time_ms": 28610.09,
+      "p95_response_time_ms": 30862.15,
+      "p99_response_time_ms": 30862.15,
+      "errors": [
+        "Request timeout"
+      ]
+    },
+    {
+      "name": "documind",
+      "success_rate": 0.0,
+      "successful_requests": 0,
+      "failed_requests": 15,
+      "avg_response_time_ms": 0,
+      "p95_response_time_ms": 0,
+      "p99_response_time_ms": 0,
+      "errors": [
+        "Agent not accessible: Cannot connect to host localhost:11407 ssl:default [Connect call failed ('127.0.0.1', 11407)]"
+      ]
+    },
+    {
+      "name": "finrobot",
+      "success_rate": 0.0,
+      "successful_requests": 0,
+      "failed_requests": 15,
+      "avg_response_time_ms": 0,
+      "p95_response_time_ms": 0,
+      "p99_response_time_ms": 0,
+      "errors": [
+        "Agent not accessible: Cannot connect to host localhost:11408 ssl:default [Connect call failed ('127.0.0.1', 11408)]"
+      ]
+    },
+    {
+      "name": "gpt-engineer",
+      "success_rate": 0.0,
+      "successful_requests": 0,
+      "failed_requests": 15,
+      "avg_response_time_ms": 30411.72,
+      "p95_response_time_ms": 30997.93,
+      "p99_response_time_ms": 30997.93,
+      "errors": [
+        "Request timeout"
+      ]
+    },
+    {
+      "name": "langchain",
+      "success_rate": 20.0,
+      "successful_requests": 3,
+      "failed_requests": 12,
+      "avg_response_time_ms": 27660.05,
+      "p95_response_time_ms": 30400.5,
+      "p99_response_time_ms": 30400.5,
+      "errors": [
+        "Request timeout"
+      ]
+    },
+    {
+      "name": "letta",
+      "success_rate": 0.0,
+      "successful_requests": 0,
+      "failed_requests": 15,
+      "avg_response_time_ms": 0,
+      "p95_response_time_ms": 0,
+      "p99_response_time_ms": 0,
+      "errors": [
+        "Agent not accessible: Cannot connect to host localhost:11409 ssl:default [Connect call failed ('127.0.0.1', 11409)]"
+      ]
+    },
+    {
+      "name": "shellgpt",
+      "success_rate": 0.0,
+      "successful_requests": 0,
+      "failed_requests": 15,
+      "avg_response_time_ms": 0,
+      "p95_response_time_ms": 0,
+      "p99_response_time_ms": 0,
+      "errors": [
+        "Agent not accessible: Cannot connect to host localhost:11406 ssl:default [Connect call failed ('127.0.0.1', 11406)]"
+      ]
+    }
+  ],
+  "overall": {
+    "total_requests": 120,
+    "successful_requests": 6,
+    "failed_requests": 114,
+    "success_rate": 5.0,
+    "total_duration_seconds": 152.08,
+    "requests_per_second": 0.79,
+    "all_agents_passing": false
+  }
+}

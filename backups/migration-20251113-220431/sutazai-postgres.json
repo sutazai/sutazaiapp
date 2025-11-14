@@ -1,0 +1,325 @@
+[
+    {
+        "Id": "46bd32f89997c755d810febe162250a19daa94546354e1841321c0c001fd6bf4",
+        "Created": "2025-11-13T14:43:40.525688865Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "postgres"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 83474,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-11-13T14:43:40.762512582Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2025-11-13T22:03:44.031857276+01:00",
+                        "End": "2025-11-13T22:03:44.070316511+01:00",
+                        "ExitCode": 0,
+                        "Output": "/var/run/postgresql:5432 - accepting connections\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:03:54.071353573+01:00",
+                        "End": "2025-11-13T22:03:54.127295229+01:00",
+                        "ExitCode": 0,
+                        "Output": "/var/run/postgresql:5432 - accepting connections\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:04.128335246+01:00",
+                        "End": "2025-11-13T22:04:04.20012434+01:00",
+                        "ExitCode": 0,
+                        "Output": "/var/run/postgresql:5432 - accepting connections\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:14.201235116+01:00",
+                        "End": "2025-11-13T22:04:14.25861462+01:00",
+                        "ExitCode": 0,
+                        "Output": "/var/run/postgresql:5432 - accepting connections\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:24.259598725+01:00",
+                        "End": "2025-11-13T22:04:24.311716053+01:00",
+                        "ExitCode": 0,
+                        "Output": "/var/run/postgresql:5432 - accepting connections\n"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:aab18c983342019900e3a4a617c63432fd5e34449323ab04187a8e8c1ee3dbad",
+        "ResolvConfPath": "/var/lib/docker/containers/46bd32f89997c755d810febe162250a19daa94546354e1841321c0c001fd6bf4/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/46bd32f89997c755d810febe162250a19daa94546354e1841321c0c001fd6bf4/hostname",
+        "HostsPath": "/var/lib/docker/containers/46bd32f89997c755d810febe162250a19daa94546354e1841321c0c001fd6bf4/hosts",
+        "LogPath": "/var/lib/docker/containers/46bd32f89997c755d810febe162250a19daa94546354e1841321c0c001fd6bf4/46bd32f89997c755d810febe162250a19daa94546354e1841321c0c001fd6bf4-json.log",
+        "Name": "/sutazai-postgres",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/opt/sutazaiapp/init-scripts/postgres:/docker-entrypoint-initdb.d:ro",
+                "sutazaiapp_postgres_data:/var/lib/postgresql/data:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sutazaiapp_sutazai-network",
+            "PortBindings": {
+                "5432/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10000"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 268435456,
+            "NanoCpus": 500000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 134217728,
+            "MemorySwap": 536870912,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "46bd32f89997c755d810febe162250a19daa94546354e1841321c0c001fd6bf4",
+                "LowerDir": "/var/lib/docker/overlay2/debe4dc9e2e12325ff853723dd2846582a61066eef79008073e4e6250fa69932-init/diff:/var/lib/docker/overlay2/424423cceee48f1405ddcbd4e35056f7a9bc617b08cbdbf97d7673b36756e475/diff:/var/lib/docker/overlay2/c15b8db8b785c72a914bc61148331b548fc30cd6e3b692e226d5785397843005/diff:/var/lib/docker/overlay2/70de330595fadbc4daaec5a6d1eb349115afc127f1965a9ee2d6298c3f4f4aec/diff:/var/lib/docker/overlay2/f0c3e0f44e36bc430a87ff5e31b11df868799374ed54644de91d58786980dd01/diff:/var/lib/docker/overlay2/493f3cb2c88e6c37d81164268af0756489d2baf3609cef5a19d6314072dc71e7/diff:/var/lib/docker/overlay2/b1df0e2b40dab01b932f9686c5fdb1a3bf7f0e96465a4f005d2d277a7ef6dc71/diff:/var/lib/docker/overlay2/638ddfa82a498ad8953bdc0ee5f41bc35954f8a3cc44b786f5a983c4f907ac14/diff:/var/lib/docker/overlay2/21b7b98036ffc651ba5c5ae2f70980a71f4398fe26691b1ca706afb7fc439412/diff:/var/lib/docker/overlay2/1701782728f7c209724ccd72b6b57ab9d2824fb5c296695bcf6f3a19305c58c9/diff:/var/lib/docker/overlay2/b0ebc5b729411bf4073722348af11189c0df7c1e1c6de4f8c82b5010936fa892/diff:/var/lib/docker/overlay2/d76d6bce27a193bf6c86598fcb5c516314dc7a0a98d0401ca5369618536a6434/diff",
+                "MergedDir": "/var/lib/docker/overlay2/debe4dc9e2e12325ff853723dd2846582a61066eef79008073e4e6250fa69932/merged",
+                "UpperDir": "/var/lib/docker/overlay2/debe4dc9e2e12325ff853723dd2846582a61066eef79008073e4e6250fa69932/diff",
+                "WorkDir": "/var/lib/docker/overlay2/debe4dc9e2e12325ff853723dd2846582a61066eef79008073e4e6250fa69932/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/opt/sutazaiapp/init-scripts/postgres",
+                "Destination": "/docker-entrypoint-initdb.d",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "volume",
+                "Name": "sutazaiapp_postgres_data",
+                "Source": "/var/lib/docker/volumes/sutazaiapp_postgres_data/_data",
+                "Destination": "/var/lib/postgresql/data",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "46bd32f89997",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "5432/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "POSTGRES_DB=jarvis_ai",
+                "POSTGRES_USER=jarvis",
+                "POSTGRES_PASSWORD=sutazai_secure_2024",
+                "POSTGRES_INITDB_ARGS=--encoding=UTF-8",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "GOSU_VERSION=1.19",
+                "LANG=en_US.utf8",
+                "PG_MAJOR=16",
+                "PG_VERSION=16.10",
+                "PG_SHA256=de8485f4ce9c32e3ddfeef0b7c261eed1cecb54c9bcd170e437ff454cb292b42",
+                "DOCKER_PG_LLVM_DEPS=llvm19-dev \t\tclang19",
+                "PGDATA=/var/lib/postgresql/data"
+            ],
+            "Cmd": [
+                "postgres"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD-SHELL",
+                    "pg_isready -U jarvis -d jarvis_ai"
+                ],
+                "Interval": 10000000000,
+                "Timeout": 5000000000,
+                "StartPeriod": 30000000000,
+                "Retries": 5
+            },
+            "Image": "postgres:16-alpine",
+            "Volumes": {
+                "/docker-entrypoint-initdb.d": {},
+                "/var/lib/postgresql/data": {}
+            },
+            "WorkingDir": "/",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "eb2dd3b5904a574377ad86106aa0dbf3aa763f065c50bc4645a9bd00d34d45d3",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sutazaiapp",
+                "com.docker.compose.project.config_files": "docker-compose-core.yml",
+                "com.docker.compose.project.working_dir": "/opt/sutazaiapp",
+                "com.docker.compose.service": "postgres",
+                "com.docker.compose.version": "1.29.2"
+            },
+            "StopSignal": "SIGINT"
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "dd126a97bf6c1112a6e68c34d209b2b6f17f9d369bea0e4c5306b9b9c92f1189",
+            "SandboxKey": "/var/run/docker/netns/dd126a97bf6c",
+            "Ports": {
+                "5432/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10000"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10000"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sutazaiapp_sutazai-network": {
+                    "IPAMConfig": {
+                        "IPv4Address": "172.20.0.10"
+                    },
+                    "Links": null,
+                    "Aliases": [
+                        "46bd32f89997",
+                        "postgres"
+                    ],
+                    "MacAddress": "b6:4f:16:4e:36:ba",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "4697ccfa8ce5da1b842e4ceebc9277a143b6ad8242733a9c4d5ae5304bd8492a",
+                    "EndpointID": "8e43808af904074cc031119ed9752b3b50ae615b191cecbfae9a211ae8b45ea1",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.10",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sutazai-postgres",
+                        "46bd32f89997",
+                        "postgres"
+                    ]
+                }
+            }
+        }
+    }
+]

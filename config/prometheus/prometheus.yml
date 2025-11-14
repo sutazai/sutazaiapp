@@ -1,0 +1,105 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'sutazai-platform'
+    environment: 'production'
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          component: 'monitoring'
+
+  # Node Exporter - Host metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['sutazai-node-exporter:9100']
+        labels:
+          component: 'infrastructure'
+
+  # cAdvisor - Container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['sutazai-cadvisor:8080']
+        labels:
+          component: 'containers'
+
+  # Backend API
+  - job_name: 'backend-api'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['sutazai-backend:8000']
+        labels:
+          component: 'backend'
+          service: 'api'
+
+  # MCP Bridge
+  - job_name: 'mcp-bridge'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['sutazai-mcp-bridge:11100']
+        labels:
+          component: 'integration'
+          service: 'mcp'
+
+  # AI Agents
+  - job_name: 'ai-agents'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+          - 'sutazai-crewai:8000'
+          - 'sutazai-aider:8000'
+          - 'sutazai-langchain:8000'
+          - 'sutazai-shellgpt:8000'
+          - 'sutazai-documind:8000'
+          - 'sutazai-finrobot:8000'
+          - 'sutazai-letta:8000'
+          - 'sutazai-gpt-engineer:8000'
+        labels:
+          component: 'agents'
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['sutazai-postgres-exporter:9187']
+        labels:
+          component: 'database'
+          service: 'postgres'
+
+  # Redis Exporter
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['sutazai-redis-exporter:9121']
+        labels:
+          component: 'cache'
+          service: 'redis'
+
+  # RabbitMQ
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['sutazai-rabbitmq:15672']
+        labels:
+          component: 'messaging'
+          service: 'rabbitmq'
+
+  # Kong Gateway
+  - job_name: 'kong'
+    static_configs:
+      - targets: ['sutazai-kong:8001']
+        labels:
+          component: 'gateway'
+          service: 'kong'
+
+# Alerting rules
+rule_files:
+  - '/etc/prometheus/alerts/*.yml'
+
+# Alert manager configuration (optional)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets: ['alertmanager:9093']

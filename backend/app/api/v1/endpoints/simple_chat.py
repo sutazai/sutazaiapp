@@ -33,7 +33,11 @@ class SimpleChatResponse(BaseModel):
 async def simple_chat(request: SimpleChatRequest) -> SimpleChatResponse:
     """Simple direct chat with Ollama"""
     
-    ollama_url = "http://sutazai-ollama:11434"
+    # Get Ollama connection details from environment
+    import os
+    ollama_host = os.getenv("OLLAMA_HOST", "host.docker.internal")
+    ollama_port = os.getenv("OLLAMA_PORT", "11434")
+    ollama_url = f"http://{ollama_host}:{ollama_port}"
     
     # Create a more focused prompt
     prompt = f"""You are a helpful AI assistant. Keep your responses concise and directly answer the question.

@@ -15,7 +15,7 @@ class OllamaHelper:
     """Helper class for Ollama operations"""
     
     def __init__(self):
-        self.host = os.getenv("OLLAMA_HOST", "sutazai-ollama")
+        self.host = os.getenv("OLLAMA_HOST", "host.docker.internal")
         self.port = os.getenv("OLLAMA_PORT", "11434")
         self.base_url = f"http://{self.host}:{self.port}"
         self._available_models_cache = None

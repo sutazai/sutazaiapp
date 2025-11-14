@@ -1,0 +1,215 @@
+Need to install the following packages:
+playwright@1.56.1
+Ok to proceed? (y) 
+Error: Playwright Test did not expect test() to be called here.
+Most common reasons include:
+- You are calling test() in a configuration file.
+- You are calling test() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+
+   at frontend/tests/e2e/debug-page.spec.ts:3
+
+  1 | import { test } from '@playwright/test';
+  2 |
+> 3 | test('capture page content', async ({ page }) => {
+    |     ^
+  4 |   await page.goto('http://localhost:11000');
+  5 |   await page.waitForTimeout(5000);
+  6 |   
+    at TestTypeImpl._currentSuite (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:74:13)
+    at TestTypeImpl._createTest (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:87:24)
+    at /opt/sutazaiapp/frontend/node_modules/playwright/lib/transform/transform.js:275:12
+    at Object.<anonymous> (/opt/sutazaiapp/frontend/tests/e2e/debug-page.spec.ts:3:5)
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+
+   at frontend/tests/e2e/jarvis-basic.spec.ts:23
+
+  21 | }
+  22 |
+> 23 | test.describe('JARVIS Basic Functionality', () => {
+     |      ^
+  24 |   test.beforeEach(async ({ page }) => {
+  25 |     await page.goto('/');
+  26 |     await waitForStreamlitReady(page);
+    at TestTypeImpl._currentSuite (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:74:13)
+    at TestTypeImpl._describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:114:24)
+    at Function.describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/transform/transform.js:275:12)
+    at Object.<anonymous> (/opt/sutazaiapp/frontend/tests/e2e/jarvis-basic.spec.ts:23:6)
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+
+   at frontend/tests/e2e/jarvis-chat.spec.ts:17
+
+  15 | }
+  16 |
+> 17 | test.describe('JARVIS Chat Interface', () => {
+     |      ^
+  18 |   test.beforeEach(async ({ page }) => {
+  19 |     await page.goto('/');
+  20 |     await waitForStreamlitReady(page);
+    at TestTypeImpl._currentSuite (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:74:13)
+    at TestTypeImpl._describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:114:24)
+    at Function.describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/transform/transform.js:275:12)
+    at Object.<anonymous> (/opt/sutazaiapp/frontend/tests/e2e/jarvis-chat.spec.ts:17:6)
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+
+   at frontend/tests/e2e/jarvis-debug.spec.ts:3
+
+  1 | import { test, expect } from '@playwright/test';
+  2 |
+> 3 | test.describe('JARVIS Debug - What is actually running?', () => {
+    |      ^
+  4 |   test('capture actual page state and take screenshot', async ({ page }) => {
+  5 |     // Navigate to the app
+  6 |     await page.goto('http://localhost:11000');
+    at TestTypeImpl._currentSuite (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:74:13)
+    at TestTypeImpl._describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:114:24)
+    at Function.describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/transform/transform.js:275:12)
+    at Object.<anonymous> (/opt/sutazaiapp/frontend/tests/e2e/jarvis-debug.spec.ts:3:6)
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+
+   at frontend/tests/e2e/jarvis-integration.spec.ts:17
+
+  15 | }
+  16 |
+> 17 | test.describe('JARVIS Backend Integration', () => {
+     |      ^
+  18 |   test.beforeEach(async ({ page }) => {
+  19 |     // Set longer navigation timeout for slow loads
+  20 |     page.setDefaultNavigationTimeout(30000);
+    at TestTypeImpl._currentSuite (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:74:13)
+    at TestTypeImpl._describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:114:24)
+    at Function.describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/transform/transform.js:275:12)
+    at Object.<anonymous> (/opt/sutazaiapp/frontend/tests/e2e/jarvis-integration.spec.ts:17:6)
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+
+   at frontend/tests/e2e/jarvis-models.spec.ts:3
+
+  1 | import { test, expect } from '@playwright/test';
+  2 |
+> 3 | test.describe('JARVIS AI Model Support', () => {
+    |      ^
+  4 |   test.beforeEach(async ({ page }) => {
+  5 |     await page.goto('/');
+  6 |     await page.waitForTimeout(3000);
+    at TestTypeImpl._currentSuite (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:74:13)
+    at TestTypeImpl._describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:114:24)
+    at Function.describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/transform/transform.js:275:12)
+    at Object.<anonymous> (/opt/sutazaiapp/frontend/tests/e2e/jarvis-models.spec.ts:3:6)
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+
+   at frontend/tests/e2e/jarvis-ui.spec.ts:3
+
+  1 | import { test, expect } from '@playwright/test';
+  2 |
+> 3 | test.describe('JARVIS UI Components and Responsiveness', () => {
+    |      ^
+  4 |   test.beforeEach(async ({ page }) => {
+  5 |     await page.goto('/');
+  6 |     await page.waitForTimeout(3000);
+    at TestTypeImpl._currentSuite (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:74:13)
+    at TestTypeImpl._describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:114:24)
+    at Function.describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/transform/transform.js:275:12)
+    at Object.<anonymous> (/opt/sutazaiapp/frontend/tests/e2e/jarvis-ui.spec.ts:3:6)
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+
+   at frontend/tests/e2e/jarvis-voice.spec.ts:3
+
+  1 | import { test, expect } from '@playwright/test';
+  2 |
+> 3 | test.describe('JARVIS Voice Assistant Features', () => {
+    |      ^
+  4 |   test.beforeEach(async ({ page }) => {
+  5 |     await page.goto('/');
+  6 |     await page.waitForTimeout(3000);
+    at TestTypeImpl._currentSuite (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:74:13)
+    at TestTypeImpl._describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:114:24)
+    at Function.describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/transform/transform.js:275:12)
+    at Object.<anonymous> (/opt/sutazaiapp/frontend/tests/e2e/jarvis-voice.spec.ts:3:6)
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+
+   at frontend/tests/e2e/jarvis-websocket.spec.ts:3
+
+  1 | import { test, expect } from '@playwright/test';
+  2 |
+> 3 | test.describe('JARVIS WebSocket Real-time Communication', () => {
+    |      ^
+  4 |   test.beforeEach(async ({ page }) => {
+  5 |     // Enable console logging
+  6 |     page.on('console', msg => {
+    at TestTypeImpl._currentSuite (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:74:13)
+    at TestTypeImpl._describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/common/testType.js:114:24)
+    at Function.describe (/opt/sutazaiapp/frontend/node_modules/playwright/lib/transform/transform.js:275:12)
+    at Object.<anonymous> (/opt/sutazaiapp/frontend/tests/e2e/jarvis-websocket.spec.ts:3:6)
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/integration/GitHubProjectManager.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/integration/persistence-and-events.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/services/TaskContextGenerationService.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/services/TaskGenerationService.enhanced.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/tools/ParsePRDTool.enhanced.test.ts
+ReferenceError: describe is not defined
+
+   at mcp-servers/github-project-manager/src/__tests__/unit/infrastructure/cache/ResourceCache.test.ts:5
+
+  3 |
+  4 | // Create a manual mock instead of using jest.mock
+> 5 | describe('ResourceCache', () => {
+    | ^
+  6 |   let cache: any;
+  7 |   // Use fixed dates for testing to avoid timestamp comparison issues
+  8 |   const fixedDateString = '2025-05-22T00:00:00.000Z';
+    at /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/unit/infrastructure/cache/ResourceCache.test.ts:5:1
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/unit/infrastructure/github/GitHubConfig.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/unit/infrastructure/github/repositories/GitHubIssueRepository.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/unit/infrastructure/github/repositories/GitHubMilestoneRepository.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/unit/infrastructure/github/repositories/GitHubProjectRepository.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/unit/infrastructure/mcp/MCPErrorHandler.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/unit/infrastructure/mcp/MCPResponseFormatter.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/unit/infrastructure/resource/ResourceManager.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/src/__tests__/unit/services/ProjectManagementService.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/tests/ai-services/AIServiceFactory.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/tests/ai-services/PRDGenerationService.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/tests/ai-services/RequirementsTraceabilityService.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/tests/ai-services/TaskGenerationService.test.ts
+Error: Cannot find package '@jest/globals' imported from /opt/sutazaiapp/mcp-servers/github-project-manager/tests/ai-tools/GeneratePRDTool.test.ts
+Error: No tests found
+

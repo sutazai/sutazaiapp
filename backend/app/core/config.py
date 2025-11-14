@@ -44,8 +44,8 @@ class Settings(BaseSettings):
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
     
     # Redis
-    REDIS_HOST: str = "sutazai-redis"
-    REDIS_PORT: int = 6379
+    REDIS_HOST: str = os.getenv("REDIS_HOST", "sutazai-redis")
+    REDIS_PORT: int = int(os.getenv("REDIS_PORT", "6379"))
     REDIS_DB: int = 0
     
     @property
@@ -53,9 +53,9 @@ class Settings(BaseSettings):
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
     
     # RabbitMQ (using secrets manager)
-    RABBITMQ_HOST: str = "sutazai-rabbitmq"
-    RABBITMQ_PORT: int = 5672
-    RABBITMQ_USER: str = "sutazai"
+    RABBITMQ_HOST: str = os.getenv("RABBITMQ_HOST", "sutazai-rabbitmq")
+    RABBITMQ_PORT: int = int(os.getenv("RABBITMQ_PORT", "5672"))
+    RABBITMQ_USER: str = os.getenv("RABBITMQ_USER", "jarvis")
     
     @property
     def RABBITMQ_PASSWORD(self) -> str:

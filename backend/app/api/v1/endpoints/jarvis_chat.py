@@ -331,7 +331,7 @@ async def get_available_models() -> List[ModelInfo]:
             import httpx
             import os
             try:
-                ollama_host = os.getenv("OLLAMA_HOST", "sutazai-ollama")
+                ollama_host = os.getenv("OLLAMA_HOST", "host.docker.internal")
                 ollama_port = os.getenv("OLLAMA_PORT", "11434")
                 async with httpx.AsyncClient(timeout=5.0) as client:
                     response = await client.get(f"http://{ollama_host}:{ollama_port}/api/tags")
@@ -422,7 +422,7 @@ async def health_check() -> dict:
     
     # Check Ollama
     try:
-        ollama_host = os.getenv("OLLAMA_HOST", "sutazai-ollama")
+        ollama_host = os.getenv("OLLAMA_HOST", "host.docker.internal")
         ollama_port = os.getenv("OLLAMA_PORT", "11434")
         async with httpx.AsyncClient(timeout=3.0) as client:
             response = await client.get(f"http://{ollama_host}:{ollama_port}/api/tags")
