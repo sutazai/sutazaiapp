@@ -46,4 +46,5 @@ docker==7.0.0
 # AI/ML Support
 numpy==1.26.4
 pandas==2.2.0
-scikit-learn==1.5.2bleach==6.1.0
+scikit-learn==1.5.2
+bleach==6.1.0

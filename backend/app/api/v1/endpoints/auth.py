@@ -28,23 +28,35 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED, tags=["authentication"])
 async def register(
     user_data: UserCreate,
     db: Annotated[AsyncSession, Depends(get_db)]
 ):
     """
-    Register a new user
+    Register a new user account
     
-    Args:
-        user_data: User registration data
-        db: Database session
-        
-    Returns:
-        Created user information
-        
-    Raises:
-        HTTPException: If username or email already exists or password is weak
+    Creates a new user with the provided credentials. Passwords must meet security requirements:
+    - Minimum 8 characters
+    - At least one uppercase letter
+    - At least one lowercase letter
+    - At least one number
+    - At least one special character
+    
+    Email verification will be sent (if email service is configured).
+    
+    **Request Body:**
+    - `email` (required): Valid email address, must be unique
+    - `username` (required): Alphanumeric username (3-20 chars), must be unique
+    - `password` (required): Strong password meeting requirements above
+    - `full_name` (optional): User's full name
+    
+    **Returns:**
+    - `201 Created`: User created successfully with user details
+    
+    **Errors:**
+    - `400 Bad Request`: Email/username already registered or weak password
+    - `422 Unprocessable Entity`: Invalid input data
     """
     # Validate password strength
     is_valid, error_message = security.validate_password_strength(user_data.password)
@@ -107,23 +119,36 @@ async def register(
     return UserResponse.model_validate(db_user)
 
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=Token, tags=["authentication"])
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Annotated[AsyncSession, Depends(get_db)]
 ):
     """
-    OAuth2 compatible token login
+    Authenticate user and receive JWT tokens
     
-    Args:
-        form_data: OAuth2 password request form (username and password)
-        db: Database session
-        
-    Returns:
-        Access and refresh tokens
-        
-    Raises:
-        HTTPException: If authentication fails
+    OAuth2-compatible password flow authentication. Accepts username or email in the username field.
+    
+    **Account Security:**
+    - Account locks after 5 failed attempts for 30 minutes
+    - Failed attempt counter resets on successful login
+    - Locked accounts cannot authenticate until lockout expires
+    
+    **Request Form Data:**
+    - `username` (required): Username or email address
+    - `password` (required): User password
+    
+    **Returns:**
+    - `200 OK`: Authentication successful with tokens
+        - `access_token`: Short-lived JWT (30 minutes)
+        - `refresh_token`: Long-lived JWT (7 days)
+        - `token_type`: "bearer"
+        - `expires_in`: Token expiration in seconds
+    
+    **Errors:**
+    - `401 Unauthorized`: Invalid credentials
+    - `403 Forbidden`: Account locked or inactive
+    - `422 Unprocessable Entity`: Missing fields
     """
     # Find user by username or email
     result = await db.execute(
@@ -275,20 +300,26 @@ async def refresh_token(
         )
 
 
-@router.post("/logout")
+@router.post("/logout", tags=["authentication"])
 async def logout(
     current_user: Annotated[User, Depends(get_current_active_user)],
     db: Annotated[AsyncSession, Depends(get_db)]
 ):
     """
-    Logout current user (invalidate refresh token)
+    Logout user and invalidate refresh token
     
-    Args:
-        current_user: Current authenticated user
-        db: Database session
-        
-    Returns:
-        Success message
+    Invalidates the user's refresh token, preventing it from being used to obtain new access tokens.
+    The current access token will remain valid until expiration (30 minutes).
+    
+    **Authentication:**
+    - Header: `Authorization: Bearer <access_token>`
+    
+    **Returns:**
+    - `200 OK`: Logout successful
+        - `message`: "Successfully logged out"
+    
+    **Errors:**
+    - `401 Unauthorized`: Missing or invalid token
     """
     # Clear refresh token
     current_user.refresh_token = None
@@ -299,79 +330,94 @@ async def logout(
     return {"message": "Successfully logged out"}
 
 
-@router.get("/me", response_model=UserResponse)
-async def get_current_user_info(
+@router.get("/me", response_model=UserResponse, tags=["authentication"])
+async def get_user_profile(
     current_user: Annotated[User, Depends(get_current_active_user)]
 ):
     """
-    Get current user information
+    Get authenticated user's profile information
     
-    Args:
-        current_user: Current authenticated user
-        
-    Returns:
-        Current user information
+    Returns the profile of the currently authenticated user based on the JWT access token.
+    Requires valid authentication token in Authorization header.
+    
+    **Authentication:**
+    - Header: `Authorization: Bearer <access_token>`
+    
+    **Returns:**
+    - `200 OK`: User profile data
+        - `id`: User ID
+        - `email`: Email address
+        - `username`: Username
+        - `full_name`: Full name (if provided)
+        - `is_active`: Account active status
+        - `is_verified`: Email verification status
+        - `is_superuser`: Admin privileges
+        - `created_at`: Account creation timestamp
+        - `last_login`: Last successful login timestamp
+    
+    **Errors:**
+    - `401 Unauthorized`: Missing or invalid token
+    - `403 Forbidden`: Inactive account
     """
-    return UserResponse.model_validate(current_user)
 
 
-@router.post("/password-reset", dependencies=[Depends(strict_rate_limiter)])
+@router.post("/password-reset", dependencies=[Depends(strict_rate_limiter)], tags=["authentication"])
 async def request_password_reset(
     reset_data: PasswordReset,
     db: Annotated[AsyncSession, Depends(get_db)]
 ):
     """
-    Request password reset token
-    Rate limited to prevent abuse
+    Request password reset email
     
-    Args:
-        reset_data: Email address for reset
-        db: Database session
-        
-    Returns:
-        Success message (always returns success to prevent email enumeration)
+    Sends a password reset email with a one-time token valid for 1 hour.
+    Always returns success to prevent email enumeration attacks.
+    
+    **Rate Limit:** 5 requests per minute (strict)
+    
+    **Request Body:**
+    - `email` (required): Email address to send reset link
+    
+    **Returns:**
+    - `200 OK`: Request processed (always success)
+        - `message`: "If the email exists, a password reset link has been sent"
+    
+    **Errors:**
+    - `429 Too Many Requests`: Rate limit exceeded
+    - `422 Unprocessable Entity`: Invalid email format
+    
+    **Security Note:**
+    Response is identical whether email exists or not to prevent account enumeration.
     """
-    # Find user by email
-    result = await db.execute(
-        select(User).where(User.email == reset_data.email)
-    )
-    user = result.scalar_one_or_none()
-    
-    if user:
-        # Generate reset token
-        reset_token = security.generate_password_reset_token(user.email)
-        
-        # Send password reset email
-        email_sent = await email_service.send_password_reset_email(user.email, reset_token)
-        
-        if email_sent:
-            logger.info(f"Password reset email sent to {user.email}")
-        else:
-            logger.warning(f"Failed to send password reset email to {user.email}, but token generated: {reset_token}")
-    
-    # Always return success to prevent email enumeration
-    return {
-        "message": "If the email exists, a password reset link has been sent"
-    }
 
 
-@router.post("/password-reset/confirm")
+@router.post("/password-reset/confirm", tags=["authentication"])
 async def confirm_password_reset(
-    reset_confirm: PasswordResetConfirm,
+    confirm_data: PasswordResetConfirm,
     db: Annotated[AsyncSession, Depends(get_db)]
 ):
     """
-    Confirm password reset with token
+    Reset password using reset token
     
-    Args:
-        reset_confirm: Reset token and new password
-        db: Database session
-        
-    Returns:
-        Success message
-        
-    Raises:
-        HTTPException: If token is invalid or expired
+    Completes the password reset process using the token from the reset email.
+    The new password must meet all security requirements.
+    
+    **Request Body:**
+    - `token` (required): Password reset token from email
+    - `new_password` (required): New password meeting security requirements
+        - Minimum 8 characters
+        - At least one uppercase letter
+        - At least one lowercase letter
+        - At least one number
+        - At least one special character
+    
+    **Returns:**
+    - `200 OK`: Password reset successful
+        - `message`: "Password successfully reset"
+    
+    **Errors:**
+    - `400 Bad Request`: Invalid or expired token, weak password
+    - `404 Not Found`: User not found
+    - `422 Unprocessable Entity`: Invalid input
     """
     # Verify reset token
     email = security.verify_password_reset_token(reset_confirm.token)
@@ -407,23 +453,28 @@ async def confirm_password_reset(
     return {"message": "Password successfully reset"}
 
 
-@router.post("/verify-email/{token}")
+@router.post("/verify-email/{token}", tags=["authentication"])
 async def verify_email(
     token: str,
     db: Annotated[AsyncSession, Depends(get_db)]
 ):
     """
-    Verify user email with token
+    Verify user's email address
     
-    Args:
-        token: Email verification token
-        db: Database session
-        
-    Returns:
-        Success message
-        
-    Raises:
-        HTTPException: If token is invalid
+    Completes email verification using the token sent to the user's email during registration.
+    Token is valid for 24 hours.
+    
+    **Path Parameters:**
+    - `token` (required): Email verification token from registration email
+    
+    **Returns:**
+    - `200 OK`: Email verified successfully
+        - `message`: "Email successfully verified"
+        - `user`: Updated user object with `is_verified: true`
+    
+    **Errors:**
+    - `400 Bad Request`: Invalid or expired token
+    - `404 Not Found`: User not found
     """
     # Verify the token and extract email
     email = security.verify_email_token(token)

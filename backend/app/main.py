@@ -4,6 +4,7 @@ FastAPI backend with comprehensive service integrations
 """
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Response, Request
+from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from contextlib import asynccontextmanager
@@ -23,17 +24,19 @@ from app.api.v1.router import api_router
 # Import Prometheus metrics
 from prometheus_client import Counter, Histogram, Gauge, generate_latest, REGISTRY, CONTENT_TYPE_LATEST
 
+# Import custom middleware
+from app.middleware.metrics import PrometheusMetricsMiddleware
+from app.middleware.logging import RequestLoggingMiddleware, configure_structured_logging
+
 # Import models to ensure they're registered
 from app.models import User
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
-)
+# Configure structured logging
+if settings.DEBUG:
+    configure_structured_logging(log_level="DEBUG")
+else:
+    configure_structured_logging(log_level="INFO")
+
 logger = logging.getLogger(__name__)
 
 # Initialize Prometheus metrics
@@ -115,12 +118,50 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 # Create FastAPI application
 app = FastAPI(
-    title=settings.APP_NAME,
-    version=settings.APP_VERSION,
+    title="SutazAI Backend API",
+    description="Comprehensive AI-powered platform with authentication, vector databases, and AI agents",
+    version="1.0.0",
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     docs_url="/docs",
     redoc_url="/redoc",
-    lifespan=lifespan
+    lifespan=lifespan,
+    contact={
+        "name": "SutazAI Support",
+        "url": "https://github.com/sutazai/sutazaiapp",
+        "email": "support@sutazai.com",
+    },
+    license_info={
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+    },
+    servers=[
+        {
+            "url": "http://localhost:10200",
+            "description": "Development server"
+        },
+        {
+            "url": "https://api.sutazai.com",
+            "description": "Production server"
+        }
+    ],
+    openapi_tags=[
+        {
+            "name": "authentication",
+            "description": "User authentication and authorization endpoints"
+        },
+        {
+            "name": "health",
+            "description": "Health check and monitoring endpoints"
+        },
+        {
+            "name": "metrics",
+            "description": "Prometheus metrics for monitoring"
+        },
+        {
+            "name": "chat",
+            "description": "AI chat and WebSocket endpoints"
+        }
+    ]
 )
 
 # Configure CORS
@@ -134,6 +175,12 @@ app.add_middleware(
 
 # Add security headers middleware
 app.add_middleware(SecurityHeadersMiddleware)
+
+# Add request logging middleware
+app.add_middleware(RequestLoggingMiddleware)
+
+# Add Prometheus metrics middleware
+app.add_middleware(PrometheusMetricsMiddleware)
 
 # Include API routers
 app.include_router(api_router, prefix=settings.API_V1_STR)
@@ -394,9 +441,21 @@ async def websocket_chat(websocket: WebSocket):
         ws_manager.disconnect(websocket, session_id)
 
 
-@app.get("/")
+@app.get("/", tags=["health"])
 async def root():
-    """Root endpoint"""
+    """
+    API root endpoint with service information
+    
+    Returns basic information about the SutazAI API including version, status, and links to documentation.
+    
+    **Returns:**
+    - `200 OK`: Service information
+        - `app`: Application name
+        - `version`: API version
+        - `status`: operational
+        - `docs`: Link to interactive API documentation
+        - `api`: API base path
+    """
     return {
         "app": settings.APP_NAME,
         "version": settings.APP_VERSION,
@@ -406,15 +465,72 @@ async def root():
     }
 
 
-@app.get("/health")
+@app.get("/health", tags=["health"])
 async def health_check():
-    """Basic health check"""
+    """
+    Basic health check endpoint
+    
+    Quickly determine if the API is operational. Does not check external service dependencies.
+    Use `/health/detailed` for comprehensive service health checks.
+    
+    **Returns:**
+    - `200 OK`: Service is healthy
+        - `status`: "healthy"
+        - `app`: Application name
+    """
     return {"status": "healthy", "app": settings.APP_NAME}
 
 
-@app.get("/health/detailed")
+@app.get("/health/detailed", tags=["health"])
 async def detailed_health_check():
-    """Detailed health check for all services"""
+    """
+    Comprehensive health check for all service dependencies
+    
+    Checks connectivity and health status of all integrated services including:
+    - **Redis**: Caching and session management
+    - **RabbitMQ**: Message queue
+    - **Neo4j**: Graph database
+    - **ChromaDB**: Vector database
+    - **Qdrant**: Vector database
+    - **FAISS**: Vector database
+    - **Consul**: Service discovery
+    - **Kong**: API gateway
+    - **Ollama**: AI model server
+    
+    **Returns:**
+    - `200 OK`: All services healthy or some degraded
+        - `status`: "healthy" (all pass) or "degraded" (some failing)
+        - `app`: Application name
+        - `version`: API version
+        - `services`: Object with service names and boolean health status
+        - `healthy_count`: Number of healthy services
+        - `total_services`: Total number of services checked
+    
+    - `503 Service Unavailable`: Health check failed
+        - `detail`: Error message
+    
+    **Example Response:**
+    ```json
+    {
+      "status": "healthy",
+      "app": "SutazAI Backend API",
+      "version": "1.0.0",
+      "services": {
+        "redis": true,
+        "rabbitmq": true,
+        "neo4j": true,
+        "chromadb": true,
+        "qdrant": true,
+        "faiss": true,
+        "consul": true,
+        "kong": true,
+        "ollama": true
+      },
+      "healthy_count": 9,
+      "total_services": 9
+    }
+    ```
+    """
     try:
         service_health = await service_connections.health_check()
         all_healthy = all(service_health.values())
@@ -436,9 +552,66 @@ async def detailed_health_check():
         raise HTTPException(status_code=503, detail=str(e))
 
 
-@app.get("/metrics")
+@app.get("/metrics", tags=["metrics"])
 async def metrics():
-    """Prometheus metrics endpoint"""
+    """
+    Prometheus-compatible metrics endpoint
+    
+    Exposes comprehensive application and infrastructure metrics in Prometheus text format.
+    Scrape this endpoint with Prometheus/Grafana for monitoring and alerting.
+    
+    **Metric Categories:**
+    
+    **HTTP Metrics:**
+    - `http_requests_total`: Total HTTP requests by method, endpoint, status code
+    - `http_request_duration_seconds`: Request latency histogram (14 buckets)
+    - `http_request_size_bytes`: Request body size
+    - `http_response_size_bytes`: Response body size
+    - `http_requests_in_progress`: Currently processing requests
+    
+    **Authentication Metrics:**
+    - `auth_login_total`: Login attempts by success/failure
+    - `auth_token_generation_total`: Token generation by type
+    - `auth_account_lockouts_total`: Account lockouts triggered
+    - `auth_password_resets_total`: Password reset requests
+    
+    **Database Metrics:**
+    - `db_queries_total`: Database queries by operation
+    - `db_query_duration_seconds`: Query execution time
+    - `db_connection_pool_size`: Connection pool size
+    - `db_connection_pool_active`: Active connections
+    - `db_query_errors_total`: Database errors
+    
+    **Cache Metrics:**
+    - `cache_hits_total`: Cache hit count by cache type
+    - `cache_misses_total`: Cache miss count
+    - `cache_operations_total`: Cache operations (get, set, delete)
+    - `cache_operation_duration_seconds`: Cache operation latency
+    
+    **Message Queue Metrics:**
+    - `rabbitmq_messages_published_total`: Messages published by queue
+    - `rabbitmq_messages_consumed_total`: Messages consumed
+    - `rabbitmq_message_processing_duration_seconds`: Processing time
+    
+    **Vector Database Metrics:**
+    - `vector_db_operations_total`: Vector DB operations by type and database
+    - `vector_db_operation_duration_seconds`: Operation latency
+    - `vector_db_collection_size`: Collection document count
+    
+    **External API Metrics:**
+    - `external_api_calls_total`: External API calls by service and status
+    - `external_api_call_duration_seconds`: API call latency
+    
+    **Service Health:**
+    - `backend_service_status`: Service health by service name (1=healthy, 0=unhealthy)
+    
+    **Returns:**
+    - `200 OK`: Metrics in Prometheus text format
+    - Content-Type: `text/plain; version=0.0.4; charset=utf-8`
+    
+    **Errors:**
+    - `500 Internal Server Error`: Failed to generate metrics
+    """
     try:
         # Update connection metrics before exposing
         service_health = await service_connections.health_check()

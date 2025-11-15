@@ -1,0 +1,35 @@
+2025-11-15 18:45:18.691 UTC - __main__ - INFO - Kong Gateway Comprehensive Test Suite starting at 2025-11-15T17:45:18.690343+00:00
+2025-11-15 18:45:18.691 UTC - __main__ - INFO - Kong Tester initialized with execution ID: kong_test_20251115_174518_690
+2025-11-15 18:45:18.691 UTC - __main__ - INFO - Starting Kong comprehensive test suite
+2025-11-15 18:45:18.691 UTC - __main__ - INFO - Running test: test_admin_api_health
+2025-11-15 18:45:18.704 UTC - __main__ - INFO - Test Kong Admin API Health: PASS (Duration: 0.0127s)
+2025-11-15 18:45:19.204 UTC - __main__ - INFO - Running test: test_routes_inventory
+2025-11-15 18:45:19.239 UTC - __main__ - INFO - Test Kong Routes Inventory: FAIL (Duration: 0.0343s)
+2025-11-15 18:45:19.739 UTC - __main__ - INFO - Running test: test_services_health
+2025-11-15 18:45:19.754 UTC - __main__ - INFO - Test Kong Services Health: PASS (Duration: 0.0142s)
+2025-11-15 18:45:20.254 UTC - __main__ - INFO - Running test: test_plugins_list
+2025-11-15 18:45:20.275 UTC - __main__ - INFO - Test Kong Plugins List: PASS (Duration: 0.0203s)
+2025-11-15 18:45:20.776 UTC - __main__ - INFO - Running test: test_all_routes_accessible
+2025-11-15 18:45:20.867 UTC - __main__ - INFO - Test All Routes Accessible: PASS (Duration: 0.0905s)
+2025-11-15 18:45:21.367 UTC - __main__ - INFO - Running test: test_rate_limiting
+2025-11-15 18:45:21.378 UTC - __main__ - INFO - Request 1: Rate limit remaining: 998
+2025-11-15 18:45:21.384 UTC - __main__ - INFO - Request 2: Rate limit remaining: 997
+2025-11-15 18:45:21.390 UTC - __main__ - INFO - Request 3: Rate limit remaining: 996
+2025-11-15 18:45:21.399 UTC - __main__ - INFO - Request 4: Rate limit remaining: 995
+2025-11-15 18:45:21.409 UTC - __main__ - INFO - Request 5: Rate limit remaining: 994
+2025-11-15 18:45:21.415 UTC - __main__ - INFO - Request 6: Rate limit remaining: 993
+2025-11-15 18:45:21.420 UTC - __main__ - INFO - Request 7: Rate limit remaining: 992
+2025-11-15 18:45:21.425 UTC - __main__ - INFO - Request 8: Rate limit remaining: 991
+2025-11-15 18:45:21.432 UTC - __main__ - INFO - Request 9: Rate limit remaining: 990
+2025-11-15 18:45:21.438 UTC - __main__ - INFO - Request 10: Rate limit remaining: 989
+2025-11-15 18:45:21.438 UTC - __main__ - INFO - Test Rate Limiting: PASS (Duration: 0.0708s)
+2025-11-15 18:45:21.938 UTC - __main__ - INFO - Running test: test_cors_configuration
+2025-11-15 18:45:21.944 UTC - __main__ - INFO - Test CORS Configuration: PASS (Duration: 0.0056s)
+2025-11-15 18:45:22.445 UTC - __main__ - INFO - Running test: test_request_transformation
+2025-11-15 18:45:22.452 UTC - __main__ - INFO - Test Request Transformation: PASS (Duration: 0.0068s)
+2025-11-15 18:45:22.952 UTC - __main__ - INFO - Running test: test_request_size_limit
+2025-11-15 18:45:22.959 UTC - __main__ - INFO - Test Request Size Limiting: PASS (Duration: 0.0067s)
+2025-11-15 18:45:23.462 UTC - __main__ - INFO - Results saved to kong_test_results_20251115_174518.json
+2025-11-15 18:45:23.462 UTC - __main__ - INFO - Report saved to KONG_TEST_REPORT_20251115_174518.txt
+2025-11-15 18:45:23.462 UTC - __main__ - INFO - JSON results saved to kong_test_results_20251115_174518.json
+2025-11-15 18:45:23.462 UTC - __main__ - WARNING - 1 test(s) failed

@@ -291,6 +291,16 @@ if 'available_models' not in st.session_state:
 if 'available_agents' not in st.session_state:
     st.session_state.available_agents = []
 
+# Initialize backend client
+if 'backend_client' not in st.session_state:
+    st.session_state.backend_client = BackendClient(base_url=settings.BACKEND_URL)
+
+if 'backend_connected' not in st.session_state:
+    st.session_state.backend_connected = False
+
+if 'websocket_connected' not in st.session_state:
+    st.session_state.websocket_connected = False
+
 # Function to check backend connection
 def check_backend_connection():
     """Check if backend is connected and update status"""

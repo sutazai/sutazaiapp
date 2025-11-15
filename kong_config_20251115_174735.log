@@ -1,0 +1,24 @@
+2025-11-15 18:47:35,449 - INFO - Kong Gateway Advanced Configuration Starting...
+2025-11-15 18:47:35,449 - INFO - Kong Configurator initialized
+2025-11-15 18:47:35,449 - INFO - Starting Kong advanced configuration...
+2025-11-15 18:47:35,449 - INFO - 
+=== Creating Upstreams with Health Checks ===
+2025-11-15 18:47:35,469 - INFO - Upstream backend-upstream already exists
+2025-11-15 18:47:35,519 - INFO - Created upstream: vector-db-upstream with algorithm: least-connections
+2025-11-15 18:47:35,556 - INFO - Added target sutazai-chromadb:8000 to upstream vector-db-upstream
+2025-11-15 18:47:35,579 - INFO - Added target sutazai-qdrant:10102 to upstream vector-db-upstream
+2025-11-15 18:47:35,580 - INFO - 
+=== Configuring JWT Authentication ===
+2025-11-15 18:47:35,580 - INFO - JWT configuration skipped (enable manually if needed)
+2025-11-15 18:47:35,580 - INFO - 
+=== Configuring IP Restriction ===
+2025-11-15 18:47:35,580 - INFO - IP restriction configuration skipped (enable manually if needed)
+2025-11-15 18:47:35,580 - INFO - 
+=== Configuring Proxy Cache ===
+2025-11-15 18:47:35,860 - INFO - Configured proxy cache with TTL: 300s
+2025-11-15 18:47:35,861 - INFO - 
+=== Configuring Circuit Breaker ===
+2025-11-15 18:47:35,871 - ERROR - Failed to configure request termination: {"fields":{"config":"message cannot be used with content_type or body"},"code":2,"name":"schema violation","message":"schema violation (config: message cannot be used with content_type or body)"}
+2025-11-15 18:47:35,871 - INFO - 
+=== Kong Advanced Configuration Completed ===
+2025-11-15 18:47:35,871 - INFO - Kong advanced configuration completed successfully
