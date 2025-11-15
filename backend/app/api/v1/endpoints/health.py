@@ -5,6 +5,7 @@ Health check endpoints for service monitoring
 from fastapi import APIRouter, HTTPException
 from typing import Dict, Any
 from app.services.connections import service_connections
+from app.core.config import settings
 import logging
 
 router = APIRouter()
@@ -19,6 +20,7 @@ async def health_status() -> Dict[str, Any]:
         all_healthy = all(service_health.values())
         
         return {
+            "version": settings.APP_VERSION,
             "status": "healthy" if all_healthy else "degraded",
             "services": service_health,
             "healthy_count": sum(service_health.values()),

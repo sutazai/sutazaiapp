@@ -1,0 +1,690 @@
+{
+  "start_time": "2025-11-15T20:50:54.548409",
+  "tests": [
+    {
+      "name": "PostgreSQL Database Connection",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "host": "localhost",
+        "port": 10000,
+        "type": "tcp"
+      },
+      "timestamp": "2025-11-15T20:50:54.618050"
+    },
+    {
+      "name": "Redis Database Connection",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "host": "localhost",
+        "port": 10001,
+        "type": "tcp"
+      },
+      "timestamp": "2025-11-15T20:50:54.618147"
+    },
+    {
+      "name": "Neo4j Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10002",
+        "status": 200,
+        "data": {
+          "bolt_routing": "neo4j://localhost:7687",
+          "query": "http://localhost:10002/db/{databaseName}/query/v2",
+          "transaction": "http://localhost:10002/db/{databaseName}/tx",
+          "bolt_direct": "bolt://localhost:7687",
+          "neo4j_version": "5.26.16",
+          "neo4j_edition": "community"
+        }
+      },
+      "timestamp": "2025-11-15T20:50:54.627935"
+    },
+    {
+      "name": "RabbitMQ Database Connection",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "host": "localhost",
+        "port": 10004,
+        "type": "tcp"
+      },
+      "timestamp": "2025-11-15T20:50:54.628118"
+    },
+    {
+      "name": "Consul Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10006/v1/status/leader",
+        "status": 200,
+        "data": "172.20.0.14:8300"
+      },
+      "timestamp": "2025-11-15T20:50:54.630511"
+    },
+    {
+      "name": "Kong Gateway Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10009/status",
+        "status": 200,
+        "data": {
+          "memory": {
+            "lua_shared_dicts": {
+              "kong_db_cache": {
+                "allocated_slabs": "0.76 MiB",
+                "capacity": "128.00 MiB"
+              },
+              "kong_db_cache_miss": {
+                "allocated_slabs": "0.08 MiB",
+                "capacity": "12.00 MiB"
+              },
+              "kong_secrets": {
+                "allocated_slabs": "0.04 MiB",
+                "capacity": "5.00 MiB"
+              },
+              "prometheus_metrics": {
+                "allocated_slabs": "0.04 MiB",
+                "capacity": "5.00 MiB"
+              },
+              "kong": {
+                "allocated_slabs": "0.05 MiB",
+                "capacity": "5.00 MiB"
+              },
+              "kong_locks": {
+                "allocated_slabs": "0.06 MiB",
+                "capacity": "8.00 MiB"
+              },
+              "kong_healthchecks": {
+                "allocated_slabs": "0.05 MiB",
+                "capacity": "5.00 MiB"
+              },
+              "kong_cluster_events": {
+                "allocated_slabs": "0.04 MiB",
+                "capacity": "5.00 MiB"
+              },
+              "kong_rate_limiting_counters": {
+                "allocated_slabs": "0.09 MiB",
+                "capacity": "12.00 MiB"
+              },
+              "kong_core_db_cache": {
+                "allocated_slabs": "0.77 MiB",
+                "capacity": "128.00 MiB"
+              },
+              "kong_core_db_cache_miss": {
+                "allocated_slabs": "0.08 MiB",
+                "capacity": "12.00 MiB"
+              }
+            },
+            "workers_lua_vms": [
+              {
+                "pid": 36347,
+                "http_allocated_gc": "47.28 MiB"
+              },
+              {
+                "pid": 39727,
+                "http_allocated_gc": "47.29 MiB"
+              },
+              {
+                "pid": 41058,
+                "http_allocated_gc": "86.64 MiB"
+              },
+              {
+                "pid": 44213,
+                "http_allocated_gc": "47.29 MiB"
+              },
+              {
+                "pid": 45927,
+                "http_allocated_gc": "47.29 MiB"
+              },
+              {
+                "pid": 48393,
+                "http_allocated_gc": "47.29 MiB"
+              },
+              {
+                "pid": 50937,
+                "http_allocated_gc": "47.29 MiB"
+              },
+              {
+                "pid": 53416,
+                "http_allocated_gc": "47.29 MiB"
+              },
+              {
+                "pid": 55243,
+                "http_allocated_gc": "47.28 MiB"
+              },
+              {
+                "pid": 58332,
+                "http_allocated_gc": "47.29 MiB"
+              },
+              {
+                "pid": 60077,
+                "http_allocated_gc": "47.28 MiB"
+              },
+              {
+                "pid": 61812,
+                "http_allocated_gc": "48.44 MiB"
+              },
+              {
+                "pid": 62629,
+                "http_allocated_gc": "47.34 MiB"
+              },
+              {
+                "pid": 65738,
+                "http_allocated_gc": "47.34 MiB"
+              },
+              {
+                "pid": 67339,
+                "http_allocated_gc": "47.34 MiB"
+              },
+              {
+                "pid": 69645,
+                "http_allocated_gc": "47.37 MiB"
+              },
+              {
+                "pid": 72469,
+                "http_allocated_gc": "47.37 MiB"
+              },
+              {
+                "pid": 74073,
+                "http_allocated_gc": "47.37 MiB"
+              },
+              {
+                "pid": 77419,
+                "http_allocated_gc": "47.37 MiB"
+              },
+              {
+                "pid": 79019,
+                "http_allocated_gc": "47.37 MiB"
+              }
+            ]
+          },
+          "database": {
+            "reachable": true
+          },
+          "server": {
+            "connections_writing": 63,
+            "connections_waiting": 40,
+            "total_requests": 5870,
+            "connections_active": 105,
+            "connections_handled": 2975,
+            "connections_reading": 1,
+            "connections_accepted": 2975
+          }
+        }
+      },
+      "timestamp": "2025-11-15T20:50:54.648123"
+    },
+    {
+      "name": "Backend API Health Check",
+      "passed": true,
+      "warning": true,
+      "details": {
+        "url": "http://localhost:10200/health",
+        "status": 200,
+        "data": {
+          "status": "healthy",
+          "app": "SutazAI Platform API"
+        }
+      },
+      "timestamp": "2025-11-15T20:50:54.650896"
+    },
+    {
+      "name": "Backend API Metrics Endpoint",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10200/metrics",
+        "has_prometheus_format": true,
+        "length": 3193
+      },
+      "timestamp": "2025-11-15T20:50:54.678998"
+    },
+    {
+      "name": "ChromaDB Vector Database Operations",
+      "passed": false,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10100",
+        "test_collection": "test_1763236254",
+        "status": 404
+      },
+      "timestamp": "2025-11-15T20:50:54.682412"
+    },
+    {
+      "name": "Qdrant Vector Database Operations",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10102",
+        "test_collection": "test_1763236254",
+        "status": 200
+      },
+      "timestamp": "2025-11-15T20:50:54.937484"
+    },
+    {
+      "name": "FAISS Vector Database Operations",
+      "passed": false,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10103",
+        "test_collection": "test_1763236254",
+        "status": 404
+      },
+      "timestamp": "2025-11-15T20:50:54.941471"
+    },
+    {
+      "name": "Letta AI Agent",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11401",
+        "health": 200,
+        "metrics": true,
+        "endpoint_accessible": true
+      },
+      "timestamp": "2025-11-15T20:50:54.952650"
+    },
+    {
+      "name": "CrewAI AI Agent",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11403",
+        "health": 200,
+        "metrics": true,
+        "endpoint_accessible": true
+      },
+      "timestamp": "2025-11-15T20:50:54.962591"
+    },
+    {
+      "name": "Aider AI Agent",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11404",
+        "health": 200,
+        "metrics": true,
+        "endpoint_accessible": true
+      },
+      "timestamp": "2025-11-15T20:50:55.174750"
+    },
+    {
+      "name": "LangChain AI Agent",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11405",
+        "health": 200,
+        "metrics": true,
+        "endpoint_accessible": true
+      },
+      "timestamp": "2025-11-15T20:50:55.183547"
+    },
+    {
+      "name": "FinRobot AI Agent",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11410",
+        "health": 200,
+        "metrics": true,
+        "endpoint_accessible": true
+      },
+      "timestamp": "2025-11-15T20:50:55.192602"
+    },
+    {
+      "name": "ShellGPT AI Agent",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11413",
+        "health": 200,
+        "metrics": true,
+        "endpoint_accessible": true
+      },
+      "timestamp": "2025-11-15T20:50:55.201807"
+    },
+    {
+      "name": "Documind AI Agent",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11414",
+        "health": 200,
+        "metrics": true,
+        "endpoint_accessible": true
+      },
+      "timestamp": "2025-11-15T20:50:55.211206"
+    },
+    {
+      "name": "GPT-Engineer AI Agent",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11416",
+        "health": 200,
+        "metrics": true,
+        "endpoint_accessible": true
+      },
+      "timestamp": "2025-11-15T20:50:55.219336"
+    },
+    {
+      "name": "MCP Bridge Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11100/health",
+        "status": 200,
+        "data": {
+          "status": "healthy",
+          "service": "mcp-bridge",
+          "version": "1.0.0",
+          "timestamp": "2025-11-15T19:50:55.220718"
+        }
+      },
+      "timestamp": "2025-11-15T20:50:55.221484"
+    },
+    {
+      "name": "MCP Services Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11100/services",
+        "status": 200,
+        "data": {
+          "postgres": {
+            "url": "postgresql://jarvis:sutazai_secure_2024@localhost:10000/jarvis_ai",
+            "type": "database"
+          },
+          "redis": {
+            "url": "redis://localhost:10001",
+            "type": "cache"
+          },
+          "rabbitmq": {
+            "url": "amqp://sutazai:sutazai_secure_2024@localhost:10004",
+            "type": "queue"
+          },
+          "neo4j": {
+            "url": "bolt://localhost:10003",
+            "type": "graph"
+          },
+          "consul": {
+            "url": "http://localhost:10006",
+            "type": "discovery"
+          },
+          "kong": {
+            "url": "http://localhost:10009",
+            "type": "gateway"
+          },
+          "chromadb": {
+            "url": "http://localhost:10100",
+            "type": "vector"
+          },
+          "qdrant": {
+            "url": "http://localhost:10101",
+            "type": "vector"
+          },
+          "faiss": {
+            "url": "http://localhost:10103",
+            "type": "vector"
+          },
+          "backend": {
+            "url": "http://localhost:10200",
+            "type": "api"
+          },
+          "frontend": {
+            "url": "http://localhost:11000",
+            "type": "ui"
+          },
+          "letta": {
+            "url": "http://localhost:11400",
+            "type": "agent",
+            "status": "pending"
+          },
+          "autogpt": {
+            "url": "http://localhost:11402",
+            "type": "agent",
+            "status": "pending"
+          },
+          "crewai": {
+            "url": "http://localhost:11401",
+            "type": "agent",
+            "status": "pending"
+          },
+          "aider": {
+            "url": "http://localhost:11403",
+            "type": "agent",
+            "status": "pending"
+          },
+          "private-gpt": {
+            "url": "http://localhost:11404",
+            "type": "agent",
+            "status": "pending"
+          }
+        }
+      },
+      "timestamp": "2025-11-15T20:50:55.223017"
+    },
+    {
+      "name": "MCP Agents Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11100/agents",
+        "status": 200,
+        "data": {
+          "letta": {
+            "name": "Letta (MemGPT)",
+            "capabilities": [
+              "memory",
+              "conversation",
+              "task-automation"
+            ],
+            "port": 11401,
+            "status": "online"
+          },
+          "autogpt": {
+            "name": "AutoGPT",
+            "capabilities": [
+              "autonomous",
+              "web-search",
+              "task-execution"
+            ],
+            "port": 11402,
+            "status": "offline"
+          },
+          "crewai": {
+            "name": "CrewAI",
+            "capabilities": [
+              "multi-agent",
+              "orchestration",
+              "collaboration"
+            ],
+            "port": 11403,
+            "status": "offline"
+          },
+          "aider": {
+            "name": "Aider",
+            "capabilities": [
+              "code-editing",
+              "pair-programming",
+              "refactoring"
+            ],
+            "port": 11404,
+            "status": "offline"
+          },
+          "langchain": {
+            "name": "LangChain",
+            "capabilities": [
+              "llm-framework",
+              "chain-of-thought",
+              "agents"
+            ],
+            "port": 11405,
+            "status": "offline"
+          },
+          "bigagi": {
+            "name": "BigAGI",
+            "capabilities": [
+              "chat-interface",
+              "multi-model",
+              "reasoning"
+            ],
+            "port": 11407,
+            "status": "offline"
+          },
+          "agentzero": {
+            "name": "Agent Zero",
+            "capabilities": [
+              "autonomous",
+              "task-completion",
+              "reasoning"
+            ],
+            "port": 11408,
+            "status": "offline"
+          },
+          "skyvern": {
+            "name": "Skyvern",
+            "capabilities": [
+              "browser-automation",
+              "web-scraping",
+              "ui-testing"
+            ],
+            "port": 11409,
+            "status": "offline"
+          },
+          "shellgpt": {
+            "name": "ShellGPT",
+            "capabilities": [
+              "cli-assistant",
+              "command-generation",
+              "terminal"
+            ],
+            "port": 11413,
+            "status": "offline"
+          },
+          "autogen": {
+            "name": "AutoGen",
+            "capabilities": [
+              "multi-agent",
+              "conversation",
+              "configuration"
+            ],
+            "port": 11415,
+            "status": "offline"
+          },
+          "browseruse": {
+            "name": "Browser Use",
+            "capabilities": [
+              "web-automation",
+              "browser-control",
+              "scraping"
+            ],
+            "port": 11703,
+            "status": "offline"
+          },
+          "semgrep": {
+            "name": "Semgrep",
+            "capabilities": [
+              "security-analysis",
+              "code-scanning",
+              "vulnerability-detection"
+            ],
+            "port": 11801,
+            "status": "offline"
+          }
+        }
+      },
+      "timestamp": "2025-11-15T20:50:55.224383"
+    },
+    {
+      "name": "Prometheus Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10300/-/healthy",
+        "status": 200,
+        "data": {}
+      },
+      "timestamp": "2025-11-15T20:50:55.226602"
+    },
+    {
+      "name": "Grafana Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10301/api/health",
+        "status": 200,
+        "data": {
+          "database": "ok",
+          "version": "12.2.1",
+          "commit": "563109b696e9c1cbaf345f2ab7a11f7f78422982"
+        }
+      },
+      "timestamp": "2025-11-15T20:50:55.229129"
+    },
+    {
+      "name": "Loki Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10310/ready",
+        "status": 200,
+        "data": {}
+      },
+      "timestamp": "2025-11-15T20:50:55.230956"
+    },
+    {
+      "name": "Node Exporter Metrics Endpoint",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10305/metrics",
+        "has_prometheus_format": true,
+        "length": 126687
+      },
+      "timestamp": "2025-11-15T20:50:55.406296"
+    },
+    {
+      "name": "Postgres Exporter Metrics Endpoint",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10307/metrics",
+        "has_prometheus_format": true,
+        "length": 104977
+      },
+      "timestamp": "2025-11-15T20:50:55.456093"
+    },
+    {
+      "name": "Redis Exporter Metrics Endpoint",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:10308/metrics",
+        "has_prometheus_format": true,
+        "length": 52775
+      },
+      "timestamp": "2025-11-15T20:50:55.468396"
+    },
+    {
+      "name": "Jarvis Frontend Health Check",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "url": "http://localhost:11000",
+        "status": 200,
+        "data": {}
+      },
+      "timestamp": "2025-11-15T20:50:55.471727"
+    }
+  ],
+  "total": 29,
+  "passed": 27,
+  "failed": 2,
+  "warnings": 1,
+  "end_time": "2025-11-15T20:50:55.471735"
+}

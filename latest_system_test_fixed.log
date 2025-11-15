@@ -1,0 +1,61 @@
+[95mHEADER: ================================================================================[0m
+[95mHEADER: SutazAI Platform Comprehensive System Test Suite[0m
+[95mHEADER: Start Time: 2025-11-15T21:05:35.169737[0m
+[95mHEADER: ================================================================================[0m
+[95mHEADER: 
+[PHASE 1] Core Infrastructure Services[0m
+[92mSUCCESS: ✓ PostgreSQL Database Connection - PASSED[0m
+[92mSUCCESS: ✓ Redis Database Connection - PASSED[0m
+[92mSUCCESS: ✓ Neo4j Health Check - PASSED[0m
+[92mSUCCESS: ✓ RabbitMQ Database Connection - PASSED[0m
+[92mSUCCESS: ✓ Consul Health Check - PASSED[0m
+[95mHEADER: 
+[PHASE 2] API Gateway and Backend[0m
+[92mSUCCESS: ✓ Kong Gateway Health Check - PASSED[0m
+[93mWARNING: ✓ Backend API Health Check - PASSED WITH WARNINGS[0m
+[92mSUCCESS: ✓ Backend API Metrics Endpoint - PASSED[0m
+[95mHEADER: 
+[PHASE 3] Vector Databases[0m
+[91mERROR: ✗ ChromaDB Vector Database Operations - FAILED[0m
+[92mSUCCESS: ✓ Qdrant Vector Database Operations - PASSED[0m
+[91mERROR: ✗ FAISS Vector Database Operations - FAILED[0m
+[95mHEADER: 
+[PHASE 4] AI Agents[0m
+[92mSUCCESS: ✓ Letta AI Agent - PASSED[0m
+[92mSUCCESS: ✓ CrewAI AI Agent - PASSED[0m
+[92mSUCCESS: ✓ Aider AI Agent - PASSED[0m
+[92mSUCCESS: ✓ LangChain AI Agent - PASSED[0m
+[92mSUCCESS: ✓ FinRobot AI Agent - PASSED[0m
+[92mSUCCESS: ✓ ShellGPT AI Agent - PASSED[0m
+[92mSUCCESS: ✓ Documind AI Agent - PASSED[0m
+[92mSUCCESS: ✓ GPT-Engineer AI Agent - PASSED[0m
+[95mHEADER: 
+[PHASE 5] MCP Bridge[0m
+[92mSUCCESS: ✓ MCP Bridge Health Check - PASSED[0m
+[92mSUCCESS: ✓ MCP Services Health Check - PASSED[0m
+[92mSUCCESS: ✓ MCP Agents Health Check - PASSED[0m
+[95mHEADER: 
+[PHASE 6] Monitoring Stack[0m
+[92mSUCCESS: ✓ Prometheus Health Check - PASSED[0m
+[92mSUCCESS: ✓ Grafana Health Check - PASSED[0m
+[92mSUCCESS: ✓ Loki Health Check - PASSED[0m
+[92mSUCCESS: ✓ Node Exporter Metrics Endpoint - PASSED[0m
+[92mSUCCESS: ✓ Postgres Exporter Metrics Endpoint - PASSED[0m
+[92mSUCCESS: ✓ Redis Exporter Metrics Endpoint - PASSED[0m
+[95mHEADER: 
+[PHASE 7] Frontend[0m
+[92mSUCCESS: ✓ Jarvis Frontend Health Check - PASSED[0m
+[95mHEADER: 
+================================================================================[0m
+[95mHEADER: TEST SUMMARY[0m
+[95mHEADER: ================================================================================[0m
+[94mINFO: Total Tests: 29[0m
+[92mSUCCESS: Passed: 27 (93.1%)[0m
+[93mWARNING: Warnings: 1[0m
+[91mERROR: Failed: 2[0m
+[94mINFO: 
+Start Time: 2025-11-15T21:05:35.169737[0m
+[94mINFO: End Time: 2025-11-15T21:05:36.179259[0m
+[94mINFO: 
+Detailed results saved to: /opt/sutazaiapp/test_results_20251115_210536.json[0m
+[95mHEADER: ================================================================================[0m

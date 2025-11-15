@@ -116,7 +116,7 @@ SERVICE_REGISTRY = {
     
     # Vector Databases
     "chromadb": {"url": "http://localhost:10100", "type": "vector"},
-    "qdrant": {"url": "http://localhost:10101", "type": "vector"},
+    "qdrant": {"url": "http://localhost:10102", "type": "vector"},
     "faiss": {"url": "http://localhost:10103", "type": "vector"},
     
     # Backend Services
