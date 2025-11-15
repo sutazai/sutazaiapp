@@ -7,6 +7,13 @@ import streamlit as st
 from typing import List, Dict, Optional
 import time
 from datetime import datetime
+import re
+import html
+
+try:
+    import bleach
+except ImportError:
+    bleach = None
 
 class ChatInterface:
     """Advanced chat interface with streaming and animations"""
@@ -14,6 +21,56 @@ class ChatInterface:
     def __init__(self):
         self.messages = []
         self.typing_speed = 0.03  # Seconds between characters
+        
+    @staticmethod
+    def sanitize_content(content: str) -> str:
+        """Sanitize content to prevent XSS attacks, especially javascript: URLs"""
+        if not content:
+            return ""
+        
+        # Remove javascript: protocol links (including markdown format)
+        content = re.sub(r'javascript:', '', content, flags=re.IGNORECASE)
+        content = re.sub(r'\[([^\]]+)\]\(javascript:[^\)]+\)', r'\1', content, flags=re.IGNORECASE)
+        
+        # Remove data URI XSS vectors
+        content = re.sub(r'data:text/html', '', content, flags=re.IGNORECASE)
+        content = re.sub(r'\[([^\]]+)\]\(data:text/html[^\)]+\)', r'\1', content, flags=re.IGNORECASE)
+        
+        # Remove vbscript and other dangerous protocols
+        content = re.sub(r'vbscript:', '', content, flags=re.IGNORECASE)
+        content = re.sub(r'file:', '', content, flags=re.IGNORECASE)
+        
+        # Remove event handlers
+        content = re.sub(r'on\w+\s*=', '', content, flags=re.IGNORECASE)
+        
+        # Remove script tags
+        content = re.sub(r'<script[^>]*>.*?</script>', '', content, flags=re.IGNORECASE | re.DOTALL)
+        
+        # Remove iframe tags
+        content = re.sub(r'<iframe[^>]*>.*?</iframe>', '', content, flags=re.IGNORECASE | re.DOTALL)
+        
+        # Remove object and embed tags
+        content = re.sub(r'<object[^>]*>.*?</object>', '', content, flags=re.IGNORECASE | re.DOTALL)
+        content = re.sub(r'<embed[^>]*>', '', content, flags=re.IGNORECASE)
+        
+        # If bleach is available, use it for comprehensive sanitization
+        if bleach:
+            allowed_tags = ['b', 'i', 'u', 'strong', 'em', 'code', 'pre', 'br', 'p', 'div', 'span']
+            allowed_attrs = {'div': ['style'], 'span': ['style'], 'p': ['style']}
+            # Configure bleach to also strip dangerous protocols from links
+            allowed_protocols = ['http', 'https', 'mailto']
+            content = bleach.clean(
+                content, 
+                tags=allowed_tags, 
+                attributes=allowed_attrs, 
+                protocols=allowed_protocols,
+                strip=True
+            )
+        else:
+            # Fallback: escape HTML if bleach not available
+            content = html.escape(content)
+        
+        return content
         
     def add_message(self, role: str, content: str, metadata: Optional[Dict] = None):
         """Add a message to the chat history"""
@@ -32,6 +89,10 @@ class ChatInterface:
         content = message["content"]
         timestamp = message.get("timestamp", "")
         
+        # SECURITY: Sanitize content to prevent XSS
+        safe_content = self.sanitize_content(content)
+        safe_timestamp = html.escape(str(timestamp))
+        
         # Message container styling based on role
         if role == "user":
             st.markdown(f"""
@@ -40,8 +101,8 @@ class ChatInterface:
                           color: white; padding: 12px 18px; border-radius: 18px 18px 5px 18px;
                           max-width: 70%; word-wrap: break-word;">
                     <div style="font-size: 0.9em; opacity: 0.8; margin-bottom: 5px;">You</div>
-                    <div>{content}</div>
-                    <div style="font-size: 0.8em; opacity: 0.6; margin-top: 5px;">{timestamp}</div>
+                    <div>{safe_content}</div>
+                    <div style="font-size: 0.8em; opacity: 0.6; margin-top: 5px;">{safe_timestamp}</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -51,15 +112,16 @@ class ChatInterface:
                 placeholder = st.empty()
                 displayed_text = ""
                 
-                for char in content:
+                for char in safe_content:
                     displayed_text += char
+                    safe_displayed = html.escape(displayed_text)
                     placeholder.markdown(f"""
                     <div style="display: flex; justify-content: flex-start; margin: 10px 0;">
                         <div style="background: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
                                   color: white; padding: 12px 18px; border-radius: 18px 18px 18px 5px;
                                   max-width: 70%; word-wrap: break-word;">
                             <div style="font-size: 0.9em; opacity: 0.8; margin-bottom: 5px;">JARVIS</div>
-                            <div>{displayed_text}▌</div>
+                            <div>{safe_displayed}▌</div>
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
@@ -72,8 +134,8 @@ class ChatInterface:
                               color: white; padding: 12px 18px; border-radius: 18px 18px 18px 5px;
                               max-width: 70%; word-wrap: break-word;">
                         <div style="font-size: 0.9em; opacity: 0.8; margin-bottom: 5px;">JARVIS</div>
-                        <div>{content}</div>
-                        <div style="font-size: 0.8em; opacity: 0.6; margin-top: 5px;">{timestamp}</div>
+                        <div>{safe_content}</div>
+                        <div style="font-size: 0.8em; opacity: 0.6; margin-top: 5px;">{safe_timestamp}</div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -84,8 +146,8 @@ class ChatInterface:
                               color: white; padding: 12px 18px; border-radius: 18px 18px 18px 5px;
                               max-width: 70%; word-wrap: break-word;">
                         <div style="font-size: 0.9em; opacity: 0.8; margin-bottom: 5px;">JARVIS</div>
-                        <div>{content}</div>
-                        <div style="font-size: 0.8em; opacity: 0.6; margin-top: 5px;">{timestamp}</div>
+                        <div>{safe_content}</div>
+                        <div style="font-size: 0.8em; opacity: 0.6; margin-top: 5px;">{safe_timestamp}</div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)

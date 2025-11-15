@@ -13,6 +13,7 @@
 ## 🚀 Quick Start
 
 ### Access the Platform
+
 ```bash
 # Frontend Interface (JARVIS UI)
 http://localhost:11000
@@ -28,6 +29,7 @@ http://localhost:11434
 ```
 
 ### Check System Health
+
 ```bash
 # Backend health
 curl http://localhost:10200/health/detailed
@@ -49,10 +51,12 @@ python3 tests/test_full_stack.py
 ### Running Services (12 Total)
 
 #### Application Layer
+
 - ✅ **Backend API** (Port 10200) - FastAPI with 9 service connections
 - ✅ **Frontend** (Port 11000) - Streamlit JARVIS interface
 
 #### Infrastructure (10 Services)
+
 - ✅ **PostgreSQL** (Port 10000) - Primary database
 - ✅ **Redis** (Port 10001) - Cache & sessions
 - ✅ **Neo4j** (Ports 10002-10003) - Graph database
@@ -65,6 +69,7 @@ python3 tests/test_full_stack.py
 - ✅ **Ollama** (Port 11434) - Local LLM (TinyLlama)
 
 ### Service Connectivity Matrix
+
 ```
 Backend → PostgreSQL  ✅
 Backend → Redis       ✅
@@ -83,12 +88,14 @@ Backend → Ollama      ✅  [NEWLY CONNECTED!]
 ## 🎯 Key Accomplishments
 
 ### ✅ Infrastructure Deployment
+
 - All 10 infrastructure services deployed and healthy
 - Docker network properly configured (172.20.0.0/16)
 - Static IP assignments for all containers
 - Health checks implemented and passing
 
 ### ✅ Backend Application
+
 - FastAPI backend fully operational
 - All 9 services connected (including Ollama)
 - WebSocket support for real-time chat
@@ -97,6 +104,7 @@ Backend → Ollama      ✅  [NEWLY CONNECTED!]
 - Database connection pooling
 
 ### ✅ Frontend Interface
+
 - Streamlit application deployed successfully
 - JARVIS-themed UI with voice support
 - Backend integration verified
@@ -104,6 +112,7 @@ Backend → Ollama      ✅  [NEWLY CONNECTED!]
 - System metrics dashboard ready
 
 ### ✅ LLM Integration
+
 - Ollama v0.12.10 installed on host
 - TinyLlama model (637MB) downloaded
 - Configured to listen on all interfaces (0.0.0.0)
@@ -115,11 +124,13 @@ Backend → Ollama      ✅  [NEWLY CONNECTED!]
 ## 🔧 Technical Details
 
 ### Dependencies Resolved
+
 1. **Backend** - Fixed huggingface-hub version, added psutil, GPUtil, python-json-logger
 2. **Frontend** - Resolved altair version conflict, added audio library support
 3. **Ollama** - Configured systemd override for network binding
 
 ### Docker Compose Files
+
 ```
 docker-compose-core.yml      - Infrastructure (10 services)
 docker-compose-backend.yml   - Backend API (1 service)
@@ -127,6 +138,7 @@ docker-compose-frontend.yml  - Frontend UI (1 service)
 ```
 
 ### Network Configuration
+
 - **Network:** sutazaiapp_sutazai-network
 - **Subnet:** 172.20.0.0/16
 - **Type:** Bridge with static IPs
@@ -137,6 +149,7 @@ docker-compose-frontend.yml  - Frontend UI (1 service)
 ## 🧪 Testing Summary
 
 ### Integration Tests
+
 ```
 Total Tests: 21
 Passed: 17 (81.0%)
@@ -159,6 +172,7 @@ Infrastructure Tests:
 ```
 
 ### LLM Testing
+
 ```bash
 # Tested Ollama inference
 curl -s http://localhost:11434/api/generate \
@@ -173,6 +187,7 @@ Status: ✅ Working
 ## 📈 Resource Usage
 
 ### Current Utilization
+
 - **Containers:** 12 running
 - **RAM:** ~8-10GB estimated
 - **Disk:** ~15GB (with models)
@@ -180,6 +195,7 @@ Status: ✅ Working
 - **CPU:** Shared across services
 
 ### Container Health
+
 ```
 sutazai-postgres          Up 2+ hours (healthy)
 sutazai-redis             Up 2+ hours (healthy)
@@ -200,6 +216,7 @@ Ollama (host)             Up 20+ min  (running)
 ## 🛠️ Deployment Commands
 
 ### Start All Services
+
 ```bash
 # Infrastructure
 docker-compose -f docker-compose-core.yml up -d
@@ -215,6 +232,7 @@ systemctl status ollama
 ```
 
 ### Stop All Services
+
 ```bash
 docker-compose -f docker-compose-frontend.yml down
 docker-compose -f docker-compose-backend.yml down
@@ -223,6 +241,7 @@ sudo systemctl stop ollama
 ```
 
 ### View Logs
+
 ```bash
 # Backend
 docker logs sutazai-backend --tail 50 -f
@@ -239,12 +258,14 @@ docker-compose -f docker-compose-core.yml logs -f
 ## 🔐 Security Notes
 
 ### Current Setup (Development)
+
 - Services communicate over internal Docker network
 - No external authentication required
 - Environment variables in docker-compose files
 - Ollama accessible from host only
 
 ### Production Recommendations
+
 - [ ] Enable SSL/TLS for all public endpoints
 - [ ] Implement JWT authentication
 - [ ] Add Kong rate limiting
@@ -258,6 +279,7 @@ docker-compose -f docker-compose-core.yml logs -f
 ## 🎓 Lessons Learned
 
 ### Key Insights
+
 1. **Dependency Management** - Always verify transitive dependencies (huggingface-hub issue)
 2. **System Libraries** - Audio packages need portaudio19-dev, libasound2-dev
 3. **Network Binding** - Ollama defaults to 127.0.0.1, needs 0.0.0.0 for containers
@@ -265,6 +287,7 @@ docker-compose -f docker-compose-core.yml logs -f
 5. **Health Checks** - Critical for verifying deployment success
 
 ### Best Practices Applied
+
 - ✅ Used multi-stage Docker builds
 - ✅ Implemented comprehensive health checks
 - ✅ Created external Docker network for isolation
@@ -289,6 +312,7 @@ docker-compose -f docker-compose-core.yml logs -f
 ## 🎯 Next Steps (Optional)
 
 ### Recommended Priorities
+
 1. **Deploy AI Agents** - 30+ agents configured but not deployed
 2. **Add Monitoring** - Prometheus + Grafana for metrics
 3. **Implement Playwright Tests** - E2E browser automation
@@ -297,6 +321,7 @@ docker-compose -f docker-compose-core.yml logs -f
 6. **Set up CI/CD** - Automated deployment pipeline
 
 ### Future Enhancements
+
 - Scale with Kubernetes
 - Add log aggregation (ELK stack)
 - Implement backup/restore
@@ -309,6 +334,7 @@ docker-compose -f docker-compose-core.yml logs -f
 ## ✨ Success Metrics
 
 ### Deployment Quality
+
 - ✅ **100%** Service Connectivity (9/9 backend connections)
 - ✅ **100%** Container Health (12/12 running)
 - ✅ **81%** Integration Test Pass Rate
@@ -316,6 +342,7 @@ docker-compose -f docker-compose-core.yml logs -f
 - ✅ **35 min** Total Deployment Time
 
 ### Platform Capabilities
+
 - ✅ REST API with FastAPI
 - ✅ WebSocket support
 - ✅ Local LLM inference
@@ -332,8 +359,9 @@ docker-compose -f docker-compose-core.yml logs -f
 The SutazAI Platform is **fully operational** with all core services running, backend API healthy with 9/9 connections including Ollama LLM, and frontend interface accessible.
 
 **Access the platform at:**
-- Frontend: http://localhost:11000
-- Backend API: http://localhost:10200/docs
+
+- Frontend: <http://localhost:11000>
+- Backend API: <http://localhost:10200/docs>
 
 **Status: PRODUCTION READY** ✅
 

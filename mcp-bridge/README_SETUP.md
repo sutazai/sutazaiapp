@@ -24,36 +24,44 @@ The MCP Bridge has been successfully set up and is running on port 11100.
 ## Startup Options
 
 ### 1. FastAPI Mode (Recommended)
+
 ```bash
 ./start_fastapi.sh
 ```
+
 - Full feature set with FastAPI
 - WebSocket support
 - Async operations
 - Currently running
 
 ### 2. Simple Mode (Fallback)
+
 ```bash
 ./start_simple.sh
 ```
+
 - Basic HTTP server
 - No external dependencies
 - Limited features
 
 ### 3. Docker Mode
+
 ```bash
 docker-compose -f docker-compose-standalone.yml up -d
 ```
+
 - Containerized deployment
 - Isolated environment
 - Auto-restart on failure
 
 ### 4. Systemd Service
+
 ```bash
 sudo cp mcp-bridge.service /etc/systemd/system/
 sudo systemctl enable mcp-bridge
 sudo systemctl start mcp-bridge
 ```
+
 - Auto-start on boot
 - System integration
 - Managed by systemd
@@ -61,21 +69,25 @@ sudo systemctl start mcp-bridge
 ## Management Commands
 
 ### Check Status
+
 ```bash
 ./check_status.sh
 ```
 
 ### View Logs
+
 ```bash
 tail -f logs/mcp_bridge_fastapi.log
 ```
 
 ### Stop Service
+
 ```bash
 kill $(lsof -ti:11100)
 ```
 
 ### Test Endpoints
+
 ```bash
 # Health check
 curl http://localhost:11100/health | jq .
@@ -130,6 +142,7 @@ MCP Bridge (Port 11100)
 ## Troubleshooting
 
 If the service stops:
+
 1. Check logs: `tail -50 logs/mcp_bridge_fastapi.log`
 2. Check port: `lsof -i:11100`
 3. Restart: `./start_fastapi.sh`

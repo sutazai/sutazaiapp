@@ -44,8 +44,16 @@ async def register(
         Created user information
         
     Raises:
-        HTTPException: If username or email already exists
+        HTTPException: If username or email already exists or password is weak
     """
+    # Validate password strength
+    is_valid, error_message = security.validate_password_strength(user_data.password)
+    if not is_valid:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=error_message
+        )
+    
     # Check if user already exists
     result = await db.execute(
         select(User).where(

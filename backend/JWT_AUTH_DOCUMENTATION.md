@@ -1,9 +1,11 @@
 # JWT Authentication API Documentation
 
 ## Overview
+
 The SutazAI backend implements JWT (JSON Web Token) based authentication with access and refresh tokens. The system is fully operational and running on port 10200.
 
 ## Base URL
+
 ```
 http://localhost:10200/api/v1
 ```
@@ -11,10 +13,12 @@ http://localhost:10200/api/v1
 ## Authentication Endpoints
 
 ### 1. User Registration
+
 **Endpoint:** `POST /api/v1/auth/register`  
 **Content-Type:** `application/json`
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com",
@@ -25,6 +29,7 @@ http://localhost:10200/api/v1
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "id": 1,
@@ -41,20 +46,24 @@ http://localhost:10200/api/v1
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Email already registered or username taken
 - `422 Unprocessable Entity`: Invalid input data
 
 ### 2. User Login (OAuth2)
+
 **Endpoint:** `POST /api/v1/auth/login`  
 **Content-Type:** `application/x-www-form-urlencoded`  
 **Note:** This endpoint uses OAuth2 form data, NOT JSON!
 
 **Request Body (Form Data):**
+
 ```
 username=johndoe&password=SecurePassword123!
 ```
 
 **cURL Example:**
+
 ```bash
 curl -X POST http://localhost:10200/api/v1/auth/login \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -62,6 +71,7 @@ curl -X POST http://localhost:10200/api/v1/auth/login \
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -72,25 +82,30 @@ curl -X POST http://localhost:10200/api/v1/auth/login \
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Invalid credentials
 - `403 Forbidden`: Account locked or inactive
 
 ### 3. Get Current User
+
 **Endpoint:** `GET /api/v1/auth/me`  
 **Authorization:** Required (Bearer token)
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **cURL Example:**
+
 ```bash
 curl -X GET http://localhost:10200/api/v1/auth/me \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "id": 1,
@@ -107,14 +122,17 @@ curl -X GET http://localhost:10200/api/v1/auth/me \
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Invalid or expired token
 - `403 Forbidden`: User account inactive
 
 ### 4. Refresh Access Token
+
 **Endpoint:** `POST /api/v1/auth/refresh`  
 **Content-Type:** `application/json`
 
 **Request Body:**
+
 ```json
 {
   "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -122,6 +140,7 @@ curl -X GET http://localhost:10200/api/v1/auth/me \
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -132,18 +151,22 @@ curl -X GET http://localhost:10200/api/v1/auth/me \
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Invalid or expired refresh token
 
 ### 5. Logout
+
 **Endpoint:** `POST /api/v1/auth/logout`  
 **Authorization:** Required (Bearer token)
 
 **Request Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "message": "Successfully logged out"
@@ -151,10 +174,12 @@ Authorization: Bearer <access_token>
 ```
 
 ### 6. Password Reset Request
+
 **Endpoint:** `POST /api/v1/auth/password-reset`  
 **Content-Type:** `application/json`
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com"
@@ -162,6 +187,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "message": "If the email exists, a password reset link has been sent"
@@ -171,10 +197,12 @@ Authorization: Bearer <access_token>
 **Note:** Always returns success to prevent email enumeration
 
 ### 7. Confirm Password Reset
+
 **Endpoint:** `POST /api/v1/auth/password-reset/confirm`  
 **Content-Type:** `application/json`
 
 **Request Body:**
+
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -183,6 +211,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "message": "Password successfully reset"
@@ -190,18 +219,21 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid or expired reset token
 - `404 Not Found`: User not found
 
 ## Token Information
 
 ### Access Token
+
 - **Expiration:** 30 minutes (1800 seconds)
 - **Type:** Bearer token
 - **Usage:** Include in Authorization header for protected endpoints
 - **Format:** `Authorization: Bearer <access_token>`
 
 ### Refresh Token
+
 - **Expiration:** 7 days
 - **Type:** JWT token
 - **Usage:** Used to obtain new access tokens without re-authentication
@@ -231,7 +263,9 @@ Authorization: Bearer <access_token>
 ## Common Issues and Solutions
 
 ### Issue: 422 Unprocessable Entity on Registration
+
 **Solution:** Ensure JSON is properly formatted with correct escaping:
+
 ```bash
 # Correct
 echo '{"email":"test@example.com","username":"testuser","password":"TestPassword123"}' | curl -X POST http://localhost:10200/api/v1/auth/register -H "Content-Type: application/json" -d @-
@@ -241,7 +275,9 @@ curl -X POST http://localhost:10200/api/v1/auth/register -H "Content-Type: appli
 ```
 
 ### Issue: 401 Unauthorized on Login
+
 **Solution:** Login endpoint uses OAuth2 form data, not JSON:
+
 ```bash
 # Correct (form data)
 curl -X POST http://localhost:10200/api/v1/auth/login \
@@ -255,7 +291,9 @@ curl -X POST http://localhost:10200/api/v1/auth/login \
 ```
 
 ### Issue: 401 on Protected Endpoints
+
 **Solution:** Include the Bearer token in the Authorization header:
+
 ```bash
 # Correct
 curl -X GET http://localhost:10200/api/v1/auth/me \
@@ -280,6 +318,7 @@ This script tests all authentication endpoints and provides detailed feedback on
 ## Integration Examples
 
 ### Python (requests)
+
 ```python
 import requests
 
@@ -313,6 +352,7 @@ response = requests.get(
 ```
 
 ### JavaScript (fetch)
+
 ```javascript
 // Register
 const registerResponse = await fetch('http://localhost:10200/api/v1/auth/register', {
@@ -351,7 +391,9 @@ const userResponse = await fetch('http://localhost:10200/api/v1/auth/me', {
 ```
 
 ## System Status
+
 ✅ **All JWT authentication endpoints are fully operational**
+
 - Backend running on port 10200
 - Database connection established
 - Token generation and validation working

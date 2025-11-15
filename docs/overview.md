@@ -172,6 +172,7 @@ AI Agents (11401-11801)
 ### MCP Agents
 
 18 specialized agents including:
+
 - filesystem, memory, github
 - claude-flow, ruv-swarm
 - context7, playwright
@@ -206,7 +207,7 @@ AI Agents (11401-11801)
 ### Communication Channels
 
 - **Slack**: #sutazai-dev
-- **Email**: dev-team@sutazai.local
+- **Email**: <dev-team@sutazai.local>
 - **Issue Tracker**: GitHub Issues
 
 ### Support

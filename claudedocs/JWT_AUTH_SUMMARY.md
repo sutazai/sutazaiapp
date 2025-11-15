@@ -51,6 +51,7 @@ The JWT authentication system in the SutazAI backend is now fully functional and
 ## Test Results
 
 All authentication tests pass successfully:
+
 ```
 ✅ User Registration - Working
 ✅ User Login - Working  
@@ -64,6 +65,7 @@ All authentication tests pass successfully:
 ## Usage Examples
 
 ### 1. Register a New User
+
 ```bash
 curl -X POST http://localhost:10200/api/v1/auth/register \
   -H "Content-Type: application/json" \
@@ -71,6 +73,7 @@ curl -X POST http://localhost:10200/api/v1/auth/register \
 ```
 
 ### 2. Login (OAuth2 Form Data)
+
 ```bash
 curl -X POST http://localhost:10200/api/v1/auth/login \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -78,12 +81,14 @@ curl -X POST http://localhost:10200/api/v1/auth/login \
 ```
 
 ### 3. Access Protected Endpoint
+
 ```bash
 curl -X GET http://localhost:10200/api/v1/auth/me \
   -H "Authorization: Bearer <access_token>"
 ```
 
 ### 4. Refresh Token
+
 ```bash
 curl -X POST http://localhost:10200/api/v1/auth/refresh \
   -H "Content-Type: application/json" \

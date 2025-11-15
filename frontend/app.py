@@ -49,6 +49,41 @@ from components.voice_assistant import VoiceAssistant
 from components.system_monitor import SystemMonitor
 from services.backend_client_fixed import BackendClient
 from services.agent_orchestrator import AgentOrchestrator
+import collections
+from datetime import timedelta
+import collections
+from datetime import timedelta
+
+# Rate limiting configuration
+class RateLimiter:
+    """Simple rate limiter for chat messages"""
+    
+    def __init__(self, max_requests: int = 10, time_window: int = 60):
+        self.max_requests = max_requests
+        self.time_window = time_window
+        self.requests = collections.deque()
+    
+    def is_allowed(self) -> tuple[bool, str]:
+        """Check if request is allowed within rate limit"""
+        current_time = time.time()
+        
+        # Remove old requests outside time window
+        while self.requests and self.requests[0] < current_time - self.time_window:
+            self.requests.popleft()
+        
+        # Check if under limit
+        if len(self.requests) < self.max_requests:
+            self.requests.append(current_time)
+            return True, ""
+        
+        # Calculate wait time
+        oldest_request = self.requests[0]
+        wait_time = int(oldest_request + self.time_window - current_time)
+        return False, f"Rate limit exceeded. Please wait {wait_time} seconds."
+    
+    def reset(self):
+        """Reset rate limiter"""
+        self.requests.clear()
 
 # Page configuration
 st.set_page_config(
@@ -235,22 +270,26 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Initialize session state
-if 'initialized' not in st.session_state:
-    st.session_state.initialized = True
+if 'messages' not in st.session_state:
     st.session_state.messages = []
-    st.session_state.backend_client = BackendClient(settings.BACKEND_URL)
-    st.session_state.chat_interface = ChatInterface()
-    st.session_state.voice_assistant = None
-    st.session_state.agent_orchestrator = AgentOrchestrator()
-    st.session_state.current_model = "tinyllama:latest"
-    st.session_state.current_agent = "default"
-    st.session_state.backend_connected = False
-    st.session_state.websocket_connected = False
-    st.session_state.available_models = []
-    st.session_state.available_agents = []
-    st.session_state.is_listening = False
+
+if 'is_processing' not in st.session_state:
     st.session_state.is_processing = False
-    st.session_state.voice_enabled = settings.ENABLE_VOICE_COMMANDS
+
+if 'rate_limiter' not in st.session_state:
+    st.session_state.rate_limiter = RateLimiter(max_requests=20, time_window=60)
+
+if 'last_message_time' not in st.session_state:
+    st.session_state.last_message_time = 0
+
+if 'message_queue' not in st.session_state:
+    st.session_state.message_queue = []
+
+if 'available_models' not in st.session_state:
+    st.session_state.available_models = []
+
+if 'available_agents' not in st.session_state:
+    st.session_state.available_agents = []
 
 # Function to check backend connection
 def check_backend_connection():
@@ -323,51 +362,28 @@ def synthesize_speech(text: str) -> bool:
     return False
 
 # Function to process chat message
-def process_chat_message(message: str):
-    """Process a chat message and get response from backend"""
+def process_chat_message(user_message: str):
+    """Process user chat message with rate limiting and throttling"""
+    if not user_message or not user_message.strip():
+        return
+    
+    # Check rate limit
+    allowed, message = st.session_state.rate_limiter.is_allowed()
+    if not allowed:
+        st.error(f"⚠️ {message}")
+        return
+    
+    # Check message throttling (minimum 100ms between messages)
+    current_time = time.time()
+    time_since_last = current_time - st.session_state.last_message_time
+    if time_since_last < 0.1:  # 100ms throttle
+        st.warning("⚠️ Please wait a moment before sending another message.")
+        return
+    
+    st.session_state.last_message_time = current_time
+    
+    # Set processing flag
     st.session_state.is_processing = True
-    
-    # Add user message to chat
-    st.session_state.messages.append({
-        "role": "user",
-        "content": message,
-        "timestamp": datetime.now().isoformat()
-    })
-    
-    # Get response from backend
-    try:
-        response = st.session_state.backend_client.chat_sync(
-            message=message,
-            agent=st.session_state.current_agent
-        )
-        
-        # Extract response content
-        if response.get("success"):
-            response_text = response.get("response", "I'm sorry, I didn't understand that.")
-        else:
-            response_text = response.get("response", "I encountered an error processing your request.")
-        
-        # Add assistant response to chat
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": response_text,
-            "timestamp": datetime.now().isoformat(),
-            "metadata": response.get("metadata", {})
-        })
-        
-        # Speak response if voice is enabled
-        if st.session_state.get("voice_enabled", False):
-            synthesize_speech(response_text)
-        
-    except Exception as e:
-        error_message = f"Error: {str(e)}"
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": f"I encountered an error: {error_message}",
-            "timestamp": datetime.now().isoformat()
-        })
-    
-    st.session_state.is_processing = False
 
 # Function to process voice input
 def process_voice_input(audio_bytes):
@@ -493,11 +509,33 @@ with st.sidebar:
     if backend_status:
         st.success("✅ Backend Connected")
         
-        # WebSocket status
+        # WebSocket status with latency
         ws_status = "connected" if st.session_state.websocket_connected else "disconnected"
         ws_class = "ws-connected" if st.session_state.websocket_connected else "ws-disconnected"
+        
+        # Measure backend latency
+        if st.session_state.websocket_connected:
+            import time
+            ping_start = time.time()
+            try:
+                health_check = st.session_state.backend_client.check_health_sync()
+                latency_ms = int((time.time() - ping_start) * 1000)
+                latency_indicator = f" ({latency_ms}ms)"
+                if latency_ms < 100:
+                    latency_color = "#4CAF50"  # Green
+                elif latency_ms < 300:
+                    latency_color = "#FF9800"  # Orange
+                else:
+                    latency_color = "#F44336"  # Red
+            except:
+                latency_indicator = ""
+                latency_color = "#999"
+        else:
+            latency_indicator = ""
+            latency_color = "#999"
+        
         st.markdown(
-            f'<div><span class="ws-status {ws_class}"></span>WebSocket: {ws_status}</div>',
+            f'<div><span class="ws-status {ws_class}"></span>WebSocket: {ws_status}<span style="color: {latency_color}; margin-left: 8px; font-size: 0.85em;">{latency_indicator}</span></div>',
             unsafe_allow_html=True
         )
         
@@ -525,8 +563,12 @@ with st.sidebar:
             st.session_state.messages = []
             st.rerun()
     with col2:
-        if st.button("💾 Export Chat", use_container_width=True):
-            chat_export = st.session_state.chat_interface.export_chat()
+        if st.button("💾 Export Chat", use_container_width=True) and st.session_state.messages:
+            # Export chat history as text
+            chat_export = "\n\n".join([
+                f"[{msg.get('timestamp', 'N/A')}] {msg['role'].upper()}: {msg['content']}"
+                for msg in st.session_state.messages
+            ])
             st.download_button(
                 label="Download",
                 data=chat_export,

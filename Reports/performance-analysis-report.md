@@ -1,4 +1,5 @@
 # System Performance Analysis Report
+
 Generated: 2025-08-28 22:06 UTC
 
 ## Executive Summary
@@ -8,19 +9,23 @@ Your system is experiencing critical memory pressure with 65.3% RAM utilization 
 ## 1. Memory Analysis
 
 ### Current State
+
 - **Total Memory**: 23.3GB
 - **Used Memory**: 15.3GB (65.3%)
 - **Available Memory**: 7.9GB
 - **Critical Threshold**: Approaching 70% warning level
 
 ### Memory Growth Pattern
+
 Analysis of historical metrics shows concerning trends:
+
 - **Memory usage trajectory**: 32% → 72% over 3-hour period
 - **Peak usage**: 72.99% at timestamp 1756411104
 - **Average growth rate**: ~13% per hour
 - **Memory leak indicators**: Persistent growth without corresponding workload increase
 
 ### Top Memory Consumers
+
 1. **Claude Instances (16 processes)**: ~5.4GB total
    - Primary instance (PID 162362): 510MB (38.1% CPU!)
    - Multiple instances 300-450MB each
@@ -41,6 +46,7 @@ Analysis of historical metrics shows concerning trends:
 ### Critical Issues
 
 #### Zombie Processes (8 detected)
+
 ```
 - npm exec playwright (PID 778203)
 - npm exec ruv-sw (PID 780760)
@@ -51,9 +57,11 @@ Analysis of historical metrics shows concerning trends:
 - npm exec mcp-gi (PID 783864)
 - bash (PID 1181414)
 ```
+
 **Impact**: Consuming PIDs, preventing proper cleanup, potential memory leaks
 
 #### Process Proliferation
+
 - **16 Claude instances** running simultaneously
 - High CPU usage on primary Claude (38.1%)
 - Thread count explosion: 5017 threads across 620 tasks
@@ -62,6 +70,7 @@ Analysis of historical metrics shows concerning trends:
 ## 3. Docker Container Performance
 
 ### Critical Containers
+
 1. **Neo4j** - SEVERE
    - Memory: 95.81% (490.6MB/512MB)
    - Risk: OOM killer activation imminent
@@ -78,6 +87,7 @@ Analysis of historical metrics shows concerning trends:
    - Recommendation: Monitor closely
 
 ### Container Resource Efficiency
+
 - Total containers: 17
 - Combined memory allocation: ~11.5GB
 - Actual usage: ~1.8GB
@@ -86,6 +96,7 @@ Analysis of historical metrics shows concerning trends:
 ## 4. Historical Performance Trends
 
 ### Memory Usage Evolution
+
 ```
 Time Period    | Memory %  | Status
 ---------------|-----------|----------
@@ -98,6 +109,7 @@ Current        | 65.3%     | Warning
 ```
 
 ### Load Average Trend
+
 - Initial: 5.72 (high stress)
 - Post-cleanup: 3.03 (improved)
 - Current: 3.73 (degrading)
@@ -105,6 +117,7 @@ Current        | 65.3%     | Warning
 ## 5. Root Cause Analysis
 
 ### Primary Issues
+
 1. **Claude Process Leak**: New Claude instances spawning without cleanup
 2. **Zombie Process Accumulation**: MCP/npm processes not terminating properly
 3. **Memory Fragmentation**: Long-running processes with growing heap
@@ -112,6 +125,7 @@ Current        | 65.3%     | Warning
 5. **VSCode Memory Bloat**: Extensions consuming excessive memory
 
 ### Contributing Factors
+
 - No process lifecycle management
 - Absent memory limits on Claude processes
 - Docker container limits too restrictive
@@ -120,16 +134,19 @@ Current        | 65.3%     | Warning
 ## 6. Performance Bottlenecks
 
 ### CPU Bottlenecks
+
 - Claude primary process: 38.1% CPU (single process!)
 - Docker daemon: 11% CPU
 - Combined Claude CPU: ~150%
 
 ### Memory Bottlenecks
+
 - System approaching swap usage (146MB used)
 - Page cache pressure evident
 - Memory fragmentation reducing available RAM
 
 ### I/O Bottlenecks
+
 - Historical I/O wait issues (resolved post-nginx cleanup)
 - Docker overlay filesystem overhead
 - Log file growth unchecked
@@ -139,6 +156,7 @@ Current        | 65.3%     | Warning
 ### Immediate Actions (Priority 1 - Do Now)
 
 #### 1. Kill Redundant Claude Processes
+
 ```bash
 # Keep only essential Claude instances (max 3-4)
 for pid in $(pgrep claude | tail -n +5); do
@@ -147,6 +165,7 @@ done
 ```
 
 #### 2. Clean Zombie Processes
+
 ```bash
 # Force cleanup of zombie processes
 pkill -9 -f "npm exec"
@@ -154,6 +173,7 @@ pkill -9 -f "uv"
 ```
 
 #### 3. Adjust Critical Container Limits
+
 ```bash
 # Neo4j memory increase
 docker update --memory="1g" --memory-swap="1g" sutazai-neo4j
@@ -165,6 +185,7 @@ docker update --memory="512m" --memory-swap="512m" sutazai-rabbitmq
 ### Short-term Actions (Priority 2 - Within 24 hours)
 
 #### 1. Implement Process Management
+
 ```bash
 # Create Claude process monitor script
 cat > /usr/local/bin/claude-monitor.sh << 'EOF'
@@ -182,6 +203,7 @@ echo "*/5 * * * * /usr/local/bin/claude-monitor.sh" | crontab -
 ```
 
 #### 2. Memory Monitoring Alert
+
 ```bash
 # Create memory alert script
 cat > /usr/local/bin/memory-alert.sh << 'EOF'
@@ -196,6 +218,7 @@ EOF
 ```
 
 #### 3. Container Resource Optimization
+
 ```yaml
 # docker-compose.override.yml
 services:
@@ -213,16 +236,19 @@ services:
 ### Long-term Actions (Priority 3 - Within 1 week)
 
 #### 1. Implement Process Pooling
+
 - Use process pool for Claude instances
 - Implement proper lifecycle management
 - Add health checks and auto-restart
 
 #### 2. Memory Profiling
+
 - Add memory profiling to identify leaks
 - Implement heap dump analysis
 - Set up continuous monitoring
 
 #### 3. Container Orchestration
+
 - Migrate to Kubernetes/Swarm for better resource management
 - Implement auto-scaling policies
 - Add resource quotas
@@ -230,6 +256,7 @@ services:
 ## 8. Performance Metrics & Monitoring
 
 ### Key Metrics to Track
+
 1. **Memory Usage**: Alert at 70%, critical at 85%
 2. **Process Count**: Max 4 Claude instances
 3. **Zombie Processes**: Should be 0
@@ -237,6 +264,7 @@ services:
 5. **Load Average**: Should be <10 on 20-core system
 
 ### Monitoring Implementation
+
 ```bash
 # Quick monitoring dashboard
 watch -n 5 'echo "=== SYSTEM METRICS ==="; \
@@ -254,18 +282,21 @@ ps aux --sort=-%mem | head -5'
 After implementing recommended optimizations:
 
 ### Immediate (After Priority 1)
+
 - Memory usage: 65% → 45% (-20%)
 - Claude processes: 16 → 4 (-75%)
 - Zombie processes: 8 → 0 (-100%)
 - System responsiveness: +40%
 
 ### Short-term (After Priority 2)
+
 - Memory stability: Maintained below 60%
 - Process management: Automated
 - Container stability: No OOM kills
 - Load average: <2.0
 
 ### Long-term (After Priority 3)
+
 - Memory efficiency: 80%+ utilization
 - Process pooling: 50% resource savings
 - Auto-scaling: Dynamic resource allocation
@@ -274,6 +305,7 @@ After implementing recommended optimizations:
 ## 10. Risk Assessment
 
 ### Current Risks
+
 - **HIGH**: Neo4j OOM kill imminent (96% memory)
 - **HIGH**: System swap thrashing if memory exceeds 75%
 - **MEDIUM**: Process table exhaustion from zombies
@@ -281,6 +313,7 @@ After implementing recommended optimizations:
 - **LOW**: Docker daemon instability
 
 ### Mitigation Priority
+
 1. Increase Neo4j memory limit immediately
 2. Kill excess Claude processes
 3. Clean zombie processes
@@ -292,6 +325,7 @@ After implementing recommended optimizations:
 Your system is experiencing severe memory pressure primarily due to process proliferation and inadequate resource limits. The combination of 16 Claude instances, 8 zombie processes, and undersized Docker containers is creating a perfect storm for system instability.
 
 **Immediate action required**:
+
 1. Reduce Claude instances to 4 maximum
 2. Clean all zombie processes
 3. Increase Neo4j memory to 1GB

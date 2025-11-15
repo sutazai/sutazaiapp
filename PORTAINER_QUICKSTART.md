@@ -1,15 +1,18 @@
 # Portainer Quick Start Guide
+
 **SutazAI Platform - Portainer Stack Management**
 
 ## 🚀 Quick Migration (3 Steps)
 
 ### Step 1: Run Migration Script
+
 ```bash
 cd /opt/sutazaiapp
 ./migrate-to-portainer.sh
 ```
 
 The script will:
+
 - ✅ Verify prerequisites (Docker, Portainer, network, Ollama)
 - ✅ Create backup of current state
 - ✅ Stop existing docker-compose services
@@ -18,9 +21,10 @@ The script will:
 - ✅ Generate migration report
 
 ### Step 2: Deploy in Portainer UI
+
 When prompted by the script:
 
-1. **Open Portainer**: http://localhost:9000
+1. **Open Portainer**: <http://localhost:9000>
 2. **Create Admin Account** (if first time):
    - Username: `admin`
    - Password: Cristi45!!!!!!
@@ -33,7 +37,9 @@ When prompted by the script:
 6. **Return to terminal** and press Enter to continue verification
 
 ### Step 3: Verify Deployment
+
 The script will automatically verify:
+
 - ✅ All 11 containers running
 - ✅ Health checks passing
 - ✅ Service endpoints accessible
@@ -43,6 +49,7 @@ The script will automatically verify:
 ## 📊 Daily Operations
 
 ### View Stack Status
+
 ```bash
 # Open Portainer
 http://localhost:9000
@@ -52,6 +59,7 @@ Stacks → sutazai-platform → View details
 ```
 
 ### Start/Stop Individual Containers
+
 ```bash
 # Via Portainer UI
 Containers → Select container(s) → Start/Stop/Restart
@@ -62,6 +70,7 @@ sudo docker start sutazai-backend
 ```
 
 ### View Logs
+
 ```bash
 # Via Portainer UI
 Containers → [container-name] → Logs → Auto-refresh
@@ -71,6 +80,7 @@ sudo docker logs -f sutazai-backend
 ```
 
 ### Update Stack Configuration
+
 ```bash
 # 1. Edit the compose file
 nano /opt/sutazaiapp/docker-compose-portainer.yml
@@ -85,6 +95,7 @@ Stacks → sutazai-platform → View containers
 ```
 
 ### Scale Services
+
 ```bash
 # Via Portainer UI (only for stateless services)
 Stacks → sutazai-platform → Editor
@@ -97,6 +108,7 @@ Stacks → sutazai-platform → Editor
 ## 🔧 Common Tasks
 
 ### Restart Entire Stack
+
 ```bash
 # Option 1: Via Portainer UI
 Stacks → sutazai-platform → Stop → Start
@@ -107,6 +119,7 @@ sudo docker-compose -f docker-compose-portainer.yml restart
 ```
 
 ### View Resource Usage
+
 ```bash
 # Via Portainer UI
 Containers → sutazai-platform → Stats (real-time graphs)
@@ -116,6 +129,7 @@ sudo docker stats --filter "name=sutazai-"
 ```
 
 ### Backup Volumes
+
 ```bash
 # Create backup directory
 mkdir -p /opt/sutazaiapp/backups/volumes-$(date +%Y%m%d)
@@ -138,6 +152,7 @@ sudo docker run --rm \
 ```
 
 ### Restore Volumes
+
 ```bash
 # Stop stack first
 Portainer → Stacks → sutazai-platform → Stop
@@ -153,6 +168,7 @@ Portainer → Stacks → sutazai-platform → Start
 ```
 
 ### Monitor Health Checks
+
 ```bash
 # Via Portainer UI
 Containers → Filter by "unhealthy" status
@@ -169,6 +185,7 @@ sudo docker inspect sutazai-backend | jq '.[0].State.Health'
 ## 🔍 Troubleshooting
 
 ### Container Won't Start
+
 ```bash
 # 1. Check logs
 Portainer → Containers → [container] → Logs
@@ -186,6 +203,7 @@ sudo docker-compose -f docker-compose-portainer.yml up -d --force-recreate [serv
 ```
 
 ### Health Check Failing
+
 ```bash
 # 1. Check health command
 sudo docker inspect sutazai-backend | jq '.[0].Config.Healthcheck'
@@ -201,6 +219,7 @@ Edit docker-compose-portainer.yml:
 ```
 
 ### Network Issues
+
 ```bash
 # 1. Verify network exists
 sudo docker network inspect sutazaiapp_sutazai-network
@@ -217,6 +236,7 @@ sudo docker exec sutazai-backend curl http://172.20.0.10:5432
 ```
 
 ### Ollama Not Accessible
+
 ```bash
 # 1. Verify Ollama running on host
 curl http://localhost:11434/api/version
@@ -237,6 +257,7 @@ environment:
 ```
 
 ### Port Conflicts
+
 ```bash
 # 1. Check what's using the port
 sudo netstat -tlnp | grep :10200
@@ -254,6 +275,7 @@ ports:
 ## 📈 Performance Monitoring
 
 ### Enable Prometheus/Grafana (Optional)
+
 ```bash
 # Deploy monitoring stack
 cd /opt/sutazaiapp
@@ -268,7 +290,9 @@ http://172.20.0.60:9090
 ```
 
 ### Resource Limits
+
 Current limits in `docker-compose-portainer.yml`:
+
 ```yaml
 deploy:
   resources:
@@ -278,6 +302,7 @@ deploy:
 ```
 
 To modify:
+
 ```bash
 # Edit docker-compose-portainer.yml
 nano /opt/sutazaiapp/docker-compose-portainer.yml
@@ -291,6 +316,7 @@ Stacks → sutazai-platform → Editor → Update
 ## 🔐 Security Hardening
 
 ### Change Default Credentials
+
 ```bash
 # 1. PostgreSQL
 sudo docker exec -it sutazai-postgres psql -U jarvis -d jarvis_ai
@@ -313,6 +339,7 @@ Portainer → Stacks → sutazai-platform → Editor → Update
 ```
 
 ### Enable TLS/SSL
+
 ```bash
 # Generate certificates
 mkdir -p /opt/sutazaiapp/certs
@@ -325,6 +352,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 ```
 
 ### Restrict Portainer Access
+
 ```bash
 # Via Portainer UI
 Settings → Users → Add user with limited permissions
@@ -353,17 +381,20 @@ https://localhost:9443
 ## 📚 Additional Resources
 
 ### Portainer Documentation
-- Official Docs: https://docs.portainer.io/
-- Stack Management: https://docs.portainer.io/user/docker/stacks
-- API Reference: https://docs.portainer.io/api/
+
+- Official Docs: <https://docs.portainer.io/>
+- Stack Management: <https://docs.portainer.io/user/docker/stacks>
+- API Reference: <https://docs.portainer.io/api/>
 
 ### SutazAI Documentation
+
 - Architecture: `/opt/sutazaiapp/docs/architecture/`
 - Port Registry: `/opt/sutazaiapp/IMPORTANT/ports/PortRegistry.md`
 - Validation Report: `/opt/sutazaiapp/PRODUCTION_VALIDATION_REPORT.md`
 - Deployment Guide: `/opt/sutazaiapp/PORTAINER_DEPLOYMENT_GUIDE.md`
 
 ### Quick Commands Reference
+
 ```bash
 # View all sutazai containers
 sudo docker ps --filter "name=sutazai-"
@@ -395,11 +426,11 @@ After migration, verify:
 
 - [ ] All 11 containers running: `sudo docker ps --filter "name=sutazai-"`
 - [ ] Health checks passing: Check Portainer UI container status
-- [ ] Frontend accessible: http://localhost:11000
-- [ ] Backend API accessible: http://localhost:10200/docs
+- [ ] Frontend accessible: <http://localhost:11000>
+- [ ] Backend API accessible: <http://localhost:10200/docs>
 - [ ] Integration tests passing: `bash tests/integration/test_integration.sh`
 - [ ] E2E tests passing: `cd frontend && npx playwright test`
-- [ ] Portainer accessible: http://localhost:9000
+- [ ] Portainer accessible: <http://localhost:9000>
 - [ ] Stack visible in Portainer: Navigate to Stacks → sutazai-platform
 - [ ] Volume backups configured
 - [ ] Monitoring setup (optional)
@@ -409,6 +440,7 @@ After migration, verify:
 ---
 
 **Need Help?**
+
 - Check migration report: `/opt/sutazaiapp/PORTAINER_MIGRATION_REPORT.md`
 - View deployment guide: `/opt/sutazaiapp/PORTAINER_DEPLOYMENT_GUIDE.md`
 - Review logs: Portainer UI → Containers → [service] → Logs

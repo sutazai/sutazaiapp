@@ -21,8 +21,9 @@ scrape_configs:
         labels:
           component: 'infrastructure'
 
-  # cAdvisor - Container metrics
+  # cAdvisor - Container metrics (metrics on /metrics path)
   - job_name: 'cadvisor'
+    metrics_path: '/metrics'
     static_configs:
       - targets: ['sutazai-cadvisor:8080']
         labels:
@@ -78,16 +79,17 @@ scrape_configs:
           component: 'cache'
           service: 'redis'
 
-  # RabbitMQ
+  # RabbitMQ - Prometheus plugin on port 15692
   - job_name: 'rabbitmq'
     static_configs:
-      - targets: ['sutazai-rabbitmq:15672']
+      - targets: ['sutazai-rabbitmq:15692']
         labels:
           component: 'messaging'
           service: 'rabbitmq'
 
-  # Kong Gateway
+  # Kong Gateway - Admin API metrics
   - job_name: 'kong'
+    metrics_path: '/metrics'
     static_configs:
       - targets: ['sutazai-kong:8001']
         labels:

@@ -20,7 +20,7 @@ router = APIRouter()
 
 # Ollama configuration - using Docker service name
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "host.docker.internal")
-OLLAMA_PORT = os.getenv("OLLAMA_PORT", "11434")
+OLLAMA_PORT = os.getenv("OLLAMA_PORT", "11435")
 OLLAMA_BASE_URL = f"http://{OLLAMA_HOST}:{OLLAMA_PORT}"
 
 # In-memory session storage (replace with Redis/DB in production)
@@ -200,6 +200,78 @@ async def send_message(
             response=response_text,
             session_id=session_id,
             model=chat.model,
+            status="success",
+            timestamp=datetime.utcnow().isoformat(),
+            response_time=response_time
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error processing chat message: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to process message: {str(e)}"
+        )
+
+@router.post("/send", response_model=ChatResponse)
+async def chat_send(
+    chat: ChatMessage,
+    current_user: Optional[User] = Depends(get_current_user_optional)
+) -> ChatResponse:
+    """Send a chat message and receive a response from Ollama LLM (auth optional for testing)"""
+    import time
+    start_time = time.time()
+    
+    # Validate message length
+    if len(chat.message) > 5000:
+        raise HTTPException(
+            status_code=400,
+            detail="Message exceeds maximum length of 5000 characters"
+        )
+    
+    if not chat.message.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Message cannot be empty"
+        )
+    
+    # Generate session ID if not provided
+    session_id = chat.session_id or str(uuid.uuid4())
+    
+    # Store message in session history
+    if session_id not in chat_sessions:
+        chat_sessions[session_id] = []
+    
+    chat_sessions[session_id].append({
+        "role": "user",
+        "content": chat.message,
+        "timestamp": datetime.utcnow().isoformat(),
+        "user_id": str(current_user.id) if current_user else "anonymous"
+    })
+    
+    try:
+        # Call Ollama for response
+        response_text = await call_ollama(
+            message=chat.message,
+            model=chat.model or "tinyllama:latest",
+            temperature=chat.temperature or 0.7
+        )
+        
+        # Store assistant response in session
+        chat_sessions[session_id].append({
+            "role": "assistant",
+            "content": response_text,
+            "timestamp": datetime.utcnow().isoformat(),
+            "model": chat.model
+        })
+        
+        response_time = time.time() - start_time
+        
+        return ChatResponse(
+            response=response_text,
+            session_id=session_id,
+            model=chat.model or "tinyllama:latest",
             status="success",
             timestamp=datetime.utcnow().isoformat(),
             response_time=response_time

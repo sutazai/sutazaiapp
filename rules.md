@@ -35,6 +35,7 @@ Implement rate limiting using actual throttling mechanisms
 Use CDN endpoints that are configured and accessible
 
 #### Use Testing Protocol (Use Playwright MCP) for every testing aspect
+
 ```bash
 npx playwright test
 npx playwright test --ui
@@ -978,7 +979,7 @@ Requirement: Maintain centralized, documented, and reusable scripts that elimina
     ├── python-template.py     # Python script template
     ├── batch-template.bat     # Windows batch template
     └── examples/              # Example implementations
-	
+ 
 Rule 7: Script Organization & Control
 ✅ Script Standards:
 

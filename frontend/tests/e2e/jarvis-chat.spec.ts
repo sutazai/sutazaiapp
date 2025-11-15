@@ -50,28 +50,33 @@ test.describe('JARVIS Chat Interface', () => {
     }
   });
 
-  test('should have send button or enter functionality', async ({ page }) => {
-    // Look for send button
-    const sendButtonSelectors = [
-      'button:has-text("Send")',
-      'button:has-text("Submit")',
-      'button:has-text("Ask")',
-      'button[aria-label*="send"]',
-      '[data-testid="stButton"] button'
+  test('should have chat input or enter functionality', async ({ page }) => {
+    // Look for Streamlit chat_input component (uses Enter key, not visible send button)
+    const chatInputSelectors = [
+      '[data-testid="stChatInput"] textarea',
+      '[data-testid="stChatInput"] input',
+      'textarea[placeholder*="message"]',
+      'input[placeholder*="message"]'
     ];
     
-    let sendButton = null;
-    for (const selector of sendButtonSelectors) {
-      const element = page.locator(selector);
+    let chatInput = null;
+    for (const selector of chatInputSelectors) {
+      const element = page.locator(selector).first();
       if (await element.count() > 0) {
-        sendButton = element.first();
+        chatInput = element;
         break;
       }
     }
     
-    if (sendButton) {
-      await expect(sendButton).toBeVisible();
-      await expect(sendButton).toBeEnabled();
+    if (chatInput && await chatInput.isVisible().catch(() => false)) {
+      // Chat input found - user can type and press Enter
+      await expect(chatInput).toBeVisible();
+      await expect(chatInput).toBeEditable();
+      console.log('✅ Chat input functional (Enter to send)');
+    } else {
+      // Fallback: check body text for chat features
+      const bodyText = await page.locator('body').innerText();
+      expect(bodyText.includes('Chat') || bodyText.includes('message')).toBeTruthy();
     }
   });
 

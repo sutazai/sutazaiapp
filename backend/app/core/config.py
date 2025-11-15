@@ -125,8 +125,13 @@ class Settings(BaseSettings):
     DB_POOL_TIMEOUT: int = 30
     DB_POOL_RECYCLE: int = 1800
     
-    # CORS
-    CORS_ORIGINS: list = ["*"]
+    # CORS - Restricted to specific origins for security
+    CORS_ORIGINS: list = [
+        "http://localhost:11000",  # Frontend Streamlit app
+        "http://localhost:3000",   # Alternative frontend port
+        "http://127.0.0.1:11000",  # Local frontend
+        "http://127.0.0.1:3000",   # Alternative local frontend
+    ]
     
     model_config = SettingsConfigDict(
         env_file=".env",

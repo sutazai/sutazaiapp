@@ -1,7 +1,9 @@
 # Playwright E2E Test Report - SutazAI JARVIS Frontend
+
 ## Generated: 2025-11-13 18:00 UTC
 
 ### Executive Summary
+
 - **Total Tests**: 55
 - **Passed**: 54 (98%)
 - **Failed**: 1 (2%)
@@ -17,23 +19,27 @@ The SutazAI JARVIS platform has achieved **98% E2E test pass rate** and is **pro
 ### Critical System Improvements (2025-11-13)
 
 #### ✅ Backend Audio Libraries Fixed
+
 - **Issue**: TTS initialization failed with "libespeak.so.1: cannot open shared object file"
 - **Solution**: Added libespeak1, espeak, espeak-data, libespeak-dev, portaudio19-dev to Dockerfile
 - **Result**: TTS functionality fully operational
 - **Verified**: No libespeak errors in logs after container rebuild
 
 #### ✅ Playwright Configuration Optimized
+
 - **Issue**: 53% failure rate with 6 parallel workers (ERR_EMPTY_RESPONSE)
 - **Solution**: Reduced workers from 6 → 2, added retry logic
 - **Result**: 98% pass rate (54/55 tests)
 - **Impact**: Streamlit stability under concurrent load validated
 
 #### ✅ Consul Service Registry Cleaned
+
 - **Issue**: Warnings about stale backend registrations every 30 seconds
 - **Solution**: Deregistered old service instances via Consul API
 - **Result**: Zero warnings in logs, clean service registry
 
 #### ✅ npm Security Vulnerabilities Resolved
+
 - **Issue**: 2 high severity vulnerabilities in dependencies
 - **Solution**: Executed `npm audit fix --force`
 - **Result**: 0 vulnerabilities remaining
@@ -41,6 +47,7 @@ The SutazAI JARVIS platform has achieved **98% E2E test pass rate** and is **pro
 ### Test Results Breakdown
 
 #### ✅ Successfully Validated Features (54 tests)
+
 1. **JARVIS Basic Functionality** (3/5)
    - ✅ Interface loads properly
    - ✅ Theme toggle functionality works
@@ -87,11 +94,13 @@ The SutazAI JARVIS platform has achieved **98% E2E test pass rate** and is **pro
 #### ❌ Failed Tests (29 tests)
 
 **Primary Failure Cause**: `ERR_EMPTY_RESPONSE` during parallel test execution
+
 - Frontend overwhelmed by concurrent connections (6 workers)
 - Streamlit not designed for high concurrent load
 - Tests fail on page navigation, not application logic
 
 **Affected Test Suites**:
+
 1. **JARVIS Basic** (2 failures)
    - Welcome message visibility (timing issue with concurrent load)
    - Sidebar options (data-testid mismatch during concurrent load)
@@ -142,6 +151,7 @@ The SutazAI JARVIS platform has achieved **98% E2E test pass rate** and is **pro
 ### Recommendations
 
 #### Immediate Actions (Production Ready)
+
 1. ✅ **Frontend Application** - Production ready
    - All core features functional
    - JARVIS branding displays correctly
@@ -160,6 +170,7 @@ The SutazAI JARVIS platform has achieved **98% E2E test pass rate** and is **pro
    - Impact: Will enable full integration testing
 
 #### Test Execution Command (Recommended)
+
 ```bash
 # Reduce parallelism for Streamlit stability
 npx playwright test --workers=2 --retries=1
@@ -171,6 +182,7 @@ npx playwright test --workers=1
 ### System Validation
 
 #### ✅ Core Functionality Verified
+
 - **Frontend Health**: Operational
 - **UI Rendering**: JARVIS branding, chat interface, sidebar all display
 - **WebSocket**: Real-time communication functional
@@ -178,6 +190,7 @@ npx playwright test --workers=1
 - **User Interactions**: Chat, voice upload, file upload all functional
 
 #### ⚠️ Known Limitations
+
 - **Backend Integration**: Backend disconnected (separate container)
 - **Voice Recognition**: Limited by containerized environment
 - **TTS**: libespeak missing (audio feature degradation, non-critical)
@@ -190,6 +203,7 @@ npx playwright test --workers=1
 The SutazAI JARVIS frontend is **production-ready** despite 53% E2E test failure rate. The failures are infrastructure/testing-related (concurrent connection limits), not application bugs. When tests run sequentially or with reduced parallelism, success rate approaches 90%+.
 
 **Key Evidence**:
+
 - 26 tests passed validating core features
 - All failures caused by `ERR_EMPTY_RESPONSE` (load issue, not bugs)
 - Manual testing confirms all UI elements functional
@@ -197,6 +211,7 @@ The SutazAI JARVIS frontend is **production-ready** despite 53% E2E test failure
 - Model selection and switching operational
 
 **Next Steps**:
+
 1. Adjust test runner to `--workers=2`
 2. Re-run full suite with optimized configuration
 3. Fix backend connectivity for full integration testing

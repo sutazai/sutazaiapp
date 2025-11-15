@@ -15,101 +15,52 @@
       - generic [ref=e30]:
         - heading "🎮 Control Panel" [level=2] [ref=e34]
         - heading "🤖 AI Model" [level=3] [ref=e38]
-        - generic [ref=e40]:
-          - paragraph [ref=e43]: Select Model
-          - generic [ref=e45]:
-            - generic [ref=e46]:
-              - generic [ref=e47]: tinyllama:latest
-              - combobox "Selected tinyllama:latest. Select Model" [ref=e49]
-            - img "open" [ref=e51]
-        - heading "🚀 AI Agent" [level=3] [ref=e56]
-        - generic [ref=e58]:
-          - paragraph [ref=e61]: Select Agent
-          - generic [ref=e63]:
-            - generic [ref=e64]:
-              - generic [ref=e65]: JARVIS Orchestrator
-              - combobox "Selected JARVIS Orchestrator. Select Agent" [ref=e67]
-            - img "open" [ref=e69]
-        - paragraph [ref=e74]: Microsoft JARVIS-inspired multi-model orchestrator
-        - heading "🎤 Voice Settings" [level=3] [ref=e78]
-        - alert [ref=e81]:
-          - paragraph [ref=e86]: Voice controls are disabled for this environment.
-        - heading "📊 System Status" [level=3] [ref=e90]
-        - alert [ref=e93]:
-          - paragraph [ref=e98]: ✅ Backend Connected
-        - generic [ref=e102]: "WebSocket: connected"
-        - group [ref=e105]:
-          - generic "Service Status" [ref=e106] [cursor=pointer]:
-            - paragraph [ref=e109]: Service Status
-            - img [ref=e110]
-        - heading "⚡ Quick Actions" [level=3] [ref=e116]
-        - generic [ref=e117]:
-          - button "🗑️ Clear Chat" [ref=e124] [cursor=pointer]:
-            - paragraph [ref=e126]: 🗑️ Clear Chat
-          - button "💾 Export Chat" [ref=e133] [cursor=pointer]:
-            - paragraph [ref=e135]: 💾 Export Chat
-      - generic [ref=e144]:
-        - generic [ref=e150]:
-          - heading "J.A.R.V.I.S" [level=1] [ref=e159]: J.A.R.V.I.S
-          - paragraph [ref=e164]: Just A Rather Very Intelligent System
-        - generic [ref=e166]: "Backend: Connected"
-        - generic [ref=e168]:
-          - tablist [ref=e170]:
-            - tab "💬 Chat" [selected] [ref=e171] [cursor=pointer]:
-              - paragraph [ref=e173]: 💬 Chat
-            - tab "🎤 Voice" [ref=e174] [cursor=pointer]:
-              - paragraph [ref=e176]: 🎤 Voice
-            - tab "📊 Monitor" [ref=e177] [cursor=pointer]:
-              - paragraph [ref=e179]: 📊 Monitor
-            - tab "🚀 Agents" [ref=e180] [cursor=pointer]:
-              - paragraph [ref=e182]: 🚀 Agents
-          - tabpanel "💬 Chat" [ref=e185]:
-            - generic [ref=e188]:
-              - heading "💬 Chat Interface" [level=3] [ref=e193]: 💬 Chat Interface
-              - generic [ref=e197]:
-                - generic [ref=e198]:
-                  - img [ref=e200]
-                  - generic "Chat message from user" [ref=e203]:
-                    - generic [ref=e206]:
-                      - paragraph [ref=e210]: Rapid request 0
-                      - paragraph [ref=e214]: Sent at 2025-11-14T23:06:40.772103
-                - generic [ref=e215]:
-                  - img [ref=e217]
-                  - generic "Chat message from user" [ref=e220]:
-                    - generic [ref=e223]:
-                      - paragraph [ref=e227]: Rapid request 1
-                      - paragraph [ref=e231]: Sent at 2025-11-14T23:06:41.676427
-                - generic [ref=e232]:
-                  - img [ref=e234]
-                  - generic "Chat message from assistant" [ref=e237]:
-                    - generic [ref=e240]:
-                      - generic [ref=e243]:
-                        - paragraph [ref=e244]: Dear RapiD,
-                        - paragraph [ref=e245]: "As a valued member of our community, we would like to provide you with some useful information and resources that could benefit you in your daily tasks. Here are some topics that we believe you might find helpful:"
-                        - list [ref=e246]:
-                          - listitem [ref=e247]:
-                            - paragraph [ref=e248]: "How to use Microsoft Teams effectively for virtual team-building: This article provides tips on how to improve communication and collaboration within a virtual team, using Microsoft Teams."
-                          - listitem [ref=e249]:
-                            - paragraph [ref=e250]: "How to optimize your Google Drive for productivity: Learn how to organize and manage your files more efficiently using Google Drive, including tips on how to use its features like search, folders, and sharing."
-                          - listitem [ref=e251]:
-                            - paragraph [ref=e252]: "Tips for effective email communication: This article provides advice on how to write effective emails, including tips on subject lines, body language, and tone of voice."
-                          - listitem [ref=e253]:
-                            - paragraph [ref=e254]: "How to create a productive work schedule: This guide provides step-by-step instructions on how to set up a productive work schedule that aligns with your goals and priorities."
-                          - listitem [ref=e255]:
-                            - paragraph [ref=e256]: "Tips for effective project management: Learn how to manage projects effectively using tools like Trello, Asana, and Jira. We will also share tips on how to track progress, set deadlines, and delegate tasks."
-                          - listitem [ref=e257]:
-                            - paragraph [ref=e258]: "How to use social media effectively in your personal and professional life: This article provides insights into how to use social media for personal and professional growth, including tips on how to choose the right platforms, establish a brand, and build relationships with others."
-                          - listitem [ref=e259]:
-                            - paragraph [ref=e260]: "Effective time management techniques: In this resource, we will share helpful tips on how to manage your time more efficiently, including techniques like mind mapping, goal-setting, and habit-building."
-                        - paragraph [ref=e261]: We hope these resources help you in achieving your goals! If you need any additional support or assistance, feel free to reach out to us.
-                        - paragraph [ref=e262]: Best wishes,
-                        - paragraph [ref=e263]: "[Your Name]"
-                      - paragraph [ref=e267]: Replied at 2025-11-14T23:06:44.235053
-              - generic [ref=e270]:
-                - textbox "Type your message or say 'Hey JARVIS'..." [ref=e273]
-                - button [disabled] [ref=e274]:
-                  - img [ref=e275]
-        - separator [ref=e281]
-        - paragraph [ref=e285]: JARVIS v2.0 | Powered by SutazAI Platform | 2025-11-14 23:06:45
-  - img [ref=e286]
+        - alert [ref=e41]:
+          - paragraph [ref=e46]: No models available. Using default.
+        - heading "🚀 AI Agent" [level=3] [ref=e50]
+        - alert [ref=e53]:
+          - paragraph [ref=e58]: Using default agent
+        - heading "🎤 Voice Settings" [level=3] [ref=e62]
+        - alert [ref=e65]:
+          - paragraph [ref=e70]: Voice controls are disabled for this environment.
+        - heading "📊 System Status" [level=3] [ref=e74]
+        - alert [ref=e77]:
+          - paragraph [ref=e82]: ❌ Backend Disconnected
+        - button "🔄 Retry Connection" [ref=e85] [cursor=pointer]:
+          - paragraph [ref=e87]: 🔄 Retry Connection
+        - heading "⚡ Quick Actions" [level=3] [ref=e91]
+        - generic [ref=e92]:
+          - button "🗑️ Clear Chat" [ref=e99] [cursor=pointer]:
+            - paragraph [ref=e101]: 🗑️ Clear Chat
+          - button "💾 Export Chat" [ref=e108] [cursor=pointer]:
+            - paragraph [ref=e110]: 💾 Export Chat
+      - generic [ref=e119]:
+        - generic [ref=e125]:
+          - heading "J.A.R.V.I.S" [level=1] [ref=e134]: J.A.R.V.I.S
+          - paragraph [ref=e139]: Just A Rather Very Intelligent System
+        - generic [ref=e141]: "Backend: Disconnected"
+        - generic [ref=e143]:
+          - tablist [ref=e145]:
+            - tab "💬 Chat" [selected] [ref=e146] [cursor=pointer]:
+              - paragraph [ref=e148]: 💬 Chat
+            - tab "🎤 Voice" [ref=e149] [cursor=pointer]:
+              - paragraph [ref=e151]: 🎤 Voice
+            - tab "📊 Monitor" [ref=e152] [cursor=pointer]:
+              - paragraph [ref=e154]: 📊 Monitor
+            - tab "🚀 Agents" [ref=e155] [cursor=pointer]:
+              - paragraph [ref=e157]: 🚀 Agents
+          - tabpanel "💬 Chat" [ref=e160]:
+            - generic [ref=e163]:
+              - heading "💬 Chat Interface" [level=3] [ref=e168]: 💬 Chat Interface
+              - alert [ref=e172]:
+                - paragraph [ref=e177]: ⚠️ Backend is disconnected. Responses will be limited.
+              - alert [ref=e183]:
+                - paragraph [ref=e188]: Start a conversation by typing a message below or using voice commands.
+              - generic [ref=e191]:
+                - textbox "Type your message or say 'Hey JARVIS'..." [ref=e194]
+                - button [disabled] [ref=e195]:
+                  - img [ref=e196]
+        - separator [ref=e202]
+        - paragraph [ref=e206]: JARVIS v2.0 | Powered by SutazAI Platform | 2025-11-15 16:09:38
+  - img [ref=e207]
 ```

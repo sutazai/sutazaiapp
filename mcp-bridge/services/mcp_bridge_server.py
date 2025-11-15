@@ -13,7 +13,7 @@ from datetime import datetime
 from pathlib import Path
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
@@ -23,6 +23,7 @@ from typing import Union
 import aio_pika
 import redis.asyncio as aioredis
 from consul import Consul
+from prometheus_client import Counter, Histogram, Gauge, generate_latest, REGISTRY, CONTENT_TYPE_LATEST
 
 # Configure logging
 logging.basicConfig(
@@ -30,6 +31,13 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Prometheus metrics
+http_requests_total = Counter('mcp_bridge_http_requests_total', 'Total HTTP requests', ['method', 'endpoint'])
+http_request_duration = Histogram('mcp_bridge_http_request_duration_seconds', 'HTTP request duration', ['method', 'endpoint'])
+websocket_connections_gauge = Gauge('mcp_bridge_websocket_connections', 'Active WebSocket connections')
+agent_status = Gauge('mcp_bridge_agent_status', 'Agent status (1=online, 0=offline)', ['agent_id'])
+message_routes_total = Counter('mcp_bridge_message_routes_total', 'Total routed messages', ['route_type'])
 
 # Global connection objects
 rabbitmq_connection = None
@@ -737,10 +745,26 @@ async def get_bridge_status():
         timestamp=datetime.now().isoformat()
     )
 
-# Metrics Endpoint
+# Metrics Endpoint - Prometheus format
 @app.get("/metrics")
-async def get_metrics():
-    """Get bridge metrics"""
+async def get_prometheus_metrics():
+    """Get bridge metrics in Prometheus format"""
+    # Update metrics
+    websocket_connections_gauge.set(len(active_connections))
+    
+    for agent_id, agent in AGENT_REGISTRY.items():
+        status_value = 1 if agent.get("status") == "online" else 0
+        agent_status.labels(agent_id=agent_id).set(status_value)
+    
+    # Generate Prometheus metrics
+    return Response(content=generate_latest(REGISTRY), media_type=CONTENT_TYPE_LATEST)
+
+# Legacy JSON metrics endpoint
+@app.get("/metrics/json")
+async def get_json_metrics():
+    """Get bridge metrics in JSON format (legacy)"""
+    http_requests_total.labels(method='GET', endpoint='/metrics/json').inc()
+    
     return {
         "total_services": len(SERVICE_REGISTRY),
         "total_agents": len(AGENT_REGISTRY),

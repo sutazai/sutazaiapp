@@ -5,6 +5,7 @@
 The JARVIS Streamlit frontend at `/opt/sutazaiapp/frontend/app.py` exhibits significant performance bottlenecks that severely impact user experience. With a **performance score of -35/100** and **50% optimization potential**, immediate action is required.
 
 ### Critical Findings
+
 - **13 high-severity bottlenecks** blocking UI responsiveness
 - **8 synchronous API calls** causing UI freezes during network I/O
 - **4 infinite CSS animations** reducing FPS by ~20
@@ -28,9 +29,10 @@ The JARVIS Streamlit frontend at `/opt/sutazaiapp/frontend/app.py` exhibits sign
 
 ### 2. Runtime Performance Bottlenecks
 
-#### High Severity Issues (Lines with specific problems):
+#### High Severity Issues (Lines with specific problems)
 
 **Synchronous API Calls (Blocking UI)**
+
 - Line 233: `check_health_sync()` - Blocks during health check
 - Line 276: `get_models_sync()` - Blocks while fetching models
 - Line 277: `get_agents_sync()` - Blocks while fetching agents
@@ -41,6 +43,7 @@ The JARVIS Streamlit frontend at `/opt/sutazaiapp/frontend/app.py` exhibits sign
 - Line 624: `check_voice_status_sync()` - Another voice status check
 
 **Full Page Reruns (Complete Re-execution)**
+
 - Line 459: Connection retry
 - Line 467: Chat clear
 - Line 519: After user input
@@ -50,6 +53,7 @@ The JARVIS Streamlit frontend at `/opt/sutazaiapp/frontend/app.py` exhibits sign
 - Line 776: Agent activation
 
 **Blocking Operations**
+
 - Line 513: `time.sleep(0.5)` in main thread
 
 ### 3. Memory Usage Patterns
@@ -110,7 +114,7 @@ The JARVIS Streamlit frontend at `/opt/sutazaiapp/frontend/app.py` exhibits sign
 
 ## Specific Line-by-Line Issues
 
-### Critical Performance Bottlenecks by Line Number:
+### Critical Performance Bottlenecks by Line Number
 
 ```python
 # Line 233 - Synchronous health check blocking UI
@@ -155,6 +159,7 @@ animation: pulse 2s ease-in-out infinite;
    - **Issue**: 8 sync calls blocking UI
    - **Solution**: Convert to async operations with loading states
    - **Implementation**:
+
    ```python
    # Instead of:
    health = st.session_state.backend_client.check_health_sync()
@@ -164,30 +169,35 @@ animation: pulse 2s ease-in-out infinite;
    async def check_health_cached():
        return await backend_client.check_health_async()
    ```
+
    - **Expected Improvement**: 60% faster perceived performance
 
 2. **Eliminate Full Page Reruns**
    - **Issue**: 13 st.rerun() calls
    - **Solution**: Use Streamlit fragments and partial updates
    - **Implementation**:
+
    ```python
    # Use st.fragment for partial updates
    @st.fragment
    def chat_input_fragment():
        # Handle input without full rerun
    ```
+
    - **Expected Improvement**: 70% reduction in re-rendering
 
 3. **Fix Thread Management**
    - **Issue**: WebSocket threads without cleanup
    - **Solution**: Implement proper cleanup handlers
    - **Implementation**:
+
    ```python
    def cleanup_threads():
        if hasattr(st.session_state, 'ws_thread'):
            st.session_state.ws_thread.stop()
            st.session_state.ws_thread.join(timeout=1)
    ```
+
    - **Expected Improvement**: Prevent memory leaks
 
 ### Priority 2: High (Within 1 Week)
@@ -196,6 +206,7 @@ animation: pulse 2s ease-in-out infinite;
    - **Issue**: 4 infinite animations consuming CPU
    - **Solution**: Use CSS transforms, reduce frequency, add will-change
    - **Implementation**:
+
    ```css
    .arc-reactor {
        will-change: transform;
@@ -206,17 +217,20 @@ animation: pulse 2s ease-in-out infinite;
        animation-play-state: running;
    }
    ```
+
    - **Expected Improvement**: 15-20 FPS improvement
 
 5. **Implement Caching Strategy**
    - **Issue**: No caching, repeated API calls
    - **Solution**: Add st.cache_data with TTL
    - **Implementation**:
+
    ```python
    @st.cache_data(ttl=300)  # 5 minute cache
    def get_models_cached():
        return backend_client.get_models_sync()
    ```
+
    - **Expected Improvement**: 80% reduction in API calls
 
 6. **Enable Compression**
@@ -230,22 +244,26 @@ animation: pulse 2s ease-in-out infinite;
    - **Issue**: Heavy objects in session state
    - **Solution**: Lazy initialization and singleton patterns
    - **Implementation**:
+
    ```python
    @st.cache_resource
    def get_backend_client():
        return BackendClient(settings.BACKEND_URL)
    ```
+
    - **Expected Improvement**: 150ms faster initialization
 
 8. **Reduce Monitoring Overhead**
    - **Issue**: Docker stats in UI thread
    - **Solution**: Cache results, increase interval, background worker
    - **Implementation**:
+
    ```python
    @st.cache_data(ttl=10)
    def get_docker_stats_cached():
        return SystemMonitor.get_docker_stats()
    ```
+
    - **Expected Improvement**: 80% reduction in monitoring overhead
 
 9. **Bundle Resources**
@@ -268,22 +286,26 @@ animation: pulse 2s ease-in-out infinite;
 ## Test Scenarios
 
 ### 1. Initial Page Load Test
+
 ```bash
 # Measure cold start performance
 curl -w "@curl-format.txt" -o /dev/null -s http://localhost:11000
 ```
 
 ### 2. User Interaction Test
+
 - Type message → Measure response time
 - Switch agents → Measure UI update time
 - Navigate tabs → Measure rendering time
 
 ### 3. Extended Session Test
+
 - Run for 1 hour
 - Monitor memory growth
 - Check for thread leaks
 
 ### 4. Concurrent User Test
+
 ```python
 # Simulate 10 concurrent users
 import concurrent.futures
@@ -298,6 +320,7 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
 ```
 
 ### 5. Mobile Performance Test
+
 - Test on throttled connection (3G)
 - Measure interaction responsiveness
 - Check animation performance
@@ -334,24 +357,28 @@ class PerformanceMonitor:
 ## Implementation Roadmap
 
 ### Week 1: Critical Fixes
+
 - [ ] Convert sync API calls to async
 - [ ] Remove unnecessary st.rerun() calls
 - [ ] Fix thread cleanup issues
 - [ ] Remove blocking sleep operations
 
 ### Week 2: Performance Optimizations
+
 - [ ] Implement caching strategy
 - [ ] Optimize CSS animations
 - [ ] Enable compression
 - [ ] Add loading states
 
 ### Week 3: Architecture Improvements
+
 - [ ] Refactor session state management
 - [ ] Implement lazy loading
 - [ ] Add background workers
 - [ ] Optimize Docker API calls
 
 ### Week 4: Monitoring & Testing
+
 - [ ] Add performance monitoring
 - [ ] Implement automated tests
 - [ ] Set up performance budgets
@@ -372,9 +399,10 @@ After implementing these optimizations:
 
 ## Conclusion
 
-The JARVIS frontend requires immediate performance optimization. The identified bottlenecks are severely impacting user experience, with synchronous operations blocking the UI and infinite animations consuming resources unnecessarily. 
+The JARVIS frontend requires immediate performance optimization. The identified bottlenecks are severely impacting user experience, with synchronous operations blocking the UI and infinite animations consuming resources unnecessarily.
 
 By implementing the recommended optimizations in priority order, the application can achieve:
+
 - **60% faster perceived performance**
 - **70% reduction in unnecessary re-renders**
 - **20 FPS improvement in animations**

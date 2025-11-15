@@ -1,4 +1,5 @@
 # SutazAI Platform - Portainer Migration Action Plan
+
 **Created**: 2025-11-13 22:55:00 UTC  
 **Status**: Ready for Execution  
 **Confidence**: High (95%)
@@ -6,6 +7,7 @@
 ## Current System State ✅
 
 ### All Containers Operational
+
 ```
 ✅ sutazai-frontend       (healthy) - Port 11000
 ✅ sutazai-backend        (healthy) - Port 10200  
@@ -21,6 +23,7 @@
 ```
 
 ### Backend Service Connectivity
+
 - ✅ Redis (cache)
 - ❌ RabbitMQ (authentication issue)
 - ✅ Neo4j (graph database)
@@ -36,9 +39,11 @@
 ## Pre-Migration Fixes Required
 
 ### Fix 1: RabbitMQ Authentication
+
 **Issue**: Backend cannot connect despite correct credentials  
 **Root Cause**: Timing issue - RabbitMQ not fully ready when backend starts  
 **Solution**:
+
 ```bash
 # Restart backend after RabbitMQ is fully initialized
 sudo docker restart sutazai-backend
@@ -46,29 +51,36 @@ sleep 30
 # Verify connection
 curl http://localhost:10200/health/detailed
 ```
+
 **Expected**: rabbitmq: true
 
 ### Fix 2: Qdrant Connection
+
 **Issue**: Backend showing qdrant as false  
 **Root Cause**: Qdrant client library compatibility or endpoint configuration  
 **Solution**:
+
 ```bash
 # Test Qdrant directly
 curl http://localhost:10101
 # If responds, restart backend
 sudo docker restart sutazai-backend
 ```
+
 **Expected**: qdrant: true
 
 ### Fix 3: Kong Registration
+
 **Issue**: Kong not registered with Consul/Backend  
 **Root Cause**: Kong migrations completed but backend not notified  
 **Solution**:
+
 ```bash
 # Restart backend to re-register services
 sudo docker restart sutazai-backend
 sleep 30
 ```
+
 **Expected**: kong: true
 
 ## Step-by-Step Migration Process
@@ -76,6 +88,7 @@ sleep 30
 ### Phase 1: Pre-Migration Validation (15 minutes)
 
 #### Step 1.1: Fix Service Connections
+
 ```bash
 # Execute fixes
 sudo docker restart sutazai-backend
@@ -87,6 +100,7 @@ curl -s http://localhost:10200/health/detailed | jq '.healthy_count'
 ```
 
 #### Step 1.2: Test Frontend Functionality
+
 ```bash
 # Access frontend
 open http://localhost:11000
@@ -99,6 +113,7 @@ open http://localhost:11000
 ```
 
 #### Step 1.3: Run Playwright E2E Tests
+
 ```bash
 cd /opt/sutazaiapp/frontend
 npx playwright test --reporter=list 2>&1 | tee /tmp/playwright-results.txt
@@ -108,6 +123,7 @@ npx playwright test --reporter=list 2>&1 | tee /tmp/playwright-results.txt
 ```
 
 #### Step 1.4: Validate Docker Resources
+
 ```bash
 docker system df
 # Ensure adequate disk space (>10GB free)
@@ -119,11 +135,13 @@ free -h
 ### Phase 2: Portainer Setup (10 minutes)
 
 #### Step 2.1: Check Portainer Status
+
 ```bash
 sudo docker ps | grep portainer
 ```
 
 **If not running**:
+
 ```bash
 sudo docker run -d \
   -p 9000:9000 \
@@ -139,12 +157,14 @@ sleep 30
 ```
 
 #### Step 2.2: Access Portainer UI
+
 ```bash
 # Open browser
 open http://localhost:9000
 ```
 
 **First Time Setup**:
+
 1. Create admin account:
    - Username: admin
    - Password: [Generate secure password - Min 12 characters]
@@ -152,6 +172,7 @@ open http://localhost:9000
 3. Click on "local" environment
 
 #### Step 2.3: Verify Portainer Connectivity
+
 - Navigate to: Containers → Should see existing sutazai containers
 - Navigate to: Networks → Should see sutazaiapp_sutazai-network
 - Navigate to: Volumes → Should see all sutazaiapp volumes
@@ -159,6 +180,7 @@ open http://localhost:9000
 ### Phase 3: Migration Execution (20 minutes)
 
 #### Step 3.1: Create Backup
+
 ```bash
 cd /opt/sutazaiapp
 BACKUP_DIR="backups/pre-portainer-$(date +%Y%m%d_%H%M%S)"
@@ -179,6 +201,7 @@ echo "Backup created at: $BACKUP_DIR"
 ```
 
 #### Step 3.2: Stop Current Deployment
+
 ```bash
 cd /opt/sutazaiapp
 
@@ -193,6 +216,7 @@ sudo docker ps --filter "name=sutazai-"
 #### Step 3.3: Deploy via Portainer UI
 
 **In Portainer**:
+
 1. Navigate to: **Stacks** → **Add stack**
 2. **Name**: `sutazai-platform`
 3. **Build method**: **Upload**
@@ -200,11 +224,13 @@ sudo docker ps --filter "name=sutazai-"
 5. Click **Deploy the stack**
 
 **Monitor Deployment**:
+
 - Watch container creation in real-time
 - Should see 11 containers being created
 - Wait for all health checks to pass (~2 minutes)
 
 #### Step 3.4: Verify Deployment
+
 ```bash
 # Check all containers running
 sudo docker ps --filter "name=sutazai-" --format "table {{.Names}}\t{{.Status}}"
@@ -215,6 +241,7 @@ sudo docker ps --filter "name=sutazai-" --format "table {{.Names}}\t{{.Status}}"
 ### Phase 4: Post-Migration Validation (15 minutes)
 
 #### Step 4.1: Service Health Validation
+
 ```bash
 # Backend health
 curl http://localhost:10200/health | jq '.'
@@ -228,6 +255,7 @@ curl http://localhost:10200/health/detailed | jq '.'
 ```
 
 #### Step 4.2: End-to-End Testing
+
 ```bash
 cd /opt/sutazaiapp/frontend
 npx playwright test --reporter=list
@@ -237,6 +265,7 @@ npx playwright test --reporter=list
 ```
 
 #### Step 4.3: Performance Validation
+
 ```bash
 # Test backend latency
 time curl http://localhost:10200/health
@@ -248,7 +277,9 @@ curl -w "@curl-format.txt" -o /dev/null -s http://localhost:11000
 ```
 
 #### Step 4.4: Portainer Stack Management
+
 **In Portainer UI**:
+
 1. Navigate to: **Stacks** → **sutazai-platform**
 2. Verify:
    - ✅ All 11 containers listed
@@ -262,6 +293,7 @@ curl -w "@curl-format.txt" -o /dev/null -s http://localhost:11000
 ### Phase 5: Documentation & Cleanup (10 minutes)
 
 #### Step 5.1: Update Documentation
+
 ```bash
 # Update TODO.md
 # Mark Phase 8 complete
@@ -276,12 +308,14 @@ curl -w "@curl-format.txt" -o /dev/null -s http://localhost:11000
 ```
 
 #### Step 5.2: Generate Migration Report
+
 ```bash
 cd /opt/sutazaiapp
 ./migrate-to-portainer.sh --report-only > PORTAINER_MIGRATION_REPORT_$(date +%Y%m%d_%H%M%S).md
 ```
 
 #### Step 5.3: Clean Up Old Resources
+
 ```bash
 # Remove old docker-compose project metadata (keeps volumes)
 sudo docker-compose -f docker-compose-core.yml down 2>/dev/null || true
@@ -298,6 +332,7 @@ sudo docker image prune -f
 ### Daily Management via Portainer
 
 #### View Logs
+
 ```
 Portainer → Containers → [container-name] → Logs
 - Enable "Auto-refresh logs"
@@ -305,6 +340,7 @@ Portainer → Containers → [container-name] → Logs
 ```
 
 #### Restart Service
+
 ```
 Portainer → Containers → [container-name] → Restart
 - Option: Quick restart (no grace period)
@@ -312,6 +348,7 @@ Portainer → Containers → [container-name] → Restart
 ```
 
 #### Update Configuration
+
 ```
 Portainer → Stacks → sutazai-platform → Editor
 - Edit docker-compose content
@@ -320,6 +357,7 @@ Portainer → Stacks → sutazai-platform → Editor
 ```
 
 #### Scale Services (if applicable)
+
 ```
 Portainer → Stacks → sutazai-platform → Editor
 - Add: deploy.replicas: 3
@@ -328,6 +366,7 @@ Portainer → Stacks → sutazai-platform → Editor
 ```
 
 #### Monitor Resources
+
 ```
 Portainer → Containers → sutazai-platform
 - View: CPU, Memory, Network, Disk usage
@@ -370,6 +409,7 @@ echo "Backup completed: $BACKUP_DIR.tar.gz"
 ### Monitoring & Alerts
 
 **Set up in Portainer**:
+
 1. Navigate to: **Settings** → **Notifications**
 2. Add webhook for critical alerts
 3. Configure:
@@ -380,6 +420,7 @@ echo "Backup completed: $BACKUP_DIR.tar.gz"
 ## Rollback Procedure (If Needed)
 
 ### Emergency Rollback
+
 ```bash
 # Stop Portainer stack
 curl -X POST http://localhost:9000/api/stacks/1/stop \
@@ -397,6 +438,7 @@ curl http://localhost:10200/health
 ```
 
 ### Data Recovery
+
 ```bash
 # Restore PostgreSQL
 cat "$BACKUP_DIR/postgres.sql" | \
@@ -412,6 +454,7 @@ sudo docker run --rm \
 ## Success Criteria Checklist
 
 ### Pre-Migration ✅
+
 - [ ] All 11 containers healthy
 - [ ] 9/9 backend services connected
 - [ ] Frontend accessible and functional
@@ -420,6 +463,7 @@ sudo docker run --rm \
 - [ ] Portainer installed and accessible
 
 ### Migration ✅
+
 - [ ] Stack deployed successfully in Portainer
 - [ ] All 11 containers created
 - [ ] All health checks passing
@@ -427,6 +471,7 @@ sudo docker run --rm \
 - [ ] Network connectivity verified
 
 ### Post-Migration ✅
+
 - [ ] Backend API responding (< 100ms)
 - [ ] Frontend loading (< 3 seconds)
 - [ ] All services: 9/9 connected
@@ -437,6 +482,7 @@ sudo docker run --rm \
 ## Troubleshooting Guide
 
 ### Container Won't Start
+
 ```bash
 # Check logs
 sudo docker logs sutazai-[service-name]
@@ -450,6 +496,7 @@ sudo docker rm sutazai-[service-name]
 ```
 
 ### Health Check Failing
+
 ```bash
 # Test health endpoint directly
 sudo docker exec sutazai-backend curl http://localhost:8000/health
@@ -462,6 +509,7 @@ sudo docker inspect sutazai-backend | jq '.[0].Config.Healthcheck'
 ```
 
 ### Network Issues
+
 ```bash
 # Verify network exists
 sudo docker network inspect sutazaiapp_sutazai-network
@@ -486,12 +534,12 @@ sudo docker exec sutazai-backend ping -c 3 sutazai-postgres
 
 ## Contact & Support
 
-**System Administrator**: ai@sutazai.local  
+**System Administrator**: <ai@sutazai.local>  
 **Documentation**: `/opt/sutazaiapp/docs/`  
 **Backup Location**: `/opt/sutazaiapp/backups/`  
-**Portainer URL**: http://localhost:9000  
-**Frontend URL**: http://localhost:11000  
-**Backend API**: http://localhost:10200
+**Portainer URL**: <http://localhost:9000>  
+**Frontend URL**: <http://localhost:11000>  
+**Backend API**: <http://localhost:10200>
 
 ---
 

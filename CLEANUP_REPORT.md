@@ -1,14 +1,17 @@
 # Filesystem Cleanup Report
+
 Date: 2025-08-29
 
 ## Summary
+
 Successfully cleaned up the /opt/sutazaiapp filesystem, reducing size from **3.8GB to 2.4GB** (saved **1.4GB** / 37% reduction).
 
 ## Cleanup Actions Performed
 
 ### Phase 1: Standard Cleanup (400MB saved)
+
 - ✅ Removed 25,899 Python compiled (.pyc) files
-- ✅ Removed 3,013 __pycache__ directories
+- ✅ Removed 3,013 **pycache** directories
 - ✅ Cleaned up temporary files (.tmp, .bak, .swp, ~)
 - ✅ Removed test artifacts (.coverage, htmlcov, .mypy_cache)
 - ✅ Cleaned up build artifacts (dist, build, *.egg-info)
@@ -16,6 +19,7 @@ Successfully cleaned up the /opt/sutazaiapp filesystem, reducing size from **3.8
 - ✅ Removed empty directories
 
 ### Phase 2: Deep Cleanup (955MB saved)
+
 - ✅ Removed 6 unnecessary .git repositories from agents subdirectories (745MB)
   - agents/core-frameworks/langchain/.git (470MB)
   - agents/orchestration/crewai/.git (122MB)
@@ -23,13 +27,14 @@ Successfully cleaned up the /opt/sutazaiapp filesystem, reducing size from **3.8
   - agents/code-generation/aider/.git (65MB)
   - agents/task-automation/letta/.git (11MB)
   - agents/document-processing/private-gpt/.git (696KB)
-- ✅ Removed large model files (*.bin, *.onnx, *.pt, *.pth, *.h5, *.pb, *.ckpt)
+- ✅ Removed large model files (*.bin,*.onnx, *.pt,*.pth, *.h5,*.pb, *.ckpt)
 - ✅ Optimized virtual environments (removed unnecessary packages from frontend)
 - ✅ Cleaned Docker artifacts and archives
 
 ## Current State
 
 ### Top Directories by Size
+
 ```
 765M    /opt/sutazaiapp/frontend/       (Streamlit UI + venv)
 693M    /opt/sutazaiapp/agents/         (Agent configurations)
@@ -40,6 +45,7 @@ Successfully cleaned up the /opt/sutazaiapp filesystem, reducing size from **3.8
 ```
 
 ### Largest Remaining Files
+
 ```
 248M    .git/objects/pack/pack-69f32dd68537218c7324d5ee6030da1d4d342346.pack
 167M    .git/objects/pack/pack-9712cde426cc484c7b31d740aced9e314b92aee9.pack
@@ -56,7 +62,9 @@ Successfully cleaned up the /opt/sutazaiapp filesystem, reducing size from **3.8
 4. **Agent directories**: Now contain only source code without git histories
 
 ## Services Impact
+
 No running services were affected. All cleanup operations were safe and non-destructive to:
+
 - Configuration files
 - Source code
 - Database files
@@ -65,7 +73,9 @@ No running services were affected. All cleanup operations were safe and non-dest
 - Docker compose configurations
 
 ## Cleanup Scripts
+
 Two cleanup scripts were created and are available for future use:
+
 - `/opt/sutazaiapp/cleanup_filesystem.sh` - Standard cleanup
 - `/opt/sutazaiapp/deep_cleanup.sh` - Deep cleanup (use with caution)
 

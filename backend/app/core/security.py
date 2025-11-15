@@ -4,12 +4,13 @@ Implements OAuth2 with Password and Bearer for secure authentication
 """
 
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import HTTPException, status
 import secrets
 import logging
+import re
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -61,6 +62,59 @@ class SecurityUtils:
         # This is safe as 72 bytes provides sufficient entropy
         password_bytes = password.encode('utf-8')[:72]
         return pwd_context.hash(password_bytes)
+    
+    @staticmethod
+    def validate_password_strength(password: str) -> Tuple[bool, Optional[str]]:
+        """
+        Validate password strength according to security requirements
+        
+        Requirements:
+        - Minimum 8 characters
+        - At least one uppercase letter
+        - At least one lowercase letter
+        - At least one digit
+        - At least one special character
+        
+        Args:
+            password: Plain text password to validate
+            
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        if not password:
+            return False, "Password cannot be empty"
+        
+        if len(password) < 8:
+            return False, "Password must be at least 8 characters long"
+        
+        if len(password) > 128:
+            return False, "Password must be no more than 128 characters long"
+        
+        # Check for at least one uppercase letter
+        if not re.search(r'[A-Z]', password):
+            return False, "Password must contain at least one uppercase letter"
+        
+        # Check for at least one lowercase letter
+        if not re.search(r'[a-z]', password):
+            return False, "Password must contain at least one lowercase letter"
+        
+        # Check for at least one digit
+        if not re.search(r'\d', password):
+            return False, "Password must contain at least one digit"
+        
+        # Check for at least one special character
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+            return False, "Password must contain at least one special character"
+        
+        # Check for common weak passwords
+        common_weak_passwords = [
+            'password', 'password123', '12345678', 'qwerty', 'abc123',
+            '123456789', 'letmein', 'welcome', 'monkey', '1q2w3e4r'
+        ]
+        if password.lower() in common_weak_passwords:
+            return False, "Password is too common, please choose a stronger password"
+        
+        return True, None
     
     @staticmethod
     def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
