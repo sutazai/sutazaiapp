@@ -1,0 +1,140 @@
+{
+  "summary": {
+    "total_tests": 11,
+    "passed": 11,
+    "failed": 0,
+    "pass_rate": 100.0,
+    "total_duration_seconds": 13.933968,
+    "start_time": "2025-11-15T19:15:20.948450+00:00",
+    "end_time": "2025-11-15T19:15:34.882428+00:00"
+  },
+  "results": [
+    {
+      "test_name": "PostgreSQL Migrations",
+      "passed": true,
+      "duration_ms": 6.008386611938477,
+      "timestamp": "2025-11-15T19:15:20.963307+00:00",
+      "details": {
+        "kong_db_exists": true,
+        "public_schema_exists": true
+      }
+    },
+    {
+      "test_name": "PostgreSQL Schema Integrity",
+      "passed": true,
+      "duration_ms": 54.9616813659668,
+      "timestamp": "2025-11-15T19:15:21.018442+00:00",
+      "details": {
+        "not_null_constraint": true,
+        "unique_constraint": true,
+        "check_constraint": true,
+        "default_value": true
+      }
+    },
+    {
+      "test_name": "PostgreSQL Foreign Key Constraints",
+      "passed": true,
+      "duration_ms": 38.3603572845459,
+      "timestamp": "2025-11-15T19:15:21.056990+00:00",
+      "details": {
+        "fk_violation_detected": true,
+        "cascade_delete_works": true,
+        "children_before_delete": 2,
+        "children_after_delete": 0
+      }
+    },
+    {
+      "test_name": "PostgreSQL Index Performance",
+      "passed": true,
+      "duration_ms": 206.76445960998535,
+      "timestamp": "2025-11-15T19:15:21.263951+00:00",
+      "details": {
+        "index_created": true,
+        "index_used_in_query": true,
+        "test_rows_inserted": 1000
+      }
+    },
+    {
+      "test_name": "PostgreSQL Backup & Restore",
+      "passed": true,
+      "duration_ms": 434.5543384552002,
+      "timestamp": "2025-11-15T19:15:21.698659+00:00",
+      "details": {
+        "backup_successful": true,
+        "backup_file_exists": true,
+        "restore_successful": true,
+        "data_restored": true
+      }
+    },
+    {
+      "test_name": "Neo4j Graph Queries",
+      "passed": true,
+      "duration_ms": 6317.889928817749,
+      "timestamp": "2025-11-15T19:15:28.030290+00:00",
+      "details": {
+        "persons_created": 3,
+        "relationships_created": 1,
+        "filtered_query_result": 2
+      }
+    },
+    {
+      "test_name": "Neo4j Graph Relationships",
+      "passed": true,
+      "duration_ms": 3069.3905353546143,
+      "timestamp": "2025-11-15T19:15:31.200282+00:00",
+      "details": {
+        "assignments_found": 1,
+        "dependencies_found": 1,
+        "relationships_with_properties": 1
+      }
+    },
+    {
+      "test_name": "Redis Cache Invalidation",
+      "passed": true,
+      "duration_ms": 3008.8589191436768,
+      "timestamp": "2025-11-15T19:15:34.303117+00:00",
+      "details": {
+        "set_get_works": true,
+        "delete_works": true,
+        "ttl_expiration_works": true,
+        "flush_works": true
+      }
+    },
+    {
+      "test_name": "Redis Persistence",
+      "passed": true,
+      "duration_ms": 2.722024917602539,
+      "timestamp": "2025-11-15T19:15:34.305962+00:00",
+      "details": {
+        "persistence_configured": true,
+        "aof_enabled": true,
+        "bgsave_works": true,
+        "data_persisted": true
+      }
+    },
+    {
+      "test_name": "RabbitMQ Message Durability",
+      "passed": true,
+      "duration_ms": 33.875226974487305,
+      "timestamp": "2025-11-15T19:15:34.345859+00:00",
+      "details": {
+        "message_published": true,
+        "message_received": true,
+        "content_correct": true,
+        "message_persistent": true
+      }
+    },
+    {
+      "test_name": "RabbitMQ Queue Management",
+      "passed": true,
+      "duration_ms": 535.679817199707,
+      "timestamp": "2025-11-15T19:15:34.881671+00:00",
+      "details": {
+        "queue_creation": true,
+        "queue_purge": true,
+        "queue_deletion": true,
+        "exchange_creation": true
+      }
+    }
+  ]
+}

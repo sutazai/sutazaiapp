@@ -1,0 +1,69 @@
+
+[1m[95m================================================================================[0m
+[1m[95mPHASE 9: MCP BRIDGE COMPREHENSIVE TESTING[0m
+[1m[95mStarted: 2025-11-15 20:01:52 UTC[0m
+[1m[95m================================================================================[0m
+
+[1m[96m[1/10] Health & Status Tests[0m
+[92m✓[0m Health Endpoint (0.067s)
+[92m✓[0m Status Endpoint (0.083s)
+
+[1m[96m[2/10] Service Registry Tests[0m
+[92m✓[0m Services Listing (0.021s)
+[92m✓[0m Get Specific Service (0.027s)
+[92m✓[0m Get Nonexistent Service (0.022s)
+
+[1m[96m[3/10] Agent Registry Tests[0m
+[92m✓[0m Agents Listing (0.020s)
+[92m✓[0m Get Specific Agent (0.028s)
+[92m✓[0m Get Nonexistent Agent (0.024s)
+[92m✓[0m Update Agent Status (0.020s)
+
+[1m[96m[4/10] Message Routing Tests[0m
+[92m✓[0m Route Message to Service (0.028s)
+[92m✓[0m Route Message to Agent (0.037s)
+[92m✓[0m Route Invalid Target (0.021s)
+
+[1m[96m[5/10] Task Orchestration Tests[0m
+[92m✓[0m Submit Task with Agent (0.023s)
+[92m✓[0m Submit Task Auto-Select (0.021s)
+[92m✓[0m Submit Invalid Task (0.020s)
+
+[1m[96m[6/10] WebSocket Tests[0m
+[92m✓[0m WebSocket Connection (0.019s)
+[92m✓[0m WebSocket Broadcast (0.005s)
+[92m✓[0m WebSocket Direct Message (0.006s)
+
+[1m[96m[7/10] Metrics Tests[0m
+[92m✓[0m Prometheus Metrics (0.022s)
+[92m✓[0m JSON Metrics (0.020s)
+
+[1m[96m[8/10] Concurrent Request Tests[0m
+[92m✓[0m Concurrent Health Checks (0.031s)
+[92m✓[0m Concurrent Agent Queries (0.027s)
+
+[1m[96m[9/10] Error Handling Tests[0m
+[92m✓[0m Invalid JSON (0.020s)
+[92m✓[0m Missing Required Fields (0.020s)
+
+[1m[96m[10/10] Performance Tests[0m
+[92m✓[0m Response Time Health (0.020s)
+[92m✓[0m Response Time Services (0.021s)
+
+[1m================================================================================[0m
+[1mPHASE 9 MCP BRIDGE TEST RESULTS[0m
+[1m================================================================================[0m
+
+Total Tests:    26
+[92mPassed:        26[0m
+[91mFailed:        0[0m
+[93mSkipped:       0[0m
+
+[1mPass Rate:      100.0%[0m
+Total Duration: 0.67s
+
+[1m================================================================================[0m
+
+
+[92mResults saved to: /opt/sutazaiapp/PHASE_9_TEST_RESULTS_20251115_200153.json[0m
+

@@ -1,0 +1,108 @@
+{
+  "total": 16,
+  "passed": 15,
+  "failed": 1,
+  "skipped": 0,
+  "pass_rate": 93.75,
+  "duration": 4.679260492324829,
+  "errors": [
+    {
+      "test": "RabbitMQ Message Consume",
+      "error": "Message consume failed: PRECONDITION_FAILED - queue 'test_consume_1763233433' in vhost '/' in use"
+    }
+  ],
+  "timings": {
+    "RabbitMQ Connection": 0.01386713981628418,
+    "RabbitMQ Queue Creation": 0.09577465057373047,
+    "RabbitMQ Message Publish": 0.007669925689697266,
+    "RabbitMQ Message Consume": 0.013947010040283203,
+    "Redis Connection": 0.0028257369995117188,
+    "Redis Cache Write": 0.002694368362426758,
+    "Redis Cache Expiration": 3.003432035446167,
+    "Redis Cache Invalidation": 0.004656553268432617,
+    "Endpoint Throughput": 0.17251825332641602,
+    "WebSocket Latency": 0.016807079315185547,
+    "Concurrent Load Handling": 1.2039954662322998,
+    "Graceful Degradation": 0.038681745529174805,
+    "Timeout Handling": 0.029279232025146484,
+    "Error Recovery": 0.029894590377807617,
+    "Single Capability Selection": 0.02212214469909668,
+    "Multi-Capability Selection": 0.021094560623168945
+  },
+  "performance_metrics": {
+    "RabbitMQ Connection": {
+      "status": "connected",
+      "exchange": "mcp.exchange exists"
+    },
+    "RabbitMQ Queue Creation": {
+      "status": "success",
+      "queue_created": "test_queue_1763233433"
+    },
+    "RabbitMQ Message Publish": {
+      "status": "published",
+      "message_id": "test-msg-1763233433"
+    },
+    "Redis Connection": {
+      "status": "connected",
+      "ping": "success"
+    },
+    "Redis Cache Write": {
+      "status": "success",
+      "key": "test:cache:1763233433",
+      "verified": true
+    },
+    "Redis Cache Expiration": {
+      "status": "success",
+      "ttl_set": 2,
+      "expired": true
+    },
+    "Redis Cache Invalidation": {
+      "status": "success",
+      "deleted": true
+    },
+    "Endpoint Throughput": {
+      "requests": 100,
+      "duration_s": "0.172",
+      "throughput_rps": "579.80",
+      "success_rate": "100.0%"
+    },
+    "WebSocket Latency": {
+      "avg_latency_ms": "0.035",
+      "min_latency_ms": "0.015",
+      "max_latency_ms": "0.103",
+      "samples": 10
+    },
+    "Concurrent Load Handling": {
+      "concurrent_requests": 50,
+      "duration_s": "1.204",
+      "success": 50,
+      "errors": 0,
+      "success_rate": "100.0%"
+    },
+    "Graceful Degradation": {
+      "status": "bridge_healthy",
+      "graceful_degradation": "working"
+    },
+    "Timeout Handling": {
+      "timeout_handling": "working",
+      "timeout_triggered": true
+    },
+    "Error Recovery": {
+      "status": "system_recovered",
+      "error_recovery": "working"
+    },
+    "Single Capability Selection": {
+      "code_agents": 1,
+      "memory_agents": 1,
+      "selection_working": true
+    },
+    "Multi-Capability Selection": {
+      "multi_capable_agents": 12,
+      "found_capable_agents": [
+        "letta",
+        "autogpt",
+        "crewai"
+      ]
+    }
+  }
+}
