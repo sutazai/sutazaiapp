@@ -186,11 +186,18 @@ class TestMetricsCollection:
             response = await client.get(f"{MCP_BASE_URL}/metrics")
             assert response.status_code in [200, 404]
             if response.status_code == 200:
-                # MCP Bridge returns JSON metrics, not Prometheus format
-                data = response.json()
-                assert isinstance(data, dict)
-                # Check for expected metric keys
-                assert any(key in data for key in ["total_services", "total_agents", "timestamp"])
+                # MCP Bridge may return JSON metrics or Prometheus text format
+                content_type = response.headers.get("content-type", "")
+                if "application/json" in content_type:
+                    data = response.json()
+                    assert isinstance(data, dict)
+                    # Check for expected metric keys
+                    assert any(key in data for key in ["total_services", "total_agents", "timestamp"])
+                else:
+                    # Prometheus text format
+                    text = response.text
+                    assert len(text) > 0
+                    print(f"\nMetrics format: Prometheus text ({len(text)} bytes)")
     
     @pytest.mark.asyncio
     async def test_agent_metrics(self):

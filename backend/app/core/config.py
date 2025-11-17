@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     # Application
     APP_NAME: str = "SutazAI Platform API"
     APP_VERSION: str = "4.0.0"
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     DEBUG: bool = False
     API_V1_STR: str = "/api/v1"
     

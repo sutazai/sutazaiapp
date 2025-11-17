@@ -36,11 +36,11 @@ class TestDatabaseConnectionPool:
     @pytest.mark.asyncio
     async def test_multiple_concurrent_connections(self):
         """Test handling multiple concurrent database requests"""
-        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        async with httpx.AsyncClient(timeout=TIMEOUT, follow_redirects=True) as client:
             # Create multiple concurrent requests
             tasks = []
             for i in range(20):  # Create 20 concurrent requests
-                task = client.get(f"{BASE_URL}/health")
+                task = client.get(f"{BASE_URL}/health/")
                 tasks.append(task)
             
             # Execute all requests concurrently

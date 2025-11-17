@@ -165,8 +165,8 @@ api_router.include_router(new_feature.router, prefix="/features", tags=["feature
 | memory-bank | Project memory | `/scripts/mcp/wrappers/memory-bank.sh` |
 | github | GitHub API | `/scripts/mcp/wrappers/github.sh` |
 | github-project-manager | Project management | `/scripts/mcp/wrappers/github-project-manager.sh` |
-| claude-flow | Agent orchestration | `/scripts/mcp/wrappers/claude-flow.sh` |
-| ruv-swarm | Swarm management | `/scripts/mcp/wrappers/ruv-swarm.sh` |
+| removed | Agent orchestration | `/scripts/mcp/wrappers/removed.sh` |
+| removed | Swarm management | `/scripts/mcp/wrappers/removed.sh` |
 | context7 | Documentation lookup | `/scripts/mcp/wrappers/context7.sh` |
 | playwright | Browser automation | `/scripts/mcp/wrappers/playwright.sh` |
 | sequential-thinking | Multi-step reasoning | `/scripts/mcp/wrappers/sequential-thinking.sh` |

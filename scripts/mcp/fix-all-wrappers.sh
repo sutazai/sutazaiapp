@@ -77,24 +77,24 @@ export GITHUB_TOKEN="${GITHUB_TOKEN:-}"
 exec npx -y @bstefanescu/mcp-github-project-manager@latest
 EOF
 
-# Fix claude-flow
-cat > /opt/sutazaiapp/scripts/mcp/wrappers/claude-flow.sh << 'EOF'
+# Fix removed
+cat > /opt/sutazaiapp/scripts/mcp/wrappers/removed.sh << 'EOF'
 #!/bin/bash
 if [ "$1" == "--selfcheck" ]; then
-    echo "claude-flow MCP wrapper operational"
+    echo "removed MCP wrapper operational"
     exit 0
 fi
-exec npx -y claude-flow@alpha mcp start
+exec npx -y removed@alpha mcp start
 EOF
 
-# Fix ruv-swarm
-cat > /opt/sutazaiapp/scripts/mcp/wrappers/ruv-swarm.sh << 'EOF'
+# Fix removed
+cat > /opt/sutazaiapp/scripts/mcp/wrappers/removed.sh << 'EOF'
 #!/bin/bash
 if [ "$1" == "--selfcheck" ]; then
-    echo "ruv-swarm MCP wrapper operational"
+    echo "removed MCP wrapper operational"
     exit 0
 fi
-exec npx -y ruv-swarm@latest mcp start
+exec npx -y removed@latest mcp start
 EOF
 
 chmod +x /opt/sutazaiapp/scripts/mcp/wrappers/*.sh

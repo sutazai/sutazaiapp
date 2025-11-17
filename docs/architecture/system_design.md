@@ -119,8 +119,8 @@ MCP Servers (18 total):
   - memory-bank: Project memory
   - github: GitHub API integration
   - github-project-manager: Project management
-  - claude-flow: Agent orchestration
-  - ruv-swarm: Swarm management
+  - removed: Agent orchestration
+  - removed: Swarm management
   - context7: Documentation lookup
   - playwright: Browser automation
   - sequential-thinking: Multi-step reasoning

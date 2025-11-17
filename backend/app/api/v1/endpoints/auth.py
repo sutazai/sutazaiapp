@@ -359,6 +359,7 @@ async def get_user_profile(
     - `401 Unauthorized`: Missing or invalid token
     - `403 Forbidden`: Inactive account
     """
+    return current_user
 
 
 @router.post("/password-reset", dependencies=[Depends(strict_rate_limiter)], tags=["authentication"])
@@ -388,6 +389,32 @@ async def request_password_reset(
     **Security Note:**
     Response is identical whether email exists or not to prevent account enumeration.
     """
+    # Find user by email
+    result = await db.execute(
+        select(User).where(User.email == reset_data.email)
+    )
+    user = result.scalar_one_or_none()
+    
+    if user:
+        # Generate password reset token
+        reset_token = security.generate_password_reset_token(user.email)
+        
+        # Send password reset email
+        email_sent = await email_service.send_password_reset_email(
+            user.email,
+            reset_token
+        )
+        
+        if email_sent:
+            logger.info(f"Password reset email sent to {user.email}")
+        else:
+            logger.warning(f"Failed to send password reset email to {user.email}")
+    else:
+        # Don't reveal if email exists - security measure
+        logger.info(f"Password reset requested for non-existent email: {reset_data.email}")
+    
+    # Always return success to prevent email enumeration
+    return {"message": "If the email exists, a password reset link has been sent"}
 
 
 @router.post("/password-reset/confirm", tags=["authentication"])
@@ -420,7 +447,7 @@ async def confirm_password_reset(
     - `422 Unprocessable Entity`: Invalid input
     """
     # Verify reset token
-    email = security.verify_password_reset_token(reset_confirm.token)
+    email = security.verify_password_reset_token(confirm_data.token)
     
     if not email:
         raise HTTPException(
@@ -440,8 +467,16 @@ async def confirm_password_reset(
             detail="User not found"
         )
     
+    # Validate new password strength
+    is_valid, error_message = security.validate_password_strength(confirm_data.new_password)
+    if not is_valid:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=error_message
+        )
+    
     # Update password
-    user.hashed_password = security.get_password_hash(reset_confirm.new_password)
+    user.hashed_password = security.get_password_hash(confirm_data.new_password)
     user.password_changed_at = datetime.now(timezone.utc)
     user.failed_login_attempts = 0
     user.account_locked_until = None

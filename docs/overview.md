@@ -174,7 +174,7 @@ AI Agents (11401-11801)
 18 specialized agents including:
 
 - filesystem, memory, github
-- claude-flow, ruv-swarm
+- removed, removed
 - context7, playwright
 - sequential-thinking
 - And more...

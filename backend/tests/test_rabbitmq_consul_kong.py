@@ -243,7 +243,7 @@ class TestConsulIntegration:
     async def test_consul_health(self):
         """Test Consul health endpoint"""
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-            response = await client.get("http://localhost:8500/v1/status/leader")
+            response = await client.get("http://localhost:10006/v1/status/leader")
             assert response.status_code in [200, 404]
             
             if response.status_code == 200:
@@ -253,7 +253,7 @@ class TestConsulIntegration:
     async def test_consul_services(self):
         """Test Consul service registry"""
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-            response = await client.get("http://localhost:8500/v1/catalog/services")
+            response = await client.get("http://localhost:10006/v1/catalog/services")
             
             if response.status_code == 200:
                 services = response.json()
@@ -265,7 +265,7 @@ class TestConsulIntegration:
         """Test Consul key-value store"""
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
             # Try to read from KV store
-            response = await client.get("http://localhost:8500/v1/kv/?keys")
+            response = await client.get("http://localhost:10006/v1/kv/?keys")
             
             if response.status_code == 200:
                 keys = response.json()
@@ -279,7 +279,7 @@ class TestKongGateway:
     async def test_kong_admin_api(self):
         """Test Kong admin API"""
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-            response = await client.get("http://localhost:8001/")
+            response = await client.get("http://localhost:10009/")
             assert response.status_code in [200, 404]
             
             if response.status_code == 200:
@@ -290,7 +290,7 @@ class TestKongGateway:
     async def test_kong_services(self):
         """Test Kong services configuration"""
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-            response = await client.get("http://localhost:8001/services")
+            response = await client.get("http://localhost:10009/services")
             
             if response.status_code == 200:
                 data = response.json()
@@ -304,7 +304,7 @@ class TestKongGateway:
     async def test_kong_routes(self):
         """Test Kong routes configuration"""
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-            response = await client.get("http://localhost:8001/routes")
+            response = await client.get("http://localhost:10009/routes")
             
             if response.status_code == 200:
                 data = response.json()

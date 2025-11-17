@@ -1,97 +1,97 @@
 ---
-name: claude-flow-help
-description: Show Claude-Flow commands and usage
+name: removed-help
+description: Show removed commands and usage
 ---
 
-# Claude-Flow Commands
+# removed Commands
 
-## 🌊 Claude-Flow: Agent Orchestration Platform
+## 🌊 removed: Agent Orchestration Platform
 
-Claude-Flow is the ultimate multi-terminal orchestration platform that revolutionizes how you work with Claude Code.
+removed is the ultimate multi-terminal orchestration platform that revolutionizes how you work with Claude Code.
 
 ## Core Commands
 
 ### 🚀 System Management
-- `./claude-flow start` - Start orchestration system
-- `./claude-flow start --ui` - Start with interactive process management UI
-- `./claude-flow status` - Check system status
-- `./claude-flow monitor` - Real-time monitoring
-- `./claude-flow stop` - Stop orchestration
+- `./removed start` - Start orchestration system
+- `./removed start --ui` - Start with interactive process management UI
+- `./removed status` - Check system status
+- `./removed monitor` - Real-time monitoring
+- `./removed stop` - Stop orchestration
 
 ### 🤖 Agent Management
-- `./claude-flow agent spawn <type>` - Create new agent
-- `./claude-flow agent list` - List active agents
-- `./claude-flow agent info <id>` - Agent details
-- `./claude-flow agent terminate <id>` - Stop agent
+- `./removed agent spawn <type>` - Create new agent
+- `./removed agent list` - List active agents
+- `./removed agent info <id>` - Agent details
+- `./removed agent terminate <id>` - Stop agent
 
 ### 📋 Task Management
-- `./claude-flow task create <type> "description"` - Create task
-- `./claude-flow task list` - List all tasks
-- `./claude-flow task status <id>` - Task status
-- `./claude-flow task cancel <id>` - Cancel task
-- `./claude-flow task workflow <file>` - Execute workflow
+- `./removed task create <type> "description"` - Create task
+- `./removed task list` - List all tasks
+- `./removed task status <id>` - Task status
+- `./removed task cancel <id>` - Cancel task
+- `./removed task workflow <file>` - Execute workflow
 
 ### 🧠 Memory Operations
-- `./claude-flow memory store "key" "value"` - Store data
-- `./claude-flow memory query "search"` - Search memory
-- `./claude-flow memory stats` - Memory statistics
-- `./claude-flow memory export <file>` - Export memory
-- `./claude-flow memory import <file>` - Import memory
+- `./removed memory store "key" "value"` - Store data
+- `./removed memory query "search"` - Search memory
+- `./removed memory stats` - Memory statistics
+- `./removed memory export <file>` - Export memory
+- `./removed memory import <file>` - Import memory
 
 ### ⚡ SPARC Development
-- `./claude-flow sparc "task"` - Run SPARC orchestrator
-- `./claude-flow sparc modes` - List all 17+ SPARC modes
-- `./claude-flow sparc run <mode> "task"` - Run specific mode
-- `./claude-flow sparc tdd "feature"` - TDD workflow
-- `./claude-flow sparc info <mode>` - Mode details
+- `./removed sparc "task"` - Run SPARC orchestrator
+- `./removed sparc modes` - List all 17+ SPARC modes
+- `./removed sparc run <mode> "task"` - Run specific mode
+- `./removed sparc tdd "feature"` - TDD workflow
+- `./removed sparc info <mode>` - Mode details
 
 ### 🐝 Swarm Coordination
-- `./claude-flow swarm "task" --strategy <type>` - Start swarm
-- `./claude-flow swarm "task" --background` - Long-running swarm
-- `./claude-flow swarm "task" --monitor` - With monitoring
-- `./claude-flow swarm "task" --ui` - Interactive UI
-- `./claude-flow swarm "task" --distributed` - Distributed coordination
+- `./removed swarm "task" --strategy <type>` - Start swarm
+- `./removed swarm "task" --background` - Long-running swarm
+- `./removed swarm "task" --monitor` - With monitoring
+- `./removed swarm "task" --ui` - Interactive UI
+- `./removed swarm "task" --distributed` - Distributed coordination
 
 ### 🌍 MCP Integration
-- `./claude-flow mcp status` - MCP server status
-- `./claude-flow mcp tools` - List available tools
-- `./claude-flow mcp config` - Show configuration
-- `./claude-flow mcp logs` - View MCP logs
+- `./removed mcp status` - MCP server status
+- `./removed mcp tools` - List available tools
+- `./removed mcp config` - Show configuration
+- `./removed mcp logs` - View MCP logs
 
 ### 🤖 Claude Integration
-- `./claude-flow claude spawn "task"` - Spawn Claude with enhanced guidance
-- `./claude-flow claude batch <file>` - Execute workflow configuration
+- `./removed claude spawn "task"` - Spawn Claude with enhanced guidance
+- `./removed claude batch <file>` - Execute workflow configuration
 
 ## 🌟 Quick Examples
 
 ### Initialize with SPARC:
 ```bash
-npx -y claude-flow@latest init --sparc
+npx -y removed@latest init --sparc
 ```
 
 ### Start a development swarm:
 ```bash
-./claude-flow swarm "Build REST API" --strategy development --monitor --review
+./removed swarm "Build REST API" --strategy development --monitor --review
 ```
 
 ### Run TDD workflow:
 ```bash
-./claude-flow sparc tdd "user authentication"
+./removed sparc tdd "user authentication"
 ```
 
 ### Store project context:
 ```bash
-./claude-flow memory store "project_requirements" "e-commerce platform specs" --namespace project
+./removed memory store "project_requirements" "e-commerce platform specs" --namespace project
 ```
 
 ### Spawn specialized agents:
 ```bash
-./claude-flow agent spawn researcher --name "Senior Researcher" --priority 8
-./claude-flow agent spawn developer --name "Lead Developer" --priority 9
+./removed agent spawn researcher --name "Senior Researcher" --priority 8
+./removed agent spawn developer --name "Lead Developer" --priority 9
 ```
 
 ## 🎯 Best Practices
-- Use `./claude-flow` instead of `npx claude-flow` after initialization
+- Use `./removed` instead of `npx removed` after initialization
 - Store important context in memory for cross-session persistence
 - Use swarm mode for complex tasks requiring multiple agents
 - Enable monitoring for real-time progress tracking

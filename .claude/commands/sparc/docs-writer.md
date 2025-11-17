@@ -19,7 +19,7 @@ Only work in .md files. Use sections, examples, and headings. Keep each file und
 
 ### Option 1: Using MCP Tools (Preferred in Claude Code)
 ```javascript
-mcp__claude-flow__sparc_mode {
+mcp__removed__sparc_mode {
   mode: "docs-writer",
   task_description: "create API documentation",
   options: {
@@ -32,22 +32,22 @@ mcp__claude-flow__sparc_mode {
 ### Option 2: Using NPX CLI (Fallback when MCP not available)
 ```bash
 # Use when running from terminal or MCP tools unavailable
-npx claude-flow sparc run docs-writer "create API documentation"
+npx removed sparc run docs-writer "create API documentation"
 
 # For alpha features
-npx claude-flow@alpha sparc run docs-writer "create API documentation"
+npx removed@alpha sparc run docs-writer "create API documentation"
 
 # With namespace
-npx claude-flow sparc run docs-writer "your task" --namespace docs-writer
+npx removed sparc run docs-writer "your task" --namespace docs-writer
 
 # Non-interactive mode
-npx claude-flow sparc run docs-writer "your task" --non-interactive
+npx removed sparc run docs-writer "your task" --non-interactive
 ```
 
 ### Option 3: Local Installation
 ```bash
-# If claude-flow is installed locally
-./claude-flow sparc run docs-writer "create API documentation"
+# If removed is installed locally
+./removed sparc run docs-writer "create API documentation"
 ```
 
 ## Memory Integration
@@ -55,7 +55,7 @@ npx claude-flow sparc run docs-writer "your task" --non-interactive
 ### Using MCP Tools (Preferred)
 ```javascript
 // Store mode-specific context
-mcp__claude-flow__memory_usage {
+mcp__removed__memory_usage {
   action: "store",
   key: "docs-writer_context",
   value: "important decisions",
@@ -63,7 +63,7 @@ mcp__claude-flow__memory_usage {
 }
 
 // Query previous work
-mcp__claude-flow__memory_search {
+mcp__removed__memory_search {
   pattern: "docs-writer",
   namespace: "docs-writer",
   limit: 5
@@ -73,8 +73,8 @@ mcp__claude-flow__memory_search {
 ### Using NPX CLI (Fallback)
 ```bash
 # Store mode-specific context
-npx claude-flow memory store "docs-writer_context" "important decisions" --namespace docs-writer
+npx removed memory store "docs-writer_context" "important decisions" --namespace docs-writer
 
 # Query previous work
-npx claude-flow memory query "docs-writer" --limit 5
+npx removed memory query "docs-writer" --limit 5
 ```

@@ -74,25 +74,22 @@
       "/tmp"
     ]
   },
-  "enableAllProjectMcpServers": true,
+  "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
+    "removed",
     "filesystem",
     "github",
-    "memory",
-    "everything",
+    "extended-memory",
     "sequential-thinking",
+    "ddg",
+    "http-fetch",
+    "memory",
     "playwright",
     "gitmcp-sutazai",
     "gitmcp-anthropic",
     "gitmcp-docs",
-    "claude-flow",
-    "ruv-swarm",
     "context7",
-    "ddg",
-    "http-fetch",
-    "extended-memory",
     "memory-bank",
-    "code-index",
     "github-project-manager"
   ],
   "hooks": {
@@ -108,5 +105,9 @@
       }
     ]
   },
-  "outputStyle": "Explanatory"
+  "outputStyle": "Explanatory",
+  "disabledMcpjsonServers": [
+    "everything",
+    "code-index"
+  ]
 }

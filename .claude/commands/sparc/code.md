@@ -28,7 +28,7 @@ Write modular code using clean architecture principles. Never hardcode secrets o
 
 ### Option 1: Using MCP Tools (Preferred in Claude Code)
 ```javascript
-mcp__claude-flow__sparc_mode {
+mcp__removed__sparc_mode {
   mode: "code",
   task_description: "implement REST API endpoints",
   options: {
@@ -41,22 +41,22 @@ mcp__claude-flow__sparc_mode {
 ### Option 2: Using NPX CLI (Fallback when MCP not available)
 ```bash
 # Use when running from terminal or MCP tools unavailable
-npx claude-flow sparc run code "implement REST API endpoints"
+npx removed sparc run code "implement REST API endpoints"
 
 # For alpha features
-npx claude-flow@alpha sparc run code "implement REST API endpoints"
+npx removed@alpha sparc run code "implement REST API endpoints"
 
 # With namespace
-npx claude-flow sparc run code "your task" --namespace code
+npx removed sparc run code "your task" --namespace code
 
 # Non-interactive mode
-npx claude-flow sparc run code "your task" --non-interactive
+npx removed sparc run code "your task" --non-interactive
 ```
 
 ### Option 3: Local Installation
 ```bash
-# If claude-flow is installed locally
-./claude-flow sparc run code "implement REST API endpoints"
+# If removed is installed locally
+./removed sparc run code "implement REST API endpoints"
 ```
 
 ## Memory Integration
@@ -64,7 +64,7 @@ npx claude-flow sparc run code "your task" --non-interactive
 ### Using MCP Tools (Preferred)
 ```javascript
 // Store mode-specific context
-mcp__claude-flow__memory_usage {
+mcp__removed__memory_usage {
   action: "store",
   key: "code_context",
   value: "important decisions",
@@ -72,7 +72,7 @@ mcp__claude-flow__memory_usage {
 }
 
 // Query previous work
-mcp__claude-flow__memory_search {
+mcp__removed__memory_search {
   pattern: "code",
   namespace: "code",
   limit: 5
@@ -82,8 +82,8 @@ mcp__claude-flow__memory_search {
 ### Using NPX CLI (Fallback)
 ```bash
 # Store mode-specific context
-npx claude-flow memory store "code_context" "important decisions" --namespace code
+npx removed memory store "code_context" "important decisions" --namespace code
 
 # Query previous work
-npx claude-flow memory query "code" --limit 5
+npx removed memory query "code" --limit 5
 ```

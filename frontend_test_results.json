@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-14T22:01:20.989207",
+  "timestamp": "2025-11-15T21:22:42.760967",
   "tests_passed": 5,
   "tests_failed": 0,
   "tests": [
@@ -16,7 +16,7 @@
     {
       "name": "Sidebar Test",
       "status": "passed",
-      "details": "Sidebar found with content length: 381"
+      "details": "Sidebar found with content length: 273"
     },
     {
       "name": "API Connection Test",

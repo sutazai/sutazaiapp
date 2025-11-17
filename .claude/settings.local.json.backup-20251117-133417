@@ -1,0 +1,112 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ollama list:*)",
+      "Bash(docker restart:*)",
+      "Bash(curl:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker exec:*)",
+      "Bash(python3:*)",
+      "Bash(chmod:*)",
+      "Bash(./test_chat.sh:*)",
+      "mcp__playwright__init-browser",
+      "Bash(docker ps:*)",
+      "Bash(docker compose:*)",
+      "Bash(pip install:*)",
+      "Bash(playwright install:*)",
+      "Bash(netstat:*)",
+      "Bash(grep:*)",
+      "Bash(for:*)",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(PGPASSWORD=sutazai_secure_2024 psql -h localhost -p 10000 -U jarvis -d jarvis_ai -c \"\\l\")",
+      "Bash(export PGPASSWORD=sutazai_secure_2024)",
+      "Bash(psql:*)",
+      "Bash(pip3 install:*)",
+      "Bash(docker build:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(./venv/bin/pip install --upgrade pip)",
+      "Bash(git push:*)",
+      "Bash(./venv/bin/pip install -r requirements-minimal.txt)",
+      "Bash(./venv/bin/pip install pyttsx3 SpeechRecognition gTTS pygame webrtcvad)",
+      "Bash(apt-get:*)",
+      "Bash(apt-get install:*)",
+      "Bash(docker inspect:*)",
+      "Bash(source:*)",
+      "Bash(python:*)",
+      "Bash(cat:*)",
+      "Bash(do if [ -f \"$file\" ])",
+      "Bash(then mv \"$file\" tests/)",
+      "Bash(echo:*)",
+      "Bash(fi)",
+      "Bash(./venv/bin/pip install:*)",
+      "Bash(./venv/bin/python -m pytest tests/integration/test_api_endpoints.py::TestHealthEndpoints -v --tb=short)",
+      "Bash(./venv/bin/pytest tests/unit/ -v --tb=short --color=yes)",
+      "Bash(./venv/bin/pytest tests/integration/ -v --tb=short --color=yes)",
+      "Bash(./venv/bin/pytest tests/e2e/ -v --tb=short --color=yes)",
+      "Bash(./venv/bin/pytest tests/integration/ --cov=. --cov-report=term-missing --cov-report=html -q)",
+      "Bash(./venv/bin/pytest tests/integration/ -q --tb=no)",
+      "WebSearch",
+      "Bash(./venv/bin/python tests/test_comprehensive_validation.py)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(systemctl status:*)",
+      "Bash(service ssh status:*)",
+      "Bash(sshd:*)",
+      "Bash(ss:*)",
+      "Bash(ip addr:*)",
+      "Bash(journalctl:*)",
+      "Bash(sudo -u ai mkdir:*)",
+      "Bash(sudo -u ai chmod:*)",
+      "Bash(sudo -u ai touch:*)",
+      "Bash(systemctl restart:*)",
+      "Bash(ssh:*)",
+      "Bash(passwd:*)",
+      "Bash(do ssh-keygen -l -f \"$key\")",
+      "Bash(iptables:*)",
+      "Bash(systemctl daemon-reload:*)",
+      "Bash(git reset:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "filesystem",
+    "github",
+    "memory",
+    "everything",
+    "sequential-thinking",
+    "playwright",
+    "gitmcp-sutazai",
+    "gitmcp-anthropic",
+    "gitmcp-docs",
+    "removed",
+    "removed",
+    "context7",
+    "ddg",
+    "http-fetch",
+    "extended-memory",
+    "memory-bank",
+    "code-index",
+    "github-project-manager"
+  ],
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'All MCP servers automatically engaged and ready'"
+          }
+        ]
+      }
+    ]
+  },
+  "outputStyle": "Explanatory"
+}
