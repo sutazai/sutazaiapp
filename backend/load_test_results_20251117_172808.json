@@ -1,0 +1,95 @@
+[
+  {
+    "name": "10 Concurrent Users",
+    "passed": true,
+    "success_rate": 100.0,
+    "scenarios": [
+      {
+        "scenario": "Health Check",
+        "success_rate": 100.0,
+        "successes": 50,
+        "failures": 0,
+        "mean_ms": 211.88432216644287,
+        "p95_ms": 214.3990993499756
+      },
+      {
+        "scenario": "Health Services",
+        "success_rate": 100.0,
+        "successes": 50,
+        "failures": 0,
+        "mean_ms": 282.7938747406006,
+        "p95_ms": 369.3199157714844
+      },
+      {
+        "scenario": "List Agents",
+        "success_rate": 100.0,
+        "successes": 50,
+        "failures": 0,
+        "mean_ms": 36.215505599975586,
+        "p95_ms": 39.090871810913086
+      }
+    ]
+  },
+  {
+    "name": "50 Concurrent Users",
+    "passed": true,
+    "success_rate": 100.0,
+    "scenarios": [
+      {
+        "scenario": "Health Check",
+        "success_rate": 100.0,
+        "successes": 500,
+        "failures": 0,
+        "mean_ms": 2520.068971157074,
+        "p95_ms": 4004.4610500335693
+      },
+      {
+        "scenario": "Health Services",
+        "success_rate": 100.0,
+        "successes": 500,
+        "failures": 0,
+        "mean_ms": 2286.429750919342,
+        "p95_ms": 3896.808385848999
+      },
+      {
+        "scenario": "List Agents",
+        "success_rate": 100.0,
+        "successes": 500,
+        "failures": 0,
+        "mean_ms": 557.6445827484131,
+        "p95_ms": 917.5655841827393
+      }
+    ]
+  },
+  {
+    "name": "100 Concurrent Users",
+    "passed": true,
+    "success_rate": 100.0,
+    "scenarios": [
+      {
+        "scenario": "Health Check",
+        "success_rate": 100.0,
+        "successes": 1000,
+        "failures": 0,
+        "mean_ms": 4411.240510463715,
+        "p95_ms": 7857.715606689453
+      },
+      {
+        "scenario": "Health Services",
+        "success_rate": 100.0,
+        "successes": 1000,
+        "failures": 0,
+        "mean_ms": 4205.127910852432,
+        "p95_ms": 7405.282735824585
+      },
+      {
+        "scenario": "List Agents",
+        "success_rate": 100.0,
+        "successes": 1000,
+        "failures": 0,
+        "mean_ms": -90.64779305458069,
+        "p95_ms": 332.4556350708008
+      }
+    ]
+  }
+]

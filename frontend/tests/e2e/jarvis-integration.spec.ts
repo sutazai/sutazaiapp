@@ -206,14 +206,26 @@ test.describe('JARVIS Backend Integration', () => {
   });
 
   test('should handle rate limiting gracefully', async ({ page }) => {
-    const chatInput = page.locator('textarea, input[type="text"]').first();
+    let chatInput = page.locator('textarea, input[type="text"]').first();
     
     if (await chatInput.isVisible()) {
-      // Send multiple rapid requests
+      // Send multiple rapid requests with re-querying to handle re-renders
       for (let i = 0; i < 10; i++) {
-        await chatInput.fill(`Rapid request ${i}`);
-        await chatInput.press('Enter');
-        await page.waitForTimeout(100);
+        // Re-query chat input each iteration to handle Streamlit re-renders
+        chatInput = page.locator('textarea, input[type="text"]').first();
+        
+        try {
+          await chatInput.fill(`Rapid request ${i}`, { timeout: 2000 });
+          await chatInput.press('Enter');
+          await page.waitForTimeout(150);
+        } catch (error) {
+          // If element is detached, re-query and retry
+          console.log(`Retry ${i} due to element detachment`);
+          chatInput = page.locator('textarea, input[type="text"]').first();
+          await chatInput.fill(`Rapid request ${i}`, { timeout: 2000 });
+          await chatInput.press('Enter');
+          await page.waitForTimeout(150);
+        }
       }
       
       await page.waitForTimeout(3000);

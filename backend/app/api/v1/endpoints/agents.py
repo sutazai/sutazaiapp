@@ -22,101 +22,100 @@ jarvis = JARVISOrchestrator(jarvis_config)
 @router.get("/")
 async def list_agents() -> List[Dict[str, Any]]:
     """List all available AI agents and models"""
+    # Actual deployed agents on SutazAI platform (verified 2025-11-19)
     agents = [
-        {
-            "id": "jarvis-core",
-            "name": "JARVIS Orchestrator",
-            "status": "active",
-            "type": "orchestrator",
-            "description": "Microsoft JARVIS-inspired multi-model orchestrator",
-            "capabilities": ["chat", "code", "vision", "audio", "analysis"],
-            "models": list(jarvis.model_registry.keys())
-        },
-        {
-            "id": "gpt-4",
-            "name": "GPT-4",
-            "status": "active",
-            "type": "llm",
-            "provider": "openai",
-            "capabilities": ["chat", "code", "analysis"],
-            "max_tokens": 8192
-        },
-        {
-            "id": "claude-3",
-            "name": "Claude 3 Opus",
-            "status": "active",
-            "type": "llm",
-            "provider": "anthropic",
-            "capabilities": ["chat", "code", "creative"],
-            "max_tokens": 200000
-        },
-        {
-            "id": "gemini-pro",
-            "name": "Gemini Pro",
-            "status": "active",
-            "type": "llm",
-            "provider": "google",
-            "capabilities": ["chat", "vision", "analysis"],
-            "max_tokens": 32768
-        },
-        {
-            "id": "llama-3",
-            "name": "Llama 3 70B",
-            "status": "available",
-            "type": "llm",
-            "provider": "ollama",
-            "capabilities": ["chat", "code"],
-            "max_tokens": 8192,
-            "local": True
-        },
-        {
-            "id": "mistral-7b",
-            "name": "Mistral 7B",
-            "status": "available",
-            "type": "llm",
-            "provider": "ollama",
-            "capabilities": ["chat"],
-            "max_tokens": 4096,
-            "local": True
-        },
-        {
-            "id": "codestral",
-            "name": "Codestral",
-            "status": "available",
-            "type": "code",
-            "provider": "huggingface",
-            "capabilities": ["code"],
-            "max_tokens": 32768
-        },
-        {
-            "id": "whisper",
-            "name": "Whisper ASR",
-            "status": "available",
-            "type": "audio",
-            "provider": "openai",
-            "capabilities": ["transcription"],
-            "models": ["tiny", "base", "small", "medium", "large"]
-        },
         {
             "id": "letta",
             "name": "Letta (MemGPT)",
-            "status": "pending",
+            "status": "active",
             "type": "memory",
-            "description": "Long-term memory agent"
-        },
-        {
-            "id": "autogpt",
-            "name": "AutoGPT",
-            "status": "pending",
-            "type": "autonomous",
-            "description": "Autonomous task execution agent"
+            "port": 11401,
+            "description": "Long-term memory AI agent with persistent context",
+            "capabilities": ["memory", "chat", "task-automation"],
+            "endpoint": "http://localhost:11401"
         },
         {
             "id": "crewai",
             "name": "CrewAI",
-            "status": "pending",
-            "type": "collaborative",
-            "description": "Multi-agent collaboration framework"
+            "status": "active",
+            "type": "orchestrator",
+            "port": 11403,
+            "description": "Multi-agent collaboration framework for complex tasks",
+            "capabilities": ["orchestration", "collaboration", "task-delegation"],
+            "endpoint": "http://localhost:11403"
+        },
+        {
+            "id": "aider",
+            "name": "Aider",
+            "status": "active",
+            "type": "code-assistant",
+            "port": 11404,
+            "description": "AI pair programming assistant",
+            "capabilities": ["code", "refactoring", "debugging"],
+            "endpoint": "http://localhost:11404"
+        },
+        {
+            "id": "langchain",
+            "name": "LangChain",
+            "status": "active",
+            "type": "framework",
+            "port": 11405,
+            "description": "LLM application development framework",
+            "capabilities": ["chat", "chains", "tools", "agents"],
+            "endpoint": "http://localhost:11405"
+        },
+        {
+            "id": "finrobot",
+            "name": "FinRobot",
+            "status": "active",
+            "type": "specialist",
+            "port": 11410,
+            "description": "Financial analysis and insights agent",
+            "capabilities": ["financial-analysis", "market-data", "reports"],
+            "endpoint": "http://localhost:11410"
+        },
+        {
+            "id": "shellgpt",
+            "name": "ShellGPT",
+            "status": "active",
+            "type": "cli-assistant",
+            "port": 11413,
+            "description": "Command-line interface assistant",
+            "capabilities": ["cli", "automation", "scripting"],
+            "endpoint": "http://localhost:11413"
+        },
+        {
+            "id": "documind",
+            "name": "Documind",
+            "status": "active",
+            "type": "document-processor",
+            "port": 11414,
+            "description": "Document processing and analysis agent",
+            "capabilities": ["document-processing", "ocr", "extraction"],
+            "endpoint": "http://localhost:11414"
+        },
+        {
+            "id": "gpt-engineer",
+            "name": "GPT-Engineer",
+            "status": "active",
+            "type": "code-generator",
+            "port": 11416,
+            "description": "Automated code generation from requirements",
+            "capabilities": ["code-generation", "project-scaffolding"],
+            "endpoint": "http://localhost:11416"
+        },
+        {
+            "id": "tinyllama",
+            "name": "TinyLlama",
+            "status": "active",
+            "type": "llm",
+            "provider": "ollama",
+            "port": 11434,
+            "description": "Lightweight local language model (608MB)",
+            "capabilities": ["chat", "text-generation"],
+            "max_tokens": 2048,
+            "local": True,
+            "endpoint": "http://localhost:11434"
         }
     ]
     return agents

@@ -285,10 +285,19 @@ test.describe('Responsive Design Tests', () => {
     test(`should render correctly on ${viewport.name}`, async ({ page }) => {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
       await page.goto('/');
+      
+      // Wait for Streamlit to fully render with new viewport size
+      await page.waitForTimeout(3000);
+      
+      // Reload to ensure Streamlit adapts to new viewport
+      await page.reload();
       await page.waitForTimeout(2000);
       
-      const appElement = page.locator('[data-testid="stApp"], body').first();
-      expect(await appElement.isVisible()).toBeTruthy();
+      // Check if app content is visible (Control Panel is a key element)
+      const controlPanel = page.locator('h2:has-text("Control Panel"), h3').first();
+      const isVisible = await controlPanel.isVisible();
+      
+      expect(isVisible).toBeTruthy();
       
       console.log(`✅ ${viewport.name} (${viewport.width}x${viewport.height}) renders correctly`);
     });

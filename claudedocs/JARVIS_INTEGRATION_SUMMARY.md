@@ -9,7 +9,8 @@ Successfully integrated JARVIS orchestrator and voice pipeline into the SutazAI 
 ### 1. JARVIS Orchestrator (`app/services/jarvis_orchestrator.py`)
 
 - **Microsoft JARVIS Architecture**: Implements 4-stage pipeline (Task Planning → Model Selection → Task Execution → Response Generation)
-- **Multi-Model Support**: GPT-4, Claude-3, Gemini Pro, Llama-3, Mistral, Codestral, and more
+- **Multi-Agent System**: Letta, CrewAI, Aider, LangChain, FinRobot, ShellGPT, Documind, GPT-Engineer
+- **Local LLM Support**: TinyLlama via Ollama (608MB), with support for Mistral, Llama2, DeepSeek-Coder
 - **Dynamic Model Selection**: Intelligent routing based on task type, complexity, and requirements
 - **Fallback Mechanisms**: Automatic failover to backup models
 - **Tool Integration**: Web search, calculator, code execution (when dependencies available)
@@ -70,7 +71,7 @@ Successfully integrated JARVIS orchestrator and voice pipeline into the SutazAI 
 
 ## Architecture
 
-```
+```text
 Frontend (Streamlit:11000)
         ↓ HTTP/WebSocket
 Backend API (FastAPI:10200)
@@ -91,12 +92,20 @@ Backend API (FastAPI:10200)
 └─────────────────────────────┘
         ↓
 ┌─────────────────────────────┐
-│   Model Providers            │
-│   ├── OpenAI (GPT-4)         │
-│   ├── Anthropic (Claude)     │
-│   ├── Google (Gemini)        │
-│   ├── Ollama (Local)         │
-│   └── HuggingFace            │
+│   AI Agents (Deployed)       │
+│   ├── Letta (11401)          │
+│   ├── CrewAI (11403)         │
+│   ├── Aider (11404)          │
+│   ├── LangChain (11405)      │
+│   ├── FinRobot (11410)       │
+│   ├── ShellGPT (11413)       │
+│   ├── Documind (11414)       │
+│   └── GPT-Engineer (11416)   │
+└─────────────────────────────┘
+        ↓
+┌─────────────────────────────┐
+│   Local Models (Ollama)      │
+│   └── TinyLlama (11434)      │
 └─────────────────────────────┘
 ```
 
@@ -105,16 +114,11 @@ Backend API (FastAPI:10200)
 ### Environment Variables
 
 ```bash
-# AI Model APIs (optional - will fallback gracefully)
-OPENAI_API_KEY=your-key
-ANTHROPIC_API_KEY=your-key
-GOOGLE_API_KEY=your-key
-
-# Ollama Configuration
-OLLAMA_HOST=sutazai-ollama
+# Ollama Configuration (Local LLM)
+OLLAMA_HOST=host.docker.internal
 OLLAMA_PORT=11434
 
-# Voice Configuration
+# Voice Configuration (Optional)
 WHISPER_MODEL=base
 VOSK_MODEL_PATH=/path/to/model
 WAKE_WORD=jarvis

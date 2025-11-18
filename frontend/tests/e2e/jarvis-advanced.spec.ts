@@ -57,12 +57,15 @@ test.describe('Advanced Security Testing', () => {
   test('should handle session timeout', async ({ page }) => {
     // Simulate session timeout by clearing cookies
     await page.context().clearCookies();
-    await page.reload();
-    await page.waitForTimeout(2000);
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(3000);
     
     // App should still load (public access or show login)
-    const appElement = page.locator('[data-testid="stApp"], body').first();
-    expect(await appElement.isVisible()).toBeTruthy();
+    // Check for any heading or control panel element which indicates app loaded
+    const controlPanel = page.locator('h2:has-text("Control Panel"), h3').first();
+    const isVisible = await controlPanel.isVisible();
+    expect(isVisible).toBeTruthy();
     console.log('✅ Session timeout handled gracefully');
   });
 
@@ -115,22 +118,34 @@ test.describe('Performance Testing', () => {
     await page.goto('/');
     await page.waitForTimeout(2000);
     
-    const chatInput = page.locator('textarea, input[type="text"]').first();
+    let chatInput = page.locator('textarea, input[type="text"]').first();
     
     if (await chatInput.isVisible()) {
       const startTime = Date.now();
       
-      // Send 100 messages rapidly
+      // Send 100 messages rapidly with re-querying to handle re-renders
       for (let i = 0; i < 100; i++) {
-        await chatInput.fill(`Test message ${i}`);
-        await chatInput.press('Enter');
-        await page.waitForTimeout(10); // Minimal delay
+        // Re-query chat input each time to handle Streamlit re-renders
+        chatInput = page.locator('textarea, input[type="text"]').first();
+        
+        try {
+          await chatInput.fill(`Test message ${i}`, { timeout: 1000 });
+          await chatInput.press('Enter');
+          await page.waitForTimeout(50); // Small delay to prevent overwhelming
+        } catch (error) {
+          // If element is detached, re-query and retry
+          chatInput = page.locator('textarea, input[type="text"]').first();
+          await chatInput.fill(`Test message ${i}`, { timeout: 1000 });
+          await chatInput.press('Enter');
+          await page.waitForTimeout(50);
+        }
       }
       
       const duration = Date.now() - startTime;
       console.log(`100 messages sent in ${duration}ms`);
       
-      // App should still be responsive
+      // App should still be responsive - re-query one more time
+      chatInput = page.locator('textarea, input[type="text"]').first();
       expect(await chatInput.isVisible()).toBeTruthy();
     }
   });

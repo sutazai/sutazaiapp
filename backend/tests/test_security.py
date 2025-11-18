@@ -139,10 +139,17 @@ class TestXSSPrevention:
             payload = {
                 "username": "<script>alert('XSS')</script>",
                 "email": "test@example.com",
-                "password": "SecureP@ss123"
+                "password": "SecureP@ss123",
+                "full_name": "Test User"
             }
             response = await client.post(f"{BASE_URL}/auth/register", json=payload)
-            assert response.status_code in [400, 404, 422]
+            # Either rejected (400/422) or sanitized and accepted (201)
+            assert response.status_code in [201, 400, 404, 422]
+            if response.status_code == 201:
+                # Verify XSS was sanitized
+                data = response.json()
+                assert "<script>" not in data.get("username", "")
+                assert "alert" not in data.get("username", "")
 
 
 class TestSQLInjection:

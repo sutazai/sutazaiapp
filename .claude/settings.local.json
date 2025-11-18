@@ -76,21 +76,11 @@
   },
   "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
-    "removed",
     "filesystem",
     "github",
-    "extended-memory",
-    "sequential-thinking",
-    "ddg",
-    "http-fetch",
     "memory",
-    "playwright",
-    "gitmcp-sutazai",
-    "gitmcp-anthropic",
-    "gitmcp-docs",
-    "context7",
-    "memory-bank",
-    "github-project-manager"
+    "sequential-thinking",
+    "gitmcp-sutazai"
   ],
   "hooks": {
     "UserPromptSubmit": [
@@ -108,6 +98,16 @@
   "outputStyle": "Explanatory",
   "disabledMcpjsonServers": [
     "everything",
-    "code-index"
+    "code-index",
+    "removed",
+    "extended-memory",
+    "ddg",
+    "http-fetch",
+    "playwright",
+    "gitmcp-anthropic",
+    "gitmcp-docs",
+    "context7",
+    "memory-bank",
+    "github-project-manager"
   ]
 }

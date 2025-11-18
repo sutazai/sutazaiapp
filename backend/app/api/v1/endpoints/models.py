@@ -39,23 +39,35 @@ async def list_models() -> Dict:
     except Exception as e:
         logger.warning(f"Could not fetch Ollama models from {ollama_url}: {e}")
     
-    # Static list of models (including both available and planned)
-    static_models = [
-        {"name": "gpt-4", "provider": "openai", "available": False},
-        {"name": "claude-3", "provider": "anthropic", "available": False},
-        {"name": "local", "provider": "system", "available": True},
+    # Only include actually available local models
+    # NO external API models (GPT-4, Claude, Gemini) per user requirements
+    available_models = []
+    unavailable_models = []
+    
+    # Add verified Ollama models (currently only tinyllama:latest is loaded)
+    if ollama_models:
+        available_models = ollama_models
+    else:
+        # Fallback if Ollama connection failed - only include verified models
+        logger.info("Using fallback model list (Ollama connection failed)")
+        available_models = [
+            {"name": "tinyllama:latest", "provider": "ollama", "size": 637000000, "available": True}
+        ]
+    
+    # List potentially available models (not yet pulled)
+    unavailable_models = [
+        {"name": "mistral:latest", "provider": "ollama", "available": False, "note": "Available for download"},
+        {"name": "llama2:7b", "provider": "ollama", "available": False, "note": "Available for download"},
+        {"name": "deepseek-coder:latest", "provider": "ollama", "available": False, "note": "Available for download"}
     ]
     
-    # Combine all models
-    all_models = ollama_models + static_models
-    
     # Extract just the model names for simple listing
-    model_names = [m["name"] for m in all_models if m.get("available", False)]
-    if not model_names:
-        model_names = ["tinyllama:latest", "mistral:latest", "local"]
+    model_names = [m["name"] for m in available_models]
     
     return {
         "models": model_names,
-        "detailed": all_models,
-        "count": len(model_names)
+        "available_detailed": available_models,
+        "downloadable": unavailable_models,
+        "count": len(model_names),
+        "note": "Only local Ollama models supported - no external API models"
     }

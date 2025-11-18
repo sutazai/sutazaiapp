@@ -141,7 +141,7 @@ services:
       - "10005:15672"  # Management UI
     networks:
       sutazai-network:
-        ipv4_address: 172.20.0.13
+        ipv4_address: 172.20.0.26
     environment:
       RABBITMQ_DEFAULT_USER: sutazai
       RABBITMQ_DEFAULT_PASS: sutazai_secure_2024

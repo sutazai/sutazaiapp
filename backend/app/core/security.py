@@ -16,7 +16,13 @@ from app.core.config import settings
 logger = logging.getLogger(__name__)
 
 # Password hashing context with bcrypt
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Set ident="2b" to avoid passlib wrap bug detection issues
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto",
+    bcrypt__ident="2b",  # Use 2b format to avoid wrap bug detection
+    bcrypt__rounds=12     # Standard security rounds
+)
 
 # JWT secret key is now managed through the secrets manager
 # The settings.SECRET_KEY property handles generation and warnings
@@ -41,7 +47,8 @@ class SecurityUtils:
         try:
             # Truncate to 72 bytes to match get_password_hash behavior
             password_bytes = plain_password.encode('utf-8')[:72]
-            return pwd_context.verify(password_bytes, hashed_password)
+            truncated_password = password_bytes.decode('utf-8', errors='ignore')
+            return pwd_context.verify(truncated_password, hashed_password)
         except Exception as e:
             logger.error(f"Password verification error: {e}")
             return False
@@ -61,7 +68,8 @@ class SecurityUtils:
         # Bcrypt has a 72-byte limit, truncate password if needed
         # This is safe as 72 bytes provides sufficient entropy
         password_bytes = password.encode('utf-8')[:72]
-        return pwd_context.hash(password_bytes)
+        truncated_password = password_bytes.decode('utf-8')
+        return pwd_context.hash(truncated_password)
     
     @staticmethod
     def validate_password_strength(password: str) -> Tuple[bool, Optional[str]]:

@@ -1,0 +1,127 @@
+[1m============================= test session starts ==============================[0m
+platform linux -- Python 3.12.3, pytest-9.0.1, pluggy-1.6.0 -- /opt/sutazaiapp/backend/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /opt/sutazaiapp/backend
+configfile: pytest.ini
+plugins: anyio-4.10.0, asyncio-1.3.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+[1mcollecting ... [0mcollected 12 items
+
+tests/test_auth_integration.py::TestRealAuthenticationFlow::test_register_creates_user_in_database [32mPASSED[0m[33m [  8%][0m
+tests/test_auth_integration.py::TestRealAuthenticationFlow::test_login_with_real_password_verification [32mPASSED[0m[33m [ 16%][0m
+tests/test_auth_integration.py::TestRealAuthenticationFlow::test_login_with_wrong_password_increments_failures [32mPASSED[0m[33m [ 25%][0m
+tests/test_auth_integration.py::TestRealAuthenticationFlow::test_account_lockout_after_5_failed_attempts [32mPASSED[0m[33m [ 33%][0m
+tests/test_auth_integration.py::TestRealAuthenticationFlow::test_get_me_returns_real_user_data [32mPASSED[0m[33m [ 41%][0m
+tests/test_auth_integration.py::TestRealAuthenticationFlow::test_refresh_token_generates_new_tokens [31mFAILED[0m[31m [ 50%][0m
+tests/test_auth_integration.py::TestRealAuthenticationFlow::test_logout_invalidates_refresh_token [32mPASSED[0m[31m [ 58%][0m
+tests/test_auth_integration.py::TestRealAuthenticationFlow::test_duplicate_email_registration_fails [32mPASSED[0m[31m [ 66%][0m
+tests/test_auth_integration.py::TestRealAuthenticationFlow::test_weak_password_rejected [32mPASSED[0m[31m [ 75%][0m
+tests/test_auth_integration.py::TestDatabaseIntegrity::test_transaction_rollback_on_error [32mPASSED[0m[31m [ 83%][0m
+tests/test_auth_integration.py::TestDatabaseIntegrity::test_concurrent_registrations_handled [32mPASSED[0m[31m [ 91%][0m
+tests/test_auth_integration.py::test_database_connection_pool_health [32mPASSED[0m[31m [100%][0m
+
+=================================== FAILURES ===================================
+[31m[1m______ TestRealAuthenticationFlow.test_refresh_token_generates_new_tokens ______[0m
+[1m[31mtests/test_auth_integration.py[0m:264: in test_refresh_token_generates_new_tokens
+    [0m[94massert[39;49;00m data[[33m"[39;49;00m[33maccess_token[39;49;00m[33m"[39;49;00m] != old_access_token[90m[39;49;00m
+[1m[31mE   AssertionError: assert 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyZWZyZXNodXNlciIsInVzZXJfaWQiOjEsImVtYWlsIjoicmVmcmVzaEB0ZXN0LmNvbSIsImV4cCI6MTc2MzUwMzgwNiwiaWF0IjoxNzYzNTAyMDA2LCJ0eXBlIjoiYWNjZXNzIn0.ZM6Bq39tXNdciEf9YHcJ0Sh0vqVtmvyzjBu3_2KmzAw' != 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyZWZyZXNodXNlciIsInVzZXJfaWQiOjEsImVtYWlsIjoicmVmcmVzaEB0ZXN0LmNvbSIsImV4cCI6MTc2MzUwMzgwNiwiaWF0IjoxNzYzNTAyMDA2LCJ0eXBlIjoiYWNjZXNzIn0.ZM6Bq39tXNdciEf9YHcJ0Sh0vqVtmvyzjBu3_2KmzAw'[0m
+---------------------------- Captured stdout setup -----------------------------
+{"timestamp": "2025-11-18T21:40:05.536337+00:00", "level": "DEBUG", "logger": "asyncio", "message": "Using selector: EpollSelector", "module": "selector_events", "function": "__init__", "line": 64, "taskName": null}
+------------------------------ Captured log setup ------------------------------
+[35mDEBUG   [0m asyncio:selector_events.py:64 Using selector: EpollSelector
+----------------------------- Captured stdout call -----------------------------
+{"timestamp": "2025-11-18T21:40:05.607457+00:00", "level": "INFO", "logger": "app.middleware.logging", "message": "[a0198cbf-83b0-42db-824f-9dd9af600b5f] Incoming request: POST /api/v1/auth/register", "module": "logging", "function": "dispatch", "line": 45, "correlation_id": "a0198cbf-83b0-42db-824f-9dd9af600b5f", "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro", "method": "POST", "path": "/api/v1/auth/register", "url": "http://test/api/v1/auth/register", "client_host": "127.0.0.1", "user_agent": "python-httpx/0.28.1"}
+{"timestamp": "2025-11-18T21:40:05.835551+00:00", "level": "INFO", "logger": "app.api.v1.endpoints.auth", "message": "New user registered: refreshuser (refresh@test.com)", "module": "auth", "function": "register", "line": 108, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.836173+00:00", "level": "WARNING", "logger": "app.services.email", "message": "SMTP not configured. Email would be sent to refresh@test.com\nSubject: Verify Your Email - SutazAI Platform\nBody: \nWelcome to SutazAI Platform!\n\nPlease verify your email address by clicking the following link:\nhttp://sutazai-frontend:3000/verify-email?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyZWZyZXN...", "module": "email", "function": "send_email", "line": 188, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.836606+00:00", "level": "INFO", "logger": "app.services.email", "message": "Development mode: Email saved to /opt/sutazaiapp/backend/app/templates/emails/email_1763502005.836341.json", "module": "email", "function": "send_email", "line": 216, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.836747+00:00", "level": "INFO", "logger": "app.api.v1.endpoints.auth", "message": "Verification email sent to refresh@test.com", "module": "auth", "function": "register", "line": 115, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.837777+00:00", "level": "INFO", "logger": "app.middleware.logging", "message": "[a0198cbf-83b0-42db-824f-9dd9af600b5f] Response: 201 (0.230s)", "module": "logging", "function": "dispatch", "line": 69, "correlation_id": "a0198cbf-83b0-42db-824f-9dd9af600b5f", "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro", "method": "POST", "path": "/api/v1/auth/register", "status_code": 201, "process_time": 0.23005247116088867}
+{"timestamp": "2025-11-18T21:40:05.838811+00:00", "level": "INFO", "logger": "httpx", "message": "HTTP Request: POST http://test/api/v1/auth/register \"HTTP/1.1 201 Created\"", "module": "_client", "function": "_send_single_request", "line": 1740, "taskName": "Task-408"}
+{"timestamp": "2025-11-18T21:40:05.839520+00:00", "level": "INFO", "logger": "app.middleware.logging", "message": "[1398678c-8c6f-4259-83e4-97230f7a8d49] Incoming request: POST /api/v1/auth/login", "module": "logging", "function": "dispatch", "line": 45, "correlation_id": "1398678c-8c6f-4259-83e4-97230f7a8d49", "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro", "method": "POST", "path": "/api/v1/auth/login", "url": "http://test/api/v1/auth/login", "client_host": "127.0.0.1", "user_agent": "python-httpx/0.28.1"}
+{"timestamp": "2025-11-18T21:40:05.840563+00:00", "level": "DEBUG", "logger": "python_multipart.multipart", "message": "Calling on_field_start with no data", "module": "multipart", "function": "callback", "line": 628, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.840700+00:00", "level": "DEBUG", "logger": "python_multipart.multipart", "message": "Calling on_field_name with data[0:8]", "module": "multipart", "function": "callback", "line": 625, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.840776+00:00", "level": "DEBUG", "logger": "python_multipart.multipart", "message": "Calling on_field_data with data[9:20]", "module": "multipart", "function": "callback", "line": 625, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.840835+00:00", "level": "DEBUG", "logger": "python_multipart.multipart", "message": "Calling on_field_end with no data", "module": "multipart", "function": "callback", "line": 628, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.840961+00:00", "level": "DEBUG", "logger": "python_multipart.multipart", "message": "Calling on_field_start with no data", "module": "multipart", "function": "callback", "line": 628, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.841047+00:00", "level": "DEBUG", "logger": "python_multipart.multipart", "message": "Calling on_field_name with data[21:29]", "module": "multipart", "function": "callback", "line": 625, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.841087+00:00", "level": "DEBUG", "logger": "python_multipart.multipart", "message": "Calling on_field_data with data[30:47]", "module": "multipart", "function": "callback", "line": 625, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.841484+00:00", "level": "DEBUG", "logger": "python_multipart.multipart", "message": "Calling on_field_end with no data", "module": "multipart", "function": "callback", "line": 628, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:05.841567+00:00", "level": "DEBUG", "logger": "python_multipart.multipart", "message": "Calling on_end with no data", "module": "multipart", "function": "callback", "line": 628, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:06.058066+00:00", "level": "INFO", "logger": "app.api.v1.endpoints.auth", "message": "User logged in: refreshuser", "module": "auth", "function": "login", "line": 220, "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro"}
+{"timestamp": "2025-11-18T21:40:06.058980+00:00", "level": "INFO", "logger": "app.middleware.logging", "message": "[1398678c-8c6f-4259-83e4-97230f7a8d49] Response: 200 (0.219s)", "module": "logging", "function": "dispatch", "line": 69, "correlation_id": "1398678c-8c6f-4259-83e4-97230f7a8d49", "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro", "method": "POST", "path": "/api/v1/auth/login", "status_code": 200, "process_time": 0.2193160057067871}
+{"timestamp": "2025-11-18T21:40:06.059447+00:00", "level": "INFO", "logger": "httpx", "message": "HTTP Request: POST http://test/api/v1/auth/login \"HTTP/1.1 200 OK\"", "module": "_client", "function": "_send_single_request", "line": 1740, "taskName": "Task-408"}
+{"timestamp": "2025-11-18T21:40:06.059951+00:00", "level": "INFO", "logger": "app.middleware.logging", "message": "[ef2abb1c-c6e2-423a-a6d3-9fc459c3ad21] Incoming request: POST /api/v1/auth/refresh", "module": "logging", "function": "dispatch", "line": 45, "correlation_id": "ef2abb1c-c6e2-423a-a6d3-9fc459c3ad21", "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro", "method": "POST", "path": "/api/v1/auth/refresh", "url": "http://test/api/v1/auth/refresh", "client_host": "127.0.0.1", "user_agent": "python-httpx/0.28.1"}
+{"timestamp": "2025-11-18T21:40:06.066443+00:00", "level": "INFO", "logger": "app.middleware.logging", "message": "[ef2abb1c-c6e2-423a-a6d3-9fc459c3ad21] Response: 200 (0.006s)", "module": "logging", "function": "dispatch", "line": 69, "correlation_id": "ef2abb1c-c6e2-423a-a6d3-9fc459c3ad21", "taskName": "starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro", "method": "POST", "path": "/api/v1/auth/refresh", "status_code": 200, "process_time": 0.006396293640136719}
+{"timestamp": "2025-11-18T21:40:06.067028+00:00", "level": "INFO", "logger": "httpx", "message": "HTTP Request: POST http://test/api/v1/auth/refresh \"HTTP/1.1 200 OK\"", "module": "_client", "function": "_send_single_request", "line": 1740, "taskName": "Task-408"}
+------------------------------ Captured log call -------------------------------
+[32mINFO    [0m app.middleware.logging:logging.py:45 [a0198cbf-83b0-42db-824f-9dd9af600b5f] Incoming request: POST /api/v1/auth/register
+[32mINFO    [0m app.api.v1.endpoints.auth:auth.py:108 New user registered: refreshuser (refresh@test.com)
+[33mWARNING [0m app.services.email:email.py:188 SMTP not configured. Email would be sent to refresh@test.com
+Subject: Verify Your Email - SutazAI Platform
+Body: 
+Welcome to SutazAI Platform!
+
+Please verify your email address by clicking the following link:
+http://sutazai-frontend:3000/verify-email?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyZWZyZXN...
+[32mINFO    [0m app.services.email:email.py:216 Development mode: Email saved to /opt/sutazaiapp/backend/app/templates/emails/email_1763502005.836341.json
+[32mINFO    [0m app.api.v1.endpoints.auth:auth.py:115 Verification email sent to refresh@test.com
+[32mINFO    [0m app.middleware.logging:logging.py:69 [a0198cbf-83b0-42db-824f-9dd9af600b5f] Response: 201 (0.230s)
+[32mINFO    [0m httpx:_client.py:1740 HTTP Request: POST http://test/api/v1/auth/register "HTTP/1.1 201 Created"
+[32mINFO    [0m app.middleware.logging:logging.py:45 [1398678c-8c6f-4259-83e4-97230f7a8d49] Incoming request: POST /api/v1/auth/login
+[35mDEBUG   [0m python_multipart.multipart:multipart.py:628 Calling on_field_start with no data
+[35mDEBUG   [0m python_multipart.multipart:multipart.py:625 Calling on_field_name with data[0:8]
+[35mDEBUG   [0m python_multipart.multipart:multipart.py:625 Calling on_field_data with data[9:20]
+[35mDEBUG   [0m python_multipart.multipart:multipart.py:628 Calling on_field_end with no data
+[35mDEBUG   [0m python_multipart.multipart:multipart.py:628 Calling on_field_start with no data
+[35mDEBUG   [0m python_multipart.multipart:multipart.py:625 Calling on_field_name with data[21:29]
+[35mDEBUG   [0m python_multipart.multipart:multipart.py:625 Calling on_field_data with data[30:47]
+[35mDEBUG   [0m python_multipart.multipart:multipart.py:628 Calling on_field_end with no data
+[35mDEBUG   [0m python_multipart.multipart:multipart.py:628 Calling on_end with no data
+[32mINFO    [0m app.api.v1.endpoints.auth:auth.py:220 User logged in: refreshuser
+[32mINFO    [0m app.middleware.logging:logging.py:69 [1398678c-8c6f-4259-83e4-97230f7a8d49] Response: 200 (0.219s)
+[32mINFO    [0m httpx:_client.py:1740 HTTP Request: POST http://test/api/v1/auth/login "HTTP/1.1 200 OK"
+[32mINFO    [0m app.middleware.logging:logging.py:45 [ef2abb1c-c6e2-423a-a6d3-9fc459c3ad21] Incoming request: POST /api/v1/auth/refresh
+[32mINFO    [0m app.middleware.logging:logging.py:69 [ef2abb1c-c6e2-423a-a6d3-9fc459c3ad21] Response: 200 (0.006s)
+[32mINFO    [0m httpx:_client.py:1740 HTTP Request: POST http://test/api/v1/auth/refresh "HTTP/1.1 200 OK"
+[33m=============================== warnings summary ===============================[0m
+venv/lib/python3.12/site-packages/passlib/utils/__init__.py:854
+  /opt/sutazaiapp/backend/venv/lib/python3.12/site-packages/passlib/utils/__init__.py:854: DeprecationWarning: 'crypt' is deprecated and slated for removal in Python 3.13
+    from crypt import crypt as _crypt
+
+venv/lib/python3.12/site-packages/pydantic/fields.py:1062
+venv/lib/python3.12/site-packages/pydantic/fields.py:1062
+  /opt/sutazaiapp/backend/venv/lib/python3.12/site-packages/pydantic/fields.py:1062: PydanticDeprecatedSince20: `min_items` is deprecated and will be removed, use `min_length` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warn('`min_items` is deprecated and will be removed, use `min_length` instead', DeprecationWarning)
+
+venv/lib/python3.12/site-packages/pydantic/fields.py:1068
+venv/lib/python3.12/site-packages/pydantic/fields.py:1068
+  /opt/sutazaiapp/backend/venv/lib/python3.12/site-packages/pydantic/fields.py:1068: PydanticDeprecatedSince20: `max_items` is deprecated and will be removed, use `max_length` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warn('`max_items` is deprecated and will be removed, use `max_length` instead', DeprecationWarning)
+
+venv/lib/python3.12/site-packages/speech_recognition/__init__.py:7
+  /opt/sutazaiapp/backend/venv/lib/python3.12/site-packages/speech_recognition/__init__.py:7: DeprecationWarning: 'aifc' is deprecated and slated for removal in Python 3.13
+    import aifc
+
+venv/lib/python3.12/site-packages/speech_recognition/__init__.py:8
+  /opt/sutazaiapp/backend/venv/lib/python3.12/site-packages/speech_recognition/__init__.py:8: DeprecationWarning: 'audioop' is deprecated and slated for removal in Python 3.13
+    import audioop
+
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py:1758
+  /opt/sutazaiapp/backend/venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py:1758: PytestCollectionWarning: cannot collect 'test_session_maker' because it is not a function.
+    def __call__(self, **local_kw: Any) -> _AS:
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+1.37s call     tests/test_auth_integration.py::TestRealAuthenticationFlow::test_account_lockout_after_5_failed_attempts
+0.49s call     tests/test_auth_integration.py::TestRealAuthenticationFlow::test_logout_invalidates_refresh_token
+0.48s call     tests/test_auth_integration.py::TestRealAuthenticationFlow::test_get_me_returns_real_user_data
+0.48s call     tests/test_auth_integration.py::TestRealAuthenticationFlow::test_login_with_wrong_password_increments_failures
+0.46s call     tests/test_auth_integration.py::TestRealAuthenticationFlow::test_login_with_real_password_verification
+0.46s call     tests/test_auth_integration.py::TestRealAuthenticationFlow::test_refresh_token_generates_new_tokens
+0.30s call     tests/test_auth_integration.py::TestDatabaseIntegrity::test_concurrent_registrations_handled
+0.28s call     tests/test_auth_integration.py::TestRealAuthenticationFlow::test_register_creates_user_in_database
+0.24s call     tests/test_auth_integration.py::TestRealAuthenticationFlow::test_duplicate_email_registration_fails
+0.18s call     tests/test_auth_integration.py::test_database_connection_pool_health
+[36m[1m=========================== short test summary info ============================[0m
+[31mFAILED[0m tests/test_auth_integration.py::[1mTestRealAuthenticationFlow::test_refresh_token_generates_new_tokens[0m - AssertionError: assert 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyZWZyZXNodXNlciIsInVzZXJfaWQiOjEsImVtYWlsIjoicmVmcmVzaEB0ZXN0LmNvbSIsImV4cCI6MTc2MzUwMzgwNiwiaWF0IjoxNzYzNTAyMDA2LCJ0eXBlIjoiYWNjZXNzIn0.ZM6Bq39tXNdciEf9YHcJ0Sh0vqVtmvyzjBu3_2KmzAw' != 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyZWZyZXNodXNlciIsInVzZXJfaWQiOjEsImVtYWlsIjoicmVmcmVzaEB0ZXN0LmNvbSIsImV4cCI6MTc2MzUwMzgwNiwiaWF0IjoxNzYzNTAyMDA2LCJ0eXBlIjoiYWNjZXNzIn0.ZM6Bq39tXNdciEf9YHcJ0Sh0vqVtmvyzjBu3_2KmzAw'
+[31m=================== [31m[1m1 failed[0m, [32m11 passed[0m, [33m8 warnings[0m[31m in 5.83s[0m[31m ===================[0m

@@ -9,6 +9,9 @@ import os
 from typing import List, Dict, Optional, Any
 from functools import lru_cache
 
+from app.core.circuit_breaker import CircuitBreaker, CircuitBreakerOpen
+from app.core.retry import async_retry
+
 logger = logging.getLogger(__name__)
 
 class OllamaHelper:
@@ -19,19 +22,32 @@ class OllamaHelper:
         self.port = os.getenv("OLLAMA_PORT", "11434")
         self.base_url = f"http://{self.host}:{self.port}"
         self._available_models_cache = None
+        # Circuit breaker for Ollama API calls
+        self._circuit_breaker = CircuitBreaker(
+            failure_threshold=5,
+            timeout=30,  # 30 seconds for Ollama recovery
+            expected_exception=(httpx.HTTPError, httpx.TimeoutException)
+        )
         
+    @async_retry(max_attempts=3, delay=1.0, backoff=2.0, exceptions=(httpx.HTTPError, httpx.TimeoutException))
     async def get_available_models(self) -> List[str]:
         """Get list of available Ollama models"""
         try:
-            async with httpx.AsyncClient(timeout=5.0) as client:
-                response = await client.get(f"{self.base_url}/api/tags")
-                if response.status_code == 200:
-                    data = response.json()
-                    models = data.get("models", [])
-                    return [model["name"] for model in models]
-                else:
-                    logger.error(f"Failed to get models: {response.status_code}")
-                    return []
+            async def _get_models():
+                async with httpx.AsyncClient(timeout=5.0) as client:
+                    response = await client.get(f"{self.base_url}/api/tags")
+                    if response.status_code == 200:
+                        data = response.json()
+                        models = data.get("models", [])
+                        return [model["name"] for model in models]
+                    else:
+                        logger.error(f"Failed to get models: {response.status_code}")
+                        raise httpx.HTTPError(f"HTTP {response.status_code}")
+            
+            return await self._circuit_breaker.call(_get_models)
+        except CircuitBreakerOpen:
+            logger.warning("Circuit breaker open for Ollama - returning empty model list")
+            return []
         except Exception as e:
             logger.error(f"Error getting Ollama models: {str(e)}")
             return []
@@ -59,6 +75,7 @@ class OllamaHelper:
             logger.error(f"Error pulling model {model_name}: {str(e)}")
             return False
     
+    @async_retry(max_attempts=3, delay=2.0, backoff=2.0, exceptions=(httpx.HTTPError, httpx.TimeoutException))
     async def generate(
         self,
         model: str,
@@ -79,25 +96,31 @@ class OllamaHelper:
                 else:
                     raise Exception("No Ollama models available")
             
-            async with httpx.AsyncClient(timeout=60.0) as client:
-                response = await client.post(
-                    f"{self.base_url}/api/generate",
-                    json={
-                        "model": model,
-                        "prompt": prompt,
-                        "stream": stream,
-                        "options": {
-                            "temperature": temperature,
-                            "num_predict": max_tokens
+            async def _generate():
+                async with httpx.AsyncClient(timeout=60.0) as client:
+                    response = await client.post(
+                        f"{self.base_url}/api/generate",
+                        json={
+                            "model": model,
+                            "prompt": prompt,
+                            "stream": stream,
+                            "options": {
+                                "temperature": temperature,
+                                "num_predict": max_tokens
+                            }
                         }
-                    }
-                )
-                
-                if response.status_code == 200:
-                    return response.json()
-                else:
-                    raise Exception(f"Ollama API error: {response.status_code} - {response.text}")
+                    )
                     
+                    if response.status_code == 200:
+                        return response.json()
+                    else:
+                        raise httpx.HTTPError(f"Ollama API error: {response.status_code} - {response.text}")
+            
+            return await self._circuit_breaker.call(_generate)
+                    
+        except CircuitBreakerOpen:
+            logger.error("Circuit breaker open for Ollama - cannot generate")
+            raise Exception("Ollama service temporarily unavailable")
         except Exception as e:
             logger.error(f"Error generating with Ollama: {str(e)}")
             raise
@@ -174,9 +197,14 @@ class OllamaHelper:
     async def health_check(self) -> bool:
         """Check if Ollama service is healthy"""
         try:
-            async with httpx.AsyncClient(timeout=3.0) as client:
-                response = await client.get(f"{self.base_url}/api/tags")
-                return response.status_code == 200
+            async def _check():
+                async with httpx.AsyncClient(timeout=3.0) as client:
+                    response = await client.get(f"{self.base_url}/api/tags")
+                    if response.status_code == 200:
+                        return True
+                    raise httpx.HTTPError(f"HTTP {response.status_code}")
+            
+            return await self._circuit_breaker.call(_check)
         except Exception:
             return False
 
