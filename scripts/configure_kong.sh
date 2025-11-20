@@ -24,11 +24,12 @@ create_route() {
     local service=$1
     local path=$2
     local name=$3
+    local strip_path=${4:-false}
     echo "Creating route: $name"
     curl -s -X POST "$KONG_ADMIN/services/$service/routes" \
         -d "paths[]=$path" \
         -d "name=$name" \
-        -d "strip_path=false" | python3 -c "import sys,json; d=json.load(sys.stdin); print(f\"  ✓ Route ID: {d.get('id', 'ERROR')[:16]}\")" 2>/dev/null || echo "  ✗ Failed"
+        -d "strip_path=$strip_path" | python3 -c "import sys,json; d=json.load(sys.stdin); print(f\"  ✓ Route ID: {d.get('id', 'ERROR')[:16]}\")" 2>/dev/null || echo "  ✗ Failed"
 }
 
 # Function to add rate limiting plugin
@@ -65,7 +66,7 @@ echo ""
 
 echo "2. Creating MCP Bridge Service"
 create_service "mcp-bridge" "http://sutazai-mcp-bridge:11100"
-create_route "mcp-bridge" "/mcp" "mcp-route"
+create_route "mcp-bridge" "/mcp" "mcp-route" "true"
 add_rate_limit "mcp-bridge" 500
 add_cors "mcp-bridge"
 echo ""

@@ -1,0 +1,434 @@
+{
+  "timestamp": 1763676551,
+  "duration": 1.0497560501098633,
+  "summary": {
+    "total": 44,
+    "passed": 28,
+    "failed": 3,
+    "warnings": 5,
+    "skipped": 8,
+    "success_rate": 63.64
+  },
+  "categories": {
+    "INFRASTRUCTURE": {
+      "PASS": 1,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "BACKEND": {
+      "PASS": 7,
+      "FAIL": 0,
+      "WARN": 3,
+      "SKIP": 0
+    },
+    "AUTHENTICATION": {
+      "PASS": 0,
+      "FAIL": 0,
+      "WARN": 1,
+      "SKIP": 0
+    },
+    "AI_AGENTS": {
+      "PASS": 8,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 8
+    },
+    "DATABASES": {
+      "PASS": 1,
+      "FAIL": 2,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "VECTOR_DBS": {
+      "PASS": 2,
+      "FAIL": 1,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "MCP_BRIDGE": {
+      "PASS": 3,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "MONITORING": {
+      "PASS": 3,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "FRONTEND": {
+      "PASS": 1,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "API_GATEWAY": {
+      "PASS": 1,
+      "FAIL": 0,
+      "WARN": 1,
+      "SKIP": 0
+    },
+    "AI_INFERENCE": {
+      "PASS": 1,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    }
+  },
+  "tests": [
+    {
+      "number": 1,
+      "category": "INFRASTRUCTURE",
+      "name": "All Containers Running",
+      "status": "PASS",
+      "details": "30/30 containers",
+      "timestamp": 1763676550.7532053
+    },
+    {
+      "number": 2,
+      "category": "BACKEND",
+      "name": "Backend Health Endpoint",
+      "status": "PASS",
+      "details": "Status: healthy",
+      "timestamp": 1763676550.8178494
+    },
+    {
+      "number": 3,
+      "category": "BACKEND",
+      "name": "Endpoint /api/v1/health",
+      "status": "PASS",
+      "details": "HTTP 200",
+      "timestamp": 1763676550.86004
+    },
+    {
+      "number": 4,
+      "category": "BACKEND",
+      "name": "Endpoint /api/v1/agents",
+      "status": "PASS",
+      "details": "HTTP 200",
+      "timestamp": 1763676550.8645902
+    },
+    {
+      "number": 5,
+      "category": "BACKEND",
+      "name": "Endpoint /api/v1/models",
+      "status": "PASS",
+      "details": "HTTP 200",
+      "timestamp": 1763676550.88148
+    },
+    {
+      "number": 6,
+      "category": "BACKEND",
+      "name": "Endpoint /api/v1/auth/login",
+      "status": "PASS",
+      "details": "HTTP 405",
+      "timestamp": 1763676550.8839133
+    },
+    {
+      "number": 7,
+      "category": "BACKEND",
+      "name": "Endpoint /api/v1/auth/register",
+      "status": "PASS",
+      "details": "HTTP 405",
+      "timestamp": 1763676550.8872628
+    },
+    {
+      "number": 8,
+      "category": "BACKEND",
+      "name": "Endpoint /api/v1/chat/send",
+      "status": "PASS",
+      "details": "HTTP 405",
+      "timestamp": 1763676550.8893616
+    },
+    {
+      "number": 9,
+      "category": "BACKEND",
+      "name": "Endpoint /api/v1/vectors/chromadb/status",
+      "status": "WARN",
+      "details": "HTTP 404",
+      "timestamp": 1763676550.891417
+    },
+    {
+      "number": 10,
+      "category": "BACKEND",
+      "name": "Endpoint /api/v1/vectors/qdrant/status",
+      "status": "WARN",
+      "details": "HTTP 404",
+      "timestamp": 1763676550.8961377
+    },
+    {
+      "number": 11,
+      "category": "BACKEND",
+      "name": "Endpoint /api/v1/vectors/faiss/status",
+      "status": "WARN",
+      "details": "HTTP 404",
+      "timestamp": 1763676550.8982046
+    },
+    {
+      "number": 12,
+      "category": "AUTHENTICATION",
+      "name": "Authentication Flow",
+      "status": "WARN",
+      "details": "No access token",
+      "timestamp": 1763676551.1399791
+    },
+    {
+      "number": 13,
+      "category": "AI_AGENTS",
+      "name": "Agent letta Health",
+      "status": "PASS",
+      "details": "Port 11401, Model: tinyllama",
+      "timestamp": 1763676551.1660895
+    },
+    {
+      "number": 14,
+      "category": "AI_AGENTS",
+      "name": "Agent crewai Health",
+      "status": "PASS",
+      "details": "Port 11403, Model: tinyllama",
+      "timestamp": 1763676551.1882777
+    },
+    {
+      "number": 15,
+      "category": "AI_AGENTS",
+      "name": "Agent aider Health",
+      "status": "PASS",
+      "details": "Port 11404, Model: tinyllama",
+      "timestamp": 1763676551.2135704
+    },
+    {
+      "number": 16,
+      "category": "AI_AGENTS",
+      "name": "Agent langchain Health",
+      "status": "PASS",
+      "details": "Port 11405, Model: tinyllama",
+      "timestamp": 1763676551.2390482
+    },
+    {
+      "number": 17,
+      "category": "AI_AGENTS",
+      "name": "Agent finrobot Health",
+      "status": "PASS",
+      "details": "Port 11410, Model: tinyllama",
+      "timestamp": 1763676551.2626255
+    },
+    {
+      "number": 18,
+      "category": "AI_AGENTS",
+      "name": "Agent shellgpt Health",
+      "status": "PASS",
+      "details": "Port 11413, Model: tinyllama",
+      "timestamp": 1763676551.2905314
+    },
+    {
+      "number": 19,
+      "category": "AI_AGENTS",
+      "name": "Agent documind Health",
+      "status": "PASS",
+      "details": "Port 11414, Model: tinyllama",
+      "timestamp": 1763676551.3138106
+    },
+    {
+      "number": 20,
+      "category": "AI_AGENTS",
+      "name": "Agent gpt-engineer Health",
+      "status": "PASS",
+      "details": "Port 11416, Model: tinyllama",
+      "timestamp": 1763676551.340354
+    },
+    {
+      "number": 21,
+      "category": "AI_AGENTS",
+      "name": "Agent letta Capabilities",
+      "status": "SKIP",
+      "details": "Endpoint not implemented",
+      "timestamp": 1763676551.3606715
+    },
+    {
+      "number": 22,
+      "category": "AI_AGENTS",
+      "name": "Agent crewai Capabilities",
+      "status": "SKIP",
+      "details": "Endpoint not implemented",
+      "timestamp": 1763676551.3805873
+    },
+    {
+      "number": 23,
+      "category": "AI_AGENTS",
+      "name": "Agent aider Capabilities",
+      "status": "SKIP",
+      "details": "Endpoint not implemented",
+      "timestamp": 1763676551.4009984
+    },
+    {
+      "number": 24,
+      "category": "AI_AGENTS",
+      "name": "Agent langchain Capabilities",
+      "status": "SKIP",
+      "details": "Endpoint not implemented",
+      "timestamp": 1763676551.421798
+    },
+    {
+      "number": 25,
+      "category": "AI_AGENTS",
+      "name": "Agent finrobot Capabilities",
+      "status": "SKIP",
+      "details": "Endpoint not implemented",
+      "timestamp": 1763676551.4425497
+    },
+    {
+      "number": 26,
+      "category": "AI_AGENTS",
+      "name": "Agent shellgpt Capabilities",
+      "status": "SKIP",
+      "details": "Endpoint not implemented",
+      "timestamp": 1763676551.4631696
+    },
+    {
+      "number": 27,
+      "category": "AI_AGENTS",
+      "name": "Agent documind Capabilities",
+      "status": "SKIP",
+      "details": "Endpoint not implemented",
+      "timestamp": 1763676551.4859555
+    },
+    {
+      "number": 28,
+      "category": "AI_AGENTS",
+      "name": "Agent gpt-engineer Capabilities",
+      "status": "SKIP",
+      "details": "Endpoint not implemented",
+      "timestamp": 1763676551.518277
+    },
+    {
+      "number": 29,
+      "category": "DATABASES",
+      "name": "PostgreSQL Connection",
+      "status": "FAIL",
+      "details": "connection to server at \"localhost\" (127.0.0.1), port 10000 failed: FATAL:  password authentication failed for user \"jarvis\"\n",
+      "timestamp": 1763676551.5257385
+    },
+    {
+      "number": 30,
+      "category": "DATABASES",
+      "name": "Redis Connection & Operations",
+      "status": "PASS",
+      "details": "SET/GET/DEL working",
+      "timestamp": 1763676551.5304172
+    },
+    {
+      "number": 31,
+      "category": "DATABASES",
+      "name": "Neo4j Connection & Query",
+      "status": "FAIL",
+      "details": "Couldn't connect to localhost:10002 (resolved to ('127.0.0.1:10002',)):\nCannot to connect to Bolt service on ResolvedIPv4Address(('127.0.0.1', 10002)) (looks like HTTP)",
+      "timestamp": 1763676551.5331273
+    },
+    {
+      "number": 32,
+      "category": "VECTOR_DBS",
+      "name": "Vector DB chromadb",
+      "status": "PASS",
+      "details": "Healthy on http://localhost:10100",
+      "timestamp": 1763676551.5527997
+    },
+    {
+      "number": 33,
+      "category": "VECTOR_DBS",
+      "name": "Vector DB qdrant",
+      "status": "FAIL",
+      "details": "illegal request line",
+      "timestamp": 1763676551.573093
+    },
+    {
+      "number": 34,
+      "category": "VECTOR_DBS",
+      "name": "Vector DB faiss",
+      "status": "PASS",
+      "details": "Healthy on http://localhost:10103",
+      "timestamp": 1763676551.5916328
+    },
+    {
+      "number": 35,
+      "category": "MCP_BRIDGE",
+      "name": "MCP Bridge Agents List",
+      "status": "PASS",
+      "details": "12 agents",
+      "timestamp": 1763676551.6128716
+    },
+    {
+      "number": 36,
+      "category": "MCP_BRIDGE",
+      "name": "MCP Bridge Services List",
+      "status": "PASS",
+      "details": "16 services",
+      "timestamp": 1763676551.6176345
+    },
+    {
+      "number": 37,
+      "category": "MCP_BRIDGE",
+      "name": "MCP Bridge Metrics",
+      "status": "PASS",
+      "details": "Prometheus format",
+      "timestamp": 1763676551.61918
+    },
+    {
+      "number": 38,
+      "category": "MONITORING",
+      "name": "Prometheus Targets",
+      "status": "PASS",
+      "details": "17/17 targets up",
+      "timestamp": 1763676551.6387358
+    },
+    {
+      "number": 39,
+      "category": "MONITORING",
+      "name": "Grafana Health",
+      "status": "PASS",
+      "details": "Version: 12.2.1",
+      "timestamp": 1763676551.6583624
+    },
+    {
+      "number": 40,
+      "category": "MONITORING",
+      "name": "Loki Ready",
+      "status": "PASS",
+      "details": "Log aggregation ready",
+      "timestamp": 1763676551.6788626
+    },
+    {
+      "number": 41,
+      "category": "FRONTEND",
+      "name": "Frontend Accessibility",
+      "status": "PASS",
+      "details": "Responding (1837 bytes)",
+      "timestamp": 1763676551.7012906
+    },
+    {
+      "number": 42,
+      "category": "API_GATEWAY",
+      "name": "Kong Admin API",
+      "status": "PASS",
+      "details": "Version: 3.9.1",
+      "timestamp": 1763676551.736154
+    },
+    {
+      "number": 43,
+      "category": "API_GATEWAY",
+      "name": "Kong Services",
+      "status": "WARN",
+      "details": "0 services configured",
+      "timestamp": 1763676551.7624915
+    },
+    {
+      "number": 44,
+      "category": "AI_INFERENCE",
+      "name": "Ollama Models",
+      "status": "PASS",
+      "details": "1 models loaded",
+      "timestamp": 1763676551.7852705
+    }
+  ]
+}

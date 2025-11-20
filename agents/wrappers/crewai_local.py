@@ -29,7 +29,35 @@ class CrewAILocal(BaseAgentWrapper):
     def setup_crewai_routes(self):
         """Setup CrewAI-specific routes"""
         
-        @self.app.post("/crew/create")
+        @self.app.get("/capabilities")
+        async def get_capabilities():
+            """Return CrewAI agent capabilities"""
+            return {
+                "agent": "CrewAI",
+                "version": "1.0.0",
+                "capabilities": [
+                    "multi_agent_orchestration",
+                    "task_delegation",
+                    "agent_coordination",
+                    "workflow_management",
+                    "collaborative_problem_solving"
+                ],
+                "features": [
+                    "role_based_agents",
+                    "hierarchical_teams",
+                    "task_distribution",
+                    "result_aggregation"
+                ],
+                "endpoints": [
+                    "/health",
+                    "/capabilities",
+                    "/chat",
+                    "/orchestrate",
+                    "/agents/list"
+                ]
+            }
+        
+        @self.app.post("/orchestrate")
         async def create_crew(request: Dict[str, Any]):
             """Create a new crew of agents"""
             crew_name = request.get("name")

@@ -1,0 +1,244 @@
+{
+  "timestamp": 1763678772,
+  "duration": 3.5482237339019775,
+  "summary": {
+    "total": 23,
+    "passed": 14,
+    "failed": 4,
+    "warnings": 5,
+    "success_rate": 60.87
+  },
+  "categories": {
+    "KONG": {
+      "PASS": 0,
+      "FAIL": 2,
+      "WARN": 1
+    },
+    "AGENTS": {
+      "PASS": 8,
+      "FAIL": 0,
+      "WARN": 1
+    },
+    "WEBSOCKET": {
+      "PASS": 0,
+      "FAIL": 0,
+      "WARN": 1
+    },
+    "SECURITY": {
+      "PASS": 0,
+      "FAIL": 1,
+      "WARN": 2
+    },
+    "AUTH": {
+      "PASS": 1,
+      "FAIL": 1,
+      "WARN": 0
+    },
+    "DATABASE": {
+      "PASS": 1,
+      "FAIL": 0,
+      "WARN": 0
+    },
+    "CACHE": {
+      "PASS": 1,
+      "FAIL": 0,
+      "WARN": 0
+    },
+    "MONITORING": {
+      "PASS": 2,
+      "FAIL": 0,
+      "WARN": 0
+    },
+    "VECTORS": {
+      "PASS": 1,
+      "FAIL": 0,
+      "WARN": 0
+    }
+  },
+  "tests": [
+    {
+      "num": 1,
+      "category": "KONG",
+      "name": "Kong Backend Routing",
+      "status": "FAIL",
+      "details": "HTTP 307",
+      "time": 1763678768.970465
+    },
+    {
+      "num": 2,
+      "category": "KONG",
+      "name": "Kong MCP Routing",
+      "status": "FAIL",
+      "details": "HTTP 404",
+      "time": 1763678768.9860606
+    },
+    {
+      "num": 3,
+      "category": "KONG",
+      "name": "Kong Rate Limiting",
+      "status": "WARN",
+      "details": "No rate limit triggered",
+      "time": 1763678769.0542347
+    },
+    {
+      "num": 4,
+      "category": "AGENTS",
+      "name": "Agent letta Capabilities",
+      "status": "PASS",
+      "details": "5 capabilities",
+      "time": 1763678769.0749624
+    },
+    {
+      "num": 5,
+      "category": "AGENTS",
+      "name": "Agent crewai Capabilities",
+      "status": "PASS",
+      "details": "5 capabilities",
+      "time": 1763678769.0770483
+    },
+    {
+      "num": 6,
+      "category": "AGENTS",
+      "name": "Agent aider Capabilities",
+      "status": "PASS",
+      "details": "7 capabilities",
+      "time": 1763678769.079045
+    },
+    {
+      "num": 7,
+      "category": "AGENTS",
+      "name": "Agent langchain Capabilities",
+      "status": "PASS",
+      "details": "5 capabilities",
+      "time": 1763678769.081238
+    },
+    {
+      "num": 8,
+      "category": "AGENTS",
+      "name": "Agent finrobot Capabilities",
+      "status": "PASS",
+      "details": "4 capabilities",
+      "time": 1763678769.0840607
+    },
+    {
+      "num": 9,
+      "category": "AGENTS",
+      "name": "Agent shellgpt Capabilities",
+      "status": "PASS",
+      "details": "4 capabilities",
+      "time": 1763678769.0868514
+    },
+    {
+      "num": 10,
+      "category": "AGENTS",
+      "name": "Agent documind Capabilities",
+      "status": "PASS",
+      "details": "4 capabilities",
+      "time": 1763678769.0893245
+    },
+    {
+      "num": 11,
+      "category": "AGENTS",
+      "name": "Agent gpt-engineer Capabilities",
+      "status": "PASS",
+      "details": "4 capabilities",
+      "time": 1763678769.0914733
+    },
+    {
+      "num": 12,
+      "category": "WEBSOCKET",
+      "name": "WebSocket Bidirectional",
+      "status": "WARN",
+      "details": "Unexpected response: connected",
+      "time": 1763678769.100627
+    },
+    {
+      "num": 13,
+      "category": "SECURITY",
+      "name": "CORS Configuration",
+      "status": "FAIL",
+      "details": "CORS headers missing",
+      "time": 1763678769.1263275
+    },
+    {
+      "num": 14,
+      "category": "SECURITY",
+      "name": "SQL Injection Prevention",
+      "status": "WARN",
+      "details": "Input accepted (hopefully sanitized)",
+      "time": 1763678769.4209678
+    },
+    {
+      "num": 15,
+      "category": "SECURITY",
+      "name": "XSS Prevention",
+      "status": "WARN",
+      "details": "Registration failed: 400",
+      "time": 1763678769.4681833
+    },
+    {
+      "num": 16,
+      "category": "AUTH",
+      "name": "Password Reset Request",
+      "status": "FAIL",
+      "details": "HTTP 404",
+      "time": 1763678769.7670012
+    },
+    {
+      "num": 17,
+      "category": "AUTH",
+      "name": "Account Lockout",
+      "status": "PASS",
+      "details": "Account locked after 4 attempts",
+      "time": 1763678771.6746733
+    },
+    {
+      "num": 18,
+      "category": "DATABASE",
+      "name": "Database Indexes",
+      "status": "PASS",
+      "details": "4 indexes found",
+      "time": 1763678771.6895342
+    },
+    {
+      "num": 19,
+      "category": "CACHE",
+      "name": "Redis Cache Strategy",
+      "status": "PASS",
+      "details": "TTL: 60s",
+      "time": 1763678771.6921287
+    },
+    {
+      "num": 20,
+      "category": "MONITORING",
+      "name": "Prometheus Metrics",
+      "status": "PASS",
+      "details": "17/17 targets up",
+      "time": 1763678771.7128305
+    },
+    {
+      "num": 21,
+      "category": "MONITORING",
+      "name": "Grafana Dashboards",
+      "status": "PASS",
+      "details": "Version: 12.2.1",
+      "time": 1763678771.7332191
+    },
+    {
+      "num": 22,
+      "category": "VECTORS",
+      "name": "Vector DB Load Test",
+      "status": "PASS",
+      "details": "10/10 vectors stored",
+      "time": 1763678772.3543818
+    },
+    {
+      "num": 23,
+      "category": "AGENTS",
+      "name": "Concurrent Agent Execution",
+      "status": "WARN",
+      "details": "Only 0/4 succeeded",
+      "time": 1763678772.4282389
+    }
+  ]
+}

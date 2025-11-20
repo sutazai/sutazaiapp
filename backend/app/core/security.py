@@ -8,7 +8,6 @@ from typing import Optional, Dict, Any, Tuple
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import HTTPException, status
-import secrets
 import logging
 import re
 from app.core.config import settings

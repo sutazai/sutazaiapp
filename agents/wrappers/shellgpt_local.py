@@ -24,6 +24,17 @@ class ShellGPTLocal(BaseAgentWrapper):
     def setup_shellgpt_routes(self):
         """Setup ShellGPT routes"""
         
+        @self.app.get("/capabilities")
+        async def get_capabilities():
+            """Return ShellGPT agent capabilities"""
+            return {
+                "agent": "ShellGPT",
+                "version": "1.0.0",
+                "capabilities": ["cli_assistance", "command_generation", "shell_script_creation", "command_explanation"],
+                "supported_shells": ["bash", "zsh", "fish", "powershell"],
+                "endpoints": ["/health", "/capabilities", "/chat", "/command/generate", "/command/explain"]
+            }
+        
         @self.app.post("/command/generate")
         async def generate_command(request: Dict[str, Any]):
             """Generate shell commands"""

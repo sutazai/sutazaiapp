@@ -3,8 +3,21 @@ Voice Assistant Module
 Handles speech recognition and text-to-speech functionality
 """
 
-import speech_recognition as sr
-import pyttsx3
+# Import with graceful fallbacks
+try:
+    import speech_recognition as sr
+    SR_AVAILABLE = True
+except ImportError:
+    SR_AVAILABLE = False
+    sr = None
+
+try:
+    import pyttsx3
+    PYTTSX3_AVAILABLE = True
+except ImportError:
+    PYTTSX3_AVAILABLE = False
+    pyttsx3 = None
+
 import threading
 import queue
 import time
@@ -12,12 +25,25 @@ import numpy as np
 from typing import Optional, Dict, Any
 import io
 import wave
-import audioop
+
+try:
+    import audioop
+    AUDIOOP_AVAILABLE = True
+except ImportError:
+    AUDIOOP_AVAILABLE = False
+    audioop = None
 
 class VoiceAssistant:
     """Advanced voice assistant with wake word detection and natural speech"""
     
     def __init__(self):
+        if not SR_AVAILABLE:
+            print("Warning: speech_recognition not available - voice features disabled")
+            self.audio_available = False
+            self.recognizer = None
+            self.microphone = None
+            return
+            
         # Initialize speech recognition
         self.recognizer = sr.Recognizer()
         

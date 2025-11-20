@@ -265,6 +265,49 @@ class BaseAgentWrapper:
                 logger.error(f"Chat completion failed: {e}")
                 raise HTTPException(status_code=500, detail=str(e))
         
+        @self.app.post("/chat")
+        async def chat(request: Request):
+            """Simple chat endpoint for message-based interaction"""
+            try:
+                data = await request.json()
+                messages = data.get("messages", [])
+                
+                if not messages:
+                    raise HTTPException(status_code=400, detail="No messages provided")
+                
+                # Convert simple format to ChatRequest
+                chat_messages = []
+                for msg in messages:
+                    if isinstance(msg, dict):
+                        chat_messages.append(ChatMessage(
+                            role=msg.get("role", "user"),
+                            content=msg.get("content", "")
+                        ))
+                
+                chat_request = ChatRequest(
+                    messages=chat_messages,
+                    model=data.get("model", MODEL),
+                    temperature=data.get("temperature", 0.7),
+                    max_tokens=data.get("max_tokens", 2048),
+                    stream=data.get("stream", False)
+                )
+                
+                response = await self.generate_completion(chat_request)
+                
+                # Return simple format
+                return {
+                    "response": response.choices[0]["message"]["content"],
+                    "agent": self.agent_name,
+                    "model": response.model,
+                    "usage": response.usage
+                }
+                
+            except HTTPException:
+                raise
+            except Exception as e:
+                logger.error(f"Chat failed: {e}")
+                raise HTTPException(status_code=500, detail=str(e))
+        
         @self.app.post("/generate")
         async def generate(request: Request):
             """Ollama-compatible generate endpoint"""

@@ -7,7 +7,6 @@ from app.api.dependencies.auth import get_current_active_user
 from app.models.user import User
 from app.services.connections import service_connections
 import logging
-import numpy as np
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -15,12 +14,12 @@ router = APIRouter()
 
 class VectorData(BaseModel):
     id: str
-    vector: List[float] = Field(..., min_items=1, max_items=4096)
+    vector: List[float] = Field(..., min_length=1, max_length=4096)
     metadata: Dict[str, Any] = {}
 
 
 class VectorSearchRequest(BaseModel):
-    query: List[float] = Field(..., min_items=1, max_items=4096)
+    query: List[float] = Field(..., min_length=1, max_length=4096)
     k: int = Field(5, ge=1, le=100)
     filter: Optional[Dict[str, Any]] = None
 

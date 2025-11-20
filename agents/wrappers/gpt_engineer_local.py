@@ -24,6 +24,17 @@ class GPTEngineerLocal(BaseAgentWrapper):
     def setup_gpt_engineer_routes(self):
         """Setup GPT-Engineer routes"""
         
+        @self.app.get("/capabilities")
+        async def get_capabilities():
+            """Return GPT-Engineer agent capabilities"""
+            return {
+                "agent": "GPT-Engineer",
+                "version": "1.0.0",
+                "capabilities": ["code_generation", "project_scaffolding", "architecture_design", "test_generation"],
+                "project_types": ["web_app", "api", "cli", "library", "microservice"],
+                "endpoints": ["/health", "/capabilities", "/chat", "/project/generate", "/code/generate"]
+            }
+        
         @self.app.post("/project/generate")
         async def generate_project(request: Dict[str, Any]):
             """Generate a complete project"""

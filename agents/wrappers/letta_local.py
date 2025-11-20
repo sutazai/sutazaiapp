@@ -29,6 +29,32 @@ class LettaLocal(BaseAgentWrapper):
     def setup_letta_routes(self):
         """Setup Letta-specific routes"""
         
+        @self.app.get("/capabilities")
+        async def get_capabilities():
+            """Return Letta agent capabilities"""
+            return {
+                "agent": "Letta",
+                "version": "1.0.0",
+                "capabilities": [
+                    "long_term_memory",
+                    "context_management",
+                    "conversation_recall",
+                    "memory_search",
+                    "personalization"
+                ],
+                "memory_types": [
+                    "short_term", "long_term", "episodic", "semantic"
+                ],
+                "endpoints": [
+                    "/health",
+                    "/capabilities",
+                    "/chat",
+                    "/memory/store",
+                    "/memory/recall",
+                    "/memory/search"
+                ]
+            }
+        
         @self.app.post("/memory/store")
         async def store_memory(request: Dict[str, Any]):
             """Store information in memory"""

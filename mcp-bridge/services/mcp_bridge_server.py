@@ -441,6 +441,39 @@ async def lifespan_shutdown():
     
     logger.info("MCP Bridge shutdown complete")
 
+# Root Endpoint
+@app.get("/")
+async def root():
+    """Root endpoint with service information"""
+    return {
+        "service": "SutazAI MCP Bridge",
+        "version": "1.0.0",
+        "description": "Message Control Protocol Bridge for AI Agent Integration",
+        "status": "operational",
+        "endpoints": {
+            "health": "/health",
+            "services": "/services",
+            "agents": "/agents",
+            "route": "/route",
+            "websocket": "/ws/{client_id}",
+            "metrics": "/metrics"
+        },
+        "documentation": "/docs",
+        "timestamp": datetime.now().isoformat()
+    }
+
+# MCP Root Endpoint (for Kong routing with /mcp prefix)
+@app.get("/mcp")
+async def mcp_root():
+    """MCP prefixed root endpoint for Kong routing"""
+    return {
+        "service": "SutazAI MCP Bridge",
+        "version": "1.0.0",
+        "status": "operational",
+        "message": "MCP Bridge is running. Use /health for health check.",
+        "timestamp": datetime.now().isoformat()
+    }
+
 # Health Check Endpoint
 @app.get("/health")
 async def health_check():
