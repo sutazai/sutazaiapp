@@ -127,7 +127,7 @@ async def websocket_endpoint(
                 "text": True,
                 "streaming": True,
                 "tools": ["web_search", "calculator", "code_execution"],
-                "models": ["gpt-4", "claude-3", "local-models"]
+                "models": ["tinyllama:latest"]
             }
         })
         

@@ -10,33 +10,8 @@ from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from app.core.config import settings
 
-# Try to import prometheus_client, make it optional
-try:
-    from prometheus_client import Counter, Histogram, Gauge, Info
-    PROMETHEUS_AVAILABLE = True
-except ImportError:
-    PROMETHEUS_AVAILABLE = False
-    # Create dummy classes if prometheus not available
-    class Counter:
-        def __init__(self, *args, **kwargs): pass
-        def labels(self, *args, **kwargs): return self
-        def inc(self, *args, **kwargs): pass
-    
-    class Histogram:
-        def __init__(self, *args, **kwargs): pass
-        def labels(self, *args, **kwargs): return self
-        def observe(self, *args, **kwargs): pass
-    
-    class Gauge:
-        def __init__(self, *args, **kwargs): pass
-        def labels(self, *args, **kwargs): return self
-        def set(self, *args, **kwargs): pass
-        def inc(self, *args, **kwargs): pass
-        def dec(self, *args, **kwargs): pass
-    
-    class Info:
-        def __init__(self, *args, **kwargs): pass
-        def info(self, *args, **kwargs): pass
+# Import prometheus_client - required for production metrics
+from prometheus_client import Counter, Histogram, Gauge, Info
 
 logger = logging.getLogger(__name__)
 

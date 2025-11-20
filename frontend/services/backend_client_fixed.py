@@ -185,12 +185,12 @@ class BackendClient:
             response = requests.get(url, headers=self.headers, timeout=5)
             
             if response.status_code == 200:
-                return response.json().get("models", ["gpt-4", "claude-3", "local"])
+                return response.json().get("models", ["tinyllama:latest"])
             else:
-                return ["gpt-4", "claude-3", "local"]  # Default models
+                return ["tinyllama:latest"]  # Default model
         except Exception as e:
             logger.error(f"Failed to get models: {e}")
-            return ["gpt-4", "claude-3", "local"]  # Default models
+            return ["tinyllama:latest"]  # Default model
     
     def get_agents_sync(self) -> List[Dict]:
         """Get available agents synchronously"""

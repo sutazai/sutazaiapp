@@ -56,9 +56,8 @@ async def list_models() -> Dict:
     
     # List potentially available models (not yet pulled)
     unavailable_models = [
-        {"name": "mistral:latest", "provider": "ollama", "available": False, "note": "Available for download"},
-        {"name": "llama2:7b", "provider": "ollama", "available": False, "note": "Available for download"},
-        {"name": "deepseek-coder:latest", "provider": "ollama", "available": False, "note": "Available for download"}
+        {"name": "qwen3:Thinking-2507", "provider": "ollama", "available": False, "note": "Available for download"},
+        
     ]
     
     # Extract just the model names for simple listing

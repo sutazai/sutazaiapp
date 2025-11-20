@@ -21,39 +21,8 @@ from app.core.database import init_db, close_db, Base
 from app.services.connections import service_connections
 from app.api.v1.router import api_router
 
-# Import Prometheus metrics (optional)
-try:
-    from prometheus_client import Counter, Histogram, Gauge, generate_latest, REGISTRY, CONTENT_TYPE_LATEST
-    PROMETHEUS_AVAILABLE = True
-except ImportError:
-    PROMETHEUS_AVAILABLE = False
-    # Dummy metrics if prometheus not available
-    class Counter:
-        def __init__(self, *args, **kwargs): pass
-        def labels(self, *args, **kwargs): return self
-        def inc(self, *args, **kwargs): pass
-    
-    class Histogram:
-        def __init__(self, *args, **kwargs): pass
-        def labels(self, *args, **kwargs): return self
-        def observe(self, *args, **kwargs): pass
-    
-    class Gauge:
-        def __init__(self, *args, **kwargs): pass
-        def labels(self, *args, **kwargs): return self
-        def set(self, *args, **kwargs): pass
-        def inc(self, *args, **kwargs): pass
-        def dec(self, *args, **kwargs): pass
-    
-    def generate_latest(*args, **kwargs):
-        return b"# Prometheus client not installed\n"
-    
-    CONTENT_TYPE_LATEST = "text/plain"
-    
-    class DummyRegistry:
-        pass
-    
-    REGISTRY = DummyRegistry()
+# Import Prometheus metrics - now required for production
+from prometheus_client import Counter, Histogram, Gauge, generate_latest, REGISTRY, CONTENT_TYPE_LATEST
 
 # Import custom middleware
 from app.middleware.metrics import PrometheusMetricsMiddleware

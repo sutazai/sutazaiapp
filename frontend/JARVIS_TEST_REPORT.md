@@ -177,7 +177,7 @@ While showing "Backend Connected", no actual API communication was observed duri
 6. **Add Model Selection**
 
    ```python
-   models = ["GPT-4", "GPT-3.5", "Claude", "Llama"]
+   models = ["tinyllama:latest"]  # Only local Ollama models available
    selected_model = st.selectbox("Select Model", models)
    ```
 
