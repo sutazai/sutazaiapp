@@ -173,6 +173,65 @@ services:
     # Note: Health check removed - minimal scratch image has no shell/wget/curl
     # Service health validated via external monitoring - metrics endpoint functional
 
+  # AlertManager - Alert Management & Routing
+  alertmanager:
+    container_name: sutazai-alertmanager
+    image: prom/alertmanager:latest
+    ports:
+      - "10303:9093"
+    networks:
+      - sutazai-network
+    volumes:
+      - alertmanager-data:/alertmanager
+      - ./config/alertmanager:/etc/alertmanager:ro
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:10303'
+      - '--cluster.advertise-address=0.0.0.0:9093'
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    mem_limit: 256m
+    cpus: 0.25
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Jaeger - Distributed Tracing (All-in-One)
+  jaeger:
+    container_name: sutazai-jaeger
+    image: jaegertracing/all-in-one:latest
+    user: root
+    ports:
+      - "10311:16686"  # UI
+      - "10312:4317"   # OTLP gRPC
+      - "10313:4318"   # OTLP HTTP
+      - "10314:14268"  # Jaeger collector HTTP
+      - "10315:14250"  # Jaeger collector gRPC
+    networks:
+      - sutazai-network
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+      - SPAN_STORAGE_TYPE=badger
+      - BADGER_EPHEMERAL=false
+      - BADGER_DIRECTORY_VALUE=/badger/data
+      - BADGER_DIRECTORY_KEY=/badger/key
+      - QUERY_BASE_PATH=/
+    volumes:
+      - jaeger-data:/badger
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 0.5
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:14269/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 networks:
   sutazai-network:
     external: true
@@ -185,6 +244,10 @@ volumes:
     driver: local
   loki-data:
     driver: local
+  alertmanager-data:
+    driver: local
+  jaeger-data:
+    driver: local
 
 # Resource Summary:
 # - Prometheus: 512MB RAM, 0.5 CPU
@@ -193,4 +256,9 @@ volumes:
 # - Promtail: 256MB RAM, 0.25 CPU
 # - Node Exporter: 128MB RAM, 0.1 CPU
 # - cAdvisor: 256MB RAM, 0.25 CPU
-# Total: ~2.2GB RAM, 2.1 CPUs
+# - Postgres Exporter: 128MB RAM, 0.1 CPU
+# - Redis Exporter: 128MB RAM, 0.1 CPU
+# - AlertManager: 256MB RAM, 0.25 CPU
+# - Jaeger: 512MB RAM, 0.5 CPU
+# Total: ~3.5GB RAM, 3.1 CPUs
+

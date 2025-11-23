@@ -75,6 +75,13 @@ prometheus-fastapi-instrumentator==7.0.0
 loguru==0.7.2
 python-json-logger==3.2.1
 
+# OpenTelemetry - Distributed Tracing
+opentelemetry-api==1.28.2
+opentelemetry-sdk==1.28.2
+opentelemetry-instrumentation-fastapi==0.49b2
+opentelemetry-exporter-otlp-proto-grpc==1.28.2
+opentelemetry-exporter-otlp-proto-http==1.28.2
+
 # Hardware Monitoring
 psutil==6.1.1
 GPUtil==1.4.0

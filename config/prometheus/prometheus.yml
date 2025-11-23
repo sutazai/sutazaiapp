@@ -5,6 +5,19 @@ global:
     cluster: 'sutazai-platform'
     environment: 'production'
 
+# AlertManager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - 'sutazai-alertmanager:9093'
+      timeout: 10s
+      api_version: v2
+
+# Alert rule files
+rule_files:
+  - '/etc/prometheus/alert_rules.yml'
+
 # Scrape configurations
 scrape_configs:
   # Prometheus itself
@@ -96,12 +109,3 @@ scrape_configs:
           component: 'gateway'
           service: 'kong'
 
-# Alerting rules
-rule_files:
-  - '/etc/prometheus/alerts/*.yml'
-
-# Alert manager configuration (optional)
-# alerting:
-#   alertmanagers:
-#     - static_configs:
-#         - targets: ['alertmanager:9093']

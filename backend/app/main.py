@@ -14,12 +14,14 @@ import json
 import uuid
 import httpx
 import asyncio
+import os
 from datetime import datetime
 from typing import Dict, List, Any
 from app.core.config import settings
 from app.core.database import init_db, close_db, Base
 from app.services.connections import service_connections
 from app.api.v1.router import api_router
+from app.core.graceful_shutdown import GracefulShutdownHandler
 
 # Import Prometheus metrics - now required for production
 from prometheus_client import Counter, Histogram, Gauge, generate_latest, REGISTRY, CONTENT_TYPE_LATEST
@@ -29,6 +31,15 @@ from app.middleware.metrics import PrometheusMetricsMiddleware
 from app.middleware.logging import RequestLoggingMiddleware, configure_structured_logging
 from app.middleware.request_id import RequestIDMiddleware
 from app.middleware.compression import GZipMiddleware
+
+# Import OpenTelemetry for distributed tracing
+try:
+    from app.core.telemetry import init_tracing, get_otel_config, create_span, set_span_attribute
+    TELEMETRY_ENABLED = True
+except ImportError:
+    TELEMETRY_ENABLED = False
+    logger = logging.getLogger(__name__)
+    logger.warning("OpenTelemetry not available - tracing disabled")
 
 # Import models to ensure they're registered
 from app.models import User
@@ -54,9 +65,12 @@ WEBSOCKET_CONNECTIONS = Gauge('backend_websocket_connections', 'Active WebSocket
 async def lifespan(app: FastAPI):
     """
     Manage application lifecycle
-    Initialize connections on startup, cleanup on shutdown
+    Initialize connections on startup, cleanup on shutdown with graceful handling
     """
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
+    
+    # Setup graceful shutdown handler
+    shutdown_handler = GracefulShutdownHandler(shutdown_timeout=30)
     
     try:
         # Initialize database
@@ -73,17 +87,18 @@ async def lifespan(app: FastAPI):
         # Register with Consul
         await register_with_consul()
         
+        # Register cleanup tasks for graceful shutdown
+        shutdown_handler.register_cleanup(service_connections.disconnect_all)
+        shutdown_handler.register_cleanup(close_db)
+        shutdown_handler.register_cleanup(deregister_from_consul)
+        shutdown_handler.start()
+        
         yield
         
     finally:
-        # Cleanup on shutdown
-        logger.info("Shutting down application")
-        await service_connections.disconnect_all()
-        try:
-            await close_db()
-        except Exception as e:
-            logger.warning(f"Database close failed: {e}")
-        await deregister_from_consul()
+        # Cleanup on shutdown with graceful handling
+        logger.info("Shutting down application gracefully")
+        await shutdown_handler.shutdown()
         logger.info("Cleanup completed")
 
 
@@ -189,6 +204,23 @@ app.add_middleware(RequestLoggingMiddleware)
 
 # Add Prometheus metrics middleware
 app.add_middleware(PrometheusMetricsMiddleware)
+
+# Initialize OpenTelemetry tracing
+if TELEMETRY_ENABLED:
+    jaeger_endpoint = os.getenv("JAEGER_ENDPOINT", "http://sutazai-jaeger:4317")
+    enable_console_tracing = os.getenv("OTEL_CONSOLE_EXPORT", "false").lower() == "true"
+    
+    try:
+        init_tracing(
+            app=app,
+            service_name="sutazai-backend",
+            service_version="4.0.0",
+            jaeger_endpoint=jaeger_endpoint,
+            enable_console=enable_console_tracing
+        )
+        logger.info(f"OpenTelemetry tracing initialized: endpoint={jaeger_endpoint}")
+    except Exception as e:
+        logger.error(f"Failed to initialize OpenTelemetry: {e}")
 
 # Include API routers
 app.include_router(api_router, prefix=settings.API_V1_STR)

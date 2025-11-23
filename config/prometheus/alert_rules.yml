@@ -1,0 +1,280 @@
+# Prometheus Alert Rules for Sutazai Platform
+# Production-ready alerting for system health, performance, and availability
+
+groups:
+  # System Health Alerts
+  - name: system_health
+    interval: 30s
+    rules:
+      # Container down
+      - alert: ContainerDown
+        expr: up{job=~".*"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: infrastructure
+        annotations:
+          summary: "Container {{ $labels.instance }} is down"
+          description: "Container {{ $labels.job }} on {{ $labels.instance }} has been down for more than 1 minute."
+      
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 80% (current: {{ $value }}%) for more than 5 minutes."
+      
+      # Critical CPU usage
+      - alert: CriticalCPUUsage
+        expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 95
+        for: 2m
+        labels:
+          severity: critical
+          category: infrastructure
+        annotations:
+          summary: "CRITICAL: CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 95% (current: {{ $value }}%) for more than 2 minutes."
+      
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 80% (current: {{ $value }}%) for more than 5 minutes."
+      
+      # Critical memory usage
+      - alert: CriticalMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+          category: infrastructure
+        annotations:
+          summary: "CRITICAL: Memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 95% (current: {{ $value }}%) for more than 2 minutes."
+      
+      # High disk usage
+      - alert: HighDiskUsage
+        expr: (node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"} - node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"}) / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"} * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High disk usage on {{ $labels.instance }}"
+          description: "Disk usage on {{ $labels.mountpoint }} is above 80% (current: {{ $value }}%)."
+      
+      # Critical disk usage
+      - alert: CriticalDiskUsage
+        expr: (node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"} - node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"}) / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"} * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+          category: infrastructure
+        annotations:
+          summary: "CRITICAL: Disk usage on {{ $labels.instance }}"
+          description: "Disk usage on {{ $labels.mountpoint }} is above 90% (current: {{ $value }}%)."
+
+  # Container Health Alerts
+  - name: container_health
+    interval: 30s
+    rules:
+      # Container restart
+      - alert: ContainerRestarted
+        expr: rate(container_last_seen{name=~"sutazai-.*"}[5m]) > 0 and changes(container_last_seen{name=~"sutazai-.*"}[5m]) > 2
+        for: 1m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "Container {{ $labels.name }} restarted"
+          description: "Container {{ $labels.name }} has restarted more than 2 times in the last 5 minutes."
+      
+      # Container high memory
+      - alert: ContainerHighMemory
+        expr: (container_memory_usage_bytes{name=~"sutazai-.*"} / container_spec_memory_limit_bytes{name=~"sutazai-.*"}) * 100 > 90
+        for: 3m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "Container {{ $labels.name }} high memory usage"
+          description: "Container {{ $labels.name }} memory usage is above 90% (current: {{ $value }}%)."
+      
+      # Container OOM killed
+      - alert: ContainerOOMKilled
+        expr: increase(container_oom_events_total{name=~"sutazai-.*"}[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          category: infrastructure
+        annotations:
+          summary: "Container {{ $labels.name }} OOM killed"
+          description: "Container {{ $labels.name }} was killed due to out of memory."
+
+  # Backend Service Alerts
+  - name: backend_service
+    interval: 30s
+    rules:
+      # Backend down
+      - alert: BackendDown
+        expr: up{job="sutazai-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: service
+        annotations:
+          summary: "Backend service is down"
+          description: "Sutazai backend has been down for more than 1 minute."
+      
+      # High API latency
+      - alert: HighAPILatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="sutazai-backend"}[5m])) > 1
+        for: 3m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "High API latency on backend"
+          description: "95th percentile API latency is above 1 second (current: {{ $value }}s)."
+      
+      # High error rate
+      - alert: HighErrorRate
+        expr: (rate(http_requests_total{job="sutazai-backend",status=~"5.."}[5m]) / rate(http_requests_total{job="sutazai-backend"}[5m])) * 100 > 5
+        for: 3m
+        labels:
+          severity: warning
+          category: service
+        annotations:
+          summary: "High error rate on backend"
+          description: "Backend error rate is above 5% (current: {{ $value }}%)."
+      
+      # Critical error rate
+      - alert: CriticalErrorRate
+        expr: (rate(http_requests_total{job="sutazai-backend",status=~"5.."}[5m]) / rate(http_requests_total{job="sutazai-backend"}[5m])) * 100 > 20
+        for: 1m
+        labels:
+          severity: critical
+          category: service
+        annotations:
+          summary: "CRITICAL: Error rate on backend"
+          description: "Backend error rate is above 20% (current: {{ $value }}%)."
+
+  # Database Alerts
+  - name: database_health
+    interval: 30s
+    rules:
+      # PostgreSQL down
+      - alert: PostgreSQLDown
+        expr: pg_up{job="postgres-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: database
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "PostgreSQL has been unreachable for more than 1 minute."
+      
+      # High database connections
+      - alert: HighDatabaseConnections
+        expr: (pg_stat_activity_count{job="postgres-exporter"} / pg_settings_max_connections{job="postgres-exporter"}) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "High PostgreSQL connection usage"
+          description: "PostgreSQL connection usage is above 80% (current: {{ $value }}%)."
+      
+      # Redis down
+      - alert: RedisDown
+        expr: redis_up{job="redis-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: database
+        annotations:
+          summary: "Redis cache is down"
+          description: "Redis has been unreachable for more than 1 minute."
+      
+      # High Redis memory
+      - alert: HighRedisMemory
+        expr: (redis_memory_used_bytes{job="redis-exporter"} / redis_memory_max_bytes{job="redis-exporter"}) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "High Redis memory usage"
+          description: "Redis memory usage is above 90% (current: {{ $value }}%)."
+      
+      # Redis rejected connections
+      - alert: RedisRejectedConnections
+        expr: increase(redis_rejected_connections_total{job="redis-exporter"}[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "Redis rejecting connections"
+          description: "Redis has rejected {{ $value }} connections in the last 5 minutes."
+
+  # AI Agent Alerts
+  - name: ai_agents
+    interval: 30s
+    rules:
+      # Agent service down
+      - alert: AgentServiceDown
+        expr: up{job=~"sutazai-agent-.*"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          category: agent
+        annotations:
+          summary: "AI Agent {{ $labels.job }} is down"
+          description: "Agent service {{ $labels.job }} has been down for more than 2 minutes."
+      
+      # High agent response time
+      - alert: HighAgentResponseTime
+        expr: histogram_quantile(0.95, rate(agent_request_duration_seconds_bucket{job=~"sutazai-agent-.*"}[5m])) > 30
+        for: 5m
+        labels:
+          severity: warning
+          category: agent
+        annotations:
+          summary: "High response time for {{ $labels.job }}"
+          description: "95th percentile agent response time is above 30 seconds (current: {{ $value }}s)."
+
+  # Network Alerts
+  - name: network
+    interval: 30s
+    rules:
+      # High network errors
+      - alert: HighNetworkErrors
+        expr: rate(node_network_receive_errs_total[5m]) + rate(node_network_transmit_errs_total[5m]) > 10
+        for: 3m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High network errors on {{ $labels.instance }}"
+          description: "Network interface {{ $labels.device }} is experiencing high error rate ({{ $value }}/s)."
+      
+      # High network dropped packets
+      - alert: HighNetworkDrops
+        expr: rate(node_network_receive_drop_total[5m]) + rate(node_network_transmit_drop_total[5m]) > 10
+        for: 3m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High network packet drops on {{ $labels.instance }}"
+          description: "Network interface {{ $labels.device }} is dropping packets ({{ $value }}/s)."
