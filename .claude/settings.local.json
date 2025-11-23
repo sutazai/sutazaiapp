@@ -50,7 +50,23 @@
       "Bash(./venv/bin/pytest tests/integration/ -q --tb=no)",
       "WebSearch",
       "Bash(./venv/bin/python tests/test_comprehensive_validation.py)",
-      "mcp__sequential-thinking__sequentialthinking"
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(systemctl status:*)",
+      "Bash(service ssh status:*)",
+      "Bash(sshd:*)",
+      "Bash(ss:*)",
+      "Bash(ip addr:*)",
+      "Bash(journalctl:*)",
+      "Bash(sudo -u ai mkdir:*)",
+      "Bash(sudo -u ai chmod:*)",
+      "Bash(sudo -u ai touch:*)",
+      "Bash(systemctl restart:*)",
+      "Bash(ssh:*)",
+      "Bash(passwd:*)",
+      "Bash(do ssh-keygen -l -f \"$key\")",
+      "Bash(iptables:*)",
+      "Bash(systemctl daemon-reload:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": [],
@@ -58,26 +74,13 @@
       "/tmp"
     ]
   },
-  "enableAllProjectMcpServers": true,
+  "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
     "filesystem",
     "github",
     "memory",
-    "everything",
     "sequential-thinking",
-    "playwright",
-    "gitmcp-sutazai",
-    "gitmcp-anthropic",
-    "gitmcp-docs",
-    "claude-flow",
-    "ruv-swarm",
-    "context7",
-    "ddg",
-    "http-fetch",
-    "extended-memory",
-    "memory-bank",
-    "code-index",
-    "github-project-manager"
+    "gitmcp-sutazai"
   ],
   "hooks": {
     "UserPromptSubmit": [
@@ -92,5 +95,19 @@
       }
     ]
   },
-  "outputStyle": "Explanatory"
+  "outputStyle": "Explanatory",
+  "disabledMcpjsonServers": [
+    "everything",
+    "code-index",
+    "removed",
+    "extended-memory",
+    "ddg",
+    "http-fetch",
+    "playwright",
+    "gitmcp-anthropic",
+    "gitmcp-docs",
+    "context7",
+    "memory-bank",
+    "github-project-manager"
+  ]
 }

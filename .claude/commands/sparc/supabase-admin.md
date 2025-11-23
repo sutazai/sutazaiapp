@@ -287,7 +287,7 @@ Rebases a development branch on production. This will effectively run any newer 
 
 ### Option 1: Using MCP Tools (Preferred in Claude Code)
 ```javascript
-mcp__claude-flow__sparc_mode {
+mcp__removed__sparc_mode {
   mode: "supabase-admin",
   task_description: "create user authentication schema",
   options: {
@@ -300,22 +300,22 @@ mcp__claude-flow__sparc_mode {
 ### Option 2: Using NPX CLI (Fallback when MCP not available)
 ```bash
 # Use when running from terminal or MCP tools unavailable
-npx claude-flow sparc run supabase-admin "create user authentication schema"
+npx removed sparc run supabase-admin "create user authentication schema"
 
 # For alpha features
-npx claude-flow@alpha sparc run supabase-admin "create user authentication schema"
+npx removed@alpha sparc run supabase-admin "create user authentication schema"
 
 # With namespace
-npx claude-flow sparc run supabase-admin "your task" --namespace supabase-admin
+npx removed sparc run supabase-admin "your task" --namespace supabase-admin
 
 # Non-interactive mode
-npx claude-flow sparc run supabase-admin "your task" --non-interactive
+npx removed sparc run supabase-admin "your task" --non-interactive
 ```
 
 ### Option 3: Local Installation
 ```bash
-# If claude-flow is installed locally
-./claude-flow sparc run supabase-admin "create user authentication schema"
+# If removed is installed locally
+./removed sparc run supabase-admin "create user authentication schema"
 ```
 
 ## Memory Integration
@@ -323,7 +323,7 @@ npx claude-flow sparc run supabase-admin "your task" --non-interactive
 ### Using MCP Tools (Preferred)
 ```javascript
 // Store mode-specific context
-mcp__claude-flow__memory_usage {
+mcp__removed__memory_usage {
   action: "store",
   key: "supabase-admin_context",
   value: "important decisions",
@@ -331,7 +331,7 @@ mcp__claude-flow__memory_usage {
 }
 
 // Query previous work
-mcp__claude-flow__memory_search {
+mcp__removed__memory_search {
   pattern: "supabase-admin",
   namespace: "supabase-admin",
   limit: 5
@@ -341,8 +341,8 @@ mcp__claude-flow__memory_search {
 ### Using NPX CLI (Fallback)
 ```bash
 # Store mode-specific context
-npx claude-flow memory store "supabase-admin_context" "important decisions" --namespace supabase-admin
+npx removed memory store "supabase-admin_context" "important decisions" --namespace supabase-admin
 
 # Query previous work
-npx claude-flow memory query "supabase-admin" --limit 5
+npx removed memory query "supabase-admin" --limit 5
 ```

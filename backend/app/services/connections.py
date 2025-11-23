@@ -65,7 +65,7 @@ class ServiceConnections:
             logger.info("Redis connection established")
         except Exception as e:
             logger.error(f"Redis connection failed: {e}")
-            raise
+            self.redis_client = None
     
     async def connect_rabbitmq(self):
         """Connect to RabbitMQ"""
@@ -77,7 +77,8 @@ class ServiceConnections:
             logger.info("RabbitMQ connection established")
         except Exception as e:
             logger.error(f"RabbitMQ connection failed: {e}")
-            raise
+            self.rabbitmq_connection = None
+            self.rabbitmq_channel = None
     
     async def connect_neo4j(self):
         """Connect to Neo4j"""
@@ -92,7 +93,7 @@ class ServiceConnections:
             logger.info("Neo4j connection established")
         except Exception as e:
             logger.error(f"Neo4j connection failed: {e}")
-            raise
+            self.neo4j_driver = None
     
     async def connect_vector_dbs(self):
         """Connect to vector databases"""

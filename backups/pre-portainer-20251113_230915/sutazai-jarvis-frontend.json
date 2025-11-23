@@ -1,0 +1,317 @@
+[
+    {
+        "Id": "f8d34290d99cd5fb7f293b83f06f90f117f7ad44243b712277a7e176dc70ac8d",
+        "Created": "2025-11-13T21:55:16.56152357Z",
+        "Path": "streamlit",
+        "Args": [
+            "run",
+            "app.py",
+            "--server.port=11000",
+            "--server.address=0.0.0.0",
+            "--server.headless=true",
+            "--browser.serverAddress=localhost",
+            "--browser.gatherUsageStats=false"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 741452,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-11-13T21:55:16.680864947Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2025-11-13T23:06:53.253880476+01:00",
+                        "End": "2025-11-13T23:06:53.309504049+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0ok\r100     2  100     2    0     0   2079      0 --:--:-- --:--:-- --:--:--  2000\n"
+                    },
+                    {
+                        "Start": "2025-11-13T23:07:23.310346765+01:00",
+                        "End": "2025-11-13T23:07:23.380053745+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0ok\r100     2  100     2    0     0   1850      0 --:--:-- --:--:-- --:--:--  2000\n"
+                    },
+                    {
+                        "Start": "2025-11-13T23:07:53.381212267+01:00",
+                        "End": "2025-11-13T23:07:53.436754154+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0ok\r100     2  100     2    0     0   1687      0 --:--:-- --:--:-- --:--:--  2000\n"
+                    },
+                    {
+                        "Start": "2025-11-13T23:08:23.437773265+01:00",
+                        "End": "2025-11-13T23:08:23.480626755+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100     2  100     2    0     0   1616      0 --:--:-- --:--:-- --:--:--  2000\nok"
+                    },
+                    {
+                        "Start": "2025-11-13T23:08:53.481013206+01:00",
+                        "End": "2025-11-13T23:08:53.540927372+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100     2  100     2    0     0   2200      0 --:--:-- --:--:-- --:--:--  2000\nok"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:abf430d5e499de8611424300fd252c3eae87907c8d01a7f63245b7a3e3d60db3",
+        "ResolvConfPath": "/var/lib/docker/containers/f8d34290d99cd5fb7f293b83f06f90f117f7ad44243b712277a7e176dc70ac8d/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/f8d34290d99cd5fb7f293b83f06f90f117f7ad44243b712277a7e176dc70ac8d/hostname",
+        "HostsPath": "/var/lib/docker/containers/f8d34290d99cd5fb7f293b83f06f90f117f7ad44243b712277a7e176dc70ac8d/hosts",
+        "LogPath": "/var/lib/docker/containers/f8d34290d99cd5fb7f293b83f06f90f117f7ad44243b712277a7e176dc70ac8d/f8d34290d99cd5fb7f293b83f06f90f117f7ad44243b712277a7e176dc70ac8d-json.log",
+        "Name": "/sutazai-jarvis-frontend",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sutazaiapp_sutazai-network",
+            "PortBindings": {
+                "11000/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "11000"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 1073741824,
+            "NanoCpus": 1000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 2147483648,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "f8d34290d99cd5fb7f293b83f06f90f117f7ad44243b712277a7e176dc70ac8d",
+                "LowerDir": "/var/lib/docker/overlay2/01631dbbf28c73a6618fd334a9b2f164488ce66df003f4846b29a8841999cdb2-init/diff:/var/lib/docker/overlay2/33d445f456fb4810221ef52784ae720d3cdc0a9300819ac70fbffd94eea218d3/diff:/var/lib/docker/overlay2/2a5917f72dfaa285725a5831c57fafdcb199a23b4a9ba2c97cc7b98b8bf3b42e/diff:/var/lib/docker/overlay2/c4891eeca379fe764b894de705f9669f660b6fa61622cef85f416c2800ce1a71/diff:/var/lib/docker/overlay2/5ab35f839b251a34641505596da59713edb1a7c60c5487296f5d3776320675a5/diff:/var/lib/docker/overlay2/f7718e65007d98d34dce815ab4be34daa275684c0f5260742daa228246a9e704/diff:/var/lib/docker/overlay2/7772db5c77d5766cd3b45ff7c2905140a77f30d82075fe4c8777f0cc6dc5b501/diff:/var/lib/docker/overlay2/6a68d32ecfc50118cbdb2a0081442842721527e323bfe6a3799caf5ca27a5400/diff:/var/lib/docker/overlay2/7f1e694f5e7d8de58ead35b44db8f4078f1b531fe6d6452ab4096fa8f92b1d6c/diff:/var/lib/docker/overlay2/4dd36d670b4055f4417bdee87977a7c16dafa013d4c111a31ff3a15625c6d89f/diff:/var/lib/docker/overlay2/e23f96aaa949e255f24b7dcab197d826031fb39e16f649cb6a239bb898ba6e07/diff",
+                "MergedDir": "/var/lib/docker/overlay2/01631dbbf28c73a6618fd334a9b2f164488ce66df003f4846b29a8841999cdb2/merged",
+                "UpperDir": "/var/lib/docker/overlay2/01631dbbf28c73a6618fd334a9b2f164488ce66df003f4846b29a8841999cdb2/diff",
+                "WorkDir": "/var/lib/docker/overlay2/01631dbbf28c73a6618fd334a9b2f164488ce66df003f4846b29a8841999cdb2/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "f8d34290d99c",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "11000/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "BACKEND_URL=http://172.20.0.40:8000",
+                "BACKEND_WS_URL=ws://172.20.0.40:8000",
+                "STREAMLIT_SERVER_PORT=11000",
+                "STREAMLIT_SERVER_ADDRESS=0.0.0.0",
+                "STREAMLIT_SERVER_HEADLESS=true",
+                "STREAMLIT_BROWSER_GATHER_USAGE_STATS=false",
+                "ENABLE_VOICE_COMMANDS=false",
+                "SHOW_DOCKER_STATS=false",
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+                "PYTHON_VERSION=3.11.14",
+                "PYTHON_SHA256=8d3ed8ec5c88c1c95f5e558612a725450d2452813ddad5e58fdb1a53b1209b78",
+                "DEBIAN_FRONTEND=noninteractive",
+                "PYTHONUNBUFFERED=1",
+                "STREAMLIT_THEME_BASE=dark",
+                "STREAMLIT_THEME_PRIMARY_COLOR=#00D4FF"
+            ],
+            "Cmd": [
+                "streamlit",
+                "run",
+                "app.py",
+                "--server.port=11000",
+                "--server.address=0.0.0.0",
+                "--server.headless=true",
+                "--browser.serverAddress=localhost",
+                "--browser.gatherUsageStats=false"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "curl",
+                    "-f",
+                    "http://localhost:11000/_stcore/health"
+                ],
+                "Interval": 30000000000,
+                "Timeout": 10000000000,
+                "StartPeriod": 60000000000,
+                "Retries": 3
+            },
+            "Image": "sutazai-frontend:latest",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "367d09c58b0e91de3c818c519f95dd9ea7e35071d6465891f042546022b69cc4",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sutazaiapp",
+                "com.docker.compose.project.config_files": "docker-compose-portainer.yml",
+                "com.docker.compose.project.working_dir": "/opt/sutazaiapp",
+                "com.docker.compose.service": "frontend",
+                "com.docker.compose.version": "1.29.2"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "9daa38e0e05943482e5488781fdc65d0719d75947bef375826f580eef8dd18f1",
+            "SandboxKey": "/var/run/docker/netns/9daa38e0e059",
+            "Ports": {
+                "11000/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "11000"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "11000"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sutazaiapp_sutazai-network": {
+                    "IPAMConfig": {
+                        "IPv4Address": "172.20.0.31"
+                    },
+                    "Links": null,
+                    "Aliases": [
+                        "frontend",
+                        "f8d34290d99c"
+                    ],
+                    "MacAddress": "a6:c6:78:92:0e:c1",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "c9a748f48913a9868b40449ed3c89a66069ed7d1213a35a485552a35deac76a8",
+                    "EndpointID": "b07fc8e7ad266c9d925da33f2e264807fc2d1d03d35fb9d87ba1825b69e9a5db",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.31",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sutazai-jarvis-frontend",
+                        "frontend",
+                        "f8d34290d99c"
+                    ]
+                }
+            }
+        }
+    }
+]

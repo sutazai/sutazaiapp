@@ -4,18 +4,24 @@ Implements OAuth2 with Password and Bearer for secure authentication
 """
 
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import HTTPException, status
-import secrets
 import logging
+import re
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
 # Password hashing context with bcrypt
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Set ident="2b" to avoid passlib wrap bug detection issues
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto",
+    bcrypt__ident="2b",  # Use 2b format to avoid wrap bug detection
+    bcrypt__rounds=12     # Standard security rounds
+)
 
 # JWT secret key is now managed through the secrets manager
 # The settings.SECRET_KEY property handles generation and warnings
@@ -28,6 +34,7 @@ class SecurityUtils:
     def verify_password(plain_password: str, hashed_password: str) -> bool:
         """
         Verify a plain password against a hashed password
+        Truncates password to 72 bytes to match hashing behavior
         
         Args:
             plain_password: The plain text password
@@ -37,7 +44,10 @@ class SecurityUtils:
             True if password matches, False otherwise
         """
         try:
-            return pwd_context.verify(plain_password, hashed_password)
+            # Truncate to 72 bytes to match get_password_hash behavior
+            password_bytes = plain_password.encode('utf-8')[:72]
+            truncated_password = password_bytes.decode('utf-8', errors='ignore')
+            return pwd_context.verify(truncated_password, hashed_password)
         except Exception as e:
             logger.error(f"Password verification error: {e}")
             return False
@@ -46,6 +56,7 @@ class SecurityUtils:
     def get_password_hash(password: str) -> str:
         """
         Hash a password using bcrypt
+        Truncates password to 72 bytes to comply with bcrypt limitations
         
         Args:
             password: Plain text password
@@ -53,7 +64,64 @@ class SecurityUtils:
         Returns:
             Bcrypt hashed password
         """
-        return pwd_context.hash(password)
+        # Bcrypt has a 72-byte limit, truncate password if needed
+        # This is safe as 72 bytes provides sufficient entropy
+        password_bytes = password.encode('utf-8')[:72]
+        truncated_password = password_bytes.decode('utf-8')
+        return pwd_context.hash(truncated_password)
+    
+    @staticmethod
+    def validate_password_strength(password: str) -> Tuple[bool, Optional[str]]:
+        """
+        Validate password strength according to security requirements
+        
+        Requirements:
+        - Minimum 8 characters
+        - At least one uppercase letter
+        - At least one lowercase letter
+        - At least one digit
+        - At least one special character
+        
+        Args:
+            password: Plain text password to validate
+            
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        if not password:
+            return False, "Password cannot be empty"
+        
+        if len(password) < 8:
+            return False, "Password must be at least 8 characters long"
+        
+        if len(password) > 128:
+            return False, "Password must be no more than 128 characters long"
+        
+        # Check for at least one uppercase letter
+        if not re.search(r'[A-Z]', password):
+            return False, "Password must contain at least one uppercase letter"
+        
+        # Check for at least one lowercase letter
+        if not re.search(r'[a-z]', password):
+            return False, "Password must contain at least one lowercase letter"
+        
+        # Check for at least one digit
+        if not re.search(r'\d', password):
+            return False, "Password must contain at least one digit"
+        
+        # Check for at least one special character
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+            return False, "Password must contain at least one special character"
+        
+        # Check for common weak passwords
+        common_weak_passwords = [
+            'password', 'password123', '12345678', 'qwerty', 'abc123',
+            '123456789', 'letmein', 'welcome', 'monkey', '1q2w3e4r'
+        ]
+        if password.lower() in common_weak_passwords:
+            return False, "Password is too common, please choose a stronger password"
+        
+        return True, None
     
     @staticmethod
     def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:

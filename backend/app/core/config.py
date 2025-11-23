@@ -4,7 +4,7 @@ Centralized configuration management for all services
 Compliant with Professional Project Standards - No hardcoded credentials
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 import os
 from app.core.secrets_manager import get_secrets_manager
@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     # Application
     APP_NAME: str = "SutazAI Platform API"
     APP_VERSION: str = "4.0.0"
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     DEBUG: bool = False
     API_V1_STR: str = "/api/v1"
     
@@ -44,8 +45,8 @@ class Settings(BaseSettings):
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
     
     # Redis
-    REDIS_HOST: str = "sutazai-redis"
-    REDIS_PORT: int = 6379
+    REDIS_HOST: str = os.getenv("REDIS_HOST", "sutazai-redis")
+    REDIS_PORT: int = int(os.getenv("REDIS_PORT", "6379"))
     REDIS_DB: int = 0
     
     @property
@@ -53,9 +54,9 @@ class Settings(BaseSettings):
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
     
     # RabbitMQ (using secrets manager)
-    RABBITMQ_HOST: str = "sutazai-rabbitmq"
-    RABBITMQ_PORT: int = 5672
-    RABBITMQ_USER: str = "sutazai"
+    RABBITMQ_HOST: str = os.getenv("RABBITMQ_HOST", "sutazai-rabbitmq")
+    RABBITMQ_PORT: int = int(os.getenv("RABBITMQ_PORT", "5672"))
+    RABBITMQ_USER: str = os.getenv("RABBITMQ_USER", "jarvis")
     
     @property
     def RABBITMQ_PASSWORD(self) -> str:
@@ -125,12 +126,19 @@ class Settings(BaseSettings):
     DB_POOL_TIMEOUT: int = 30
     DB_POOL_RECYCLE: int = 1800
     
-    # CORS
-    CORS_ORIGINS: list = ["*"]
+    # CORS - Restricted to specific origins for security
+    CORS_ORIGINS: list = [
+        "http://localhost:11000",  # Frontend Streamlit app
+        "http://localhost:3000",   # Alternative frontend port
+        "http://127.0.0.1:11000",  # Local frontend
+        "http://127.0.0.1:3000",   # Alternative local frontend
+    ]
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True,
+        extra="ignore"
+    )
 
 
 # Create global settings instance

@@ -1,0 +1,371 @@
+[
+    {
+        "Id": "0483db276bdae8d450c6d0c40a6435146f26c623a813683a7d1553aafa147180",
+        "Created": "2025-11-13T14:45:13.689123152Z",
+        "Path": "tini",
+        "Args": [
+            "-g",
+            "--",
+            "/startup/docker-entrypoint.sh",
+            "neo4j"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 84618,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-11-13T14:45:14.193734036Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2025-11-13T22:03:29.79183488+01:00",
+                        "End": "2025-11-13T22:03:29.841407601+01:00",
+                        "ExitCode": 0,
+                        "Output": "2025-11-13 21:03:29 URL: http://localhost:7474/ 200 OK\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:03:44.842710523+01:00",
+                        "End": "2025-11-13T22:03:44.91836658+01:00",
+                        "ExitCode": 0,
+                        "Output": "2025-11-13 21:03:44 URL: http://localhost:7474/ 200 OK\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:03:59.919313739+01:00",
+                        "End": "2025-11-13T22:03:59.982748327+01:00",
+                        "ExitCode": 0,
+                        "Output": "2025-11-13 21:03:59 URL: http://localhost:7474/ 200 OK\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:14.983453248+01:00",
+                        "End": "2025-11-13T22:04:15.038701028+01:00",
+                        "ExitCode": 0,
+                        "Output": "2025-11-13 21:04:15 URL: http://localhost:7474/ 200 OK\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:30.039986585+01:00",
+                        "End": "2025-11-13T22:04:30.094701366+01:00",
+                        "ExitCode": 0,
+                        "Output": "2025-11-13 21:04:30 URL: http://localhost:7474/ 200 OK\n"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:719c08a1b7b43216bd9972e7aceb716083b33b3e8d1caeea0bdd4a5d29f26ec0",
+        "ResolvConfPath": "/var/lib/docker/containers/0483db276bdae8d450c6d0c40a6435146f26c623a813683a7d1553aafa147180/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/0483db276bdae8d450c6d0c40a6435146f26c623a813683a7d1553aafa147180/hostname",
+        "HostsPath": "/var/lib/docker/containers/0483db276bdae8d450c6d0c40a6435146f26c623a813683a7d1553aafa147180/hosts",
+        "LogPath": "/var/lib/docker/containers/0483db276bdae8d450c6d0c40a6435146f26c623a813683a7d1553aafa147180/0483db276bdae8d450c6d0c40a6435146f26c623a813683a7d1553aafa147180-json.log",
+        "Name": "/sutazai-neo4j",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "sutazaiapp_neo4j_plugins:/plugins:rw",
+                "sutazaiapp_neo4j_data:/data:rw",
+                "sutazaiapp_neo4j_logs:/logs:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sutazaiapp_sutazai-network",
+            "PortBindings": {
+                "7474/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10002"
+                    }
+                ],
+                "7687/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10003"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 536870912,
+            "NanoCpus": 500000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 402653184,
+            "MemorySwap": 1073741824,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "0483db276bdae8d450c6d0c40a6435146f26c623a813683a7d1553aafa147180",
+                "LowerDir": "/var/lib/docker/overlay2/4d6b78856120bfded58cb1bd0f2835345ab57f92ae10a531875eb6cf8c8622e9-init/diff:/var/lib/docker/overlay2/cba2bdbaca8de44700566b7de608dd17de4ac2fb5e7fc7624faf66592ede0bed/diff:/var/lib/docker/overlay2/4d3964250f517696fd50319322afd550326ce239e0d395e708d6aa86748869a4/diff:/var/lib/docker/overlay2/750aaa67494eb26078e223563c1b3735f872983ed21c3c54d13e6b9b1adc2201/diff:/var/lib/docker/overlay2/c460d9a9aad5d57d635b0de90265cffa37ef1c1aa1994e61b66e73f496871822/diff:/var/lib/docker/overlay2/aabe56c0288a3de60da9746c4f1804185e6b9c21275b9ec7add46ea2c9ae03b8/diff:/var/lib/docker/overlay2/6707722b4b3654b905ff59d1d895b8c43dbca5171572321d874e25afcb820558/diff",
+                "MergedDir": "/var/lib/docker/overlay2/4d6b78856120bfded58cb1bd0f2835345ab57f92ae10a531875eb6cf8c8622e9/merged",
+                "UpperDir": "/var/lib/docker/overlay2/4d6b78856120bfded58cb1bd0f2835345ab57f92ae10a531875eb6cf8c8622e9/diff",
+                "WorkDir": "/var/lib/docker/overlay2/4d6b78856120bfded58cb1bd0f2835345ab57f92ae10a531875eb6cf8c8622e9/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "sutazaiapp_neo4j_plugins",
+                "Source": "/var/lib/docker/volumes/sutazaiapp_neo4j_plugins/_data",
+                "Destination": "/plugins",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            },
+            {
+                "Type": "volume",
+                "Name": "sutazaiapp_neo4j_data",
+                "Source": "/var/lib/docker/volumes/sutazaiapp_neo4j_data/_data",
+                "Destination": "/data",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            },
+            {
+                "Type": "volume",
+                "Name": "sutazaiapp_neo4j_logs",
+                "Source": "/var/lib/docker/volumes/sutazaiapp_neo4j_logs/_data",
+                "Destination": "/logs",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "0483db276bda",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "7473/tcp": {},
+                "7474/tcp": {},
+                "7687/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "NEO4J_AUTH=neo4j/sutazai_secure_2024",
+                "NEO4J_server_memory_heap_initial__size=256M",
+                "NEO4J_server_memory_heap_max__size=256M",
+                "NEO4J_server_memory_pagecache_size=128M",
+                "NEO4J_PLUGINS=[\"apoc\"]",
+                "NEO4J_apoc_export_file_enabled=true",
+                "NEO4J_apoc_import_file_enabled=true",
+                "NEO4J_apoc_import_file_use__neo4j__config=true",
+                "NEO4J_dbms_security_procedures_unrestricted=apoc.*",
+                "PATH=/var/lib/neo4j/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "JAVA_HOME=/opt/java/openjdk",
+                "NEO4J_SHA256=7b7849183fd816b0527bcb737f013ee2e26a20f33289d7493cc62f1c12445bd0",
+                "NEO4J_TARBALL=neo4j-community-5.26.16-unix.tar.gz",
+                "NEO4J_EDITION=community",
+                "NEO4J_HOME=/var/lib/neo4j",
+                "LANG=C.UTF-8"
+            ],
+            "Cmd": [
+                "neo4j"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "wget",
+                    "--no-verbose",
+                    "--tries=1",
+                    "--spider",
+                    "http://localhost:7474"
+                ],
+                "Interval": 15000000000,
+                "Timeout": 10000000000,
+                "StartPeriod": 60000000000,
+                "Retries": 5
+            },
+            "Image": "neo4j:5-community",
+            "Volumes": {
+                "/data": {},
+                "/logs": {},
+                "/plugins": {}
+            },
+            "WorkingDir": "/var/lib/neo4j",
+            "Entrypoint": [
+                "tini",
+                "-g",
+                "--",
+                "/startup/docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "fddb21a7a58c61391e597b7b58cce433262bca4bed83fc1030c25621e81c5397",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sutazaiapp",
+                "com.docker.compose.project.config_files": "docker-compose-core.yml",
+                "com.docker.compose.project.working_dir": "/opt/sutazaiapp",
+                "com.docker.compose.service": "neo4j",
+                "com.docker.compose.version": "1.29.2"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "f0990e9eb440e0d89a0855f921f14583315c559bafdaef29e35f497ab7216a1d",
+            "SandboxKey": "/var/run/docker/netns/f0990e9eb440",
+            "Ports": {
+                "7473/tcp": null,
+                "7474/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10002"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10002"
+                    }
+                ],
+                "7687/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10003"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10003"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sutazaiapp_sutazai-network": {
+                    "IPAMConfig": {
+                        "IPv4Address": "172.20.0.12"
+                    },
+                    "Links": null,
+                    "Aliases": [
+                        "0483db276bda",
+                        "neo4j"
+                    ],
+                    "MacAddress": "9e:08:16:54:85:53",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "4697ccfa8ce5da1b842e4ceebc9277a143b6ad8242733a9c4d5ae5304bd8492a",
+                    "EndpointID": "863db80ad3a513265c1fb63d3b16b20522bf352384911458d4f88a9a9d0a6dc6",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.12",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sutazai-neo4j",
+                        "0483db276bda",
+                        "neo4j"
+                    ]
+                }
+            }
+        }
+    }
+]

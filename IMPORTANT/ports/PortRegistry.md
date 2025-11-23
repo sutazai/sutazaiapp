@@ -1,6 +1,8 @@
 # SutazaiApp Port Registry
+
 ## Multi-Agent AI System Port Allocation
-### Last Updated: 2025-08-27
+
+### Last Updated: 2025-01-13 (Verified against running deployment)
 
 ---
 
@@ -9,30 +11,41 @@
 - **10001**: Redis (Cache & Message Broker)
 - **10002**: Neo4j HTTP
 - **10003**: Neo4j Bolt
-- **10005**: Kong API Gateway (Proxy)
-- **10006**: Consul (Service Discovery)
-- **10007**: RabbitMQ AMQP
-- **10008**: RabbitMQ Management UI
-- **10010**: Backend API (FastAPI)
-- **10011**: Frontend (Streamlit/Jarvis UI)
-- **10015**: Kong Admin API
+- **10006**: Consul (Service Discovery HTTP)
+- **10007**: Consul DNS
+- **10008**: Kong Proxy
+- **10009**: Kong Admin API
+- **10004**: RabbitMQ AMQP
+- **10005**: RabbitMQ Management UI
 
 ## AI & Vector Services (10100-10199)
 - **10100**: ChromaDB (Vector Database)
 - **10101**: Qdrant HTTP
 - **10102**: Qdrant gRPC
-- **10103**: FAISS Service (when activated)
-- **10104**: Ollama (Model Server) - CRITICAL PORT
-- **10105-10199**: Reserved for additional AI services
+- **10103**: FAISS Service
+- **10104-10199**: Reserved for additional AI services
 
-## Monitoring Stack (10200-10299)
-- **10200**: Prometheus
-- **10201**: Grafana
-- **10203**: AlertManager
-- **10204**: Blackbox Exporter
-- **10205**: Node Exporter
-- **10210**: Loki (Logging)
-- **10211**: Jaeger (Tracing)
+## Application Services (10200-10299)
+- **10200**: Backend API (FastAPI) - Main REST/WebSocket API
+- **10201-10299**: Reserved for application layer
+
+## Frontend Services (11000-11099)
+- **11000**: Frontend UI (Streamlit/JARVIS)
+- **11001-11099**: Reserved for UI components
+
+## LLM Services (11400-11499)
+- **11434**: Ollama (Local LLM Server) - CRITICAL PORT - **HOST SERVICE (Not Dockerized)**
+- **11435-11499**: Reserved for additional LLM services
+
+## Monitoring Stack (10300-10399) [PLANNED - NOT YET DEPLOYED]
+- **10300**: Prometheus (Metrics Collection) - PLANNED
+- **10301**: Grafana (Visualization) - PLANNED
+- **10303**: AlertManager (Alerting) - PLANNED
+- **10304**: Blackbox Exporter (Probing) - PLANNED
+- **10305**: Node Exporter (System Metrics) - PLANNED
+- **10310**: Loki (Logging) - PLANNED
+- **10311**: Jaeger (Tracing) - PLANNED
+- **10312-10399**: Reserved for additional monitoring services
 
 ## Agent Services (11000-11299)
 ### Core Agents (11300-11324)
@@ -85,18 +98,20 @@
 - **Monitoring Range**: 172.20.0.40-49
 - **Agent Range**: 172.20.0.100-199
 
-## Service IP Assignments
+## Service IP Assignments (Current Deployment)
+
 - 172.20.0.10: PostgreSQL
 - 172.20.0.11: Redis
 - 172.20.0.12: Neo4j
-- 172.20.0.13: Kong
+- 172.20.0.13: RabbitMQ
 - 172.20.0.14: Consul
-- 172.20.0.15: RabbitMQ
 - 172.20.0.20: ChromaDB
 - 172.20.0.21: Qdrant
-- 172.20.0.22: Ollama
-- 172.20.0.30: Backend API
-- 172.20.0.31: Frontend
-- 172.20.0.40: Prometheus
-- 172.20.0.41: Grafana
-- 172.20.0.100+: Agent Services
+- 172.20.0.22: FAISS Service
+- 172.20.0.31: Frontend (Streamlit/JARVIS)
+- 172.20.0.35: Kong Gateway
+- 172.20.0.40: Backend API (FastAPI)
+- 172.20.0.41-49: Reserved for Monitoring Stack (Prometheus, Grafana, etc.)
+- 172.20.0.100+: Reserved for Agent Services
+
+**Note**: Ollama (11434) runs on **host** at 172.17.0.1 (accessible via host.docker.internal)

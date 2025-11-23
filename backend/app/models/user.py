@@ -5,9 +5,10 @@ Includes database models and Pydantic schemas
 
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text
 from sqlalchemy.sql import func
-from pydantic import BaseModel, EmailStr, Field, ConfigDict
+from pydantic import BaseModel, EmailStr, Field, ConfigDict, field_validator
 from typing import Optional
 from datetime import datetime
+import html
 from app.core.database import Base
 
 
@@ -61,6 +62,16 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     """Schema for user creation"""
     password: str = Field(..., min_length=8, max_length=100)
+    
+    @field_validator('full_name', 'username')
+    @classmethod
+    def sanitize_text(cls, v: Optional[str]) -> Optional[str]:
+        """Sanitize text fields to prevent XSS"""
+        if v is None:
+            return v
+        # Remove script tags and escape HTML entities
+        sanitized = html.escape(v).replace('<script>', '').replace('</script>', '')
+        return sanitized
     
     model_config = ConfigDict(
         json_schema_extra={

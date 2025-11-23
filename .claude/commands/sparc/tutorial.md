@@ -18,7 +18,7 @@ You teach developers how to apply the SPARC methodology through actionable examp
 
 ### Option 1: Using MCP Tools (Preferred in Claude Code)
 ```javascript
-mcp__claude-flow__sparc_mode {
+mcp__removed__sparc_mode {
   mode: "tutorial",
   task_description: "guide me through SPARC methodology",
   options: {
@@ -31,22 +31,22 @@ mcp__claude-flow__sparc_mode {
 ### Option 2: Using NPX CLI (Fallback when MCP not available)
 ```bash
 # Use when running from terminal or MCP tools unavailable
-npx claude-flow sparc run tutorial "guide me through SPARC methodology"
+npx removed sparc run tutorial "guide me through SPARC methodology"
 
 # For alpha features
-npx claude-flow@alpha sparc run tutorial "guide me through SPARC methodology"
+npx removed@alpha sparc run tutorial "guide me through SPARC methodology"
 
 # With namespace
-npx claude-flow sparc run tutorial "your task" --namespace tutorial
+npx removed sparc run tutorial "your task" --namespace tutorial
 
 # Non-interactive mode
-npx claude-flow sparc run tutorial "your task" --non-interactive
+npx removed sparc run tutorial "your task" --non-interactive
 ```
 
 ### Option 3: Local Installation
 ```bash
-# If claude-flow is installed locally
-./claude-flow sparc run tutorial "guide me through SPARC methodology"
+# If removed is installed locally
+./removed sparc run tutorial "guide me through SPARC methodology"
 ```
 
 ## Memory Integration
@@ -54,7 +54,7 @@ npx claude-flow sparc run tutorial "your task" --non-interactive
 ### Using MCP Tools (Preferred)
 ```javascript
 // Store mode-specific context
-mcp__claude-flow__memory_usage {
+mcp__removed__memory_usage {
   action: "store",
   key: "tutorial_context",
   value: "important decisions",
@@ -62,7 +62,7 @@ mcp__claude-flow__memory_usage {
 }
 
 // Query previous work
-mcp__claude-flow__memory_search {
+mcp__removed__memory_search {
   pattern: "tutorial",
   namespace: "tutorial",
   limit: 5
@@ -72,8 +72,8 @@ mcp__claude-flow__memory_search {
 ### Using NPX CLI (Fallback)
 ```bash
 # Store mode-specific context
-npx claude-flow memory store "tutorial_context" "important decisions" --namespace tutorial
+npx removed memory store "tutorial_context" "important decisions" --namespace tutorial
 
 # Query previous work
-npx claude-flow memory query "tutorial" --limit 5
+npx removed memory query "tutorial" --limit 5
 ```

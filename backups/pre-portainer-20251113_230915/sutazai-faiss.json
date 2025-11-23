@@ -1,0 +1,307 @@
+[
+    {
+        "Id": "8a2ef37efdff3a53b83f11342fbc54e5ab3a6e812f2108df7dd3839e89af63e1",
+        "Created": "2025-11-13T21:54:09.400919936Z",
+        "Path": "uvicorn",
+        "Args": [
+            "main:app",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "8000"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 737220,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-11-13T21:54:09.689960189Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2025-11-13T23:06:46.639000978+01:00",
+                        "End": "2025-11-13T23:06:46.699787764+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    78  100    78    0     0  85714      0 --:--:-- --:--:-- --:--:-- 78000\n{\"status\":\"healthy\",\"dimension\":768,\"max_vectors\":1000000,\"indices_loaded\":[]}"
+                    },
+                    {
+                        "Start": "2025-11-13T23:07:16.7009674+01:00",
+                        "End": "2025-11-13T23:07:16.764850488+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    78  100    78    0     0  80495      0 --:--:-- --:--:-- --:--:-- 78000\n{\"status\":\"healthy\",\"dimension\":768,\"max_vectors\":1000000,\"indices_loaded\":[]}"
+                    },
+                    {
+                        "Start": "2025-11-13T23:07:46.765817048+01:00",
+                        "End": "2025-11-13T23:07:46.828109936+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"dimension\":768,\"max_vectors\":1000000,\"indices_loaded\":[]}\r100    78  100    78    0     0  74285      0 --:--:-- --:--:-- --:--:-- 78000\n"
+                    },
+                    {
+                        "Start": "2025-11-13T23:08:16.829230065+01:00",
+                        "End": "2025-11-13T23:08:16.876470953+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    78  100    78    0     0  80829      0 --:--:-- --:--:-- --:--:-- 78000\n{\"status\":\"healthy\",\"dimension\":768,\"max_vectors\":1000000,\"indices_loaded\":[]}"
+                    },
+                    {
+                        "Start": "2025-11-13T23:08:46.877574239+01:00",
+                        "End": "2025-11-13T23:08:46.926522675+01:00",
+                        "ExitCode": 0,
+                        "Output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    78  100    78    0     0  76320      0 --:--:-- --:--:-- --:--:-- 78000\n{\"status\":\"healthy\",\"dimension\":768,\"max_vectors\":1000000,\"indices_loaded\":[]}"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:c82caf8b251ba56aff3d4969ca26428728d21698f66d21fb10f36fee4a95f538",
+        "ResolvConfPath": "/var/lib/docker/containers/8a2ef37efdff3a53b83f11342fbc54e5ab3a6e812f2108df7dd3839e89af63e1/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/8a2ef37efdff3a53b83f11342fbc54e5ab3a6e812f2108df7dd3839e89af63e1/hostname",
+        "HostsPath": "/var/lib/docker/containers/8a2ef37efdff3a53b83f11342fbc54e5ab3a6e812f2108df7dd3839e89af63e1/hosts",
+        "LogPath": "/var/lib/docker/containers/8a2ef37efdff3a53b83f11342fbc54e5ab3a6e812f2108df7dd3839e89af63e1/8a2ef37efdff3a53b83f11342fbc54e5ab3a6e812f2108df7dd3839e89af63e1-json.log",
+        "Name": "/sutazai-faiss",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sutazaiapp_sutazai-network",
+            "PortBindings": {
+                "8000/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10103"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 536870912,
+            "NanoCpus": 500000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 1073741824,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "8a2ef37efdff3a53b83f11342fbc54e5ab3a6e812f2108df7dd3839e89af63e1",
+                "LowerDir": "/var/lib/docker/overlay2/9e0f07b87bdbb8a21c04663aba3be42449050dd27141b886d4a264135df9b22e-init/diff:/var/lib/docker/overlay2/f46fec10826006d2d6b82635eba3c48e3bd1154bc4a9a28c22c5be8ba0d6ce54/diff:/var/lib/docker/overlay2/9821d03be7acbf7284e4ca1ac89c0b1b0339556e199e0764737113e1e9386d2c/diff:/var/lib/docker/overlay2/7838883b60c16149a989416391483e9c806c819e90d364e9566323ca06fa1772/diff:/var/lib/docker/overlay2/a6bd07615b29f457054cdfc173245a3fff71f0f5ec51f404b9c21a9f186922be/diff:/var/lib/docker/overlay2/9936bee3ab215a0e7a13f04f815808dd9dce507afd6307e114914d45c95f2041/diff:/var/lib/docker/overlay2/5b9ef91d9ae0a6af212fdecfc3f898af224175c8f433d74fab146799f8025b81/diff:/var/lib/docker/overlay2/a00b24d1e4a343c968a961b4b67db57c47947788ed9a2b41dc3b7ad37b72357e/diff:/var/lib/docker/overlay2/6a68d32ecfc50118cbdb2a0081442842721527e323bfe6a3799caf5ca27a5400/diff:/var/lib/docker/overlay2/7f1e694f5e7d8de58ead35b44db8f4078f1b531fe6d6452ab4096fa8f92b1d6c/diff:/var/lib/docker/overlay2/4dd36d670b4055f4417bdee87977a7c16dafa013d4c111a31ff3a15625c6d89f/diff:/var/lib/docker/overlay2/e23f96aaa949e255f24b7dcab197d826031fb39e16f649cb6a239bb898ba6e07/diff",
+                "MergedDir": "/var/lib/docker/overlay2/9e0f07b87bdbb8a21c04663aba3be42449050dd27141b886d4a264135df9b22e/merged",
+                "UpperDir": "/var/lib/docker/overlay2/9e0f07b87bdbb8a21c04663aba3be42449050dd27141b886d4a264135df9b22e/diff",
+                "WorkDir": "/var/lib/docker/overlay2/9e0f07b87bdbb8a21c04663aba3be42449050dd27141b886d4a264135df9b22e/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "8a2ef37efdff",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8000/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PORT=8000",
+                "HOST=0.0.0.0",
+                "LOG_LEVEL=INFO",
+                "DIMENSION=768",
+                "INDEX_TYPE=Flat",
+                "METRIC=L2",
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D",
+                "PYTHON_VERSION=3.11.14",
+                "PYTHON_SHA256=8d3ed8ec5c88c1c95f5e558612a725450d2452813ddad5e58fdb1a53b1209b78"
+            ],
+            "Cmd": [
+                "uvicorn",
+                "main:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "curl",
+                    "-f",
+                    "http://localhost:8000/health"
+                ],
+                "Interval": 30000000000,
+                "Timeout": 10000000000,
+                "StartPeriod": 30000000000,
+                "Retries": 3
+            },
+            "Image": "sutazai-faiss:latest",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "3d7605436507abf6405a0c05cbbc017cc1fbd59e61f4d162bb2fc12a4d7a9fc2",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sutazaiapp",
+                "com.docker.compose.project.config_files": "docker-compose-portainer.yml",
+                "com.docker.compose.project.working_dir": "/opt/sutazaiapp",
+                "com.docker.compose.service": "faiss",
+                "com.docker.compose.version": "1.29.2"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "d2e6e9ac37102f6b75a3d5f2bc1eda0742c7672adf1543cd610306721f33b473",
+            "SandboxKey": "/var/run/docker/netns/d2e6e9ac3710",
+            "Ports": {
+                "8000/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10103"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10103"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sutazaiapp_sutazai-network": {
+                    "IPAMConfig": {
+                        "IPv4Address": "172.20.0.22"
+                    },
+                    "Links": null,
+                    "Aliases": [
+                        "faiss",
+                        "8a2ef37efdff"
+                    ],
+                    "MacAddress": "4e:f1:5e:aa:f6:4a",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "c9a748f48913a9868b40449ed3c89a66069ed7d1213a35a485552a35deac76a8",
+                    "EndpointID": "0d5f2bfb4cfd84d8c7b5faafeaf5ea642986360755e41e32390891bb5273905f",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.22",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sutazai-faiss",
+                        "faiss",
+                        "8a2ef37efdff"
+                    ]
+                }
+            }
+        }
+    }
+]

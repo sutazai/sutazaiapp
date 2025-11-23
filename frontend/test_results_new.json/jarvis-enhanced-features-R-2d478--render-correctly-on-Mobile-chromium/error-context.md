@@ -1,0 +1,69 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e6]:
+        - img "Running..." [ref=e7]
+        - generic [ref=e8]: Running...
+        - button "Stop" [ref=e10] [cursor=pointer]
+      - button "Deploy" [ref=e12] [cursor=pointer]:
+        - generic [ref=e14]: Deploy
+      - button [ref=e16] [cursor=pointer]:
+        - img [ref=e17]
+  - generic [ref=e20]:
+    - button [ref=e23] [cursor=pointer]:
+      - img [ref=e24]
+    - generic [ref=e30]:
+      - button [ref=e33] [cursor=pointer]:
+        - img [ref=e34]
+      - generic [ref=e41]:
+        - heading "🎮 Control Panel" [level=2] [ref=e45]
+        - heading "🤖 AI Model" [level=3] [ref=e49]
+        - alert [ref=e52]:
+          - paragraph [ref=e57]: No models available. Using default.
+        - heading "🚀 AI Agent" [level=3] [ref=e61]
+        - alert [ref=e64]:
+          - paragraph [ref=e69]: Using default agent
+        - heading "🎤 Voice Settings" [level=3] [ref=e73]
+        - alert [ref=e76]:
+          - paragraph [ref=e81]: Voice controls are disabled for this environment.
+        - heading "📊 System Status" [level=3] [ref=e85]
+        - alert [ref=e88]:
+          - paragraph [ref=e93]: ❌ Backend Disconnected
+        - button "🔄 Retry Connection" [ref=e96] [cursor=pointer]:
+          - paragraph [ref=e98]: 🔄 Retry Connection
+        - heading "⚡ Quick Actions" [level=3] [ref=e102]
+        - generic [ref=e103]:
+          - button "🗑️ Clear Chat" [ref=e110] [cursor=pointer]:
+            - paragraph [ref=e112]: 🗑️ Clear Chat
+          - button "💾 Export Chat" [ref=e119] [cursor=pointer]:
+            - paragraph [ref=e121]: 💾 Export Chat
+    - generic [ref=e130]:
+      - generic [ref=e135]:
+        - heading "J.A.R.V.I.S" [level=1] [ref=e144]: J.A.R.V.I.S
+        - paragraph [ref=e149]: Just A Rather Very Intelligent System
+      - generic [ref=e150]: "Backend: Disconnected"
+      - generic [ref=e152]:
+        - tablist [ref=e154]:
+          - tab "💬 Chat" [selected] [ref=e155] [cursor=pointer]:
+            - paragraph [ref=e157]: 💬 Chat
+          - tab "🎤 Voice" [ref=e158] [cursor=pointer]:
+            - paragraph [ref=e160]: 🎤 Voice
+          - tab "📊 Monitor" [ref=e161] [cursor=pointer]:
+            - paragraph [ref=e163]: 📊 Monitor
+          - tab "🚀 Agents" [ref=e164] [cursor=pointer]:
+            - paragraph [ref=e166]: 🚀 Agents
+        - tabpanel "💬 Chat" [ref=e169]:
+          - generic [ref=e172]:
+            - heading "💬 Chat Interface" [level=3] [ref=e177]: 💬 Chat Interface
+            - alert [ref=e181]:
+              - paragraph [ref=e186]: ⚠️ Backend is disconnected. Responses will be limited.
+            - alert [ref=e192]:
+              - paragraph [ref=e197]: Start a conversation by typing a message below or using voice commands.
+            - generic [ref=e200]:
+              - textbox "Type your message or say 'Hey JARVIS'..." [ref=e203]
+              - button [disabled] [ref=e204]:
+                - img [ref=e205]
+```

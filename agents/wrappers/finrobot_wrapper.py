@@ -24,6 +24,17 @@ class FinRobotLocal(BaseAgentWrapper):
     def setup_finrobot_routes(self):
         """Setup FinRobot routes"""
         
+        @self.app.get("/capabilities")
+        async def get_capabilities():
+            """Return FinRobot agent capabilities"""
+            return {
+                "agent": "FinRobot",
+                "version": "1.0.0",
+                "capabilities": ["financial_analysis", "market_research", "risk_assessment", "portfolio_optimization"],
+                "analysis_types": ["fundamental", "technical", "sentiment", "risk_metrics"],
+                "endpoints": ["/health", "/capabilities", "/chat", "/analyze/market", "/analyze/stock"]
+            }
+        
         @self.app.post("/analyze/market")
         async def analyze_market(request: Dict[str, Any]):
             """Analyze market conditions"""

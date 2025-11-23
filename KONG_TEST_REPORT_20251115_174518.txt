@@ -1,0 +1,667 @@
+================================================================================
+KONG GATEWAY COMPREHENSIVE TEST REPORT
+================================================================================
+Execution ID: kong_test_20251115_174518_690
+Start Time: 2025-11-15T17:45:18.690343+00:00
+End Time: 2025-11-15T17:45:23.460442+00:00
+Total Duration: 4.77s
+
+================================================================================
+TEST SUMMARY
+================================================================================
+Total Tests: 9
+Passed: 8 (88.9%)
+Failed: 1 (11.1%)
+Skipped: 0 (0.0%)
+Success Rate: 88.89%
+
+================================================================================
+DETAILED RESULTS
+================================================================================
+✓ Kong Admin API Health: PASS (0.0127s)
+  Details: {
+  "status": {
+    "memory": {
+      "lua_shared_dicts": {
+        "kong_db_cache": {
+          "allocated_slabs": "0.76 MiB",
+          "capacity": "128.00 MiB"
+        },
+        "kong_db_cache_miss": {
+          "allocated_slabs": "0.08 MiB",
+          "capacity": "12.00 MiB"
+        },
+        "kong_secrets": {
+          "allocated_slabs": "0.04 MiB",
+          "capacity": "5.00 MiB"
+        },
+        "prometheus_metrics": {
+          "allocated_slabs": "0.04 MiB",
+          "capacity": "5.00 MiB"
+        },
+        "kong": {
+          "allocated_slabs": "0.05 MiB",
+          "capacity": "5.00 MiB"
+        },
+        "kong_locks": {
+          "allocated_slabs": "0.06 MiB",
+          "capacity": "8.00 MiB"
+        },
+        "kong_healthchecks": {
+          "allocated_slabs": "0.04 MiB",
+          "capacity": "5.00 MiB"
+        },
+        "kong_cluster_events": {
+          "allocated_slabs": "0.04 MiB",
+          "capacity": "5.00 MiB"
+        },
+        "kong_rate_limiting_counters": {
+          "allocated_slabs": "0.09 MiB",
+          "capacity": "12.00 MiB"
+        },
+        "kong_core_db_cache": {
+          "allocated_slabs": "0.77 MiB",
+          "capacity": "128.00 MiB"
+        },
+        "kong_core_db_cache_miss": {
+          "allocated_slabs": "0.08 MiB",
+          "capacity": "12.00 MiB"
+        }
+      },
+      "workers_lua_vms": [
+        {
+          "pid": 22353,
+          "http_allocated_gc": "47.28 MiB"
+        },
+        {
+          "pid": 24304,
+          "http_allocated_gc": "47.29 MiB"
+        },
+        {
+          "pid": 25219,
+          "http_allocated_gc": "47.28 MiB"
+        },
+        {
+          "pid": 28919,
+          "http_allocated_gc": "47.29 MiB"
+        },
+        {
+          "pid": 31028,
+          "http_allocated_gc": "47.28 MiB"
+        },
+        {
+          "pid": 36347,
+          "http_allocated_gc": "47.28 MiB"
+        },
+        {
+          "pid": 39727,
+          "http_allocated_gc": "47.29 MiB"
+        },
+        {
+          "pid": 41058,
+          "http_allocated_gc": "47.28 MiB"
+        },
+        {
+          "pid": 44213,
+          "http_allocated_gc": "47.29 MiB"
+        },
+        {
+          "pid": 45927,
+          "http_allocated_gc": "47.29 MiB"
+        },
+        {
+          "pid": 48393,
+          "http_allocated_gc": "47.29 MiB"
+        },
+        {
+          "pid": 50937,
+          "http_allocated_gc": "47.29 MiB"
+        },
+        {
+          "pid": 53416,
+          "http_allocated_gc": "47.29 MiB"
+        },
+        {
+          "pid": 55243,
+          "http_allocated_gc": "47.28 MiB"
+        },
+        {
+          "pid": 58332,
+          "http_allocated_gc": "47.29 MiB"
+        },
+        {
+          "pid": 60077,
+          "http_allocated_gc": "47.28 MiB"
+        },
+        {
+          "pid": 61812,
+          "http_allocated_gc": "48.44 MiB"
+        },
+        {
+          "pid": 62629,
+          "http_allocated_gc": "47.34 MiB"
+        },
+        {
+          "pid": 65738,
+          "http_allocated_gc": "47.34 MiB"
+        },
+        {
+          "pid": 67339,
+          "http_allocated_gc": "47.34 MiB"
+        }
+      ]
+    },
+    "database": {
+      "reachable": true
+    },
+    "server": {
+      "connections_writing": 62,
+      "connections_waiting": 34,
+      "total_requests": 4679,
+      "connections_active": 97,
+      "connections_handled": 2383,
+      "connections_reading": 1,
+      "connections_accepted": 2383
+    }
+  }
+}
+
+✗ Kong Routes Inventory: FAIL (0.0343s)
+  Details: {
+  "total_routes": 4,
+  "route_names": [
+    "agents-route",
+    "vectors-route",
+    "mcp-route",
+    "backend-route"
+  ],
+  "expected_routes": [
+    "api-route",
+    "mcp-route",
+    "vectors-route",
+    "agents-route"
+  ],
+  "found_routes": [
+    "mcp-route",
+    "vectors-route",
+    "agents-route"
+  ]
+}
+
+✓ Kong Services Health: PASS (0.0142s)
+  Details: {
+  "total_services": 4,
+  "services": [
+    {
+      "name": "mcp-bridge",
+      "host": "sutazai-mcp-bridge",
+      "port": 11100,
+      "enabled": true
+    },
+    {
+      "name": "backend-api",
+      "host": "backend-upstream",
+      "port": 8000,
+      "enabled": true
+    },
+    {
+      "name": "vector-db-proxy",
+      "host": "sutazai-chromadb",
+      "port": 8000,
+      "enabled": true
+    },
+    {
+      "name": "ai-agents-proxy",
+      "host": "sutazai-backend",
+      "port": 8000,
+      "enabled": true
+    }
+  ]
+}
+
+✓ Kong Plugins List: PASS (0.0203s)
+  Details: {
+  "total_plugins": 9,
+  "enabled_plugins": [
+    "request-size-limiting",
+    "cors",
+    "file-log",
+    "rate-limiting",
+    "response-transformer",
+    "correlation-id",
+    "rate-limiting",
+    "rate-limiting",
+    "rate-limiting"
+  ],
+  "expected_plugins": [
+    "rate-limiting",
+    "cors",
+    "file-log",
+    "request-size-limiting",
+    "response-transformer"
+  ],
+  "found_plugins": [
+    "rate-limiting",
+    "cors",
+    "file-log",
+    "request-size-limiting",
+    "response-transformer"
+  ]
+}
+
+✓ All Routes Accessible: PASS (0.0905s)
+  Details: {
+  "total_routes": 4,
+  "accessible_routes": 4,
+  "route_results": [
+    {
+      "route": "api-route",
+      "path": "/api/health",
+      "status_code": 200,
+      "accessible": true
+    },
+    {
+      "route": "mcp-route",
+      "path": "/mcp",
+      "status_code": 404,
+      "accessible": true
+    },
+    {
+      "route": "vectors-route",
+      "path": "/vectors",
+      "status_code": 404,
+      "accessible": true
+    },
+    {
+      "route": "agents-route",
+      "path": "/agents",
+      "status_code": 404,
+      "accessible": true
+    }
+  ]
+}
+
+✓ Rate Limiting: PASS (0.0708s)
+  Details: {
+  "total_requests": 10,
+  "rate_limit_headers_found": true,
+  "responses": [
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "998",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "998",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "aa795e42-995d-4c93-b77b-ecffac60d881",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "1",
+        "X-Kong-Proxy-Latency": "5",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "908c533fe64d3b5aa286e67a5b55ec3a"
+      },
+      "request_num": 1
+    },
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "997",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "997",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "02615bb2-90cc-47fb-bc14-31accd31eb34",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "2",
+        "X-Kong-Proxy-Latency": "3",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "bcbd0f3ed1f8ce6de12ad40c6f453c0e"
+      },
+      "request_num": 2
+    },
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "996",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "996",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "c737f5d0-0288-470b-92b9-152b45258129",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "1",
+        "X-Kong-Proxy-Latency": "3",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "fbb75546fbbb9318fb14524572cd5c61"
+      },
+      "request_num": 3
+    },
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "995",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "995",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "37f2aea5-4a1e-43ed-ba41-909e853bc822",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "2",
+        "X-Kong-Proxy-Latency": "4",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "f275f276320d6c351c0ff7717b9fae18"
+      },
+      "request_num": 4
+    },
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "994",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "994",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "5082afab-0ad2-4f95-977b-d42decafb8a6",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "2",
+        "X-Kong-Proxy-Latency": "5",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "aa615d2c5330040076da8b2970f20f74"
+      },
+      "request_num": 5
+    },
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "993",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "993",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "ca7efec4-d756-46e8-ad6c-2c1161385f62",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "1",
+        "X-Kong-Proxy-Latency": "3",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "9ee1764e3f4c891b09f3f45c69579a52"
+      },
+      "request_num": 6
+    },
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "992",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "992",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "fdb8a2d7-4fa6-4e9d-b759-d8d287367f0f",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "0",
+        "X-Kong-Proxy-Latency": "3",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "b2bc7d58d35f136c3fe4762bedfed67a"
+      },
+      "request_num": 7
+    },
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "991",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "991",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "7b2c42c0-6c6e-4e35-ac6a-3b02e9ca3144",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "2",
+        "X-Kong-Proxy-Latency": "2",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "1240952b5b8f155081a3c75fc112962a"
+      },
+      "request_num": 8
+    },
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "990",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "990",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "b80a33b0-217f-4279-9416-3a68dc023b86",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "1",
+        "X-Kong-Proxy-Latency": "3",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "4c834054c742de0e02d64926dd0f9413"
+      },
+      "request_num": 9
+    },
+    {
+      "status_code": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "49",
+        "Connection": "keep-alive",
+        "RateLimit-Reset": "39",
+        "RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining-Minute": "989",
+        "X-RateLimit-Limit-Minute": "1000",
+        "RateLimit-Remaining": "989",
+        "date": "Sat, 15 Nov 2025 17:45:21 GMT",
+        "server": "uvicorn",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "x-xss-protection": "1; mode=block",
+        "strict-transport-security": "max-age=31536000; includeSubDomains",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "geolocation=(), microphone=(), camera=()",
+        "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+        "X-Trace-ID": "167f2001-0ac0-4f6f-b22f-8248d4d95197",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+        "X-API-Version": "1.0",
+        "X-Powered-By": "SUTAZAI-JARVIS",
+        "X-Kong-Upstream-Latency": "1",
+        "X-Kong-Proxy-Latency": "3",
+        "Via": "1.1 kong/3.9.1",
+        "X-Kong-Request-Id": "021df4467a6ae46986359930a270b22a"
+      },
+      "request_num": 10
+    }
+  ]
+}
+
+✓ CORS Configuration: PASS (0.0056s)
+  Details: {
+  "cors_headers": {
+    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,PATCH,OPTIONS",
+    "Access-Control-Allow-Headers": "Accept,Authorization,Content-Type,X-Request-ID,X-Trace-ID",
+    "Access-Control-Max-Age": "3600"
+  },
+  "response_status": 200
+}
+
+✓ Request Transformation: PASS (0.0068s)
+  Details: {
+  "transformed_headers": {
+    "X-API-Version": "1.0",
+    "X-Powered-By": "SUTAZAI-JARVIS"
+  },
+  "all_headers": {
+    "Content-Type": "application/json",
+    "Content-Length": "49",
+    "Connection": "keep-alive",
+    "RateLimit-Reset": "38",
+    "RateLimit-Limit": "1000",
+    "X-RateLimit-Remaining-Minute": "988",
+    "X-RateLimit-Limit-Minute": "1000",
+    "RateLimit-Remaining": "988",
+    "date": "Sat, 15 Nov 2025 17:45:22 GMT",
+    "server": "uvicorn",
+    "x-frame-options": "DENY",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "1; mode=block",
+    "strict-transport-security": "max-age=31536000; includeSubDomains",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "geolocation=(), microphone=(), camera=()",
+    "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+    "X-Trace-ID": "2e9d579b-8b12-435e-a105-a5d842051056",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Expose-Headers": "X-RateLimit-Limit-Minute,X-RateLimit-Remaining-Minute",
+    "X-API-Version": "1.0",
+    "X-Powered-By": "SUTAZAI-JARVIS",
+    "X-Kong-Upstream-Latency": "1",
+    "X-Kong-Proxy-Latency": "3",
+    "Via": "1.1 kong/3.9.1",
+    "X-Kong-Request-Id": "7555ff0e1a90545bd9936535700d5555"
+  }
+}
+
+✓ Request Size Limiting: PASS (0.0067s)
+  Details: {
+  "status_code": 405,
+  "small_request_allowed": true
+}
+
+================================================================================
+END OF REPORT
+================================================================================

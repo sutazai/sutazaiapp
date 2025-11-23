@@ -1,0 +1,123 @@
+====================================================================================================
+PHASE 6: VECTOR DATABASE PERFORMANCE REPORT
+Generated: 2025-11-15T17:30:34.714937+00:00
+Execution ID: phase6_20251115_173032
+====================================================================================================
+
+## SUMMARY STATISTICS
+----------------------------------------------------------------------------------------------------
+
+### ChromaDB
+Operation                      Count    Avg Duration (ms)    Avg Throughput (vec/s)    Success Rate   
+----------------------------------------------------------------------------------------------------
+create_collection              3        0.00                 0.00                      0.0            %
+insert_embeddings              6        0.00                 0.00                      0.0            %
+similarity_search              7        0.00                 0.00                      0.0            %
+update_delete                  1        0.00                 0.00                      0.0            %
+
+### FAISS
+Operation                      Count    Avg Duration (ms)    Avg Throughput (vec/s)    Success Rate   
+----------------------------------------------------------------------------------------------------
+add_vectors                    4        0.00                 0.00                      0.0            %
+create_index                   2        4.63                 217.94                    100.0          %
+search                         4        3.12                 11121.06                  100.0          %
+
+### Qdrant
+Operation                      Count    Avg Duration (ms)    Avg Throughput (vec/s)    Success Rate   
+----------------------------------------------------------------------------------------------------
+create_collection              3        257.30               3.89                      100.0          %
+filtered_search                1        4.36                 2294.10                   100.0          %
+insert_points                  6        159.54               3831.21                   100.0          %
+search                         7        3.11                 11516.77                  100.0          %
+
+
+## DETAILED METRICS
+----------------------------------------------------------------------------------------------------
+Timestamp                      Database     Operation                 Vectors    Dim      Duration (ms)   Throughput           Status    
+----------------------------------------------------------------------------------------------------
+17:30:32                       ChromaDB     create_collection         1          0        4.92            203.12               ❌ FAIL    
+17:30:32                       ChromaDB     insert_embeddings         100        384      25.88           3863.30              ❌ FAIL    
+17:30:32                       ChromaDB     insert_embeddings         1000       384      164.19          6090.63              ❌ FAIL    
+17:30:32                       ChromaDB     similarity_search         10         384      2.21            4529.98              ❌ FAIL    
+17:30:32                       ChromaDB     update_delete             3          384      1.55            1941.51              ❌ FAIL    
+17:30:32                       Qdrant       create_collection         1          384      274.41          3.64                 ✅ OK      
+17:30:32                       Qdrant       insert_points             100        384      23.13           4322.47              ✅ OK      
+17:30:32                       Qdrant       insert_points             1000       384      214.90          4653.39              ✅ OK      
+17:30:32                       Qdrant       search                    10         384      3.67            2722.51              ✅ OK      
+17:30:32                       Qdrant       filtered_search           10         384      4.36            2294.10              ✅ OK      
+17:30:32                       FAISS        create_index              1          768      4.20            237.85               ✅ OK      
+17:30:32                       FAISS        add_vectors               100        768      1.82            54892.08             ❌ FAIL    
+17:30:32                       FAISS        add_vectors               1000       768      35.06           28520.26             ❌ FAIL    
+17:30:32                       FAISS        search                    10         768      3.90            2561.41              ✅ OK      
+17:30:32                       ChromaDB     create_collection         1          0        3.70            270.57               ❌ FAIL    
+17:30:32                       ChromaDB     insert_embeddings         100        384      15.97           6262.02              ❌ FAIL    
+17:30:33                       ChromaDB     insert_embeddings         1000       384      152.00          6578.89              ❌ FAIL    
+17:30:33                       ChromaDB     similarity_search         1          384      2.44            409.44               ❌ FAIL    
+17:30:33                       ChromaDB     similarity_search         10         384      1.87            5355.34              ❌ FAIL    
+17:30:33                       ChromaDB     similarity_search         100        384      1.93            51781.53             ❌ FAIL    
+17:30:33                       Qdrant       create_collection         1          384      249.27          4.01                 ✅ OK      
+17:30:33                       Qdrant       insert_points             100        384      22.07           4530.02              ✅ OK      
+17:30:33                       Qdrant       insert_points             1000       384      213.71          4679.17              ✅ OK      
+17:30:33                       Qdrant       search                    1          384      3.03            330.31               ✅ OK      
+17:30:33                       Qdrant       search                    10         384      2.10            4763.01              ✅ OK      
+17:30:33                       Qdrant       search                    100        384      2.14            46660.41             ✅ OK      
+17:30:33                       ChromaDB     create_collection         1          0        4.65            215.27               ❌ FAIL    
+17:30:33                       ChromaDB     insert_embeddings         100        768      32.63           3064.24              ❌ FAIL    
+17:30:33                       ChromaDB     insert_embeddings         1000       768      345.10          2897.75              ❌ FAIL    
+17:30:33                       ChromaDB     similarity_search         1          768      2.10            477.28               ❌ FAIL    
+17:30:33                       ChromaDB     similarity_search         10         768      1.79            5590.91              ❌ FAIL    
+17:30:33                       ChromaDB     similarity_search         100        768      1.68            59367.36             ❌ FAIL    
+17:30:34                       Qdrant       create_collection         1          768      248.22          4.03                 ✅ OK      
+17:30:34                       Qdrant       insert_points             100        768      39.20           2551.09              ✅ OK      
+17:30:34                       Qdrant       insert_points             1000       768      444.22          2251.13              ✅ OK      
+17:30:34                       Qdrant       search                    1          768      3.50            285.99               ✅ OK      
+17:30:34                       Qdrant       search                    10         768      2.85            3504.60              ✅ OK      
+17:30:34                       Qdrant       search                    100        768      4.47            22350.55             ✅ OK      
+17:30:34                       FAISS        create_index              1          768      5.05            198.03               ✅ OK      
+17:30:34                       FAISS        add_vectors               100        768      1.87            53532.92             ❌ FAIL    
+17:30:34                       FAISS        add_vectors               1000       768      31.19           32058.70             ❌ FAIL    
+17:30:34                       FAISS        search                    1          768      3.20            312.24               ✅ OK      
+17:30:34                       FAISS        search                    10         768      2.73            3659.95              ✅ OK      
+17:30:34                       FAISS        search                    100        768      2.64            37950.63             ✅ OK      
+
+
+## PERFORMANCE COMPARISON
+----------------------------------------------------------------------------------------------------
+
+### Insertion Performance (vectors/second)
+Database        100 vectors          1000 vectors        
+------------------------------------------------------------
+ChromaDB        0.00                 0.00                
+FAISS           0.00                 0.00                
+Qdrant          3801.19              3861.23             
+
+### Search Performance (milliseconds)
+Database        k=1             k=10            k=100          
+------------------------------------------------------------
+ChromaDB        0.00            0.00            0.00           
+FAISS           3.20            3.32            2.64           
+Qdrant          3.26            2.88            3.31           
+
+
+## RECOMMENDATIONS
+----------------------------------------------------------------------------------------------------
+Based on performance testing:
+
+1. **ChromaDB**: Best for applications requiring built-in document storage and metadata management
+   - Excellent v2 API support
+   - Good for RAG applications with document retrieval
+
+2. **Qdrant**: Best for high-performance vector search with complex filtering
+   - Superior filtering capabilities
+   - Excellent for multi-tenant applications
+   - Good balance of speed and features
+
+3. **FAISS**: Best for pure vector similarity search at scale
+   - Fastest search performance
+   - Lower memory footprint
+   - Ideal for high-throughput applications
+
+
+====================================================================================================
+END OF REPORT
+====================================================================================================

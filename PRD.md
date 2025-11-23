@@ -81,6 +81,7 @@ Integration between components follows an event-driven architecture with REST AP
 The system exposes a unified API gateway at `http://localhost:8000` with the following primary endpoints:
 
 **Agent Management APIs**
+
 - `POST /agents/create` - Create new agent instance with specified capabilities
 - `GET /agents/status` - Retrieve all agent statuses and resource utilization
 - `POST /agents/{agent_id}/query` - Send query to specific agent
@@ -88,17 +89,20 @@ The system exposes a unified API gateway at `http://localhost:8000` with the fol
 - `PUT /agents/{agent_id}/config` - Update agent configuration
 
 **Model Management APIs**
+
 - `GET /models/available` - List all available models with specifications
 - `POST /models/load` - Load specific model into memory
 - `POST /models/switch` - Dynamic model switching based on task
 - `GET /models/status` - Current model memory usage and performance metrics
 
 **Document Processing APIs**
+
 - `POST /documents/extract` - Extract structured data from documents
 - `POST /documents/analyze` - Perform document analysis with specified schema
 - `GET /documents/{doc_id}/status` - Check processing status
 
 **Voice Interface APIs**
+
 - `POST /voice/transcribe` - Convert audio to text using Whisper
 - `POST /voice/synthesize` - Generate speech from text using Coqui TTS
 - `WebSocket /voice/stream` - Real-time bidirectional audio streaming
@@ -106,6 +110,7 @@ The system exposes a unified API gateway at `http://localhost:8000` with the fol
 ### WebSocket Communication Protocols
 
 **Agent Communication Channel** (`ws://localhost:8765/agents`)
+
 ```json
 {
   "type": "agent_message",
@@ -120,6 +125,7 @@ The system exposes a unified API gateway at `http://localhost:8000` with the fol
 ```
 
 **System Events Channel** (`ws://localhost:8765/events`)
+
 ```json
 {
   "type": "system_event",
@@ -135,6 +141,7 @@ The system exposes a unified API gateway at `http://localhost:8000` with the fol
 ### Message Queue Specifications
 
 **RabbitMQ Exchange Configuration**
+
 - `ai.tasks` - Topic exchange for task distribution
 - `agents.direct` - Direct exchange for agent-to-agent communication
 - `system.events` - Fanout exchange for system-wide notifications
@@ -143,6 +150,7 @@ The system exposes a unified API gateway at `http://localhost:8000` with the fol
 ## Data Models and Schemas
 
 ### Agent State Model
+
 ```python
 class AgentState:
     agent_id: str
@@ -160,6 +168,7 @@ class AgentState:
 ```
 
 ### Task Definition Schema
+
 ```python
 class Task:
     task_id: str
@@ -177,6 +186,7 @@ class Task:
 ```
 
 ### Vector Memory Schema
+
 ```python
 class VectorMemory:
     collection_name: str
@@ -190,6 +200,7 @@ class VectorMemory:
 ```
 
 ### Conversation Context Model
+
 ```python
 class ConversationContext:
     session_id: str
@@ -220,6 +231,7 @@ The complete system deploys as a multi-container orchestration with the followin
 ### Resource Allocation Strategy
 
 **Memory Distribution (32GB System)**
+
 - 12GB allocated to Ollama model cache
 - 6GB for vector databases (split between ChromaDB/Qdrant)
 - 4GB for agent runtime processes
@@ -227,11 +239,13 @@ The complete system deploys as a multi-container orchestration with the followin
 - 2GB swap space for overflow
 
 **GPU Allocation (24GB VRAM)**
+
 - 18GB for primary model inference
 - 4GB for context embeddings and caching
 - 2GB operational buffer
 
 **CPU Distribution**
+
 - 2 cores dedicated to API gateway and routing
 - 4 cores for agent orchestration
 - 6 cores for model inference tasks
@@ -614,6 +628,7 @@ services:
 ### Prometheus Metrics Collection
 
 **AI-Specific Metrics**
+
 - `inference_duration_seconds` - Model inference latency histogram
 - `agent_task_completion_rate` - Success rate per agent type
 - `model_memory_usage_bytes` - Current model memory consumption
@@ -621,6 +636,7 @@ services:
 - `voice_processing_accuracy` - ASR/TTS accuracy metrics
 
 **System Health Metrics**
+
 - Node CPU/memory/disk utilization via node-exporter
 - Service availability via blackbox-exporter
 - Container resource usage via cAdvisor
@@ -778,13 +794,12 @@ Implement model quantization from FP16 to INT8/INT4. Use knowledge distillation 
 
 This comprehensive PRD provides a complete blueprint for implementing a production-ready multi-agent AI system that operates entirely on local infrastructure. The architecture balances sophisticated capabilities with resource constraints through intelligent design patterns, efficient component integration, and comprehensive optimization strategies. The phased implementation approach ensures systematic deployment with continuous validation, while the monitoring and security frameworks guarantee operational excellence and data protection. This system represents a significant advancement in edge AI deployment, enabling enterprise-grade AI capabilities without cloud dependencies while maintaining complete control over data and processing.
 
-
-
-
 +++++++++++++++=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Multi-Agent AI System PRD
+
 ## Product Requirements Document v1.0
+
 ### Local LLM-Powered Autonomous Agent Orchestration Platform
 
 ---
@@ -792,9 +807,11 @@ This comprehensive PRD provides a complete blueprint for implementing a producti
 ## 1. EXECUTIVE SUMMARY
 
 ### 1.1 Product Vision
+
 Build a completely local, free, and self-contained multi-agent AI system that operates through voice and chat interfaces (Jarvis), leveraging lightweight LLMs (TinyLlama/Qwen) and distributed workload management via service mesh architecture to overcome hardware limitations while providing enterprise-grade AI capabilities without external dependencies.
 
 ### 1.2 Core Principles
+
 - **100% Local Execution**: No external API calls, all processing on-premises
 - **Resource Optimization**: Designed for limited hardware through intelligent workload distribution
 - **Voice-First Interface**: Jarvis voice control as primary interaction method
@@ -803,6 +820,7 @@ Build a completely local, free, and self-contained multi-agent AI system that op
 - **Zero External Dependencies**: Complete air-gapped operation capability
 
 ### 1.3 Key Differentiators
+
 - Runs entirely on consumer hardware through intelligent resource management
 - Voice-controlled multi-agent orchestration
 - Automatic workload distribution prevents system slowdown
@@ -862,6 +880,7 @@ Build a completely local, free, and self-contained multi-agent AI system that op
 ### 2.2 Component Distribution Strategy
 
 #### 2.2.1 Workload Distribution Algorithm
+
 ```python
 class WorkloadDistributor:
     def __init__(self):
@@ -900,12 +919,14 @@ class WorkloadDistributor:
 ### 2.3 Hardware Resource Management
 
 #### 2.3.1 Minimum Requirements
+
 - **CPU**: 4 cores (2.0GHz+)
 - **RAM**: 8GB minimum (16GB recommended)
 - **Storage**: 50GB free space
 - **GPU**: Optional (CPU-only fallback for all components)
 
 #### 2.3.2 Resource Allocation Strategy
+
 ```yaml
 resource_allocation:
   tier_1_critical:  # Always running
@@ -942,6 +963,7 @@ resource_allocation:
 ### 3.1 Voice Control System
 
 #### 3.1.1 Wake Word Detection
+
 ```python
 class JarvisWakeWord:
     def __init__(self):
@@ -956,6 +978,7 @@ class JarvisWakeWord:
 ```
 
 #### 3.1.2 Voice Commands Structure
+
 ```yaml
 voice_commands:
   system_control:
@@ -977,12 +1000,14 @@ voice_commands:
 ### 3.2 Chat Interface Features
 
 #### 3.2.1 Multi-Modal Input
+
 - Text input with markdown support
 - Voice input with real-time transcription
 - File uploads (documents, code, data)
 - Screen capture for visual tasks
 
 #### 3.2.2 Intelligent Response System
+
 ```python
 class JarvisResponseEngine:
     def generate_response(self, input_data):
@@ -1013,6 +1038,7 @@ class JarvisResponseEngine:
 ### 4.1 Agent Hierarchy and Roles
 
 #### 4.1.1 Master Coordinator (Agent Zero)
+
 ```python
 class AgentZeroCoordinator:
     """
@@ -1044,6 +1070,7 @@ class AgentZeroCoordinator:
 #### 4.1.2 Task Automation Agents
 
 ##### Letta Agent (Memory-Enhanced Task Automation)
+
 ```python
 class LettaAgent:
     """
@@ -1075,6 +1102,7 @@ class LettaAgent:
 ```
 
 ##### AutoGPT Agent (Autonomous Goal Achievement)
+
 ```python
 class AutoGPTAgent:
     """
@@ -1104,6 +1132,7 @@ class AutoGPTAgent:
 #### 4.1.3 Code Intelligence Agents
 
 ##### GPT Engineer Agent
+
 ```python
 class GPTEngineerAgent:
     """
@@ -1135,6 +1164,7 @@ class GPTEngineerAgent:
 ```
 
 ##### Semgrep Security Agent
+
 ```python
 class SemgrepSecurityAgent:
     """
@@ -1162,6 +1192,7 @@ class SemgrepSecurityAgent:
 #### 4.1.4 Research & Analysis Agents
 
 ##### Local Deep Researcher
+
 ```python
 class LocalDeepResearcher:
     """
@@ -1192,6 +1223,7 @@ class LocalDeepResearcher:
 ```
 
 ##### FinRobot Financial Agent
+
 ```python
 class FinRobotAgent:
     """
@@ -1221,6 +1253,7 @@ class FinRobotAgent:
 ### 4.2 Agent Communication Protocol
 
 #### 4.2.1 Message Format
+
 ```json
 {
   "message_id": "uuid",
@@ -1243,6 +1276,7 @@ class FinRobotAgent:
 ```
 
 #### 4.2.2 Coordination Patterns
+
 ```python
 class AgentCoordination:
     def __init__(self):
@@ -1277,6 +1311,7 @@ class AgentCoordination:
 ### 5.1 Kong API Gateway Configuration
 
 #### 5.1.1 Route Definitions
+
 ```yaml
 kong_routes:
   # Jarvis primary interface
@@ -1317,6 +1352,7 @@ kong_routes:
 ```
 
 #### 5.1.2 Load Balancing Strategy
+
 ```python
 class IntelligentLoadBalancer:
     def __init__(self):
@@ -1357,6 +1393,7 @@ class IntelligentLoadBalancer:
 ### 5.2 Consul Service Discovery
 
 #### 5.2.1 Service Registration
+
 ```python
 class ServiceRegistration:
     def __init__(self):
@@ -1387,6 +1424,7 @@ class ServiceRegistration:
 ```
 
 #### 5.2.2 Dynamic Service Discovery
+
 ```python
 class DynamicDiscovery:
     def __init__(self):
@@ -1422,6 +1460,7 @@ class DynamicDiscovery:
 ### 5.3 RabbitMQ Message Queue
 
 #### 5.3.1 Queue Architecture
+
 ```python
 class QueueArchitecture:
     def __init__(self):
@@ -1477,6 +1516,7 @@ class QueueArchitecture:
 ```
 
 #### 5.3.2 Priority Queue Management
+
 ```python
 class PriorityQueueManager:
     def __init__(self):
@@ -1521,6 +1561,7 @@ class PriorityQueueManager:
 ### 5.4 Monitoring & Alerting
 
 #### 5.4.1 Node Exporter Metrics
+
 ```python
 class NodeMetricsCollector:
     def __init__(self):
@@ -1564,6 +1605,7 @@ class NodeMetricsCollector:
 ```
 
 #### 5.4.2 AlertManager Rules
+
 ```yaml
 alert_rules:
   - name: HighMemoryUsage
@@ -1608,6 +1650,7 @@ alert_rules:
 ```
 
 #### 5.4.3 Blackbox Exporter Probes
+
 ```yaml
 blackbox_probes:
   jarvis_health:
@@ -1654,6 +1697,7 @@ blackbox_probes:
 ### 6.1 Model Loading Strategy
 
 #### 6.1.1 Intelligent Model Selection
+
 ```python
 class ModelManager:
     def __init__(self):
@@ -1719,6 +1763,7 @@ class ModelManager:
 ```
 
 #### 6.1.2 Context Window Optimization
+
 ```python
 class ContextOptimizer:
     def __init__(self):
@@ -1771,6 +1816,7 @@ class ContextOptimizer:
 ### 6.2 Ollama Integration
 
 #### 6.2.1 Installation & Setup
+
 ```bash
 #!/bin/bash
 # Automated Ollama setup script
@@ -1812,6 +1858,7 @@ echo "Ollama setup complete!"
 ```
 
 #### 6.2.2 Ollama Service Wrapper
+
 ```python
 class OllamaService:
     def __init__(self):
@@ -1877,6 +1924,7 @@ class OllamaService:
 ### 7.1 ChromaDB Configuration
 
 #### 7.1.1 Collection Design
+
 ```python
 class ChromaDBManager:
     def __init__(self):
@@ -1949,6 +1997,7 @@ class ChromaDBManager:
 ```
 
 #### 7.1.2 Embedding Optimization
+
 ```python
 class EmbeddingOptimizer:
     def __init__(self):
@@ -1982,6 +2031,7 @@ class EmbeddingOptimizer:
 ### 7.2 Qdrant Vector Search
 
 #### 7.2.1 High-Performance Configuration
+
 ```python
 class QdrantManager:
     def __init__(self):
@@ -2049,6 +2099,7 @@ class QdrantManager:
 ### 7.3 FAISS Integration
 
 #### 7.3.1 CPU-Optimized FAISS
+
 ```python
 class FAISSManager:
     def __init__(self):
@@ -2117,6 +2168,7 @@ class FAISSManager:
 ### 7.4 Context Engineering Framework
 
 #### 7.4.1 Context Optimization
+
 ```python
 class ContextEngineer:
     """
@@ -2167,6 +2219,7 @@ class ContextEngineer:
 ### 8.1 Streamlit Architecture
 
 #### 8.1.1 Main Application Structure
+
 ```python
 # app.py
 import streamlit as st
@@ -2309,6 +2362,7 @@ if __name__ == "__main__":
 ```
 
 #### 8.1.2 Voice Interface Component
+
 ```python
 class JarvisVoiceInterface:
     def __init__(self):
@@ -2392,6 +2446,7 @@ class JarvisVoiceInterface:
 ### 8.2 Chat Interface
 
 #### 8.2.1 Advanced Chat Component
+
 ```python
 class ChatInterface:
     def __init__(self):
@@ -2467,6 +2522,7 @@ class ChatInterface:
 ### 8.3 Agent Management Dashboard
 
 #### 8.3.1 Agent Control Panel
+
 ```python
 class AgentDashboard:
     def __init__(self):
@@ -2530,6 +2586,7 @@ class AgentDashboard:
 ### 8.4 System Monitoring Dashboard
 
 #### 8.4.1 Real-Time Monitoring
+
 ```python
 class SystemMonitor:
     def __init__(self):
@@ -2594,6 +2651,7 @@ class SystemMonitor:
 ### 9.1 Docker Compose Configuration
 
 #### 9.1.1 Complete docker-compose.yml
+
 ```yaml
 version: '3.8'
 
@@ -2845,6 +2903,7 @@ volumes:
 ### 9.2 Installation Script
 
 #### 9.2.1 Complete Setup Script
+
 ```bash
 #!/bin/bash
 # Complete Jarvis AI System Setup Script
@@ -3099,6 +3158,7 @@ main
 ### 10.1 Test Suite
 
 #### 10.1.1 Unit Tests
+
 ```python
 # tests/test_agent_system.py
 import pytest
@@ -3167,6 +3227,7 @@ class TestAgentSystem:
 ```
 
 #### 10.1.2 Integration Tests
+
 ```python
 # tests/test_integration.py
 import pytest
@@ -3237,6 +3298,7 @@ class TestSystemIntegration:
 ### 10.2 Performance Testing
 
 #### 10.2.1 Load Testing Script
+
 ```python
 # tests/load_test.py
 import concurrent.futures
@@ -3336,6 +3398,7 @@ if __name__ == "__main__":
 ### 11.1 Backup & Recovery
 
 #### 11.1.1 Automated Backup Script
+
 ```bash
 #!/bin/bash
 # backup.sh - Automated backup script for Jarvis AI System
@@ -3397,6 +3460,7 @@ find /backup/jarvis -type d -mtime +7 -exec rm -rf {} \;
 ### 11.2 Monitoring & Alerting
 
 #### 11.2.1 Health Check Script
+
 ```python
 #!/usr/bin/env python3
 # health_check.py - System health monitoring
@@ -3773,6 +3837,7 @@ paths:
 This Product Requirements Document provides a comprehensive blueprint for building a local, multi-agent AI system powered by lightweight LLMs and orchestrated through a service mesh architecture. The system is designed to run entirely on consumer hardware while providing enterprise-grade capabilities through intelligent resource management and workload distribution.
 
 Key success factors:
+
 - **100% Local Processing**: Complete data privacy and no external dependencies
 - **Voice-First Interface**: Natural interaction through Jarvis
 - **Intelligent Resource Management**: Automatic model selection and workload distribution
@@ -3788,10 +3853,12 @@ The system is production-ready with the provided implementation guide, deploymen
 **Total Word Count**: ~40,000 words  
 **Implementation Readiness**: 100%
 
-
 ++++++++++++++++++++++++++++++++++++++++++++++++
+
 # Multi-Agent AI System PRD - Production Architecture
+
 ## System Architect Design Document v2.0
+
 ### Fully Port-Compliant Local LLM Orchestration Platform
 
 ---
@@ -3799,10 +3866,13 @@ The system is production-ready with the provided implementation guide, deploymen
 ## 1. EXECUTIVE SUMMARY
 
 ### 1.1 Architecture Overview
+
 A production-grade, port-registry-compliant multi-agent AI system using existing infrastructure ports (10000-11199 range), designed for resource-constrained environments with complete local execution and zero external dependencies.
 
 ### 1.2 Port Compliance Matrix
+
 All services strictly adhere to the established Port Registry:
+
 - **Core Infrastructure**: 10000-10099 (PostgreSQL, Redis, Neo4j, Kong, Consul, RabbitMQ)
 - **AI Services**: 10100-10199 (ChromaDB, Qdrant, FAISS, Ollama)
 - **Monitoring**: 10200-10299 (Prometheus, Grafana, Loki, Jaeger)
@@ -4859,6 +4929,7 @@ if __name__ == "__main__":
 ---
 
 This production-ready PRD provides a complete, port-compliant architecture that:
+
 1. **Respects your existing port registry** (10000-11199)
 2. **Uses only local, free components** (no external APIs)
 3. **Implements proper service mesh** with Kong, Consul, RabbitMQ
@@ -4868,106 +4939,101 @@ This production-ready PRD provides a complete, port-compliant architecture that:
 
 The system is ready for immediate deployment with all configurations matching your infrastructure requirements.
 
-
-and whatever else we missing from: 
+and whatever else we missing from:
 
 ├── Model Management
 
-│   ├── Ollama repo: curl -fsSL https://ollama.com/install.sh | sh
+│   ├── Ollama repo: curl -fsSL <https://ollama.com/install.sh> | sh
 
-│   ├── tinyllama:latest repo: ollama run tinyllama as default for intital setup 
+│   ├── tinyllama:latest repo: ollama run tinyllama as default for intital setup
 
 │   ├── qwen3 repo: ollama run qwen3 optional (only activated when complex taskS)
 
-│   ├── ChromaDB (Vector Memory) repo: https://github.com/johnnycode8/chromadb_quickstart https://www.trychroma.com/
+│   ├── ChromaDB (Vector Memory) repo: <https://github.com/johnnycode8/chromadb_quickstart> <https://www.trychroma.com/>
 
-│   ├── context-engineering-framework repo: https://github.com/mihaicode/context-engineering-framework
+│   ├── context-engineering-framework repo: <https://github.com/mihaicode/context-engineering-framework>
 
-│   ├── FSDP repo: https://github.com/foundation-model-stack/fms-fsdp (optional need strong GPU)
-
+│   ├── FSDP repo: <https://github.com/foundation-model-stack/fms-fsdp> (optional need strong GPU)
 
 ├── AI Agents
 
-│   ├── deep-agent │https://github.com/soartech/deep-agent
-│   ├── local-deep-researcher - https://github.com/langchain-ai/local-deep-researcher 
-│   ├── Letta (Task Automation) repo: https://github.com/mysuperai/letta
+│   ├── deep-agent │<https://github.com/soartech/deep-agent>
+│   ├── local-deep-researcher - <https://github.com/langchain-ai/local-deep-researcher>
+│   ├── Letta (Task Automation) repo: <https://github.com/mysuperai/letta>
 
-│   ├── AutoGPT (Task Automation) repo: https://github.com/Significant-Gravitas/AutoGPT
+│   ├── AutoGPT (Task Automation) repo: <https://github.com/Significant-Gravitas/AutoGPT>
 
-│   ├── LocalAGI  (Autonomous AI Orchestration) repo: https://github.com/mudler/Local 
+│   ├── LocalAGI  (Autonomous AI Orchestration) repo: <https://github.com/mudler/Local>
 
-│   ├── TabbyML (Code Completion) repo: https://github.com/TabbyML/tabby (optional need strong GPU)
+│   ├── TabbyML (Code Completion) repo: <https://github.com/TabbyML/tabby> (optional need strong GPU)
 
-│   ├── Semgrep (Code Security) repo: https://github.com/semgrep/semgrep
+│   ├── Semgrep (Code Security) repo: <https://github.com/semgrep/semgrep>
 
-│   ├── LangChain Agents (Orchestration) repo: https://github.com/langchain-ai/langchain
+│   ├── LangChain Agents (Orchestration) repo: <https://github.com/langchain-ai/langchain>
 
-│   ├── AutoGen (Agents Configuration) repo: https://github.com/ag2ai/ag2
+│   ├── AutoGen (Agents Configuration) repo: <https://github.com/ag2ai/ag2>
 
-│   ├── AgentZero repo: https://github.com/frdel/agent-zero
+│   ├── AgentZero repo: <https://github.com/frdel/agent-zero>
 
-│   ├── BigAGI  repo: https://github.com/enricoros/big- 
+│   ├── BigAGI  repo: <https://github.com/enricoros/big->
 
-│   ├── Browser Use repo: https://github.com/browser-use/browser-use
+│   ├── Browser Use repo: <https://github.com/browser-use/browser-use>
 
-│   ├── Skyvern repo: https://github.com/Skyvern-AI/skyvern
+│   ├── Skyvern repo: <https://github.com/Skyvern-AI/skyvern>
 
-│   ├── qdrant repo: https://github.com/qdrant/qdrant
+│   ├── qdrant repo: <https://github.com/qdrant/qdrant>
 
-│   ├── pytorch repo: https://github.com/pytorch/pytorch
+│   ├── pytorch repo: <https://github.com/pytorch/pytorch>
 
-│   ├── TensorFlow repo: https://github.com/tensorflow/tensorflow
+│   ├── TensorFlow repo: <https://github.com/tensorflow/tensorflow>
 
-│   ├── jax repo: https://github.com/jax-ml/jax
+│   ├── jax repo: <https://github.com/jax-ml/jax>
 
-│   ├── langflow repo: https://github.com/langflow-ai/langflow
+│   ├── langflow repo: <https://github.com/langflow-ai/langflow>
 
-│   ├── dify repo: https://github.com/langgenius/dify
+│   ├── dify repo: <https://github.com/langgenius/dify>
 
-│   ├── Awesome-Code-AI repo: https://github.com/sourcegraph/awesome-code-ai
+│   ├── Awesome-Code-AI repo: <https://github.com/sourcegraph/awesome-code-ai>
 
-│   ├── AgentGPT repo: https://github.com/reworkd/AgentGPT
+│   ├── AgentGPT repo: <https://github.com/reworkd/AgentGPT>
 
-│   ├── CrewAI repo: https://github.com/crewAIInc/crewAI
+│   ├── CrewAI repo: <https://github.com/crewAIInc/crewAI>
 
-│   ├── PrivateGPT repo: https://github.com/zylon-ai/private-gpt
+│   ├── PrivateGPT repo: <https://github.com/zylon-ai/private-gpt>
 
-│   ├── LlamaIndex repo: https://github.com/run-llama/llama_index
+│   ├── LlamaIndex repo: <https://github.com/run-llama/llama_index>
 
-│   ├── FlowiseAI repo: https://github.com/FlowiseAI/Flowise
+│   ├── FlowiseAI repo: <https://github.com/FlowiseAI/Flowise>
 
-│   ├── ShellGPT repo: https://github.com/TheR1D/shell_gpt
+│   ├── ShellGPT repo: <https://github.com/TheR1D/shell_gpt>
 
-│   ├── PentestGPT repo: https://github.com/GreyDGL/PentestGPT
+│   ├── PentestGPT repo: <https://github.com/GreyDGL/PentestGPT>
 
-│   ├── documind Document Processing (PDF, DOCX, TXT) repo: https://github.com/DocumindHQ/documind
+│   ├── documind Document Processing (PDF, DOCX, TXT) repo: <https://github.com/DocumindHQ/documind>
 
-│   ├── FinRobot Financial Analysis AI repo: https://github.com/AI4Finance-Foundation/FinRobot
+│   ├── FinRobot Financial Analysis AI repo: <https://github.com/AI4Finance-Foundation/FinRobot>
 
-│   ├── AI Code Generator (GPT Engineer)Use gpt-engineer with a Local LLM repo: https://github.com/AntonOsika/gpt-engineer
+│   ├── AI Code Generator (GPT Engineer)Use gpt-engineer with a Local LLM repo: <https://github.com/AntonOsika/gpt-engineer>
 
-│   ├── AI Code Generator (OpenDevin) repo: https://github.com/AI-App/OpenDevin.OpenDevin
+│   ├── AI Code Generator (OpenDevin) repo: <https://github.com/AI-App/OpenDevin.OpenDevin>
 
-│   ├── AI Code Editor (Aider)repo: https://gitUhub.com/Aider-AI/aider
+│   ├── AI Code Editor (Aider)repo: <https://gitUhub.com/Aider-AI/aider>
 
+Frontend
 
-Frontend 
+└── Streamlit Web UI repo: <https://github.com/streamlit/streamlit>
 
-└── Streamlit Web UI repo: https://github.com/streamlit/streamlit
-
-├── Interactive Chatbot/Text and voicedirectly integrated (jarvis will be the one for this) │   ├── Jarvis repo: https://github.com/Dipeshpal/Jarvis_AI and https://github.com/microsoft/JARVIS and https://github.com/danilofalcao/jarvis and https://github.com/SreejanPersonal/JARVIS- jarvis - https://github.com/llm-guy/jarvis (make the best out of it get all the ai agents to perfect this and make no mistakes make sure its 100% perfect product delivery)
+├── Interactive Chatbot/Text and voicedirectly integrated (jarvis will be the one for this) │   ├── Jarvis repo: <https://github.com/Dipeshpal/Jarvis_AI> and <https://github.com/microsoft/JARVIS> and <https://github.com/danilofalcao/jarvis> and <https://github.com/SreejanPersonal/JARVIS-> jarvis - <https://github.com/llm-guy/jarvis> (make the best out of it get all the ai agents to perfect this and make no mistakes make sure its 100% perfect product delivery)
 
 ├── Full on System Dashboard
 
 Everyhting must run through a meshing system includiong the MCP servers
 
-Kong, consul, node-exporter, rabbitmq, alertmanager, blackbox-exporter, 
+Kong, consul, node-exporter, rabbitmq, alertmanager, blackbox-exporter,
 
 Anything that makes it perfectly modern Docker-in-Docker (DinD)
 
 And everyhting must be managed from portainer
-
-
 
 The Code Generation must be used by the Sutazai system to improve its own code autonomously (with suggestive prompts for the owner to ensure permission is granted).
 Some of the models or AI agents can be easily integrated into our application, while others may require setting up a separate Docker container. These must be installed and run within that environment—but ensure everything communicates properly within the unified SutazaiApp system.

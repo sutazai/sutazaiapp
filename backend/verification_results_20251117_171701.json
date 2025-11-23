@@ -1,0 +1,161 @@
+{
+  "timestamp": "2025-11-17T17:16:59.316142",
+  "categories": [
+    {
+      "name": "Imports",
+      "tests": [
+        {
+          "name": "Circuit Breaker",
+          "status": "PASSED",
+          "details": "CircuitBreaker and exception imported"
+        },
+        {
+          "name": "Retry Logic",
+          "status": "PASSED",
+          "details": "async_retry decorator imported"
+        },
+        {
+          "name": "Sanitization",
+          "status": "PASSED",
+          "details": "Sanitization functions imported"
+        },
+        {
+          "name": "Pagination",
+          "status": "PASSED",
+          "details": "Pagination utilities imported"
+        },
+        {
+          "name": "WebSocket Manager",
+          "status": "PASSED",
+          "details": "WebSocket manager imported"
+        },
+        {
+          "name": "Request ID",
+          "status": "FAILED",
+          "details": "No module named 'prometheus_client'"
+        },
+        {
+          "name": "Compression",
+          "status": "FAILED",
+          "details": "No module named 'prometheus_client'"
+        },
+        {
+          "name": "Rate Limiter",
+          "status": "FAILED",
+          "details": "No module named 'prometheus_client'"
+        }
+      ]
+    },
+    {
+      "name": "Database",
+      "tests": [
+        {
+          "name": "Session Generator",
+          "status": "PASSED",
+          "details": "get_db is async generator"
+        },
+        {
+          "name": "Session Cleanup",
+          "status": "PASSED",
+          "details": "Has finally block with close()"
+        },
+        {
+          "name": "Transaction Rollback",
+          "status": "PASSED",
+          "details": "Has rollback on error"
+        }
+      ]
+    },
+    {
+      "name": "Health Checks",
+      "tests": [
+        {
+          "name": "Service Health",
+          "status": "PASSED",
+          "details": "Calls real service checks"
+        },
+        {
+          "name": "Metrics",
+          "status": "PASSED",
+          "details": "Includes pool metrics"
+        }
+      ]
+    },
+    {
+      "name": "Voice",
+      "tests": [
+        {
+          "name": "Endpoints",
+          "status": "FAILED",
+          "details": "async_retry() got an unexpected keyword argument 'exception'"
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "tests": [
+        {
+          "name": "Ollama Integration",
+          "status": "PASSED",
+          "details": "call_ollama function exists"
+        },
+        {
+          "name": "LLM Processing",
+          "status": "PASSED",
+          "details": "Uses Ollama for responses"
+        },
+        {
+          "name": "XSS Protection",
+          "status": "PASSED",
+          "details": "Uses sanitization"
+        }
+      ]
+    },
+    {
+      "name": "Vectors",
+      "tests": [
+        {
+          "name": "Storage",
+          "status": "PASSED",
+          "details": "Real vector DB integration"
+        },
+        {
+          "name": "Search",
+          "status": "PASSED",
+          "details": "Real search implementation"
+        },
+        {
+          "name": "Deletion",
+          "status": "PASSED",
+          "details": "Delete endpoint exists"
+        }
+      ]
+    },
+    {
+      "name": "Security",
+      "tests": [
+        {
+          "name": "XSS Sanitization",
+          "status": "PASSED",
+          "details": "Sanitizes HTML/JS"
+        }
+      ]
+    },
+    {
+      "name": "Middleware",
+      "tests": [
+        {
+          "name": "Integration",
+          "status": "FAILED",
+          "details": "async_retry() got an unexpected keyword argument 'exception'"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total": 22,
+    "passed": 17,
+    "failed": 5,
+    "warnings": 0
+  }
+}

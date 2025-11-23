@@ -9,10 +9,13 @@ import json
 import logging
 import os
 from typing import Dict, List, Optional, Any
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
+from contextlib import asynccontextmanager
+from collections import defaultdict
+import time
 
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
@@ -22,6 +25,7 @@ from typing import Union
 import aio_pika
 import redis.asyncio as aioredis
 from consul import Consul
+from prometheus_client import Counter, Histogram, Gauge, generate_latest, REGISTRY, CONTENT_TYPE_LATEST
 
 # Configure logging
 logging.basicConfig(
@@ -30,11 +34,67 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# FastAPI app
+# Prometheus metrics
+http_requests_total = Counter('mcp_bridge_http_requests_total', 'Total HTTP requests', ['method', 'endpoint'])
+http_request_duration = Histogram('mcp_bridge_http_request_duration_seconds', 'HTTP request duration', ['method', 'endpoint'])
+websocket_connections_gauge = Gauge('mcp_bridge_websocket_connections', 'Active WebSocket connections')
+agent_status = Gauge('mcp_bridge_agent_status', 'Agent status (1=online, 0=offline)', ['agent_id'])
+message_routes_total = Counter('mcp_bridge_message_routes_total', 'Total routed messages', ['route_type'])
+
+# Global connection objects
+rabbitmq_connection = None
+rabbitmq_channel = None
+redis_client = None
+consul_client = None
+websocket_connections: List[WebSocket] = []
+
+# Lifespan context manager for FastAPI
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage application lifespan - startup and shutdown"""
+    # Startup
+    logger.info("Starting MCP Bridge Server...")
+    logger.info("Initializing MCP Bridge connections...")
+    
+    # Initialize services
+    await init_rabbitmq()
+    await init_redis()
+    await init_consul()
+    
+    logger.info("MCP Bridge initialization complete")
+    
+    yield
+    
+    # Shutdown
+    global rabbitmq_connection, rabbitmq_channel, redis_client, consul_client
+    
+    logger.info("Shutting down MCP Bridge Server...")
+    
+    # Close RabbitMQ
+    if rabbitmq_channel:
+        await rabbitmq_channel.close()
+    if rabbitmq_connection:
+        await rabbitmq_connection.close()
+    
+    # Close Redis
+    if redis_client:
+        await redis_client.aclose()  # Use aclose() instead of close()
+    
+    # Deregister from Consul
+    if consul_client:
+        try:
+            consul_client.agent.service.deregister('mcp-bridge-1')
+        except:
+            pass
+    
+    logger.info("MCP Bridge shutdown complete")
+
+# FastAPI app with lifespan
 app = FastAPI(
     title="SutazAI MCP Bridge",
     description="Message Control Protocol Bridge for AI Agent Integration",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 # CORS configuration
@@ -58,7 +118,7 @@ SERVICE_REGISTRY = {
     
     # Vector Databases
     "chromadb": {"url": "http://localhost:10100", "type": "vector"},
-    "qdrant": {"url": "http://localhost:10101", "type": "vector"},
+    "qdrant": {"url": "http://localhost:10102", "type": "vector"},
     "faiss": {"url": "http://localhost:10103", "type": "vector"},
     
     # Backend Services
@@ -158,8 +218,14 @@ MESSAGE_ROUTES = {
     "conversation": ["letta", "jarvis"],
 }
 
-# Active connections
+# Active connections with rate limiting
 active_connections: Dict[str, WebSocket] = {}
+websocket_message_counts: Dict[str, List[float]] = defaultdict(list)  # Track message timestamps per client
+
+# Rate limit configuration
+WEBSOCKET_MAX_CONCURRENT = 100  # Max concurrent connections
+WEBSOCKET_MAX_MESSAGES_PER_MINUTE = 1000  # Max messages per minute per client
+WEBSOCKET_RATE_LIMIT_WINDOW = 60  # 60 seconds window
 
 # Global connections
 rabbitmq_connection = None
@@ -340,37 +406,81 @@ async def get_from_redis(key: str):
         logger.error(f"Failed to get from Redis: {e}")
         return None
 
+# ============================================
+# API ENDPOINTS
+# ============================================
+
+# Health Check
+
 # Startup Event
-@app.on_event("startup")
-async def startup_event():
-    """Initialize all connections on startup"""
+async def lifespan_startup():
+    """Initialize connections on startup"""
+    logger.info("Starting MCP Bridge Server...")
     logger.info("Initializing MCP Bridge connections...")
     
-    # Initialize RabbitMQ
+    # Initialize services
     await init_rabbitmq()
-    
-    # Initialize Redis
     await init_redis()
-    
-    # Initialize Consul
     await init_consul()
-    
-    # Check all agents on startup
-    await check_all_agents_health()
     
     logger.info("MCP Bridge initialization complete")
 
 # Shutdown Event
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Clean up connections on shutdown"""
+async def lifespan_shutdown():
+    """Cleanup connections on shutdown"""
+    global rabbitmq_connection, rabbitmq_channel, redis_client, consul_client
+    
+    # Close RabbitMQ
+    if rabbitmq_channel:
+        await rabbitmq_channel.close()
     if rabbitmq_connection:
         await rabbitmq_connection.close()
+    
+    # Close Redis
     if redis_client:
-        await redis_client.close()
+        await redis_client.aclose()  # Use aclose() instead of close()
+    
+    # Deregister from Consul
     if consul_client:
-        consul_client.agent.service.deregister('mcp-bridge-1')
+        try:
+            consul_client.agent.service.deregister('mcp-bridge-1')
+        except:
+            pass
+    
     logger.info("MCP Bridge shutdown complete")
+
+# Root Endpoint
+@app.get("/")
+async def root():
+    """Root endpoint with service information"""
+    return {
+        "service": "SutazAI MCP Bridge",
+        "version": "1.0.0",
+        "description": "Message Control Protocol Bridge for AI Agent Integration",
+        "status": "operational",
+        "endpoints": {
+            "health": "/health",
+            "services": "/services",
+            "agents": "/agents",
+            "route": "/route",
+            "websocket": "/ws/{client_id}",
+            "metrics": "/metrics"
+        },
+        "documentation": "/docs",
+        "timestamp": datetime.now().isoformat()
+    }
+
+# MCP Root Endpoint (for Kong routing with /mcp prefix)
+@app.get("/mcp")
+async def mcp_root():
+    """MCP prefixed root endpoint for Kong routing"""
+    return {
+        "service": "SutazAI MCP Bridge",
+        "version": "1.0.0",
+        "status": "operational",
+        "message": "MCP Bridge is running. Use /health for health check.",
+        "timestamp": datetime.now().isoformat()
+    }
 
 # Health Check Endpoint
 @app.get("/health")
@@ -584,44 +694,132 @@ def select_agent_for_task(task_type: str) -> Optional[Dict]:
 # WebSocket for Real-time Communication
 @app.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
-    """WebSocket endpoint for real-time communication"""
+    """WebSocket endpoint for real-time communication with rate limiting"""
+    
+    # Check concurrent connection limit
+    if len(active_connections) >= WEBSOCKET_MAX_CONCURRENT:
+        await websocket.close(code=1008, reason="Max concurrent connections reached")
+        logger.warning(f"Connection from {client_id} rejected: max connections reached")
+        return
+    
     await websocket.accept()
     active_connections[client_id] = websocket
+    websocket_connections_gauge.set(len(active_connections))
     
     try:
         await websocket.send_json({
             "type": "connected",
             "client_id": client_id,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
+            "rate_limits": {
+                "max_messages_per_minute": WEBSOCKET_MAX_MESSAGES_PER_MINUTE,
+                "max_concurrent_connections": WEBSOCKET_MAX_CONCURRENT
+            }
         })
         
         while True:
             # Receive message
             data = await websocket.receive_json()
             
+            # Rate limiting check
+            current_time = time.time()
+            websocket_message_counts[client_id].append(current_time)
+            
+            # Remove timestamps older than the rate limit window
+            websocket_message_counts[client_id] = [
+                ts for ts in websocket_message_counts[client_id]
+                if current_time - ts < WEBSOCKET_RATE_LIMIT_WINDOW
+            ]
+            
+            # Check if rate limit exceeded
+            if len(websocket_message_counts[client_id]) > WEBSOCKET_MAX_MESSAGES_PER_MINUTE:
+                await websocket.send_json({
+                    "type": "error",
+                    "error": "rate_limit_exceeded",
+                    "message": f"Rate limit exceeded: max {WEBSOCKET_MAX_MESSAGES_PER_MINUTE} messages per minute",
+                    "retry_after": WEBSOCKET_RATE_LIMIT_WINDOW,
+                    "timestamp": datetime.now().isoformat()
+                })
+                logger.warning(f"Rate limit exceeded for client {client_id}")
+                continue
+            
             # Process message
             if data.get("type") == "broadcast":
                 # Broadcast to all connected clients
+                message_routes_total.labels(route_type="broadcast").inc()
                 for conn_id, conn in active_connections.items():
                     if conn_id != client_id:
-                        await conn.send_json({
+                        try:
+                            await conn.send_json({
+                                "from": client_id,
+                                "data": data.get("payload"),
+                                "timestamp": datetime.now().isoformat()
+                            })
+                        except Exception as e:
+                            logger.error(f"Failed to send broadcast to {conn_id}: {e}")
+                            
+            elif data.get("type") == "direct":
+                # Send to specific client
+                message_routes_total.labels(route_type="direct").inc()
+                target = data.get("target")
+                if target in active_connections:
+                    try:
+                        await active_connections[target].send_json({
                             "from": client_id,
                             "data": data.get("payload"),
                             "timestamp": datetime.now().isoformat()
                         })
-            elif data.get("type") == "direct":
-                # Send to specific client
-                target = data.get("target")
-                if target in active_connections:
-                    await active_connections[target].send_json({
-                        "from": client_id,
-                        "data": data.get("payload"),
+                        await websocket.send_json({
+                            "type": "ack",
+                            "message": "Message delivered",
+                            "target": target,
+                            "timestamp": datetime.now().isoformat()
+                        })
+                    except Exception as e:
+                        logger.error(f"Failed to send direct message to {target}: {e}")
+                        await websocket.send_json({
+                            "type": "error",
+                            "error": "delivery_failed",
+                            "message": f"Failed to deliver message to {target}",
+                            "timestamp": datetime.now().isoformat()
+                        })
+                else:
+                    await websocket.send_json({
+                        "type": "error",
+                        "error": "target_not_found",
+                        "message": f"Target client {target} not connected",
                         "timestamp": datetime.now().isoformat()
                     })
             
+            elif data.get("type") == "ping":
+                # Handle ping/pong for connection keep-alive
+                await websocket.send_json({
+                    "type": "pong",
+                    "timestamp": datetime.now().isoformat()
+                })
+            
+            else:
+                # Unknown message type
+                await websocket.send_json({
+                    "type": "error",
+                    "error": "unknown_message_type",
+                    "message": f"Unknown message type: {data.get('type')}",
+                    "timestamp": datetime.now().isoformat()
+                })
+            
     except WebSocketDisconnect:
         del active_connections[client_id]
+        websocket_connections_gauge.set(len(active_connections))
+        if client_id in websocket_message_counts:
+            del websocket_message_counts[client_id]
         logger.info(f"Client {client_id} disconnected")
+    except Exception as e:
+        logger.error(f"WebSocket error for client {client_id}: {e}")
+        if client_id in active_connections:
+            del active_connections[client_id]
+            websocket_connections_gauge.set(len(active_connections))
+        if client_id in websocket_message_counts:
+            del websocket_message_counts[client_id]
 
 async def check_all_agents_health():
     """Check health of all agents and update their status"""
@@ -648,12 +846,6 @@ async def periodic_health_check():
     while True:
         await asyncio.sleep(30)  # Check every 30 seconds
         await check_all_agents_health()
-
-# Start background health check
-@app.on_event("startup")
-async def start_background_tasks():
-    """Start background tasks"""
-    asyncio.create_task(periodic_health_check())
 
 # Bridge Status Endpoint
 @app.get("/status", response_model=BridgeStatus)
@@ -682,10 +874,26 @@ async def get_bridge_status():
         timestamp=datetime.now().isoformat()
     )
 
-# Metrics Endpoint
+# Metrics Endpoint - Prometheus format
 @app.get("/metrics")
-async def get_metrics():
-    """Get bridge metrics"""
+async def get_prometheus_metrics():
+    """Get bridge metrics in Prometheus format"""
+    # Update metrics
+    websocket_connections_gauge.set(len(active_connections))
+    
+    for agent_id, agent in AGENT_REGISTRY.items():
+        status_value = 1 if agent.get("status") == "online" else 0
+        agent_status.labels(agent_id=agent_id).set(status_value)
+    
+    # Generate Prometheus metrics
+    return Response(content=generate_latest(REGISTRY), media_type=CONTENT_TYPE_LATEST)
+
+# Legacy JSON metrics endpoint
+@app.get("/metrics/json")
+async def get_json_metrics():
+    """Get bridge metrics in JSON format (legacy)"""
+    http_requests_total.labels(method='GET', endpoint='/metrics/json').inc()
+    
     return {
         "total_services": len(SERVICE_REGISTRY),
         "total_agents": len(AGENT_REGISTRY),

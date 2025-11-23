@@ -1,4 +1,4 @@
-#!/opt/sutazaiapp/mcp-bridge/venv/bin/python3
+#!/opt/sutazaiapp/mcp-bridge/venv/bin/python3.12
 # -*- coding: utf-8 -*-
 import re
 import sys

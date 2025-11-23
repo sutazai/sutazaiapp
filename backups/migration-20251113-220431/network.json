@@ -1,0 +1,112 @@
+[
+    {
+        "Name": "sutazaiapp_sutazai-network",
+        "Id": "4697ccfa8ce5da1b842e4ceebc9277a143b6ad8242733a9c4d5ae5304bd8492a",
+        "Created": "2025-11-13T15:43:31.558120853+01:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": true,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "0483db276bdae8d450c6d0c40a6435146f26c623a813683a7d1553aafa147180": {
+                "Name": "sutazai-neo4j",
+                "EndpointID": "863db80ad3a513265c1fb63d3b16b20522bf352384911458d4f88a9a9d0a6dc6",
+                "MacAddress": "9e:08:16:54:85:53",
+                "IPv4Address": "172.20.0.12/16",
+                "IPv6Address": ""
+            },
+            "06136bce212454d5b7ba4fbbc4be9ee76d92798d31e46b665ec491d6848e6b88": {
+                "Name": "sutazai-faiss",
+                "EndpointID": "4da5cde67e81446ee64c32c31b65a8c0a3505db7e629f4bd2c30e0d5f2f907a4",
+                "MacAddress": "4e:2d:b0:ef:0e:23",
+                "IPv4Address": "172.20.0.22/16",
+                "IPv6Address": ""
+            },
+            "237ab520f398e77823fc26404ea23815a6d801caf951179d4a4d0f25e9947b84": {
+                "Name": "sutazai-rabbitmq",
+                "EndpointID": "89ad60a594f92e0c9419c02bd8637fc745a93c7fe3033c3930943fccee45c00e",
+                "MacAddress": "0a:74:7e:7a:5a:d6",
+                "IPv4Address": "172.20.0.13/16",
+                "IPv6Address": ""
+            },
+            "29e08e2b9b5985339fedcc91c3f548841c577a59f1d95b7ce9ecaa84675a5d9f": {
+                "Name": "sutazai-jarvis-frontend",
+                "EndpointID": "1f4729e2760753322e9c8d00ec2b82f664c88f09d912cd8d9a53bb6fd6915b0d",
+                "MacAddress": "26:7d:db:d9:e8:98",
+                "IPv4Address": "172.20.0.31/16",
+                "IPv6Address": ""
+            },
+            "46bd32f89997c755d810febe162250a19daa94546354e1841321c0c001fd6bf4": {
+                "Name": "sutazai-postgres",
+                "EndpointID": "8e43808af904074cc031119ed9752b3b50ae615b191cecbfae9a211ae8b45ea1",
+                "MacAddress": "b6:4f:16:4e:36:ba",
+                "IPv4Address": "172.20.0.10/16",
+                "IPv6Address": ""
+            },
+            "7400be2301bafcb0ae5f36d4f54d2ff8049fb49cb4f8f7e2cf96904f5491a773": {
+                "Name": "sutazai-redis",
+                "EndpointID": "dd3899062f02ade662d07e15a41f47333eac899a426076d868d65a7dbfbb3cc6",
+                "MacAddress": "ce:27:ab:19:2d:5f",
+                "IPv4Address": "172.20.0.11/16",
+                "IPv6Address": ""
+            },
+            "b0add1a971adcacf60b5ba274dba7e009bb7d1bd60b08a550820f8b18c4c50fb": {
+                "Name": "sutazai-chromadb",
+                "EndpointID": "b0493826f2abffa8c207f8ed4b63185536533a7cffee30ca47e518d9b2c501ca",
+                "MacAddress": "36:54:c8:d8:db:4d",
+                "IPv4Address": "172.20.0.20/16",
+                "IPv6Address": ""
+            },
+            "c1d21fad6eddc05d2d00ee6c5d29ee703790f0f39e253da1d5ea828e92f6d4b6": {
+                "Name": "sutazai-kong",
+                "EndpointID": "f9df1c1e92ad36499398a2739658e4d7fb1b15b0e6b630cd514d6533af6f7ce8",
+                "MacAddress": "5e:9d:28:dd:9d:91",
+                "IPv4Address": "172.20.0.35/16",
+                "IPv6Address": ""
+            },
+            "c8b3ceba30f70794d97a3b9bb3af1fcb8d4efc0555757d1b681758ff5c669f95": {
+                "Name": "sutazai-consul",
+                "EndpointID": "45c441912f71de9bfecf2bdca8a9dd10373a7ec26ee10daeeb78a81b888aba81",
+                "MacAddress": "ae:b1:18:0c:a6:bb",
+                "IPv4Address": "172.20.0.14/16",
+                "IPv6Address": ""
+            },
+            "f71802bf8d22f0b7f987e2a9b337acba037c692fbd081a7ebae84f62d846c602": {
+                "Name": "sutazai-qdrant",
+                "EndpointID": "68031563ec5f962f1ce9422a68f92b93b9d15d82238c9db6dc937d01c3c8a29a",
+                "MacAddress": "3e:9e:7b:78:36:35",
+                "IPv4Address": "172.20.0.21/16",
+                "IPv6Address": ""
+            },
+            "fd104e4c32783e8f846355ddb262ca8a397abc2f1bcf4be6d4497930f9cedc20": {
+                "Name": "sutazai-backend",
+                "EndpointID": "e852198d14aadcec9e648c15ca46846c3b6c1496f794cfac92941a1996b16ddc",
+                "MacAddress": "f6:63:6c:db:94:6b",
+                "IPv4Address": "172.20.0.40/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {
+            "com.docker.compose.network": "sutazai-network",
+            "com.docker.compose.project": "sutazaiapp",
+            "com.docker.compose.version": "1.29.2"
+        }
+    }
+]

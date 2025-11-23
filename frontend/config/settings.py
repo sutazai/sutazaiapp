@@ -7,6 +7,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def _get_bool_env(var_name: str, default: bool) -> bool:
+    value = os.getenv(var_name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
 class Settings:
     """Application settings"""
     
@@ -15,7 +21,7 @@ class Settings:
     APP_VERSION = "5.0.0"
     
     # Backend API
-    BACKEND_URL = os.getenv("BACKEND_URL", "http://sutazai-backend:8000")
+    BACKEND_URL = os.getenv("BACKEND_URL", "http://backend:8000")
     API_TIMEOUT = 30
     
     # Voice Settings
@@ -27,9 +33,9 @@ class Settings:
     
     # UI Settings
     THEME = "dark"
-    SHOW_SYSTEM_METRICS = True
-    ENABLE_VOICE_COMMANDS = True
-    ENABLE_TYPING_ANIMATION = True
+    SHOW_SYSTEM_METRICS = _get_bool_env("SHOW_SYSTEM_METRICS", True)
+    ENABLE_VOICE_COMMANDS = _get_bool_env("ENABLE_VOICE_COMMANDS", False)
+    ENABLE_TYPING_ANIMATION = _get_bool_env("ENABLE_TYPING_ANIMATION", True)
     
     # Session Settings
     SESSION_TIMEOUT = 3600  # 1 hour
@@ -56,7 +62,7 @@ class Settings:
     SHOW_CPU_USAGE = True
     SHOW_MEMORY_USAGE = True
     SHOW_NETWORK_USAGE = True
-    SHOW_DOCKER_STATS = True
+    SHOW_DOCKER_STATS = _get_bool_env("SHOW_DOCKER_STATS", False)
     
     # Features
     ENABLE_FILE_UPLOAD = True

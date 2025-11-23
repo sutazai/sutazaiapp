@@ -1,9 +1,27 @@
 import { test, expect } from '@playwright/test';
 
+// Helper function to wait for Streamlit app to be fully loaded
+async function waitForStreamlitReady(page) {
+  await page.waitForSelector('[data-testid="stApp"]', { timeout: 15000 }).catch(() => {
+    return page.waitForSelector('.main', { timeout: 15000 });
+  });
+  
+  await page.waitForFunction(() => {
+    const spinners = document.querySelectorAll('[data-testid="stSpinner"]');
+    return spinners.length === 0;
+  }, { timeout: 10000 }).catch(() => {});
+  
+  await page.waitForTimeout(2000);
+}
+
 test.describe('JARVIS Backend Integration', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.waitForTimeout(3000);
+    // Set longer navigation timeout for slow loads
+    page.setDefaultNavigationTimeout(30000);
+    page.setDefaultTimeout(15000);
+    
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await waitForStreamlitReady(page);
   });
 
   test('should connect to backend API', async ({ page }) => {
@@ -188,14 +206,26 @@ test.describe('JARVIS Backend Integration', () => {
   });
 
   test('should handle rate limiting gracefully', async ({ page }) => {
-    const chatInput = page.locator('textarea, input[type="text"]').first();
+    let chatInput = page.locator('textarea, input[type="text"]').first();
     
     if (await chatInput.isVisible()) {
-      // Send multiple rapid requests
+      // Send multiple rapid requests with re-querying to handle re-renders
       for (let i = 0; i < 10; i++) {
-        await chatInput.fill(`Rapid request ${i}`);
-        await chatInput.press('Enter');
-        await page.waitForTimeout(100);
+        // Re-query chat input each iteration to handle Streamlit re-renders
+        chatInput = page.locator('textarea, input[type="text"]').first();
+        
+        try {
+          await chatInput.fill(`Rapid request ${i}`, { timeout: 2000 });
+          await chatInput.press('Enter');
+          await page.waitForTimeout(150);
+        } catch (error) {
+          // If element is detached, re-query and retry
+          console.log(`Retry ${i} due to element detachment`);
+          chatInput = page.locator('textarea, input[type="text"]').first();
+          await chatInput.fill(`Rapid request ${i}`, { timeout: 2000 });
+          await chatInput.press('Enter');
+          await page.waitForTimeout(150);
+        }
       }
       
       await page.waitForTimeout(3000);

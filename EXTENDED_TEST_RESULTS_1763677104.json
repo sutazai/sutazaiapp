@@ -1,0 +1,223 @@
+{
+  "timestamp": 1763677104,
+  "duration": 2.2086329460144043,
+  "summary": {
+    "total": 20,
+    "passed": 17,
+    "failed": 2,
+    "warnings": 1,
+    "success_rate": 85.0
+  },
+  "categories": {
+    "AUTH_FLOW": {
+      "PASS": 5,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "VECTORS": {
+      "PASS": 4,
+      "FAIL": 1,
+      "WARN": 1,
+      "SKIP": 0
+    },
+    "MCP_ROUTING": {
+      "PASS": 2,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "LOAD_TEST": {
+      "PASS": 1,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "DATABASE_POOLING": {
+      "PASS": 2,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "RABBITMQ": {
+      "PASS": 0,
+      "FAIL": 1,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "CONSUL": {
+      "PASS": 2,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    },
+    "OLLAMA": {
+      "PASS": 1,
+      "FAIL": 0,
+      "WARN": 0,
+      "SKIP": 0
+    }
+  },
+  "tests": [
+    {
+      "number": 1,
+      "category": "AUTH_FLOW",
+      "name": "Auth Flow: Registration",
+      "status": "PASS",
+      "details": "User test_1763677102 created",
+      "timestamp": 1763677102.557641
+    },
+    {
+      "number": 2,
+      "category": "AUTH_FLOW",
+      "name": "Auth Flow: Login",
+      "status": "PASS",
+      "details": "Tokens received (expires in 1800s)",
+      "timestamp": 1763677102.7907734
+    },
+    {
+      "number": 3,
+      "category": "AUTH_FLOW",
+      "name": "Auth Flow: Protected Endpoint",
+      "status": "PASS",
+      "details": "User data retrieved for test_1763677102",
+      "timestamp": 1763677102.8041005
+    },
+    {
+      "number": 4,
+      "category": "AUTH_FLOW",
+      "name": "Auth Flow: Token Refresh",
+      "status": "PASS",
+      "details": "New tokens received",
+      "timestamp": 1763677102.8119185
+    },
+    {
+      "number": 5,
+      "category": "AUTH_FLOW",
+      "name": "Auth Flow: Logout",
+      "status": "PASS",
+      "details": "Logged out successfully",
+      "timestamp": 1763677102.8263202
+    },
+    {
+      "number": 6,
+      "category": "VECTORS",
+      "name": "Vector Store: chromadb",
+      "status": "PASS",
+      "details": "Vector stored successfully",
+      "timestamp": 1763677103.3261886
+    },
+    {
+      "number": 7,
+      "category": "VECTORS",
+      "name": "Vector Search: chromadb",
+      "status": "PASS",
+      "details": "1 results found",
+      "timestamp": 1763677103.338956
+    },
+    {
+      "number": 8,
+      "category": "VECTORS",
+      "name": "Vector Store: qdrant",
+      "status": "PASS",
+      "details": "Vector stored successfully",
+      "timestamp": 1763677103.514165
+    },
+    {
+      "number": 9,
+      "category": "VECTORS",
+      "name": "Vector Search: qdrant",
+      "status": "PASS",
+      "details": "1 results found",
+      "timestamp": 1763677103.5388734
+    },
+    {
+      "number": 10,
+      "category": "VECTORS",
+      "name": "Vector Store: faiss",
+      "status": "FAIL",
+      "details": "HTTP 501: {\"detail\":\"FAISS storage requires external service setup\"}",
+      "timestamp": 1763677103.5526764
+    },
+    {
+      "number": 11,
+      "category": "VECTORS",
+      "name": "Vector Search: faiss",
+      "status": "WARN",
+      "details": "HTTP 400",
+      "timestamp": 1763677103.5628557
+    },
+    {
+      "number": 12,
+      "category": "MCP_ROUTING",
+      "name": "MCP Routing: Direct Agent",
+      "status": "PASS",
+      "details": "Routed to aider",
+      "timestamp": 1763677103.6718092
+    },
+    {
+      "number": 13,
+      "category": "MCP_ROUTING",
+      "name": "MCP Routing: Auto-Select",
+      "status": "PASS",
+      "details": "Routed to langchain",
+      "timestamp": 1763677103.7076125
+    },
+    {
+      "number": 14,
+      "category": "LOAD_TEST",
+      "name": "Load Test: 50 Concurrent Requests",
+      "status": "PASS",
+      "details": "50/50 success, 587.2 req/s",
+      "timestamp": 1763677103.8127508
+    },
+    {
+      "number": 15,
+      "category": "DATABASE_POOLING",
+      "name": "PostgreSQL Connection Pooling",
+      "status": "PASS",
+      "details": "10 concurrent connections handled",
+      "timestamp": 1763677103.8804896
+    },
+    {
+      "number": 16,
+      "category": "DATABASE_POOLING",
+      "name": "Redis Connection Pooling",
+      "status": "PASS",
+      "details": "10 concurrent connections handled",
+      "timestamp": 1763677103.8927383
+    },
+    {
+      "number": 17,
+      "category": "RABBITMQ",
+      "name": "RabbitMQ: Management API",
+      "status": "FAIL",
+      "details": "HTTP 401",
+      "timestamp": 1763677103.9177868
+    },
+    {
+      "number": 18,
+      "category": "CONSUL",
+      "name": "Consul: Leader Election",
+      "status": "PASS",
+      "details": "Leader elected",
+      "timestamp": 1763677103.9381628
+    },
+    {
+      "number": 19,
+      "category": "CONSUL",
+      "name": "Consul: Service Catalog",
+      "status": "PASS",
+      "details": "3 services registered",
+      "timestamp": 1763677103.9396014
+    },
+    {
+      "number": 20,
+      "category": "OLLAMA",
+      "name": "Ollama: Text Generation",
+      "status": "PASS",
+      "details": "Generated 91 chars",
+      "timestamp": 1763677104.4665852
+    }
+  ]
+}

@@ -185,12 +185,12 @@ class BackendClient:
             response = requests.get(url, headers=self.headers, timeout=5)
             
             if response.status_code == 200:
-                return response.json().get("models", ["gpt-4", "claude-3", "local"])
+                return response.json().get("models", ["tinyllama:latest"])
             else:
-                return ["gpt-4", "claude-3", "local"]  # Default models
+                return ["tinyllama:latest"]  # Default model
         except Exception as e:
             logger.error(f"Failed to get models: {e}")
-            return ["gpt-4", "claude-3", "local"]  # Default models
+            return ["tinyllama:latest"]  # Default model
     
     def get_agents_sync(self) -> List[Dict]:
         """Get available agents synchronously"""
@@ -199,7 +199,15 @@ class BackendClient:
             response = requests.get(url, headers=self.headers, timeout=5)
             
             if response.status_code == 200:
-                return response.json().get("agents", [])
+                data = response.json()
+                # Backend returns a list directly, not a dict with "agents" key
+                if isinstance(data, list):
+                    return data
+                elif isinstance(data, dict) and "agents" in data:
+                    return data["agents"]
+                else:
+                    logger.warning(f"Unexpected agents response format: {type(data)}")
+                    return []
             else:
                 # Return default agents
                 return [
@@ -215,57 +223,97 @@ class BackendClient:
                 {"id": "creative", "name": "Creative Assistant", "description": "Creative writing and ideas"}
             ]
     
-    def connect_websocket(self, on_message=None, on_error=None):
-        """Connect to WebSocket for real-time communication"""
+    def connect_websocket(self, on_message=None, on_error=None, max_retries=5):
+        """Connect to WebSocket for real-time communication with reconnection logic"""
         import threading
+        import time
         
         def ws_thread():
-            try:
-                import websocket
-                
-                ws_url = self.base_url.replace("http://", "ws://").replace("https://", "wss://")
-                ws_url = urljoin(ws_url, "/ws")
-                
-                def on_ws_message(ws, message):
-                    if on_message:
-                        on_message(json.loads(message))
-                
-                def on_ws_error(ws, error):
-                    logger.error(f"WebSocket error: {error}")
+            retry_count = 0
+            retry_delay = 1  # Start with 1 second delay
+            
+            while retry_count < max_retries:
+                try:
+                    import websocket
+                    
+                    ws_url = self.base_url.replace("http://", "ws://").replace("https://", "wss://")
+                    ws_url = urljoin(ws_url, "/ws")
+                    
+                    def on_ws_message(ws, message):
+                        if on_message:
+                            on_message(json.loads(message))
+                    
+                    def on_ws_error(ws, error):
+                        logger.error(f"WebSocket error: {error}")
+                        if on_error:
+                            on_error(error)
+                    
+                    def on_ws_close(ws, close_status_code, close_msg):
+                        logger.info(f"WebSocket closed: {close_status_code} - {close_msg}")
+                        # Trigger reconnection if not intentional
+                        if retry_count < max_retries:
+                            logger.info(f"Reconnecting in {retry_delay}s... (attempt {retry_count + 1}/{max_retries})")
+                    
+                    def on_ws_open(ws):
+                        nonlocal retry_count, retry_delay
+                        logger.info("WebSocket connected")
+                        # Reset retry counter on successful connection
+                        retry_count = 0
+                        retry_delay = 1
+                        
+                        # Send initial message
+                        ws.send(json.dumps({
+                            "type": "connect",
+                            "session_id": self._get_session_id()
+                        }))
+                        
+                        # Start ping-pong heartbeat
+                        def send_ping():
+                            while ws.sock and ws.sock.connected:
+                                try:
+                                    ws.send(json.dumps({"type": "ping", "timestamp": time.time()}))
+                                    time.sleep(30)  # Ping every 30 seconds
+                                except:
+                                    break
+                        
+                        ping_thread = threading.Thread(target=send_ping, daemon=True)
+                        ping_thread.start()
+                    
+                    ws = websocket.WebSocketApp(
+                        ws_url,
+                        on_message=on_ws_message,
+                        on_error=on_ws_error,
+                        on_close=on_ws_close,
+                        on_open=on_ws_open
+                    )
+                    
+                    # Run WebSocket connection (blocking until disconnected)
+                    ws.run_forever()
+                    
+                    # If we get here, connection was closed
+                    retry_count += 1
+                    if retry_count < max_retries:
+                        time.sleep(retry_delay)
+                        retry_delay = min(retry_delay * 2, 30)  # Exponential backoff, max 30s
+                    
+                except Exception as e:
+                    logger.error(f"WebSocket connection failed: {e}")
                     if on_error:
-                        on_error(error)
-                
-                def on_ws_close(ws):
-                    logger.info("WebSocket closed")
-                
-                def on_ws_open(ws):
-                    logger.info("WebSocket connected")
-                    # Send initial message
-                    ws.send(json.dumps({
-                        "type": "connect",
-                        "session_id": self._get_session_id()
-                    }))
-                
-                ws = websocket.WebSocketApp(
-                    ws_url,
-                    on_message=on_ws_message,
-                    on_error=on_ws_error,
-                    on_close=on_ws_close,
-                    on_open=on_ws_open
-                )
-                
-                ws.run_forever()
-                
-            except Exception as e:
-                logger.error(f"WebSocket connection failed: {e}")
-                if on_error:
-                    on_error(e)
+                        on_error(e)
+                    
+                    retry_count += 1
+                    if retry_count < max_retries:
+                        time.sleep(retry_delay)
+                        retry_delay = min(retry_delay * 2, 30)
+                    else:
+                        logger.error("Max reconnection attempts reached")
+                        break
         
         # Start WebSocket in background thread
-        ws_thread = threading.Thread(target=ws_thread, daemon=True)
-        ws_thread.start()
+        ws_thread_obj = threading.Thread(target=ws_thread, daemon=True)
+        ws_thread_obj.start()
         
-        return ws_thread
+        return ws_thread_obj
 
 
 # Compatibility wrapper for async methods

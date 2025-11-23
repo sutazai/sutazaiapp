@@ -27,11 +27,11 @@
     "gitmcp-docs": {
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/gitmcp-docs.sh"
     },
-    "claude-flow": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/claude-flow.sh"
+    "removed": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/removed.sh"
     },
-    "ruv-swarm": {
-      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/ruv-swarm.sh"
+    "removed": {
+      "command": "/opt/sutazaiapp/scripts/mcp/wrappers/removed.sh"
     },
     "context7": {
       "command": "/opt/sutazaiapp/scripts/mcp/wrappers/context7.sh"

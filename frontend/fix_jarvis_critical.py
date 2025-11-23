@@ -131,7 +131,7 @@ with st.sidebar:
     
     # Model Selection
     st.subheader("AI Model")
-    models = ["GPT-4", "GPT-3.5", "Claude", "Llama", "Ollama"]
+    models = ["TinyLlama", "Ollama"]  # Only local models available
     st.session_state.current_model = st.selectbox("Select Model", models, 
                                                   index=models.index(st.session_state.current_model))
     

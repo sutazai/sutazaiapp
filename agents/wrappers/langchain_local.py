@@ -25,6 +25,23 @@ class LangChainLocal(BaseAgentWrapper):
     def setup_langchain_routes(self):
         """Setup LangChain routes"""
         
+        @self.app.get("/capabilities")
+        async def get_capabilities():
+            """Return LangChain agent capabilities"""
+            return {
+                "agent": "LangChain",
+                "version": "1.0.0",
+                "capabilities": [
+                    "chain_execution",
+                    "document_qa",
+                    "memory_management",
+                    "tool_integration",
+                    "retrieval_augmented_generation"
+                ],
+                "chain_types": ["llm", "sequential", "map_reduce", "retrieval_qa"],
+                "endpoints": ["/health", "/capabilities", "/chat", "/chain/create", "/chain/execute"]
+            }
+        
         @self.app.post("/chain/create")
         async def create_chain(request: Dict[str, Any]):
             """Create a processing chain"""

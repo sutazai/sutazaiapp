@@ -13,12 +13,14 @@ The JARVIS frontend is **partially functional** with a basic Streamlit interface
 ## Working Features ✅
 
 ### 1. Basic UI Framework
+
 - **Streamlit app loads successfully** on port 11000
 - **Page title** correctly shows "JARVIS - SutazAI Assistant"
 - **Basic layout** with sidebar and main content area
 - **Tab navigation** between Chat, Voice, Monitor, and Agents sections
 
 ### 2. UI Components Present
+
 - **Control Panel** in sidebar with:
   - AI Agent selector dropdown (shows "jarvis")
   - Voice Settings section with Enable Voice Commands checkbox
@@ -28,11 +30,13 @@ The JARVIS frontend is **partially functional** with a basic Streamlit interface
   - Quick Actions (Clear Chat, Restart, Stop, Deploy)
 
 ### 3. Chat Interface
+
 - **Text input area** with placeholder "Type your message or say 'Hey JARVIS'..."
 - **Basic message display** area
 - **Some chat functionality** (limited testing passed)
 
 ### 4. Visual Elements
+
 - **JARVIS branding** with tagline "Just A Rather Very Intelligent System"
 - **Expandable sections** for Voice Parameters and Service Status
 - **Metrics display** showing 4 metrics components
@@ -41,6 +45,7 @@ The JARVIS frontend is **partially functional** with a basic Streamlit interface
 ## Non-Working/Missing Features ❌
 
 ### 1. Voice Assistant Features
+
 - **No functional voice recording** - buttons exist but don't work
 - **No audio visualization** components
 - **No voice output/TTS controls**
@@ -49,6 +54,7 @@ The JARVIS frontend is **partially functional** with a basic Streamlit interface
 - **Audio system errors** (ALSA lib errors indicate missing audio device configuration)
 
 ### 2. WebSocket/Real-time Features
+
 - **No WebSocket connection indicators**
 - **No real-time message updates**
 - **No connection state management**
@@ -57,6 +63,7 @@ The JARVIS frontend is **partially functional** with a basic Streamlit interface
 - **No latency/ping display**
 
 ### 3. AI Model Management
+
 - **No model selection functionality** (dropdown exists but limited)
 - **No model status indicators**
 - **No parameter controls** (temperature, tokens, etc.)
@@ -64,6 +71,7 @@ The JARVIS frontend is **partially functional** with a basic Streamlit interface
 - **No response metadata** display
 
 ### 4. Backend Integration Issues
+
 - **No visible API calls** to backend detected
 - **No service status details** (PostgreSQL, Redis, etc.)
 - **No agent/MCP server status**
@@ -72,6 +80,7 @@ The JARVIS frontend is **partially functional** with a basic Streamlit interface
 - **No export/download options**
 
 ### 5. Advanced UI Features
+
 - **No animated backgrounds** or visual effects
 - **No theme toggle** functionality
 - **No data visualization** components (charts/graphs)
@@ -82,20 +91,25 @@ The JARVIS frontend is **partially functional** with a basic Streamlit interface
 ## Critical Issues Found 🚨
 
 ### 1. Audio System Configuration
+
 ```
 ALSA lib errors - Cannot find card '0'
 Jack server is not running or cannot be started
 ```
+
 The voice assistant features fail due to missing audio device configuration in the container/server environment.
 
 ### 2. Missing Core Components
+
 Many expected components from `app.py` imports are not rendering:
+
 - `streamlit_mic_recorder` - not functioning
 - `streamlit_chat` - partially working
 - `streamlit_lottie` - no animations visible
 - Custom components (VoiceAssistant, SystemMonitor) - not visible
 
 ### 3. Backend Connectivity
+
 While showing "Backend Connected", no actual API communication was observed during testing.
 
 ## Test Results by Category
@@ -115,6 +129,7 @@ While showing "Backend Connected", no actual API communication was observed duri
 ### Immediate Priorities (P0)
 
 1. **Fix Audio Configuration**
+
    ```python
    # Add to Dockerfile or startup script
    export PULSE_SERVER=unix:/tmp/pulse-socket
@@ -122,6 +137,7 @@ While showing "Backend Connected", no actual API communication was observed duri
    ```
 
 2. **Implement Missing Chat Functionality**
+
    ```python
    # Ensure chat messages are properly displayed
    if st.session_state.messages:
@@ -130,6 +146,7 @@ While showing "Backend Connected", no actual API communication was observed duri
    ```
 
 3. **Fix Component Imports**
+
    ```python
    # Verify all imported components are installed
    pip install streamlit-mic-recorder streamlit-chat streamlit-lottie
@@ -138,6 +155,7 @@ While showing "Backend Connected", no actual API communication was observed duri
 ### High Priority (P1)
 
 4. **Implement WebSocket Connection**
+
    ```python
    # Add WebSocket client for real-time updates
    import asyncio
@@ -150,14 +168,16 @@ While showing "Backend Connected", no actual API communication was observed duri
    ```
 
 5. **Connect to Backend API**
+
    ```python
    # Ensure BackendClient is properly initialized
    backend_client = BackendClient(base_url="http://localhost:10200")
    ```
 
 6. **Add Model Selection**
+
    ```python
-   models = ["GPT-4", "GPT-3.5", "Claude", "Llama"]
+   models = ["tinyllama:latest"]  # Only local Ollama models available
    selected_model = st.selectbox("Select Model", models)
    ```
 
@@ -171,18 +191,21 @@ While showing "Backend Connected", no actual API communication was observed duri
 ## Specific Fixes for Failed Tests
 
 ### 1. Fix "should load the JARVIS interface" test
+
 ```python
 # Ensure proper page title setting
 st.set_page_config(page_title="JARVIS", ...)
 ```
 
 ### 2. Fix "should have chat input area" test
+
 ```python
 # Use standard Streamlit chat input
 user_input = st.chat_input("Type your message...")
 ```
 
 ### 3. Fix Voice Recording
+
 ```python
 # Check for audio availability before initializing
 try:
@@ -196,6 +219,7 @@ except Exception as e:
 ```
 
 ### 4. Add WebSocket Status Indicator
+
 ```python
 # Add connection status to sidebar
 if st.session_state.get('ws_connected'):

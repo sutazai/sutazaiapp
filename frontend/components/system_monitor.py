@@ -15,12 +15,18 @@ import requests
 from queue import Queue
 import asyncio
 import concurrent.futures
+import logging
+
+logger = logging.getLogger(__name__)
 
 class SystemMonitor:
     """Advanced system monitoring with real-time metrics"""
     
     # Class-level instance for singleton pattern
     _instance = None
+    _docker_client = None
+    _docker_available = None
+    _docker_error = None
     
     @classmethod
     def get_instance(cls):
@@ -67,8 +73,11 @@ class SystemMonitor:
     def get_docker_stats(cls) -> List[Dict]:
         """Get Docker container statistics"""
         containers = []
+        docker_client = cls._get_docker_client()
+        if not docker_client:
+            return containers
+
         try:
-            docker_client = docker.from_env()
             for container in docker_client.containers.list():
                 stats = container.stats(stream=False)
                 
@@ -92,9 +101,38 @@ class SystemMonitor:
                     "uptime": container.attrs["State"].get("StartedAt", "Unknown")
                 })
         except Exception as e:
-            print(f"Docker stats error: {e}")
+            cls._docker_error = str(e)
+            logger.debug("Docker stats error: %s", e)
         
         return containers
+
+    @classmethod
+    def _get_docker_client(cls):
+        """Return cached docker client if available, otherwise try to create one"""
+        if cls._docker_available is False:
+            return None
+        if cls._docker_client is not None:
+            return cls._docker_client
+        try:
+            cls._docker_client = docker.from_env()
+            cls._docker_available = True
+            cls._docker_error = None
+        except Exception as e:
+            cls._docker_available = False
+            cls._docker_client = None
+            cls._docker_error = str(e)
+            logger.warning("Docker client unavailable – disabling docker stats: %s", e)
+        return cls._docker_client
+
+    @classmethod
+    def get_docker_support_status(cls) -> Dict[str, Optional[str]]:
+        """Return docker availability information for UI"""
+        if cls._docker_available is None:
+            cls._get_docker_client()
+        return {
+            "available": cls._docker_available is True,
+            "error": cls._docker_error
+        }
     
     def __init__(self):
         self.metrics_queue = Queue()
@@ -102,12 +140,8 @@ class SystemMonitor:
         self.is_monitoring = False
         self.update_interval = 5  # seconds
         
-        # Initialize Docker client
-        try:
-            self.docker_client = docker.from_env()
-        except Exception as e:
-            print(f"Docker client initialization warning: {e}")
-            self.docker_client = None
+        # Initialize Docker client lazily via shared helper
+        self.docker_client = self._get_docker_client()
         
         # Service endpoints
         self.service_endpoints = {
@@ -332,11 +366,13 @@ class SystemMonitor:
     
     def get_docker_metrics(self) -> Dict:
         """Get Docker container metrics"""
-        if not self.docker_client:
-            return {"available": False, "error": "Docker client not initialized"}
+        docker_client = self.docker_client or self._get_docker_client()
+        if not docker_client:
+            error = self._docker_error or "Docker client not available"
+            return {"available": False, "error": error}
         
         try:
-            containers = self.docker_client.containers.list(all=True)
+            containers = docker_client.containers.list(all=True)
             container_info = []
             
             for container in containers:
@@ -379,6 +415,7 @@ class SystemMonitor:
                 "running_count": len([c for c in containers if c.status == "running"])
             }
         except Exception as e:
+            self.__class__._docker_error = str(e)
             return {"available": False, "error": str(e)}
     
     def get_service_health(self) -> Dict:

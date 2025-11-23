@@ -14,6 +14,10 @@ RUN apt-get update --fix-missing && \
     apt-get install -y --no-install-recommends \
         curl \
         ca-certificates \
+        portaudio19-dev \
+        python3-pyaudio \
+        gcc \
+        g++ \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

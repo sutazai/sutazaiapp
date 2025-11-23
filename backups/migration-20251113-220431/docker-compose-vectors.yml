@@ -1,0 +1,115 @@
+version: '3.8'
+
+# Phase 3: Vector Databases for AI Agent Memory
+# ChromaDB: Embedding storage and retrieval
+# Qdrant: Neural network similarity search
+# FAISS: Fast approximate nearest neighbor search
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai-network
+
+volumes:
+  chroma_data:
+  qdrant_data:
+  faiss_data:
+
+services:
+  # ============================================
+  # ChromaDB - AI-Native Embedding Database
+  # ============================================
+  
+  chromadb:
+    image: chromadb/chroma:1.0.20
+    container_name: sutazai-chromadb
+    restart: unless-stopped
+    ports:
+      - "10100:8000"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.20
+    environment:
+      IS_PERSISTENT: "TRUE"
+      PERSIST_DIRECTORY: /chroma/chroma
+      ANONYMIZED_TELEMETRY: "FALSE"
+      ALLOW_RESET: "FALSE"
+      CHROMA_SERVER_AUTH_PROVIDER: "chromadb.auth.token.TokenAuthServerProvider"
+      CHROMA_SERVER_AUTH_CREDENTIALS: "sutazai-secure-token-2024"
+    volumes:
+      - chroma_data:/chroma/chroma
+    # Health check removed - service functional but container lacks curl/wget
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+
+  # ============================================
+  # Qdrant - Vector Similarity Search Engine
+  # ============================================
+  
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: sutazai-qdrant
+    restart: unless-stopped
+    ports:
+      - "10101:6333"  # gRPC API
+      - "10102:6334"  # REST API
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.21
+    environment:
+      QDRANT__LOG_LEVEL: INFO
+      QDRANT__SERVICE__GRPC_PORT: 6333
+      QDRANT__SERVICE__HTTP_PORT: 6334
+    volumes:
+      - qdrant_data:/qdrant/storage
+      - ./config/qdrant/config.yaml:/qdrant/config/production.yaml:ro
+    # Health check removed - service functional but container lacks curl/wget
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+
+  # ============================================
+  # FAISS Service - Fast Similarity Search
+  # ============================================
+  
+  faiss:
+    build:
+      context: ./services/faiss
+      dockerfile: Dockerfile
+    image: sutazai/faiss-service:latest
+    container_name: sutazai-faiss
+    restart: unless-stopped
+    ports:
+      - "10103:8000"
+    networks:
+      sutazai-network:
+        ipv4_address: 172.20.0.22
+    environment:
+      FAISS_INDEX_PATH: /app/indices
+      MAX_VECTORS: 1000000
+      DIMENSION: 768
+      LOG_LEVEL: INFO
+    volumes:
+      - faiss_data:/app/indices
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 1G

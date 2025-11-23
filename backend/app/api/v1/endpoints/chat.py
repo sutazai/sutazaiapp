@@ -13,14 +13,15 @@ import asyncio
 
 from app.api.dependencies.auth import get_current_active_user, get_current_user_optional
 from app.models.user import User
+from app.core.sanitization import sanitize_text
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
 # Ollama configuration - using Docker service name
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "sutazai-ollama")
-OLLAMA_PORT = os.getenv("OLLAMA_PORT", "11434")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "host.docker.internal")
+OLLAMA_PORT = os.getenv("OLLAMA_PORT", "11435")
 OLLAMA_BASE_URL = f"http://{OLLAMA_HOST}:{OLLAMA_PORT}"
 
 # In-memory session storage (replace with Redis/DB in production)
@@ -42,6 +43,96 @@ class ChatResponse(BaseModel):
     status: str
     timestamp: str
     response_time: Optional[float] = None
+
+async def _process_chat_message(
+    chat: ChatMessage,
+    current_user: Optional[User],
+    validate_input: bool = False
+) -> ChatResponse:
+    """
+    Internal function to process chat messages - extracts duplicate logic
+
+    Args:
+        chat: Chat message request
+        current_user: Optional authenticated user
+        validate_input: Whether to validate message length and content
+
+    Returns:
+        ChatResponse with processed message
+
+    Raises:
+        HTTPException: On validation or processing errors
+    """
+    import time
+    start_time = time.time()
+
+    # Sanitize message to prevent XSS attacks
+    chat.message = sanitize_text(chat.message)
+
+    # Validate message if requested (for /send endpoint)
+    if validate_input:
+        if len(chat.message) > 5000:
+            raise HTTPException(
+                status_code=400,
+                detail="Message exceeds maximum length of 5000 characters"
+            )
+
+        if not chat.message.strip():
+            raise HTTPException(
+                status_code=400,
+                detail="Message cannot be empty"
+            )
+
+    # Generate session ID if not provided
+    session_id = chat.session_id or str(uuid.uuid4())
+
+    # Store message in session history
+    if session_id not in chat_sessions:
+        chat_sessions[session_id] = []
+
+    chat_sessions[session_id].append({
+        "role": "user",
+        "content": chat.message,
+        "timestamp": datetime.utcnow().isoformat(),
+        "user_id": str(current_user.id) if current_user else "anonymous"
+    })
+
+    try:
+        # Call Ollama for response
+        response_text = await call_ollama(
+            message=chat.message,
+            model=chat.model or "tinyllama:latest",
+            temperature=chat.temperature or 0.7
+        )
+
+        # Store assistant response in session
+        chat_sessions[session_id].append({
+            "role": "assistant",
+            "content": response_text,
+            "timestamp": datetime.utcnow().isoformat(),
+            "model": chat.model
+        })
+
+        response_time = time.time() - start_time
+
+        return ChatResponse(
+            response=response_text,
+            session_id=session_id,
+            model=chat.model or "tinyllama:latest",
+            status="success",
+            timestamp=datetime.utcnow().isoformat(),
+            response_time=response_time
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error processing chat message: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to process message: {str(e)}"
+        )
+
 
 async def call_ollama(message: str, model: str = "tinyllama:latest", temperature: float = 0.7) -> str:
     """Call Ollama API for text generation"""
@@ -214,23 +305,128 @@ async def send_message(
             detail=f"Failed to process message: {str(e)}"
         )
 
+@router.post("/send", response_model=ChatResponse)
+async def chat_send(
+    chat: ChatMessage,
+    current_user: Optional[User] = Depends(get_current_user_optional)
+) -> ChatResponse:
+    """Send a chat message and receive a response from Ollama LLM (auth optional for testing)"""
+    import time
+    start_time = time.time()
+    
+    # Validate message length
+    if len(chat.message) > 5000:
+        raise HTTPException(
+            status_code=400,
+            detail="Message exceeds maximum length of 5000 characters"
+        )
+    
+    if not chat.message.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Message cannot be empty"
+        )
+    
+    # Generate session ID if not provided
+    session_id = chat.session_id or str(uuid.uuid4())
+    
+    # Store message in session history
+    if session_id not in chat_sessions:
+        chat_sessions[session_id] = []
+    
+    chat_sessions[session_id].append({
+        "role": "user",
+        "content": chat.message,
+        "timestamp": datetime.utcnow().isoformat(),
+        "user_id": str(current_user.id) if current_user else "anonymous"
+    })
+    
+    try:
+        # Call Ollama for response
+        response_text = await call_ollama(
+            message=chat.message,
+            model=chat.model or "tinyllama:latest",
+            temperature=chat.temperature or 0.7
+        )
+        
+        # Store assistant response in session
+        chat_sessions[session_id].append({
+            "role": "assistant",
+            "content": response_text,
+            "timestamp": datetime.utcnow().isoformat(),
+            "model": chat.model
+        })
+        
+        response_time = time.time() - start_time
+        
+        return ChatResponse(
+            response=response_text,
+            session_id=session_id,
+            model=chat.model or "tinyllama:latest",
+            status="success",
+            timestamp=datetime.utcnow().isoformat(),
+            response_time=response_time
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error processing chat message: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to process message: {str(e)}"
+        )
+
 @router.get("/sessions/{session_id}")
 async def get_session(
     session_id: str,
-    current_user: Annotated[User, Depends(get_current_active_user)]
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    skip: int = 0,
+    limit: int = 50
 ) -> dict:
-    """Get chat session history (requires authentication)"""
+    """
+    Get chat session history with pagination
+    
+    Args:
+        session_id: Session ID
+        skip: Number of messages to skip (default: 0)
+        limit: Maximum messages to return (default: 50, max: 500)
+        current_user: Current authenticated user
+        
+    Returns:
+        Paginated session messages
+    """
     if session_id not in chat_sessions:
         raise HTTPException(
             status_code=404,
             detail=f"Session {session_id} not found"
         )
     
+    # Validate pagination params
+    if limit > 500:
+        limit = 500
+    if skip < 0:
+        skip = 0
+    
+    messages = chat_sessions[session_id]
+    total = len(messages)
+    
+    # Apply pagination
+    start = skip
+    end = skip + limit
+    paginated_messages = messages[start:end]
+    has_more = end < total
+    
     return {
         "session_id": session_id,
-        "messages": chat_sessions[session_id],
-        "message_count": len(chat_sessions[session_id]),
-        "created_at": chat_sessions[session_id][0]["timestamp"] if chat_sessions[session_id] else None
+        "messages": paginated_messages,
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "has_more": has_more,
+        "page": (skip // limit) + 1 if limit > 0 else 1,
+        "total_pages": (total + limit - 1) // limit if limit > 0 else 1,
+        "created_at": messages[0]["timestamp"] if messages else None
     }
 
 @router.get("/models")
@@ -541,8 +737,3 @@ async def websocket_chat_endpoint(websocket: WebSocket):
         except:
             pass
         ws_manager.disconnect(websocket, session_id)
-    else:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Session {session_id} not found"
-        )

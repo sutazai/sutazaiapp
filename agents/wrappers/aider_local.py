@@ -24,6 +24,34 @@ class AiderLocal(BaseAgentWrapper):
     def setup_aider_routes(self):
         """Setup Aider-specific routes"""
         
+        @self.app.get("/capabilities")
+        async def get_capabilities():
+            """Return Aider agent capabilities"""
+            return {
+                "agent": "Aider",
+                "version": "1.0.0",
+                "capabilities": [
+                    "code_review",
+                    "code_refactoring",
+                    "pair_programming",
+                    "code_generation",
+                    "bug_detection",
+                    "performance_optimization",
+                    "best_practices_review"
+                ],
+                "supported_languages": [
+                    "python", "javascript", "typescript", "java",
+                    "c", "cpp", "go", "rust", "ruby", "php"
+                ],
+                "endpoints": [
+                    "/health",
+                    "/capabilities",
+                    "/chat",
+                    "/code/review",
+                    "/code/refactor"
+                ]
+            }
+        
         @self.app.post("/code/review")
         async def review_code(request: Dict[str, Any]):
             """Review code and suggest improvements"""

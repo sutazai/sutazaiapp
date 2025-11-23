@@ -19,6 +19,14 @@ import uvicorn
 import uuid
 from datetime import datetime
 
+# Import prometheus client for metrics
+try:
+    from prometheus_client import Counter, Histogram, Gauge, generate_latest, REGISTRY, CONTENT_TYPE_LATEST
+    PROMETHEUS_AVAILABLE = True
+except ImportError:
+    PROMETHEUS_AVAILABLE = False
+    logger.warning("prometheus_client not installed - metrics endpoint will be unavailable")
+
 # Configure logging
 logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO"),
@@ -119,9 +127,55 @@ class BaseAgentWrapper:
             version="1.0.0"
         )
         self.setup_cors()
+        self.setup_prometheus_metrics()
         self.setup_routes()
         self.http_client = None
         self.mcp_registered = False
+    
+    def setup_prometheus_metrics(self):
+        """Initialize Prometheus metrics collectors"""
+        if PROMETHEUS_AVAILABLE:
+            # Request counters
+            self.requests_total = Counter(
+                f'{self.agent_id}_requests_total',
+                'Total requests to the agent',
+                ['method', 'endpoint', 'status']
+            )
+            
+            # Request duration histogram
+            self.request_duration = Histogram(
+                f'{self.agent_id}_request_duration_seconds',
+                'Request duration in seconds',
+                ['method', 'endpoint']
+            )
+            
+            # Ollama request counter and duration
+            self.ollama_requests_total = Counter(
+                f'{self.agent_id}_ollama_requests_total',
+                'Total requests to Ollama',
+                ['status']
+            )
+            
+            self.ollama_request_duration = Histogram(
+                f'{self.agent_id}_ollama_request_duration_seconds',
+                'Ollama request duration in seconds'
+            )
+            
+            # Health status gauge
+            self.health_status = Gauge(
+                f'{self.agent_id}_health_status',
+                'Agent health status (1=healthy, 0=unhealthy)'
+            )
+            
+            # MCP registration status
+            self.mcp_registered_status = Gauge(
+                f'{self.agent_id}_mcp_registered',
+                'MCP registration status (1=registered, 0=not registered)'
+            )
+            
+            logger.info(f"Prometheus metrics initialized for {self.agent_name}")
+        else:
+            logger.warning(f"Prometheus metrics not available for {self.agent_name}")
         
     def setup_cors(self):
         """Configure CORS for the FastAPI app"""
@@ -167,6 +221,11 @@ class BaseAgentWrapper:
             try:
                 # Check Ollama connection
                 ollama_status = await self.check_ollama_health()
+                
+                # Update health gauge if prometheus is available
+                if PROMETHEUS_AVAILABLE:
+                    self.health_status.set(1 if ollama_status else 0)
+                
                 return {
                     "status": "healthy" if ollama_status else "degraded",
                     "agent": self.agent_name,
@@ -175,7 +234,26 @@ class BaseAgentWrapper:
                 }
             except Exception as e:
                 logger.error(f"Health check failed: {e}")
+                if PROMETHEUS_AVAILABLE:
+                    self.health_status.set(0)
                 raise HTTPException(status_code=503, detail=str(e))
+        
+        @self.app.get("/metrics")
+        async def metrics():
+            """Prometheus metrics endpoint"""
+            if not PROMETHEUS_AVAILABLE:
+                raise HTTPException(
+                    status_code=501,
+                    detail="Prometheus metrics not available - prometheus_client not installed"
+                )
+            
+            try:
+                # Generate latest metrics
+                metrics_output = generate_latest(REGISTRY)
+                return Response(content=metrics_output, media_type=CONTENT_TYPE_LATEST)
+            except Exception as e:
+                logger.error(f"Failed to generate metrics: {e}")
+                raise HTTPException(status_code=500, detail=str(e))
         
         @self.app.post("/chat/completions")
         async def chat_completions(request: ChatRequest):
@@ -185,6 +263,49 @@ class BaseAgentWrapper:
                 return response
             except Exception as e:
                 logger.error(f"Chat completion failed: {e}")
+                raise HTTPException(status_code=500, detail=str(e))
+        
+        @self.app.post("/chat")
+        async def chat(request: Request):
+            """Simple chat endpoint for message-based interaction"""
+            try:
+                data = await request.json()
+                messages = data.get("messages", [])
+                
+                if not messages:
+                    raise HTTPException(status_code=400, detail="No messages provided")
+                
+                # Convert simple format to ChatRequest
+                chat_messages = []
+                for msg in messages:
+                    if isinstance(msg, dict):
+                        chat_messages.append(ChatMessage(
+                            role=msg.get("role", "user"),
+                            content=msg.get("content", "")
+                        ))
+                
+                chat_request = ChatRequest(
+                    messages=chat_messages,
+                    model=data.get("model", MODEL),
+                    temperature=data.get("temperature", 0.7),
+                    max_tokens=data.get("max_tokens", 2048),
+                    stream=data.get("stream", False)
+                )
+                
+                response = await self.generate_completion(chat_request)
+                
+                # Return simple format
+                return {
+                    "response": response.choices[0]["message"]["content"],
+                    "agent": self.agent_name,
+                    "model": response.model,
+                    "usage": response.usage
+                }
+                
+            except HTTPException:
+                raise
+            except Exception as e:
+                logger.error(f"Chat failed: {e}")
                 raise HTTPException(status_code=500, detail=str(e))
         
         @self.app.post("/generate")
@@ -252,11 +373,17 @@ class BaseAgentWrapper:
             
             if response.status_code == 200:
                 self.mcp_registered = True
+                if PROMETHEUS_AVAILABLE:
+                    self.mcp_registered_status.set(1)
                 logger.info(f"Successfully registered {self.agent_name} with MCP Bridge")
             else:
+                if PROMETHEUS_AVAILABLE:
+                    self.mcp_registered_status.set(0)
                 logger.warning(f"Failed to register with MCP Bridge: {response.status_code}")
                 
         except Exception as e:
+            if PROMETHEUS_AVAILABLE:
+                self.mcp_registered_status.set(0)
             logger.error(f"Error registering with MCP Bridge: {e}")
     
     async def send_to_mcp(self, message_type: str, payload: Dict[str, Any]):

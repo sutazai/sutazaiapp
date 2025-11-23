@@ -1,0 +1,12 @@
+sutazaiapp_chroma_data
+sutazaiapp_consul_data
+sutazaiapp_faiss_data
+sutazaiapp_jarvis-data
+sutazaiapp_jarvis-logs
+sutazaiapp_neo4j_data
+sutazaiapp_neo4j_logs
+sutazaiapp_neo4j_plugins
+sutazaiapp_postgres_data
+sutazaiapp_qdrant_data
+sutazaiapp_rabbitmq_data
+sutazaiapp_redis_data

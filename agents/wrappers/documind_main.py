@@ -25,6 +25,17 @@ class DocumindLocal(BaseAgentWrapper):
     def setup_documind_routes(self):
         """Setup Documind routes"""
         
+        @self.app.get("/capabilities")
+        async def get_capabilities():
+            """Return Documind agent capabilities"""
+            return {
+                "agent": "Documind",
+                "version": "1.0.0",
+                "capabilities": ["document_processing", "text_extraction", "document_summarization", "information_extraction"],
+                "supported_formats": ["pdf", "docx", "txt", "md", "html"],
+                "endpoints": ["/health", "/capabilities", "/chat", "/document/analyze", "/document/summarize"]
+            }
+        
         @self.app.post("/document/analyze")
         async def analyze_document(request: Dict[str, Any]):
             """Analyze document content"""

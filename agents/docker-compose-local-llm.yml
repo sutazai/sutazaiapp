@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
     command: serve
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      test: ["CMD-SHELL", "ollama list || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -32,7 +32,7 @@ services:
     working_dir: /app
     command: |
       sh -c "apt-get update && apt-get install -y curl &&
-             pip install --no-cache-dir crewai crewai-tools langchain-community langchain-ollama fastapi uvicorn &&
+             pip install --no-cache-dir crewai crewai-tools langchain-community langchain-ollama fastapi uvicorn prometheus-client &&
              python /app/crewai_local.py"
     ports:
       - "11403:8000"
@@ -68,7 +68,7 @@ services:
     working_dir: /app
     command: |
       sh -c "apt-get update && apt-get install -y git curl &&
-             pip install --no-cache-dir aider-chat litellm fastapi uvicorn &&
+             pip install --no-cache-dir aider-chat litellm fastapi uvicorn prometheus-client &&
              python /app/aider_local.py"
     ports:
       - "11404:8000"
@@ -104,7 +104,7 @@ services:
     working_dir: /app
     command: |
       sh -c "apt-get update && apt-get install -y git curl &&
-             pip install --no-cache-dir letta fastapi uvicorn &&
+             pip install --no-cache-dir letta fastapi uvicorn prometheus-client &&
              python /app/letta_local.py"
     ports:
       - "11401:8000"
@@ -139,7 +139,7 @@ services:
     working_dir: /app
     command: |
       sh -c "apt-get update && apt-get install -y git curl &&
-             pip install --no-cache-dir litellm fastapi uvicorn &&
+             pip install --no-cache-dir litellm fastapi uvicorn prometheus-client &&
              python /app/gpt_engineer_local.py"
     ports:
       - "11416:8000"
@@ -176,7 +176,7 @@ services:
     working_dir: /app
     command: |
       sh -c "apt-get update && apt-get install -y git curl &&
-             pip install --no-cache-dir pandas numpy yfinance fastapi uvicorn httpx &&
+             pip install --no-cache-dir pandas numpy yfinance fastapi uvicorn httpx prometheus-client &&
              python /app/finrobot_wrapper.py"
     ports:
       - "11410:8000"
@@ -211,7 +211,7 @@ services:
     working_dir: /app
     command: |
       sh -c "apt-get update && apt-get install -y curl &&
-             pip install --no-cache-dir litellm fastapi uvicorn &&
+             pip install --no-cache-dir litellm fastapi uvicorn prometheus-client &&
              python /app/shellgpt_local.py"
     ports:
       - "11413:8000"
@@ -243,7 +243,7 @@ services:
     working_dir: /app
     command: |
       sh -c "apt-get update && apt-get install -y curl &&
-             pip install --no-cache-dir fastapi uvicorn PyPDF2 python-docx httpx &&
+             pip install --no-cache-dir fastapi uvicorn PyPDF2 python-docx httpx prometheus-client &&
              python /app/documind_main.py"
     ports:
       - "11414:8000"
@@ -279,7 +279,7 @@ services:
     working_dir: /app
     command: |
       sh -c "apt-get update && apt-get install -y curl &&
-             pip install --no-cache-dir langchain langchain-community langchain-ollama fastapi uvicorn &&
+             pip install --no-cache-dir langchain langchain-community langchain-ollama fastapi uvicorn prometheus-client &&
              python /app/langchain_local.py"
     ports:
       - "11405:8000"

@@ -1,0 +1,5 @@
+ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
+pytest: error: unrecognized arguments: --json-report --json-report-file=test-results/phase3_backend_tests_20251116_115139.json
+  inifile: /opt/sutazaiapp/backend/pytest.ini
+  rootdir: /opt/sutazaiapp/backend
+

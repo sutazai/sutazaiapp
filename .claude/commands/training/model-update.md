@@ -4,7 +4,7 @@ Update neural models with new data.
 
 ## Usage
 ```bash
-npx claude-flow training model-update [options]
+npx removed training model-update [options]
 ```
 
 ## Options
@@ -15,11 +15,11 @@ npx claude-flow training model-update [options]
 ## Examples
 ```bash
 # Update all models
-npx claude-flow training model-update
+npx removed training model-update
 
 # Specific model
-npx claude-flow training model-update --model agent-selector
+npx removed training model-update --model agent-selector
 
 # Incremental with validation
-npx claude-flow training model-update --incremental --validate
+npx removed training model-update --incremental --validate
 ```

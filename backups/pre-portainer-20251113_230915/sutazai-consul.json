@@ -1,0 +1,369 @@
+[
+    {
+        "Id": "180fe6a210c9847a9bee42a0bc36497dc8feca77734f10a656f1017e03f45de7",
+        "Created": "2025-11-13T21:54:09.402125962Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "agent",
+            "-server",
+            "-ui",
+            "-bootstrap-expect=1",
+            "-client=0.0.0.0",
+            "-bind=172.20.0.14"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 737254,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-11-13T21:54:09.698349817Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2025-11-13T23:08:11.46577237+01:00",
+                        "End": "2025-11-13T23:08:11.667906251+01:00",
+                        "ExitCode": 0,
+                        "Output": "Node          Address           Status  Type    Build   Protocol  DC   Partition  Segment\n180fe6a210c9  172.20.0.14:8301  alive   server  1.19.2  2         dc1  default    <all>\n"
+                    },
+                    {
+                        "Start": "2025-11-13T23:08:26.668817924+01:00",
+                        "End": "2025-11-13T23:08:26.965927306+01:00",
+                        "ExitCode": 0,
+                        "Output": "Node          Address           Status  Type    Build   Protocol  DC   Partition  Segment\n180fe6a210c9  172.20.0.14:8301  alive   server  1.19.2  2         dc1  default    <all>\n"
+                    },
+                    {
+                        "Start": "2025-11-13T23:08:41.968715959+01:00",
+                        "End": "2025-11-13T23:08:42.175965944+01:00",
+                        "ExitCode": 0,
+                        "Output": "Node          Address           Status  Type    Build   Protocol  DC   Partition  Segment\n180fe6a210c9  172.20.0.14:8301  alive   server  1.19.2  2         dc1  default    <all>\n"
+                    },
+                    {
+                        "Start": "2025-11-13T23:08:57.177249787+01:00",
+                        "End": "2025-11-13T23:08:57.36709907+01:00",
+                        "ExitCode": 0,
+                        "Output": "Node          Address           Status  Type    Build   Protocol  DC   Partition  Segment\n180fe6a210c9  172.20.0.14:8301  alive   server  1.19.2  2         dc1  default    <all>\n"
+                    },
+                    {
+                        "Start": "2025-11-13T23:09:12.367832543+01:00",
+                        "End": "2025-11-13T23:09:12.574803278+01:00",
+                        "ExitCode": 0,
+                        "Output": "Node          Address           Status  Type    Build   Protocol  DC   Partition  Segment\n180fe6a210c9  172.20.0.14:8301  alive   server  1.19.2  2         dc1  default    <all>\n"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:cb62b745d6a11436fb49a53680de3aa41b0699b20f582ed8535fa189d6480e15",
+        "ResolvConfPath": "/var/lib/docker/containers/180fe6a210c9847a9bee42a0bc36497dc8feca77734f10a656f1017e03f45de7/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/180fe6a210c9847a9bee42a0bc36497dc8feca77734f10a656f1017e03f45de7/hostname",
+        "HostsPath": "/var/lib/docker/containers/180fe6a210c9847a9bee42a0bc36497dc8feca77734f10a656f1017e03f45de7/hosts",
+        "LogPath": "/var/lib/docker/containers/180fe6a210c9847a9bee42a0bc36497dc8feca77734f10a656f1017e03f45de7/180fe6a210c9847a9bee42a0bc36497dc8feca77734f10a656f1017e03f45de7-json.log",
+        "Name": "/sutazai-consul",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sutazaiapp_sutazai-network",
+            "PortBindings": {
+                "8500/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10006"
+                    }
+                ],
+                "8600/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10007"
+                    }
+                ],
+                "8600/udp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10007"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 268435456,
+            "NanoCpus": 250000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 536870912,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "180fe6a210c9847a9bee42a0bc36497dc8feca77734f10a656f1017e03f45de7",
+                "LowerDir": "/var/lib/docker/overlay2/e18dd0c330fa90e592409e54940ed795d5b3d21904661ab7fa94ec4cd5bed88c-init/diff:/var/lib/docker/overlay2/891aad0006d33ca059761bc2e711ab72fc2369f2d868dff2f463e84769a2e764/diff:/var/lib/docker/overlay2/fd6a55600760da23677fdff7307ceea51a05a76cc8b076d99bbe872c2a5df55b/diff:/var/lib/docker/overlay2/267fc9befe85679c746ed2f05dcc18368119aaf92663699346a91698a8e3119e/diff:/var/lib/docker/overlay2/c8dbb5522f3c06024ca2e6d8c29917bc9193e9c5df0cf8c1d372e860833791ec/diff:/var/lib/docker/overlay2/2df01ea6ad5f1607424efa79cd8118095dec73c2c7f6baeac38e5bc920999047/diff:/var/lib/docker/overlay2/4ae88f66d3280064e5703dbc163cfbbe7e277726792421ac2c8998e5414c1675/diff:/var/lib/docker/overlay2/143a2900f2d0b7f433a8022ddc56ce13ed7b078c73ab0e0a828d9c00cd96ec07/diff:/var/lib/docker/overlay2/bf47c01a4e6e6c5a07a37f61dfe17f43dac2215d35d76682f96173ef9113ac83/diff:/var/lib/docker/overlay2/66fd93fb44d9c1001b9def0d3323ae04057794187d4305edfb9a0b97f7f47d80/diff",
+                "MergedDir": "/var/lib/docker/overlay2/e18dd0c330fa90e592409e54940ed795d5b3d21904661ab7fa94ec4cd5bed88c/merged",
+                "UpperDir": "/var/lib/docker/overlay2/e18dd0c330fa90e592409e54940ed795d5b3d21904661ab7fa94ec4cd5bed88c/diff",
+                "WorkDir": "/var/lib/docker/overlay2/e18dd0c330fa90e592409e54940ed795d5b3d21904661ab7fa94ec4cd5bed88c/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "e2bfc20991115470f38722c1cf91cddd4dc98c35e615c54f19ba7574f9745b16",
+                "Source": "/var/lib/docker/volumes/e2bfc20991115470f38722c1cf91cddd4dc98c35e615c54f19ba7574f9745b16/_data",
+                "Destination": "/consul/data",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "180fe6a210c9",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8300/tcp": {},
+                "8301/tcp": {},
+                "8301/udp": {},
+                "8302/tcp": {},
+                "8302/udp": {},
+                "8500/tcp": {},
+                "8600/tcp": {},
+                "8600/udp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "BIN_NAME=consul",
+                "PRODUCT_VERSION=1.19.2",
+                "PRODUCT_NAME=consul"
+            ],
+            "Cmd": [
+                "agent",
+                "-server",
+                "-ui",
+                "-bootstrap-expect=1",
+                "-client=0.0.0.0",
+                "-bind=172.20.0.14"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "consul",
+                    "members"
+                ],
+                "Interval": 15000000000,
+                "Timeout": 5000000000,
+                "StartPeriod": 20000000000,
+                "Retries": 5
+            },
+            "Image": "hashicorp/consul:1.19",
+            "Volumes": {
+                "/consul/data": {}
+            },
+            "WorkingDir": "",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "e0db89b3a914f81fac9963c6edf0503dc47447b96944b6d13248f483ea1c9d5c",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sutazaiapp",
+                "com.docker.compose.project.config_files": "docker-compose-portainer.yml",
+                "com.docker.compose.project.working_dir": "/opt/sutazaiapp",
+                "com.docker.compose.service": "consul",
+                "com.docker.compose.version": "1.29.2",
+                "org.opencontainers.image.authors": "Consul Team <consul@hashicorp.com>",
+                "org.opencontainers.image.description": "Consul is a datacenter runtime that provides service discovery, configuration, and orchestration.",
+                "org.opencontainers.image.documentation": "https://www.consul.io/docs",
+                "org.opencontainers.image.licenses": "BSL-1.1",
+                "org.opencontainers.image.source": "https://github.com/hashicorp/consul",
+                "org.opencontainers.image.title": "consul",
+                "org.opencontainers.image.url": "https://www.consul.io/",
+                "org.opencontainers.image.vendor": "HashiCorp",
+                "org.opencontainers.image.version": "1.19.2",
+                "version": "1.19.2"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "8fc49f5fd546d84d04776a517e3937eab44d63e9b4ab11c77666dc044a93198a",
+            "SandboxKey": "/var/run/docker/netns/8fc49f5fd546",
+            "Ports": {
+                "8300/tcp": null,
+                "8301/tcp": null,
+                "8301/udp": null,
+                "8302/tcp": null,
+                "8302/udp": null,
+                "8500/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10006"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10006"
+                    }
+                ],
+                "8600/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10007"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10007"
+                    }
+                ],
+                "8600/udp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10007"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10007"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sutazaiapp_sutazai-network": {
+                    "IPAMConfig": {
+                        "IPv4Address": "172.20.0.14"
+                    },
+                    "Links": null,
+                    "Aliases": [
+                        "180fe6a210c9",
+                        "consul"
+                    ],
+                    "MacAddress": "ea:0e:4a:f2:2b:77",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "c9a748f48913a9868b40449ed3c89a66069ed7d1213a35a485552a35deac76a8",
+                    "EndpointID": "ebf9c936b103b597fa3407379a18d60bd1237320a194675aa230dcf147b9e7ba",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.14",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sutazai-consul",
+                        "180fe6a210c9",
+                        "consul"
+                    ]
+                }
+            }
+        }
+    }
+]

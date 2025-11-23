@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Quick Start Commands
 
 ### Full Stack Deployment
+
 ```bash
 # Complete system deployment (recommended first run)
 cd /opt/sutazaiapp
@@ -18,6 +19,7 @@ docker compose -f docker-compose-vectors.yml up -d   # Vector databases
 ```
 
 ### Service Management
+
 ```bash
 # Check all services
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
@@ -34,6 +36,7 @@ docker compose down
 ```
 
 ### Testing Commands
+
 ```bash
 # Backend tests (Python/FastAPI)
 cd backend
@@ -54,6 +57,7 @@ docker exec sutazai-backend pytest tests/integration/
 ```
 
 ### Database Access
+
 ```bash
 # PostgreSQL (main database)
 PGPASSWORD=sutazai_secure_2024 psql -h localhost -p 10000 -U jarvis -d jarvis_ai
@@ -73,6 +77,7 @@ redis-cli -h localhost -p 10001
 ## Architecture Overview
 
 ### System Design
+
 **Type**: Hybrid Microservices with Event-Driven Multi-Agent Orchestration
 
 ```
@@ -98,6 +103,7 @@ AI Agents (11401-11801)
 ```
 
 ### Network Configuration
+
 - **Docker Network**: sutazai-network (172.20.0.0/16)
 - **Backend Services**: 172.20.0.10-29
 - **Vector Services**: 172.20.0.20-22
@@ -107,6 +113,7 @@ AI Agents (11401-11801)
 ### Key Files and Patterns
 
 #### Backend Structure (FastAPI)
+
 ```
 backend/
 ├── app/
@@ -124,6 +131,7 @@ backend/
 ```
 
 #### Adding New API Endpoint
+
 ```python
 # 1. Create endpoint file: app/api/v1/endpoints/new_feature.py
 from fastapi import APIRouter, Depends
@@ -148,6 +156,7 @@ api_router.include_router(new_feature.router, prefix="/features", tags=["feature
 ## MCP Server Infrastructure
 
 ### Available MCP Servers (18 total)
+
 | Server | Purpose | Command |
 |--------|---------|---------|
 | filesystem | File system access | `/scripts/mcp/wrappers/filesystem.sh` |
@@ -156,8 +165,8 @@ api_router.include_router(new_feature.router, prefix="/features", tags=["feature
 | memory-bank | Project memory | `/scripts/mcp/wrappers/memory-bank.sh` |
 | github | GitHub API | `/scripts/mcp/wrappers/github.sh` |
 | github-project-manager | Project management | `/scripts/mcp/wrappers/github-project-manager.sh` |
-| claude-flow | Agent orchestration | `/scripts/mcp/wrappers/claude-flow.sh` |
-| ruv-swarm | Swarm management | `/scripts/mcp/wrappers/ruv-swarm.sh` |
+| removed | Agent orchestration | `/scripts/mcp/wrappers/removed.sh` |
+| removed | Swarm management | `/scripts/mcp/wrappers/removed.sh` |
 | context7 | Documentation lookup | `/scripts/mcp/wrappers/context7.sh` |
 | playwright | Browser automation | `/scripts/mcp/wrappers/playwright.sh` |
 | sequential-thinking | Multi-step reasoning | `/scripts/mcp/wrappers/sequential-thinking.sh` |
@@ -170,6 +179,7 @@ api_router.include_router(new_feature.router, prefix="/features", tags=["feature
 | everything | Utility server | `/scripts/mcp/wrappers/everything.sh` |
 
 ### MCP Server Management
+
 ```bash
 # Test individual server
 /opt/sutazaiapp/scripts/mcp/wrappers/[server-name].sh --selfcheck
@@ -187,6 +197,7 @@ export DEBUG=mcp:*
 ## Code Conventions
 
 ### Python (Backend/Services)
+
 - **Naming**: snake_case for functions/variables, PascalCase for classes
 - **Async**: Use async/await throughout FastAPI
 - **Type Hints**: Always include (e.g., `Optional[Dict[str, Any]]`)
@@ -194,12 +205,14 @@ export DEBUG=mcp:*
 - **Imports**: stdlib → third-party → local
 
 ### TypeScript (MCP Servers)
+
 - **Naming**: camelCase for functions/variables, PascalCase for classes/types
 - **Modules**: ES modules with .js extensions in imports
 - **Strict Mode**: Enabled in tsconfig.json
 - **Error Handling**: Typed errors with McpError
 
 ### Shell Scripts
+
 - **Shebang**: `#!/bin/bash`
 - **Error Handling**: `set -e` at start
 - **Logging**: Use color-coded output functions
@@ -208,6 +221,7 @@ export DEBUG=mcp:*
 ## Common Operations
 
 ### Adding New Agent
+
 ```python
 # 1. Create wrapper in agents/wrappers/new_agent_local.py
 from base_agent_wrapper import BaseAgentWrapper
@@ -227,6 +241,7 @@ AGENT_REGISTRY["new_agent"] = {
 ```
 
 ### Database Migrations
+
 ```bash
 # Create migration
 cd backend
@@ -240,6 +255,7 @@ alembic downgrade -1
 ```
 
 ### Health Checks
+
 ```bash
 # System audit
 ./scripts/comprehensive_system_audit.sh
@@ -254,6 +270,7 @@ curl http://localhost:10100/api/v1/heartbeat # ChromaDB
 ## Troubleshooting
 
 ### Service Won't Start
+
 ```bash
 # Check logs
 docker logs sutazai-[service] --tail 50
@@ -266,6 +283,7 @@ docker compose up -d --force-recreate [service]
 ```
 
 ### MCP Server Issues
+
 ```bash
 # Check wrapper exists
 ls -la /opt/sutazaiapp/scripts/mcp/wrappers/[server].sh
@@ -279,6 +297,7 @@ pkill -f "scripts/mcp/wrappers/[server]"
 ```
 
 ### Database Connection Issues
+
 ```bash
 # Test PostgreSQL connection
 docker exec sutazai-backend pg_isready -h sutazai-postgres -p 5432
@@ -291,6 +310,7 @@ grep PASSWORD /opt/sutazaiapp/.env
 ```
 
 ### Resource Issues
+
 ```bash
 # Check disk space
 df -h
@@ -308,7 +328,7 @@ docker stats --no-stream
 ## Critical Issues to Address
 
 1. **Duplicate IP Assignment**: Frontend and Backend both use 172.20.0.30
-2. **Resource Misallocation**: 
+2. **Resource Misallocation**:
    - Ollama: Using 24MB of 23GB allocated
    - Neo4j: At 96% memory utilization
    - Vector DBs: Over-provisioned
@@ -332,7 +352,7 @@ docker stats --no-stream
 ## Testing Requirements
 
 - **Coverage Target**: 80% for core, 95% for critical paths
-- **Test Naming**: 
+- **Test Naming**:
   - Python: `test_<function_name>`
   - TypeScript: `should <behavior>`
 - **Test Locations**:

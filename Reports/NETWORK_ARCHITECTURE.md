@@ -92,6 +92,7 @@
 
 ### Backend Service Dependencies
 ```
+
 sutazai-backend
 ├── sutazai-postgres (Database)
 ├── sutazai-redis (Cache/Sessions)
@@ -100,16 +101,19 @@ sutazai-backend
 ├── sutazai-chromadb (Vector Store)
 ├── sutazai-qdrant (Vector Store)
 └── sutazai-faiss (Vector Store)
+
 ```
 
 ### Agent Dependencies
 ```
+
 AI Agents
 ├── sutazai-ollama (LLM Provider)
 ├── sutazai-mcp-bridge (Orchestration)
 ├── sutazai-rabbitmq (Message Queue)
 ├── sutazai-redis (Cache)
 └── sutazai-consul (Service Discovery)
+
 ```
 
 ## Network Security Considerations
@@ -161,22 +165,28 @@ docker stats --no-stream $(docker ps --filter "name=sutazai" -q)
 ### Common Issues and Solutions
 
 #### IP Address Conflicts
+
 **Problem**: Multiple containers assigned same IP
-**Solution**: 
+**Solution**:
+
 1. Stop conflicting containers
 2. Update docker-compose files with unique IPs
 3. Recreate containers
 
 #### Service Discovery Issues
+
 **Problem**: Services cannot find each other
 **Solution**:
+
 1. Verify all services on same network
 2. Use container names for internal communication
 3. Check Consul service registry
 
 #### Port Conflicts
+
 **Problem**: Port already in use
 **Solution**:
+
 1. Check for conflicting processes: `netstat -tulpn | grep [port]`
 2. Stop conflicting service
 3. Update port mapping in docker-compose
@@ -184,12 +194,14 @@ docker stats --no-stream $(docker ps --filter "name=sutazai" -q)
 ## Maintenance Procedures
 
 ### Adding New Services
+
 1. Assign IP from appropriate range
 2. Add to relevant docker-compose file
 3. Update this documentation
 4. Test network connectivity
 
 ### Network Cleanup
+
 ```bash
 # Remove orphaned containers
 docker container prune
@@ -204,11 +216,13 @@ docker system prune -a --volumes
 ## Performance Optimization
 
 ### Current Resource Allocations
+
 - **Total Memory**: ~11GB allocated across all services
 - **CPU**: ~15 CPU cores allocated
 - **Disk**: Variable based on data volumes
 
 ### Optimization Opportunities
+
 1. **Memory**: Reduce allocations for over-provisioned services
 2. **CPU**: Implement CPU quotas to prevent resource contention
 3. **Network**: Enable compression for inter-service communication
@@ -217,17 +231,20 @@ docker system prune -a --volumes
 ## Future Roadmap
 
 ### Phase 1: Network Segmentation (Current Focus)
+
 - [x] Document current architecture
 - [x] Fix IP conflicts
 - [ ] Implement network isolation
 - [ ] Apply network policies
 
 ### Phase 2: Security Hardening
+
 - [ ] Enable TLS between services
 - [ ] Implement secrets management
 - [ ] Add network intrusion detection
 
 ### Phase 3: High Availability
+
 - [ ] Service replication
 - [ ] Load balancing
 - [ ] Failover mechanisms
@@ -236,6 +253,7 @@ docker system prune -a --volumes
 ## Quick Reference
 
 ### Essential Commands
+
 ```bash
 # View all SutazAI containers
 docker ps --filter "name=sutazai"
@@ -254,16 +272,18 @@ docker network inspect sutazaiapp_sutazai-network | jq '.Containers'
 ```
 
 ### Service URLs
-- **Frontend**: http://localhost:11000
-- **Backend API**: http://localhost:10200
-- **Kong Admin**: http://localhost:10009
-- **RabbitMQ Management**: http://localhost:10005
-- **Neo4j Browser**: http://localhost:10002
-- **Consul UI**: http://localhost:10006
+
+- **Frontend**: <http://localhost:11000>
+- **Backend API**: <http://localhost:10200>
+- **Kong Admin**: <http://localhost:10009>
+- **RabbitMQ Management**: <http://localhost:10005>
+- **Neo4j Browser**: <http://localhost:10002>
+- **Consul UI**: <http://localhost:10006>
 
 ## Contact and Support
 
 For infrastructure issues or questions:
+
 1. Check service logs first
 2. Verify network connectivity
 3. Review this documentation

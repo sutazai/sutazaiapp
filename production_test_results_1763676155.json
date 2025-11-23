@@ -1,0 +1,125 @@
+{
+  "summary": {
+    "total": 19,
+    "passed": 15,
+    "warnings": 2,
+    "failed": 2,
+    "duration": 0.49131274223327637
+  },
+  "tests": [
+    {
+      "test": "Container Count",
+      "status": "PASS",
+      "details": "30/30 containers running",
+      "timestamp": 1763676155.2496145
+    },
+    {
+      "test": "Backend Health",
+      "status": "PASS",
+      "details": "Status: healthy",
+      "timestamp": 1763676155.3242807
+    },
+    {
+      "test": "Agent: letta",
+      "status": "PASS",
+      "details": "Port 11401 healthy",
+      "timestamp": 1763676155.3462472
+    },
+    {
+      "test": "Agent: crewai",
+      "status": "PASS",
+      "details": "Port 11403 healthy",
+      "timestamp": 1763676155.3689926
+    },
+    {
+      "test": "Agent: aider",
+      "status": "PASS",
+      "details": "Port 11404 healthy",
+      "timestamp": 1763676155.3919103
+    },
+    {
+      "test": "Agent: langchain",
+      "status": "PASS",
+      "details": "Port 11405 healthy",
+      "timestamp": 1763676155.4134212
+    },
+    {
+      "test": "Agent: finrobot",
+      "status": "PASS",
+      "details": "Port 11410 healthy",
+      "timestamp": 1763676155.4417899
+    },
+    {
+      "test": "Agent: shellgpt",
+      "status": "PASS",
+      "details": "Port 11413 healthy",
+      "timestamp": 1763676155.468401
+    },
+    {
+      "test": "Agent: documind",
+      "status": "PASS",
+      "details": "Port 11414 healthy",
+      "timestamp": 1763676155.4908946
+    },
+    {
+      "test": "Agent: gpt-engineer",
+      "status": "PASS",
+      "details": "Port 11416 healthy",
+      "timestamp": 1763676155.5124595
+    },
+    {
+      "test": "MCP Bridge",
+      "status": "PASS",
+      "details": "12 agents registered",
+      "timestamp": 1763676155.5321562
+    },
+    {
+      "test": "Prometheus Targets",
+      "status": "PASS",
+      "details": "17/17 targets up",
+      "timestamp": 1763676155.552842
+    },
+    {
+      "test": "Grafana",
+      "status": "PASS",
+      "details": "Version: 12.2.1",
+      "timestamp": 1763676155.5714803
+    },
+    {
+      "test": "Authentication Flow",
+      "status": "WARN",
+      "details": "Register: HTTP 422",
+      "timestamp": 1763676155.594825
+    },
+    {
+      "test": "Vector DB: ChromaDB",
+      "status": "WARN",
+      "details": "HTTP 410",
+      "timestamp": 1763676155.6203747
+    },
+    {
+      "test": "Vector DB: Qdrant",
+      "status": "FAIL",
+      "details": "illegal request line",
+      "timestamp": 1763676155.6409085
+    },
+    {
+      "test": "Vector DB: FAISS",
+      "status": "PASS",
+      "details": "Responding on http://localhost:10103",
+      "timestamp": 1763676155.6610255
+    },
+    {
+      "test": "Database Connections",
+      "status": "FAIL",
+      "details": "HTTP 307",
+      "timestamp": 1763676155.703067
+    },
+    {
+      "test": "Frontend Accessibility",
+      "status": "PASS",
+      "details": "Frontend responding",
+      "timestamp": 1763676155.723354
+    }
+  ]
+}

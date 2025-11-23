@@ -216,20 +216,22 @@ class EmailService:
                 logger.info(f"Development mode: Email saved to {email_file}")
                 return True
                 
-        except aiosmtplib.SMTPException as e:
-            logger.error(f"SMTP error sending email to {to_email}: {e}")
-            self._retry_queue.append({
-                "to_email": to_email,
-                "subject": subject,
-                "body_text": body_text,
-                "body_html": body_html,
-                "error": str(e),
-                "timestamp": datetime.now(timezone.utc)
-            })
-            return False
         except Exception as e:
-            logger.error(f"Unexpected error sending email to {to_email}: {e}")
-            return False
+            # Handle SMTP errors if aiosmtplib is available
+            if HAS_AIOSMTPLIB and isinstance(e, aiosmtplib.SMTPException):
+                logger.error(f"SMTP error sending email to {to_email}: {e}")
+                self._retry_queue.append({
+                    "to_email": to_email,
+                    "subject": subject,
+                    "body_text": body_text,
+                    "body_html": body_html,
+                    "error": str(e),
+                    "timestamp": datetime.now(timezone.utc)
+                })
+                return False
+            else:
+                logger.error(f"Error sending email to {to_email}: {e}")
+                return False
     
     async def send_password_reset_email(self, email: str, reset_token: str) -> bool:
         """

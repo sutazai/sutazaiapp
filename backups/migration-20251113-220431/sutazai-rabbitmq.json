@@ -1,0 +1,358 @@
+[
+    {
+        "Id": "237ab520f398e77823fc26404ea23815a6d801caf951179d4a4d0f25e9947b84",
+        "Created": "2025-11-13T14:45:13.685243703Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "rabbitmq-server"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 84598,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-11-13T14:45:14.164752739Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2025-11-13T22:03:38.817799473+01:00",
+                        "End": "2025-11-13T22:03:41.015633756+01:00",
+                        "ExitCode": 0,
+                        "Output": "Will ping rabbit@237ab520f398. This only checks if the OS process is running and registered with epmd. Timeout: 60000 ms.\nPing succeeded\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:03:51.016064761+01:00",
+                        "End": "2025-11-13T22:03:53.016972958+01:00",
+                        "ExitCode": 0,
+                        "Output": "Will ping rabbit@237ab520f398. This only checks if the OS process is running and registered with epmd. Timeout: 60000 ms.\nPing succeeded\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:03.017551973+01:00",
+                        "End": "2025-11-13T22:04:05.016775902+01:00",
+                        "ExitCode": 0,
+                        "Output": "Will ping rabbit@237ab520f398. This only checks if the OS process is running and registered with epmd. Timeout: 60000 ms.\nPing succeeded\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:15.017559532+01:00",
+                        "End": "2025-11-13T22:04:17.019585759+01:00",
+                        "ExitCode": 0,
+                        "Output": "Will ping rabbit@237ab520f398. This only checks if the OS process is running and registered with epmd. Timeout: 60000 ms.\nPing succeeded\n"
+                    },
+                    {
+                        "Start": "2025-11-13T22:04:27.020305105+01:00",
+                        "End": "2025-11-13T22:04:29.016445453+01:00",
+                        "ExitCode": 0,
+                        "Output": "Will ping rabbit@237ab520f398. This only checks if the OS process is running and registered with epmd. Timeout: 60000 ms.\nPing succeeded\n"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:21d906574d31c75ab12a468948aac46e5acd323f1856c0d003bc532a27c79cf9",
+        "ResolvConfPath": "/var/lib/docker/containers/237ab520f398e77823fc26404ea23815a6d801caf951179d4a4d0f25e9947b84/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/237ab520f398e77823fc26404ea23815a6d801caf951179d4a4d0f25e9947b84/hostname",
+        "HostsPath": "/var/lib/docker/containers/237ab520f398e77823fc26404ea23815a6d801caf951179d4a4d0f25e9947b84/hosts",
+        "LogPath": "/var/lib/docker/containers/237ab520f398e77823fc26404ea23815a6d801caf951179d4a4d0f25e9947b84/237ab520f398e77823fc26404ea23815a6d801caf951179d4a4d0f25e9947b84-json.log",
+        "Name": "/sutazai-rabbitmq",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/opt/sutazaiapp/config/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro",
+                "sutazaiapp_rabbitmq_data:/var/lib/rabbitmq:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sutazaiapp_sutazai-network",
+            "PortBindings": {
+                "15672/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10005"
+                    }
+                ],
+                "5672/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "10004"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 402653184,
+            "NanoCpus": 500000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 268435456,
+            "MemorySwap": 805306368,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "237ab520f398e77823fc26404ea23815a6d801caf951179d4a4d0f25e9947b84",
+                "LowerDir": "/var/lib/docker/overlay2/b231028a7a7bab65e27be337ef8773d33ac6aa1ba980a83adcf6307c7744fcff-init/diff:/var/lib/docker/overlay2/0ca602485d993287db9c997c6b9caeaa545ee604530e17ca7b28d68d4f0ca42d/diff:/var/lib/docker/overlay2/f04e82667167868580bad0913dfd472fc05fbfdd69ad3a303be258cb9ab49801/diff:/var/lib/docker/overlay2/30b0265dfb1f2cc304831597f6a54dfd55f245240bf5bc8b074ddaf309d2f30a/diff:/var/lib/docker/overlay2/b7ff824c7d677cdd6834490fa828ff0333bcde6a7142cdf329b257596559df1d/diff:/var/lib/docker/overlay2/b890f7073fbba44a5198ee3bf23b48b89d7271514bdf9b9845deaa179206a6c0/diff:/var/lib/docker/overlay2/e2314f7162065cb023208b9515544d72f22ecc82c5519745a46cb9eacc2865d0/diff:/var/lib/docker/overlay2/f8a1cd8388bf1d6a1155a5e623d523e61f9d762791ebb14cd111b7706944bdf8/diff:/var/lib/docker/overlay2/8da1809a17ca165deddb0412c69662388af74a754d842077466d0fa263eda09e/diff:/var/lib/docker/overlay2/908999babf5ea7b54d7523f88d3017f6d033ddba8c8d92f7c37639133169db84/diff:/var/lib/docker/overlay2/d76d6bce27a193bf6c86598fcb5c516314dc7a0a98d0401ca5369618536a6434/diff",
+                "MergedDir": "/var/lib/docker/overlay2/b231028a7a7bab65e27be337ef8773d33ac6aa1ba980a83adcf6307c7744fcff/merged",
+                "UpperDir": "/var/lib/docker/overlay2/b231028a7a7bab65e27be337ef8773d33ac6aa1ba980a83adcf6307c7744fcff/diff",
+                "WorkDir": "/var/lib/docker/overlay2/b231028a7a7bab65e27be337ef8773d33ac6aa1ba980a83adcf6307c7744fcff/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/opt/sutazaiapp/config/rabbitmq/definitions.json",
+                "Destination": "/etc/rabbitmq/definitions.json",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "volume",
+                "Name": "sutazaiapp_rabbitmq_data",
+                "Source": "/var/lib/docker/volumes/sutazaiapp_rabbitmq_data/_data",
+                "Destination": "/var/lib/rabbitmq",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "237ab520f398",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "15671/tcp": {},
+                "15672/tcp": {},
+                "15691/tcp": {},
+                "15692/tcp": {},
+                "25672/tcp": {},
+                "4369/tcp": {},
+                "5671/tcp": {},
+                "5672/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "RABBITMQ_DEFAULT_USER=sutazai",
+                "RABBITMQ_DEFAULT_PASS=sutazai_secure_2024",
+                "RABBITMQ_DEFAULT_VHOST=/",
+                "RABBITMQ_ERLANG_COOKIE=sutazai_cluster_cookie",
+                "RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}]",
+                "PATH=/opt/rabbitmq/sbin:/opt/erlang/bin:/opt/openssl/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "ERLANG_INSTALL_PATH_PREFIX=/opt/erlang",
+                "OPENSSL_INSTALL_PATH_PREFIX=/opt/openssl",
+                "RABBITMQ_DATA_DIR=/var/lib/rabbitmq",
+                "RABBITMQ_VERSION=3.13.7",
+                "RABBITMQ_PGP_KEY_ID=0x0A9AF2115F4687BD29803A206B73A36E6026DFCA",
+                "RABBITMQ_HOME=/opt/rabbitmq",
+                "HOME=/var/lib/rabbitmq",
+                "LANG=C.UTF-8",
+                "LANGUAGE=C.UTF-8",
+                "LC_ALL=C.UTF-8"
+            ],
+            "Cmd": [
+                "rabbitmq-server"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "rabbitmq-diagnostics",
+                    "ping"
+                ],
+                "Interval": 10000000000,
+                "Timeout": 10000000000,
+                "StartPeriod": 30000000000,
+                "Retries": 5
+            },
+            "Image": "rabbitmq:3.13-management-alpine",
+            "Volumes": {
+                "/etc/rabbitmq/definitions.json": {},
+                "/var/lib/rabbitmq": {}
+            },
+            "WorkingDir": "/",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "ff48122242690f2aef357039795659f63c905a14eb4d278b8d2cf3c36534aa60",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sutazaiapp",
+                "com.docker.compose.project.config_files": "docker-compose-core.yml",
+                "com.docker.compose.project.working_dir": "/opt/sutazaiapp",
+                "com.docker.compose.service": "rabbitmq",
+                "com.docker.compose.version": "1.29.2"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "2426b3611213f3a806ea2b2d5307b369035481d35e93a0108c1e01289c33e091",
+            "SandboxKey": "/var/run/docker/netns/2426b3611213",
+            "Ports": {
+                "15671/tcp": null,
+                "15672/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10005"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10005"
+                    }
+                ],
+                "15691/tcp": null,
+                "15692/tcp": null,
+                "25672/tcp": null,
+                "4369/tcp": null,
+                "5671/tcp": null,
+                "5672/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "10004"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "10004"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sutazaiapp_sutazai-network": {
+                    "IPAMConfig": {
+                        "IPv4Address": "172.20.0.13"
+                    },
+                    "Links": null,
+                    "Aliases": [
+                        "237ab520f398",
+                        "rabbitmq"
+                    ],
+                    "MacAddress": "0a:74:7e:7a:5a:d6",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "4697ccfa8ce5da1b842e4ceebc9277a143b6ad8242733a9c4d5ae5304bd8492a",
+                    "EndpointID": "89ad60a594f92e0c9419c02bd8637fc745a93c7fe3033c3930943fccee45c00e",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.13",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sutazai-rabbitmq",
+                        "237ab520f398",
+                        "rabbitmq"
+                    ]
+                }
+            }
+        }
+    }
+]

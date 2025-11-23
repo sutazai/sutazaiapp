@@ -9,12 +9,14 @@ Current system shows critical token consumption issue with 245 agents consuming 
 ### 1. Problem Identification
 
 #### Token Consumption Breakdown
+
 - **Current Usage**: 21,700 tokens (144% of 15k recommended limit)
 - **Agent Count**: 245 detected agents/components
 - **Directory Size**: 1.5GB in `/opt/sutazaiapp/agents/`
 - **Subdirectories**: 2,866 directories (including full framework installations)
 
 #### Root Causes
+
 1. **Full Framework Loading**: Entire agent frameworks (LangChain, AutoGPT, etc.) loaded into context
 2. **No Lazy Loading**: All agents initialize at startup
 3. **Missing Abstraction Layer**: No interface separation between agent implementation and orchestration
@@ -250,6 +252,7 @@ class LazyAgentLoader:
 ## Implementation Plan
 
 ### Phase 1: Immediate Optimizations (Day 1)
+
 1. **Create Agent Interfaces** ✅
    - Extract metadata from existing agents
    - Create lightweight interface files
@@ -266,7 +269,9 @@ class LazyAgentLoader:
    - Implement on-demand loading
 
 ### Phase 2: Agent Categorization (Day 2-3)
+
 1. **Tier Classification**
+
    ```yaml
    tier1_essential:
      - mcp_bridge      # Core orchestration
@@ -291,6 +296,7 @@ class LazyAgentLoader:
    ```
 
 2. **Token Cost Estimation**
+
    ```python
    TOKEN_COSTS = {
        'mcp_bridge': 500,
@@ -305,7 +311,9 @@ class LazyAgentLoader:
    ```
 
 ### Phase 3: Configuration Migration (Day 4)
+
 1. **Update MCP Bridge Configuration**
+
    ```python
    # /opt/sutazaiapp/mcp-bridge/config/agent_config.yaml
    agents:
@@ -328,6 +336,7 @@ class LazyAgentLoader:
    ```
 
 2. **Update Docker Compose**
+
    ```yaml
    # docker-compose-agents-optimized.yml
    services:
@@ -357,7 +366,9 @@ class LazyAgentLoader:
    ```
 
 ### Phase 4: Testing & Validation (Day 5)
+
 1. **Token Usage Tests**
+
    ```python
    # /opt/sutazaiapp/tests/test_token_optimization.py
    async def test_token_budget_enforcement():
@@ -382,6 +393,7 @@ class LazyAgentLoader:
 ## Configuration Changes
 
 ### 1. Update .claude/settings.local.json
+
 ```json
 {
   "agent_loading": {
@@ -395,6 +407,7 @@ class LazyAgentLoader:
 ```
 
 ### 2. Create Agent Manifest
+
 ```yaml
 # /opt/sutazaiapp/agents/manifest.yaml
 version: "2.0"
@@ -421,6 +434,7 @@ agents:
 ```
 
 ### 3. Environment Variables
+
 ```bash
 # .env updates
 AGENT_LOADING_STRATEGY=lazy
@@ -433,6 +447,7 @@ AGENT_LRU_SIZE=10
 ## Monitoring & Observability
 
 ### 1. Token Usage Dashboard
+
 ```python
 # /opt/sutazaiapp/monitoring/token_dashboard.py
 class TokenUsageDashboard:
@@ -453,6 +468,7 @@ class TokenUsageDashboard:
 ```
 
 ### 2. Alerts
+
 ```yaml
 # /opt/sutazaiapp/monitoring/alerts.yaml
 alerts:
@@ -472,6 +488,7 @@ alerts:
 ## Expected Outcomes
 
 ### Performance Improvements
+
 | Metric | Current | Optimized | Improvement |
 |--------|---------|-----------|-------------|
 | Initial Token Usage | 21,700 | 3,500 | 84% reduction |
@@ -481,6 +498,7 @@ alerts:
 | Context Preservation | Poor | Excellent | 80% available |
 
 ### Benefits
+
 1. **Scalability**: Can handle 100+ agents without token explosion
 2. **Performance**: 5x faster startup, lower resource usage
 3. **Flexibility**: Easy to add/remove agents without impact

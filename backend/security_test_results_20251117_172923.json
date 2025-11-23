@@ -1,0 +1,25 @@
+{
+  "xss": {
+    "tested": 7,
+    "protected": 7,
+    "vulnerable": 0,
+    "protection_rate": 100.0
+  },
+  "sql": {
+    "tested": 6,
+    "protected": 6,
+    "vulnerable": 0,
+    "protection_rate": 100.0
+  },
+  "headers": {
+    "tested": 3,
+    "present": 3,
+    "missing": 0,
+    "coverage": 100.0
+  },
+  "summary": {
+    "overall_score": 100.0,
+    "passed": true,
+    "timestamp": "2025-11-17T17:29:23.606428"
+  }
+}
