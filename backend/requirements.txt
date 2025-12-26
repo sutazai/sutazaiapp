@@ -68,5 +68,16 @@ pytest-cov==5.0.0
 prometheus-client==0.21.0
 loguru==0.7.2
 
+# Rate Limiting & Circuit Breaker
+slowapi==0.1.9
+pybreaker==1.2.0
+
+# Caching & Performance
+cachetools==5.5.0
+aiocache==0.12.3
+
+# Request ID & Tracing
+asgi-correlation-id==4.3.3
+
 # CORS
 # CORS is handled by FastAPI middleware

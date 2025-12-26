@@ -1,6 +1,7 @@
 """
 SutazAI Platform Main Application
 FastAPI backend with comprehensive service integrations
+Enterprise-level features: rate limiting, circuit breaker, caching, request tracking
 """
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
@@ -17,6 +18,7 @@ from app.core.config import settings
 from app.core.database import init_db, close_db, Base
 from app.services.connections import service_connections
 from app.api.v1.router import api_router
+from app.middleware import setup_enterprise_middleware, limiter
 # Import models to ensure they're registered
 from app.models import User
 
@@ -80,6 +82,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Setup enterprise middleware (rate limiting, circuit breaker, caching, security headers)
+limiter = setup_enterprise_middleware(app)
+logger.info("Enterprise middleware configured: rate limiting, circuit breaker, caching, security headers")
 
 # Include API routers
 app.include_router(api_router, prefix=settings.API_V1_STR)
